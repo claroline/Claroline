@@ -112,6 +112,15 @@ class Document
     protected $toolDocuments;
 
     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\DropZoneBundle\Entity\Revision",
+     *     inversedBy="documents"
+     * )
+     * @ORM\JoinColumn(name="revision_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $revision;
+
+    /**
      * Document constructor.
      */
     public function __construct()
@@ -341,6 +350,22 @@ class Document
     public function emptyToolDocuments()
     {
         $this->toolDocuments->clear();
+    }
+
+    /**
+     * @return Revision
+     */
+    public function getRevision()
+    {
+        return $this->revision;
+    }
+
+    /**
+     * @param Revision $revision
+     */
+    public function setRevision(Revision $revision = null)
+    {
+        $this->revision = $revision;
     }
 
     /**

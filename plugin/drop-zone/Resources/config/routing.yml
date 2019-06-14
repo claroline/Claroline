@@ -13,4 +13,4 @@ claro_dropzone_api:
 
 claro_dropzone_log:
     resource: "@ClarolineDropZoneBundle/Controller/Resource/DropzoneController.php"
-    type:     annotation
+    type: annotation

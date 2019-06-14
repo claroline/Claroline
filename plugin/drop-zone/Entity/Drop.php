@@ -172,6 +172,23 @@ class Drop
     protected $users;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\DropZoneBundle\Entity\Revision",
+     *     mappedBy="drop"
+     * )
+     * @ORM\OrderBy({"creationDate" = "DESC"})
+     */
+    protected $revisions;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\DropZoneBundle\Entity\DropComment",
+     *     mappedBy="drop"
+     * )
+     */
+    protected $comments;
+
+    /**
      * Drop constructor.
      */
     public function __construct()
@@ -181,6 +198,8 @@ class Drop
         $this->documents = new ArrayCollection();
         $this->corrections = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->revisions = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -514,5 +533,21 @@ class Drop
     public function emptyUsers()
     {
         $this->users->clear();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRevisions()
+    {
+        return $this->revisions;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

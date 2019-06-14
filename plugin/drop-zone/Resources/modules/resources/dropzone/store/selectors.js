@@ -310,6 +310,16 @@ const getMyDropStatus = createSelector(
   }
 )
 
+const revision = createSelector(
+  [resource],
+  (resource) => resource.revision
+)
+
+const currentRevisionId = createSelector(
+  [resource],
+  (resource) => resource.currentRevisionId
+)
+
 export const select = {
   STORE_NAME,
   resource,
@@ -335,5 +345,7 @@ export const select = {
   errorMessage,
   dropDisabledMessages,
   peerReviewDisabledMessages,
-  getMyDropStatus
+  getMyDropStatus,
+  revision,
+  currentRevisionId
 }

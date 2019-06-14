@@ -30,7 +30,11 @@ const reducer = combineReducers({
   }),
   errorMessage: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.errorMessage
-  })
+  }),
+  myRevisions: playerReducer.myRevisions,
+  revisions: playerReducer.revisions,
+  revision: playerReducer.revision,
+  currentRevisionId: playerReducer.currentRevisionId
 })
 
 export {

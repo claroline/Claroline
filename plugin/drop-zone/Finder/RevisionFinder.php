@@ -12,33 +12,42 @@
 namespace Claroline\DropZoneBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\DropZoneBundle\Entity\Drop;
+use Claroline\DropZoneBundle\Entity\Revision;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.api.finder.dropzone.drop")
+ * @DI\Service("claroline.api.finder.dropzone.revision")
  * @DI\Tag("claroline.finder")
  */
-class DropFinder extends AbstractFinder
+class RevisionFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return Drop::class;
+        return Revision::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
-    {
-        $qb->join('obj.dropzone', 'd');
-        $qb->andWhere('d.uuid = :dropzoneUuid');
-        $qb->setParameter('dropzoneUuid', $searches['dropzone']);
+    public function configureQueryBuilder(
+        QueryBuilder $qb,
+        array $searches = [],
+        array $sortBy = null,
+        array $options = ['count' => false, 'page' => 0, 'limit' => -1]
+    ) {
+        $qb->join('obj.drop', 'drop');
+        $qb->join('drop.dropzone', 'd');
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'dropzone':
+                    $qb->andWhere("d.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'user':
-                    $qb->join('obj.user', 'u');
+                case 'drop':
+                    $qb->andWhere("drop.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'creator':
+                    $qb->join('obj.creator', 'u');
                     $qb->andWhere("
                         UPPER(u.firstName) LIKE :name
                         OR UPPER(u.lastName) LIKE :name

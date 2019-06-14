@@ -9,6 +9,7 @@ import {
   DROP_UPDATE,
   CURRENT_DROP_LOAD,
   CURRENT_DROP_RESET,
+  CURRENT_DROP_COMMENT_UPDATE,
   CORRECTOR_DROP_LOAD,
   CORRECTOR_DROP_RESET,
   CORRECTIONS_LOAD,
@@ -64,6 +65,18 @@ const currentDropReducer = makeReducer(null, {
     }
 
     return Object.assign({}, state, {documents: documents})
+  },
+  [CURRENT_DROP_COMMENT_UPDATE]: (state, action) => {
+    const newComments = cloneDeep(state.comments)
+    const commentIdx = newComments.findIndex(c => c.id === action.comment.id)
+
+    if (-1 < commentIdx) {
+      newComments[commentIdx] = action.comment
+    } else {
+      newComments.push(action.comment)
+    }
+
+    return Object.assign({}, state, {comments: newComments})
   }
 })
 

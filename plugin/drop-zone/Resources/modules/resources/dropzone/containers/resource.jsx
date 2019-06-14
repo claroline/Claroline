@@ -18,7 +18,8 @@ const DropzoneResource = withRouter(
       (state) => ({
         canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
         dropzone: select.dropzone(state),
-        myDrop: select.myDrop(state)
+        myDrop: select.myDrop(state),
+        currentRevisionId: select.currentRevisionId(state)
       }),
       (dispatch) => ({
         resetForm: (formData) => dispatch(formActions.resetForm(select.STORE_NAME+'.dropzoneForm', formData)),
@@ -27,7 +28,10 @@ const DropzoneResource = withRouter(
         resetCurrentDrop: () => dispatch(correctionActions.resetCurrentDrop()),
         fetchCorrections: (dropzoneId) => dispatch(correctionActions.fetchCorrections(dropzoneId)),
         resetCorrectorDrop: () => dispatch(correctionActions.resetCorrectorDrop()),
-        fetchPeerDrop: () => dispatch(playerActions.fetchPeerDrop())
+        fetchPeerDrop: () => dispatch(playerActions.fetchPeerDrop()),
+        fetchRevision: (revisionId) => dispatch(playerActions.fetchRevision(revisionId)),
+        fetchDropFromRevision: (revisionId) => dispatch(playerActions.fetchDropFromRevision(revisionId)),
+        resetRevision: () => dispatch(playerActions.resetRevision())
       })
     )(DropzoneResourceComponent)
   )

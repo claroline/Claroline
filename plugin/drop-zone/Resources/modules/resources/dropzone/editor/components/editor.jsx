@@ -148,6 +148,10 @@ const EditorComponent = props =>
               multiple: true,
               condensed: false
             }
+          }, {
+            name: 'parameters.revisionEnabled',
+            type: 'boolean',
+            label: trans('allow_revision_request', {}, 'dropzone')
           }
         ]
       }, {

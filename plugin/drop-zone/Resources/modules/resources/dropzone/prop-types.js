@@ -31,7 +31,8 @@ const DropzoneType = {
 
       expectedCorrectionTotal: T.number.isRequired,
       scoreMax: T.number.isRequired,
-      scoreToPass: T.number.isRequired
+      scoreToPass: T.number.isRequired,
+      revisionEnabled: T.bool.isRequired
     }).isRequired,
     display: T.shape({
       correctionInstruction: T.string,
@@ -76,6 +77,22 @@ const DropzoneToolDocumentType = {
   }
 }
 
+const Comment = {
+  propTypes: {
+    id: T.string.isRequired,
+    content: T.string.isRequired,
+    user: T.shape({
+      autoId: T.number.isRequired,
+      id: T.string.isRequired,
+      username: T.string.isRequired,
+      firstName: T.string.isRequired,
+      lastName: T.string.isRequired
+    }),
+    creationDate: T.string,
+    editionDate: T.string
+  }
+}
+
 const DocumentType = {
   propTypes: {
     id: T.string.isRequired,
@@ -93,7 +110,10 @@ const DocumentType = {
     dropDate: T.string,
     toolDocuments: T.arrayOf(
       T.shape(DropzoneToolDocumentType.propTypes)
-    )
+    ),
+    revision: T.shape({
+      id: T.string.isRequired
+    })
   }
 }
 
@@ -169,7 +189,24 @@ const DropType = {
       username: T.string.isRequired,
       firstName: T.string.isRequired,
       lastName: T.string.isRequired
-    }))
+    })),
+    comments: T.arrayOf(T.shape(Comment.propTypes))
+  }
+}
+
+const Revision = {
+  propTypes: {
+    id: T.string.isRequired,
+    creator: T.shape({
+      autoId: T.number.isRequired,
+      id: T.string.isRequired,
+      username: T.string.isRequired,
+      firstName: T.string.isRequired,
+      lastName: T.string.isRequired
+    }),
+    creationDate: T.string,
+    documents: T.arrayOf(T.shape(DocumentType.propTypes)),
+    comments: T.arrayOf(T.shape(Comment.propTypes))
   }
 }
 
@@ -179,5 +216,7 @@ export {
   DocumentType,
   GradeType,
   CorrectionType,
-  DropType
+  DropType,
+  Comment,
+  Revision
 }

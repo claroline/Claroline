@@ -121,6 +121,7 @@ class DropzoneSerializer
             'criteria' => $this->serializeCriteria($dropzone),
             'criteriaTotal' => $dropzone->getCriteriaTotal(),
             'autoCloseDropsAtDropEndDate' => $dropzone->getAutoCloseDropsAtDropEndDate(),
+            'revisionEnabled' => $dropzone->isRevisionEnabled(),
         ];
     }
 
@@ -139,6 +140,7 @@ class DropzoneSerializer
         $this->sipe('parameters.criteriaEnabled', 'setCriteriaEnabled', $data, $dropzone);
         $this->sipe('parameters.criteriaTotal', 'setCriteriaTotal', $data, $dropzone);
         $this->sipe('parameters.autoCloseDropsAtDropEndDate', 'setAutoCloseDropsAtDropEndDate', $data, $dropzone);
+        $this->sipe('parameters.revisionEnabled', 'setRevisionEnabled', $data, $dropzone);
 
         if (!empty($data['parameters']['scoreMax']) && $data['parameters']['scoreMax'] !== $dropzone->getScoreMax()) {
             $dropzone->setScoreMax($data['parameters']['scoreMax']);

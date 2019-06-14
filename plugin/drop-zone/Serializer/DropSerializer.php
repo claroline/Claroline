@@ -5,6 +5,7 @@ namespace Claroline\DropZoneBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\DropZoneBundle\Entity\Drop;
+use Claroline\DropZoneBundle\Entity\DropComment;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -16,6 +17,7 @@ class DropSerializer
 {
     private $correctionSerializer;
     private $documentSerializer;
+    private $dropCommentSerializer;
     private $userSerializer;
 
     private $dropRepo;
@@ -26,25 +28,29 @@ class DropSerializer
      * DropSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "correctionSerializer" = @DI\Inject("claroline.serializer.dropzone.correction"),
-     *     "documentSerializer"   = @DI\Inject("claroline.serializer.dropzone.document"),
-     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager")
+     *     "correctionSerializer"  = @DI\Inject("claroline.serializer.dropzone.correction"),
+     *     "documentSerializer"    = @DI\Inject("claroline.serializer.dropzone.document"),
+     *     "dropCommentSerializer" = @DI\Inject("claroline.serializer.dropzone.drop.comment"),
+     *     "userSerializer"        = @DI\Inject("claroline.serializer.user"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
-     * @param CorrectionSerializer $correctionSerializer
-     * @param DocumentSerializer   $documentSerializer
-     * @param UserSerializer       $userSerializer
-     * @param ObjectManager        $om
+     * @param CorrectionSerializer  $correctionSerializer
+     * @param DocumentSerializer    $documentSerializer
+     * @param DropCommentSerializer $dropCommentSerializer
+     * @param UserSerializer        $userSerializer
+     * @param ObjectManager         $om
      */
     public function __construct(
         CorrectionSerializer $correctionSerializer,
         DocumentSerializer $documentSerializer,
+        DropCommentSerializer $dropCommentSerializer,
         UserSerializer $userSerializer,
         ObjectManager $om
     ) {
         $this->correctionSerializer = $correctionSerializer;
         $this->documentSerializer = $documentSerializer;
+        $this->dropCommentSerializer = $dropCommentSerializer;
         $this->userSerializer = $userSerializer;
 
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
@@ -59,7 +65,7 @@ class DropSerializer
      */
     public function serialize(Drop $drop)
     {
-        return [
+        $serialized = [
             'id' => $drop->getUuid(),
             'user' => $drop->getUser() ? $this->userSerializer->serialize($drop->getUser()) : null,
             'dropDate' => $drop->getDropDate() ? $drop->getDropDate()->format('Y-m-d H:i') : null,
@@ -74,7 +80,10 @@ class DropSerializer
             'documents' => $this->getDocuments($drop),
             'corrections' => $this->getCorrections($drop),
             'users' => $this->getUsers($drop),
+            'comments' => $this->getComments($drop),
         ];
+
+        return $serialized;
     }
 
     /**
@@ -136,12 +145,22 @@ class DropSerializer
     private function getDocuments(Drop $drop)
     {
         $documents = [];
+        $revisionDocuments = [];
+
+        $revisions = $drop->getRevisions()->toArray();
+        $latestRevisionId = 0 < count($revisions) ? $revisions[0]->getUuid() : null;
 
         foreach ($drop->getDocuments() as $document) {
-            $documents[] = $this->documentSerializer->serialize($document);
+            $docRevision = $document->getRevision();
+
+            if (!$docRevision) {
+                $documents[] = $this->documentSerializer->serialize($document);
+            } elseif ($latestRevisionId === $docRevision->getUuid()) {
+                $revisionDocuments[] = $this->documentSerializer->serialize($document);
+            }
         }
 
-        return $documents;
+        return 0 < count($documents) ? $documents : $revisionDocuments;
     }
 
     private function getCorrections(Drop $drop)
@@ -164,6 +183,13 @@ class DropSerializer
         }
 
         return $users;
+    }
+
+    private function getComments(Drop $drop)
+    {
+        return array_values(array_map(function (DropComment $comment) {
+            return $this->dropCommentSerializer->serialize($comment);
+        }, $drop->getComments()->toArray()));
     }
 
     private function deserializeDocuments(Drop $drop, $documentsData)

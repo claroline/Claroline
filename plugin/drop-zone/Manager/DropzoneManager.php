@@ -27,6 +27,7 @@ use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Entity\DropzoneToolDocument;
+use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Claroline\DropZoneBundle\Event\Log\LogCorrectionEndEvent;
 use Claroline\DropZoneBundle\Event\Log\LogCorrectionReportEvent;
@@ -209,6 +210,18 @@ class DropzoneManager
     public function serializeTool(DropzoneTool $tool)
     {
         return $this->serializer->serialize($tool);
+    }
+
+    /**
+     * Serializes a Revision entity.
+     *
+     * @param Revision $revision
+     *
+     * @return array
+     */
+    public function serializeRevision(Revision $revision)
+    {
+        return $this->serializer->serialize($revision);
     }
 
     /**
@@ -541,6 +554,31 @@ class DropzoneManager
         $this->om->endFlushSuite();
 
         $this->eventDispatcher->dispatch('log', new LogDropEndEvent($drop->getDropzone(), $drop, $this->roleManager));
+    }
+
+    /**
+     * Creates a revision for drop.
+     *
+     * @param Drop $drop
+     * @param User $user
+     */
+    public function submitDropForRevision(Drop $drop, User $user)
+    {
+        $revision = new Revision();
+        $revision->setDrop($drop);
+        $revision->setCreator($user);
+
+        foreach ($drop->getDocuments() as $document) {
+            if (!$document->getRevision()) {
+                $document->setRevision($revision);
+                $this->om->persist($document);
+            }
+        }
+        $this->om->persist($revision);
+        $this->om->persist($drop);
+        $this->om->flush();
+
+        return $revision;
     }
 
     /**

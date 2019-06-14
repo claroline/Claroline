@@ -1,8 +1,11 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer} from '#/main/app/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 
 import {
   MY_DROP_LOAD,
@@ -12,7 +15,12 @@ import {
   DOCUMENT_REMOVE,
   PEER_DROP_LOAD,
   PEER_DROP_RESET,
-  PEER_DROPS_INC
+  PEER_DROPS_INC,
+  CURRENT_REVISION_ID_LOAD,
+  REVISION_LOAD,
+  REVISION_RESET,
+  REVISION_COMMENT_UPDATE,
+  MY_DROP_COMMENT_UPDATE
 } from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {
   DROP_UPDATE,
@@ -29,7 +37,8 @@ const myDropReducer = makeReducer({}, {
     return state && state.id === action.drop.id ? action.drop : state
   },
   [DOCUMENTS_ADD]: (state, action) => {
-    const documents = cloneDeep(state.documents)
+    // When adding a new document, all documents from previous revision is archived in the revision
+    const documents = cloneDeep(state.documents.filter(d => !d.revision))
     action.documents.forEach(d => documents.push(d))
 
     return Object.assign({}, state, {documents: documents})
@@ -69,6 +78,18 @@ const myDropReducer = makeReducer({}, {
     } else {
       return state
     }
+  },
+  [MY_DROP_COMMENT_UPDATE]: (state, action) => {
+    const newComments = cloneDeep(state.comments)
+    const commentIdx = newComments.findIndex(c => c.id === action.comment.id)
+
+    if (-1 < commentIdx) {
+      newComments[commentIdx] = action.comment
+    } else {
+      newComments.push(action.comment)
+    }
+
+    return Object.assign({}, state, {comments: newComments})
   }
 })
 
@@ -107,10 +128,40 @@ const peerDropReducer = makeReducer(null, {
   }
 })
 
+const revisionReducer = makeReducer(null, {
+  [REVISION_LOAD]: (state, action) => {
+    return action.revision
+  },
+  [REVISION_RESET]: () => {
+    return null
+  },
+  [REVISION_COMMENT_UPDATE]: (state, action) => {
+    const newComments = cloneDeep(state.comments)
+    const commentIdx = newComments.findIndex(c => c.id === action.comment.id)
+
+    if (-1 < commentIdx) {
+      newComments[commentIdx] = action.comment
+    } else {
+      newComments.push(action.comment)
+    }
+
+    return Object.assign({}, state, {comments: newComments})
+  }
+})
+
+const currentRevisionIdReducer = makeReducer(null, {
+  [RESOURCE_LOAD]: (state, action) => action.resourceData.currentRevisionId,
+  [CURRENT_REVISION_ID_LOAD]: (state, action) => action.revisionId
+})
+
 const reducer = {
   myDrop: myDropReducer,
   nbCorrections: nbCorrectionsReducer,
-  peerDrop: peerDropReducer
+  peerDrop: peerDropReducer,
+  myRevisions: makeListReducer(select.STORE_NAME+'.myRevisions'),
+  revisions: makeListReducer(select.STORE_NAME+'.revisions'),
+  revision: revisionReducer,
+  currentRevisionId: currentRevisionIdReducer
 }
 
 export {

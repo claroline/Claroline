@@ -12,6 +12,7 @@
 namespace Claroline\DropZoneBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -23,7 +24,7 @@ class DropzoneToolFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return 'Claroline\DropZoneBundle\Entity\DropzoneTool';
+        return DropzoneTool::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])

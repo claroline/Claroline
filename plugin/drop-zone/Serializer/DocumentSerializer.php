@@ -2,6 +2,8 @@
 
 namespace Claroline\DropZoneBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
@@ -17,7 +19,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class DocumentSerializer
 {
+    use SerializerTrait;
+
     private $dropzoneToolDocumentSerializer;
+    private $revisionSerializer;
     private $resourceSerializer;
     private $userSerializer;
     private $tokenStorage;
@@ -31,6 +36,7 @@ class DocumentSerializer
      *
      * @DI\InjectParams({
      *     "dropzoneToolDocumentSerializer" = @DI\Inject("claroline.serializer.dropzone.tool.document"),
+     *     "revisionSerializer"             = @DI\Inject("claroline.serializer.dropzone.revision"),
      *     "resourceSerializer"             = @DI\Inject("claroline.serializer.resource_node"),
      *     "userSerializer"                 = @DI\Inject("claroline.serializer.user"),
      *     "tokenStorage"                   = @DI\Inject("security.token_storage"),
@@ -38,6 +44,7 @@ class DocumentSerializer
      * })
      *
      * @param DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer
+     * @param RevisionSerializer             $revisionSerializer
      * @param ResourceNodeSerializer         $resourceSerializer
      * @param UserSerializer                 $userSerializer
      * @param TokenStorageInterface          $tokenStorage
@@ -45,12 +52,14 @@ class DocumentSerializer
      */
     public function __construct(
         DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer,
+        RevisionSerializer $revisionSerializer,
         ResourceNodeSerializer $resourceSerializer,
         UserSerializer $userSerializer,
         TokenStorageInterface $tokenStorage,
         ObjectManager $om
     ) {
         $this->dropzoneToolDocumentSerializer = $dropzoneToolDocumentSerializer;
+        $this->revisionSerializer = $revisionSerializer;
         $this->resourceSerializer = $resourceSerializer;
         $this->userSerializer = $userSerializer;
         $this->tokenStorage = $tokenStorage;
@@ -62,10 +71,11 @@ class DocumentSerializer
 
     /**
      * @param Document $document
+     * @param array    $options
      *
      * @return array
      */
-    public function serialize(Document $document)
+    public function serialize(Document $document, array $options = [])
     {
         return [
             'id' => $document->getUuid(),
@@ -77,7 +87,18 @@ class DocumentSerializer
             'user' => $document->getUser() ? $this->userSerializer->serialize($document->getUser()) : null,
             'dropDate' => $document->getDropDate() ? $document->getDropDate()->format('Y-m-d H:i') : null,
             'toolDocuments' => $this->getToolDocuments($document),
+            'revision' => $document->getRevision() ?
+                $this->revisionSerializer->serialize($document->getRevision(), [Options::SERIALIZE_MINIMAL]) :
+                null,
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serialized = array_merge($serialized, [
+                'comments' => array_values(array_map(function (DocumentComment $comment) use ($options) {
+                    return $this->documentCommentSerializer->serialize($comment, $options);
+                }, $document->getComments()->toArray())),
+            ]);
+        }
     }
 
     private function getToolDocuments(Document $document)

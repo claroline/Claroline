@@ -7,6 +7,7 @@ import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/pl
 export const DROP_UPDATE = 'DROP_UPDATE'
 export const CURRENT_DROP_LOAD = 'CURRENT_DROP_LOAD'
 export const CURRENT_DROP_RESET = 'CURRENT_DROP_RESET'
+export const CURRENT_DROP_COMMENT_UPDATE = 'CURRENT_DROP_COMMENT_UPDATE'
 export const CORRECTOR_DROP_LOAD = 'CORRECTOR_DROP_LOAD'
 export const CORRECTOR_DROP_RESET = 'CORRECTOR_DROP_RESET'
 export const CORRECTIONS_LOAD = 'CORRECTIONS_LOAD'
@@ -19,6 +20,7 @@ actions.updateDrop = makeActionCreator(DROP_UPDATE, 'drop')
 
 actions.loadCurrentDrop = makeActionCreator(CURRENT_DROP_LOAD, 'drop')
 actions.resetCurrentDrop = makeActionCreator(CURRENT_DROP_RESET)
+actions.updateCurrentDropComment = makeActionCreator(CURRENT_DROP_COMMENT_UPDATE, 'comment')
 
 actions.fetchDrop = (dropId, type = 'current') => (dispatch, getState) => {
   const dropsData = select.drops(getState())

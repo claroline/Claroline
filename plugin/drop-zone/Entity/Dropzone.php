@@ -310,6 +310,15 @@ class Dropzone extends AbstractResource
     protected $correctorDisplayed = false;
 
     /**
+     * Allows to submit drop for a revision.
+     *
+     * @ORM\Column(name="revision_enabled", type="boolean", nullable=false)
+     *
+     * @var bool
+     */
+    protected $revisionEnabled = false;
+
+    /**
      * Dropzone constructor.
      */
     public function __construct()
@@ -696,5 +705,15 @@ class Dropzone extends AbstractResource
     public function setCorrectorDisplayed($correctorDisplayed)
     {
         $this->correctorDisplayed = $correctorDisplayed;
+    }
+
+    public function isRevisionEnabled()
+    {
+        return $this->revisionEnabled;
+    }
+
+    public function setRevisionEnabled($revisionEnabled)
+    {
+        $this->revisionEnabled = $revisionEnabled;
     }
 }
