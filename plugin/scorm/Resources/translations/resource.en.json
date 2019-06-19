@@ -1,6 +1,7 @@
 {
     "cannot_load_imsmanifest_message": "Cannot load \"imsmanifest.xml\" file",
     "claroline_scorm": "Scorm",
+    "claroline_scorm_desc": "Allows to integrate Scorm packages into Claroline, which is an old technology of limited interoperability for educational resources.",
     "claroline_scorm_12": "Scorm (1.2)",
     "claroline_scorm_12_resource": "Scorm (1.2)",
     "claroline_scorm_2004": "Scorm (2004)",

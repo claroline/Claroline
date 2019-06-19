@@ -7,7 +7,9 @@
     "close_redirect_workspace": "Workspace opening",
     "delete_confirm_message": "Are you sure you want to delete this resource?",
     "directory": "Directory",
+    "directory_desc": "Create a directory to organize your resources.",
     "file": "File",
+    "file_desc": "Resource allowing to drop a file of any format on the platform. PDF, audio, video and image files are readable in the platform. Any other type has to be downloaded.",
     "image": "Image",
     "new_resource": "New resource",
     "new_resource_configure": "2. Configure the resource",
@@ -37,5 +39,6 @@
     "resource_views": "{0} This resource has never been viewed. | {1} This resource has been viewed once. | ]1,Inf[ This resource has been viewed %count% times.",
     "restricted_access_message": "You can not access this resource because all access conditions are not met.",
     "text": "Text",
+    "text_desc": "Allow to edit a rich text (link, image, video) directly on the platform.",
     "video": "Video"
 }

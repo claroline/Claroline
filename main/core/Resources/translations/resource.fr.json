@@ -7,7 +7,9 @@
     "close_redirect_workspace": "Ouverture de l'espace d'activités",
     "delete_confirm_question": "Êtes-vous sûr de vouloir supprimer cette ressource ?",
     "directory": "Dossier",
+    "directory_desc": "Créer un dossier pour organiser vos ressources.",
     "file": "Fichier",
+    "file_desc": "Ressource permettant de déposer un fichier de format quelconque sur la plateforme. Les pdfs, les fichiers audios, vidéos et les images sont lisibles dans la plateforme. Les autres types de fichiers devront être téléchargés sur l'ordinateur de l'apprenant pour être consultés.",
     "image": "Image",
     "new_resource": "Nouvelle ressource",
     "new_resource_configure": "2. Configurer la ressource",
@@ -37,5 +39,6 @@
     "resource_views": "{0} Cette ressource n'a jamais été vue. | [1,Inf[ Cette resource a été vue %count% fois.",
     "restricted_access_message": "Vous ne pouvez pas accéder à cette ressource car toutes les conditions d'accès ne sont pas satisfaites.",
     "text": "Texte",
+    "text_desc": "Permet de rédiger un texte riche (lien, image, vidéo) directement dans la plateforme.",
     "video": "Vidéo"
 }

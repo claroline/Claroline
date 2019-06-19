@@ -1,5 +1,6 @@
 {
     "claroline_web_resource": "Ressource web",
+    "claroline_web_resource_desc": "Cette ressource permet de déposer sous format zip un \"site web\" écrit en html, css et javascript.",
     "not_a_zip": "Le fichier doit être une archive .zip contenant un fichier \"index.html\" ou \"index.htm\".",
     "has_to_be_a_zip": "Le fichier doit être une archive .zip contenant un fichier \"index.html\" ou \"index.htm\"."
 }

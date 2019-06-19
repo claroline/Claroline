@@ -1,3 +1,4 @@
 {
-    "claroline_dropzone": "Evaluation"
+    "claroline_dropzone": "Evaluation",
+    "claroline_dropzone_desc": "Tool allowing to submit work for evaluation by manager or peer."
 }

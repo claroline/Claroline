@@ -1,4 +1,5 @@
 {
     "claroline_web_resource": "Web Resource",
+    "claroline_web_resource_desc": "This resource allows to upload a \"website\" written in html, css and javascript from a zip file.",
     "not_a_zip": "The file must be a .zip archive containing an \"index.html\" or \"index.htm\" file."
 }

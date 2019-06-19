@@ -55,7 +55,7 @@ const WorkspaceFormComponent = (props) => {
           }, {
             name: 'extra.model',
             type: 'choice',
-            label: trans('model'),
+            label: trans('create_from_model'),
             options: {
               choices: modelChoice,
               multiple: false,
@@ -77,7 +77,7 @@ const WorkspaceFormComponent = (props) => {
             }
           }, {
             name: 'meta.model',
-            label: trans('model'),
+            label: trans('define_as_model'),
             type: 'boolean',
             disabled: !props.new
           }, {

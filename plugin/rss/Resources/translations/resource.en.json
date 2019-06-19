@@ -1,3 +1,4 @@
 {
-  "claroline_rss": "RSS Feed"
+    "claroline_rss": "RSS Feed",
+    "claroline_rss_desc": "Allows the integration of news feeds from different websites into the platform."
 }
