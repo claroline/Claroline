@@ -9,6 +9,7 @@ import {reducer, selectors} from '#/plugin/exo/resources/quiz/editor/modals/item
 const PositionModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      form: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
       positionData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
       selectEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),

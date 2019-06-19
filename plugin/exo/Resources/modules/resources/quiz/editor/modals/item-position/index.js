@@ -5,7 +5,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {PositionModal} from '#/plugin/exo/resources/quiz/editor/modals/item-position/components/modal'
+import {PositionModal} from '#/plugin/exo/resources/quiz/editor/modals/item-position/containers/modal'
 
 const MODAL_ITEM_POSITION = 'MODAL_QUIZ_ITEM_POSITION'
 

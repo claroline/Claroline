@@ -27,7 +27,7 @@ const EditorItem = props =>
 
     then={(itemDefinition) => {
       const itemTitle = props.item.title || trans(itemDefinition.name, {}, 'question_types')
-      const itemScore = calculateTotal(props.item)
+      const itemScore = itemDefinition.answerable ? calculateTotal(props.item): null
 
       return (
         <FormSection
@@ -53,9 +53,8 @@ const EditorItem = props =>
             embedded={true}
             formName={props.formName}
             path={props.path}
-            disabled={!props.item.rights.edit}
+            disabled={props.item.rights ? !props.item.rights.edit: false}
             enableScores={props.enableScores}
-
             definition={itemDefinition}
             item={props.item}
             update={props.update}

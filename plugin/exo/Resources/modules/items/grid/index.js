@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty'
+import {makeId} from '#/main/core/scaffolding/id'
 
 import {trans} from '#/main/app/intl/translation'
 import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
@@ -271,5 +272,22 @@ export default {
     }
 
     return answers
+  },
+
+  refreshIdentifiers: (item) => {
+    item.id = makeId()
+
+    const mapIds = {}
+
+    item.cells.forEach(cell => {
+      mapIds[cell.id] = makeId()
+      cell.id = mapIds[cell.id]
+    })
+
+    item.solutions.forEach(solution => {
+      solution.cellId = mapIds[solution.cellId]
+    })
+
+    return item
   }
 }

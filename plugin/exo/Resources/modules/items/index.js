@@ -42,8 +42,7 @@ function getItems() {
  * @return {Promise.<Object>}
  */
 function getItem(mimeType) {
-  return getItems()
-    .then(items => items.find(item => item.type === mimeType || mimeType.match(item.type)))
+  return   getItems().then(items => items.find(item => item.type === mimeType || mimeType.match(item.type)))
 }
 
 export {

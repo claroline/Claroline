@@ -144,7 +144,7 @@ class EditorMain extends Component {
                         formName={this.props.formName}
                         path={`steps[${stepIndex}]`}
                         numberingType={this.props.numberingType}
-
+                        steps={this.props.steps}
                         index={stepIndex}
                         id={currentStep.id}
                         title={currentStep.title}
@@ -154,6 +154,8 @@ class EditorMain extends Component {
                         errors={get(this.props.errors, `steps[${stepIndex}]`)}
                         actions={this.getStepActions(currentStep, stepIndex)}
                         update={(prop, value) => this.props.update(`steps[${stepIndex}].${prop}`, value)}
+                        moveItem={(itemId, position) => this.props.moveItem(itemId, position)}
+                        copyItem={(itemId, position) => this.props.copyItem(itemId, position)}
                       />
                     )
                   }
@@ -200,7 +202,10 @@ EditorMain.propTypes = {
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,
-  removeStep: T.func.isRequired
+  removeStep: T.func.isRequired,
+  moveItem: T.func.isRequired,
+  copyItem: T.func.isRequired
+
 }
 
 export {

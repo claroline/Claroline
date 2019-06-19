@@ -453,7 +453,7 @@ const GridTable = props =>
           sumMode={props.item.sumMode}
           deletable={utils.getNbRows(props.item.cells) > 1}
           validating={props.validating}
-          _errors={props.item._errors}
+          _errors={props.errors}
           _popover={props.item._popover}
           removeRow={() => props.removeRow(rowIndex)}
           updateScore={(newScore) => {
@@ -622,7 +622,8 @@ GridTable.propTypes = {
   removeColumn: T.func.isRequired,
   openPopover: T.func.isRequired,
   closePopover: T.func.isRequired,
-  update: T.func.isRequired
+  update: T.func.isRequired,
+  errors: T.array
 }
 
 const GridEditor = (props) => {
@@ -638,28 +639,28 @@ const GridEditor = (props) => {
     }
   })
 
-  const GridComponent = (
-    <div className="grid-body">
-      <GridTable
-        item={decoratedItem}
-        hasScore={props.hasAnswerScores}
-        validating={props.validating}
-        update={props.update}
-        removeRow={(row) => {
-          const newItem = cloneDeep(decoratedItem)
-          deleteRow(row, newItem, true)
-          props.update('cells', newItem.cells)
-        }}
-        removeColumn={(col) => {
-          const newItem = cloneDeep(decoratedItem)
-          deleteCol(col, newItem, true)
-          props.update('cells', newItem.cells)
-        }}
-        openPopover={(cellId) => props.update('_popover', cellId)}
-        closePopover={() => props.update('_popover', null) }
-      />
-    </div>
-  )
+  const GridComponent =  <div className="grid-body">
+    <GridTable
+      item={decoratedItem}
+      hasScore={props.hasAnswerScores}
+      validating={props.validating}
+      update={props.update}
+      removeRow={(row) => {
+        const newItem = cloneDeep(decoratedItem)
+        deleteRow(row, newItem, true)
+        props.update('cells', newItem.cells)
+      }}
+      removeColumn={(col) => {
+        const newItem = cloneDeep(decoratedItem)
+        deleteCol(col, newItem, true)
+        props.update('cells', newItem.cells)
+      }}
+      openPopover={(cellId) => props.update('_popover', cellId)}
+      closePopover={() => props.update('_popover', null) }
+    />
+  </div>
+  
+  
 
   return (
     <FormData
@@ -766,7 +767,7 @@ const GridEditor = (props) => {
                 max: 6
               }
             }, {
-              name: 'grid',
+              name: 'solutions',
               required: true,
               component: GridComponent
             }

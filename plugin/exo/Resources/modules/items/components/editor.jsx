@@ -32,7 +32,7 @@ const ItemEditor = props => {
     path: props.path,
     disabled: props.disabled,
     item: props.item,
-    hasAnswerScores: currentScore.hasAnswerScores,
+    hasAnswerScores: props.definition.answerable && props.enableScores ? currentScore.hasAnswerScores: false,
     update: props.update
   })
 
@@ -67,7 +67,7 @@ const ItemEditor = props => {
               name: 'hasExpectedAnswers',
               label: trans('has_expected_answers', {}, 'quiz'),
               type: 'boolean',
-              displayed: props.enableScores,
+              displayed: props.enableScores && props.definition.answerable,
               help: [
                 trans('has_expected_answers_help', {}, 'quiz'),
                 trans('has_expected_answers_help_score', {}, 'quiz')

@@ -27,10 +27,17 @@ utils.getRealItemlist = (items, solutions) => {
 }
 
 /**
- * get solutions minus odd
+ * get solutions minus odd //UNUSED AND REPLACED BY GETSOLUTIONS
  */
 utils.getRealSolutionList = (solutions) => {
   return solutions.filter(solution => solution.itemIds.length === 2 && solution.itemIds[0] !== -1 && solution.itemIds[1] !== -1)
+}
+
+/**
+ * get solutions minus odd
+ */
+utils.getSolutionList = (solutions) => {
+  return solutions.filter(solution => solution.itemIds.length === 2)
 }
 
 utils.getOddSolution = (oddItem, solutions) => {
@@ -58,7 +65,7 @@ utils.hasPinnedItems = (items) => {
 }
 
 utils.canAddSolution = (solutions, pairToUpdate, item) => {
-  const realSolutionList = utils.getRealSolutionList(solutions)
+  const realSolutionList = utils.getSolutionList(solutions)
   // second pair item
   const brotherIndexToCheck = pairToUpdate.position === 0 ? 1 : 0
   const solutionToUpdate = realSolutionList[pairToUpdate.index]
@@ -244,7 +251,7 @@ utils.getExpectedAnswers = (item) => {
     odd: []
   }
 
-  utils.getRealSolutionList(item.solutions).forEach(solution => {
+  utils.getSolutionList(item.solutions).forEach(solution => {
     expectedAnswers.answers.push({
       leftItem: {id: solution.itemIds[0], data: item.items.find(item => item.id === solution.itemIds[0]).data},
       rightItem: {id: solution.itemIds[1], data: item.items.find(item => item.id === solution.itemIds[1]).data},

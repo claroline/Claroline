@@ -124,7 +124,7 @@ const addPair = (solutions, saveCallback) => {
 
   saveCallback('rows', newSolutions.filter(s => 0 < s.score).length)
 
-  const realSolutions = utils.getRealSolutionList(newSolutions)
+  const realSolutions = utils.getSolutionList(newSolutions)
   realSolutions.forEach(s => {
     s._deletable = 1 < realSolutions.length
   })
@@ -141,7 +141,7 @@ const updatePair = (property, value, index, solutions, saveCallback) => {
       value
   // 'index', 'property', 'value'
   // can update score feedback and ordered
-  const solutionToUpdate = utils.getRealSolutionList(newSolutions)[index]
+  const solutionToUpdate = utils.getSolutionList(newSolutions)[index]
   solutionToUpdate[property] = formattedValue
 
   saveCallback('solutions', newSolutions)
@@ -154,7 +154,7 @@ const removePair = (leftId, rightId, solutions, saveCallback) => {
 
   saveCallback('rows', newSolutions.filter(s => 0 < s.score).length)
 
-  const realSolutions = utils.getRealSolutionList(newSolutions)
+  const realSolutions = utils.getSolutionList(newSolutions)
   realSolutions.forEach(s => {
     s._deletable = 1 < realSolutions.length
   })
@@ -166,7 +166,7 @@ const dropPairItem = (pairData, item, solutions, saveCallback) => {
   const newSolutions = cloneDeep(solutions)
   // pairData = pair data + position of item dropped (0 / 1) + index (index of real solution)
   // item = dropped item
-  const realSolutionList = utils.getRealSolutionList(newSolutions)
+  const realSolutionList = utils.getSolutionList(newSolutions)
   const existingSolution = realSolutionList[pairData.index]
   existingSolution.itemIds[pairData.position] = item.id
 
@@ -400,7 +400,9 @@ class PairList extends Component {
       dropPairItem(target.object, source.item, this.props.solutions, this.props.onChange)
     }
   }
+
   render(){
+
     return (
       <FormGroup
         id="item-pairs"
@@ -408,7 +410,7 @@ class PairList extends Component {
         label={trans('pairs', {}, 'quiz')}
       >
         <ul>
-          {utils.getRealSolutionList(this.props.solutions).map((pair, index) =>
+          {utils.getSolutionList(this.props.solutions).map((pair, index)=>
             <li key={`pair-${index}`}>
               <Pair
                 pair={pair}
@@ -668,7 +670,7 @@ ItemList.propTypes = {
 
 const PairEditor = props => {
   const decoratedSolutions = cloneDeep(props.item.solutions)
-  const realSolutions = utils.getRealSolutionList(decoratedSolutions)
+  const realSolutions = utils.getSolutionList(decoratedSolutions)
   decoratedSolutions.forEach(s => s._deletable = 1 < realSolutions.length)
 
   const decoratedItems = cloneDeep(props.item.items)
@@ -720,7 +722,7 @@ const PairEditor = props => {
           primary: true,
           fields: [
             {
-              name: 'pairs',
+              name: 'solutions',
               label: trans('answers', {}, 'quiz'),
               hideLabel: true,
               required: true,

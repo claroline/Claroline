@@ -8,6 +8,7 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 
 import {PairItem as PairItemType} from '#/plugin/exo/items/pair/prop-types'
 import {utils} from '#/plugin/exo/items/pair/utils'
+import {makeId} from '#/main/core/scaffolding/id'
 
 // components
 import {PairEditor} from '#/plugin/exo/items/pair/components/editor'
@@ -160,5 +161,20 @@ export default {
     }
 
     return answers
+  },
+
+  refreshIdentifiers: (item) => {
+    const mapIds = {}
+
+
+    item.items.forEach(item => {
+      mapIds[item.id] = makeId()
+      item.id = mapIds[item.id]
+    })
+
+    item.solutions.forEach(solution => solution.itemIds.forEach((itemId, idx) => solution.itemIds[idx] = mapIds[itemId]))
+    item.id = makeId()
+
+    return item
   }
 }

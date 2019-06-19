@@ -15,7 +15,7 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
 import {MODAL_ITEM_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/item-position'
-import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
+import {getNumbering, refreshIdentifiers} from '#/plugin/exo/resources/quiz/utils'
 import {EditorItem} from '#/plugin/exo/resources/quiz/editor/components/item'
 
 // TODO : lock edition of protected items
@@ -106,7 +106,34 @@ const EditorStep = props => {
                     type: MODAL_BUTTON,
                     icon: 'fa fa-fw fa-clone',
                     label: trans('copy', {}, 'actions'),
-                    modal: [],
+                    modal: [MODAL_ITEM_POSITION, {
+                      icon: 'fa fa-fw fa-arrows',
+                      title: trans('copy'),
+                      step: {
+                        id: props.id,
+                        title: props.title || trans('step', {number: props.index + 1}, 'quiz')
+                      },
+                      steps: (props.steps || []).map((s, i) => ({
+                        id: s.id,
+                        title: s.title || trans('step', {number: i + 1}, 'quiz'),
+                        items: s.items
+                      })),
+                      items: (props.items || []).map((s, i) => ({
+                        id: s.id,
+                        title: s.title || trans('item', {number: i + 1}, 'quiz')
+                      })),
+                      item: item,
+                      selectAction: (position) => ({
+                        type: CALLBACK_BUTTON,
+                        label: trans('copy', {}, 'actions'),
+                        callback: () => {
+                          refreshIdentifiers(item).then(item => {
+
+                            props.copyItem(item, position)
+                          })
+                        }
+                      })
+                    }],
                     group: trans('management')
                   }, {
                     name: 'move',
@@ -122,8 +149,21 @@ const EditorStep = props => {
                       },
                       steps: (props.steps || []).map((s, i) => ({
                         id: s.id,
-                        title: s.title || trans('step', {number: i + 1}, 'quiz')
-                      }))
+                        title: s.title || trans('step', {number: i + 1}, 'quiz'),
+                        items: s.items
+                      })),
+                      items: (props.items || []).map((s, i) => ({
+                        id: s.id,
+                        title: s.title || trans('item', {number: i + 1}, 'quiz')
+                      })),
+                      item: item,
+                      selectAction: (position) => ({
+                        type: CALLBACK_BUTTON,
+                        label: trans('move', {}, 'actions'),
+                        callback: () => {
+                          props.moveItem(item.id, position)
+                        }
+                      })
                     }],
                     group: trans('management')
                   }, {
@@ -210,6 +250,11 @@ EditorStep.propsTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
   numberingType: T.string.isRequired,
+  steps: T.arrayOf(T.shape({
+    // TODO : prop types
+  })),
+  moveItem: T.func.isRequired,
+  copyItem: T.func.isRequired,
 
   index: T.number.isRequired,
   id: T.string.isRequired,

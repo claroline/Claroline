@@ -2,6 +2,7 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 import {notBlank, number, chain} from '#/main/core/validation'
+import {makeId} from '#/main/core/scaffolding/id'
 
 import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
@@ -136,5 +137,23 @@ export default {
     }
 
     return []
+  },
+
+  refreshIdentifiers: (item) => {
+    item.id = makeId()
+
+    const mapIds = {}
+
+    item.solutions.forEach(solution => {
+      mapIds[solution.firstId] = makeId()
+      mapIds[solution.secondId] = makeId()
+      solution.firstId = mapIds[solution.firstId]
+      solution.secondId = mapIds[solution.secondId]
+    })
+
+    item.firstSet.forEach(set => set.id = mapIds[set.id])
+    item.secondSet.forEach(set => set.id = mapIds[set.id])
+
+    return item
   }
 }

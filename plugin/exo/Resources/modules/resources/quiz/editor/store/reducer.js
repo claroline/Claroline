@@ -13,7 +13,9 @@ import {
   QUIZ_STEP_ADD,
   QUIZ_STEP_COPY,
   QUIZ_STEP_MOVE,
-  QUIZ_STEP_REMOVE
+  QUIZ_STEP_REMOVE,
+  QUIZ_ITEM_MOVE,
+  QUIZ_ITEM_COPY
 } from '#/plugin/exo/resources/quiz/editor/store/actions'
 
 function setDefaults(quiz) {
@@ -57,12 +59,39 @@ function pushStep(step, steps, position) {
   return newSteps
 }
 
+function pushItem(item, items, position) {
+  const newItems = cloneDeep(items)
+
+  switch (position.order) {
+    case 'first':
+      newItems.unshift(item)
+      break
+
+    case 'before':
+    case 'after':
+      if ('before' === position.order) {
+        newItems.splice(items.findIndex(item => item.id === position.item), 0, item)
+      } else {
+        newItems.splice(items.findIndex(item => item.id === position.item) + 1, 0, item)
+      }
+      break
+
+    case 'last':
+      newItems.push(item)
+      break
+  }
+
+  return newItems
+}
+
 export const reducer = makeFormReducer('resource.editor', {}, {
   pendingChanges: makeReducer(false, {
     [QUIZ_STEP_ADD]: () => true,
     [QUIZ_STEP_COPY]: () => true,
     [QUIZ_STEP_MOVE]: () => true,
-    [QUIZ_STEP_REMOVE]: () => true
+    [QUIZ_STEP_REMOVE]: () => true,
+    [QUIZ_ITEM_MOVE]: () => true,
+    [QUIZ_ITEM_COPY]: () => true
   }),
   originalData: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => setDefaults(action.resourceData.quiz) || state
@@ -85,6 +114,33 @@ export const reducer = makeFormReducer('resource.editor', {}, {
 
       const newStep = createStep(action.step)
       newState.steps.push(newStep)
+
+      return newState
+    },
+
+    [QUIZ_ITEM_COPY]: (state, action) => {
+      const newState = cloneDeep(state)
+
+      const newParent = newState.steps.find(step => step.id === action.position.parent)
+      const newItems = newParent.items
+
+      newParent.items = pushItem(action.item, newItems, action.position)
+
+      return newState
+    },
+
+    [QUIZ_ITEM_MOVE]: (state, action) => {
+      const newState = cloneDeep(state)
+      const oldStep = newState.steps.find(step => step.items.find(item => item.id === action.id))
+      const currentPos = oldStep.items.findIndex(item => item.id === action.id)
+      const newParent = newState.steps.find(step => step.id === action.position.parent)
+      const newItems = newParent.items
+
+      if (-1 !== currentPos) {
+        const currentItem = oldStep.items.splice(currentPos, 1)
+
+        newParent.items = pushItem(currentItem[0], newItems, action.position)
+      }
 
       return newState
     },
