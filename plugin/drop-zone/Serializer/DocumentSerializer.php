@@ -7,9 +7,11 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
+use Claroline\DropZoneBundle\Entity\Revision;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -29,6 +31,7 @@ class DocumentSerializer
 
     private $documentRepo;
     private $dropRepo;
+    private $revisionRepo;
     private $resourceNodeRepo;
 
     /**
@@ -64,9 +67,10 @@ class DocumentSerializer
         $this->userSerializer = $userSerializer;
         $this->tokenStorage = $tokenStorage;
 
-        $this->documentRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Document');
-        $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
-        $this->resourceNodeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $this->documentRepo = $om->getRepository(Document::class);
+        $this->dropRepo = $om->getRepository(Drop::class);
+        $this->revisionRepo = $om->getRepository(Revision::class);
+        $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
     }
 
     /**
@@ -90,6 +94,7 @@ class DocumentSerializer
             'revision' => $document->getRevision() ?
                 $this->revisionSerializer->serialize($document->getRevision(), [Options::SERIALIZE_MINIMAL]) :
                 null,
+            'isManager' => $document->getIsManager(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -145,6 +150,16 @@ class DocumentSerializer
                     $data['data'];
                 $document->setData($documentData);
             }
+        }
+        if (!$document->getRevision() && isset($data['revision']['id'])) {
+            $revision = $this->revisionRepo->findOneBy(['uuid' => $data['revision']['id']]);
+
+            if ($revision) {
+                $document->setRevision($revision);
+            }
+        }
+        if (isset($data['isManager'])) {
+            $document->setIsManager($data['isManager']);
         }
 
         return $document;

@@ -443,20 +443,25 @@ class DropzoneManager
     /**
      * Creates a Document.
      *
-     * @param Drop  $drop
-     * @param User  $user
-     * @param int   $documentType
-     * @param mixed $documentData
+     * @param Drop     $drop
+     * @param User     $user
+     * @param int      $documentType
+     * @param mixed    $documentData
+     * @param Revision $revision
+     * @param bool     $isManager
      *
      * @return Document
      */
-    public function createDocument(Drop $drop, User $user, $documentType, $documentData)
+    public function createDocument(Drop $drop, User $user, $documentType, $documentData, Revision $revision = null, $isManager = false)
     {
         $document = new Document();
         $document->setDrop($drop);
         $document->setUser($user);
         $document->setDropDate(new \DateTime());
         $document->setType($documentType);
+        $document->setRevision($revision);
+        $document->setIsManager($isManager);
+
         if (Document::DOCUMENT_TYPE_RESOURCE === $document->getType()) {
             $resourceNode = $this->resourceNodeRepo->findOneBy(['uuid' => $documentData]);
             $document->setData($resourceNode);
@@ -475,13 +480,15 @@ class DropzoneManager
     /**
      * Creates Files Documents.
      *
-     * @param Drop  $drop
-     * @param User  $user
-     * @param array $files
+     * @param Drop     $drop
+     * @param User     $user
+     * @param array    $files
+     * @param Revision $revision
+     * @param bool     $isManager
      *
      * @return array
      */
-    public function createFilesDocuments(Drop $drop, User $user, array $files)
+    public function createFilesDocuments(Drop $drop, User $user, array $files, Revision $revision = null, $isManager = false)
     {
         $documents = [];
         $documentEntities = [];
@@ -495,6 +502,8 @@ class DropzoneManager
             $document->setUser($user);
             $document->setDropDate($currentDate);
             $document->setType(Document::DOCUMENT_TYPE_FILE);
+            $document->setRevision($revision);
+            $document->setIsManager($isManager);
             $data = $this->registerUplodadedFile($dropzone, $file);
             $document->setFile($data);
             $this->om->persist($document);

@@ -20,7 +20,8 @@ import {
   REVISION_LOAD,
   REVISION_RESET,
   REVISION_COMMENT_UPDATE,
-  MY_DROP_COMMENT_UPDATE
+  MY_DROP_COMMENT_UPDATE,
+  MANAGER_DOCUMENTS_ADD
 } from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {
   DROP_UPDATE,
@@ -146,6 +147,22 @@ const revisionReducer = makeReducer(null, {
     }
 
     return Object.assign({}, state, {comments: newComments})
+  },
+  [MANAGER_DOCUMENTS_ADD]: (state, action) => {
+    const newDocuments = cloneDeep(state.documents)
+    action.documents.forEach(d => newDocuments.push(d))
+
+    return Object.assign({}, state, {documents: newDocuments})
+  },
+  [DOCUMENT_REMOVE]: (state, action) => {
+    const newDocuments = cloneDeep(state.documents)
+    const index = newDocuments.findIndex(d => d.id === action.documentId)
+
+    if (index > -1) {
+      newDocuments.splice(index, 1)
+    }
+
+    return Object.assign({}, state, {documents: newDocuments})
   }
 })
 

@@ -21,6 +21,7 @@ use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\DropzoneTool;
+use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Entity\Team;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -297,6 +298,97 @@ class DropController
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $this->checkDropEdition($drop, $user);
+
+        try {
+            $documentId = $document->getUuid();
+            $this->manager->deleteDocument($document);
+
+            return new JsonResponse($documentId);
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage(), 422);
+        }
+    }
+
+    /**
+     * Adds a manager Document to a Drop.
+     *
+     * @EXT\Route(
+     *     "/drop/{id}/revision/{revision}/type/{type}/manager",
+     *     name="claro_dropzone_manager_documents_add"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "drop",
+     *     class="ClarolineDropZoneBundle:Drop",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "revision",
+     *     class="ClarolineDropZoneBundle:Revision",
+     *     options={"mapping": {"revision": "uuid"}}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param Drop     $drop
+     * @param Revision $revision
+     * @param int      $type
+     * @param User     $user
+     * @param Request  $request
+     *
+     * @return JsonResponse
+     */
+    public function addManagerDocumentAction(Drop $drop, Revision $revision, $type, User $user, Request $request)
+    {
+        $dropzone = $drop->getDropzone();
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
+        $documents = [];
+
+        try {
+            if (!$drop->isFinished()) {
+                switch ($type) {
+                    case Document::DOCUMENT_TYPE_FILE:
+                        $files = $request->files->all();
+                        $documents = $this->manager->createFilesDocuments($drop, $user, $files, $revision, true);
+                        break;
+                    case Document::DOCUMENT_TYPE_TEXT:
+                    case Document::DOCUMENT_TYPE_URL:
+                    case Document::DOCUMENT_TYPE_RESOURCE:
+                        $uuid = $request->request->get('dropData', false);
+                        $document = $this->manager->createDocument($drop, $user, $type, $uuid, $revision, true);
+                        $documents[] = $this->manager->serializeDocument($document);
+                        break;
+                }
+                $progression = $dropzone->isPeerReview() ? 0 : 50;
+                $this->manager->updateDropProgression($dropzone, $drop, $progression);
+            }
+
+            return new JsonResponse($documents);
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage(), 422);
+        }
+    }
+
+    /**
+     * Deletes a manager Document.
+     *
+     * @EXT\Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "document",
+     *     class="ClarolineDropZoneBundle:Document",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param Document $document
+     *
+     * @return JsonResponse
+     */
+    public function deleteManagerDocumentAction(Document $document)
+    {
+        $drop = $document->getDrop();
+        $dropzone = $drop->getDropzone();
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
         try {
             $documentId = $document->getUuid();

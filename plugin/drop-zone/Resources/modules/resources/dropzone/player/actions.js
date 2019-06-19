@@ -19,6 +19,7 @@ export const REVISION_LOAD = 'REVISION_LOAD'
 export const REVISION_RESET = 'REVISION_RESET'
 export const REVISION_COMMENT_UPDATE = 'REVISION_COMMENT_UPDATE'
 export const MY_DROP_COMMENT_UPDATE = 'MY_DROP_COMMENT_UPDATE'
+export const MANAGER_DOCUMENTS_ADD = 'MANAGER_DOCUMENTS_ADD'
 
 export const actions = {}
 
@@ -207,5 +208,38 @@ actions.saveDropComment = (comment, myDrop = false) => ({
     success: (data, dispatch) => myDrop?
       dispatch(actions.updateMyDropComment(data)) :
       dispatch(correctionActions.updateCurrentDropComment(data))
+  }
+})
+
+actions.addManagerDocuments = makeActionCreator(MANAGER_DOCUMENTS_ADD, 'documents')
+
+actions.saveManagerDocument = (dropId, revisionId, documentType, documentData) => {
+  const formData = new FormData()
+  formData.append('dropData', documentData)
+  formData.append('fileName', 'test')
+  formData.append('sourceType', 'uploadedfile')
+  return {
+    [API_REQUEST]: {
+      url: ['claro_dropzone_manager_documents_add', {id: dropId, revision: revisionId, type: documentType}],
+      request: {
+        method: 'POST',
+        body: formData,
+        headers: new Headers({
+          //no Content type for automatic detection of boundaries.
+          'X-Requested-With': 'XMLHttpRequest'
+        })
+      },
+      success: (data, dispatch) => dispatch(actions.addManagerDocuments(data))
+    }
+  }
+}
+
+actions.deleteManagerDocument = (documentId) => ({
+  [API_REQUEST]: {
+    url: ['claro_dropzone_manager_document_delete', {id: documentId}],
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => dispatch(actions.removeDocument(documentId))
   }
 })

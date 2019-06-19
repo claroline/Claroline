@@ -240,9 +240,10 @@ const MyDrop = connect(
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
           icon: 'fa fa-fw fa-exclamation-triangle',
-          title: trans('submit_my_drop', {}, 'dropzone'),
+          title: trans('final_drop', {}, 'dropzone'),
           question: trans('submit_my_drop_confirm', {}, 'dropzone'),
-          confirmButtonText: trans('submit'),
+          confirmButtonText: trans('to_drop', {}, 'dropzone'),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.submitDrop(id))
         })
       )
