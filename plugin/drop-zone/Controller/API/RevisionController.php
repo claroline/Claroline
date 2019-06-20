@@ -194,6 +194,92 @@ class RevisionController extends AbstractCrudController
         return new JsonResponse($this->manager->serializeDrop($drop), 200);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/revision/{id}/next",
+     *     name="claro_dropzone_revision_next"
+     * )
+     * @EXT\ParamConverter(
+     *     "revision",
+     *     class="ClarolineDropZoneBundle:Revision",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Revision $revision
+     * @param Request  $request
+     *
+     * @return JsonResponse
+     */
+    public function nextRevisionAction(Revision $revision, Request $request)
+    {
+        $dropzone = $revision->getDrop()->getDropzone();
+
+        $this->checkPermission('EDIT', $dropzone->getResourceNode());
+
+        $params = $request->query->all();
+        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
+        $filters['dropzone'] = $dropzone->getUuid();
+        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
+
+        //array map is not even needed; objects are fine here
+        /** @var Revision[] $data */
+        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $next = null;
+
+        foreach ($data as $position => $value) {
+            if ($value->getUuid() === $revision->getUuid()) {
+                $next = $position + 1;
+            }
+        }
+
+        $nextRevision = array_key_exists($next, $data) ? $data[$next] : reset($data);
+
+        return new JsonResponse($this->manager->serializeRevision($nextRevision), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/revision/{id}/previous",
+     *     name="claro_dropzone_revision_previous"
+     * )
+     * @EXT\ParamConverter(
+     *     "revision",
+     *     class="ClarolineDropZoneBundle:Revision",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Revision $revision
+     * @param Request  $request
+     *
+     * @return JsonResponse
+     */
+    public function previousRevisionAction(Revision $revision, Request $request)
+    {
+        $dropzone = $revision->getDrop()->getDropzone();
+
+        $this->checkPermission('EDIT', $dropzone->getResourceNode());
+
+        $params = $request->query->all();
+        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
+        $filters['dropzone'] = $dropzone->getUuid();
+        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
+
+        //array map is not even needed; objects are fine here
+        /** @var Revision[] $data */
+        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $previous = null;
+
+        foreach ($data as $position => $value) {
+            if ($value->getUuid() === $revision->getUuid()) {
+                $previous = $position - 1;
+            }
+        }
+
+        $previousDrop = array_key_exists($previous, $data) ? $data[$previous] : end($data);
+
+        return new JsonResponse($this->manager->serializeRevision($previousDrop), 200);
+    }
+
     private function checkPermission($permission, ResourceNode $resourceNode)
     {
         $collection = new ResourceCollection([$resourceNode]);

@@ -526,6 +526,96 @@ class DropController
         return $response->send();
     }
 
+    /**
+     * @EXT\Route(
+     *     "/drop/{id}/next",
+     *     name="claro_dropzone_drop_next"
+     * )
+     * @EXT\ParamConverter(
+     *     "drop",
+     *     class="ClarolineDropZoneBundle:Drop",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Drop    $drop
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function nextDropAction(Drop $drop, Request $request)
+    {
+        $dropzone = $drop->getDropzone();
+        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
+
+        if (!$this->authorization->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException();
+        }
+        $params = $request->query->all();
+        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
+        $filters['dropzone'] = $dropzone->getUuid();
+        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
+
+        //array map is not even needed; objects are fine here
+        /** @var Drop[] $data */
+        $data = $this->finder->get(Drop::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $next = null;
+
+        foreach ($data as $position => $value) {
+            if ($value->getUuid() === $drop->getUuid()) {
+                $next = $position + 1;
+            }
+        }
+
+        $nextDrop = array_key_exists($next, $data) ? $data[$next] : reset($data);
+
+        return new JsonResponse($this->manager->serializeDrop($nextDrop), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/drop/{id}/previous",
+     *     name="claro_dropzone_drop_previous"
+     * )
+     * @EXT\ParamConverter(
+     *     "drop",
+     *     class="ClarolineDropZoneBundle:Drop",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Drop    $drop
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function previousDropAction(Drop $drop, Request $request)
+    {
+        $dropzone = $drop->getDropzone();
+        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
+
+        if (!$this->authorization->isGranted('EDIT', $collection)) {
+            throw new AccessDeniedException();
+        }
+        $params = $request->query->all();
+        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
+        $filters['dropzone'] = $dropzone->getUuid();
+        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
+
+        //array map is not even needed; objects are fine here
+        /** @var Drop[] $data */
+        $data = $this->finder->get(Drop::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $previous = null;
+
+        foreach ($data as $position => $value) {
+            if ($value->getUuid() === $drop->getUuid()) {
+                $previous = $position - 1;
+            }
+        }
+
+        $previousDrop = array_key_exists($previous, $data) ? $data[$previous] : end($data);
+
+        return new JsonResponse($this->manager->serializeDrop($previousDrop), 200);
+    }
+
     private function checkDropEdition(Drop $drop, User $user)
     {
         $dropzone = $drop->getDropzone();

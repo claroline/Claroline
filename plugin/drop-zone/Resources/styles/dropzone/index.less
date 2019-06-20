@@ -84,3 +84,27 @@
 .manager-document {
     background-color: #79D762 !important;
 }
+
+.drop-content, .revision-content {
+    width: 100%;
+}
+
+.drop-nav, .revision-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    .btn-drop-nav, .btn-revision-nav {
+        flex: 0;
+        font-size: @carousel-control-font-size;
+        padding: 0;
+        border: none;
+    }
+
+    // Scale up controls for tablets and up
+    @media screen and (min-width: @screen-sm-min) {
+        .btn-drop-nav, .btn-revision-nav {
+            font-size: (@carousel-control-font-size * 1.5);
+        }
+    }
+}
