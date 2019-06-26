@@ -1,20 +1,34 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
-import {ToolPage} from '#/main/core/tool/containers/page'
 
+import {ToolPage} from '#/main/core/tool/containers/page'
 import {Home} from '#/main/core/administration/parameters/main/components/home'
 import {Archive} from '#/main/core/administration/parameters/main/components/archive'
 import {Meta} from '#/main/core/administration/parameters/main/components/meta'
 import {I18n} from '#/main/core/administration/parameters/main/components/i18n'
 import {Plugins} from '#/main/core/administration/parameters/main/components/plugins'
 import {Maintenance} from '#/main/core/administration/parameters/main/components/maintenance'
+import {Messages} from '#/main/core/administration/parameters/main/components/messages'
+import {Message} from '#/main/core/administration/parameters/main/components/message'
 
-const Tool = () =>
+const Tool = (props) =>
   <ToolPage
     styles={['claroline-distribution-main-core-administration-parameters']}
+    actions={'/messages' === props.location.pathname ? [
+      {
+        name: 'add',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('add_connection_message'),
+        target: '/messages/form',
+        primary: true
+      }
+    ] : []}
   >
     <div className="row">
       <div className="col-md-3">
@@ -48,6 +62,10 @@ const Tool = () =>
               icon: 'fa fa-fw fa-book',
               title: trans('archive'),
               path: '/archive'
+            }, {
+              icon: 'fa fa-fw fa-comment-dots',
+              title: trans('connection_messages'),
+              path: '/messages'
             }
           ]}
         />
@@ -80,12 +98,29 @@ const Tool = () =>
               path: '/archive',
               exact: true,
               component: Archive
+            }, {
+              path: '/messages',
+              exact: true,
+              component: Messages
+            }, {
+              path: '/messages/form/:id?',
+              component: Message,
+              onEnter: (params) => props.openConnectionMessageForm(params.id),
+              onLeave: () => props.resetConnectionMessageFrom()
             }
           ]}
         />
       </div>
     </div>
   </ToolPage>
+
+Tool.propTypes = {
+  location: T.shape({
+    pathname: T.string
+  }),
+  openConnectionMessageForm: T.func.isRequired,
+  resetConnectionMessageFrom: T.func.isRequired
+}
 
 export {
   Tool

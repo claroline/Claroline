@@ -1,5 +1,5 @@
 import {reducer} from '#/main/core/administration/parameters/main/store/reducer'
-import {Tool} from '#/main/core/administration/parameters/main/components/tool'
+import {Tool} from '#/main/core/administration/parameters/main/containers/tool'
 
 export const App = () => ({
   component: Tool,

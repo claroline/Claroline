@@ -83,6 +83,29 @@ class RoleController extends AbstractCrudController
         );
     }
 
+    /**
+     * List loggable platform roles.
+     *
+     * @Route("platform/loggable", name="apiv2_role_platform_loggable_list")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listLoggablePlatformRolesAction(Request $request)
+    {
+        return new JsonResponse(
+            $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => [
+                    'type' => 1,
+                    'blacklist' => ['ROLE_ANONYMOUS'],
+                ]]
+            ))
+        );
+    }
+
     use HasUsersTrait;
     use HasGroupsTrait;
 

@@ -2,6 +2,9 @@
 @import "../../less/mixins";
 @import "../../less/themes/default/variables";
 
+@content-preview-width: 195px;
+@content-preview-height: 140px;
+
 .app-plugins {
     list-style-type: none;
     margin: 0;
@@ -128,4 +131,53 @@
 
 .app-plugin-parameters {
 
+}
+
+.main-settings-container {
+    .slides-form {
+        .slides {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: @component-margin-bottom;
+
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .slide-preview {
+            display: flex;
+            justify-content: center;
+            width: @content-preview-width;
+            height: @content-preview-height;
+            border: 1px solid @data-card-inner-border;
+            border-radius: @thumbnail-border-radius;
+            padding: 4px;
+            margin: 5px;
+            position: relative;
+            overflow: hidden;
+
+            .slide-actions {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            .btn {
+                padding: 4px;
+                border-radius: @thumbnail-border-radius;
+                border-bottom-right-radius: 0;
+                border-top-left-radius: 0;
+            }
+        }
+
+        .image-thumbnail {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .text-thumbnail {
+            font-size: 10px;
+        }
+    }
 }

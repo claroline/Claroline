@@ -120,6 +120,10 @@ class RoleFinder extends AbstractFinder
                     $qb->orWhere('obj.name IN (:roleNames)');
                     $qb->setParameter('roleNames', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'blacklist':
+                    $qb->andWhere('obj.name NOT IN (:blacklist)');
+                    $qb->setParameter('blacklist', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
