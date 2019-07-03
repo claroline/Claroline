@@ -26,7 +26,7 @@ const SlideFormModal = props =>
               type: 'string',
               required: false
             }, {
-              name: 'picture',
+              name: 'poster',
               label: trans('image'),
               type: 'file',
               options: {

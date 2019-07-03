@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
+use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +21,8 @@ class ConnectionMessage
 {
     use Id;
     use Uuid;
+    use AccessibleFrom;
+    use AccessibleUntil;
 
     const TYPE_ONCE = 'once';
     const TYPE_ALWAYS = 'always';
@@ -37,20 +41,6 @@ class ConnectionMessage
      * @var string
      */
     protected $type = self::TYPE_ONCE;
-
-    /**
-     * @ORM\Column(name="start_date", type="datetime")
-     *
-     * @var \DateTime
-     */
-    private $startDate;
-
-    /**
-     * @ORM\Column(name="end_date", type="datetime")
-     *
-     * @var \DateTime
-     */
-    private $endDate;
 
     /**
      * @ORM\Column(type="boolean")
@@ -138,46 +128,6 @@ class ConnectionMessage
     public function setType($type)
     {
         $this->type = $type;
-    }
-
-    /**
-     * Get start date.
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * Set start date.
-     *
-     * @param \DateTime $startDate
-     */
-    public function setStartDate(\DateTime $startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * Get end date.
-     *
-     * @return \DateTime
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    /**
-     * Set end date.
-     *
-     * @param \DateTime $endDate
-     */
-    public function setEndDate(\DateTime $endDate)
-    {
-        $this->endDate = $endDate;
     }
 
     /**

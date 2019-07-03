@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\ConnectionMessage;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,6 +17,7 @@ class Slide
 {
     use Id;
     use Uuid;
+    use Poster;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -30,13 +32,6 @@ class Slide
      * @var string
      */
     private $title;
-
-    /**
-     * @ORM\Column(nullable=true)
-     *
-     * @var string
-     */
-    private $picture;
 
     /**
      * @ORM\Column(name="slide_order", type="integer")
@@ -102,26 +97,6 @@ class Slide
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-
-    /**
-     * Get picture.
-     *
-     * @return string
-     */
-    public function getPicture()
-    {
-        return $this->picture;
-    }
-
-    /**
-     * Set picture.
-     *
-     * @param string $picture
-     */
-    public function setPicture($picture)
-    {
-        $this->picture = $picture;
     }
 
     /**

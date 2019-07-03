@@ -82,8 +82,8 @@ class ConnectionMessageSerializer
             'locked' => $message->isLocked(),
             'restrictions' => [
                 'dates' => [
-                    DateNormalizer::normalize($message->getStartDate()),
-                    DateNormalizer::normalize($message->getEndDate()),
+                    DateNormalizer::normalize($message->getAccessibleFrom()),
+                    DateNormalizer::normalize($message->getAccessibleUntil()),
                 ],
             ],
         ];
@@ -117,14 +117,14 @@ class ConnectionMessageSerializer
         $this->sipe('type', 'setType', $data, $message);
         $this->sipe('locked', 'setLocked', $data, $message);
 
-        $startDate = isset($data['restrictions']['dates'][0]) ?
+        $accessibleFrom = isset($data['restrictions']['dates'][0]) ?
             DateNormalizer::denormalize($data['restrictions']['dates'][0]) :
             null;
-        $endDate = isset($data['restrictions']['dates'][1]) ?
+        $accessibleUntil = isset($data['restrictions']['dates'][1]) ?
             DateNormalizer::denormalize($data['restrictions']['dates'][1]) :
             null;
-        $message->setStartDate($startDate);
-        $message->setEndDate($endDate);
+        $message->setAccessibleFrom($accessibleFrom);
+        $message->setAccessibleUntil($accessibleUntil);
 
         $message->emptyRoles();
 

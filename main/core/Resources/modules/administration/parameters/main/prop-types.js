@@ -12,7 +12,7 @@ const Slide = {
     id: T.string,
     title: T.string,
     content: T.string,
-    picture: T.shape({
+    poster: T.shape({
       url: T.string,
       mimeType: T.string
     }),
