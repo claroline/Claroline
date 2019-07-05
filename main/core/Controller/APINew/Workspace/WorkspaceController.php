@@ -258,10 +258,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The workspace id or uuid"
-     *          }
+     *         {"name": "id",  "type": {"string", "integer"}, "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -288,10 +285,7 @@ class WorkspaceController extends AbstractCrudController
      * @ApiDoc(
      *     description="Export the workspace as a zip archive.",
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The workspace id or uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -322,10 +316,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of user uuids."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The workspace uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -366,10 +357,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of user uuids."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The workspace uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -408,10 +396,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of user uuids."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The workspace uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -449,10 +434,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of group uuids."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The workspace uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -545,10 +527,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string"},
-     *              "description": "The workspace uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(
@@ -675,10 +654,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     },
      *     parameters={
-     *         "role": {
-     *              "type": {"string"},
-     *              "description": "The role translation key"
-     *          }
+     *          {"name": "role", "type": {"string"}, "description": "The role translation key"}
      *     }
      * )
      * @Route(
@@ -717,10 +693,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     },
      *     parameters={
-     *         "role": {
-     *              "type": {"string"},
-     *              "description": "The role translation key"
-     *          }
+     *          {"name": "role", "type": {"string"}, "description": "The role translation key"}
      *     }
      * )
      * @Route(
@@ -811,10 +784,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     },
      *     parameters={
-     *         "user": {
-     *              "type": {"string"},
-     *              "description": "The user uuid"
-     *          }
+     *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
      * @Route("/unregister/{user}", name="apiv2_workspace_unregister")
@@ -846,10 +816,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     },
      *     parameters={
-     *         "user": {
-     *              "type": {"string"},
-     *              "description": "The user uuid"
-     *          }
+     *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
      * @Route("/register/{user}", name="apiv2_workspace_register")
@@ -983,10 +950,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string"},
-     *              "description": "The workspace uuid"
-     *          }
+     *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route("/{id}/role")
@@ -1018,10 +982,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string"},
-     *              "description": "The workspace uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
      * @Route(

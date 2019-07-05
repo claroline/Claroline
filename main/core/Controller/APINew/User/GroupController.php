@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
+use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
@@ -41,6 +42,16 @@ class GroupController extends AbstractCrudController
      * )
      * @Method("GET")
      * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @ApiDoc(
+     *     description="List the objects of class $class.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     response={"$list"}
+     * )
      *
      * @param Workspace $workspace
      *
@@ -67,6 +78,16 @@ class GroupController extends AbstractCrudController
      * )
      * @Method("GET")
      * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @ApiDoc(
+     *     description="List the objects of class $class.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     response={"$list"}
+     * )
      *
      * @param Workspace $workspace
      *

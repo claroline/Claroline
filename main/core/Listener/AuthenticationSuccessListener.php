@@ -42,6 +42,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -91,7 +92,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *     "router"               = @DI\Inject("router"),
      *     "userManager"          = @DI\Inject("claroline.manager.user_manager"),
      *     "requestStack"         = @DI\Inject("request_stack"),
-     *     "kernelRootDir"        = @DI\Inject("%kernel.root_dir%")
+     *     "kernelRootDir"        = @DI\Inject("%kernel.root_dir%"),
+     *     "firewallApiRegex"     = @DI\Inject("%firewall_api_regex%")
      * })
      *
      * @param Kernel                        $kernel
@@ -107,6 +109,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      * @param UserManager                   $userManager
      * @param RequestStack                  $requestStack
      * @param string                        $kernelRootDir
+     * @param string                        $firewallApiRegex
      */
     public function __construct(
         Kernel $kernel,
@@ -121,7 +124,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         Router $router,
         UserManager $userManager,
         RequestStack $requestStack,
-        $kernelRootDir
+        $kernelRootDir,
+        $firewallApiRegex
     ) {
         $this->kernel = $kernel;
         $this->tokenStorage = $tokenStorage;
@@ -135,17 +139,27 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->router = $router;
         $this->userManager = $userManager;
         $this->requestStack = $requestStack;
+        $this->firewallApiRegex = $firewallApiRegex;
         $this->logger = FileLogger::get($kernelRootDir.'/logs/login.log', 'claroline.login.logger');
     }
 
     /**
      * @DI\Observe("security.interactive_login")
      */
-    public function onLoginSuccess()
+    public function onLoginSuccess(InteractiveLoginEvent $event)
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $this->userManager->logUser($user);
+        //todo this probably shouldn't happen
+        if ('anon.' === $user) {
+            return;
+        }
+        $request = $event->getRequest();
+        $pathInfo = $request->getPathInfo();
+        //we should check the regex set in the security thingy
+        $apiFirewall = $this->firewallApiRegex;
+        $fromApi = preg_match($apiFirewall, $pathInfo) ? true : false;
+        $this->userManager->logUser($user, $fromApi);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)

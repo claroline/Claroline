@@ -167,6 +167,9 @@ class ClientSerializer
                 }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
                 'softDelete' => $this->config->getParameter('resource.soft_delete'),
             ],
+            'swagger' => [
+              'base' => $this->config->getParameter('swagger.base'),
+            ],
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),
         ];

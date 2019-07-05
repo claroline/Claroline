@@ -63,7 +63,8 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @ApiDoc(
      *     description="Find a single object of class $class.",
-     *     queryString={"$finder"}
+     *     queryString={"$finder"},
+     *     response={"$object"}
      * )
      *
      * @param Request $request
@@ -114,11 +115,9 @@ abstract class AbstractCrudController extends AbstractApiController
      * @ApiDoc(
      *     description="Finds an object class $class.",
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The object id or uuid"
-     *          }
-     *     }
+     *          {"name": "id", "type": {"string", "integer"}, "description": "The object id or uuid"}
+     *     },
+     *     response={"$object"}
      * )
      *
      * @param Request    $request
@@ -150,7 +149,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     description="Check if an object exists (it'll eventually fire a doctrine findBy method)",
      *     parameters={
      *         {"name": "field", "type": "string", "description": "The queried field."},
-     *         {"name": "value", "type": "mixed", "description": "The value of the field"}
+     *         {"name": "value", "type": "string", "description": "The value of the field"}
      *     }
      * )
      *
@@ -171,7 +170,8 @@ abstract class AbstractCrudController extends AbstractApiController
      *         {"name": "page", "type": "integer", "description": "The queried page."},
      *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
+     *     },
+     *     response={"$list"}
      * )
      *
      * @param Request $request
@@ -274,7 +274,8 @@ abstract class AbstractCrudController extends AbstractApiController
      *     description="Create an object class $class.",
      *     body={
      *         "schema":"$schema"
-     *     }
+     *     },
+     *     response={"$object"}
      * )
      *
      * @param Request $request
@@ -314,11 +315,9 @@ abstract class AbstractCrudController extends AbstractApiController
      *         "schema":"$schema"
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The object id or uuid"
-     *          }
-     *     }
+     *          {"name": "id", "type": {"string", "integer"}, "description": "The object id or uuid"}
+     *     },
+     *     response={"$object"}
      * )
      *
      * @param string|int $id
@@ -395,7 +394,8 @@ abstract class AbstractCrudController extends AbstractApiController
      *     description="Copy an array of object of class $class.",
      *     queryString={
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
-     *     }
+     *     },
+     *     response={"$array"}
      * )
      *
      * @param Request $request

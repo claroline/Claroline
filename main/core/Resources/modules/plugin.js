@@ -13,6 +13,11 @@ registry.add('ClarolineCoreBundle', {
     'workspaces': () => { return import(/* webpackChunkName: "core-header-workspaces" */ '#/main/core/header/workspaces') }
   },
 
+  integration: {
+    'api' : () => { return import(/* webpackChunkName: "core-integration-api" */ '#/main/core/administration/integration/documentation')},
+    'api_tokens' : () => { return import(/* webpackChunkName: "core-integration-api_tokens" */ '#/main/core/administration/integration/apitoken')}
+  },
+
   /**
    * Provides actions for base Claroline objects.
    */

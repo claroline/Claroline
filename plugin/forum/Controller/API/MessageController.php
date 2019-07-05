@@ -29,10 +29,7 @@ class MessageController extends AbstractCrudController
      * @ApiDoc(
      *     description="Create a comment in a message",
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The message id or uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The message id or uuid"}
      *     }
      * )
      *

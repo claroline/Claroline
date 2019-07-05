@@ -261,10 +261,7 @@ class MessageController extends AbstractCrudController
      * @ApiDoc(
      *     description="Get the fist message.",
      *     parameters={
-     *         "message": {
-     *              "type": {"string", "integer"},
-     *              "description": "The message id or uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The message id or uuid"}
      *     }
      * )
      *

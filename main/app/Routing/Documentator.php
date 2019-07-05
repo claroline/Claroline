@@ -5,6 +5,7 @@ namespace Claroline\AppBundle\Routing;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\FinderException;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Doctrine\Common\Annotations\Reader;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -22,7 +23,8 @@ class Documentator
      *     "finder"     = @DI\Inject("claroline.api.finder"),
      *     "serializer" = @DI\Inject("claroline.api.serializer"),
      *     "router"     = @DI\Inject("claroline.api.routing.finder"),
-     *     "reader"    = @DI\Inject("annotation_reader")
+     *     "reader"     = @DI\Inject("annotation_reader"),
+     *     "schema"     = @DI\Inject("claroline.api.schema")
      * })
      *
      * @param Router $router
@@ -30,6 +32,7 @@ class Documentator
     public function __construct(
         FinderProvider $finder,
         SerializerProvider $serializer,
+        SchemaProvider $schema,
         Reader $reader,
         Finder $router
     ) {
@@ -37,14 +40,12 @@ class Documentator
         $this->serializer = $serializer;
         $this->reader = $reader;
         $this->router = $router;
+        $this->schema = $schema;
     }
 
     public function documentRoute(Route $route)
     {
-        $base = [
-            'url' => $route->getPath(),
-            'method' => $route->getMethods(),
-        ];
+        $base = [];
 
         $defaults = $route->getDefaults();
 
@@ -81,8 +82,10 @@ class Documentator
         $routes = $this->router->find($class);
         $documented = [];
 
-        foreach ($routes->getIterator() as $name => $route) {
-            $documented[$name] = $this->documentRoute($route);
+        foreach ($routes->getIterator() as $route) {
+            $method = strtolower(isset($route->getMethods()[0]) ? $route->getMethods()[0] : 'get');
+            $documented[$route->getPath()][$method] = $this->documentRoute($route);
+            $documented[$route->getPath()][$method]['tags'] = [$class];
         }
 
         return $documented;
@@ -90,31 +93,39 @@ class Documentator
 
     private function parseDoc(ApiDoc $doc, $objectClass)
     {
-        $data = [];
+        $data = ['parameters' => []];
 
         $description = $doc->getDescription() ?
           $this->parseDescription($doc->getDescription(), $objectClass) : null;
 
         $queryString = $doc->getQueryString() ?
-            $this->parseQueryString($doc->getQueryString(), $objectClass) : null;
+            $this->parseQueryString($doc->getQueryString(), $objectClass) : [];
+
+        $parameters = $doc->getParameters() ?
+            $this->parseParameters($doc->getParameters(), $objectClass) : [];
 
         $body = $doc->getBody() ?
             $this->parseBody($doc->getBody(), $objectClass) : null;
+
+        $responses = $doc->getResponse() ?
+            $this->parseResponse($doc->getResponse(), $objectClass) : null;
+
+        $data['produce'] = $doc->getProduce() ?? ['application/json'];
 
         if ($description) {
             $data['description'] = $description;
         }
 
-        if ($queryString) {
-            $data['queryString'] = $queryString;
+        if ($responses) {
+            $data['responses'] = $responses;
         }
 
-        if ($doc->getParameters()) {
-            $data['parameters'] = $doc->getParameters();
+        if ($queryString || $parameters) {
+            $data['parameters'] = array_merge($queryString, $parameters);
         }
 
-        if ($body) {
-            $data['body'] = $body;
+        if (isset($body['parameters'])) {
+            $data['parameters'] = array_merge($data['parameters'], $body['parameters']);
         }
 
         return $data;
@@ -123,6 +134,22 @@ class Documentator
     private function parseDescription($description, $objectClass)
     {
         return str_replace('$class', $objectClass, $description);
+    }
+
+    private function parseParameters($parameters, $objectClass)
+    {
+        $doc = [];
+
+        foreach ($parameters as $parameter) {
+            $data['name'] = $parameter['name'];
+            $data['type'] = $parameter['type'];
+            $data['required'] = true;
+            $data['description'] = isset($parameters['description']) ? $parameters['description'] : null;
+            $data['in'] = 'path';
+            $doc[] = $data;
+        }
+
+        return $doc;
     }
 
     private function parseQueryString($queryStrings, $objectClass)
@@ -160,6 +187,8 @@ class Documentator
                                   'name' => "filters[{$name}]",
                                   'type' => $data['type'],
                                   'description' => $data['description'],
+                                  'required' => false,
+                                  'in' => 'query',
                               ];
                             }
                         }
@@ -177,6 +206,8 @@ class Documentator
                                             'name' => "filters[{$refProp->getName()}]",
                                             'type' => $annotation->type,
                                             'description' => 'Autogenerated from doctrine annotations (no description found)',
+                                            'required' => false,
+                                            'in' => 'query',
                                         ];
                                     }
                                 }
@@ -191,6 +222,7 @@ class Documentator
                    //todo: write that doc
                 }
             } else {
+                $query['in'] = 'query';
                 $doc[] = $query;
             }
         }
@@ -200,13 +232,47 @@ class Documentator
 
     private function parseBody($body, $objectClass)
     {
+        $requestBody = [];
+        $examples = [];
+        $data = [];
+
         if (is_array($body)) {
             if (isset($body['schema']) && '$schema' === $body['schema']) {
-                //cast to array recursively
-                $body['schema'] = json_decode(json_encode($this->serializer->getSchema($objectClass)), true);
+                $data['schema']['$ref'] = '#/extendedModels/'.$objectClass.'/post';
+                $data['in'] = 'body';
+                $data['name'] = 'body';
+                $examples = $this->schema->getSamples($objectClass);
+                $data['examples'] = $examples;
+
+                $requestBody[] = $data;
             }
         }
 
-        return $body;
+        return ['parameters' => $requestBody, 'samples' => $examples];
+    }
+
+    private function parseResponse($responses, $objectClass)
+    {
+        $data = [];
+
+        foreach ($responses as $response) {
+            $options = explode('=', $response);
+            $objectClass = isset($options[1]) ? $options[1] : $objectClass;
+
+            if (is_string($response) && null !== strpos($response, '$object')) {
+                $options = explode('=', $response);
+
+                $objectClass = isset($options[1]) ? $options[1] : $objectClass;
+                $data['200']['description'] = 'successfull operation';
+                $data['200']['schema']['$ref'] = '#/definitions/'.$objectClass;
+            } elseif (is_string($response) && null !== strpos($response, '$list')) {
+                $options = explode('=', $response);
+                $objectClass = isset($options[1]) ? $options[1] : $objectClass;
+                $data['200']['description'] = 'successfull operation';
+                $data['200']['schema']['$ref'] = '#/extendedModels/'.$objectClass.'/list';
+            }
+        }
+
+        return $data;
     }
 }

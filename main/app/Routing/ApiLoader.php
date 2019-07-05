@@ -213,17 +213,16 @@ class ApiLoader extends Loader
             $methods = $refClass->getMethods();
 
             foreach ($methods as $method) {
-                foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
-                    $actionName = preg_replace('/Action/', '', $method->getName());
+                $actionName = preg_replace('/Action/', '', $method->getName());
+                $defaults[$actionName][1] = 'GET';
 
+                foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
                     if ($annotation instanceof RouteConfig) {
                         $defaults[$actionName][0] = $annotation->getPath();
                     }
 
                     if ($annotation instanceof MethodConfig) {
                         $defaults[$actionName][1] = $annotation->getMethods()[0];
-                    } else {
-                        $defaults[$actionName][1] = 'GET';
                     }
                 }
             }

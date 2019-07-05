@@ -89,8 +89,8 @@ class HomeController extends AbstractApiController
         $orderedTabs = [];
 
         $tabs = $this->finder->search(HomeTab::class, [
-          'filters' => ['workspace' => $workspace->getUuid()],
-      ]);
+            'filters' => ['workspace' => $workspace->getUuid()],
+        ]);
 
         // but why ? finder should never give you an empty row
         $tabs = array_filter($tabs['data'], function ($data) {
@@ -100,6 +100,7 @@ class HomeController extends AbstractApiController
         foreach ($tabs as $tab) {
             $orderedTabs[$tab['position']] = $tab;
         }
+
         ksort($orderedTabs);
 
         return new JsonResponse(array_values($orderedTabs));

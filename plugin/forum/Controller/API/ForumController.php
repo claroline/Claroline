@@ -54,10 +54,7 @@ class ForumController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The forum id or uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The forum id or uuid"}
      *     }
      * )
      *
@@ -84,10 +81,7 @@ class ForumController extends AbstractCrudController
      * @ApiDoc(
      *     description="Create a subject in a forum",
      *     parameters={
-     *         "id": {
-     *              "type": {"string", "integer"},
-     *              "description": "The forum id or uuid"
-     *          }
+     *          {"name": "id", "type": {"string", "integer"},  "description": "The forum id or uuid"}
      *     }
      * )
      *

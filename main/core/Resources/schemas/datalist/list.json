@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "integer",
+      "description": "The page number"
+    },
+    "pageSize": {
+      "type": "integer",
+      "description": "The page size"
+    },
+    "totalResults": {
+      "type": "integer",
+      "description": "The number of results"
+    },
+    "sortBy": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "integer",
+          "description": "The direction"
+        },
+        "property": {
+          "type": "string",
+          "description": "The property"
+        }
+      }
+    },
+    "filters": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "string",
+            "description": "The property"
+          },
+          "value": {
+            "type": "string",
+            "description": "The value"
+          }
+        }
+      }
+    }
+  }
+}

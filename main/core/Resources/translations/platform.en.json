@@ -1741,5 +1741,8 @@
     "medias": "Medias",
     "archive": "Archive",
     "form_not_validating_desc": "Work in progress: some information is missing or requires changes.",
-    "form_validating_desc": "Some errors or missing information prevent saving data."
+    "form_validating_desc": "Some errors or missing information prevent saving data.",
+    "tokens": "Tokens",
+    "add_token": "Add a token",
+    "token": "Token"
 }

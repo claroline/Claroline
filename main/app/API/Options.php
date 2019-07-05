@@ -113,4 +113,6 @@ final class Options
     //transfer_options
     const WORKSPACE_IMPORT = 'workspace_import';
     const ADMINISTRATION_IMPORT = 'administration_import';
+
+    const IGNORE_COLLECTIONS = 'ignore_collections';
 }

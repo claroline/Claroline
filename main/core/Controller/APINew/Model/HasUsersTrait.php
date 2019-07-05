@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Model;
 
+use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,16 @@ trait HasUsersTrait
      *
      * @EXT\Route("/{id}/user")
      * @EXT\Method("GET")
+     * @ApiDoc(
+     *     description="List the objects of class Claroline\CoreBundle\Entity\User.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     response={"$list=Claroline\CoreBundle\Entity\User"}
+     * )
      *
      * @param string  $id
      * @param string  $class
@@ -39,6 +50,16 @@ trait HasUsersTrait
      *
      * @EXT\Route("/{id}/user")
      * @EXT\Method("PATCH")
+     * @ApiDoc(
+     *     description="Add objects of class Claroline\CoreBundle\Entity\User.",
+     *     parameters={
+     *         {"name": "id", "type": "string", "description": "The object id."}
+     *     },
+     *     response={"$object"},
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The user id or uuid."}
+     *     }
+     * )
      *
      * @param string  $id
      * @param string  $class
@@ -62,6 +83,16 @@ trait HasUsersTrait
      *
      * @EXT\Route("/{id}/user")
      * @EXT\Method("DELETE")
+     * @ApiDoc(
+     *     description="Removes objects of class Claroline\CoreBundle\Entity\User.",
+     *     parameters={
+     *         {"name": "id", "type": "string", "description": "The object id."}
+     *     },
+     *     response={"$object"},
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The user id or uuid."}
+     *     }
+     * )
      *
      * @param string  $id
      * @param string  $class

@@ -928,14 +928,19 @@ class UserManager
     /**
      * Logs the current user.
      */
-    public function logUser(User $user)
+    public function logUser(User $user, $fromApi = false)
     {
-        // TODO : log in an EventListener on user log event instead
-        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
-
+        if ($fromApi) {
+            //need the refresh for some reason...
+            $user = $this->objectManager->getRepository(User::class)->findOneByUsername($user->getUsername());
+        }
         // TODO : nope, we should let Symfony handles token creation
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
+
+        if (!$fromApi) {
+            $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
+        }
 
         if (null === $user->getInitDate()) {
             $this->setUserInitDate($user);

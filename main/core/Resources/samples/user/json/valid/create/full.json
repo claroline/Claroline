@@ -24,33 +24,5 @@
         "personalWorkspace": true,
         "enabled": true,
         "removed": false
-    },
-    "restrictions": {
-        "accessibleFrom": "2017-12-03T12:03:38",
-        "accessibleUntil": "2038-01-01T00:00:00"
-    },
-    "rights": {
-        "current": {
-            "edit": true,
-            "administrate": true,
-            "delete": true
-        }
-    },
-    "roles": [
-      {
-        "name": "ROLE_USER"
-      },
-      {
-          "id": "b2e4c784-9416-4320-af06-c91f6654be88",
-          "type": 4,
-          "name": "ROLE_USER_ELORFIN",
-          "translationKey": "Elorfin"
-        }
-      ],
-    "groups": [
-      {
-        "id": "2c95f2a0-0966-4496-a37e-5ea220dec1cb",
-        "name": "hey ho"
-      }
-    ]
+    }
 }

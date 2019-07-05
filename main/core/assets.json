@@ -37,7 +37,8 @@
       "administration-parameters": "administration/parameters.less",
       "home-tool": "tools/home.less",
       "theme-management": "tools/theme-management.less",
-      "iframe": "iframe/iframe.less"
+      "iframe": "iframe/iframe.less",
+      "swagger": "swagger/index.less"
     }
   }
 }

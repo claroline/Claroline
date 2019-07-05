@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -281,6 +282,10 @@ class Persister
         $this->om->persist($workspace);
 
         $user->setPersonalWorkspace($workspace);
+
+        $token = new ApiToken();
+        $token->setUser($user);
+        $this->om->persist($token);
 
         return $user;
     }

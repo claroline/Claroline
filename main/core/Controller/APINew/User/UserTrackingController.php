@@ -49,10 +49,7 @@ class UserTrackingController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "user": {
-     *              "type": {"string", "integer"},
-     *              "description": "The user uuid"
-     *          }
+     *          {"name": "user", "type": {"string", "integer"}, "description": "The user uuid"}
      *     }
      * )
      * @EXT\Route(

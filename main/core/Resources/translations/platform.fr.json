@@ -1774,5 +1774,8 @@
     "medias": "Médias",
     "archive": "Archive",
     "form_not_validating_desc": "Travail en cours : certaines données sont manquantes ou nécessitent une correction.",
-    "form_validating_desc": "Des erreurs ou des informations manquantes empêchent la sauvegarde des données."
+    "form_validating_desc": "Des erreurs ou des informations manquantes empêchent la sauvegarde des données.",
+    "tokens": "Tokens",
+    "add_token": "Ajouter un token",
+    "token": "Token"
 }
