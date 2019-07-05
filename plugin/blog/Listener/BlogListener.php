@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
@@ -143,6 +144,19 @@ class BlogListener
 
         foreach ($data['_data']['posts'] as $postData) {
             $post = $this->container->get('claroline.serializer.blog.post')->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
+
+            if (isset($postData['creationDate'])) {
+                $post->setCreationDate(DateNormalizer::denormalize($postData['creationDate']));
+            }
+
+            if (isset($commentData['publicationDate'])) {
+                $post->setPublicationDate(DateNormalizer::denormalize($postData['publicationDate']));
+            }
+
+            if (isset($commentData['updateDate'])) {
+                $post->setUpdateDate(DateNormalizer::denormalize($postData['updateDate']));
+            }
+
             $post->setBlog($blog)
               ->setAuthor($this->container->get('security.token_storage')->getToken()->getUser());
 
@@ -151,6 +165,18 @@ class BlogListener
 
                 $this->container->get('icap.blog.manager.comment')
                   ->createComment($blog, $post, $this->commentSerializer->deserialize($data, null), $comment['isPublished']);
+
+                if (isset($commentData['creationDate'])) {
+                    $comment->setCreationDate(DateNormalizer::denormalize($commentData['creationDate']));
+                }
+
+                if (isset($commentData['publicationDate'])) {
+                    $comment->setPublicationDate(DateNormalizer::denormalize($commentData['publicationDate']));
+                }
+
+                if (isset($commentData['updateDate'])) {
+                    $comment->setUpdateDate(DateNormalizer::denormalize($commentData['updateDate']));
+                }
 
                 $om->persist($comment);
             }
@@ -185,6 +211,9 @@ class BlogListener
                 ->setAuthor($post->getAuthor())
                 ->setStatus($post->getStatus())
                 ->setPinned($post->isPinned())
+                ->setCreationDate($post->getCreationDate())
+                ->setPublicationDate($post->getPublicationDate())
+                ->setUpdateDate($post->getUpdateDate())
                 ->setBlog($newBlog)
             ;
 
@@ -200,6 +229,9 @@ class BlogListener
                 /** @var \Icap\BlogBundle\Entity\Comment $newComment */
                 $newComment = new Comment();
                 $newComment
+                    ->setCreationDate($comment->getCreationDate())
+                    ->setPublicationDate($comment->getPublicationDate())
+                    ->setUpdateDate($comment->getUpdateDate())
                     ->setAuthor($comment->getAuthor())
                     ->setMessage($comment->getMessage())
                     ->setPost($newPost)

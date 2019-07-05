@@ -222,7 +222,7 @@ class RightsManager
 
         $this->om->startFlushSuite();
         foreach ($originalRights as $originalRight) {
-            $new = new ResourceRights();
+            $new = $this->rightsRepo->findOneBy(['resourceNode' => $node, 'role' => $originalRight->getRole()]) ?? new ResourceRights();
             $new->setRole($originalRight->getRole());
             $new->setResourceNode($node);
             $new->setMask($originalRight->getMask());
@@ -549,10 +549,17 @@ class RightsManager
             $data = [
                 'translationKey' => $role->getTranslationKey(),
                 'permissions' => $permissions,
+                'id' => $rights->getId(),
             ];
 
             if (!in_array(Options::REFRESH_UUID, $options)) {
                 $data['name'] = $role->getName();
+            }
+
+            if ($role->getWorkspace()) {
+                $data['workspace']['code'] = $role->getWorkspace()->getCode();
+            } else {
+                $data['workspace'] = null;
             }
 
             return $data;

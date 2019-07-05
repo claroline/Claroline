@@ -12,7 +12,10 @@ const Forum = {
       users: T.number.isRequired,
       subjects: T.number.isRequired,
       messages: T.number.isRequired,
-      tags: T.arrayOf(T.string)
+      tags: T.arrayOf(T.shape({
+        id: T.string,
+        name: T.string
+      }))
     })
   },
   defaultProps: {

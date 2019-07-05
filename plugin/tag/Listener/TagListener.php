@@ -175,7 +175,47 @@ class TagListener
                 //array [tagName]
                 foreach ($taggedObjects as $taggedObject) {
                     $tag = $taggedObject->getTag();
-                    $tags[$tag->getId()] = $taggedObject->getTag()->getName();
+                    $tags[$tag->getId()] = $tag->getName();
+                }
+                $tags = array_values($tags);
+            }
+        }
+        $event->setResponse($tags);
+    }
+
+    /**
+     * Used by serializers to retrieves tags object.
+     *
+     * @DI\Observe("claroline_retrieve_used_tags_object_by_class_and_ids")
+     *
+     * @param GenericDataEvent $event
+     */
+    public function onRetrieveUsedTagsObjectByClassAndIds(GenericDataEvent $event)
+    {
+        $tags = [];
+        $data = $event->getData();
+
+        if (is_array($data) && isset($data['class']) && !empty($data['ids'])) {
+            /** @var TaggedObject[] $taggedObjects */
+            $taggedObjects = $this->manager->getTaggedObjects($data['class'], $data['ids']);
+
+            if (isset($data['frequency']) && $data['frequency']) {
+                //array [tagName => frequency]
+                foreach ($taggedObjects as $taggedObject) {
+                    $tag = $taggedObject->getTag();
+                    if (!array_key_exists($tag->getName(), $tags)) {
+                        $tags[$tag->getName()] = 0;
+                    }
+                    ++$tags[$tag->getName()];
+                }
+            } else {
+                //array [tagName]
+                foreach ($taggedObjects as $taggedObject) {
+                    $tag = $taggedObject->getTag();
+                    $tags[$tag->getId()] = [
+                        'id' => $tag->getUuid(),
+                        'name' => $tag->getName(),
+                    ];
                 }
                 $tags = array_values($tags);
             }

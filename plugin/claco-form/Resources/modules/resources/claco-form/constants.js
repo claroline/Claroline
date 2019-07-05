@@ -39,7 +39,8 @@ const DEFAULT_HOME_CHOICES = {
 const MENU_POSITION_CHOICES = {
   [CHOICE_DOWN]: trans('choice_menu_position_down', {}, 'clacoform'),
   [CHOICE_UP]: trans('choice_menu_position_up', {}, 'clacoform'),
-  [CHOICE_BOTH]: trans('both', {}, 'clacoform')
+  [CHOICE_BOTH]: trans('both', {}, 'clacoform'),
+  [CHOICE_NONE]: trans('none')
 }
 
 const DISPLAY_METADATA_CHOICES = {

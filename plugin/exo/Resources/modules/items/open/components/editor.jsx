@@ -44,7 +44,7 @@ const OpenEditor = (props) =>
               {
                 name: 'maxLength',
                 type: 'number',
-                label: trans('open_maximum_length', {}, 'quiz'),
+                label: trans('max_text_length'),
                 required: true,
                 displayed: (openItem) => openItem._restrictLength || 0 < openItem.maxLength
               }

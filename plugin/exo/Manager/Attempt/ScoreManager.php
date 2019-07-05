@@ -139,6 +139,7 @@ class ScoreManager
     public function calculateTotal(array $scoreRule, array $expectedAnswers, array $allAnswers = [])
     {
         $total = null;
+
         switch ($scoreRule['type']) {
             case 'fixed':
                 $total = $scoreRule['success'];

@@ -57,12 +57,13 @@ export const reducers = {
 
       return merge({}, state, newAnswers)
     },
-    [ANSWER_UPDATE]: (state, action) => merge({}, state, {
-      [action.questionId]: {
-        data: action.answerData,
-        _touched: true
-      }
-    }),
+    [ANSWER_UPDATE]: (state, action) => {
+      const newAnswer = merge({}, state)
+      newAnswer[action.questionId].data = action.answerData
+      newAnswer[action.questionId]._touched = true
+
+      return newAnswer
+    },
     [ANSWERS_SUBMIT]: (state, action) => {
       const updatedAnswers = {}
       for (let questionId in action.answers) {

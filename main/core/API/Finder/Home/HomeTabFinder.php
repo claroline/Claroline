@@ -67,27 +67,42 @@ class HomeTabFinder extends AbstractFinder
                     $expr = [];
 
                     if (!in_array('ROLE_ADMIN', $roles)) {
+                        //those whose rights are enabled
                         $subQuery =
                           "
-                            SELECT tab from Claroline\CoreBundle\Entity\Tab\HomeTab tab
+                            SELECT DISTINCT tab from Claroline\CoreBundle\Entity\Tab\HomeTab tab
                             JOIN tab.homeTabConfigs htc
                             JOIN htc.roles role
                             JOIN role.users user
-
-                            WHERE (user.uuid = :userId OR user.id = :userId)
-                            AND tab.type = :adminDesktop
-                            AND htc.locked = true
+                            JOIN role.groups group
+                            JOIN group.users gusers
+                            WHERE (
+                              (user.uuid = :userId)
+                              AND tab.type = :adminDesktop
+                              AND htc.locked = true
+                            ) OR (
+                              (gusers.uuid = :userId)
+                              AND tab.type = :adminDesktop
+                              AND htc.locked = true
+                            )
                           ";
 
+                        //this subquery is awfull, same issue as ResourceRightsIntegrityCommand::43
+                        //we want to do the same thing, so I copied it
+
+                        //This query is real bad
+                        //those admin tabs who have no role set
                         $subQuery2 =
                           "
                             SELECT tab2 from Claroline\CoreBundle\Entity\Tab\HomeTab tab2
                             JOIN tab2.homeTabConfigs htc2
-                            LEFT JOIN htc2.roles role2
-                            WHERE tab2.type = :adminDesktop
+                            WHERE tab2 NOT IN (
+                              SELECT DISTINCT tab3 FROM Claroline\CoreBundle\Entity\Tab\HomeTab tab3
+                              JOIN tab3.homeTabConfigs htc3
+                              JOIN htc3.roles role2
+                            )
+                            AND tab2.type = :adminDesktop
                             AND htc2.locked = true
-                            GROUP BY tab2.id
-                            HAVING COUNT(role2.id) = 0
                           ";
 
                         $expr[] = $qb->expr()->orX(
@@ -103,7 +118,6 @@ class HomeTabFinder extends AbstractFinder
                     }
 
                     $expr[] = $qb->expr()->orX(
-                      $qb->expr()->like('u.id', ':userId'),
                       $qb->expr()->like('u.uuid', ':userId')
                     );
 

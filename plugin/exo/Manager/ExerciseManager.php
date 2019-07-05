@@ -282,9 +282,9 @@ class ExerciseManager
                 $user = $paper->getUser();
 
                 if ($user) {
-                    $csv['username'] = [$user->getUsername()];
-                    $csv['lastname'] = [$user->getLastName()];
-                    $csv['firstname'] = [$user->getFirstName()];
+                    $csv['username'] = [$paper->isAnonymized() ? '' : $user->getUsername()];
+                    $csv['lastname'] = [$paper->isAnonymized() ? '' : $user->getLastName()];
+                    $csv['firstname'] = [$paper->isAnonymized() ? '' : $user->getFirstName()];
                 } else {
                     $csv['username'] = ['none'];
                     $csv['lastname'] = ['none'];

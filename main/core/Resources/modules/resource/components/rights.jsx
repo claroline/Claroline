@@ -189,11 +189,13 @@ const AdvancedTab = props => {
       </thead>
 
       <tbody>
-        {props.permissions.map((rolePerm, index) =>
-          <RolePermissions
-            key={rolePerm.name}
+        {props.permissions.map((rolePerm, index) => {
+          const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
+          const displayName = workspaceCode ? rolePerm.translationKey + ' (' + workspaceCode + ')': rolePerm.translationKey
+          return (<RolePermissions
+            key={rolePerm.id}
             name={rolePerm.name}
-            translationKey={rolePerm.translationKey}
+            translationKey={displayName}
             permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
             deletable={!isStandardRole(rolePerm.name, props.workspace)}
             update={(permissions) => {
@@ -209,7 +211,8 @@ const AdvancedTab = props => {
 
               props.updatePermissions(newPerms)
             }}
-          />
+          />)
+        }
         )}
       </tbody>
 

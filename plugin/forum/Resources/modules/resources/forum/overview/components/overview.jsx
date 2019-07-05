@@ -53,7 +53,7 @@ const OverviewComponent = props =>
               />
             }
           </section>
-          {!isEmpty(props.forum.meta.tags)&&
+          {!isEmpty(props.forum.meta.tags) &&
             <section>
               <h3 className="h2">{trans('tags')}</h3>
               <TagCloud
@@ -61,8 +61,12 @@ const OverviewComponent = props =>
                 minSize={12}
                 maxSize={28}
                 onClick={(tag) => {
-                  props.goToList(tag)
-                  props.history.push('/subjects')
+                  const forumTag = props.forum.meta.tags.find(t => t.name === tag)
+
+                  if (forumTag) {
+                    props.goToList(forumTag.id)
+                    props.history.push('/subjects')
+                  }
                 }}
               />
             </section>

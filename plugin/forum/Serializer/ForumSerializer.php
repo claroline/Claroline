@@ -172,7 +172,7 @@ class ForumSerializer
             ]);
 
             $this->eventDispatcher->dispatch(
-                'claroline_retrieve_used_tags_by_class_and_ids',
+                'claroline_retrieve_used_tags_object_by_class_and_ids',
                 $event
             );
 

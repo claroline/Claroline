@@ -52,6 +52,35 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
             $manager->flush();
         }
 
+        foreach ($tabs as $tab) {
+            $homeTabConfig = $this->getConfig($tab);
+            $restoreConfig = false;
+
+            if (!$homeTabConfig) {
+                $restoreConfig = true;
+            }
+        }
+
+        if ($restoreConfig) {
+            $output->writeln('Config not found... restoring...');
+
+            foreach ($tabs as $i => $tab) {
+                $homeTabConfig = $this->getConfig($tab);
+
+                if (!$homeTabConfig) {
+                    $homeTabConfig = new HomeTabConfig();
+                    $homeTabConfig->setName('Restored');
+                    $homeTabConfig->setHomeTab($tab);
+                    $homeTabConfig->setLongTitle('Restored');
+                }
+
+                $homeTabConfig->setTabOrder($i);
+                $manager->persist($homeTabConfig);
+            }
+
+            $manager->flush();
+        }
+
         $workspaces = $container->get('claroline.persistence.object_manager')->getRepository(Workspace::class)->findAll();
 
         $output->writeln(count($workspaces).' found');
@@ -85,6 +114,35 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
                 ++$j;
             }
 
+            foreach ($tabs as $tab) {
+                $homeTabConfig = $this->getConfig($tab);
+                $restoreConfig = false;
+
+                if (!$homeTabConfig) {
+                    $restoreConfig = true;
+                }
+            }
+
+            if ($restoreConfig) {
+                $output->writeln('Config not found... restoring...');
+
+                foreach ($tabs as $i => $tab) {
+                    $homeTabConfig = $this->getConfig($tab);
+
+                    if (!$homeTabConfig) {
+                        $homeTabConfig = new HomeTabConfig();
+                        $homeTabConfig->setName('Restored');
+                        $homeTabConfig->setHomeTab($tab);
+                        $homeTabConfig->setLongTitle('Restored');
+                    }
+
+                    $homeTabConfig->setTabOrder($i);
+                    $manager->persist($homeTabConfig);
+                }
+
+                $manager->flush();
+            }
+
             if (0 === $j % 500) {
                 $manager->flush();
                 $j = 1;
@@ -93,5 +151,22 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
         }
 
         $manager->flush();
+    }
+
+    /**
+     * @param HomeTab $tab
+     *
+     * @return HomeTabConfig
+     */
+    public function getConfig(HomeTab $tab)
+    {
+        $container = $this->getContainer();
+        $manager = $container->get('claroline.persistence.object_manager');
+
+        /** @var HomeTabConfig $homeTabConfig */
+        $homeTabConfig = $manager->getRepository(HomeTabConfig::class)
+          ->findOneBy(['homeTab' => $tab]);
+
+        return $homeTabConfig;
     }
 }

@@ -463,7 +463,7 @@ const Entry = withRouter(connect(
   (state, ownProps) => ({
     clacoFormId: selectors.clacoForm(state).id,
     slideshowQueryString: playerSelectors.slideshowQueryString(state),
-    entryId: ownProps.match.params.id,
+    entryId: ownProps.match.params.id || formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')).id,
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entryUser: selectors.entryUser(state),
 

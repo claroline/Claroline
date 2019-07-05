@@ -100,10 +100,10 @@ const moderatedMessages = createSelector(
 const tagsCount = createSelector(
   [forum],
   (forum) => forum.meta.tags.reduce((obj, tag) => {
-    if (!obj[tag]) {
-      obj[tag] = 0
+    if (!obj[tag.name]) {
+      obj[tag.name] = 0
     }
-    obj[tag]++
+    obj[tag.name]++
     return obj
   }, {})
 )

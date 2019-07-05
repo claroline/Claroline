@@ -195,8 +195,7 @@ class ScormListener
     public function onExportFile(ExportObjectEvent $exportEvent)
     {
         $file = $exportEvent->getObject();
-        $ds = DIRECTORY_SEPARATOR;
-        $path = $this->filesDir.$ds.'scorm'.$ds.$file->getResourceNode()->getWorkspace()->getUuid().$ds.$file->getHashName();
+        $path = $this->getScormArchive($file);
         $file = $exportEvent->getObject();
         $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
         //get the filePath
@@ -277,12 +276,62 @@ class ScormListener
      */
     public function onDownload(DownloadResourceEvent $event)
     {
-        $ds = DIRECTORY_SEPARATOR;
         $scorm = $event->getResource();
-        $workspace = $scorm->getResourceNode()->getWorkspace();
-        $event->setItem($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$scorm->getHashName());
+        $event->setItem($this->getScormArchive($scorm));
         $event->setExtension('zip');
         $event->stopPropagation();
+    }
+
+    public function getScormArchive(Scorm $scorm)
+    {
+        $workspace = $scorm->getResourceNode()->getWorkspace();
+        $ds = DIRECTORY_SEPARATOR;
+        $supposedArchiveLocation = $this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$scorm->getHashName();
+
+        if (is_file($supposedArchiveLocation)) {
+            return $supposedArchiveLocation;
+        }
+
+        $uploadArchiveLocation = $this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$scorm->getHashName();
+
+        if (!is_dir($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid())) {
+            mkdir($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid());
+        }
+        // initialize the ZIP archive
+        $zip = new \ZipArchive();
+        $zip->open($supposedArchiveLocation, \ZipArchive::CREATE);
+
+        // create recursive directory iterator
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($uploadArchiveLocation), \RecursiveIteratorIterator::LEAVES_ONLY);
+
+        // let's iterate
+        foreach ($files as $file) {
+            $filePath = $file->getRealPath();
+
+            if (file_exists($filePath) && is_file($filePath)) {
+                $rel = $this->getRelativePath($filePath, $scorm->getHashName(), $workspace->getUuid());
+                $zip->addFile($filePath, $rel);
+            }
+        }
+
+        $zip->close();
+
+        return $supposedArchiveLocation;
+    }
+
+    /**
+     * Gets the relative path between 2 instances (not optimized yet).
+     *
+     * @param ResourceNode $root
+     * @param ResourceNode $node
+     *
+     * @return string
+     */
+    private function getRelativePath($current, $hashName, $wuid)
+    {
+        $path = substr($current, strlen(realpath($this->uploadDir).'/scorm/'.$wuid.'/'.$hashName.'/'));
+
+        return $path;
     }
 
     /**

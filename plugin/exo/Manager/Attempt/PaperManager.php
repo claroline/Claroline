@@ -187,7 +187,7 @@ class PaperManager
 
                             if (!$itemAnswer) {
                                 $corrected->addMissing(new GenericScore($itemTotal));
-                            } else {
+                            } elseif (!is_null($itemAnswer->getScore())) {
                                 // get the answer score without hints
                                 // this is required to check if the item has been correctly answered
                                 // we don't want the use of an hint with penalty mark the question has incorrect

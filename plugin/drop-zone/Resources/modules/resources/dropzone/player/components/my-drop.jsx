@@ -9,7 +9,9 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
 
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
+import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {DropzoneType, DropType, Revision as RevisionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
@@ -144,7 +146,7 @@ const MyDropComponent = props =>
             icon={'fa fa-fw fa-plus icon-with-text-right'}
             label= {trans('add_document', {}, 'dropzone')}
             className="btn btn-default"
-            callback={() => props.addDocument(props.myDrop.id, props.dropzone.parameters.documents)}
+            callback={() => props.addDocument(props.myDrop.id, props.dropzone.parameters.documents, props.resourceNode.parent)}
           />
           <Button
             type={CALLBACK_BUTTON}
@@ -191,6 +193,7 @@ MyDropComponent.propTypes = {
   isDropEnabled: T.bool.isRequired,
   currentRevisionId: T.string,
   revision: T.shape(RevisionType.propTypes),
+  resourceNode: T.shape(ResourceNodeType.propTypes),
   submit: T.func.isRequired,
   denyCorrection: T.func.isRequired,
   showModal: T.func.isRequired,
@@ -207,11 +210,12 @@ const MyDrop = connect(
     myDrop: select.myDrop(state),
     isDropEnabled: select.isDropEnabled(state),
     currentRevisionId: select.currentRevisionId(state),
-    revision: select.revision(state)
+    revision: select.revision(state),
+    resourceNode: resourceSelect.resourceNode(state)
   }),
   (dispatch) => ({
     saveDocument: (dropType, dropData) => dispatch(actions.saveDocument(dropType, dropData)),
-    addDocument(dropId, allowedDocuments) {
+    addDocument(dropId, allowedDocuments, parent = null) {
       dispatch(
         modalActions.showModal(MODAL_ADD_DOCUMENT, {
           allowedDocuments: allowedDocuments,
@@ -223,6 +227,7 @@ const MyDrop = connect(
             callback = (selected) => {dispatch(actions.saveDocument(dropId, data.type, selected[0].id))}
             dispatch(modalActions.showModal(MODAL_RESOURCE_EXPLORER, {
               title: title,
+              current: parent,
               selectAction: (selected) => ({
                 type: 'callback',
                 label: trans('select', {}, 'actions'),

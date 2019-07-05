@@ -32,8 +32,8 @@ class Updater120410 extends Updater
         // retrieve all papers
         $papers = $om
             ->createQuery('
-                SELECT p 
-                FROM UJM\ExoBundle\Entity\Attempt\Paper AS p 
+                SELECT p
+                FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
             ')
             ->getResult();
 
@@ -47,7 +47,7 @@ class Updater120410 extends Updater
 
             $this->migrateStructure($paper);
             $this->dumpTotal($paper);
-            
+
             if (0 === $i % 100) {
                 $om->flush();
                 $this->log('flush');
@@ -93,7 +93,7 @@ class Updater120410 extends Updater
                 if (isset($structure['parameters']) && !empty($structure['parameters']['totalScoreOn'])) {
                     $structure['score'] = ['type' => 'sum', 'total' => $structure['parameters']['totalScoreOn']];
                 } else {
-                    $structure['score'] = ['type' => 'none'];
+                    $structure['score'] = ['type' => 'sum'];
                 }
 
                 if (!empty($structure['steps'])) {
