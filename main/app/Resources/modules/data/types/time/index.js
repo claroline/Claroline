@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
+import {chain, number, inRange} from '#/main/app/data/types/validators'
 import {displayDuration} from '#/main/app/intl/date'
-import {chain, number, inRange} from '#/main/core/validation'
 
 import {TimeInput} from '#/main/app/data/types/time/components/input'
 

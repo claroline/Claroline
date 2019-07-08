@@ -17,17 +17,8 @@
 {% block content %}
   <div
     class="agenda-container page-container"
-    {% if workspace is defined %}
-      data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
-    {% else %}
-      data-workspace="{}"
-    {% endif %}
-
-    {% if filters is defined %}
-       data-workspaces="{{ filters | json_encode }}"
-    {% endif %}
+    data-current-context="{{ context | json_encode | raw | escape }}"
   >
-
   </div>
 {% endblock %}
 

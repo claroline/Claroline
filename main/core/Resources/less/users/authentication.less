@@ -11,6 +11,25 @@
 
 
 /**
+ * Login modal
+ */
+
+.login-modal {
+    .login-container {
+        box-shadow: @modal-content-box-shadow;
+    }
+
+    .modal-content {
+        // reset bootstrap defaults
+        border: none !important;
+        border-radius: 0 !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+}
+
+
+/**
  * Login page
  */
 
@@ -57,7 +76,6 @@
     margin-bottom: @component-margin-bottom;
 }
 
-.login_form_container, // for retro compatibility
 .login-container {
     width: 100%;
     margin: 0 auto @component-margin-bottom;
@@ -81,7 +99,6 @@
 
 // In screen > SM, Claroline login form and SSO btns
 // are displayed horizontally
-.login_form_container, // for retro compatibility
 .login-container {
     display: flex;
     border: 1px solid @panel-default-border;

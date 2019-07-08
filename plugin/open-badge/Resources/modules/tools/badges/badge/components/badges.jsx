@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {BadgeList} from '#/plugin/open-badge/tools/badges/badge/components/badge-list'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl/translation'

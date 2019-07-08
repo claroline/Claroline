@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {currentUser} from '#/main/app/security'
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -17,7 +17,7 @@ export const actions = {}
  * @param {object} parent       - the parent of the new resource
  * @param {object} resourceType - the type of resource to create
  */
-actions.startCreation = (parent, resourceType) => formActions.resetForm(selectors.STORE_NAME, {
+actions.startCreation = (parent, resourceType) => (dispatch, getState) => dispatch(formActions.resetForm(selectors.STORE_NAME, {
   resource: null,
   resourceNode: merge({}, ResourceNodeTypes.defaultProps, {
     id: makeId(),
@@ -26,13 +26,13 @@ actions.startCreation = (parent, resourceType) => formActions.resetForm(selector
     meta: {
       mimeType: `custom/${resourceType.name}`,
       type: resourceType.name,
-      creator: currentUser(),
+      creator: securitySelectors.currentUser(getState()),
       published: true
     },
     restrictions: parent.restrictions,
     rights: parent.rights
   })
-}, true)
+}, true))
 
 actions.reset = () => formActions.resetForm(selectors.STORE_NAME, {resource: {}, resourceNode: {}}, true)
 

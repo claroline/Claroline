@@ -4,7 +4,9 @@ import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as homeSelectors} from '#/main/core/tools/home/store/selectors'
 
-const editorTabs = (state) => formSelectors.data(formSelectors.form(state, 'editor'))
+const FORM_NAME = `${homeSelectors.STORE_NAME}.editor`
+
+const editorTabs = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
 const currentTabIndex = createSelector(
   [editorTabs, homeSelectors.currentTabId],
@@ -52,6 +54,7 @@ const readOnly = createSelector(
 )
 
 export const selectors = {
+  FORM_NAME,
   editorTabs,
   currentTab,
   currentTabIndex,

@@ -33,6 +33,12 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
 
     public function getConfiguration($environment)
     {
-        return new ConfigurationBuilder();
+        $config = new ConfigurationBuilder();
+
+        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
+            $config->addRoutingResource($routingFile);
+        }
+
+        return $config;
     }
 }

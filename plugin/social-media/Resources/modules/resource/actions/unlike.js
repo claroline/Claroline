@@ -3,14 +3,13 @@ import get from 'lodash/get'
 import {number} from '#/main/app/intl'
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
-import {isAuthenticated} from '#/main/app/security'
 
-export default (resourceNodes, nodesRefresher) => ({ // todo collection
+export default (resourceNodes, nodesRefresher, path, currentUser) => ({ // todo collection
   name: 'unlike',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-flip-vertical fa-thumbs-o-up',
   label: trans('unlike', {}, 'actions'),
-  displayed: isAuthenticated() && false, // todo find the correct way to display it
+  displayed: !!currentUser && false, // todo find the correct way to display it
   subscript: 1 === resourceNodes.length ? {
     type: 'label',
     status: 'primary',

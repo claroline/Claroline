@@ -216,10 +216,13 @@
     .color-chart-container {
         flex-direction: column;
 
+        .current-container {
+            max-width: 100%;
+        }
+
         .current-container,
         .colors-container {
             flex: auto; // otherwise it breaks on IE
-            //width: 100%;
         }
     }
 }

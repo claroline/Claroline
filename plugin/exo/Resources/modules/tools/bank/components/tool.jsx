@@ -2,15 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
+import {ToolPage} from '#/main/core/tool/containers/page'
+
+import {selectors} from '#/plugin/exo/tools/bank/store/selectors'
 import {ItemList} from '#/plugin/exo/items/components/list'
 
 const BankTool = props =>
   <ToolPage>
     <ItemList
-      name="questions"
+      name={selectors.LIST_QUESTIONS}
       actions={(rows) => [
         /*{
          icon: 'fa fa-fw fa-copy',

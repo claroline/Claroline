@@ -5,7 +5,7 @@ import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {trans} from '#/main/app/intl/translation'
 

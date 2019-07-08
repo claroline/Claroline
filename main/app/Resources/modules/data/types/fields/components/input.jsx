@@ -5,7 +5,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {MODAL_FIELD_PARAMETERS} from '#/main/app/data/types/fields/modals/parameters'
 

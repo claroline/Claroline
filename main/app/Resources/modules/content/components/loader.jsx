@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {trans} from '#/main/app/intl/translation'
 import {Hourglass} from '#/main/app/animation/components/hourglass'
 
 const ContentLoader = (props) =>
@@ -13,12 +14,17 @@ const ContentLoader = (props) =>
       <Hourglass />
     </div>
 
-    Merci de patienter quelques instants
+    {trans('please_wait')}
+
+    {props.description &&
+      <p>{props.description}</p>
+    }
   </div>
 
 ContentLoader.propTypes = {
   size: T.oneOf(['sm', 'lg']),
-  direction: T.oneOf(['horizontal', 'vertical'])
+  direction: T.oneOf(['horizontal', 'vertical']),
+  description: T.string
 }
 
 export {

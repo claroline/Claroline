@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 
-import {chain, array, string, notBlank, unique} from '#/main/core/validation'
+import {chain, array, string, notBlank, unique} from '#/main/app/data/types/validators'
 
 import {CascadeEnumInput} from '#/main/app/data/types/cascade-enum/components/input'
 import {CascadeEnumGroup} from '#/main/app/data/types/cascade-enum/components/group'

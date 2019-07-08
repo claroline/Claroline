@@ -5,7 +5,8 @@ import moment from 'moment'
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
-import {actions as resourceActions} from '#/main/core/resource/store'
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+import {actions as resourceActions} from '#/main/core/resource/store/actions'
 
 import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 import {select as playerSelectors} from '#/plugin/exo/quiz/player/selectors'
@@ -81,6 +82,7 @@ actions.play = (previousPaper = null) => {
       return Promise.resolve(dispatch(
         actions.initPlayer(generateAttempt(
           quizSelectors.quiz(getState()),
+          securitySelectors.currentUser(getState()),
           previousPaper
         ))
       ))

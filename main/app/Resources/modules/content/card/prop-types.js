@@ -14,7 +14,7 @@ const DataCard = {
       T.string, // uuid
       T.number  // autoincrement
     ]).isRequired,
-    size: T.oneOf(['sm', 'lg']),
+    size: T.oneOf(['xs', 'sm', 'lg']),
     orientation: T.oneOf(['col', 'row']),
     className: T.string,
     poster: T.string,

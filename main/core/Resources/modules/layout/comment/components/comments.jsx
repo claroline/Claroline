@@ -2,15 +2,12 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {User as UserType} from '#/main/core/user/prop-types'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
-
-const authenticatedUser = currentUser()
 
 class Comments extends Component {
   constructor(props) {
@@ -81,7 +78,7 @@ class Comments extends Component {
 
             {this.state.showNewCommentForm &&
               <UserMessageForm
-                user={authenticatedUser}
+                user={this.props.currentUser}
                 allowHtml={true}
                 submitLabel={trans('add_comment')}
                 submit={(content) => this.createNewComment(content)}
@@ -105,7 +102,7 @@ class Comments extends Component {
               this.state[comment.id] && this.state[comment.id].showCommentForm ?
                 <UserMessageForm
                   key={`comment-${commentIndex}`}
-                  user={authenticatedUser}
+                  user={this.props.currentUser}
                   content={comment.content}
                   allowHtml={true}
                   submitLabel={trans('add_comment')}
@@ -144,6 +141,7 @@ class Comments extends Component {
 }
 
 Comments.propTypes = {
+  currentUser: T.object,
   title: T.string.isRequired,
   noCommentLabel: T.string.isRequired,
   addCommentLabel: T.string.isRequired,

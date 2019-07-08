@@ -87,6 +87,7 @@ class ChoiceQuestionSerializer
         $this->sipe('multiple', 'setMultiple', $data, $choiceQuestion);
         $this->sipe('random', 'setShuffle', $data, $choiceQuestion);
         $this->sipe('numbering', 'setNumbering', $data, $choiceQuestion);
+        $this->sipe('direction', 'setDirection', $data, $choiceQuestion);
 
         $this->deserializeChoices($choiceQuestion, $data['choices'], $data['solutions'], $options);
 

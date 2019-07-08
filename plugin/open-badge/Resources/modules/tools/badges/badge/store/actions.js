@@ -33,6 +33,7 @@ actions.disable = (badges) => ({
   }
 })
 
+// TODO : this must use the standard form actions
 actions.save = (formName, badge, workspace, isNew) => ({
   [API_REQUEST]: {
     url: isNew ? ['apiv2_badge-class_create']: ['apiv2_badge-class_update', {id: badge.id}],
@@ -58,7 +59,7 @@ actions.save = (formName, badge, workspace, isNew) => ({
         })
 
         // dispatch an error action if the caller want to do something particular
-        dispatch(formActions.submitFormError(formName, formErrors))
+        dispatch(formActions.submitError(formName, formErrors))
 
         // inject errors in form
         dispatch(formActions.setErrors(formName, formErrors))

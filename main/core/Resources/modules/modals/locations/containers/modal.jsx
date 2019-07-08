@@ -7,9 +7,9 @@ import {
 } from '#/main/app/content/list/store'
 
 import {reducer, selectors} from '#/main/core/modals/locations/store'
-import {LocationsPickerModal as LocationsPickerModalComponent} from '#/main/core/modals/locations/components/modal'
+import {LocationsModal as LocationsModalComponent} from '#/main/core/modals/locations/components/modal'
 
-const LocationsPickerModal = withReducer(selectors.STORE_NAME, reducer)(
+const LocationsModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
@@ -19,9 +19,9 @@ const LocationsPickerModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
       }
     })
-  )(LocationsPickerModalComponent)
+  )(LocationsModalComponent)
 )
 
 export {
-  LocationsPickerModal
+  LocationsModal
 }

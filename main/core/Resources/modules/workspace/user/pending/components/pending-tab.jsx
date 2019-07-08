@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as pendingActions} from '#/main/core/workspace/user/pending/actions'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
 import {select} from '#/main/core/workspace/user/selectors'
 

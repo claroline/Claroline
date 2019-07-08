@@ -7,7 +7,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {getUserList} from '#/main/core/workspace/user/user/components/user-list'
 import {actions} from '#/main/core/workspace/user/user/actions'

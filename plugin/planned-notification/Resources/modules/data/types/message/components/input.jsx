@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'

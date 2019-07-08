@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-types'
 

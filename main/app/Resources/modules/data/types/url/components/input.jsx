@@ -33,6 +33,7 @@ class UrlInput extends PureComponent {
         <input
           id={this.props.id}
           type="text"
+          className="form-control"
           value={this.props.value || ''}
           disabled={this.props.disabled}
           placeholder={this.props.placeholder}

@@ -3,8 +3,8 @@ import React from 'react'
 import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {convertTimestampToString} from '#/main/core/logs/utils'
-import {LogConnectPlatformCard} from '#/main/core/logs/data/components/log-connect-platform-card'
+import {convertTimestampToString} from '#/main/app/intl/date'
+import {LogConnectCard} from '#/main/core/layout/logs/components/connect-card'
 
 const Connections = () =>
   <ListData
@@ -40,7 +40,7 @@ const Connections = () =>
         calculated: (rowData) => rowData.duration !== null ? convertTimestampToString(rowData.duration) : null
       }
     ]}
-    card={LogConnectPlatformCard}
+    card={LogConnectCard}
   />
 
 export {

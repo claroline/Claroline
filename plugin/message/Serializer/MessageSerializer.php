@@ -4,7 +4,6 @@ namespace Claroline\MessageBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
@@ -23,6 +22,18 @@ class MessageSerializer
 {
     use SerializerTrait;
 
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var MessageManager */
+    private $manager;
+
+    /** @var UserSerializer */
+    private $userSerializer;
+
     /**
      * ParametersSerializer constructor.
      *
@@ -33,7 +44,10 @@ class MessageSerializer
      *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param ObjectManager         $om
+     * @param MessageManager        $manager
+     * @param TokenStorageInterface $tokenStorage
+     * @param UserSerializer        $userSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -53,15 +67,6 @@ class MessageSerializer
     }
 
     /**
-     * @return string
-     */
-    /*
-    public function getSchema()
-    {
-       return '#/plugin/message/message.json';
-    }*/
-
-    /**
      * Serializes a Message entity.
      *
      * @param Message $message
@@ -73,7 +78,7 @@ class MessageSerializer
     {
         $userMessage = $this->getUserMessage($message);
 
-        //mainly for tests or if someting went wrong
+        //mainly for tests or if something went wrong
         if (!$userMessage) {
             $userMessage = new UserMessage();
         }
@@ -97,7 +102,7 @@ class MessageSerializer
             ['username' => $message->getSenderUsername()];
 
         if (in_array(Options::IS_RECURSIVE, $options)) {
-            $data['children'] = array_map(function (Message $child) {
+            $data['children'] = array_map(function (Message $child) use ($options) {
                 return $this->serialize($child, $options);
             }, $message->getChildren()->toArray());
         }
@@ -112,7 +117,7 @@ class MessageSerializer
      * @param Message $message
      * @param array   $options
      *
-     * @return Plugin
+     * @return Message
      */
     public function deserialize($data, Message $message, array $options = [])
     {
@@ -160,14 +165,6 @@ class MessageSerializer
         }
 
         return $message;
-    }
-
-    //we return an array for backward compatibity. It used to create many messages for a single user.
-    private function getUserMessages(Message $message)
-    {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-
-        return $this->om->getRepository(UserMessage::class)->findBy(['message' => $message, 'user' => $currentUser]);
     }
 
     private function getUserMessage(Message $message)

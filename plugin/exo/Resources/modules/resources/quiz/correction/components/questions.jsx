@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 

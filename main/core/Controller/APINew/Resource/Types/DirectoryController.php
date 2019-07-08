@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Directory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
@@ -21,7 +22,7 @@ class DirectoryController extends AbstractCrudController
 {
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Resource\Directory';
+        return Directory::class;
     }
 
     public function getIgnore()

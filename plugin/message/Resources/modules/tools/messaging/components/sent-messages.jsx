@@ -5,23 +5,21 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {MessageCard} from '#/plugin/message/data/components/message-card'
-import {actions} from '#/plugin/message/tools/messaging/store'
+import {actions, selectors} from '#/plugin/message/tools/messaging/store'
 
 const SentMessagesComponent = (props) =>
   <ListData
-    title={trans('messages_sent', {}, 'message')}
-    name="sentMessages"
+    name={`${selectors.STORE_NAME}.sentMessages`}
     fetch={{
       url: ['apiv2_message_sent'],
       autoload: true
     }}
     primaryAction={(message) => ({
       type: LINK_BUTTON,
-      target: '/message/'+message.id,
+      target: props.path+'/message/'+message.id,
       label: trans('open', {}, 'actions')
     })}
     definition={[
@@ -57,40 +55,28 @@ const SentMessagesComponent = (props) =>
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
         dangerous: true,
-        callback: () => props.removeMessages(rows, 'sentMessages'),
+        callback: () => props.removeMessages(rows),
         confirm: {
           title: trans('messages_delete_title', {}, 'message'),
           message: trans('messages_delete_confirm', {}, 'message')
         }
       }
     ]}
-    card={(props) =>
-      <MessageCard
-        {...props}
-        contentText={props.data.content}
-      />
-    }
+    card={MessageCard}
   />
 
 SentMessagesComponent.propTypes = {
-  removeMessages: T.func.isRequired,
-  data: T.shape({
-    content: T.string
-  })
+  path: T.string.isRequired,
+  removeMessages: T.func.isRequired
 }
 
 const SentMessages = connect(
-  null,
+  (state) => ({
+    path: toolSelectors.path(state)
+  }),
   dispatch => ({
-    removeMessages(message, form) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('messages_delete_title', {}, 'message'),
-          question: trans('remove_message_confirm_message', {}, 'message'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.removeMessages(message, form))
-        })
-      )
+    removeMessages(message) {
+      dispatch(actions.removeMessages(message, `${selectors.STORE_NAME}.sentMessages`))
     }
   })
 )(SentMessagesComponent)

@@ -9,7 +9,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
 import {Organization as OrganizationType} from '#/main/core/user/prop-types'
-import {MODAL_ORGANIZATION_PICKER} from '#/main/core/modals/organization'
+import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
 
 const OrganizationButton = props =>
   <Button
@@ -19,7 +19,7 @@ const OrganizationButton = props =>
     icon="fa fa-fw fa-book"
     label={trans('select_a_organization')}
     primary={true}
-    modal={[MODAL_ORGANIZATION_PICKER, {
+    modal={[MODAL_ORGANIZATIONS, {
       url: ['apiv2_organization_list'],
       title: props.title,
       selectAction: (selected) => ({
@@ -82,10 +82,7 @@ implementPropTypes(OrganizationInput, FormFieldTypes, {
     title: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('organization_selector')
-  }
+  value: null
 })
 
 export {

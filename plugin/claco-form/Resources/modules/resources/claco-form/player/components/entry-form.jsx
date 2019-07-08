@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 import set from 'lodash/set'
 
-import {mount} from '#/main/app/mount'
+import {mount} from '#/main/app/dom/mount'
 import {withRouter} from '#/main/app/router'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'

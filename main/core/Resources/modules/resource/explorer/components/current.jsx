@@ -27,7 +27,7 @@ const CurrentDirectory = (props) =>
             return {
               label: trans('open', {}, 'actions'),
               type: LINK_BUTTON,
-              target: `/${resourceNode.id}`
+              target: `${props.basePath}/${resourceNode.id}`
             }
           }
         },
@@ -38,6 +38,7 @@ const CurrentDirectory = (props) =>
   />
 
 CurrentDirectory.propTypes = {
+  basePath: T.string,
   name: T.string.isRequired,
   currentId: T.string,
   listConfiguration: T.shape(
@@ -48,6 +49,7 @@ CurrentDirectory.propTypes = {
 }
 
 CurrentDirectory.defaultProps = {
+  basePath: '',
   current: {},
   listConfiguration: {}
 }

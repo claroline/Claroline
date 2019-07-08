@@ -1,4 +1,0 @@
-icap_website:
-    resource: "@IcapWebsiteBundle/Controller/"
-    type:     annotation
-    prefix:   /

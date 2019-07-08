@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Router, withRouter} from '#/main/app/router'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
@@ -151,12 +151,12 @@ ExplorerModalContent.propTypes = {
 
 const RoutedExplorerModal = withRouter(ExplorerModalContent)
 
-const ExplorerModal = props =>
+const ResourcesModal = props =>
   <Router embedded={true}>
     <RoutedExplorerModal {...props} />
   </Router>
 
-ExplorerModal.propTypes = {
+ResourcesModal.propTypes = {
   root: T.shape(
     ResourceNodeTypes.propTypes
   ),
@@ -175,7 +175,7 @@ ExplorerModal.propTypes = {
   fadeModal: T.func.isRequired
 }
 
-ExplorerModal.defaultProps = {
+ResourcesModal.defaultProps = {
   icon: 'fa fa-fw fa-folder',
   title: trans('resource_explorer', {}, 'resource'),
   filters: [],
@@ -183,5 +183,5 @@ ExplorerModal.defaultProps = {
 }
 
 export {
-  ExplorerModal
+  ResourcesModal
 }

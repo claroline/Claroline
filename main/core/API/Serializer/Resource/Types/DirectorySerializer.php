@@ -26,10 +26,6 @@ class DirectorySerializer
         return [
             'id' => $directory->getId(),
             'uploadDestination' => $directory->isUploadDestination(),
-            'display' => [
-                'showSummary' => $directory->getShowSummary(),
-                'openSummary' => $directory->getOpenSummary(),
-            ],
 
             // resource list config
             // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer
@@ -78,9 +74,6 @@ class DirectorySerializer
     public function deserialize(array $data, Directory $directory): Directory
     {
         $this->sipe('uploadDestination', 'setUploadDestination', $data, $directory);
-
-        $this->sipe('display.showSummary', 'setShowSummary', $data, $directory);
-        $this->sipe('display.openSummary', 'setOpenSummary', $data, $directory);
 
         // resource list config
         // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 import {DropzoneType, CorrectionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'

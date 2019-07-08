@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {chain, string, email} from '#/main/core/validation'
+import {chain, string, email} from '#/main/app/data/types/validators'
 
 import {EmailDisplay} from '#/main/app/data/types/email/components/display'
 import {EmailInput} from '#/main/app/data/types/email/components/input'

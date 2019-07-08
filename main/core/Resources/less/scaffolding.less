@@ -1,74 +1,77 @@
+body {
+    background: transparent; // removes bootstrap default for TinyMCE rendering
+}
+
 // We use classes for `html` and `body` tags
 // to avoid adding unwanted styles in iframe or tinyMCE
 
 // Moves the app scroll bar after the fixed header
-html.claroline-app-container {
+.claroline-app {
     height: 100%;
-}
 
-body {
-    background: transparent; // removes bootstrap default
-
-    &.claroline-app {
-        position: relative;
+    > body {
         height: 100%;
         overflow-y: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
 
         // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
         background: @body-bg;
     }
 }
 
-.app-content-container {
+.app-container {
+    position: relative;
     height: 100%;
     overflow-y: hidden;
-    position: relative; // to constrain sidebar
+
+    display: flex;
+    flex-direction: row;
 }
 
-.app-toolbar {
-    + .app-content {
-        margin-left: @toolbar-size;
+.app {
+    flex: 1;
+    position: relative; // to constrain sidebar
+    height: 100%;
+    overflow-y: hidden;
+    padding-top: @top-bar-height;
+    display: flex;
+    flex-direction: row;
+
+    .app-menu {
+        + .app-content {
+            margin-left: @toolbar-size;
+        }
+    }
+
+    .app-menu-collapsed {
+        + .app-content {
+            margin-left: @toolbar-collapsed-size;
+        }
     }
 }
 
 .app-content {
-    position: relative;
-    flex: 1;
     display: flex;
     flex-direction: column;
+    flex: 1;
     height: 100%;
-
-    box-shadow: 0 0 3px 0 rgba(0,0,0,0.75);
-
-    // Get the scroll bar
-    // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
-    // but this is the only way to avoid content to move when the scroll appears in `auto` mode
-    // todo : try https://aykevl.nl/2014/09/fix-jumping-scrollbar
-    overflow-y: scroll;
-
-    .page-container {
-        flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
-
-        max-width: @app-max-width;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .breadcrumb { // temp : should be moved inside page-container
-        max-width: @app-max-width;
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    /*&.app-content-full {
-        max-width: 100% !important; // make sure it overrides default max-width
-    }*/
+    overflow-y: auto;
 }
 
-.component-container {
-    margin-bottom: @component-margin-bottom;
+.app-toolbar {
+    padding: @component-margin-bottom 0;
+    background: white;
+    border-left: 1px solid #ddd;
+
+    .app-toolbar-link {
+        font-size: @font-size-large;
+        display: block;
+
+        &.active {
+
+        }
+
+        + .app-toolbar-link {
+            margin-top: 5px;
+        }
+    }
 }

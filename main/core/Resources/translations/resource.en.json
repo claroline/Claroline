@@ -15,8 +15,6 @@
     "new_resource_configure": "2. Configure the resource",
     "new_resource_configure_rights": "3. Configure rights",
     "new_resource_select": "1. Choose the type of resource to create",
-    "resource_access_code": "Restrict by code",
-    "resource_access_ips": "Restrict by IPs",
     "resource_access_rights": "Who can see this resource ?",
     "resource_explorer": "Resources explorer",
     "resource_fullscreen": "Display in fullscreen on open",

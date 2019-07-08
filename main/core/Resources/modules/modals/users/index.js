@@ -7,13 +7,13 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {UsersPickerModal} from '#/main/core/modals/users/containers/modal'
+import {UsersModal} from '#/main/core/modals/users/containers/modal'
 
-const MODAL_USERS_PICKER = 'MODAL_USERS_PICKER'
+const MODAL_USERS = 'MODAL_USERS'
 
 // make the modal available for use
-registry.add(MODAL_USERS_PICKER, UsersPickerModal)
+registry.add(MODAL_USERS, UsersModal)
 
 export {
-  MODAL_USERS_PICKER
+  MODAL_USERS
 }

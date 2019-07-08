@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {selectors} from '#/main/core/widget/editor/modals/parameters/store'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'

@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 import set from 'lodash/set'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank} from '#/main/core/validation'
+import {notBlank} from '#/main/app/data/types/validators'
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'

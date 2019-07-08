@@ -166,7 +166,7 @@ class TransferManager
 
         $serialized['roles'] = $roles;
 
-        //we want to load  the ressources first
+        //we want to load the resources first
         $ot = $workspace->getOrderedTools()->toArray();
 
         $idx = 0;

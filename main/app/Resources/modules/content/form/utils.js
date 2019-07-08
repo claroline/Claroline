@@ -1,6 +1,5 @@
 import isObject from 'lodash/isObject'
 import isEmpty from 'lodash/isEmpty'
-import memoize from 'lodash/memoize'
 import merge from 'lodash/merge'
 import mergeWith from 'lodash/mergeWith'
 import omitBy from 'lodash/omitBy'
@@ -11,7 +10,7 @@ function isDisplayed(element, data) {
   return typeof element.displayed === 'function' ? element.displayed(data) : element.displayed
 }
 
-function doCreateFieldDefinition(field, data) {
+function createFieldDefinition(field, data) {
   const defaultedField = merge({}, DataFormProperty.defaultProps, field)
 
   // adds default to linked fields if any
@@ -26,17 +25,13 @@ function doCreateFieldDefinition(field, data) {
   return defaultedField
 }
 
-const createFieldDefinition = memoize(doCreateFieldDefinition)
-
-function doCreateFieldsetDefinition(fields, data) {
+function createFieldsetDefinition(fields, data) {
   return fields
     // adds default to fields
     .map(field => createFieldDefinition(field, data))
     // filters hidden fields
     .filter(field => isDisplayed(field, data))
 }
-
-const createFieldsetDefinition = memoize(doCreateFieldsetDefinition)
 
 /**
  * Fills definition with missing default values.
@@ -47,7 +42,7 @@ const createFieldsetDefinition = memoize(doCreateFieldsetDefinition)
  *
  * @return {Array} - the defaulted definition
  */
-function doCreateFormDefinition(sections, data) {
+function createFormDefinition(sections, data) {
   return sections
     .map(section => {
       // adds defaults to the section configuration
@@ -68,8 +63,6 @@ function doCreateFormDefinition(sections, data) {
     })
     .filter(section => null !== section)
 }
-
-const createFormDefinition = memoize(doCreateFormDefinition)
 
 /**
  * Removes errors that are now irrelevant (aka undefined) from an error object.

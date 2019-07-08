@@ -1,4 +1,4 @@
-import {string} from '#/main/core/validation'
+import {string} from '#/main/app/data/types/validators'
 
 import {UsernameInput} from '#/main/app/data/types/username/components/input'
 

@@ -2,13 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {trans} from '#/main/app/intl/translation'
-import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 
 import {selectors, actions} from '#/plugin/team/tools/team/store'
 

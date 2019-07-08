@@ -35,7 +35,7 @@ class LayoutListener
      *
      * @param InjectStylesheetEvent $event
      */
-    public function onInjectJs(InjectStylesheetEvent $event)
+    public function onInjectCss(InjectStylesheetEvent $event)
     {
         $content = $this->templating->render('ClarolineTagBundle:layout:stylesheets.html.twig', []);
 

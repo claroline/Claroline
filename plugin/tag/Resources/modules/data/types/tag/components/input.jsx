@@ -7,7 +7,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {makeCancelable, url} from '#/main/app/api'
 import {currentUser} from '#/main/app/security'
 import {toKey} from '#/main/core/scaffolding/text/utils'
-import {Overlay} from '#/main/app/overlay/components/overlay'
+import {Overlay} from '#/main/app/overlays/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback'
@@ -230,6 +230,7 @@ class TagInput extends Component {
                   icon="fa fa-fw fa-times"
                   label={trans('delete', {}, 'actions')}
                   tooltip="bottom"
+                  disabled={this.props.disabled}
                   callback={() => this.remove(tag)}
                   size="sm"
                 />
@@ -238,6 +239,7 @@ class TagInput extends Component {
 
             <input
               type="text"
+              disabled={this.props.disabled}
               value={this.state.currentTag}
               onFocus={this.focus}
               onBlur={this.blur}
@@ -252,6 +254,7 @@ class TagInput extends Component {
               icon="fa fa-fw fa-tags"
               label={trans('add-tags', {}, 'actions')}
               tooltip="left"
+              disabled={this.props.disabled}
               modal={[MODAL_TAGS, {
                 selectAction: (selectedTags) => ({
                   type: CALLBACK_BUTTON,

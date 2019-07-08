@@ -77,9 +77,9 @@ const PageFull = {
     /**
      * An optional subtitle for the page.
      *
-     * @type {string}
+     * @type {React.node}
      */
-    subtitle: T.string,
+    subtitle: T.node,
 
     /**
      * An optional icon for the page.

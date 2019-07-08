@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {Button} from '#/main/app/action/components/button'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {trans} from '#/main/app/intl/translation'
@@ -11,7 +11,7 @@ import {selectors} from '#/main/core/modals/template-types/store'
 import {TemplateTypeList} from '#/main/core/administration/template/components/template-type-list'
 import {TemplateType as TemplateTypeType} from '#/main/core/administration/template/prop-types'
 
-const TemplateTypesPickerModal = props => {
+const TemplateTypesModal = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
@@ -44,7 +44,7 @@ const TemplateTypesPickerModal = props => {
   )
 }
 
-TemplateTypesPickerModal.propTypes = {
+TemplateTypesModal.propTypes = {
   title: T.string,
   confirmText: T.string,
   selectAction: T.func.isRequired,
@@ -53,11 +53,11 @@ TemplateTypesPickerModal.propTypes = {
   resetSelect: T.func.isRequired
 }
 
-TemplateTypesPickerModal.defaultProps = {
-  title: trans('template_type_selector'),
+TemplateTypesModal.defaultProps = {
+  title: trans('template_types'),
   confirmText: trans('select', {}, 'actions')
 }
 
 export {
-  TemplateTypesPickerModal
+  TemplateTypesModal
 }

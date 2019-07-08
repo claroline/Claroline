@@ -1,5 +1,5 @@
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {notBlank, number, chain} from '#/main/core/validation'
+import {notBlank, number, chain} from '#/main/app/data/types/validators'
 
 import {makeId} from '#/main/core/scaffolding/id'
 

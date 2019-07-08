@@ -7,9 +7,9 @@ import {
 } from '#/main/app/content/list/store'
 
 import {reducer, selectors} from '#/main/core/modals/roles/store'
-import {RolesPickerModal as RolesPickerModalComponent} from '#/main/core/modals/roles/components/modal'
+import {RolesModal as RolesModalComponent} from '#/main/core/modals/roles/components/modal'
 
-const RolesPickerModal = withReducer(selectors.STORE_NAME, reducer)(
+const RolesModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
@@ -19,9 +19,9 @@ const RolesPickerModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
       }
     })
-  )(RolesPickerModalComponent)
+  )(RolesModalComponent)
 )
 
 export {
-  RolesPickerModal
+  RolesModal
 }

@@ -8,6 +8,8 @@ import {PageSimple as PageSimpleTypes} from '#/main/app/page/prop-types'
 import {PageBreadcrumb} from '#/main/app/page/components/breadcrumb'
 import {PageWrapper} from '#/main/app/page/components/wrapper'
 
+// TODO : remove styles management
+
 /**
  * Root of the current page.
  *

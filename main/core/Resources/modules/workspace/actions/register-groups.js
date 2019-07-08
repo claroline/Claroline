@@ -2,9 +2,9 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
-import {MODAL_GROUPS_PICKER} from '#/main/core/modals/groups'
+import {MODAL_GROUPS} from '#/main/core/modals/groups'
 import {MODAL_WORKSPACE_ROLES} from '#/main/core/workspace/modals/roles'
 
 /**
@@ -17,7 +17,7 @@ export default (workspaces, refresher) => ({
   label: trans('register_groups'),
   displayed: -1 !== workspaces.findIndex(workspace => hasPermission('administrate', workspace)),
   // open a modal to select the list of groups to register
-  modal: [MODAL_GROUPS_PICKER, {
+  modal: [MODAL_GROUPS, {
     title: trans('register_groups'),
     url: ['apiv2_group_list_registerable'],
 

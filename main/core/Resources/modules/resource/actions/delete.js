@@ -1,5 +1,6 @@
 import {createElement} from 'react'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {url} from '#/main/app/api'
 import {trans, transChoice} from '#/main/app/intl/translation'
@@ -18,13 +19,12 @@ export default (resourceNodes, nodesRefresher) => ({
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-trash-o',
   label: trans('delete', {}, 'actions'),
+  displayed: -1 !== resourceNodes.findIndex(node => !isEmpty(node.parent)),
   dangerous: true,
   confirm: {
     title: transChoice('resources_delete_confirm', resourceNodes.length),
     subtitle: 1 === resourceNodes.length ? resourceNodes[0].name : transChoice('count_elements', resourceNodes.length, {count: resourceNodes.length}),
-    message: transChoice('resources_delete_message', resourceNodes.length, {count: resourceNodes.length})
-    //The following block should be commented because it crashes the trash tool for unknwown reason when we close the moel (react freeze error)
-    ,
+    message: transChoice('resources_delete_message', resourceNodes.length, {count: resourceNodes.length}),
     additional: [
       createElement('div', {
         key: 'additional',

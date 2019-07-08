@@ -79,7 +79,7 @@
 @top-bar-border-bottom-size:  0;
 @top-bar-border-bottom-color: @brand-primary;
 @top-bar-border-bottom:       @top-bar-border-bottom-size solid @top-bar-border-bottom-color;
-@top-bar-box-shadow:          none;
+@top-bar-box-shadow:          0 0 5px 1px rgba(0, 0, 0, 0.5);
 
 @top-bar-brand-color:         #FFFFFF;
 @top-bar-brand-font-size:     24px;
@@ -130,15 +130,15 @@
 // By default it reuses some of the styles from the app header.
 // ---
 
-@toolbar-size:         60px;
-@toolbar-font-size:    22px; // size for icons
-@toolbar-bg:           @top-bar-bg;
-@toolbar-color:        white;
+@toolbar-collapsed-size: 60px;
+@toolbar-size:           360px;
+@toolbar-font-size:      22px; // size for icons
+@toolbar-bg:             @top-bar-bg;
+@toolbar-color:          white;
 
 // links
 @toolbar-link-color:          @top-bar-link-color;
 @toolbar-link-bg:             @top-bar-link-bg;
-@toolbar-link-shadow:         0 0 3px rgba(0,0,0,0.75);
 @toolbar-link-hover-color:    @top-bar-link-hover-color;
 @toolbar-link-hover-bg:       @top-bar-link-hover-bg;
 @toolbar-link-active-color:   @top-bar-link-active-color;
@@ -151,6 +151,7 @@
 // Page
 // ---
 
+@page-header-bg:               white;
 @page-header-padding:          0;
 @page-header-font-size:        @font-size-h1;
 @page-header-weight:           700;
@@ -205,23 +206,25 @@
 // and adapt to the use case in order to keep common look & feel between all summary implementations
 // ---
 
-@summary-padding:           15px;
-@summary-font:              16px;
-@summary-bg:                #262626;
+@summary-font:              @font-size-base;
 @summary-color:             white;
+@summary-lvl-indent:        20px; // indent children of a step in the summary
+
+// deprecated (? still required by PDF player)
+@summary-padding:           15px;
+@summary-bg:                #262626;
 @summary-border-radius:     0;
 @summary-box-shadow:        0 0 4px 0 rgba(0, 0, 0, 0.4);
 @summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
 @summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
 
 // Links
-@summary-link-bg:           transparent;
-@summary-link-color:        @gray-light;
-@summary-link-border-color: #444444;
-@summary-link-hover-bg:     transparent;
-@summary-link-hover-color:  #BBBBBB;
-@summary-link-active-bg:    transparent;
-@summary-link-active-color: white;
+@summary-link-bg:           @toolbar-link-bg;
+@summary-link-color:        @toolbar-link-color;
+@summary-link-hover-bg:     @toolbar-link-hover-bg;
+@summary-link-hover-color:  @toolbar-link-hover-color;
+@summary-link-active-bg:    @toolbar-link-hover-bg;
+@summary-link-active-color: @toolbar-link-active-color;
 
 
 // -

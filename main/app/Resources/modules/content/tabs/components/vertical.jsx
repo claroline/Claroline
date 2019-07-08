@@ -8,12 +8,12 @@ import {toKey} from '#/main/core/scaffolding/text/utils'
 
 const Vertical = (props) =>
   <nav
-    {...omit(props, 'tabs')}
+    {...omit(props, 'tabs', 'basePath')}
     className={classes('lateral-nav', props.className)}
   >
     {props.tabs.map((tab) =>
       <NavLink
-        to={tab.path}
+        to={props.basePath+tab.path}
         key={toKey(tab.title)}
         className="lateral-link"
         exact={tab.exact}
@@ -28,6 +28,7 @@ const Vertical = (props) =>
 
 Vertical.propTypes= {
   className: T.string,
+  basePath: T.string,
   tabs: T.arrayOf(T.shape({
     path: T.string.isRequired,
     exact: T.bool,
@@ -36,6 +37,9 @@ Vertical.propTypes= {
   })).isRequired
 }
 
+Vertical.defaultProps = {
+  basePath: ''
+}
 
 export {
   Vertical

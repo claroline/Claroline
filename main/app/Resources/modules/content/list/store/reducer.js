@@ -5,6 +5,7 @@ import merge from 'lodash/merge'
 
 import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/app/store/reducer'
 
+import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {reducer as paginationReducer} from '#/main/app/content/pagination/store/reducer'
 import {reducer as searchReducer} from '#/main/app/content/search/store/reducer'
 import {
@@ -35,11 +36,12 @@ const defaultState = {
  * A list is invalidated when its data need to be refreshed.
  */
 const invalidatedReducer = makeInstanceReducer(defaultState.invalidated, {
+  [SECURITY_USER_CHANGE]: () => true,
   [LIST_DATA_INVALIDATE]: () => true,
   [LIST_DATA_LOAD]: () => false
 })
 
-const loadedReducer = makeInstanceReducer(defaultState.invalidated, {
+const loadedReducer = makeInstanceReducer(defaultState.loaded, {
   [LIST_DATA_LOAD]: () => true
 })
 

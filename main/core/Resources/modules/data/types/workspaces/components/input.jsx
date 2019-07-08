@@ -8,20 +8,20 @@ import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
+import {WorkspaceCard} from '#/main/core/workspace/components/card'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
-import {MODAL_WORKSPACES_PICKER} from '#/main/core/modals/workspaces'
+import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
 const WorkspacesButton = props =>
   <Button
     className="btn"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-book-plus"
+    icon="fa fa-fw fa-book"
     label={trans('add_workspaces')}
     primary={true}
-    modal={[MODAL_WORKSPACES_PICKER, {
-      url: ['apiv2_administrated_list'],
+    modal={[MODAL_WORKSPACES, {
+      url: ['apiv2_workspace_list_managed'],
       title: props.title,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
@@ -82,20 +82,20 @@ const WorkspacesInput = props => {
         />
       </Fragment>
     )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-books"
-        title={trans('no_workspace')}
-      >
-        <WorkspacesButton
-          {...props.picker}
-          onChange={props.onChange}
-        />
-      </EmptyPlaceholder>
-    )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-book"
+      title={trans('no_workspace')}
+    >
+      <WorkspacesButton
+        {...props.picker}
+        onChange={props.onChange}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(WorkspacesInput, FormFieldTypes, {
@@ -104,10 +104,7 @@ implementPropTypes(WorkspacesInput, FormFieldTypes, {
     title: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('workspace_selector')
-  }
+  value: null
 })
 
 export {

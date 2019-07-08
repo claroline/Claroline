@@ -75,30 +75,13 @@ claro_desktop:
     resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
     type: annotation
 
-claro_desktop_tool_properties:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopParametersController.php"
-    prefix: desktop/tool/properties
-    type: annotation
-
 claro_workspace:
     resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
-    type: annotation
-
-claro_workspace_tool_properties:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
-    prefix: workspaces/tool/properties
     type: annotation
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     type: annotation
-
-# todo : remove me
-claro_resource_old:
-    resource: "@ClarolineCoreBundle/Controller/ResourceOldController.php"
-    prefix: /resource
-    type: annotation
-    options: { expose: true }
 
 claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"

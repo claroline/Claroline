@@ -109,6 +109,12 @@ class ToolRightsManager
         );
     }
 
+    /**
+     * @param array $orderedTools
+     * @param bool  $executeQuery
+     *
+     * @return ToolRights[]|\Doctrine\ORM\Query
+     */
     public function getRightsForOrderedTools(array $orderedTools, $executeQuery = true)
     {
         return $this->toolRightsRepo->findRightsForOrderedTools(

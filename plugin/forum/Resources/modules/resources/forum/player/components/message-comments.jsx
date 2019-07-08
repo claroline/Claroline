@@ -8,7 +8,7 @@ import {currentUser} from '#/main/app/security'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {withModal} from '#/main/app/overlay/modal/withModal'
+import {withModal} from '#/main/app/overlays/modal/withModal'
 
 import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'
 import {select} from '#/plugin/forum/resources/forum/store/selectors'

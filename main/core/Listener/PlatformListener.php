@@ -48,8 +48,6 @@ class PlatformListener
      */
     const PUBLIC_ROUTES = [
         'claro_index',
-
-        // why do we allow to log to an unavailable platform ?
         'claro_security_login',
         'claro_security_login_check',
     ];

@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {chain, lengthInRange, match, string} from '#/main/core/validation'
+import {chain, lengthInRange, match, string} from '#/main/app/data/types/validators'
 
 import {StringDisplay} from '#/main/app/data/types/string/components/display'
 import {StringInput} from '#/main/app/data/types/string/components/input'

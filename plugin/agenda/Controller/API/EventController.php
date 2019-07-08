@@ -28,7 +28,7 @@ class EventController extends AbstractCrudController
 {
     public function getClass()
     {
-        return 'Claroline\AgendaBundle\Entity\Event';
+        return Event::class;
     }
 
     public function getName()
@@ -78,9 +78,9 @@ class EventController extends AbstractCrudController
      * )
      * @EXT\Method("GET")
      *
-     * @param Workspace $workspace
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return StreamedResponse
      */
     public function exportAction(Request $request)
     {
@@ -113,9 +113,9 @@ class EventController extends AbstractCrudController
      * )
      * @EXT\Method("POST")
      *
-     * @param Workspace $workspace
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function importAction(Request $request)
     {

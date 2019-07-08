@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {BankTool as BankToolComponent} from '#/plugin/exo/tools/bank/components/tool'

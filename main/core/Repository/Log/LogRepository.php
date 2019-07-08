@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
-use Claroline\CoreBundle\API\Finder\LogFinder;
+use Claroline\CoreBundle\API\Finder\Log\LogFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
@@ -261,12 +261,12 @@ class LogRepository extends EntityRepository
      * @param $configs
      * @param $maxResult
      *
-     * @return null|Query
+     * @return Query|null
      */
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
         if (null === $configs || 0 === count($configs)) {
-            return;
+            return null;
         }
 
         $queryBuilder = $this

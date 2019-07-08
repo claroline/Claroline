@@ -8,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {Role as RoleType} from '#/main/core/user/prop-types'
-import {MODAL_ROLES_PICKER} from '#/main/core/modals/roles'
+import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
@@ -20,7 +20,7 @@ const RolesButton = props =>
     icon="fa fa-fw fa-plus"
     label={trans('add_roles')}
     primary={true}
-    modal={[MODAL_ROLES_PICKER, {
+    modal={[MODAL_ROLES, {
       url: ['apiv2_role_platform_loggable_list'], // maybe not the correct URL
       title: props.title,
       selectAction: (selected) => ({

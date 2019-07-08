@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
-import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
+import {WorkspaceCard} from '#/main/core/workspace/components/card'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 const WorkspaceDisplay = (props) => props.data ?

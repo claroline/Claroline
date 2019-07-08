@@ -35,5 +35,9 @@ registry.add('UJMExoBundle', {
     'image'    : () => { return import(/* webpackChunkName: "quiz-item-image" */     '#/plugin/exo/contents/image') },
     'text'     : () => { return import(/* webpackChunkName: "quiz-item-text" */      '#/plugin/exo/contents/text') },
     'video'    : () => { return import(/* webpackChunkName: "quiz-item-video" */     '#/plugin/exo/contents/video') }
+  },
+
+  tools: {
+    'ujm_questions' : () => { return import(/* webpackChunkName: "exo-tools-bank" */ '#/plugin/exo/tools/bank') }
   }
 })

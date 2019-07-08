@@ -2,10 +2,10 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
-
-import {DragNDropContext} from '#/main/app/overlay/dnd'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {DragNDropContext} from '#/main/app/overlays/dnd'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {hasPermission, isAuthenticated} from '#/main/app/security'
+import {hasPermission} from '#/main/app/security'
 
 import {QuizResource as QuizResourceComponent} from '#/plugin/exo/resources/quiz/components/resource'
 
@@ -26,7 +26,7 @@ const QuizResource = DragNDropContext(
           docimologyAdmin: hasPermission('view_docimology', resourceSelectors.resourceNode(state)),
           hasOverview: selectors.hasOverview(state),
           showStatistics: selectors.showStatistics(state),
-          registeredUser: isAuthenticated()
+          registeredUser: securitySelectors.isAuthenticated(state)
         }),
         (dispatch) => ({
           testMode(testMode) {

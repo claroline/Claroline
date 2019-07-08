@@ -63,7 +63,7 @@ module.exports = {
     // dev tools
     hotModuleReplacement(),
     notifier(),
-    circularDependency()
+    //circularDependency()
   ],
   optimization: {
     // bundle webpack runtime code into a single chunk file

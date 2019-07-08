@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {string} from '#/main/core/validation'
+import {string} from '#/main/app/data/types/validators'
 
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 

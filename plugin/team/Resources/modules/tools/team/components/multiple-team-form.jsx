@@ -7,7 +7,6 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
-import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 
 import {selectors} from '#/plugin/team/tools/team/store'
 
@@ -124,7 +123,7 @@ MultipleTeamFormComponent.propTypes = {
 const MultipleTeamForm = connect(
   (state) => ({
     form: formSelectors.data(formSelectors.form(state, 'teams.multiple')),
-    workspace: workspaceSelect.workspace(state),
+    workspace: state.workspace,
     resourceTypes: selectors.resourceTypes(state)
   })
 )(MultipleTeamFormComponent)

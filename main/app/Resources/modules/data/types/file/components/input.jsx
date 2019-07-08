@@ -7,7 +7,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/app/api/store'
 
-import {FileDropContext} from '#/main/app/overlay/dnd/file-drop-context'
+import {FileDropContext} from '#/main/app/overlays/dnd/file-drop-context'
 import {getType} from '#/main/app/data/types/file/utils'
 import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail'
 

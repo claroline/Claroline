@@ -19,6 +19,11 @@ class DisplayToolEvent extends Event implements DataConveyorEventInterface
 {
     private $workspace;
     private $content;
+
+    /** @var array */
+    private $data = [];
+
+    /** @var bool */
     private $isPopulated = false;
 
     public function __construct(Workspace $workspace = null)
@@ -40,6 +45,23 @@ class DisplayToolEvent extends Event implements DataConveyorEventInterface
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    /**
+     * Sets data to return in the api.
+     * NB. It MUST contain serialized structures.
+     *
+     * @param array $data
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
+        $this->isPopulated = true;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 
     public function isPopulated()

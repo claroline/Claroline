@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
-
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as resourceSelect} from '#/main/core/resource/store/selectors'
 import {hasPermission} from '#/main/app/security'
 
@@ -13,6 +13,7 @@ const ForumResource = withRouter(
   withReducer(select.STORE_NAME, reducer)(
     connect(
       (state) => ({
+        currentUser: securitySelectors.currentUser(state),
         forum: select.forum(state),
         editable: hasPermission('edit', resourceSelect.resourceNode(state))
       }),

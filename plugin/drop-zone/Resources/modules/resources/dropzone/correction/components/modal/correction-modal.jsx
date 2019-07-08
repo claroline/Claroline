@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {registry} from '#/main/app/modals/registry'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {trans} from '#/main/app/intl/translation'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
 import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group.jsx'

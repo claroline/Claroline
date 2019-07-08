@@ -1,36 +1,24 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {actions as listActions} from '#/main/app/content/list/store'
 
-import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {actions as explorerActions, selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
-import {selectors} from '#/main/core/tools/resources/store'
 import {ResourcesTool as ResourcesToolComponent} from '#/main/core/tools/resources/components/tool'
+import {selectors} from '#/main/core/tools/resources/store'
 
 const ResourcesTool = withRouter(
   connect(
     (state) => ({
-      contextType: toolSelectors.contextType(state),
-      loading: explorerSelectors.loading(explorerSelectors.explorer(state, selectors.STORE_NAME)),
-      current: explorerSelectors.currentNode(explorerSelectors.explorer(state, selectors.STORE_NAME))
+      currentUser: securitySelectors.currentUser(state),
+      root: selectors.root(state),
+      listRootName: selectors.LIST_ROOT_NAME
     }),
     (dispatch) => ({
-      addNodes(resourceNodes) {
-        dispatch(explorerActions.addNodes(selectors.STORE_NAME, resourceNodes))
-      },
-
-      updateNodes(resourceNodes) {
-        dispatch(explorerActions.updateNodes(selectors.STORE_NAME, resourceNodes))
-      },
-
-      deleteNodes(resourceNodes) {
-        dispatch(explorerActions.deleteNodes(selectors.STORE_NAME, resourceNodes))
+      invalidateRoot() {
+        dispatch(listActions.invalidateData(selectors.LIST_ROOT_NAME))
       }
-    }),
-    undefined,
-    {
-      areStatesEqual: (next, prev) => selectors.store(prev) === selectors.store(next)
-    }
+    })
   )(ResourcesToolComponent)
 )
 

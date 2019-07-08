@@ -13,7 +13,7 @@ import {displayDate} from '#/main/app/intl/date'
 import {hasPermission} from '#/main/app/security'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'

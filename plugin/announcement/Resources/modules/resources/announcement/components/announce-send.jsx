@@ -9,7 +9,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'

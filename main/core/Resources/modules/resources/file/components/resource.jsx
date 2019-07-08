@@ -8,8 +8,8 @@ import {Routes} from '#/main/app/router'
 
 import {File as FileType} from '#/main/core/files/prop-types'
 import {ResourcePage} from '#/main/core/resource/containers/page'
-import {FilePlayer} from '#/main/core/resources/file/player/components/player'
-import {FileEditor} from '#/main/core/resources/file/editor/components/editor'
+import {PlayerMain} from '#/main/core/resources/file/player/containers/main'
+import {EditorMain} from '#/main/core/resources/file/editor/containers/main'
 
 const FileResource = props =>
   <ResourcePage
@@ -29,10 +29,10 @@ const FileResource = props =>
         {
           path: '/',
           exact: true,
-          component: FilePlayer
+          component: PlayerMain
         }, {
           path: '/edit',
-          component: FileEditor,
+          component: EditorMain,
           onEnter: () => props.resetForm(props.file)
         }
       ]}

@@ -9,7 +9,7 @@ import {
   actions as formActions,
   selectors as formSelect
 } from '#/main/app/content/form/store'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'

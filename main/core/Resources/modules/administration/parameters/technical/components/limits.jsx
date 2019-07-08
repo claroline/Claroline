@@ -1,12 +1,14 @@
 import React from 'react'
-import {connect} from 'react-redux'
+
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-const LimitsComponent = () =>
+import {selectors} from '#/main/core/administration/parameters/technical/store/selectors'
+
+const Limits = () =>
   <FormData
-    name="parameters"
+    name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
@@ -42,15 +44,6 @@ const LimitsComponent = () =>
       }
     ]}
   />
-
-
-LimitsComponent.propTypes = {
-}
-
-const Limits = connect(
-  null,
-  () => ({ })
-)(LimitsComponent)
 
 export {
   Limits

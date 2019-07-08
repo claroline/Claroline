@@ -1,11 +1,13 @@
 
 import {DirectoryResource} from '#/main/core/resources/directory/containers/resource'
+import {DirectoryMenu} from '#/main/core/resources/directory/containers/menu'
+import {reducer} from '#/main/core/resources/directory/store'
 
 /**
  * Directory resource application.
- *
- * @constructor
  */
-export const App = () => ({
-  component: DirectoryResource
-})
+export default {
+  component: DirectoryResource,
+  menu: DirectoryMenu,
+  store: reducer
+}

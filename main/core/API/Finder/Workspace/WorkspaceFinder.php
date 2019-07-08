@@ -165,7 +165,7 @@ class WorkspaceFinder extends AbstractFinder
 
                     return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
                     break;
-                    //use this whith the 'user' property
+                    //use this with the 'user' property
                 case 'isManager':
                     if ($filterValue) {
                         $qb->andWhere('r.name like :ROLE_WS_MANAGER');

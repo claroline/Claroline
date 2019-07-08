@@ -214,6 +214,7 @@ class UserSerializer extends GenericSerializer
                 $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization());
             }
 
+            // TODO : do not get it here
             $serializedUser['administratedOrganizations'] = array_map(function ($organization) {
                 return $this->organizationSerializer->serialize($organization);
             }, $user->getAdministratedOrganizations()->toArray());

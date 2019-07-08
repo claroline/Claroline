@@ -1,4 +1,4 @@
-import {chain, string, notBlank} from '#/main/core/validation'
+import {chain, string, notBlank} from '#/main/app/data/types/validators'
 
 import {MessageInput} from '#/plugin/planned-notification/data/types/message/components/input'
 

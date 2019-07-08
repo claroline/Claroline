@@ -18,7 +18,7 @@ final class ToolsOptions
         'formalibre_bulletin_tool',
         'formalibre_presence_tool',
         'formalibre_reservation_agenda',
-        'home',
+        //'home',
         'inwicast_portal',
         'my-learning-objectives',
         'my_portfolios',

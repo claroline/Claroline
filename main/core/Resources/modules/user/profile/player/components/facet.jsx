@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as detailsSelect} from '#/main/app/content/details/store'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 
@@ -16,7 +17,7 @@ const ProfileFacetComponent = props => {
   let sections = []
   if (props.facet) {
     if (props.facet.sections) {
-      sections = formatDetailsSections(cloneDeep(props.facet.sections), props.user, props.parameters)
+      sections = formatDetailsSections(cloneDeep(props.facet.sections), props.user, props.parameters, props.currentUser)
     }
 
     if (get(props.facet, 'meta.main')) {
@@ -34,6 +35,7 @@ const ProfileFacetComponent = props => {
 }
 
 ProfileFacetComponent.propTypes = {
+  currentUser: T.object,
   user: T.object.isRequired,
   facet: T.shape(
     ProfileFacetTypes.propTypes
@@ -43,6 +45,7 @@ ProfileFacetComponent.propTypes = {
 
 const ProfileFacet = connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     user: detailsSelect.data(detailsSelect.details(state, 'user')),
     facet: select.currentFacet(state),
     parameters: select.parameters(state)

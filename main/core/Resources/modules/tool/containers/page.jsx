@@ -8,6 +8,7 @@ import {reducer, selectors} from '#/main/core/tool/store'
 const ToolPage = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      //loaded: selectors.loaded(state),
       name: selectors.name(state),
       currentContext: selectors.context(state)
     }),

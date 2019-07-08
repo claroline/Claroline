@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEqual from 'lodash/isEqual'
 
-import {mount, unmount} from '#/main/app/mount'
+import {mount, unmount} from '#/main/app/dom/mount'
 
 import {getWidget} from '#/main/core/widget/types'
 import {reducer} from '#/main/core/widget/content/store'

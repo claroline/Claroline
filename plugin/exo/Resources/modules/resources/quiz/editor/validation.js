@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
-import {notBlank, notEmpty, number, gteZero, gtZero, chain} from '#/main/core/validation'
+import {notBlank, notEmpty, number, gteZero, gtZero, chain} from '#/main/app/data/types/validators'
 import {trans, tval} from '#/main/app/intl/translation'
 
 import {validate as validateItem} from '#/plugin/exo/items/validation'

@@ -1,0 +1,85 @@
+.agenda-month {
+    flex: 1; // fill .page-content
+    display: flex;
+    flex-direction: column;
+    margin: 0 -(floor(@grid-gutter-width / 2)); // absorb .page-content padding
+    max-height: 100%;
+
+    background: @agenda-bg;
+
+    // rows
+    .calendar-row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .day-names {
+        flex: 0;
+        font-family: @headings-font-family;
+        color: @brand-primary;
+        font-size: @font-size-small;
+    }
+
+    .week {
+        flex: 1;
+        border-bottom: 1px solid @agenda-grid-border;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    // cells
+    .calendar-cell {
+        flex: 1;
+        text-align: center;
+        padding: 5px;
+
+        border-right: 1px solid @agenda-grid-border;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    .day-name {
+        text-transform: uppercase; // todo : use a var
+    }
+
+    .day {
+        .day-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+
+            color: @agenda-color;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+
+        &.now .day-number {
+            color: @brand-primary;
+            background: transparent;
+            border-color: @brand-primary;
+        }
+
+        &.selected .day-number {
+            color: white;
+            background: @brand-primary;
+            border-color: @brand-primary;
+        }
+
+        &.fill {
+            .day-number {
+                color: @gray-light;
+            }
+
+
+            background: @body-bg; // TODO : use its own var
+        }
+    }
+}

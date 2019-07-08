@@ -1,7 +1,4 @@
 import {trans} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
-
-const authenticatedUser = currentUser()
 
 function getMainFacet(facets) {
   return facets.find(facet => facet.meta.main)
@@ -113,16 +110,12 @@ function getFormDefaultSection(userData, isNew = false) {
 }
 
 //the `force` param is here for the user registration: just show everything
-function formatFormSections(sections, userData, params, force = null) {
-  let hasConfidentialRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])): false
-  let hasLockedRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
-
-  if (force !== null) {
-    hasLockedRights = hasConfidentialRights = force
-  }
+function formatFormSections(sections, userData, params, currentUser = null) {
+  let hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])): false
+  let hasLockedRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
 
   sections.forEach(section => {
-    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (authenticatedUser && authenticatedUser.id === userData['id'])))
+    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (currentUser && currentUser.id === userData['id'])))
     section.fields.forEach(f => {
       f['name'] = 'profile.' + f['id']
 
@@ -149,10 +142,10 @@ function formatFormSections(sections, userData, params, force = null) {
   return sections
 }
 
-function formatDetailsSections(sections, user, params) {
-  const hasConfidentialRights = hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential']))
+function formatDetailsSections(sections, user, params, currentUser) {
+  const hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])) : false
   sections.forEach(section => {
-    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (authenticatedUser && authenticatedUser.id === user.id)))
+    section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (currentUser && currentUser.id === user.id)))
     section.fields.forEach(f => {
       f['name'] = 'profile.' + f['id']
 

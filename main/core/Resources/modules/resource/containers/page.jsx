@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 // the component to connect
 import {ResourcePage as ResourcePageComponent} from '#/main/core/resource/components/page'
 // the store to use
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions, selectors} from '#/main/core/resource/store'
 
 /**
@@ -13,6 +14,8 @@ import {actions, selectors} from '#/main/core/resource/store'
  */
 const ResourcePage = connect(
   (state) => ({
+    basePath: selectors.basePath(state),
+    currentUser: securitySelectors.currentUser(state),
     loaded: selectors.loaded(state),
     embedded: selectors.embedded(state),
     showHeader: selectors.showHeader(state),

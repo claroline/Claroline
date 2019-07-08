@@ -1,6 +1,5 @@
 /* global document */
 
-import isEmpty   from 'lodash/isEmpty'
 import invariant from 'invariant'
 
 /**
@@ -34,21 +33,6 @@ function currentUser() {
   return user
 }
 
-function isAdmin() {
-  const authenticated = currentUser()
-  if (authenticated) {
-    return !!authenticated.roles.find(role => role.name === 'ROLE_ADMIN')
-  }
-
-  return false
-}
-
-function isAuthenticated() {
-  return !isEmpty(currentUser())
-}
-
 export {
-  currentUser,
-  isAdmin,
-  isAuthenticated
+  currentUser
 }

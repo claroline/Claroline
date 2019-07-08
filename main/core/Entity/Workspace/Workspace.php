@@ -11,80 +11,66 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Creator;
+use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\AppBundle\Entity\Restriction\AccessCode;
+use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
+use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\Restriction\AllowedIps;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
- * @ORM\Table(name="claro_workspace", indexes={@ORM\Index(name="name_idx", columns={"name"})})
+ * @ORM\Table(name="claro_workspace", indexes={
+ *     @ORM\Index(name="name_idx", columns={"name"})
+ * })
  */
 class Workspace
 {
-    use Poster;
-    use OrganizationsTrait;
+    // identifiers
+    use Id;
     use Uuid;
+
+    // meta
+    use Poster;
     use Thumbnail;
+    use Description;
+    use Creator;
 
-    const DEFAULT_MAX_STORAGE_SIZE = '1 TB';
-    const DEFAULT_MAX_FILE_COUNT = 10000;
-    const DEFAULT_MAX_USERS = 10000;
+    // restrictions
+    use AccessibleFrom;
+    use AccessibleUntil;
+    use AccessCode;
+    use AllowedIps;
 
-    protected static $visitorPrefix = 'ROLE_WS_VISITOR';
-    protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
-    protected static $managerPrefix = 'ROLE_WS_MANAGER';
-    protected static $customPrefix = 'ROLE_WS_CUSTOM';
+    use OrganizationsTrait;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"api_workspace", "api_workspace_min", "api_user_min", "api_user"})
-     * @Serializer\SerializedName("id")
+     * The name of the workspace.
      *
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @ORM\Column()
-     *
      * @Assert\NotBlank()
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min", "api_user_min"})
-     * @Serializer\SerializedName("name")
      *
      * @var string
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * The code of the workspace.
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("description")
-     *
-     * @var string
-     */
-    protected $description;
-
-    /**
      * @ORM\Column(unique=true)
-     *
      * @Assert\NotBlank()
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min", "api_user_min"})
-     * @Serializer\SerializedName("code")
      *
      * @var string
      */
@@ -98,9 +84,6 @@ class Workspace
 
     /**
      * @ORM\Column(type="string", nullable=false)
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("maxStorageSize")
      *
      * @var string
      */
@@ -116,18 +99,12 @@ class Workspace
     /**
      * @ORM\Column(type="integer", nullable=false)
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("maxUploadResources")
-     *
      * @var int
      */
     protected $maxUploadResources = 10000;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("maxUsers")
      *
      * @var int
      */
@@ -136,9 +113,6 @@ class Workspace
     /**
      * @ORM\Column(type="boolean")
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("displayable")
-     *
      * @var bool
      */
     protected $displayable = false;
@@ -146,24 +120,9 @@ class Workspace
     /**
      * @ORM\Column(name="isModel", type="boolean")
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("isModel")
-     *
      * @var bool
      */
     protected $model = false;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="workspace"
-     * )
-     *
-     * @var ResourceNode[]|ArrayCollection
-     *
-     * @todo : relation should not be bi directional for performances.
-     */
-    protected $resources;
 
     /**
      * @ORM\OneToMany(
@@ -185,6 +144,8 @@ class Workspace
      * )
      *
      * @var Role[]|ArrayCollection
+     *
+     * @todo : remove me. relation should be unidirectional
      */
     protected $roles;
 
@@ -200,22 +161,7 @@ class Workspace
     protected $defaultRole;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
-     *
-     * @Serializer\SerializedName("creator")
-     *
-     * @var User
-     */
-    protected $creator;
-
-    /**
      * @ORM\Column(name="self_registration", type="boolean")
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("selfRegistration")
      *
      * @var bool
      */
@@ -224,9 +170,6 @@ class Workspace
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("registrationValidation")
-     *
      * @var bool
      */
     protected $registrationValidation = false;
@@ -234,20 +177,12 @@ class Workspace
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("selfUnregistration")
-     *
      * @var bool
      */
     protected $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("creationDate")
-     * @Serializer\Accessor(getter="getCreationDate")
-     * @Serializer\Type("DateTime<'Y-m-d\TH:i:s'>")
      * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
@@ -257,48 +192,12 @@ class Workspace
     /**
      * @ORM\Column(name="is_personal", type="boolean")
      *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("isPersonal")
-     *
      * @var bool
      */
     protected $personal = false;
 
     /**
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("startDate")
-     *
-     * @var \DateTime
-     */
-    protected $startDate;
-
-    /**
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("endDate")
-     *
-     * @var \DateTime
-     */
-    protected $endDate;
-
-    /**
-     * @ORM\Column(name="is_access_date", type="boolean")
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("isAccessDate")
-     *
-     * @var bool
-     */
-    protected $isAccessDate = false;
-
-    /**
      * @ORM\Column(name="workspace_type", type="integer", nullable=true)
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("workspaceType")
      *
      * @var int
      */
@@ -306,9 +205,6 @@ class Workspace
 
     /**
      * @ORM\Column(name="disabled_notifications", type="boolean")
-     *
-     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
-     * @Serializer\SerializedName("disabledNotifications")
      *
      * @var bool
      */
@@ -356,26 +252,16 @@ class Workspace
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->roles = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
         $this->organizations = new ArrayCollection();
-        $this->workspaceModel = null;
         $this->options = new WorkspaceOptions();
     }
 
     public function __toString()
     {
         return $this->name.' ['.$this->code.']';
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -396,36 +282,6 @@ class Workspace
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description ? $this->description : '';
-    }
-
-    /**
-     * Set description.
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Get resources.
-     *
-     * @return ResourceNode[]|ArrayCollection
-     */
-    public function getResources()
-    {
-        return $this->resources;
     }
 
     /**
@@ -508,26 +364,6 @@ class Workspace
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
-    }
-
-    /**
-     * Get creator.
-     *
-     * @return User
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Set creator.
-     *
-     * @param User $creator
-     */
-    public function setCreator(User $creator = null)
-    {
-        $this->creator = $creator;
     }
 
     /**
@@ -654,12 +490,11 @@ class Workspace
     }
 
     /**
-     * @todo internal implementation should only return the prop. I don't know why it works like this
-     *
      * @return \Datetime
      */
     public function getCreated()
     {
+        // todo : change column to datetime to avoid this
         $date = !is_null($this->created) ? date('d-m-Y H:i', $this->created) : null;
 
         return new \Datetime($date);
@@ -715,44 +550,6 @@ class Workspace
         return $this->personal;
     }
 
-    public function serializeForWidgetPicker()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-        ];
-    }
-
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(\DateTime $startDate = null)
-    {
-        $this->startDate = $startDate;
-    }
-
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(\DateTime $endDate = null)
-    {
-        $this->endDate = $endDate;
-    }
-
-    public function getIsAccessDate()
-    {
-        return $this->isAccessDate;
-    }
-
-    public function setIsAccessDate($isAccessDate)
-    {
-        $this->isAccessDate = $isAccessDate;
-    }
-
     public function getWorkspaceType()
     {
         return $this->workspaceType;
@@ -789,25 +586,6 @@ class Workspace
     public function setOptions(WorkspaceOptions $options = null)
     {
         $this->options = $options;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getBackgroundColor()
-    {
-        $backgroundColor = null;
-        $workspaceOptions = $this->getOptions();
-
-        if (null !== $workspaceOptions) {
-            $workspaceOptionsDetails = $workspaceOptions->getDetails();
-
-            if (isset($workspaceOptionsDetails['background_color'])) {
-                $backgroundColor = $workspaceOptionsDetails['background_color'];
-            }
-        }
-
-        return $backgroundColor;
     }
 
     public function getManagerRole()

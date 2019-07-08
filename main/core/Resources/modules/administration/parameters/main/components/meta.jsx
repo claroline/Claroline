@@ -4,11 +4,13 @@ import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors} from '#/main/core/administration/parameters/main/store'
+
 const Meta = () =>
   <FormData
     level={2}
     title={trans('information')}
-    name="parameters"
+    name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{

@@ -2,9 +2,9 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
-import {MODAL_USERS_PICKER} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/core/modals/users'
 import {MODAL_WORKSPACE_ROLES} from '#/main/core/workspace/modals/roles'
 
 /**
@@ -17,7 +17,7 @@ export default (workspaces, refresher) => ({
   label: trans('register_users'),
   displayed: -1 !== workspaces.findIndex(workspace => hasPermission('administrate', workspace)),
   // open a modal to select the list of users to register
-  modal: [MODAL_USERS_PICKER, {
+  modal: [MODAL_USERS, {
     title: trans('register_users'),
     url: ['apiv2_user_list_registerable'],
 

@@ -72,7 +72,7 @@ class Crud
      * @param mixed  $data    - the serialized data of the object to create
      * @param array  $options - additional creation options
      *
-     * @return object
+     * @return object|array
      */
     public function create($class, $data, array $options = [])
     {
@@ -109,7 +109,7 @@ class Crud
      * @param mixed  $data    - the serialized data of the object to create
      * @param array  $options - additional update options
      *
-     * @return object
+     * @return object|array
      */
     public function update($class, $data, array $options = [])
     {
@@ -118,7 +118,7 @@ class Crud
             $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
 
             if (count($errors) > 0) {
-                return $errors;
+                return $errors; // todo : it should throw an Exception otherwise it makes return inconsistent
             }
         }
 
@@ -182,6 +182,8 @@ class Crud
      *
      * @param object $object  - the entity to copy
      * @param array  $options - additional copy options
+     *
+     * @return object
      */
     public function copy($object, array $options = [])
     {
@@ -214,6 +216,8 @@ class Crud
      * @param string $class   - the class of the entries to copy
      * @param array  $data    - the list of entries to copy
      * @param array  $options - additional copy options
+     *
+     * @return array
      */
     public function copyBulk($class, array $data, array $options = [])
     {
@@ -270,6 +274,8 @@ class Crud
      * @param string $property - the property to update
      * @param mixed  $data     - the data that must be set
      * @param array  $options  - an array of options
+     *
+     * @return object
      */
     public function replace($object, $property, $data, array $options = [])
     {
@@ -290,14 +296,19 @@ class Crud
             $this->om->save($object);
             $this->dispatch('patch', 'post', [$object, $options, $property, $data, self::PROPERTY_SET]);
         }
+
+        return $object;
     }
 
     /**
      * Validates `data` with the available validator for `class`.
      *
-     * @param string $class - the class of the entity used for validation
-     * @param mixed  $data  - the serialized data to validate
-     * @param string $mode  - the validation mode
+     * @param string $class   - the class of the entity used for validation
+     * @param mixed  $data    - the serialized data to validate
+     * @param string $mode    - the validation mode
+     * @param array  $options
+     *
+     * @return array
      */
     public function validate($class, $data, $mode, array $options = [])
     {

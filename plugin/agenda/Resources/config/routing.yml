@@ -2,17 +2,7 @@ claro_agenda:
     resource: "@ClarolineAgendaBundle/Controller/AgendaController.php"
     type: annotation
 
-claro_agenda_desktop:
-    resource: "@ClarolineAgendaBundle/Controller/DesktopAgendaController.php"
-    prefix: desktop
-    type: annotation
-
-claro_agenda_workspace:
-    resource: "@ClarolineAgendaBundle/Controller/WorkspaceAgendaController.php"
-    prefix: workspaces
-    type: annotation
-
-claro_forum_api:
+claro_event:
     resource: "@ClarolineAgendaBundle/Controller/API/"
     prefix: apiv2
     type: api

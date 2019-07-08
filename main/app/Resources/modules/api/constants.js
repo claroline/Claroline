@@ -1,4 +1,4 @@
-import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
+import {constants as alertConstants} from '#/main/app/overlays/alert/constants'
 import {constants as actionConstants} from '#/main/app/action/constants'
 
 const API_REQUEST = 'API_REQUEST'

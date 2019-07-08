@@ -18,10 +18,18 @@ class Version20190514145921 extends AbstractMigration
             ALTER TABLE claro_resource_node
             ADD slug VARCHAR(128)
         ');
+
+        $this->addSql('
+            CREATE UNIQUE INDEX UNIQ_A76799FF989D9B62 ON claro_resource_node (slug)
+        ');
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql('
+            DROP INDEX UNIQ_A76799FF989D9B62 ON claro_resource_node
+        ');
+
         $this->addSql('
             ALTER TABLE claro_resource_node
             DROP slug

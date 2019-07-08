@@ -4,6 +4,7 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config/asset'
+import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -31,7 +32,7 @@ PageTitle.propTypes = {
    * Mostly used when the current page has sub-sections
    * example : in quizzes, we have edit/play/papers/etc. sections
    */
-  subtitle: T.string
+  subtitle: T.node
 }
 
 /**
@@ -63,6 +64,7 @@ const PageHeader = props =>
 
     {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
       <Toolbar
+        id={toKey(props.title)}
         className="page-actions"
         tooltip="bottom"
         toolbar={props.toolbar}
@@ -75,7 +77,7 @@ const PageHeader = props =>
 
 PageHeader.propTypes = {
   title: T.string.isRequired,
-  subtitle: T.string,
+  subtitle: T.node,
   icon: T.oneOfType([T.string, T.element]),
   poster: T.string,
   disabled: T.bool,

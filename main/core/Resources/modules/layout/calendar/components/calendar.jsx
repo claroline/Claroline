@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
+import classes from 'classnames'
 import moment from 'moment'
+import get from 'lodash/get'
 import padStart from 'lodash/padStart'
 
 import {trans} from '#/main/app/intl/translation'
@@ -122,6 +124,20 @@ class Calendar extends Component {
   constructor(props) {
     super(props)
 
+    this.state = this.init()
+
+    this.changeView = this.changeView.bind(this)
+    this.update = this.update.bind(this)
+    this.today = this.today.bind(this)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.selected !== this.props.selected) {
+      this.setState(this.init())
+    }
+  }
+
+  init() {
     // Get local current time as UTC current time
     const now = moment.utc(moment().local().format(getApiFormat())).set('second', 0)
 
@@ -134,8 +150,8 @@ class Calendar extends Component {
     // we focus on the selected date, or now if no selected
     const referenceDate = selected ? selected : now
 
-    this.state = {
-      view: constants.CALENDAR_VIEW_DAYS,
+    return {
+      view: get(this.state, 'view') || constants.CALENDAR_VIEW_DAYS,
 
       // create moment objects for all used dates
       now: now,
@@ -153,10 +169,6 @@ class Calendar extends Component {
         moment.utc(this.props.maxTime, 'HH:mm')
       ]
     }
-
-    this.changeView = this.changeView.bind(this)
-    this.update = this.update.bind(this)
-    this.today = this.today.bind(this)
   }
 
   /**
@@ -220,7 +232,9 @@ class Calendar extends Component {
 
   render() {
     return (
-      <div className="calendar-container">
+      <div className={classes('calendar-container', {
+        vertical: this.props.vertical
+      })}>
         {this.props.showCurrent &&
           <CurrentDate
             selected={this.state.selected || this.state.now}

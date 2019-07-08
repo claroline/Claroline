@@ -6,7 +6,7 @@
   },
   "styles": {
     "entry": {
-      "agenda": "agenda.less"
+      "agenda": "tools/agenda/index.less"
     }
   }
 }

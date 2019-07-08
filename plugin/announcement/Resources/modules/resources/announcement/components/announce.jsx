@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 

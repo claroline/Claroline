@@ -1,14 +1,11 @@
 
-import {hasPermission} from '#/main/app/security/permissions'
+import {isAdmin, hasPermission} from '#/main/app/security/permissions'
 import {
-  currentUser,
-  isAdmin,
-  isAuthenticated
+  currentUser
 } from '#/main/app/security/authenticated'
 
 export {
   currentUser,
   isAdmin,
-  isAuthenticated,
   hasPermission
 }

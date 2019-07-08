@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
@@ -7,13 +7,13 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 import {NewMessage} from '#/plugin/message/tools/messaging/components/new-message'
 import {actions, selectors} from '#/plugin/message/tools/messaging/store'
 
 const MessageComponent = (props) =>
-  <div>
+  <Fragment>
     <h2>{props.message.object}</h2>
     <UserMessage
       user={get(props.message, 'from')}
@@ -48,7 +48,7 @@ const MessageComponent = (props) =>
     {(!get(props.message, 'meta.sent') && !get(props.message, 'meta.removed')) &&
       <NewMessage/>
     }
-  </div>
+  </Fragment>
 
 MessageComponent.propTypes = {
   message: T.shape({

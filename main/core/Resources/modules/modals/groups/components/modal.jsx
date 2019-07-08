@@ -4,14 +4,14 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/core/modals/groups/store'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list'
+import {GroupList} from '#/main/core/administration/users/group/components/group-list'
 import {Group as GroupType} from '#/main/core/user/prop-types'
 
-const GroupsPickerModal = props => {
+const GroupsModal = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
@@ -44,7 +44,7 @@ const GroupsPickerModal = props => {
   )
 }
 
-GroupsPickerModal.propTypes = {
+GroupsModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
   selectAction: T.func.isRequired,
@@ -55,11 +55,11 @@ GroupsPickerModal.propTypes = {
   resetSelect: T.func.isRequired
 }
 
-GroupsPickerModal.defaultProps = {
+GroupsModal.defaultProps = {
   url: ['apiv2_group_list_registerable'], //apiv2_group_list_registerable = filter by current user organizations
-  title: trans('groups_picker')
+  title: trans('groups')
 }
 
 export {
-  GroupsPickerModal
+  GroupsModal
 }

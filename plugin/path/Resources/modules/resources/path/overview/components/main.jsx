@@ -26,7 +26,7 @@ const OverviewMain = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play icon-with-text-right',
         label: trans('start_path', {}, 'path'),
-        target: '/play',
+        target: `${props.basePath}/play`,
         primary: true,
         disabled: props.empty,
         disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'path')]:[]
@@ -37,12 +37,14 @@ const OverviewMain = props =>
       <h3 className="h2">{trans('summary')}</h3>
 
       <OverviewSummary
+        basePath={props.basePath}
         steps={props.path.steps}
       />
     </section>
   </ResourceOverview>
 
 OverviewMain.propTypes = {
+  basePath: T.string.isRequired,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,

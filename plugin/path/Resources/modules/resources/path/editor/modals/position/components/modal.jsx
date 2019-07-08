@@ -6,7 +6,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/plugin/path/resources/path/editor/modals/position/store/selectors'

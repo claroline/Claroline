@@ -4,14 +4,14 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections.jsx'
 import {ListData} from '#/main/app/content/list/containers/data.jsx'
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
-import {RoleList} from '#/main/core/administration/user/role/components/role-list'
+import {OrganizationList} from '#/main/core/administration/users/organization/components/organization-list'
+import {RoleList} from '#/main/core/administration/users/role/components/role-list'
 
 import {actions} from '#/plugin/reservation/administration/resource/actions'
 

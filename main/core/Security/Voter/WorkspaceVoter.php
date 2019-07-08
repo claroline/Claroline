@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,18 +42,13 @@ class WorkspaceVoter extends AbstractVoter
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
-        $now = new \DateTime();
-
-        if ($object->getEndDate()) {
-            if ($now->getTimeStamp() > $object->getEndDate()->getTimeStamp()) {
-                return VoterInterface::ACCESS_DENIED;
-            }
-        }
-
-        if ($object->getStartDate()) {
-            if ($now->getTimeStamp() < $object->getStartDate()->getTimeStamp()) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        /** @var WorkspaceRestrictionsManager $restrictionsManager */
+        $restrictionsManager = $this->container->get('claroline.manager.workspace_restrictions');
+        if (!$restrictionsManager->isStarted($object)
+            || $restrictionsManager->isEnded($object)
+            || !$restrictionsManager->isUnlocked($object)
+            || !$restrictionsManager->isIpAuthorized($object)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         //then we do all the rest
@@ -168,8 +163,10 @@ class WorkspaceVoter extends AbstractVoter
         return false;
     }
 
-    protected function isUsurper(TokenInterface $token)
+    protected function isImpersonated(TokenInterface $token)
     {
-        return $token instanceof ViewAsToken;
+        $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
+
+        return $wm->isImpersonated($token);
     }
 }

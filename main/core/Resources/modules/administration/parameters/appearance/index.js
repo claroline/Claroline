@@ -1,19 +1,10 @@
+
 import {reducer} from '#/main/core/administration/parameters/appearance/store/reducer'
-import {Tool} from '#/main/core/administration/parameters/appearance/components/tool'
+import {AppearanceTool} from '#/main/core/administration/parameters/appearance/components/tool'
+import {AppearanceMenu} from '#/main/core/administration/parameters/appearance/components/menu'
 
-export const App = () => ({
-  component: Tool,
-  store: reducer,
-  initialData: (initialData) => ({
-    tool: {
-      name: 'appearance_settings',
-      currentContext: initialData.currentContext
-    },
-
-    parameters: {
-      data: initialData.parameters,
-      originalData: initialData.parameters
-    },
-    iconSetChoices: initialData.iconSetChoices
-  })
-})
+export default {
+  component: AppearanceTool,
+  menu: AppearanceMenu,
+  store: reducer
+}

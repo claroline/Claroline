@@ -1,11 +1,9 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {SummarizedContent} from '#/main/app/content/summary/components/content'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
@@ -24,7 +22,6 @@ class EditorMain extends Component {
     super(props)
 
     this.getStepActions = this.getStepActions.bind(this)
-    this.getStepSummary = this.getStepSummary.bind(this)
   }
 
   getStepActions(step) {
@@ -87,101 +84,73 @@ class EditorMain extends Component {
     ]
   }
 
-  getStepSummary(step) {
-    return {
-      type: LINK_BUTTON,
-      icon: classes('step-progression fa fa-circle', step.userProgression && step.userProgression.status),
-      label: step.title,
-      target: `/edit/${step.id}`,
-      additional: this.getStepActions(step),
-      children: step.children ? step.children.map(this.getStepSummary) : []
-    }
-  }
-
   render() {
     return (
       <Fragment>
         <h2 className="sr-only">{trans('configuration')}</h2>
-        <SummarizedContent
-          summary={{
-            displayed: true,
-            opened: this.props.summaryOpened,
-            pinned: this.props.summaryPinned,
-            links: [{
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-cog',
-              label: trans('parameters'),
-              target: '/edit/parameters'
-            }].concat(this.props.path.steps.map(this.getStepSummary), [{
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-plus',
-              label: trans('step_add', {}, 'path'),
-              callback: () => this.props.addStep()
-            }])
-          }}
-        >
-          <Routes
-            redirect={[
-              {from: '/edit/', to: '/edit/parameters', exact: true}
-            ]}
-            routes={[
-              {
-                path: '/edit/parameters',
-                exact: true,
-                render: () => {
-                  const Parameters = (
-                    <EditorParameters
-                      path={this.props.path}
-                      workspace={this.props.workspace}
-                    />
+        <Routes
+          path={this.props.basePath}
+          redirect={[
+            {from: '/edit/', to: '/edit/parameters', exact: true}
+          ]}
+          routes={[
+            {
+              path: '/edit/parameters',
+              exact: true,
+              render: () => {
+                const Parameters = (
+                  <EditorParameters
+                    path={this.props.path}
+                    workspace={this.props.workspace}
+                  />
+                )
+
+                return Parameters
+              }
+            }, {
+              path: '/edit/:id',
+              render: (routeProps) => {
+                const step = this.props.steps.find(step => routeProps.match.params.id === step.id)
+
+                if (step) {
+                  const CurrentStep = (
+                    <PathCurrent
+                      prefix={`${this.props.basePath}/edit`}
+                      current={step}
+                      all={this.props.steps}
+                      navigation={true}
+                    >
+                      <EditorStep
+                        {...step}
+                        pathId={this.props.path.id}
+                        workspace={this.props.workspace}
+                        resourceParent={this.props.resourceParent}
+                        actions={this.getStepActions(step)}
+                        numbering={getNumbering(this.props.path.display.numbering, this.props.path.steps, step)}
+                        customNumbering={constants.NUMBERING_CUSTOM === this.props.path.display.numbering}
+                        stepPath={getFormDataPart(step.id, this.props.path.steps)}
+                        onEmbeddedResourceClose={this.props.computeResourceDuration}
+                      />
+                    </PathCurrent>
                   )
 
-                  return Parameters
+                  return CurrentStep
                 }
-              }, {
-                path: '/edit/:id',
-                render: (routeProps) => {
-                  const step = this.props.steps.find(step => routeProps.match.params.id === step.id)
 
-                  if (step) {
-                    const CurrentStep = (
-                      <PathCurrent
-                        prefix="/edit"
-                        current={step}
-                        all={this.props.steps}
-                        navigation={true}
-                      >
-                        <EditorStep
-                          {...step}
-                          pathId={this.props.path.id}
-                          workspace={this.props.workspace}
-                          resourceParent={this.props.resourceParent}
-                          actions={this.getStepActions(step)}
-                          numbering={getNumbering(this.props.path.display.numbering, this.props.path.steps, step)}
-                          customNumbering={constants.NUMBERING_CUSTOM === this.props.path.display.numbering}
-                          stepPath={getFormDataPart(step.id, this.props.path.steps)}
-                          onEmbeddedResourceClose={this.props.computeResourceDuration}
-                        />
-                      </PathCurrent>
-                    )
+                routeProps.history.push(`${this.props.basePath}/edit`)
 
-                    return CurrentStep
-                  }
-
-                  routeProps.history.push('/edit')
-
-                  return null
-                }
+                return null
               }
-            ]}
-          />
-        </SummarizedContent>
+            }
+          ]}
+        />
       </Fragment>
     )
   }
 }
 
 EditorMain.propTypes = {
+  basePath: T.string.isRequired,
   workspace: T.object,
   path: T.shape(
     PathTypes.propTypes
@@ -192,10 +161,6 @@ EditorMain.propTypes = {
   resourceParent: T.shape(
     ResourceNodeTypes.propTypes
   ),
-
-  // summary
-  summaryOpened: T.bool.isRequired,
-  summaryPinned: T.bool.isRequired,
 
   // step actions
   addStep: T.func.isRequired,

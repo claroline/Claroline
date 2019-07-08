@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
@@ -237,10 +236,6 @@ class DatabaseWriter
             $this->createAdminTool($adminTool, $plugin);
         }
 
-        foreach ($processedConfiguration['additional_action'] as $action) {
-            $this->updateAdditionalAction($action);
-        }
-
         foreach ($processedConfiguration['templates'] as $templateType) {
             $this->createTemplateType($templateType, $plugin);
         }
@@ -296,23 +291,6 @@ class DatabaseWriter
         }
 
         //remove admin tools
-        $installedActions = $this->em->getRepository('ClarolineCoreBundle:Action\AdditionalAction')->findAll();
-        $actions = $processedConfiguration['additional_action'];
-        $actionsName = array_map(function ($action) {
-            return $action['action'];
-        }, $actions);
-
-        $toRemove = array_filter($installedActions, function (AdditionalAction $action) use ($actionsName) {
-            return !in_array($action->getAction(), $actionsName);
-        });
-
-        /** @var AdditionalAction $action */
-        foreach ($toRemove as $action) {
-            $this->log('Removing action '.$action->getAction());
-            $this->em->remove($action);
-        }
-
-        //remove additional actions
         /** @var AdminTool[] $installedAdminTools */
         $installedAdminTools = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
           ->findBy(['plugin' => $plugin]);
@@ -332,10 +310,6 @@ class DatabaseWriter
 
         foreach ($adminTools as $adminTool) {
             $this->updateAdminTool($adminTool, $plugin);
-        }
-
-        foreach ($processedConfiguration['additional_action'] as $actionConfiguration) {
-            $this->updateAdditionalAction($actionConfiguration);
         }
 
         foreach ($processedConfiguration['templates'] as $templateType) {
@@ -441,26 +415,6 @@ class DatabaseWriter
         } else {
             return $this->persistWidget($widgetConfiguration, $widget);
         }
-    }
-
-    private function updateAdditionalAction(array $action)
-    {
-        $this->log("Adding action  {$action['type']}:{$action['displayed_name']}");
-        $aa = $this->em->getRepository('ClarolineCoreBundle:Action\AdditionalAction')->findOneBy([
-            'action' => $action['action'],
-            'type' => $action['type'],
-        ]);
-
-        if (!$aa) {
-            $aa = new AdditionalAction();
-        }
-
-        $aa->setClass($action['class']);
-        $aa->setAction($action['action']);
-        $aa->setDisplayedName($action['displayed_name']);
-        $aa->setType($action['type']);
-        $this->em->persist($aa);
-        $this->em->flush();
     }
 
     /**

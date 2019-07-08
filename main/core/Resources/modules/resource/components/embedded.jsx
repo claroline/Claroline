@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {mount, unmount} from '#/main/app/mount'
+import {mount, unmount} from '#/main/app/dom/mount'
 
-import {constants} from '#/main/core/tool/constants'
-import {App} from '#/main/core/resource'
+import {ResourceMain} from '#/main/core/resource/containers/main'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 // the class is because of the use of references and lifecycle
@@ -34,17 +33,9 @@ class ResourceEmbedded extends Component {
   }
 
   mountResource() {
-    const ResourceApp = new App()
+    // cloneElement(ResourceApp.component, {resourceId: this.props.resourceNode.id, path: ''})
 
-    mount(this.mountNode, ResourceApp.component, ResourceApp.store, {
-      tool: {
-        name: 'resource_manager',
-        // In fact, I think I should let the caller choose the context
-        currentContext: {
-          type: this.props.resourceNode.workspace ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,
-          data: this.props.resourceNode.workspace || null
-        }
-      },
+    mount(this.mountNode, ResourceMain, {}, {
       resourceNode: this.props.resourceNode,
       embedded: true,
       showHeader: this.props.showHeader,

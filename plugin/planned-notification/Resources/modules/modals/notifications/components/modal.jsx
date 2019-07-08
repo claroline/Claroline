@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/plugin/planned-notification/modals/notifications/store'

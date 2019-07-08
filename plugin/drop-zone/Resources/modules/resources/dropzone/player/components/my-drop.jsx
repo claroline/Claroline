@@ -4,13 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
 import {trans} from '#/main/app/intl/translation'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
 import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
@@ -21,6 +20,7 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document'
 import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
+import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {Comments} from '#/plugin/drop-zone/resources/dropzone/player/components/comments'
 
@@ -225,7 +225,7 @@ const MyDrop = connect(
             let callback
             title = trans('add_primary_resource', {}, 'path')
             callback = (selected) => {dispatch(actions.saveDocument(dropId, data.type, selected[0].id))}
-            dispatch(modalActions.showModal(MODAL_RESOURCE_EXPLORER, {
+            dispatch(modalActions.showModal(MODAL_RESOURCES, {
               title: title,
               current: parent,
               selectAction: (selected) => ({

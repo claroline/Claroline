@@ -1,17 +1,20 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
-import {isAuthenticated} from '#/main/app/security'
 
-export default (resourceNodes) => ({ // todo collection
-  name: 'favourite',
-  type: ASYNC_BUTTON,
-  icon: 'fa fa-fw fa-star-o',
-  label: trans('add-favourite', {}, 'actions'),
-  displayed: isAuthenticated(),
-  request: {
-    url: ['hevinci_favourite_toggle', {ids: resourceNodes.map(node => node.id)}],
+export default (resourceNodes, nodesRefresher, path, currentUser) => {
+  return ({
+    name: 'favourite',
+    type: ASYNC_BUTTON,
+    icon: 'fa fa-fw fa-star-o',
+    label: trans('add-favourite', {}, 'actions'),
+    displayed: !isEmpty(currentUser),
     request: {
-      method: 'PUT'
+      url: ['hevinci_favourite_toggle', {ids: resourceNodes.map(node => node.id)}],
+      request: {
+        method: 'PUT'
+      }
     }
-  }
-})
+  })
+}

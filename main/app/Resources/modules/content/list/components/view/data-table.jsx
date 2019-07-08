@@ -12,7 +12,7 @@ import {
   Action as ActionTypes,
   PromisedAction as PromisedActionTypes
 } from '#/main/app/action/prop-types'
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {
   Table,
   TableHeaderCell,

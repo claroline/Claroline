@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,6 +34,7 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
      *
      * @param string[]  $roles
      * @param Workspace $workspace
+     * @param int       $orderedToolType
      *
      * @return Tool[]
      *
@@ -43,13 +45,13 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
         Workspace $workspace,
         $orderedToolType = 0
     ) {
-        if (count($roles) === 0) {
-            return array();
+        if (0 === count($roles)) {
+            return [];
         } else {
             $isAdmin = false;
 
             foreach ($roles as $role) {
-                if ($role === 'ROLE_ADMIN' || $role === 'ROLE_WS_MANAGER_'.$workspace->getGuid()) {
+                if ('ROLE_ADMIN' === $role || 'ROLE_WS_MANAGER_'.$workspace->getUuid() === $role) {
                     $isAdmin = true;
                 }
             }
@@ -174,8 +176,9 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
      * Returns the non-visible tools in a user's desktop.
      *
      * @param User $user
+     * @param int  $orderedToolType
      *
-     * @return array[Tool]
+     * @return Tool[]
      */
     public function findDesktopUndisplayedToolsByUser(User $user, $orderedToolType = 0)
     {
@@ -207,7 +210,7 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
     /**
      * Returns the non-visible tools in a user's desktop in admin configuration.
      *
-     * @return array[Tool]
+     * @return Tool[]
      */
     public function findDesktopUndisplayedToolsByTypeForAdmin($orderedToolType = 0)
     {
@@ -240,8 +243,9 @@ class ToolRepository extends EntityRepository implements ContainerAwareInterface
      * Returns the non-visible tools in a workspace.
      *
      * @param Workspace $workspace
+     * @param int       $orderedToolType
      *
-     * @return array[Tool]
+     * @return Tool[]
      */
     public function findUndisplayedToolsByWorkspace(
         Workspace $workspace,

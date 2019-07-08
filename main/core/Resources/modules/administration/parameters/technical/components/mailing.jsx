@@ -7,6 +7,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 
+import {selectors} from '#/main/core/administration/parameters/technical/store/selectors'
+
 const mailers = [
   {
     name: 'sendmail',
@@ -103,7 +105,7 @@ const mailers = [
 
 const MailingForm = (props) =>
   <FormData
-    name="parameters"
+    name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
@@ -143,7 +145,7 @@ MailingForm.propTypes = {
 
 const Mailing = connect(
   (state) => ({
-    mailer: formSelectors.data(formSelectors.form(state, 'parameters')).mailer
+    mailer: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)).mailer
   })
 )(MailingForm)
 

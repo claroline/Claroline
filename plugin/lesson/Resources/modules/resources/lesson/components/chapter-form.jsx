@@ -15,7 +15,7 @@ import {constants} from '#/plugin/lesson/resources/lesson/constants'
 import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/utils'
 import {actions as lessonActions} from '#/plugin/lesson/resources/lesson/store'
 import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/modals/chapter'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store'

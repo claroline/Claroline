@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
 

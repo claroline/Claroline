@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep'
-
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
@@ -7,8 +5,6 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {Workspace} from '#/main/core/workspace/prop-types'
 import {reducer as creationReducer} from '#/main/core/workspace/creation/store'
-import {LOAD_ARCHIVE} from '#/main/core/workspace/creation/store/actions'
-
 const reducer = {
   workspaces: combineReducers({
     creation: creationReducer,
@@ -25,19 +21,7 @@ const reducer = {
     }),
     current: makeFormReducer('workspaces.current', {data: Workspace.defaultProps, originalData: Workspace.defaultProps}, {
       organizations: makeListReducer('workspaces.current.organizations'),
-      managers: makeListReducer('workspaces.current.managers'),
-      data: makeReducer(Workspace.defaultProps, {
-        [LOAD_ARCHIVE]: (state, action) => {
-          const workspace = cloneDeep(action.data)
-          workspace.meta.forceLang = !!workspace.meta.lang
-
-          //if they exists...
-          delete workspace.id
-          delete workspace.uuid
-
-          return workspace
-        }
-      })
+      managers: makeListReducer('workspaces.current.managers')
     })
   }),
   organizations: combineReducers({

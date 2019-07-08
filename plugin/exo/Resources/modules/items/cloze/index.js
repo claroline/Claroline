@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, notEmpty, chain} from '#/main/core/validation'
+import {notBlank, notEmpty, chain} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/cloze/prop-types'

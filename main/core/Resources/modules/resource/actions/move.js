@@ -2,7 +2,7 @@ import {url} from '#/main/app/api'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
+import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 /**
  * Moves resource nodes to the destination chosen by the user.
@@ -15,7 +15,7 @@ export default (resourceNodes, nodesRefresher) => ({
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-arrows',
   label: trans('move', {}, 'actions'),
-  modal: [MODAL_RESOURCE_EXPLORER, {
+  modal: [MODAL_RESOURCES, {
     title: trans('select_target_directory'),
     current: 0 < resourceNodes.length && resourceNodes[0].parent ? resourceNodes[0].parent : null,
     selectAction: (selected) => ({

@@ -16,7 +16,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -35,7 +34,7 @@ class MaintenanceListener
     const PUBLIC_ROUTES = [
         'claro_index',
 
-        // why do we allow to log to an unavailable platform ?
+        // allow login to let administrator access the platform.
         'claro_security_login',
         'claro_security_login_check',
     ];

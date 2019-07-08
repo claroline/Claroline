@@ -1,16 +1,22 @@
+import {createSelector} from 'reselect'
 
 import {trans} from '#/main/app/intl/translation'
 
-const toolChoices = (state) => {
-  const choices = {}
+const STORE_NAME = 'technical_settings'
+const FORM_NAME = STORE_NAME+'.parameters'
 
-  state.tools.forEach(tool => {
-    choices[tool] = trans(tool, {}, 'tools')
-  })
+const store = (state) => state[STORE_NAME]
 
-  return choices
-}
+const toolChoices = createSelector(
+  [store],
+  (store) => store.tools.reduce((acc, current) => Object.assign(acc, {
+    [current]: trans(current, {}, 'tools')
+  }), {})
+)
 
 export const selectors = {
+  STORE_NAME,
+  FORM_NAME,
+
   toolChoices
 }

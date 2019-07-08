@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 const TableCell = props =>
   <td className={classes(`text-${props.align}`, props.className)}>

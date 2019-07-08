@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -34,15 +35,16 @@ class OrderedToolRepository extends EntityRepository implements ContainerAwareIn
      *
      * @param Workspace $workspace
      * @param array     $roles
+     * @param int       $type
      *
-     * @return array[OrderedTool]
+     * @return OrderedTool[]
      */
     public function findByWorkspaceAndRoles(
         Workspace $workspace,
         array $roles,
         $type = 0
     ) {
-        if (count($roles) === 0) {
+        if (0 === count($roles)) {
             return [];
         } else {
             $dql = '
@@ -179,6 +181,13 @@ class OrderedToolRepository extends EntityRepository implements ContainerAwareIn
         return $query->getResult();
     }
 
+    /**
+     * @param User $user
+     * @param int  $type
+     * @param bool $executeQuery
+     *
+     * @return \Doctrine\ORM\Query|OrderedTool[]
+     */
     public function findDisplayableDesktopOrderedToolsByUser(
         User $user,
         $type = 0,
@@ -240,6 +249,12 @@ class OrderedToolRepository extends EntityRepository implements ContainerAwareIn
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    /**
+     * @param int  $type
+     * @param bool $executeQuery
+     *
+     * @return \Doctrine\ORM\Query|OrderedTool[]
+     */
     public function findDisplayableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
         $executeQuery = true

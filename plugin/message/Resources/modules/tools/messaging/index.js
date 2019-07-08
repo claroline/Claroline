@@ -1,29 +1,11 @@
-import {Messaging} from '#/plugin/message/tools/messaging/components/messaging'
 
-import {bootstrap} from '#/main/app/dom/bootstrap'
+import {MessagingTool} from '#/plugin/message/tools/messaging/containers/tool'
+import {MessagingMenu} from '#/plugin/message/tools/messaging/components/menu'
 
 import {reducer} from '#/plugin/message/tools/messaging/store'
 
-// mount the react application
-bootstrap(
-  // app DOM container (also holds initial app data as data attributes)
-  '.messaging-container',
-
-  // app main component
-  Messaging,
-
-  // app store configuration
-  reducer,
-
-  // remap data-attributes set on the app DOM container
-  // todo load remaining through ajax
-  (initialData) => {
-
-    return {
-      parameters: {
-        data: initialData.parameters,
-        originalData: initialData.parameters
-      }
-    }
-  }
-)
+export default {
+  component: MessagingTool,
+  menu: MessagingMenu,
+  store: reducer
+}

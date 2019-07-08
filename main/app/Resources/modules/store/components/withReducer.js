@@ -10,9 +10,9 @@ class ReducerLoader extends Component {
   }
 
   render() {
-    if (!this.props.storeState[this.props.keyName]) {
+    /*if (!this.props.storeState || !this.props.storeState[this.props.keyName]) {
       return null
-    }
+    }*/
 
     return this.props.children
   }
@@ -24,6 +24,10 @@ ReducerLoader.propTypes = {
   keyName: T.string.isRequired,
   reducer: T.func.isRequired,
   children: T.any
+}
+
+ReducerLoader.defaultProps = {
+  //storeState: {}
 }
 
 function getDisplayName(WrappedComponent) {

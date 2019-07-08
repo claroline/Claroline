@@ -4,15 +4,14 @@ import set from 'lodash/set'
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
 import {dateToDisplayFormat} from '#/main/app/intl/date'
-import {trans} from '#/main/app/intl/translation'
-import {tval} from '#/main/app/intl/translation'
+import {trans, tval} from '#/main/app/intl/translation'
 import {API_REQUEST} from '#/main/app/api'
-import {actions as alertActions} from '#/main/app/overlay/alert/store'
-import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
+import {actions as alertActions} from '#/main/app/overlays/alert/store'
+import {constants as alertConstants} from '#/main/app/overlays/alert/constants'
 import {constants as actionConstants} from '#/main/app/action/constants'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {currentUser} from '#/main/app/security'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 export const FORM_RESET          = 'FORM_RESET'
@@ -61,8 +60,10 @@ actions.getItemLock = (className, id) => (dispatch) => {
   }
 }
 
-actions.validateLock = (lock) => (dispatch) => {
-  if (lock.user.username !== currentUser().username) {
+actions.validateLock = (lock) => (dispatch, getState) => {
+  const currentUser = securitySelectors.currentUser(getState())
+
+  if (lock.user.username !== currentUser.username) {
     dispatch(
       modalActions.showModal(MODAL_CONFIRM, {
         title: trans('update_object'),
@@ -109,7 +110,7 @@ actions.errors = (formName, errors) => (dispatch) => {
     })
 
     // dispatch an error action if the caller want to do something particular
-    dispatch(actions.submitFormError(formName, formErrors))
+    dispatch(actions.submitError(formName, formErrors))
 
     // inject errors in form
     dispatch(actions.setErrors(formName, formErrors))
@@ -121,7 +122,7 @@ actions.save = (formName, target) => (dispatch, getState) => {
   const formData = formSelect.data(formSelect.form(getState(), formName))
   const formErrors = formSelect.errors(formSelect.form(getState(), formName))
 
-  dispatch(actions.submitForm(formName))
+  dispatch(actions.submit(formName))
 
   if (!isEmpty(formErrors)) {
     const status = alertConstants.ALERT_STATUS_WARNING
@@ -137,40 +138,37 @@ actions.save = (formName, target) => (dispatch, getState) => {
     ))
 
     return Promise.reject()
-  } else {
-    return dispatch({
-      [API_REQUEST]: {
-        url: target,
-        request: {
-          method: formNew ? 'POST' : 'PUT',
-          body: JSON.stringify(formData)
-        },
-        success: (response, dispatch) => {
-          dispatch(actions.submitFormSuccess(formName, response))
-
-          if (response) {
-            // I should check status code (204) instead but I don't have access to it here
-            dispatch(actions.resetForm(formName, response, false))
-          }
-        },
-        error: (errors, status, dispatch) => dispatch(actions.errors(formName, errors))
-      }
-    })
   }
+
+  return dispatch({
+    [API_REQUEST]: {
+      url: target,
+      request: {
+        method: formNew ? 'POST' : 'PUT',
+        body: JSON.stringify(formData)
+      },
+      success: (response, dispatch) => {
+        dispatch(actions.submitSuccess(formName, response))
+
+        if (response) {
+          // I should check status code (204) instead but I don't have access to it here
+          dispatch(actions.reset(formName, response, false))
+        }
+      },
+      error: (errors, status, dispatch) => dispatch(actions.errors(formName, errors))
+    }
+  })
 }
 
 actions.cancelChanges = (formName) => (dispatch, getState) => {
   const formNew = formSelect.isNew(formSelect.form(getState(), formName))
   const originalData = formSelect.originalData(formSelect.form(getState(), formName))
 
-  dispatch(actions.resetForm(formName, originalData, formNew))
+  dispatch(actions.reset(formName, originalData, formNew))
 }
 
 // I keep them for retro compatibility.
 // Please don't use them and use new naming
 // TODO : remove me
-actions.submitForm = actions.submit
-actions.submitFormSuccess = actions.submitSuccess
-actions.submitFormError = actions.submitError
 actions.resetForm = actions.reset
 actions.saveForm = actions.save

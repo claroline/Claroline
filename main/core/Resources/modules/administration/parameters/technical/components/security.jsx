@@ -1,14 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
+
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+
 import {selectors} from '#/main/core/administration/parameters/technical/store/selectors'
-import {PropTypes as T} from 'prop-types'
 
 const SecurityComponent = props =>
   <FormData
-    name="parameters"
+    name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
@@ -57,7 +59,6 @@ const SecurityComponent = props =>
     ]}
   />
 
-
 SecurityComponent.propTypes = {
   toolChoices: T.object.isRequired
 }
@@ -65,8 +66,7 @@ SecurityComponent.propTypes = {
 const Security = connect(
   (state) => ({
     toolChoices: selectors.toolChoices(state)
-  }),
-  () => ({ })
+  })
 )(SecurityComponent)
 
 export {

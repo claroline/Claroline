@@ -6,9 +6,9 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group'
 
 import {actions} from '#/plugin/reservation/administration/resource-type/actions'

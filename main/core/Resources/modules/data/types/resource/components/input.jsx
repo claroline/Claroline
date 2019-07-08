@@ -12,7 +12,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
+import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 const ResourceInput = props => {
   if (!isEmpty(props.value) && !props.embedded) {
@@ -25,7 +25,7 @@ const ResourceInput = props => {
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-recycle',
             label: trans('replace', {}, 'actions'),
-            modal: [MODAL_RESOURCE_EXPLORER, {
+            modal: [MODAL_RESOURCES, {
               title: props.picker.title,
               current: props.picker.current,
               root: props.picker.root,
@@ -86,7 +86,7 @@ const ResourceInput = props => {
         <ModalButton
           className="btn"
           primary={true}
-          modal={[MODAL_RESOURCE_EXPLORER, {
+          modal={[MODAL_RESOURCES, {
             title: props.picker.title,
             current: props.picker.current,
             root: props.picker.root,
@@ -125,7 +125,6 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
 }, {
   value: null,
   picker: {
-    title: trans('resource_picker'),
     current: null,
     filters: {},
     root: null

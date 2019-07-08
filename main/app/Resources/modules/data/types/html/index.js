@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {chain, string} from '#/main/core/validation'
+import {chain, string} from '#/main/app/data/types/validators'
 
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {HtmlCell} from '#/main/app/data/types/html/components/table'

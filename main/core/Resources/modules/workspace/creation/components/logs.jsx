@@ -4,28 +4,20 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 
-const Logs = props => {
-  return (<div>
-    <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      <div className="panel panel-default">
-        <div className="panel-heading" role="tab" id="headingOne">
-          <h4 className="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              {trans('log')}
-            </a>
-          </h4>
-        </div>
-        <div id="collapseOne" className="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div className="panel-body">
-            <pre>
-              {props.data.log}
-            </pre>
-          </div>
-        </div>
-      </div>
+const Logs = props =>
+  <div className="panel panel-default">
+    <div className="panel-heading">
+      <h4 className="panel-title">
+        {trans('log')}
+      </h4>
     </div>
-  </div>)
-}
+
+    <div className="panel-body">
+      <pre>
+        {props.data.log}
+      </pre>
+    </div>
+  </div>
 
 Logs.propTypes = {
   data: T.object.isRequired

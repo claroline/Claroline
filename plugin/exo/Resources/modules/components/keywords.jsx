@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {ContentError} from '#/main/app/content/components/error'
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 

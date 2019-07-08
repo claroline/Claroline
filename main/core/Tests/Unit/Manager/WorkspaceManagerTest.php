@@ -322,34 +322,6 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->assertEquals($workspaces, $this->getManager()->getWorkspacesByUser($user));
     }
 
-    public function testGetNbWorkspaces()
-    {
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->workspaceRepo->shouldReceive('count')
-            ->once()
-            ->andReturn(4);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-
-        $this->assertEquals(4, $this->getManager()->getNbWorkspaces());
-    }
-
-    public function testGetWorkspacesByRoles()
-    {
-        $roleA = new Role();
-        $roleB = new Role();
-        $roles = [$roleA, $roleB];
-        $workspaces = ['workspaceA', 'workspaceB'];
-
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->workspaceRepo->shouldReceive('findByRoles')
-            ->with($roles)
-            ->once()
-            ->andReturn($workspaces);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-
-        $this->assertEquals($workspaces, $this->getManager()->getOpenableWorkspacesByRoles($roles));
-    }
-
     public function testGetLatestWorkspacesByUser()
     {
         $user = new User();
@@ -403,22 +375,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         );
     }
 
-    public function testGetOneByGuid()
-    {
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->workspaceRepo->shouldReceive('findOneByGuid')
-            ->with(1)
-            ->once()
-            ->andReturn('workspace');
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-
-        $this->assertEquals(
-            'workspace',
-            $this->getManager()->getOneByGuid(1)
-        );
-    }
-
-    public function testAddUserAction()
+    public function testAddUser()
     {
         $user = new User();
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
@@ -458,7 +415,7 @@ class WorkspaceManagerTest extends MockeryTestCase
 
         $this->assertEquals(
             $user,
-            $this->getManager()->addUserAction($workspace, $user)
+            $this->getManager()->addUser($workspace, $user)
         );
     }
 

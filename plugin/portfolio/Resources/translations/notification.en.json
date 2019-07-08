@@ -1,7 +1,0 @@
-{
-    "portfolio": "Portfolio",
-    "portfolio-add_guide": "has added you to the guides list of the portfolio %portfolio%",
-    "portfolio-add_viewer": "has removed your access to the portfolio %portfolio%",
-    "portfolio-edit": "has modified the portfolio %portfolio%",
-    "portfolio-remove_guide": "has removed you from the guides list of the portfolio %portfolio%"
-}

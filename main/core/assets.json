@@ -1,33 +1,20 @@
 {
   "webpack": {
     "entry": {
-      "tinymce": "tinymce/browser",
-      "user-management": "administration/user",
-      "integration": "administration/integration/bootstrap",
-      "main-settings": "administration/parameters/main/bootstrap",
-      "technical-settings": "administration/parameters/technical/bootstrap",
-      "appearance-settings": "administration/parameters/appearance/bootstrap",
-      "workspace-management": "administration/workspace",
-      "workspace-list": "workspace/list/bootstrap",
       "transfer-management": "tools/transfer/bootstrap",
       "scheduled-task-management": "administration/scheduled-task",
       "user-registration": "user/registration",
       "user-profile": "user/profile",
-      "home-tool": "tools/home/bootstrap",
-      "admin-desktop-tool": "administration/home/bootstrap",
       "user-tracking": "user/tracking",
-      "contacts-tool": "tools/contact",
-      "resources-tool": "tools/resources/bootstrap",
-      "trash-tool": "tools/trash/bootstrap",
       "workspace-user-management": "workspace/user",
-      "administration-toolbar": "administration/toolbar",
-      "workspace-toolbar": "workspace/toolbar",
       "resource-logs": "resource/logs",
-      "resource": "resource/bootstrap",
+      "trash-tool": "tools/trash/bootstrap",
       "desktop-parameters-tool": "tools/desktop-parameters",
-      "home": "home/bootstrap",
-      "templates-management": "administration/template/bootstrap",
       "dashboard-tool": "tools/dashboard/bootstrap",
+
+      "integration": "administration/integration/bootstrap",
+      "admin-desktop-tool": "administration/home/bootstrap",
+      "templates-management": "administration/template/bootstrap",
       "dashboard-admin-tool": "administration/dashboard/bootstrap"
     }
   },

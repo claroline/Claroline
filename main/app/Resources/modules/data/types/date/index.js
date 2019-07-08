@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {chain, date, string} from '#/main/core/validation'
+import {chain, date, string} from '#/main/app/data/types/validators'
 import {displayDate, apiDate} from '#/main/app/intl/date'
 
 import {DateInput} from '#/main/app/data/types/date/components/input'

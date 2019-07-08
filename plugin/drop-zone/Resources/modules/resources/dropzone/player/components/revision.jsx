@@ -7,13 +7,13 @@ import {hasPermission} from '#/main/app/security'
 import {matchPath, withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
+import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 import {
   DropzoneType,
@@ -164,7 +164,7 @@ const Revision = withRouter(connect(
             let callback
             title = trans('add_primary_resource', {}, 'path')
             callback = (selected) => {dispatch(actions.saveManagerDocument(dropId, revisionId, data.type, selected[0].id))}
-            dispatch(modalActions.showModal(MODAL_RESOURCE_EXPLORER, {
+            dispatch(modalActions.showModal(MODAL_RESOURCES, {
               title: title,
               selectAction: (selected) => ({
                 type: 'callback',

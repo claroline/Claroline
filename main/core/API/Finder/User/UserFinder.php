@@ -304,6 +304,11 @@ class UserFinder extends AbstractFinder
             return $workspace->getUuid();
         }, $this->workspaceManager->getWorkspacesByUser($currentUser));
 
+        // not him
+        $qb
+            ->andWhere('obj.id != :currentId')
+            ->setParameter('currentId', $currentUser->getId());
+
         // same organizations
         $qb->leftJoin('obj.userOrganizationReferences', 'oref');
         $qb->leftJoin('oref.organization', 'o');

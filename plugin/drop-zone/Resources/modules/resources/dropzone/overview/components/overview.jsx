@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceOverview} from '#/main/core/resource/components/overview'

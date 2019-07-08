@@ -158,9 +158,6 @@ plugin:
         - name: user_management
           class: user
 
-        - name: workspace_management
-          class: book
-
         - name: desktop_and_home
           class: home
 
@@ -212,20 +209,47 @@ plugin:
 
         - name: workspaces
           type: list
-          context: [desktop, home]
+          context: [desktop, workspace, home]
+          tags: [workspaces]
+
+        - name: public_workspaces
+          type: list
+          context: [desktop, workspace, home]
           tags: [workspaces]
 
         - name: my_workspaces
+          type: list
+          context: [desktop, workspace]
+          tags: [workspaces]
+
+        - name: managed_workspaces
+          type: list
+          context: [desktop]
+          tags: [workspaces]
+
+        - name: workspace_models
           type: list
           context: [desktop]
           tags: [workspaces]
 
         - name: users
           type: list
-          context: [workspace, desktop]
+          context: [desktop, workspace]
           tags: [community]
 
     tools:
+        - name: workspaces
+          class: book
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: true
+          is_workspace_required: false
+          is_exportable: true
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+
         - name: home
           class: home
           is_displayable_in_workspace: true
@@ -274,19 +298,6 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
-
-        - name: my_contacts
-          class: address-book
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: true
-          desktop_category: user
 
         - name: data_transfer
           class: exchange

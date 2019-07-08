@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {select as listSelectors} from '#/main/app/content/list/store/selectors'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -13,9 +13,8 @@ import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
-import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {selectors, actions} from '#/plugin/team/tools/team/store'
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 
@@ -145,7 +144,7 @@ TeamComponent.propTypes = {
 
 const Team = connect(
   (state) => ({
-    workspace: workspaceSelect.workspace(state),
+    workspace: state.workspace,
     team: formSelectors.data(formSelectors.form(state, 'teams.current')),
     canEdit: selectors.canEdit(state),
     allowedTeams: selectors.allowedTeams(state),

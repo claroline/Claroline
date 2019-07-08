@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -10,9 +10,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
 import {trans} from '#/main/app/intl/translation'
-import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 import {actions, selectors} from '#/plugin/team/tools/team/store'
@@ -195,7 +194,7 @@ TeamFormComponent.propTypes = {
 const TeamForm = connect(
   (state) => ({
     team: formSelectors.data(formSelectors.form(state, 'teams.current')),
-    workspace: workspaceSelect.workspace(state),
+    workspace: state.workspace,
     isNew: formSelectors.isNew(formSelectors.form(state, 'teams.current')),
     resourceTypes: selectors.resourceTypes(state)
   }),

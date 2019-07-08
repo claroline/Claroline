@@ -30,8 +30,5 @@ class Version20190522102209 extends AbstractMigration
             ALTER TABLE claro__organization
             DROP maxUsers
         ');
-        $this->addSql('
-            DROP INDEX UNIQ_A76799FF989D9B62 ON claro_resource_node
-        ');
     }
 }

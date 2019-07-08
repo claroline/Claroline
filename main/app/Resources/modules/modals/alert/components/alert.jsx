@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 const AlertModal = props =>
   <Modal

@@ -1,22 +1,9 @@
-/**
- *
- * @deprecated use `locale()` instead.
- */
-function getLocale() {
-  return locale()
-}
+import {param} from '#/main/app/config'
 
 function locale() {
-  const current = document.querySelector('#homeLocale') // todo use platform locale
-
-  if (current) {
-    return current.innerHTML.trim()
-  }
-
-  return 'en'
+  return param('locale.current') || 'en'
 }
 
 export {
-  getLocale,
   locale
 }

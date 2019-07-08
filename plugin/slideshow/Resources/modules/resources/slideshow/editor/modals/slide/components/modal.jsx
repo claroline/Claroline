@@ -8,7 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
@@ -113,7 +113,8 @@ SlideModal.propTypes = {
     SlideTypes.propTypes
   ).isRequired,
   reset: T.func.isRequired,
-  save: T.func.isRequired
+  save: T.func.isRequired,
+  fadeModal: T.func.isRequired
 }
 
 export {

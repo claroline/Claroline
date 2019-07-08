@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 const FormStatus = props =>
   <TooltipOverlay

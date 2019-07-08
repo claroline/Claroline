@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty'
-import {chain, array, string, notBlank, lengthInRange} from '#/main/core/validation'
+import {chain, array, string, notBlank, lengthInRange} from '#/main/app/data/types/validators'
 
 import {ScoreRulesInput} from '#/plugin/exo/data/types/score-rules/components/input'
 

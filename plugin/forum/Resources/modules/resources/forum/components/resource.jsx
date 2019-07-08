@@ -5,7 +5,6 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
-import {currentUser} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Overview} from '#/plugin/forum/resources/forum/overview/components/overview'
@@ -37,13 +36,13 @@ const ForumResource = props =>
         icon: 'fa fa-fw fa-envelope',
         label: trans('receive_notifications', {}, 'forum'),
         displayed: !get(props.forum, 'meta.notified'),
-        callback: () => props.notify(props.forum, currentUser())
+        callback: () => props.notify(props.forum, props.currentUser)
       },{
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-envelope-o',
         label: trans('stop_receive_notifications', {}, 'forum'),
         displayed: !!get(props.forum, 'meta.notified'),
-        callback: () => props.stopNotify(props.forum, currentUser())
+        callback: () => props.stopNotify(props.forum, props.currentUser)
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-gavel',
@@ -95,6 +94,7 @@ const ForumResource = props =>
   </ResourcePage>
 
 ForumResource.propTypes = {
+  currentUser: T.object,
   forum: T.shape(ForumType.propTypes).isRequired,
   editable: T.bool.isRequired,
   loadLastMessages: T.func.isRequired,

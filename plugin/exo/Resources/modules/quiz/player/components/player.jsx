@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Timer} from '#/main/core/layout/gauge/components/timer'

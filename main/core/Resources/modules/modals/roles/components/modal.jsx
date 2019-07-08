@@ -4,14 +4,14 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/core/modals/roles/store'
-import {RoleList} from '#/main/core/administration/user/role/components/role-list'
+import {RoleList} from '#/main/core/administration/users/role/components/role-list'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 
-const RolesPickerModal = props => {
+const RolesModal = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
@@ -44,7 +44,7 @@ const RolesPickerModal = props => {
   )
 }
 
-RolesPickerModal.propTypes = {
+RolesModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
   selectAction: T.func.isRequired,
@@ -55,11 +55,11 @@ RolesPickerModal.propTypes = {
   resetSelect: T.func.isRequired
 }
 
-RolesPickerModal.defaultProps = {
+RolesModal.defaultProps = {
   url: ['apiv2_role_list'],
-  title: trans('roles_picker')
+  title: trans('roles')
 }
 
 export {
-  RolesPickerModal
+  RolesModal
 }

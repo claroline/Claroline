@@ -14,7 +14,7 @@ import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {READ_ONLY, MANAGER, ADMIN, getPermissionLevel} from  '#/main/core/workspace/user/restrictions'
 
 const UserTool = (props) => {
-  const permLevel = getPermissionLevel(props.workspace)
+  const permLevel = getPermissionLevel(props.workspace, props.currentUser)
 
   return (
     <TabbedPageContainer
@@ -66,6 +66,7 @@ const UserTool = (props) => {
 }
 
 UserTool.propTypes = {
+  currentUser: T.object,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired

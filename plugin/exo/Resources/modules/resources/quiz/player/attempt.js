@@ -2,7 +2,6 @@ import merge from 'lodash/merge'
 import sampleSize from 'lodash/sampleSize'
 import shuffle from 'lodash/shuffle'
 
-import {currentUser} from '#/main/app/security'
 import {now} from '#/main/app/intl/date'
 import {makeId} from '#/main/core/scaffolding/id'
 
@@ -15,18 +14,19 @@ import {calculateTotal} from '#/plugin/exo/resources/quiz/papers/score'
 /**
  * Generate a new paper for a quiz.
  *
- * @param {object} quiz - the quiz definition
+ * @param {object} quiz          - the quiz definition
+ * @param {object} user          - the user for which we want to create an attempt
  * @param {object} previousPaper - the previous attempt of the user if any
  *
  * @returns {{number: number, anonymized: boolean, structure}}
  */
-function generateAttempt(quiz, previousPaper = null) {
+function generateAttempt(quiz, user, previousPaper = null) {
   const newPaper = {
     id: makeId(),
     finished: false,
     startDate: now(),
     endDate: null,
-    user: currentUser(),
+    user: user,
     number: previousPaper ? previousPaper.number + 1 : 1,
     anonymized: quiz.parameters.anonymizeAttempts,
     structure: generateStructure(quiz, previousPaper)

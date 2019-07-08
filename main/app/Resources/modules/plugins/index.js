@@ -4,6 +4,7 @@ import {param} from '#/main/app/config'
 import {registry} from '#/main/app/plugins/registry'
 
 /**
+ * Get all the apps declared in plugins.
  *
  * @param {string}  type
  * @param {boolean} onlyEnabled

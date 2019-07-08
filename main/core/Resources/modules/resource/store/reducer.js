@@ -3,7 +3,9 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
+import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {
+  RESOURCE_OPEN,
   RESOURCE_LOAD,
   RESOURCE_SET_LOADED,
   RESOURCE_UPDATE_NODE,
@@ -17,9 +19,10 @@ import {
   RESOURCE_COMMENT_REMOVE
 } from '#/main/core/resource/store/actions'
 
-const reducer = {
+const reducer = combineReducers({
   loaded: makeReducer(false, {
-    [RESOURCE_SET_LOADED]: () => true
+    [SECURITY_USER_CHANGE]: () => false,
+    [RESOURCE_SET_LOADED]: (state, action) => action.loaded
   }),
 
   accessErrors: combineReducers({
@@ -62,6 +65,7 @@ const reducer = {
    * Manages the ResourceNode of the resource.
    */
   resourceNode: makeReducer({}, {
+    [RESOURCE_OPEN]: (state, action) => action.resourceNode,
     [RESOURCE_LOAD]: (state, action) => action.resourceData.resourceNode,
 
     /**
@@ -112,8 +116,7 @@ const reducer = {
   }),
 
   lifecycle: makeReducer({})
-}
-
+})
 
 export {
   reducer

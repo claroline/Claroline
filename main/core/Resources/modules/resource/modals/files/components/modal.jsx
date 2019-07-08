@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'

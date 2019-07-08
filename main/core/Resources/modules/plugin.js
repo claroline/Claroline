@@ -7,10 +7,11 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineCoreBundle', {
   /**
-   * Provides menu which can be used as the main header menu.
+   * Provides menu which can be used in the main header menu.
    */
   header: {
-    'workspaces': () => { return import(/* webpackChunkName: "core-header-workspaces" */ '#/main/core/header/workspaces') }
+    'search'    : () => { return import(/* webpackChunkName: "core-header-search" */   '#/main/core/header/search') },
+    'history'    : () => { return import(/* webpackChunkName: "core-header-history" */ '#/main/core/header/history') }
   },
 
   integration: {
@@ -75,14 +76,11 @@ registry.add('ClarolineCoreBundle', {
       'ws-disable'     : () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */      '#/main/core/user/actions/ws-disable') },
       'ws-enable'      : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */       '#/main/core/user/actions/ws-enable') },
       'merge'          : () => { return import(/* webpackChunkName: "core-action-user-ws-merge" */        '#/main/core/user/actions/merge') }
-    },
-    group: {
-
     }
   },
 
   /**
-   * Provides new types of resources
+   * Provides new types of resources.
    */
   resources: {
     'directory': () => { return import(/* webpackChunkName: "core-resource-directory" */ '#/main/core/resources/directory') },
@@ -90,7 +88,24 @@ registry.add('ClarolineCoreBundle', {
     'text'     : () => { return import(/* webpackChunkName: "core-resource-text" */      '#/main/core/resources/text') }
   },
 
-  tools: {},
+  /**
+   * Provides Desktop and/or Workspace tools.
+   */
+  tools: {
+    'home'            : () => { return import(/* webpackChunkName: "core-tool-home" */       '#/main/core/tools/home') },
+    'workspaces'      : () => { return import(/* webpackChunkName: "core-tool-workspaces" */ '#/main/core/tools/workspaces') },
+    'resource_manager': () => { return import(/* webpackChunkName: "core-tool-resources" */  '#/main/core/tools/resources') }
+  },
+
+  /**
+   * Provides Administration tools.
+   */
+  administration: {
+    'user_management'   : () => { return import(/* webpackChunkName: "core-admin-users" */       '#/main/core/administration/users') },
+    'main_settings'     : () => { return import(/* webpackChunkName: "core-admin-parameters" */  '#/main/core/administration/parameters/main') },
+    'technical_settings': () => { return import(/* webpackChunkName: "core-admin-technical" */  '#/main/core/administration/parameters/technical') },
+    'appearance_settings': () => { return import(/* webpackChunkName: "core-admin-appearance" */  '#/main/core/administration/parameters/appearance') }
+  },
 
   widgets: {
     'list'       : () => { return import(/* webpackChunkName: "core-widget-list" */        '#/main/core/widget/types/list') },
@@ -102,32 +117,28 @@ registry.add('ClarolineCoreBundle', {
 
   data: {
     types: {
-      'organization' : () => { return import(/* webpackChunkName: "core-data-organization" */  '#/main/core/data/types/organization') },
-      'resource'     : () => { return import(/* webpackChunkName: "core-data-resource" */      '#/main/core/data/types/resource') },
-      'resources'    : () => { return import(/* webpackChunkName: "core-data-resources" */     '#/main/core/data/types/resources') },
-      'user'         : () => { return import(/* webpackChunkName: "core-data-user" */          '#/main/core/data/types/user') },
-      'users'        : () => { return import(/* webpackChunkName: "core-data-users" */         '#/main/core/data/types/users') },
-      'workspace'    : () => { return import(/* webpackChunkName: "core-data-workspace" */     '#/main/core/data/types/workspace') },
-      'workspaces'   : () => { return import(/* webpackChunkName: "core-data-workspaces" */    '#/main/core/data/types/workspaces') },
-      'groups'       : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/groups') },
-      'group'        : () => { return import(/* webpackChunkName: "core-data-group" */         '#/main/core/data/types/group') },
-      'location'     : () => { return import(/* webpackChunkName: "core-data-location" */      '#/main/core/data/types/location') },
-      'template_type': () => { return import(/* webpackChunkName: "core-data-template-type" */ '#/main/core/data/types/template-type') },
-      'roles'        : () => { return import(/* webpackChunkName: "core-data-roles" */         '#/main/core/data/types/roles') }
+      'organization' : () => { return import(/* webpackChunkName: "core-data-type-organization" */  '#/main/core/data/types/organization') },
+      'resource'     : () => { return import(/* webpackChunkName: "core-data-type-resource" */      '#/main/core/data/types/resource') },
+      'resources'    : () => { return import(/* webpackChunkName: "core-data-type-resources" */     '#/main/core/data/types/resources') },
+      'user'         : () => { return import(/* webpackChunkName: "core-data-type-user" */          '#/main/core/data/types/user') },
+      'users'        : () => { return import(/* webpackChunkName: "core-data-type-users" */         '#/main/core/data/types/users') },
+      'workspace'    : () => { return import(/* webpackChunkName: "core-data-type-workspace" */     '#/main/core/data/types/workspace') },
+      'workspaces'   : () => { return import(/* webpackChunkName: "core-data-type-workspaces" */    '#/main/core/data/types/workspaces') },
+      'groups'       : () => { return import(/* webpackChunkName: "core-data-type-groups" */        '#/main/core/data/types/groups') },
+      'group'        : () => { return import(/* webpackChunkName: "core-data-type-group" */         '#/main/core/data/types/group') },
+      'location'     : () => { return import(/* webpackChunkName: "core-data-type-location" */      '#/main/core/data/types/location') },
+      'template_type': () => { return import(/* webpackChunkName: "core-data-type-template-type" */ '#/main/core/data/types/template-type') },
+      'roles'        : () => { return import(/* webpackChunkName: "core-data-type-roles" */         '#/main/core/data/types/roles') }
     },
     sources: {
-      'resources'    : () => { return import(/* webpackChunkName: "core-data-resources" */  '#/main/core/data/sources/resources') },
-      'users'        : () => { return import(/* webpackChunkName: "core-data-users" */      '#/main/core/data/sources/users') },
-      'workspaces'   : () => { return import(/* webpackChunkName: "core-data-workspaces" */ '#/main/core/data/sources/workspaces') },
-      'my_workspaces': () => { return import(/* webpackChunkName: "core-data-workspaces" */ '#/main/core/data/sources/workspaces') }
+      'resources'         : () => { return import(/* webpackChunkName: "core-data-source-resources" */  '#/main/core/data/sources/resources') },
+      'users'             : () => { return import(/* webpackChunkName: "core-data-source-users" */      '#/main/core/data/sources/users') },
+
+      'workspaces'        : () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') },
+      'public_workspaces' : () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') },
+      'my_workspaces'     : () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') },
+      'managed_workspaces': () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') },
+      'workspace_models'  : () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') }
     }
-  },
-
-  questions: {
-
-  },
-
-  tinymcePlugins: {
-
   }
 })

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
-use Claroline\AppBundle\Entity\Parameters\SummaryParameters;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Directory extends AbstractResource
 {
-    use SummaryParameters;
     use ListParameters;
 
     /**

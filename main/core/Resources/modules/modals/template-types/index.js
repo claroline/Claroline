@@ -7,13 +7,13 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {TemplateTypesPickerModal} from '#/main/core/modals/template-types/containers/modal'
+import {TemplateTypesModal} from '#/main/core/modals/template-types/containers/modal'
 
-const MODAL_TEMPLATE_TYPES_PICKER = 'MODAL_TEMPLATE_TYPES_PICKER'
+const MODAL_TEMPLATE_TYPES = 'MODAL_TEMPLATE_TYPES'
 
 // make the modal available for use
-registry.add(MODAL_TEMPLATE_TYPES_PICKER, TemplateTypesPickerModal)
+registry.add(MODAL_TEMPLATE_TYPES, TemplateTypesModal)
 
 export {
-  MODAL_TEMPLATE_TYPES_PICKER
+  MODAL_TEMPLATE_TYPES
 }

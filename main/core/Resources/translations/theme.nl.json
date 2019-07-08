@@ -1,8 +1,0 @@
-{
-    "create_new_theme": "Een nieuw thema maken",
-    "delete_theme_confirm": "Bent u er zeker van dat u dit thema wenst te verwijderen ?",
-    "new_theme": "Nieuw thema",
-    "theme_dir_not_writable": "U hebt geen schrijfrechten op de directory \"web/themes\". U mag geen persoonlijk thema maken of verwijderen. Gelieve de rechten op deze directory te bewerken om het probleem op te lossen.",
-    "extend_default_theme": "Standaard thema uitbreiden",
-    "stylesheet": "Stijlblad"
-}

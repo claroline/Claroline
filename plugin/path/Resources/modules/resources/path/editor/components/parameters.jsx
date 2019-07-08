@@ -59,18 +59,6 @@ const EditorParameters = props =>
           title: trans('display_parameters'),
           fields: [
             {
-              name: 'display.showSummary',
-              type: 'boolean',
-              label: trans('show_summary', {}, 'path'),
-              linked: [
-                {
-                  name: 'display.openSummary',
-                  type: 'boolean',
-                  label: trans('show_opened_summary', {}, 'path'),
-                  displayed: props.path.display.showSummary
-                }
-              ]
-            }, {
               name: 'display.manualProgressionAllowed',
               type: 'boolean',
               label: trans('path_manual_progression_allowed', {}, 'path')
@@ -114,8 +102,7 @@ EditorParameters.propTypes = {
   path: T.shape({
     id: T.string,
     display: T.shape({
-      showOverview: T.bool.isRequired,
-      showSummary: T.bool.isRequired
+      showOverview: T.bool
     })
   }).isRequired
 }

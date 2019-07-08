@@ -36,6 +36,17 @@
     border-style: dashed;
 }
 
+.page-content > .empty-placeholder {
+    margin-top: @component-margin-bottom;
+    flex: 1;
+}
+
+.form-group {
+    .empty-placeholder {
+        margin-bottom: @form-group-margin-bottom;
+    }
+}
+
 .drop-placeholder {
     color: @placeholder-color;
     background: @placeholder-bg;

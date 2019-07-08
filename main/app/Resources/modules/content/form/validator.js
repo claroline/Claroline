@@ -1,6 +1,6 @@
 // todo : move in data module
 
-import {chain, notEmpty, validateIf} from '#/main/core/validation'
+import {chain, notEmpty, validateIf} from '#/main/app/data/types/validators'
 import {getType} from '#/main/app/data/types'
 
 /**

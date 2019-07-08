@@ -19,13 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 class OpenAdministrationToolEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {
     private $response;
-    protected $isPopulated = false;
-    private $toolName;
 
-    public function __construct($toolName)
-    {
-        $this->toolName = $toolName;
-    }
+    /** @var array */
+    private $data = [];
+
+    private $isPopulated = false;
 
     public function setResponse(Response $response)
     {
@@ -38,13 +36,25 @@ class OpenAdministrationToolEvent extends Event implements DataConveyorEventInte
         return $this->response;
     }
 
+    /**
+     * Sets data to return in the api.
+     * NB. It MUST contain serialized structures.
+     *
+     * @param array $data
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
+        $this->isPopulated = true;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
     public function isPopulated()
     {
         return $this->isPopulated;
-    }
-
-    public function getToolName()
-    {
-        return $this->toolName;
     }
 }

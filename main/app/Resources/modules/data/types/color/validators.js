@@ -2,7 +2,7 @@ import tinycolor from 'tinycolor2'
 
 import {tval} from '#/main/app/intl/translation'
 
-import {string} from '#/main/core/validation'
+import {string} from '#/main/app/data/types/validators'
 
 function color(value) {
   if (string(value)) {

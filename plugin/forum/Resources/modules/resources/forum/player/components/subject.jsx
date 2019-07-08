@@ -11,7 +11,7 @@ import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
-import {withModal} from '#/main/app/overlay/modal/withModal'
+import {withModal} from '#/main/app/overlays/modal/withModal'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {

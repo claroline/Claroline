@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
@@ -76,7 +76,8 @@ UploadModal.propTypes = {
   fetchUploadDestinations: T.func.isRequired,
   uploadEnabled: T.bool.isRequired,
   upload: T.func.isRequired,
-  add: T.func.isRequired
+  add: T.func.isRequired,
+  fadeModal: T.func.isRequired
 }
 
 export {

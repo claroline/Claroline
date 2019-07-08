@@ -48,21 +48,6 @@ class LocaleController
     }
 
     /**
-     * Select a language.
-     *
-     * @EXT\Route("/select", name="claroline_locale_select")
-     * @EXT\Template("ClarolineCoreBundle:locale:select.html.twig")
-     *
-     * @return array
-     */
-    public function selectAction()
-    {
-        return [
-            'locales' => $this->localeManager->getAvailableLocales(),
-        ];
-    }
-
-    /**
      * Change locale.
      *
      * @EXT\Route("/change/{locale}", name="claroline_locale_change")

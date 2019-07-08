@@ -1,4 +1,7 @@
+
 import {ResourcesTool} from '#/main/core/tools/resources/containers/tool'
+import {ResourcesMenu} from '#/main/core/tools/resources/containers/menu'
+
 import {reducer} from '#/main/core/tools/resources/store'
 
 /**
@@ -6,17 +9,8 @@ import {reducer} from '#/main/core/tools/resources/store'
  *
  * @constructor
  */
-export const App = () => ({
+export default {
   component: ResourcesTool,
-  store: reducer,
-  initialData: initialData => ({
-    tool: {
-      name: 'resource_manager',
-      currentContext: initialData.currentContext
-    },
-    resourceManager: {
-      root: initialData.root,
-      directories: initialData.root ? [initialData.root] : []
-    }
-  })
-})
+  menu: ResourcesMenu,
+  store: reducer
+}

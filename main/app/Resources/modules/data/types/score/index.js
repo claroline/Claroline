@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {chain, number, inRange} from '#/main/core/validation'
+import {chain, number, inRange} from '#/main/app/data/types/validators'
 
 import {ScoreInput} from '#/main/app/data/types/score/components/input'
 import {ScoreTable} from '#/main/app/data/types/score/components/table'

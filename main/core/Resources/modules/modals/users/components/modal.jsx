@@ -4,14 +4,16 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {selectors} from '#/main/core/modals/users/store'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {UserCard} from '#/main/core/user/data/components/user-card'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserType} from '#/main/core/user/prop-types'
 
-const UsersPickerModal = props => {
+import {selectors} from '#/main/core/modals/users/store'
+
+const UsersModal = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
@@ -30,10 +32,25 @@ const UsersPickerModal = props => {
         }}
         definition={[
           {
+            name: 'picture',
+            type: 'user', // required to get correct styles (no padding + small picture size)
+            label: trans('avatar'),
+            displayed: true,
+            filterable: false,
+            sortable: false,
+            render: (user) => {
+              const Avatar = (
+                <UserAvatar picture={user.picture} alt={false} />
+              )
+
+              return Avatar
+            }
+          }, {
             name: 'username',
             type: 'username',
             label: trans('username'),
-            displayed: true
+            displayed: true,
+            primary: true
           }, {
             name: 'lastName',
             type: 'string',
@@ -63,9 +80,16 @@ const UsersPickerModal = props => {
             displayed: false,
             displayable: false,
             sortable: false
+          }, {
+            name: 'unionOrganizationName',
+            label: trans('organization'),
+            type: 'string',
+            displayed: false,
+            displayable: false,
+            sortable: false
           }
         ]}
-        card={UserList.card}
+        card={UserCard}
       />
 
       <Button
@@ -80,7 +104,7 @@ const UsersPickerModal = props => {
   )
 }
 
-UsersPickerModal.propTypes = {
+UsersModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
   selectAction: T.func.isRequired,
@@ -89,11 +113,11 @@ UsersPickerModal.propTypes = {
   resetSelect: T.func.isRequired
 }
 
-UsersPickerModal.defaultProps = {
+UsersModal.defaultProps = {
   url: ['apiv2_user_list_registerable'], // = filter by current user organizations
-  title: trans('user_selector')
+  title: trans('users')
 }
 
 export {
-  UsersPickerModal
+  UsersModal
 }

@@ -89,9 +89,6 @@ class Version20190624150111 extends AbstractMigration
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
         ');
-        $this->addSql('
-            CREATE UNIQUE INDEX UNIQ_A76799FF989D9B62 ON claro_resource_node (slug)
-        ');
     }
 
     public function down(Schema $schema)
@@ -119,9 +116,6 @@ class Version20190624150111 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE claro_connection_message_user
-        ');
-        $this->addSql('
-            DROP INDEX UNIQ_A76799FF989D9B62 ON claro_resource_node
         ');
     }
 }

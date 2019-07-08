@@ -7,15 +7,13 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {EditorMain as EditorMainComponent} from '#/plugin/path/resources/path/editor/components/main'
 import {actions, selectors} from '#/plugin/path/resources/path/editor/store'
-import {actions as pathActions, selectors as pathSelectors} from '#/plugin/path/resources/path/store'
+import {actions as pathActions} from '#/plugin/path/resources/path/store'
 import {flattenSteps} from '#/plugin/path/resources/path/utils'
 
 const EditorMain = withRouter(
   connect(
     (state) => ({
-      summaryOpened: pathSelectors.summaryOpened(state),
-      summaryPinned: pathSelectors.summaryPinned(state),
-
+      basePath: resourceSelectors.path(state),
       path: selectors.path(state),
       steps: flattenSteps(selectors.steps(state)),
       resourceParent: resourceSelectors.parent(state),
@@ -28,13 +26,13 @@ const EditorMain = withRouter(
 
         dispatch(actions.addStep({id: stepId}, parentId))
 
-        ownProps.history.push(`/edit/${stepId}`)
+        ownProps.history.push(`${ownProps.basePath}/edit/${stepId}`)
       },
       removeStep(stepId) {
         dispatch(actions.removeStep(stepId))
 
-        if (`/edit/${stepId}` === ownProps.history.location.pathname) {
-          ownProps.history.push('/edit')
+        if (`${ownProps.basePath}/edit/${stepId}` === ownProps.history.location.pathname) {
+          ownProps.history.push(`${ownProps.basePath}/edit`)
         }
       },
       copyStep(stepId, position) {

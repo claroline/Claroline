@@ -1,12 +1,8 @@
 import {createSelector} from 'reselect'
 
-import {currentUser} from '#/main/app/security'
-
 // TODO : there is possible code refactoring with editor/selectors.js
 
 const STORE_NAME = 'resource'
-
-const registered = () => null !== currentUser()
 
 const resource = (state) => state[STORE_NAME]
 
@@ -100,7 +96,6 @@ export default {
   empty,
   papers,
   statistics,
-  registered,
   description,
   meta,
   parameters,
@@ -122,7 +117,6 @@ export const select = {
   empty,
   papers,
   statistics,
-  registered,
   description,
   meta,
   parameters,
@@ -144,7 +138,6 @@ export const selectors = {
   empty,
   papers,
   statistics,
-  registered,
   description,
   meta,
   parameters,

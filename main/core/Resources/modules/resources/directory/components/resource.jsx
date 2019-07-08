@@ -1,27 +1,34 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
-import {DirectoryPlayer} from '#/main/core/resources/directory/player/components/directory'
-import {DirectoryEditor} from '#/main/core/resources/directory/editor/components/directory'
+import {PlayerMain} from '#/main/core/resources/directory/player/containers/main'
+import {EditorMain} from '#/main/core/resources/directory/editor/containers/main'
 
-const DirectoryResource = () =>
+const DirectoryResource = (props) =>
   <ResourcePage
     primaryAction="add"
   >
     <Routes
+      path={props.path}
       routes={[
         {
-          path: '/edit',
-          component: DirectoryEditor
+          path: '/',
+          exact: true,
+          component: PlayerMain
         }, {
-          path: '/:id?', // declared last to avoid catching /edit as an id
-          component: DirectoryPlayer
+          path: '/edit',
+          component: EditorMain
         }
       ]}
     />
   </ResourcePage>
+
+DirectoryResource.propTypes = {
+  path: T.string
+}
 
 export {
   DirectoryResource

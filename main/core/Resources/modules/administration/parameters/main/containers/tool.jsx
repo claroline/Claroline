@@ -5,9 +5,9 @@ import {withRouter} from '#/main/app/router'
 import {makeId} from '#/main/core/scaffolding/id'
 import {ConnectionMessage as ConnectionMessageType} from '#/main/core/administration/parameters/main/prop-types'
 import {actions} from '#/main/core/administration/parameters/main/store'
-import {Tool as ToolComponent} from '#/main/core/administration/parameters/main/components/tool'
+import {ParametersTool as ParametersToolComponent} from '#/main/core/administration/parameters/main/components/tool'
 
-const Tool = withRouter(connect(
+const ParametersTool = withRouter(connect(
   null,
   (dispatch) => ({
     openConnectionMessageForm(id = null) {
@@ -20,8 +20,8 @@ const Tool = withRouter(connect(
       dispatch(actions.resetForm('messages.current'))
     }
   })
-)(ToolComponent))
+)(ParametersToolComponent))
 
 export {
-  Tool
+  ParametersTool
 }

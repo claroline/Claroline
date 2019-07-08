@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -30,9 +29,7 @@ use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Integrates the "Directory" resource.
@@ -41,9 +38,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DirectoryListener
 {
-    /** @var TwigEngine */
-    private $templating;
-
     /** @var SerializerProvider */
     private $serializer;
 
@@ -57,7 +51,6 @@ class DirectoryListener
      * DirectoryListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating"      = @DI\Inject("templating"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "serializer"      = @DI\Inject("claroline.api.serializer"),
      *     "crud"            = @DI\Inject("claroline.api.crud"),
@@ -66,29 +59,43 @@ class DirectoryListener
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param TwigEngine            $templating
      * @param ObjectManager         $om
      * @param SerializerProvider    $serializer
+     * @param Crud                  $crud
      * @param ResourceManager       $resourceManager
      * @param RightsManager         $rightsManager
      * @param ResourceActionManager $actionManager
      */
     public function __construct(
-        ResourceActionManager $actionManager,
-        TwigEngine $templating,
-        Crud $crud,
         ObjectManager $om,
         SerializerProvider $serializer,
+        Crud $crud,
         ResourceManager $resourceManager,
+        ResourceActionManager $actionManager,
         RightsManager $rightsManager
     ) {
-        $this->templating = $templating;
         $this->om = $om;
         $this->serializer = $serializer;
         $this->crud = $crud;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
+    }
+
+    /**
+     * Loads a directory.
+     *
+     * @DI\Observe("resource.directory.load")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        $event->setData([
+            'directory' => $this->serializer->serialize($event->getResource()),
+        ]);
+
+        $event->stopPropagation();
     }
 
     /**
@@ -170,49 +177,9 @@ class DirectoryListener
     }
 
     /**
-     * Loads a directory.
-     *
-     * @DI\Observe("resource.directory.load")
-     *
-     * @param LoadResourceEvent $event
-     */
-    public function onLoad(LoadResourceEvent $event)
-    {
-        $event->setData([
-            'directory' => $this->serializer->serialize($event->getResource()),
-        ]);
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * Opens a directory.
-     *
-     * @DI\Observe("open_directory")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        $directory = $event->getResource();
-
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:directory:index.html.twig', [
-                'directory' => $directory,
-                '_resource' => $directory,
-            ]
-        );
-
-        $response = new Response($content);
-        $event->setResponse($response);
-
-        $event->stopPropagation();
-    }
-
-    /**
      * Removes a directory.
      *
-     * @DI\Observe("delete_directory")
+     * @DI\Observe("resource.directory.delete")
      *
      * @param deleteResourceEvent $event
      */

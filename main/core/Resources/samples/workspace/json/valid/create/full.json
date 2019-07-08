@@ -24,5 +24,26 @@
     "validation": false,
     "selfRegistration": false,
     "selfUnregistration": false
-  }
+  },
+  "roles": [
+    {
+      "id": 23,
+      "name": "ROLE_WS_COLLABORATOR_59d245173680e9.83088773"
+    },
+    {
+      "id": 24,
+      "name": "ROLE_WS_MANAGER_59d245173680e9.83088773"
+    }
+  ],
+  "managers": [{
+    "autoId": 9,
+    "id": "becabdfe-bc40-4fc5-a822-b7c0a3c6fd66",
+    "name": "toto4 toto4",
+    "firstName": "toto4",
+    "lastName": "toto4",
+    "username": "toto4",
+    "picture": null,
+    "email": "toto4@gmail.com",
+    "administrativeCode": "toto4admin"
+  }]
 }

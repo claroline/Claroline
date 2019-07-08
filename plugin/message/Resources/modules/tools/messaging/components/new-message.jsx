@@ -15,7 +15,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors} from '#/plugin/message/tools/messaging/store'
 
 const NewMessageFormWrapper = (props) =>
-  <div className='user-message-container user-message-form-container user-message-left'>
+  <div className="user-message-container user-message-form-container user-message-left">
     <UserAvatar picture={props.user.picture} alt={false} />
 
     <div className="user-message">
@@ -24,9 +24,11 @@ const NewMessageFormWrapper = (props) =>
           {props.user.name}
         </div>
       </div>
+
       <div className="user-message-content embedded-form-section">
         {props.children}
       </div>
+
       <Button
         className="btn btn-block btn-save btn-emphasis"
         label={trans('send', {}, 'actions')}
@@ -45,55 +47,45 @@ NewMessageFormWrapper.propTypes = {
 }
 
 const NewMessageComponent = (props) =>
-  <div>
-    {!props.reply &&
-      <h2>{trans('new_message', {}, 'message')}</h2>
-    }
-    <NewMessageFormWrapper
-      user={currentUser()}
-      callback={() =>  props.saveForm(props.history.push)}
-    >
-      <FormData
-        level={3}
-        displayLevel={2}
-        name="messageForm"
-        className="content-container"
-        sections={[
-          {
-            title: 'message',
-            fields:[
-              {
-                name: 'toUsers',
-                type: 'users',
-                label: trans('message_form_to', {}, 'message')
-              },
-              {
-                name: 'toGroups',
-                type: 'groups',
-                label: trans('message_form_to', {}, 'message')
-              },
-              {
-                name: 'toWorkspaces',
-                type: 'workspaces',
-                label: trans('message_form_to', {}, 'message')
-              },
-              {
-                name: 'object',
-                type: 'string',
-                label: trans('message_form_object', {}, 'message')
-              },
-              {
-                name: 'content',
-                type: 'html',
-                label: trans('message_form_content', {}, 'message'),
-                required: true
-              }
-            ]
-          }
-        ]}
-      />
-    </NewMessageFormWrapper>
-  </div>
+  <NewMessageFormWrapper
+    user={currentUser()}
+    callback={() =>  props.saveForm(props.history.push)}
+  >
+    <FormData
+      level={3}
+      displayLevel={2}
+      name={`${selectors.STORE_NAME}.messageForm`}
+      sections={[
+        {
+          title: 'message',
+          fields:[
+            {
+              name: 'toUsers',
+              type: 'users',
+              label: trans('message_form_to', {}, 'message')
+            }, {
+              name: 'toGroups',
+              type: 'groups',
+              label: trans('message_form_to', {}, 'message')
+            }, {
+              name: 'toWorkspaces',
+              type: 'workspaces',
+              label: trans('message_form_to', {}, 'message')
+            }, {
+              name: 'object',
+              type: 'string',
+              label: trans('message_form_object', {}, 'message')
+            }, {
+              name: 'content',
+              type: 'html',
+              label: trans('message_form_content', {}, 'message'),
+              required: true
+            }
+          ]
+        }
+      ]}
+    />
+  </NewMessageFormWrapper>
 
 NewMessageComponent.propTypes = {
   saveForm: T.func.isRequired,
@@ -109,7 +101,7 @@ const NewMessage = withRouter(connect(
   }),
   (dispatch) => ({
     saveForm(push) {
-      dispatch(formActions.saveForm('messageForm', ['apiv2_message_create'])).then(() => push('/received'))
+      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.messageForm`, ['apiv2_message_create'])).then(() => push('/received'))
     }
   })
 )(NewMessageComponent))

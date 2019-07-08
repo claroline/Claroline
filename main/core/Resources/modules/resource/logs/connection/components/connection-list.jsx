@@ -1,9 +1,9 @@
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
+import {convertTimestampToString} from '#/main/app/intl/date'
 
-import {convertTimestampToString} from '#/main/core/logs/utils'
-import {LogConnectResourceCard} from '#/main/core/logs/data/components/log-connect-resource-card'
+import {LogConnectCard} from '#/main/core/layout/logs/components/connect-card'
 
 const ConnectionList = {
   open: (row) => ({
@@ -38,7 +38,7 @@ const ConnectionList = {
       calculated: (rowData) => rowData.duration !== null ? convertTimestampToString(rowData.duration) : null
     }
   ],
-  card: LogConnectResourceCard
+  card: LogConnectCard
 }
 
 export {

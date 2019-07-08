@@ -1,19 +1,18 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 /**
  * Opens a resource node.
  *
  * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
+ * @param {object} nodesRefresher
+ * @param {string} path
  */
-export default (resourceNodes) => ({
+export default (resourceNodes, nodesRefresher, path) => ({
   name: 'open',
-  type: URL_BUTTON,
+  type: LINK_BUTTON,
   label: trans('open', {}, 'actions'),
-  primary: true,
+  default: true,
   icon: 'fa fa-fw fa-arrow-circle-o-right',
-  target: ['claro_resource_open', {
-    resourceType: resourceNodes[0].meta.type,
-    node: resourceNodes[0].id
-  }]
+  target: `${path}/${resourceNodes[0].id}`
 })

@@ -9,7 +9,7 @@ export default {
   name: 'resources',
   icon: 'fa fa-fw fa-folder',
   parameters: {
-    primaryAction: (resourceNode) => ({ // todo : reuse resource default action
+    primaryAction: (resourceNode) => ({
       type: URL_BUTTON,
       target: ['claro_resource_show', {
         type: resourceNode.meta.type,

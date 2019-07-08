@@ -23,10 +23,12 @@ const Routes = props =>
           <Routes
             {...route}
             key={`route-${toKey(route.path)}`}
+            path={props.path+route.path}
           /> :
           <Route
             {...route}
             key={`route-${toKey(route.path)}`}
+            path={props.path+route.path}
           />
         )
       }
@@ -37,6 +39,8 @@ const Routes = props =>
           <Redirect
             {...redirect}
             key={`redirect-${redirectIndex}`}
+            from={props.path+redirect.from}
+            to={props.path+redirect.to}
           />
         )
       }

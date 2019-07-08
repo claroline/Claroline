@@ -12,8 +12,9 @@
 namespace Claroline\MessageBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\MessageBundle\Manager\ContactManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Messaging tool.
@@ -22,22 +23,29 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
  */
 class MessagingListener
 {
-    /** @var TwigEngine */
-    private $templating;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var ContactManager */
+    private $contactManager;
 
     /**
-     * MessagingListener constructor.
+     * ContactsListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
+     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
+     *     "contactManager" = @DI\Inject("claroline.manager.contact_manager")
      * })
      *
-     * @param TwigEngine $templating
+     * @param TokenStorageInterface $tokenStorage
+     * @param ContactManager        $contactManager
      */
     public function __construct(
-        TwigEngine $templating
-    ) {
-        $this->templating = $templating;
+        TokenStorageInterface $tokenStorage,
+        ContactManager $contactManager)
+    {
+        $this->tokenStorage = $tokenStorage;
+        $this->contactManager = $contactManager;
     }
 
     /**
@@ -49,11 +57,11 @@ class MessagingListener
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $content = $this->templating->render(
-            'ClarolineMessageBundle:tool:messaging.html.twig'
-        );
-
-        $event->setContent($content);
+        $event->setData([
+            'options' => $this->contactManager->getUserOptions(
+                $this->tokenStorage->getToken()->getUser()
+            ),
+        ]);
         $event->stopPropagation();
     }
 }

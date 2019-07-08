@@ -16,7 +16,7 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {PopoverButton} from '#/main/app/buttons/popover/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_ROLES_PICKER} from '#/main/core/modals/roles'
+import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {
   getSimpleAccessRule,
   setSimpleAccessRule,
@@ -222,7 +222,7 @@ const AdvancedTab = props => {
             <ModalButton
               className="btn btn-block"
               size="sm"
-              modal={[MODAL_ROLES_PICKER, {
+              modal={[MODAL_ROLES, {
                 selectAction: (selectedRoles) => ({
                   type: CALLBACK_BUTTON,
                   callback: () => props.updatePermissions([].concat(props.permissions, selectedRoles.map(role => ({

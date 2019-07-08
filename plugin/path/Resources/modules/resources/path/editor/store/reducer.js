@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
@@ -63,7 +64,7 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
     [PATH_REMOVE_STEP]: () => true
   }),
   originalData: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.path || state
+    [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.path || state
   }),
   data: makeReducer({}, {
     /**
@@ -71,7 +72,7 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
      *
      * @param {object} state - the path object @see Path.propTypes
      */
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.path || state,
+    [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.path || state,
 
     /**
      * Adds a new step to the path.

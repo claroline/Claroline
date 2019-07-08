@@ -1,26 +1,11 @@
-import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/plugin/agenda/tools/agenda/store/reducer'
 import {AgendaTool} from '#/plugin/agenda/tools/agenda/containers/tool'
+import {AgendaMenu} from '#/plugin/agenda/tools/agenda/containers/menu'
 
-// mount the react application
-bootstrap(
-  // app DOM container (also holds initial app data as data attributes)
-  '.agenda-container',
-
-  // app main component
-  AgendaTool,
-
-  // app store configuration
-  reducer,
-
-  // remap data-attributes set on the app DOM container
-  // todo load remaining through ajax
-  (initialData) => ({
-    workspace: initialData.workspace,
-    workspaces: initialData.workspaces,
-    filters: {
-      workspaces: initialData.workspace.uuid ? [initialData.workspace.uuid]: Object.keys(initialData.workspaces)
-    }
-  })
-)
+export default {
+  component: AgendaTool,
+  menu: AgendaMenu,
+  store: reducer,
+  styles: ['claroline-distribution-plugin-agenda-agenda']
+}

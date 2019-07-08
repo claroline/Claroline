@@ -1,12 +1,14 @@
 import React from 'react'
-import {connect} from 'react-redux'
+
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-const PdfComponent = () =>
+import {selectors} from '#/main/core/administration/parameters/technical/store/selectors'
+
+const Pdf = () =>
   <FormData
-    name="parameters"
+    name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
@@ -30,15 +32,6 @@ const PdfComponent = () =>
       }
     ]}
   />
-
-
-PdfComponent.propTypes = {
-}
-
-const Pdf = connect(
-  null,
-  () => ({ })
-)(PdfComponent)
 
 export {
   Pdf

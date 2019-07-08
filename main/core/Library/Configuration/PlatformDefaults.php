@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -92,9 +91,9 @@ class PlatformDefaults implements ParameterProviderInterface
               'google_meta_tag' => null,
             ],
             'workspace' => [
-              'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
-              'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
-              'max_workspace_users' => Workspace::DEFAULT_MAX_USERS,
+              'max_storage_size' => '1 TB',
+              'max_upload_resources' => 10000,
+              'max_workspace_users' => 10000,
               'enable_rich_text_file_import' => false,
               'send_mail_at_registration' => true,
               'users_csv_by_full_name' => false, //is it still used ?

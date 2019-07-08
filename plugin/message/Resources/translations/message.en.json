@@ -12,7 +12,7 @@
     "messages_received": "Received messages",
     "messages_removed": "Removed messages",
     "messages_sent": "Sent messages",
-
+    "contacts": "Contacts",
     "message_read" : "Read",
     "marked_read_message": "Mark read",
     "marked_unread_message": "Mark as unread",

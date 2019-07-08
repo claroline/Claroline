@@ -9,7 +9,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {User as UserType} from '#/main/core/user/prop-types'
 import {UserCard} from '#/main/core/user/data/components/user-card'
-import {MODAL_USERS_PICKER} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/core/modals/users'
 
 //todo: implement badge picker
 const UserButton = props =>
@@ -20,7 +20,7 @@ const UserButton = props =>
     icon="fa fa-fw fa-user"
     label={trans('select_a_user')}
     primary={true}
-    modal={[MODAL_USERS_PICKER, {
+    modal={[MODAL_USERS, {
       url: ['apiv2_user_list_registerable'], // maybe not the correct URL
       title: props.title,
       selectAction: (selected) => ({
@@ -90,10 +90,7 @@ implementPropTypes(UserInput, FormFieldTypes, {
     title: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('user_selector')
-  }
+  value: null
 })
 
 export {

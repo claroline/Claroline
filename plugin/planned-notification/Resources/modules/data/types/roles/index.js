@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty'
-import {chain, array, string, notBlank} from '#/main/core/validation'
+import {chain, array, string, notBlank} from '#/main/app/data/types/validators'
 
 import {RolesInput} from '#/plugin/planned-notification/data/types/roles/components/input'
 

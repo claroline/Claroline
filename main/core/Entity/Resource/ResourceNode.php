@@ -36,8 +36,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ResourceNode
 {
     const PATH_SEPARATOR = '/';
-
     const PATH_OLDSEPARATOR = '`';
+
     // identifiers
     use Id;
     use Uuid;
@@ -157,13 +157,12 @@ class ResourceNode
     protected $children;
 
     /**
-     * @var \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * The parent workspace of the resource.
      *
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *      inversedBy="resources"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     *
+     * @var Workspace
      */
     protected $workspace;
 
@@ -173,7 +172,7 @@ class ResourceNode
      * @Gedmo\TreePath(separator="`")
      * @ORM\Column(length=3000, nullable=true)
      *
-     * @todo a virer
+     * @todo remove me
      */
     protected $path;
 
@@ -229,6 +228,8 @@ class ResourceNode
      *  fetch="EXTRA_LAZY",
      *  mappedBy="resourceNode"
      * )
+     *
+     * @todo : remove me. this relation should not be bi-directional
      */
     protected $logs;
 
@@ -297,6 +298,8 @@ class ResourceNode
      *     mappedBy="resourceNode"
      * )
      * @ORM\OrderBy({"creationDate" = "DESC"})
+     *
+     * @todo : remove me. this relation should not be bi-directional
      */
     protected $comments;
 

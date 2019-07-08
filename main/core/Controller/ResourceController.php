@@ -11,15 +11,18 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
@@ -75,6 +78,9 @@ class ResourceController
     /** @var ResourceRightsRepository */
     private $rightsRepo;
 
+    /** @var EventManager */
+    private $eventManager;
+
     /**
      * ResourceController constructor.
      *
@@ -87,7 +93,8 @@ class ResourceController
      *     "actionManager"       = @DI\Inject("claroline.manager.resource_action"),
      *     "restrictionsManager" = @DI\Inject("claroline.manager.resource_restrictions"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization"       = @DI\Inject("security.authorization_checker")
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "eventManager"        = @DI\Inject("claroline.event.manager")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
@@ -99,6 +106,7 @@ class ResourceController
      * @param ResourceRestrictionsManager   $restrictionsManager
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
+     * @param EventManager                  $eventManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -109,7 +117,8 @@ class ResourceController
         ResourceManager $manager,
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
-        ObjectManager $om
+        ObjectManager $om,
+        EventManager $eventManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -121,6 +130,7 @@ class ResourceController
         $this->om = $om;
         $this->rightsRepo = $om->getRepository(ResourceRights::class);
         $this->authorization = $authorization;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -138,13 +148,15 @@ class ResourceController
      * @return array
      *
      * @throws ResourceNotFoundException
+     *
+     * @deprecated
      */
     public function showAction($id, User $currentUser = null)
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->find(ResourceNode::class, $id);
         if (!$resourceNode) {
-            throw new ResourceNotFoundException();
+            throw new NotFoundHttpException('Resource not found');
         }
 
         // TODO : not pretty, but might want on some case to download files instead ?
@@ -163,6 +175,52 @@ class ResourceController
         return [
             'resourceNode' => $resourceNode,
         ];
+    }
+
+    /**
+     * Opens a resource.
+     *
+     * @EXT\Route("/load/{id}", name="claro_resource_load_short")
+     * @EXT\Route("/load/{type}/{id}", name="claro_resource_load")
+     * @EXT\Route("/load/{type}/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
+     * @EXT\Method("GET")
+     *
+     * @param int|string $id       - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     * @param int        $embedded
+     *
+     * @return JsonResponse
+     *
+     * @throws ResourceNotFoundException
+     */
+    public function openAction($id, $embedded = 0)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->om->find(ResourceNode::class, $id);
+        if (!$resourceNode) {
+            throw new ResourceNotFoundException();
+        }
+
+        // gets the current user roles to check access restrictions
+        $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
+        $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
+
+        if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
+            try {
+                $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
+            } catch (ResourceNotFoundException $e) {
+                return new JsonResponse(['resource_not_found'], 500);
+            }
+
+            return new JsonResponse(
+                array_merge([
+                    // append access restrictions to the loaded node if any
+                    // to let the manager knows that other users can not enter the resource
+                    'accessErrors' => $accessErrors,
+                ], $loaded)
+            );
+        }
+
+        return new JsonResponse($accessErrors, 403);
     }
 
     /**
@@ -208,7 +266,7 @@ class ResourceController
      * @param bool    $forceArchive
      * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse|BinaryFileResponse
      */
     public function downloadAction($forceArchive = false, Request $request)
     {
@@ -230,9 +288,10 @@ class ResourceController
             return new JsonResponse(['file_not_found'], 500);
         }
 
-        $fileName = null === $fileName ? $response->getFile()->getFilename() : $fileName;
-        $fileName = str_replace('/', '_', $fileName);
-        $fileName = str_replace('\\', '_', $fileName);
+        if ($fileName) {
+            $fileName = str_replace('/', '_', $fileName);
+            $fileName = str_replace('\\', '_', $fileName);
+        }
 
         $response = new BinaryFileResponse($file, 200, ['Content-Disposition' => "attachment; filename={$fileName}"]);
 
@@ -313,52 +372,6 @@ class ResourceController
     }
 
     /**
-     * Gets a resource.
-     *
-     * @EXT\Route("/{id}", name="claro_resource_load_short")
-     * @EXT\Route("/{type}/{id}", name="claro_resource_load")
-     * @EXT\Route("/{type}/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
-     * @EXT\Method("GET")
-     *
-     * @param int|string $id       - the id of the target node (we don't use ParamConverter to support ID and UUID)
-     * @param int        $embedded
-     *
-     * @return JsonResponse
-     *
-     * @throws ResourceNotFoundException
-     */
-    public function getAction($id, $embedded = 0)
-    {
-        /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->om->find(ResourceNode::class, $id);
-        if (!$resourceNode) {
-            throw new ResourceNotFoundException();
-        }
-
-        // gets the current user roles to check access restrictions
-        $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
-        $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
-
-        if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
-            try {
-                $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
-            } catch (ResourceNotFoundException $e) {
-                return new JsonResponse(['resource_not_found'], 500);
-            }
-
-            return new JsonResponse(
-                array_merge([
-                    // append access restrictions to the loaded node
-                    // if any to let know the manager that other user can not enter the resource
-                    'accessErrors' => $accessErrors,
-                ], $loaded)
-            );
-        }
-
-        return new JsonResponse($accessErrors, 403);
-    }
-
-    /**
      * Executes an action on one resource.
      *
      * @EXT\Route("/{action}/{id}", name="claro_resource_action_short")
@@ -397,6 +410,58 @@ class ResourceController
 
         // dispatch action event
         return $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
+    }
+
+    /**
+     * Shows resource logs list.
+     *
+     * @todo use standard resource action system.
+     *
+     * @EXT\Route("/logs/{node}", name="claro_resource_logs")
+     * @EXT\Template("ClarolineCoreBundle:resource/logs:list.html.twig")
+     *
+     * @param ResourceNode $node the resource
+     *
+     * @return array
+     */
+    public function logListAction(ResourceNode $node)
+    {
+        $resource = $this->manager->getResourceFromNode($node);
+        $collection = new ResourceCollection([$node]);
+        if (!$this->authorization->isGranted('ADMINISTRATE', $collection)) {
+            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+        }
+
+        return [
+            'workspace' => $node->getWorkspace(),
+            '_resource' => $resource,
+            'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
+        ];
+    }
+
+    /**
+     * Gets a resource node.
+     *
+     * @EXT\Route("/{id}", name="claro_resource_get")
+     * @EXT\Method("GET")
+     *
+     * @param int|string $id - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     *
+     * @return JsonResponse
+     *
+     * @throws ResourceNotFoundException
+     */
+    public function getAction($id)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->om->find(ResourceNode::class, $id);
+        if (!$resourceNode) {
+            throw new ResourceNotFoundException();
+        }
+
+        return new JsonResponse(
+            $this->serializer->serialize($resourceNode, [Options::SERIALIZE_MINIMAL])
+        );
     }
 
     /**

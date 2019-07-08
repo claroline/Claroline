@@ -1,6 +1,7 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {actions} from '#/main/core/user/actions'
 import {UserPage} from '#/main/core/user/components/page'
@@ -14,6 +15,7 @@ import {UserPage} from '#/main/core/user/components/page'
 const UserPageContainer = withRouter(
   connect(
     (state, ownProps) =>  ({
+      currentUser: securitySelectors.currentUser(state),
       user: ownProps.user || state.user
     }),
     (dispatch) => ({

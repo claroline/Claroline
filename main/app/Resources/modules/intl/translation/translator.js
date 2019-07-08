@@ -1,3 +1,5 @@
+import invariant from 'invariant'
+
 import {asset} from '#/main/app/config/asset'
 
 /**
@@ -7,77 +9,77 @@ import {asset} from '#/main/app/config/asset'
 var _messages     = {},
   _fallbackLocale = 'en',
   _domains      = [],
-  _sPluralRegex = new RegExp(/^\w+\: +(.+)$/),
-  _cPluralRegex = new RegExp(/^\s*((\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]]))\s?(.+?)$/),
-  _iPluralRegex = new RegExp(/^\s*(\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]])/)
+  _sPluralRegex = new RegExp(/^\w+\: +(.+)$/), // eslint-disable-line no-useless-escape
+  _cPluralRegex = new RegExp(/^\s*((\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]]))\s?(.+?)$/), // eslint-disable-line no-useless-escape
+  _iPluralRegex = new RegExp(/^\s*(\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]])/) // eslint-disable-line no-useless-escape
 
 const Translator = {
 
-   /**
-    * The current locale.
-    *
-    * @type {Array}
-    */
+  /**
+   * The current locale.
+   *
+   * @type {Array}
+   */
   loaded_domains: [],
 
-    /**
-     * The current locale.
-     *
-     * @type {String}
-     * @api public
-     */
+  /**
+   * The current locale.
+   *
+   * @type {String}
+   * @api public
+   */
   locale: get_current_locale(),
 
-    /**
-     * Fallback locale.
-     *
-     * @type {String}
-     * @api public
-     */
+  /**
+   * Fallback locale.
+   *
+   * @type {String}
+   * @api public
+   */
   fallback: _fallbackLocale,
 
-    /**
-     * Placeholder prefix.
-     *
-     * @type {String}
-     * @api public
-     */
+  /**
+   * Placeholder prefix.
+   *
+   * @type {String}
+   * @api public
+   */
   placeHolderPrefix: '%',
 
-    /**
-     * Placeholder suffix.
-     *
-     * @type {String}
-     * @api public
-     */
+  /**
+   * Placeholder suffix.
+   *
+   * @type {String}
+   * @api public
+   */
   placeHolderSuffix: '%',
 
-    /**
-     * Default domain.
-     *
-     * @type {String}
-     * @api public
-     */
+  /**
+   * Default domain.
+   *
+   * @type {String}
+   * @api public
+   */
   defaultDomain: 'messages',
 
-    /**
-     * Plural separator.
-     *
-     * @type {String}
-     * @api public
-     */
+  /**
+   * Plural separator.
+   *
+   * @type {String}
+   * @api public
+   */
   pluralSeparator: '|',
 
-    /**
-     * Adds a translation entry.
-     *
-     * @param {String} id         The message id
-     * @param {String} message    The message to register for the given id
-     * @param {String} [domain]   The domain for the message or null to use the default
-     * @param {String} [locale]   The locale or null to use the default
-     * @return {Object}           Translator
-     * @api public
-     */
+  /**
+   * Adds a translation entry.
+   *
+   * @param {String} id         The message id
+   * @param {String} message    The message to register for the given id
+   * @param {String} [domain]   The domain for the message or null to use the default
+   * @param {String} [locale]   The locale or null to use the default
+   * @return {Object}           Translator
+   * @api public
+   */
   add: function (id, message, domain, locale) {
     let _locale = locale || this.locale || this.fallback
     let _domain = domain || this.defaultDomain
@@ -100,16 +102,16 @@ const Translator = {
   },
 
 
-    /**
-     * Translates the given message.
-     *
-     * @param {String} id               The message id
-     * @param {Object} [parameters]     An array of parameters for the message
-     * @param {String} [domain]         The domain for the message or null to guess it
-     * @param {String} [locale]         The locale or null to use the default
-     * @return {String}                 The translated string
-     * @api public
-     */
+  /**
+   * Translates the given message.
+   *
+   * @param {String} id               The message id
+   * @param {Object} [parameters]     An array of parameters for the message
+   * @param {String} [domain]         The domain for the message or null to guess it
+   * @param {String} [locale]         The locale or null to use the default
+   * @return {String}                 The translated string
+   * @api public
+   */
   trans: function (id, parameters, domain, locale) {
     load_domain(locale || this.locale || this.fallback, domain)
 
@@ -124,17 +126,17 @@ const Translator = {
     return replace_placeholders(_message, parameters || {})
   },
 
-    /**
-     * Translates the given choice message by choosing a translation according to a number.
-     *
-     * @param {String} id               The message id
-     * @param {Number} number           The number to use to find the indice of the message
-     * @param {Object} [parameters]     An array of parameters for the message
-     * @param {String} [domain]         The domain for the message or null to guess it
-     * @param {String} [locale]         The locale or null to use the default
-     * @return {String}                 The translated string
-     * @api public
-     */
+  /**
+   * Translates the given choice message by choosing a translation according to a number.
+   *
+   * @param {String} id               The message id
+   * @param {Number} number           The number to use to find the indice of the message
+   * @param {Object} [parameters]     An array of parameters for the message
+   * @param {String} [domain]         The domain for the message or null to guess it
+   * @param {String} [locale]         The locale or null to use the default
+   * @return {String}                 The translated string
+   * @api public
+   */
   transChoice: function (id, number, parameters, domain, locale) {
     load_domain(locale || this.locale || this.fallback, domain)
 
@@ -164,13 +166,13 @@ const Translator = {
     return replace_placeholders(_message, parameters)
   },
 
-    /**
-     * Loads translations from JSON.
-     *
-     * @param {String} data     A JSON string or object literal
-     * @return {Object}         Translator
-     * @api public
-     */
+  /**
+   * Loads translations from JSON.
+   *
+   * @param {String} data     A JSON string or object literal
+   * @return {Object}         Translator
+   * @api public
+   */
   fromJSON: function (data) {
     if (typeof data === 'string') {
       data = JSON.parse(data)
@@ -201,9 +203,9 @@ const Translator = {
     return this
   },
 
-    /**
-     * @api public
-     */
+  /**
+   * @api public
+   */
   reset: function () {
     _messages   = {}
     _domains    = []

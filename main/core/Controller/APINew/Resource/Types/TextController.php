@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\Text;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
@@ -21,7 +22,7 @@ class TextController extends AbstractCrudController
 {
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Resource\Text';
+        return Text::class;
     }
 
     public function getIgnore()

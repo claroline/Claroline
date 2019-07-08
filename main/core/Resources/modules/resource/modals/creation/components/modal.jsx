@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
@@ -137,9 +137,8 @@ ResourceCreationModal.propTypes = {
   save: T.func.isRequired,
   reset: T.func.isRequired,
   saveEnabled: T.bool.isRequired,
-  newNode: T.shape(
-    ResourceNodeTypes.propTypes
-  ).isRequired
+  // not a ResourceNodeTypes to avoid prop-types fails before the node is valid (ie. filled by user)
+  newNode: T.object.isRequired
 }
 
 export {

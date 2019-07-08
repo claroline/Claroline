@@ -1,17 +1,8 @@
-.page-container {
-    display: flex; // this permits to have the .page component to fill the available height
-    //margin-top: @component-margin-bottom; // add spacing with header
-}
-
-/*.breadcrumb + .page-container {
-    margin-top: 0; // reset spacing (it's added by the breadcrumb)
-}*/
 
 .page {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100%; // fill parent
     max-width: 100%;
 
     &.fullscreen {
@@ -24,14 +15,6 @@
         background: @body-bg; // regular page container has no background. We need to hide what is under
         overflow-y: scroll; // get the scrollbar
     }
-
-    &.sm {
-
-    }
-
-    &.lg {
-
-    }
 }
 
 .page-header {
@@ -41,11 +24,13 @@
     justify-content: space-between;
     flex-shrink: 0;
     flex-wrap: wrap;
-    background-color: @body-bg; // for walkthrough-highlight
+    background-color: @page-header-bg;
 
     padding: @page-header-padding;
     margin: 0;
-    border-bottom: 1px solid @page-header-border-color;
+    //border-bottom: 1px solid @page-header-border-color;
+    border-bottom: none;
+    .box-shadow(0 2px 2px rgba(0,0,0,.15));
 
     .page-header-content { // todo : remove me (old pages)
         flex: 3;
@@ -165,12 +150,16 @@
     .button-base();
 
     position: relative; // for buttons with labels
-    border-radius: 50%;
+    text-align: center;
+    border-radius: (.65em * 2) + 1.25em;
     padding: .65em;
+    font-size: 1.25em;
+    line-height: 1.25em;
+
     border: 1px solid transparent !important; // not perfect, it's required to override default btns border
 
     &.default {
-        .button-variant(#333333; #EBEBEB; transparent);
+        .button-variant(#333333; #F6F6F6; transparent);
     }
 
     &.primary {
@@ -183,8 +172,6 @@
 
     // displays icon as a square
     .action-icon {
-        font-size: 1.25em;
-        line-height: 1.25em;
         width: 1.25em;
     }
 
@@ -194,6 +181,7 @@
         top: auto; // reset bootstrap default
         bottom: -5px;
         right: 0;
+        font-size: 14px;
         line-height: 1;
 
         &.label {
@@ -209,7 +197,6 @@
     flex-direction: column;
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
     padding: 0 floor(@grid-gutter-width / 2);
-    //margin-bottom: 20px;
 }
 
 .tabbed-page {

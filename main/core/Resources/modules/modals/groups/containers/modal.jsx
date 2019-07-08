@@ -7,9 +7,9 @@ import {
 } from '#/main/app/content/list/store'
 
 import {reducer, selectors} from '#/main/core/modals/groups/store'
-import {GroupsPickerModal as GroupsPickerModalComponent} from '#/main/core/modals/groups/components/modal'
+import {GroupsModal as GroupsModalComponent} from '#/main/core/modals/groups/components/modal'
 
-const GroupsPickerModal = withReducer(selectors.STORE_NAME, reducer)(
+const GroupsModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
@@ -19,9 +19,9 @@ const GroupsPickerModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
       }
     })
-  )(GroupsPickerModalComponent)
+  )(GroupsModalComponent)
 )
 
 export {
-  GroupsPickerModal
+  GroupsModal
 }

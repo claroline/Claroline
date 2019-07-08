@@ -1,9 +1,9 @@
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/main/core/tool/constants'
-import {currentUser} from '#/main/app/security'
 
 /**
  * Gets the path of a tool based on its rendering context.
@@ -14,8 +14,7 @@ import {currentUser} from '#/main/app/security'
  *
  * @return {Array}
  */
-function getToolPath(toolName, contextType, contextData = {}) {
-  const user = currentUser()
+function getToolBreadcrumb(toolName, contextType, contextData = {}) {
   const breadcrumbItems = get(contextData, 'breadcrumb.items') || []
 
   let path = []
@@ -24,60 +23,53 @@ function getToolPath(toolName, contextType, contextData = {}) {
     case constants.TOOL_DESKTOP:
       path = [
         {
+          type: LINK_BUTTON,
           label: trans('desktop'),
-          target: ['claro_desktop_open']
+          target: '/desktop'
         }, {
+          type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
-          target: ['claro_desktop_open_tool', {toolName: toolName}]
+          target: '/desktop/' + toolName
         }
       ]
       break
 
     case constants.TOOL_WORKSPACE:
-      if (user) {
-        path = [
-          {
-            icon: 'fa fa-fw fa-atlas',
-            label: trans('desktop'),
-            displayed: -1 !== breadcrumbItems.indexOf('desktop'),
-            target: ['claro_desktop_open']
-          }, {
-            label: trans('my_workspaces'),
-            displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
-            target: ['claro_workspace_by_user']
-          }
-        ]
-      } else {
-        path = [
-          {
-            label: trans('public_workspaces'),
-            displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
-            target: ['claro_workspace_list']
-          }
-        ]
-      }
-
-      path = path.concat([
+      path = [
         {
+          type: LINK_BUTTON,
+          label: trans('desktop'),
+          displayed: -1 !== breadcrumbItems.indexOf('desktop'),
+          target: '/desktop'
+        }, {
+          type: LINK_BUTTON,
+          label: trans('my_workspaces', {}, 'workspace'),
+          displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
+          target: '/desktop/workspaces'
+        }, {
+          type: LINK_BUTTON,
           label: contextData.name,
           displayed: -1 !== breadcrumbItems.indexOf('current'),
-          target: ['claro_workspace_open', {workspaceId: contextData.id}]
+          target: '/desktop/workspaces/' + contextData.id
         }, {
+          type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
           displayed: -1 !== breadcrumbItems.indexOf('tool'),
-          target: ['claro_workspace_open_tool', {workspaceId: contextData.id, toolName: toolName}]
+          target: '/desktop/workspaces/' + contextData.id + '/' + toolName
         }
-      ])
+      ]
       break
 
     case constants.TOOL_ADMINISTRATION:
       path = [
         {
+          type: LINK_BUTTON,
           label: trans('administration'),
-          target: ['claro_admin_open']
+          target: '/administration'
         }, {
+          type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
-          target: ['claro_admin_open_tool', {toolName: toolName}]
+          target: '/administration/' + toolName
         }
       ]
       break
@@ -95,6 +87,6 @@ function showToolBreadcrumb(contextType, contextData) {
 }
 
 export {
-  getToolPath,
+  getToolBreadcrumb,
   showToolBreadcrumb
 }

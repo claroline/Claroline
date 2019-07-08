@@ -7,12 +7,12 @@
 
 import moment from 'moment'
 
+import {locale} from '#/main/app/intl/locale'
 import {trans} from '#/main/app/intl/translation'
-import {getLocale} from '#/main/app/intl/locale'
 
 // configure moment
 // this may be not the better place to do it
-moment.locale(getLocale())
+moment.locale(locale())
 
 /**
  * Gets the date format expected by the server API.
@@ -157,6 +157,24 @@ function nowAdd(addition, local = true) {
   return local ? moment().utc().local().add(addition).format(getApiFormat()) : moment().utc().add(addition).format(getApiFormat())
 }
 
+function convertTimestampToString(timestamp) {
+  let result = null
+  let duration = timestamp
+
+  if (duration !== null) {
+    const hours = Math.floor(duration / 3600)
+    duration %= 3600
+    const minutes = Math.floor(duration / 60)
+    const seconds = duration % 60
+
+    result = `${hours}:`
+    result += 10 > minutes ? `0${minutes}:` : `${minutes}:`
+    result += 10 > seconds ? `0${seconds}` : `${seconds}`
+  }
+
+  return result
+}
+
 export {
   getApiFormat,
   getDisplayFormat,
@@ -169,5 +187,6 @@ export {
   computeElapsedTime,
   getTimeDiff,
   nowAdd,
+  convertTimestampToString,
   displayDuration
 }

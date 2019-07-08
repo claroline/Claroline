@@ -50,7 +50,6 @@ class Configuration implements ConfigurationInterface
         $this->addToolSection($pluginSection);
         $this->addThemeSection($pluginSection);
         $this->addAdminToolSection($pluginSection);
-        $this->addAdditionalActionSection($pluginSection);
         $this->addTemplateSection($pluginSection);
 
         return $treeBuilder;
@@ -369,22 +368,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('name')->isRequired()->end()
                         ->scalarNode('class')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ->end()->end();
-    }
-
-    private function addAdditionalActionSection(NodeBuilder $pluginSection)
-    {
-        $pluginSection
-            ->arrayNode('additional_action')
-                ->prototype('array')
-                    ->children()
-                        ->scalarNode('action')->isRequired()->end()
-                        ->scalarNode('type')->isRequired()->end()
-                        ->scalarNode('displayed_name')->isRequired()->end()
-                        ->scalarNode('class')->isRequired()->end()
                     ->end()
                 ->end()
             ->end()

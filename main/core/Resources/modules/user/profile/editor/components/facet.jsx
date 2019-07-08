@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -19,7 +20,7 @@ const ProfileFacetComponent = props => {
   let sections = []
   if (props.facet) {
     if (props.facet.sections) {
-      sections = formatFormSections(cloneDeep(props.facet.sections), props.originalUser, props.parameters)
+      sections = formatFormSections(cloneDeep(props.facet.sections), props.originalUser, props.parameters, props.currentUser)
     }
 
     if (get(props.facet, 'meta.main')) {
@@ -44,6 +45,7 @@ const ProfileFacetComponent = props => {
 }
 
 ProfileFacetComponent.propTypes = {
+  currentUser: T.object,
   user: T.object.isRequired,
   originalUser: T.object.isRequired,
   facet: T.shape(
@@ -54,6 +56,7 @@ ProfileFacetComponent.propTypes = {
 
 const ProfileFacet = connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     user: formSelect.data(formSelect.form(state, 'user')),
     originalUser: formSelect.originalData(formSelect.form(state, 'user')),
     facet: select.currentFacet(state),

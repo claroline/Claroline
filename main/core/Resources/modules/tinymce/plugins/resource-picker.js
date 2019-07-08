@@ -6,7 +6,7 @@ import {url} from '#/main/app/api'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
+import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 // TODO : make loaders work
 // TODO : remove placeholder on selection cancel
@@ -23,7 +23,7 @@ function openResourcePicker(editor) {
 
   editor.setProgressState(true)
 
-  editor.settings.showModal(MODAL_RESOURCE_EXPLORER, {
+  editor.settings.showModal(MODAL_RESOURCES, {
     selectAction: (selected) => ({
       type: CALLBACK_BUTTON,
       label: trans('select', {}, 'actions'),

@@ -4,7 +4,7 @@ import {
   setIfError,
   notBlank,
   number
-} from '#/main/core/validation'
+} from '#/main/app/data/types/validators'
 
 /**
  * Checks if a Correction data are valid.

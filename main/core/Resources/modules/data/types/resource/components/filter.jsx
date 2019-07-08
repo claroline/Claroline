@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
+import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 // TODO : reuse explorer config (title, root, filters, etc.)
 
@@ -22,7 +22,7 @@ const ResourceFilter = (props) =>
       icon="fa fa-fw fa-folder"
       label={props.placeholder || trans('select_resource')}
       size="sm"
-      modal={[MODAL_RESOURCE_EXPLORER, {
+      modal={[MODAL_RESOURCES, {
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,
           label: trans('select', {}, 'actions'),

@@ -9,7 +9,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {locale} from '#/main/app/intl/locale'
 import {asset, param, theme} from '#/main/app/config'
-import {url as urlValidator} from '#/main/core/validation'
+import {url as urlValidator} from '#/main/app/data/types/validators'
 import {getExternalPlugins} from '#/main/core/tinymce/plugins/external-plugins'
 
 // Load external tinymce plugins from other bundles

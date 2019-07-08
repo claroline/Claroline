@@ -9,7 +9,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {TemplateTypeCard} from '#/main/core/administration/template/data/components/template-type-card'
 import {TemplateType as TemplateTypeType} from '#/main/core/administration/template/prop-types'
-import {MODAL_TEMPLATE_TYPES_PICKER} from '#/main/core/modals/template-types'
+import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
 
 const TemplateTypeInput = props => {
   if (props.value) {
@@ -32,7 +32,7 @@ const TemplateTypeInput = props => {
           className="btn btn-template-types-primary"
           style={{marginTop: 10}}
           primary={true}
-          modal={[MODAL_TEMPLATE_TYPES_PICKER, {
+          modal={[MODAL_TEMPLATE_TYPES, {
             title: props.picker.title,
             confirmText: props.picker.confirmText,
             selectAction: (selected) => ({
@@ -46,31 +46,31 @@ const TemplateTypeInput = props => {
         </ModalButton>
       </div>
     )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-file-alt"
-        title={trans('no_template_type', {}, 'template')}
-      >
-        <ModalButton
-          className="btn btn-template-types-primary"
-          primary={true}
-          modal={[MODAL_TEMPLATE_TYPES_PICKER, {
-            title: props.picker.title,
-            confirmText: props.picker.confirmText,
-            selectAction: (selected) => ({
-              type: CALLBACK_BUTTON,
-              callback: () => props.onChange(selected[0])
-            })
-          }]}
-        >
-          <span className="fa fa-fw fa-file-alt icon-with-text-right" />
-          {trans('select_a_template_type', {}, 'template')}
-        </ModalButton>
-      </EmptyPlaceholder>
-    )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-file-alt"
+      title={trans('no_template_type', {}, 'template')}
+    >
+      <ModalButton
+        className="btn btn-template-types-primary"
+        primary={true}
+        modal={[MODAL_TEMPLATE_TYPES, {
+          title: props.picker.title,
+          confirmText: props.picker.confirmText,
+          selectAction: (selected) => ({
+            type: CALLBACK_BUTTON,
+            callback: () => props.onChange(selected[0])
+          })
+        }]}
+      >
+        <span className="fa fa-fw fa-file-alt icon-with-text-right" />
+        {trans('select_a_template_type', {}, 'template')}
+      </ModalButton>
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(TemplateTypeInput, FormFieldTypes, {
@@ -80,11 +80,7 @@ implementPropTypes(TemplateTypeInput, FormFieldTypes, {
     confirmText: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('template_type_selector', {}, 'template'),
-    confirmText: trans('select', {}, 'actions')
-  }
+  value: null
 })
 
 export {

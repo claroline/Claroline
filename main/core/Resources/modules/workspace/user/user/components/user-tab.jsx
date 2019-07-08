@@ -4,13 +4,13 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {matchPath, Routes, withRouter} from '#/main/app/router'
-
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {PageActions, PageAction} from '#/main/core/layout/page'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
-import {User}    from '#/main/core/administration/user/user/components/user'
+import {User}    from '#/main/core/administration/users/user/components/user'
 import {Users}   from '#/main/core/workspace/user/user/components/users'
 
 import {actions} from '#/main/core/workspace/user/user/actions'
@@ -19,7 +19,7 @@ import {select}  from '#/main/core/workspace/user/selectors'
 import {getModalDefinition} from '#/main/core/workspace/user/role/modal'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
 const UserTabActionsComponent = props =>
   <PageActions>
@@ -33,7 +33,7 @@ const UserTabActionsComponent = props =>
       />
     }
 
-    {getPermissionLevel(props.workspace) === ADMIN &&
+    {getPermissionLevel(props.workspace, props.currentUser) === ADMIN &&
       <PageAction
         type={LINK_BUTTON}
         icon="fa fa-pencil"
@@ -44,6 +44,7 @@ const UserTabActionsComponent = props =>
   </PageActions>
 
 UserTabActionsComponent.propTypes = {
+  currentUser: T.object,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired,
@@ -53,6 +54,7 @@ UserTabActionsComponent.propTypes = {
 
 const UserTabActions = withRouter(connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     workspace: select.workspace(state)
   }),
   dispatch => ({

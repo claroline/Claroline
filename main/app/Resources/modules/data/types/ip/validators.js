@@ -1,6 +1,6 @@
 import {tval} from '#/main/app/intl/translation'
 
-import {string} from '#/main/core/validation'
+import {string} from '#/main/app/data/types/validators'
 import {IPv4} from '#/main/app/data/types/ip/utils'
 
 /**

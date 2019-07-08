@@ -39,17 +39,14 @@ class CallbackButton extends Component {
         role="button"
         tabIndex={this.props.tabIndex}
         disabled={this.props.disabled}
-        className={classes(
-          this.props.className,
-          this.props.size && `btn-${this.props.size}`,
-          {
-            disabled: this.props.disabled,
-            default: !this.props.primary && !this.props.dangerous,
-            primary: this.props.primary,
-            danger: this.props.dangerous,
-            active: this.props.active
-          }
-        )}
+        className={classes(this.props.className, {
+          [`btn-${this.props.size}`]: !!this.props.size,
+          disabled: this.props.disabled,
+          default: !this.props.primary && !this.props.dangerous,
+          primary: this.props.primary,
+          danger: this.props.dangerous,
+          active: this.props.active
+        })}
         onClick={this.onClick}
       >
         {this.props.children}

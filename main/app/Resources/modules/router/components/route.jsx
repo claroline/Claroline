@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Route as BaseRoute} from 'react-router-dom'
+import get from 'lodash/get'
 
 import {Route as RouteTypes} from '#/main/app/router/prop-types'
 
@@ -18,14 +19,14 @@ class Route extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname !== nextProps.location.pathname) {
+  componentDidUpdate(prevProps) {
+    if (this.props.location && get(this.props, 'location.pathname') !== get(prevProps, 'location.pathname')) {
       if (this.props.onLeave) {
-        this.props.onLeave(this.props.computedMatch.params)
+        this.props.onLeave(prevProps.computedMatch.params)
       }
 
-      if (nextProps.onEnter) {
-        nextProps.onEnter(nextProps.computedMatch.params)
+      if (this.props.onEnter) {
+        this.props.onEnter(this.props.computedMatch.params)
       }
     }
   }

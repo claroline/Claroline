@@ -1,10 +1,21 @@
+import {createSelector} from 'reselect'
 
-const message = (state) => state.currentMessage
-const reply = (state) => state.messageForm.reply
-const mailNotified = (state) => state.mailNotified
+const STORE_NAME = 'messaging'
+
+const store = (state) => state[STORE_NAME]
+
+const message = createSelector(
+  [store],
+  (store) => store.currentMessage
+)
+
+const reply = createSelector(
+  [store],
+  (store) => store.messageForm.reply
+)
 
 export const selectors = {
+  STORE_NAME,
   message,
-  reply,
-  mailNotified
+  reply
 }

@@ -3,43 +3,30 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
-import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
-import {Player} from '#/main/core/tools/home/player/components/player'
-import {Editor} from '#/main/core/tools/home/editor/components/editor'
+import {PlayerMain} from '#/main/core/tools/home/player/containers/main'
+import {EditorMain} from '#/main/core/tools/home/editor/containers/main'
 
 const HomeTool = props =>
   <Routes
-    redirect={[
-      {from: '/', exact: true, to: '/tab/'+props.sortedTabs[0].id },
-      {from: '/edit', exact: true, to: '/edit/tab/'+props.editorTabs[0].id}
-    ]}
+    path={props.path}
     routes={[
       {
-        path: '/tab/:id?',
-        exact: true,
-        component: Player,
-        onEnter: (params) => props.setCurrentTab(params.id)
+        path: '/tab',
+        render: () => <PlayerMain path={props.path} />
       }, {
-        path: '/edit/tab/:id?',
-        component: Editor,
-        onEnter: (params) => {
-          props.setCurrentTab(params.id)
-        },
-        disabled: !props.editable
+        path: '/edit/tab',
+        disabled: !props.editable,
+        render: () => <EditorMain path={props.path} />
       }
+    ]}
+    redirect={[
+      {from: '/', exact: true, to: '/tab'}
     ]}
   />
 
 HomeTool.propTypes = {
-  sortedTabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
-  editorTabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
-  currentTab: T.shape(TabTypes.propTypes),
-  editable: T.bool.isRequired,
-  setCurrentTab: T.func.isRequired
+  path: T.string.isRequired,
+  editable: T.bool.isRequired
 }
 
 export {

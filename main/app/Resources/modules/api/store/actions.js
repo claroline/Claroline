@@ -1,9 +1,9 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {url} from '#/main/app/api/router'
 
-import {actions as alertActions} from '#/main/app/overlay/alert/store'
+import {actions as alertActions} from '#/main/app/overlays/alert/store'
 
-import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
+import {constants as alertConstants} from '#/main/app/overlays/alert/constants'
 import {constants} from '#/main/app/api/constants'
 
 // actions

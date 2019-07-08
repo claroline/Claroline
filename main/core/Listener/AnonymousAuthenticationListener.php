@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener as Listener;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**

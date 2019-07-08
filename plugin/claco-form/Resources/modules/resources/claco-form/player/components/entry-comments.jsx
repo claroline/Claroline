@@ -5,7 +5,7 @@ import classes from 'classnames'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {currentUser} from '#/main/app/security'

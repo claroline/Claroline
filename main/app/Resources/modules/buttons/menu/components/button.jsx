@@ -13,7 +13,7 @@ import {
   Menu,
   MenuAction,
   MenuItem
-} from '#/main/app/overlay/menu'
+} from '#/main/app/overlays/menu'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'

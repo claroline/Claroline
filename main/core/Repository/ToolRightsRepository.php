@@ -12,6 +12,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Doctrine\ORM\EntityRepository;
 
 class ToolRightsRepository extends EntityRepository
@@ -49,12 +50,18 @@ class ToolRightsRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    /**
+     * @param array $orderedTools
+     * @param bool  $executeQuery
+     *
+     * @return \Doctrine\ORM\Query|ToolRights[]
+     */
     public function findRightsForOrderedTools(
         array $orderedTools,
         $executeQuery = true
     ) {
-        if (count($orderedTools) === 0) {
-            return array();
+        if (0 === count($orderedTools)) {
+            return [];
         } else {
             $dql = '
                 SELECT tr

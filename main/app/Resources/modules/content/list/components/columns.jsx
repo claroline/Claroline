@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
-import {MenuItem} from '#/main/app/overlay/menu'
+import {MenuItem} from '#/main/app/overlays/menu'
 
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 

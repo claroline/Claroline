@@ -89,6 +89,9 @@ class ToolMaskDecoder
         return $this->name;
     }
 
+    /**
+     * @return Tool
+     */
     public function getTool()
     {
         return $this->tool;

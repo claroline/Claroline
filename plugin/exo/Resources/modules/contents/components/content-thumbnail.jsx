@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 import {MODAL_CONTENT} from '#/plugin/exo/contents/modals'
 import {makeSortable} from '#/plugin/exo/utils/sortable'

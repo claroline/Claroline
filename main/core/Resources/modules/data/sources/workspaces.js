@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
+import {WorkspaceCard} from '#/main/core/workspace/components/card'
 
 export default {
   name: 'workspaces',

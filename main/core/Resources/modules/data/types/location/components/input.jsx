@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -9,7 +9,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 import {Location as LocationType} from '#/main/core/user/prop-types'
-import {MODAL_LOCATIONS_PICKER} from '#/main/core/modals/locations'
+import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
 
 const LocationsButton = props =>
   <Button
@@ -19,7 +19,7 @@ const LocationsButton = props =>
     icon="fa fa-fw fa-location-arrow"
     label={trans('select_a_location')}
     primary={true}
-    modal={[MODAL_LOCATIONS_PICKER, {
+    modal={[MODAL_LOCATIONS, {
       url: ['apiv2_location_list'],
       title: props.title,
       selectAction: (selected) => ({
@@ -37,8 +37,8 @@ LocationsButton.propTypes = {
 
 const LocationInput = props => {
   if (props.value) {
-    return(
-      <div>
+    return (
+      <Fragment>
         <LocationCard
           data={props.value}
           actions={[
@@ -57,22 +57,22 @@ const LocationInput = props => {
           {...props.picker}
           onChange={props.onChange}
         />
-      </div>
-    )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-location-arrow"
-        title={trans('no_location')}
-      >
-        <LocationsButton
-          {...props.picker}
-          onChange={props.onChange}
-        />
-      </EmptyPlaceholder>
+      </Fragment>
     )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-location-arrow"
+      title={trans('no_location')}
+    >
+      <LocationsButton
+        {...props.picker}
+        onChange={props.onChange}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(LocationInput, FormFieldTypes, {
@@ -81,10 +81,7 @@ implementPropTypes(LocationInput, FormFieldTypes, {
     title: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('location_selector')
-  }
+  value: null
 })
 
 export {

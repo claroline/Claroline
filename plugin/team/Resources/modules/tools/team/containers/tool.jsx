@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {makeId} from '#/main/core/scaffolding/id'
 import {actions as formActions} from '#/main/app/content/form/store'
-import {select as workspaceSelectors} from '#/main/core/workspace/selectors'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {TeamTool as TeamToolComponent} from '#/plugin/team/tools/team/components/tool'
 import {selectors, actions} from '#/plugin/team/tools/team/store'
@@ -14,7 +14,7 @@ const TeamTool = withRouter(
       canEdit: selectors.canEdit(state),
       teamParams: selectors.teamParams(state),
       resourceTypes: selectors.resourceTypes(state),
-      workspaceId: workspaceSelectors.workspace(state).uuid
+      workspaceId: toolSelectors.contextData(state) ? toolSelectors.contextData(state).uuid : null
     }),
     (dispatch) => ({
       resetForm(formData) {

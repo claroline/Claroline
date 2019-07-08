@@ -4,18 +4,16 @@
  * Displays the resources explorer inside the modal.
  */
 
-// TODO : move in #/main/core/modals/resources
-
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ExplorerModal} from '#/main/core/modals/resources/containers/modal'
+import {ResourcesModal} from '#/main/core/modals/resources/containers/modal'
 
-const MODAL_RESOURCE_EXPLORER = 'MODAL_RESOURCE_EXPLORER'
+const MODAL_RESOURCES = 'MODAL_RESOURCES'
 
 // make the modal available for use
-registry.add(MODAL_RESOURCE_EXPLORER, ExplorerModal)
+registry.add(MODAL_RESOURCES, ResourcesModal)
 
 export {
-  MODAL_RESOURCE_EXPLORER
+  MODAL_RESOURCES
 }

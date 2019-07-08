@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'

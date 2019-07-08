@@ -5,13 +5,8 @@ import {reducer} from '#/plugin/exo/tools/bank/store'
  * BankTool application.
  * Manages all the quiz questions accessible by the current user.
  */
-export const App = () => ({
+export default {
   component: BankTool,
-  store: reducer,
-  initialData: initialData => ({
-    tool: {
-      name: 'ujm_questions',
-      currentContext: initialData.currentContext
-    }
-  })
-})
+  // menu: ResourcesMenu,
+  store: reducer
+}

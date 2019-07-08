@@ -1,6 +1,4 @@
-import {mount} from '#/main/app/mount'
-
-// TODO : move in dom module
+import {mount} from '#/main/app/dom/mount'
 
 /**
  * Retrieves app container with CSS selector.

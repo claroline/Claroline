@@ -7,9 +7,9 @@ import {
 } from '#/main/app/content/list/store'
 
 import {reducer, selectors} from '#/main/core/modals/template-types/store'
-import {TemplateTypesPickerModal as TemplateTypesPickerModalComponent} from '#/main/core/modals/template-types/components/modal'
+import {TemplateTypesModal as TemplateTypesModalComponent} from '#/main/core/modals/template-types/components/modal'
 
-const TemplateTypesPickerModal = withReducer(selectors.STORE_NAME, reducer)(
+const TemplateTypesModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
@@ -19,9 +19,9 @@ const TemplateTypesPickerModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
       }
     })
-  )(TemplateTypesPickerModalComponent)
+  )(TemplateTypesModalComponent)
 )
 
 export {
-  TemplateTypesPickerModal
+  TemplateTypesModal
 }

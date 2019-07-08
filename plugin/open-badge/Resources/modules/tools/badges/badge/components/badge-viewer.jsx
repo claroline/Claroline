@@ -4,7 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {actions}    from '#/plugin/open-badge/tools/badges/store/actions'
 
-import {MODAL_USERS_PICKER} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/core/modals/users'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -37,7 +37,7 @@ const BadgeViewerComponent = (props) => {
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
-            modal: [MODAL_USERS_PICKER, {
+            modal: [MODAL_USERS, {
               url: ['apiv2_user_list_registerable'], // maybe not the correct URL
               title: props.title,
               selectAction: (selected) => ({

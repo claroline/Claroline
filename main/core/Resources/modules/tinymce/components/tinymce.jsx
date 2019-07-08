@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {withModal} from '#/main/app/overlay/modal/withModal'
+import {withModal} from '#/main/app/overlays/modal/withModal'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 import {tinymce} from '#/main/core/tinymce'

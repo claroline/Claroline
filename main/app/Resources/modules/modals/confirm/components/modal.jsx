@@ -4,9 +4,9 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 

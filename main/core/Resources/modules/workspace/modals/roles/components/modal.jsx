@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {RoleCard} from '#/main/core/user/data/components/role-card'

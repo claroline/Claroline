@@ -4,26 +4,38 @@ import {now} from '#/main/app/intl/date'
 import {currentUser} from '#/main/app/security'
 import {makeId} from '#/main/core/scaffolding/id'
 import {makeActionCreator} from '#/main/app/store/actions'
-import {API_REQUEST} from '#/main/app/api'
+import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions} from '#/main/app/content/form/store'
 
-import {Message as MessageTypes} from '#/plugin/message/tools/messaging/prop-types'
+import {selectors} from '#/plugin/message/tools/messaging/store/selectors'
+import {Message as MessageTypes} from '#/plugin/message/prop-types'
 
+// actions
 export const MESSAGE_LOAD = 'MESSAGE_LOAD'
 export const IS_REPLY = 'IS_REPLY'
-export const MAIL_NOTIFICATION_UPDATE = 'MAIL_NOTIFICATION_UPDATE'
+
+// actions creators
 export const actions = {}
 
+actions.addContacts = users => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_contacts_create'], {ids: users}),
+    request: {
+      method: 'PATCH'
+    },
+    success: (data, dispatch) => dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.contacts`))
+  }
+})
 
-actions.newMessage = (id = null) => (dispatch) => {
+actions.newMessage = (id = null) => {
   if (id) {
-    dispatch({
+    return ({
       [API_REQUEST]: {
         url: ['apiv2_message_root', {id}],
         success: (data, dispatch) => {
           dispatch(formActions.resetForm(
-            'messageForm',
+            `${selectors.STORE_NAME}.messageForm`,
             merge({}, MessageTypes.defaultProps, {
               id: makeId(),
               from: currentUser(),
@@ -31,23 +43,23 @@ actions.newMessage = (id = null) => (dispatch) => {
               object: `Re: ${data.object}`,
               meta: {date : now()}
             }),
-            true))
+            true
+          ))
         }
       }
     })
-  } else {
-    dispatch(formActions.resetForm(
-      'messageForm',
-      merge({}, MessageTypes.defaultProps, {
-        id: makeId(),
-        from: currentUser(),
-        meta: {date : now()}
-      }),
-      true
-    ))
   }
-}
 
+  return formActions.resetForm(
+    `${selectors.STORE_NAME}.messageForm`,
+    merge({}, MessageTypes.defaultProps, {
+      id: makeId(),
+      from: currentUser(),
+      meta: {date : now()}
+    }),
+    true
+  )
+}
 
 actions.deleteMessages = (messages) => ({
   [API_REQUEST]: {
@@ -56,25 +68,20 @@ actions.deleteMessages = (messages) => ({
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('deletedMessages'))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.deletedMessages`))
     }
   }
 })
 
-actions.removeMessages = (messages, formName = null) => ({
+actions.removeMessages = (messages, listName) => ({
   [API_REQUEST]: {
     url: ['apiv2_message_soft_delete', {ids: messages.map(message => message.meta.umuuid)}],
     request: {
       method: 'PUT'
     },
-    success: (data, dispatch) => {
-      if (formName) {
-        dispatch(listActions.invalidateData(formName))
-      }
-    }
+    success: (data, dispatch) => dispatch(listActions.invalidateData(listName))
   }
 })
-
 
 actions.restoreMessages = (messages) => ({
   [API_REQUEST]: {
@@ -83,14 +90,13 @@ actions.restoreMessages = (messages) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('deletedMessages'))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.deletedMessages`))
     }
   }
 })
 
 actions.setAsReply = makeActionCreator(IS_REPLY)
 actions.loadMessage = makeActionCreator(MESSAGE_LOAD, 'message')
-
 
 actions.fetchMessage = (id) => ({
   [API_REQUEST]: {
@@ -110,7 +116,7 @@ actions.markedAsReadWhenOpen = (id) => ({
   }
 })
 
-actions.openMessage = (id) =>  (dispatch) => {
+actions.openMessage = (id) => (dispatch) => {
   dispatch(actions.fetchMessage(id)).then((data) => dispatch(actions.markedAsReadWhenOpen(data.meta.umuuid)))
 }
 
@@ -121,7 +127,7 @@ actions.readMessages = (messages) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('receivedMessages'))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.receivedMessages`))
     }
   }
 })
@@ -133,22 +139,7 @@ actions.unreadMessages = (messages) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('receivedMessages'))
-    }
-  }
-})
-
-actions.uploadMailNotifications = makeActionCreator(MAIL_NOTIFICATION_UPDATE, 'notified')
-actions.setMailNotification = (user, mailNotified) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_user_update', {id: user.id}],
-    request: {
-      body: JSON.stringify(Object.assign({}, user, {meta: {mailNotified: mailNotified}})),
-      method: 'PUT'
-    },
-    success: (data, dispatch) => {
-      dispatch(formActions.resetForm('messagesParameters', {mailNotified: data.meta.mailNotified}))
-      dispatch(actions.uploadMailNotifications(data.meta.mailNotified))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.receivedMessages`))
     }
   }
 })

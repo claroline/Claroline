@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 
-import {chain, array, string, notBlank, unique} from '#/main/core/validation'
+import {chain, array, string, notBlank, unique} from '#/main/app/data/types/validators'
 
 import {EnumGroup} from '#/main/app/data/types/enum/components/group'
 import {EnumInput} from '#/main/app/data/types/enum/components/input'

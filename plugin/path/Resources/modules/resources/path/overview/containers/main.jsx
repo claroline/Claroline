@@ -7,6 +7,7 @@ import {selectors} from '#/plugin/path/resources/path/store'
 
 const OverviewMain = connect(
   (state) => ({
+    basePath: resourceSelectors.path(state),
     path: selectors.path(state),
     empty: selectors.empty(state),
     evaluation: resourceSelectors.resourceEvaluation(state)

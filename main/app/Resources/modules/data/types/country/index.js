@@ -1,5 +1,5 @@
 import {trans, tval} from '#/main/app/intl/translation'
-import {chain, string} from '#/main/core/validation'
+import {chain, string} from '#/main/app/data/types/validators'
 
 import {constants as intlConstants} from '#/main/app/intl/constants'
 import {CountryInput} from '#/main/app/data/types/country/components/input'

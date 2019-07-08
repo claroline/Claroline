@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import {notBlank, number, gteZero, chain} from '#/main/core/validation'
+import {notBlank, number, gteZero, chain} from '#/main/app/data/types/validators'
 
 import {getItem} from '#/plugin/exo/items'
 

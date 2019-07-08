@@ -7,13 +7,13 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {RolesPickerModal} from '#/main/core/modals/roles/containers/modal'
+import {RolesModal} from '#/main/core/modals/roles/containers/modal'
 
-const MODAL_ROLES_PICKER = 'MODAL_ROLES_PICKER'
+const MODAL_ROLES = 'MODAL_ROLES'
 
 // make the modal available for use
-registry.add(MODAL_ROLES_PICKER, RolesPickerModal)
+registry.add(MODAL_ROLES, RolesModal)
 
 export {
-  MODAL_ROLES_PICKER
+  MODAL_ROLES
 }

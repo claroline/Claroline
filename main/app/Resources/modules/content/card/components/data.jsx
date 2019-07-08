@@ -10,7 +10,7 @@ import {number} from '#/main/app/intl'
 import {Await} from '#/main/app/components/await'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Heading} from '#/main/core/layout/components/heading'
 
 import {
@@ -205,7 +205,7 @@ const DataCard = props =>
         }
       </Heading>
 
-      {'sm' !== props.size && -1 !== props.display.indexOf('description') && props.contentText &&
+      {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('description') && props.contentText &&
         <div key="data-card-description" className="data-card-description">
           {getPlainText(props.contentText)}
         </div>
@@ -213,7 +213,7 @@ const DataCard = props =>
 
       {props.children}
 
-      {'sm' !== props.size && -1 !== props.display.indexOf('footer') && props.footer &&
+      {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('footer') && props.footer &&
         <div key="data-card-footer" className="data-card-footer">
           {props.footer}
         </div>

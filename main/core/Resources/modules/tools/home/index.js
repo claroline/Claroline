@@ -1,4 +1,7 @@
+
 import {HomeTool} from '#/main/core/tools/home/containers/tool'
+import {HomeMenu} from '#/main/core/tools/home/containers/menu'
+
 import {reducer} from '#/main/core/tools/home/store'
 
 /**
@@ -8,13 +11,12 @@ import {reducer} from '#/main/core/tools/home/store'
  */
 export const App = () => ({
   component: HomeTool,
-  store: reducer,
-  initialData: (initialData) => Object.assign({}, initialData, {
-    editable: !!initialData.editable,
-    administration: !!initialData.administration,
-    editor:{
-      data: initialData.tabs || [],
-      originalData: initialData.tabs || []
-    }
-  })
+  styles: ['claroline-distribution-main-core-home-tool']
 })
+
+export default {
+  component: HomeTool,
+  menu: HomeMenu,
+  store: reducer,
+  styles: ['claroline-distribution-main-core-home-tool']
+}

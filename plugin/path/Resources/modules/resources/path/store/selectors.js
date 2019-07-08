@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'innova_path'
 
 const resource = (state) => state[STORE_NAME]
 
@@ -34,37 +34,12 @@ const navigationEnabled = createSelector(
   (resource) => resource.navigationEnabled
 )
 
-// summary
-const summary = createSelector(
-  [resource],
-  (resource) => resource.summary
-)
-
-const summaryPinned = createSelector(
-  [summary],
-  (summary) => summary.pinned
-)
-
-const summaryOpened = createSelector(
-  [summary],
-  (summary) => summary.opened
-)
-
-// is the current step rendered full width (without opened pinned summary) ?
-const fullWidth = createSelector(
-  [summaryPinned, summaryOpened],
-  (summaryPinned, summaryOpened) => !summaryOpened || !summaryPinned
-)
-
 export const selectors = {
   STORE_NAME,
   resource,
   path,
   steps,
   empty,
-  summaryPinned,
-  summaryOpened,
-  fullWidth,
   navigationEnabled,
   showOverview
 }

@@ -1,20 +1,21 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {WidgetGridEditor} from '#/main/core/widget/editor/components/grid'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 
+import {selectors} from '#/main/core/tools/home/editor/store/selectors'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
 const TabEditor = props =>
   <FormData
-    name="editor"
+    name={selectors.FORM_NAME}
     dataPart={`[${props.currentTabIndex}]`}
     buttons={true}
     lock={{
@@ -25,16 +26,16 @@ const TabEditor = props =>
     target={props.administration ?
       ['apiv2_home_admin', {
         context: props.currentContext.type,
-        contextId: props.currentContext.data ? props.currentContext.data.uuid : currentUser().id
+        contextId: props.currentContext.data ? props.currentContext.data.uuid : get(props.currentUser, 'id')
       }] :
       ['apiv2_home_update', {
         context: props.currentContext.type,
-        contextId: props.currentContext.data ? props.currentContext.data.uuid : currentUser().id
+        contextId: props.currentContext.data ? props.currentContext.data.uuid : get(props.currentUser, 'id')
       }]
     }
     cancel={{
       type: LINK_BUTTON,
-      target: props.created ? `/tab/${props.currentTab.id}` : '/',
+      target: `${props.path}/tab/${props.currentTab.id}`,
       exact: true
     }}
     sections={[
@@ -172,6 +173,8 @@ const TabEditor = props =>
   </FormData>
 
 TabEditor.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   currentContext: T.object.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
 

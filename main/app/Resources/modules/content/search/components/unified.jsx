@@ -8,7 +8,7 @@ import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data/types'
 import {getPropDefinition} from '#/main/app/content/list/utils'
 
-import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 // TODO : reuse #/main/app/content/search/components/prop
 

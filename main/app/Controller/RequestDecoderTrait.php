@@ -28,10 +28,11 @@ trait RequestDecoderTrait
     /**
      * @param Request $request
      * @param string  $class
+     * @param string  $property
      */
-    protected function decodeIdsString(Request $request, $class)
+    protected function decodeIdsString(Request $request, $class, $property = 'ids')
     {
-        $ids = $request->query->get('ids');
+        $ids = $request->query->get($property);
 
         $property = is_numeric($ids[0]) ? 'id' : 'uuid';
 

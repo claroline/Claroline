@@ -3,7 +3,6 @@
 namespace Innova\PathBundle\Entity\Path;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Parameters\SummaryParameters;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +17,6 @@ use Innova\PathBundle\Entity\Step;
 class Path extends AbstractResource
 {
     use Uuid;
-    use SummaryParameters;
 
     /**
      * JSON structure of the path.

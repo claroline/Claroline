@@ -36,7 +36,7 @@ class ResourceSource
      *
      * @param ObjectManager  $om
      * @param FinderProvider $finder
-     * @param TokenStorage   $tokenSorage
+     * @param TokenStorage   $tokenStorage
      */
     public function __construct(
         ObjectManager $om,
@@ -64,9 +64,9 @@ class ResourceSource
                 // only grab workspace root directory content
                 /** @var ResourceNode $workspaceRoot */
                 $workspaceRoot = $this->repository->findOneBy([
-                'parent' => null,
-                'workspace' => $event->getWorkspace(),
-            ]);
+                    'parent' => null,
+                    'workspace' => $event->getWorkspace(),
+                ]);
 
                 $options['hiddenFilters']['path.after'] = $workspaceRoot->getPath();
             }

@@ -1,4 +1,4 @@
-import $ from 'jquery'
+//import $ from 'jquery'
 
 (function ($) {
   window.select = function (mediaTitle, mediaNb) {

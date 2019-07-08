@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, number, gteZero, chain} from '#/main/core/validation'
+import {notBlank, number, gteZero, chain} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer} from '#/plugin/exo/items/utils'
 import {OpenItem} from '#/plugin/exo/items/open/prop-types'

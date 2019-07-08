@@ -4,7 +4,8 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
-import {Route, NavLink, Switch} from '#/main/app/router'
+import {NavLink} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 import {PageContainer} from '#/main/core/layout/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
 
@@ -19,7 +20,7 @@ const PageHeader = props =>
               'only-icon': section.onlyIcon
             })}
             key={`section-link-${sectionIndex}`}
-            to={section.path}
+            to={props.path+section.path}
             exact={section.exact}
           >
             <span className={classes('page-tabs-icon', section.icon)} />
@@ -39,6 +40,7 @@ const PageHeader = props =>
 PageHeader.propTypes = {
   className: T.string,
   title: T.string.isRequired,
+  path: T.string.isRequired,
   tabs: T.arrayOf(T.shape({
     path: T.string.isRequired,
     exact: T.bool,
@@ -58,24 +60,24 @@ const TabbedPage = props => {
     <PageContainer {...props} className="tabbed-page">
       <PageHeader
         title={props.title}
+        path={props.path}
         tabs={displayedTabs}
       >
-        <Switch>
-          {displayedTabs
+        <Routes
+          path={props.path}
+          routes={displayedTabs
             .filter(tab => !!tab.actions)
-            .map((tab, tabIndex) =>
-              <Route
-                {...tab}
-                key={`tab-actions-${tabIndex}`}
-                component={tab.actions}
-              />
-            )
+            .map((tab) => ({
+              ...tab,
+              component: tab.actions
+            }))
           }
-        </Switch>
+        />
       </PageHeader>
 
       <RoutedPageContent
         className="page-tab"
+        path={props.path}
         routes={displayedTabs.map((tab) => ({
           path: tab.path,
           exact: tab.exact,
@@ -89,6 +91,7 @@ const TabbedPage = props => {
 
 implementPropTypes(TabbedPage, PageTypes, {
   title: T.string.isRequired,
+  path: T.string,
   tabs: T.arrayOf(T.shape({
     path: T.string.isRequired,
     exact: T.bool,

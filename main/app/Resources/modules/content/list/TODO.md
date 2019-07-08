@@ -1,4 +1,4 @@
-- [ ] implement better loader.
+- [x] implement better loader.
 - [ ] append list filters to URL.
 - [ ] add default filter select in search.
 - [ ] add the possibility to override list translations

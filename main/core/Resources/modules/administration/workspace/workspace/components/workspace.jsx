@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
@@ -16,8 +16,8 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {WorkspaceForm} from '#/main/core/workspace/components/form'
 import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {OrganizationList} from '#/main/core/administration/users/organization/components/organization-list'
+import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
 const WorkspaceComponent = (props) =>
   <div>

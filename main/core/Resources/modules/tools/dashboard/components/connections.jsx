@@ -5,8 +5,8 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {convertTimestampToString} from '#/main/core/logs/utils'
-import {LogConnectWorkspaceCard} from '#/main/core/logs/data/components/log-connect-workspace-card'
+import {convertTimestampToString} from '#/main/app/intl/date'
+import {LogConnectCard} from '#/main/core/layout/logs/components/connect-card'
 
 const ConnectionsComponent = (props) =>
   <ListData
@@ -42,7 +42,7 @@ const ConnectionsComponent = (props) =>
         calculated: (rowData) => rowData.duration !== null ? convertTimestampToString(rowData.duration) : null
       }
     ]}
-    card={LogConnectWorkspaceCard}
+    card={LogConnectCard}
   />
 
 ConnectionsComponent.propTypes = {

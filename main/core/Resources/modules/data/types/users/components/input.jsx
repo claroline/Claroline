@@ -10,17 +10,17 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {UserCard} from '#/main/core/user/data/components/user-card'
 import {User as UserType} from '#/main/core/user/prop-types'
-import {MODAL_USERS_PICKER} from '#/main/core/modals/users'
+import {MODAL_USERS} from '#/main/core/modals/users'
 
 const UsersButton = props =>
   <Button
     className="btn"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-user-plus"
+    icon="fa fa-fw fa-user"
     label={trans('add_users')}
     primary={true}
-    modal={[MODAL_USERS_PICKER, {
+    modal={[MODAL_USERS, {
       url: ['apiv2_user_list_registerable'], // maybe not the correct URL
       title: props.title,
       selectAction: (selected) => ({
@@ -103,10 +103,7 @@ implementPropTypes(UsersInput, FormFieldTypes, {
     title: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('user_selector')
-  }
+  value: null
 })
 
 export {

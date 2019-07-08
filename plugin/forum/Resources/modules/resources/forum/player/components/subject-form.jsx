@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {url} from '#/main/app/api'
 
 import {withRouter} from '#/main/app/router'
-import {withModal} from '#/main/app/overlay/modal/withModal'
+import {withModal} from '#/main/app/overlays/modal/withModal'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'

@@ -32,7 +32,7 @@
 {% endjavascripts %}
 
 {# We have replaced WillDurand by our own to be able to lazy load trans domains #}
-<script src="{{ hotAsset('claroline-distribution-main-app-translator') }}"></script>
+{#<script src="{{ hotAsset('claroline-distribution-main-app-translator') }}"></script>#}
 {# Load some default translation domains #}
 {% javascripts debug=false
     'js/translations/resource/*.js'
@@ -58,10 +58,10 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-<script src="{{ hotAsset('claroline-distribution-main-core-tinymce') }}"></script>
+{#<script src="{{ hotAsset('claroline-distribution-main-core-tinymce') }}"></script>#}
 
 {# Topbar #}
-<script src="{{ hotAsset('claroline-distribution-main-app-header') }}"></script>
+{#<script src="{{ hotAsset('claroline-distribution-main-app-header') }}"></script>#}
 
 <script>
     $('body').tooltip({
@@ -96,8 +96,6 @@
         return oldJqTrigger.apply(this, arguments);
     };
 </script>
-
-{{ render(controller('ClarolineCoreBundle:Layout:injectJavascript')) }}
 
 {% for file in platform_config()['javascripts'] %}
     <script src="{{ asset(file) }}"></script>

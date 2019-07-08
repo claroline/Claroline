@@ -1,22 +1,18 @@
-import {makeReducer} from '#/main/app/store/reducer'
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
-import {currentUser} from '#/main/app/security'
-import {MESSAGE_LOAD, IS_REPLY, MAIL_NOTIFICATION_UPDATE} from '#/plugin/message/tools/messaging/store/actions'
 
-const authenticatedUser = currentUser()
+import {selectors} from '#/plugin/message/tools/messaging/store/selectors'
+import {MESSAGE_LOAD, IS_REPLY} from '#/plugin/message/tools/messaging/store/actions'
 
-const reducer = {
-  receivedMessages: makeListReducer('receivedMessages'),
-  sentMessages: makeListReducer('sentMessages'),
-  deletedMessages: makeListReducer('deletedMessages'),
-  messagesParameters: makeFormReducer('messagesParameters'),
-  mailNotified: makeReducer(authenticatedUser.meta.mailNotified, {
-    [MAIL_NOTIFICATION_UPDATE]: (state, action) => action.notified
-  }),
-  messageForm : makeFormReducer('messageForm', {
-    reply: false
-  }, {
+const reducer = combineReducers({
+  contacts: makeListReducer(`${selectors.STORE_NAME}.contacts`),
+
+  receivedMessages: makeListReducer(`${selectors.STORE_NAME}.receivedMessages`),
+  sentMessages: makeListReducer(`${selectors.STORE_NAME}.sentMessages`),
+  deletedMessages: makeListReducer(`${selectors.STORE_NAME}.deletedMessages`),
+
+  messageForm : makeFormReducer(`${selectors.STORE_NAME}.messageForm`, {}, {
     reply: makeReducer(false, {
       [IS_REPLY]: () => true
     })
@@ -24,7 +20,7 @@ const reducer = {
   currentMessage: makeReducer({}, {
     [MESSAGE_LOAD]: (state, action) => action.message
   })
-}
+})
 
 export {
   reducer

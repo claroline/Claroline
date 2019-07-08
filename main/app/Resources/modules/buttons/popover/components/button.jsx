@@ -3,7 +3,7 @@ import identity from 'lodash/identity'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {PopoverOverlay} from '#/main/app/overlay/popover/components/overlay'
+import {PopoverOverlay} from '#/main/app/overlays/popover/components/overlay'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'

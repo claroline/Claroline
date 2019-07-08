@@ -1,19 +1,11 @@
+
 import {reducer} from '#/main/core/administration/parameters/main/store/reducer'
-import {Tool} from '#/main/core/administration/parameters/main/containers/tool'
+import {ParametersTool} from '#/main/core/administration/parameters/main/containers/tool'
+import {ParametersMenu} from '#/main/core/administration/parameters/main/components/menu'
 
-export const App = () => ({
-  component: Tool,
+export default {
+  component: ParametersTool,
+  menu: ParametersMenu,
   store: reducer,
-  initialData: (initialData) => ({
-    tool: {
-      name: 'main_settings',
-      currentContext: initialData.currentContext
-    },
-
-    parameters: {
-      data: initialData.parameters,
-      originalData: initialData.parameters
-    },
-    availableLocales: initialData.availableLocales
-  })
-})
+  styles: ['claroline-distribution-main-core-administration-parameters']
+}

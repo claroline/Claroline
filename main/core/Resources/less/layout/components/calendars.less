@@ -307,6 +307,19 @@
     }
 }
 
+.calendar-dark {
+    color: @datepicker-color;
+}
+
+.calendar-light {
+    color: #ededed;
+}
+
+.calendar-vertical {
+    .calendar-vertical-variant();
+}
+
+
 /*
  * Calendar picker.
  */
@@ -319,12 +332,16 @@
 // vertical layout for XS screens
 @media (max-width: @screen-xs-max) {
     .calendar-container {
-        flex-direction: column;
+        .calendar-vertical-variant();
+    }
+}
 
-        .current-container,
-        .calendar {
-            flex: auto; // otherwise it breaks on IE
-            width: 100%;
-        }
+.calendar-vertical-variant() {
+    flex-direction: column;
+
+    .current-container,
+    .calendar {
+        flex: auto; // otherwise it breaks on IE
+        width: 100%;
     }
 }

@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {UserTypeahead} from '#/plugin/exo/users/components/typeahead'

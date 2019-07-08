@@ -1,11 +1,14 @@
 import React from 'react'
+
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors} from '#/main/core/administration/parameters/technical/store/selectors'
+
 const Javascripts = () =>
   <FormData
-    name="parameters"
+    name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{

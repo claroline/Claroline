@@ -28,24 +28,13 @@ class PostLoadRolesData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         /** @var Role $role */
-        $wscreator = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_WS_CREATOR');
-
-        /** @var AdminTool $tool */
-        $wsmanagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');
-
-        $wsmanagement->addRole($wscreator);
-        $manager->persist($wsmanagement);
-
-        /** @var Role $role */
         $adminOrganization = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
 
         /** @var AdminTool $tool */
-        $usermanagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('user_management');
-        $workspacemanagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');
-        $usermanagement->addRole($adminOrganization);
-        $workspacemanagement->addRole($adminOrganization);
-        $manager->persist($usermanagement);
-        $manager->persist($workspacemanagement);
+        $userManagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('user_management');
+        $userManagement->addRole($adminOrganization);
+
+        $manager->persist($userManagement);
         $manager->flush();
     }
 }

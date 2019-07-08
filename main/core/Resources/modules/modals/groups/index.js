@@ -7,13 +7,13 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {GroupsPickerModal} from '#/main/core/modals/groups/containers/modal'
+import {GroupsModal} from '#/main/core/modals/groups/containers/modal'
 
-const MODAL_GROUPS_PICKER = 'MODAL_GROUPS_PICKER'
+const MODAL_GROUPS = 'MODAL_GROUPS'
 
 // make the modal available for use
-registry.add(MODAL_GROUPS_PICKER, GroupsPickerModal)
+registry.add(MODAL_GROUPS, GroupsModal)
 
 export {
-  MODAL_GROUPS_PICKER
+  MODAL_GROUPS
 }

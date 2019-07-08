@@ -40,8 +40,6 @@ const Path = {
     id: T.string.isRequired,
     display: T.shape({
       showOverview: T.bool,
-      showSummary: T.bool,
-      openSummary: T.bool,
       numbering: T.oneOf(['none', 'numeric', 'literal', 'custom']),
       manualProgressionAllowed: T.bool
     }).isRequired,
@@ -53,10 +51,15 @@ const Path = {
     ))
   },
   defaultProps: {
-    steps: [],
+    display: {
+      showOverview: false,
+      numbering: 'none',
+      manualProgressionAllowed: false
+    },
     opening: {
       secondaryResources: '_self'
-    }
+    },
+    steps: []
   }
 }
 

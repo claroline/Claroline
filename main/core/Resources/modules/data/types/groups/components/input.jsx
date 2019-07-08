@@ -10,7 +10,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {GroupCard} from '#/main/core/user/data/components/group-card'
 import {Group as GroupType} from '#/main/core/user/prop-types'
-import {MODAL_GROUPS_PICKER} from '#/main/core/modals/groups'
+import {MODAL_GROUPS} from '#/main/core/modals/groups'
 
 const GroupsButton = props =>
   <Button
@@ -20,7 +20,7 @@ const GroupsButton = props =>
     icon="fa fa-fw fa-users"
     label={trans('add_groups')}
     primary={true}
-    modal={[MODAL_GROUPS_PICKER, {
+    modal={[MODAL_GROUPS, {
       url: ['apiv2_group_list_registerable'],
       title: props.title,
       selectAction: (selected) => ({
@@ -105,10 +105,7 @@ implementPropTypes(GroupsInput, FormFieldTypes, {
     title: T.string
   })
 }, {
-  value: null,
-  picker: {
-    title: trans('groups_picker')
-  }
+  value: null
 })
 
 export {

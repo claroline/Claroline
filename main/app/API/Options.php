@@ -29,7 +29,7 @@ final class Options
     const SERIALIZE_LIST = 'serialize_list';
 
     /*
-     * Using this option, the serializers will return minmal data (no meta or restrictions)
+     * Using this option, the serializers will return minimal data (no meta or restrictions)
      */
     const SERIALIZE_MINIMAL = 'serialize_minimal';
 
@@ -73,11 +73,6 @@ final class Options
 
     //for workspace
     const WORKSPACE_MODEL = 'workspace_model';
-    const WORKSPACE_FETCH_GROUPS = 'workspace_fetch_groups';
-    const WORKSPACE_FETCH_ORDERED_TOOLS = 'workspace_fetch_ordered_tools';
-    const WORKSPACE_FETCH_HOME = 'workspace_fetch_home';
-    const WORKSPACE_FETCH_RESOURCES = 'workspace_fetch_resources';
-    const WORKSPACE_DESERIALIZE_ROLES = 'workspace_deserialize_roles';
     const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
     const WORKSPACE_COPY = 'workspace_copy';
 

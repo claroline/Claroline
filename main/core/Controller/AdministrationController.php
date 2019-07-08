@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @EXT\Route("/admin", options={"expose"=true})
  */
-class AdministrationController extends Controller
+class AdministrationController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -35,7 +35,7 @@ class AdministrationController extends Controller
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var StrictDispatcher */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
     /** @var ToolManager */
@@ -45,21 +45,21 @@ class AdministrationController extends Controller
      * AdministrationController constructor.
      *
      * @DI\InjectParams({
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager")
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param TokenStorageInterface         $tokenStorage
-     * @param StrictDispatcher              $eventDispatcher
+     * @param EventDispatcherInterface      $eventDispatcher
      * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        StrictDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         ToolManager $toolManager
     ) {
         $this->authorization = $authorization;
@@ -76,17 +76,23 @@ class AdministrationController extends Controller
      *
      * @throws AccessDeniedException
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function indexAction()
+    public function openAction()
     {
         $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
-
         if (0 === count($tools)) {
             throw new AccessDeniedException();
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_open_tool', ['toolName' => $tools[0]->getName()]));
+        return new JsonResponse([
+            'tools' => array_values(array_map(function (AdminTool $orderedTool) {
+                return [
+                    'icon' => $orderedTool->getClass(),
+                    'name' => $orderedTool->getName(),
+                ];
+            }, $tools)),
+        ]);
     }
 
     /**
@@ -98,59 +104,24 @@ class AdministrationController extends Controller
      *
      * @throws AccessDeniedException
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function openToolAction($toolName)
     {
         $tool = $this->toolManager->getAdminToolByName($toolName);
+        if (!$tool) {
+            throw new NotFoundHttpException('Tool not found');
+        }
 
         if (!$this->authorization->isGranted('OPEN', $tool)) {
             throw new AccessDeniedException();
         }
 
         /** @var OpenAdministrationToolEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            'administration_tool_'.$toolName,
-            'OpenAdministrationTool',
-            ['toolName' => $toolName]
-        );
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Log\LogAdminToolRead',
-            ['toolName' => $toolName]
-        );
+        $event = $this->eventDispatcher->dispatch('administration_tool_'.$toolName, new OpenAdministrationToolEvent());
 
-        return $event->getResponse();
-    }
+        $this->eventDispatcher->dispatch('log', new LogAdminToolReadEvent($toolName));
 
-    /**
-     * @EXT\Template("ClarolineCoreBundle:administration:toolbar.html.twig")
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function renderToolbarAction(Request $request)
-    {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
-
-        $current = null;
-        if ('claro_admin_open_tool' === $request->get('_route')) {
-            $params = $request->get('_route_params');
-            if (!empty($params['toolName'])) {
-                $current = $params['toolName'];
-            }
-        }
-
-        return [
-            'current' => $current,
-            'tools' => array_map(function (AdminTool $tool) {
-                return [
-                    'icon' => $tool->getClass(),
-                    'name' => $tool->getName(),
-                    'open' => ['claro_admin_open_tool', ['toolName' => $tool->getName()]],
-                ];
-            }, $tools),
-        ];
+        return new JsonResponse($event->getData());
     }
 }

@@ -1,7 +1,6 @@
 {
   "webpack": {
     "entry": {
-      "bank": "tools/bank/bootstrap",
       "docimology": "docimology/index"
     }
   },

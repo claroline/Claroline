@@ -5,23 +5,21 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
-import {actions} from '#/plugin/message/tools/messaging/store'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {actions, selectors} from '#/plugin/message/tools/messaging/store'
 import {MessageCard} from '#/plugin/message/data/components/message-card'
 
 const DeletedMessagesComponent = (props) =>
   <ListData
-    title={trans('messages_removed', {}, 'message')}
-    name="deletedMessages"
+    name={`${selectors.STORE_NAME}.deletedMessages`}
     fetch={{
       url: ['apiv2_message_removed'],
       autoload: true
     }}
     primaryAction={(message) => ({
       type: LINK_BUTTON,
-      target: '/message/'+message.id,
+      target: props.path+'/message/'+message.id,
       label: trans('open', {}, 'actions')
     })}
     definition={[
@@ -82,43 +80,25 @@ const DeletedMessagesComponent = (props) =>
         callback: () => props.deleteMessages(rows)
       }
     ]}
-    card={(props) =>
-      <MessageCard
-        {...props}
-        contentText={props.data.content}
-      />
-    }
+    card={MessageCard}
   />
 
 DeletedMessagesComponent.propTypes = {
+  path: T.string.isRequired,
   deleteMessages: T.func.isRequired,
-  restoreMessages: T.func.isRequired,
-  data: T.shape({
-    content: T.string
-  })
+  restoreMessages: T.func.isRequired
 }
 
 const DeletedMessages = connect(
-  null,
-  dispatch => ({
+  (state) => ({
+    path: toolSelectors.path(state)
+  }),
+  (dispatch) => ({
     deleteMessages(messages) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('messages_delete_title', {}, 'message'),
-          question: trans('messages_confirm_permanent_delete', {}, 'message'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.deleteMessages(messages))
-        })
-      )
+      dispatch(actions.deleteMessages(messages))
     },
     restoreMessages(messages) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('messages_restore_title', {}, 'message'),
-          question: trans('messages_confirm_restore', {}, 'message'),
-          handleConfirm: () => dispatch(actions.restoreMessages(messages))
-        })
-      )
+      dispatch(actions.restoreMessages(messages))
     }
   })
 )(DeletedMessagesComponent)

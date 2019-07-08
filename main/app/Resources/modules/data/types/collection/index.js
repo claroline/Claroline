@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {chain, array, lengthInRange} from '#/main/core/validation'
+import {chain, array, lengthInRange} from '#/main/app/data/types/validators'
 import {validateProp} from '#/main/app/content/form/validator'
 
 import {CollectionGroup} from '#/main/app/data/types/collection/components/group'

@@ -129,7 +129,7 @@ const ResourceFormComponent = (props) =>
             ]
           }, {
             name: 'restrictions.enableCode',
-            label: trans('resource_access_code', {}, 'resource'),
+            label: trans('restrict_by_code'),
             type: 'boolean',
             calculated: restrictedByCode,
             onChange: activated => {
@@ -148,7 +148,7 @@ const ResourceFormComponent = (props) =>
             ]
           }, {
             name: 'restrictions.enableIps',
-            label: trans('resource_access_ips', {}, 'resource'),
+            label: trans('restrict_by_ips'),
             type: 'boolean',
             calculated: restrictedByIps,
             onChange: activated => {

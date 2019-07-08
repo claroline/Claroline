@@ -59,21 +59,33 @@ class ToolRights
      */
     protected $orderedTool;
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
     public function getMask()
     {
         return $this->mask;
     }
 
+    /**
+     * @return Role
+     */
     public function getRole()
     {
         return $this->role;
     }
 
+    /**
+     * @return OrderedTool
+     */
     public function getOrderedTool()
     {
         return $this->orderedTool;

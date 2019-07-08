@@ -2,11 +2,11 @@ import merge from 'lodash/merge'
 import {checkPropTypes} from 'prop-types'
 
 import {url} from '#/main/app/api/router'
-import {authenticate} from '#/main/app/api/authentication'
 import {makeId} from '#/main/core/scaffolding/id'
-import {currentUser} from '#/main/app/security'
 
 import {actions} from '#/main/app/api/store'
+import {MODAL_LOGIN} from '#/main/app/modals/login'
+import {actions as modalActions} from '#/main/app/overlays/modal/store/actions'
 import {ApiRequest as ApiRequestTypes} from '#/main/app/api/prop-types'
 
 /**
@@ -101,19 +101,18 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
       throw responseError
     }
 
-    //if we're already registered, no point triggering authentication again
-    const user = currentUser()
+    if (401 === responseError.status) {
+      // authentication needed
+      return new Promise(function (resolve, reject) {
+        dispatch(modalActions.showModal(MODAL_LOGIN, {
+          onLogin: () => resolve(apiFetch(originalRequest, dispatch)), // re-execute original request
+          onAbort: () => {
+            error('Authentication required', responseError.status, dispatch)
 
-    if ((401 === responseError.status || 403 === responseError.status) && !user) { // authentication needed
-      return authenticate()
-        .then(
-          () => apiFetch(originalRequest, dispatch), // re-execute original request,
-          authError => {
-            error(authError, dispatch)
-
-            return Promise.reject(authError)
+            return reject('Authentication required')
           }
-        )
+        }))
+      })
     } else {
       return getResponseData(responseError) // get error data if any
         .then(errorData => {

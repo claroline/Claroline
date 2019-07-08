@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, number, chain} from '#/main/core/validation'
+import {notBlank, number, chain} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 

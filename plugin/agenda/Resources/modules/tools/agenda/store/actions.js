@@ -1,12 +1,32 @@
 import {makeActionCreator} from '#/main/app/store/actions'
+
 import {API_REQUEST} from '#/main/app/api'
+
+export const AGENDA_CHANGE_VIEW      = 'AGENDA_CHANGE_VIEW'
+export const AGENDA_CHANGE_REFERENCE = 'AGENDA_CHANGE_REFERENCE'
+
+export const actions = {}
+
+actions.changeView = makeActionCreator(AGENDA_CHANGE_VIEW, 'view')
+actions.changeReference = makeActionCreator(AGENDA_CHANGE_REFERENCE, 'referenceDate')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const AGENDA_UPDATE_FILTER_TYPE = 'AGENDA_UPDATE_FILTER_TYPE'
 export const AGENDA_UPDATE_FILTER_WORKSPACE = 'AGENDA_UPDATE_FILTER_WORKSPACE'
-export const AGENDA_RELOAD = 'AGENDA_RELOAD'
-
-export const actions = {}
 
 actions.updateFilterType = makeActionCreator(AGENDA_UPDATE_FILTER_TYPE, 'filters')
 actions.updateFilterWorkspace = makeActionCreator(AGENDA_UPDATE_FILTER_WORKSPACE, 'filters')
