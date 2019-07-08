@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater120415 extends Updater
+class Updater120500 extends Updater
 {
     protected $logger;
     private $container;
