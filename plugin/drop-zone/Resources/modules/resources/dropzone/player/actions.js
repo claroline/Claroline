@@ -2,7 +2,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {API_REQUEST} from '#/main/app/api'
 
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
@@ -29,7 +29,7 @@ actions.addDocuments = makeActionCreator(DOCUMENTS_ADD, 'documents')
 actions.updateDocument = makeActionCreator(DOCUMENT_UPDATE, 'document')
 actions.removeDocument = makeActionCreator(DOCUMENT_REMOVE, 'documentId')
 
-actions.initializeMyDrop = (dropzoneId, teamId = null, navigate) => ({
+actions.initializeMyDrop = (dropzoneId, teamId = null, navigate, path) => ({
   [API_REQUEST]: {
     url: ['claro_dropzone_drop_create', {id: dropzoneId, teamId: teamId}],
     request: {
@@ -37,7 +37,7 @@ actions.initializeMyDrop = (dropzoneId, teamId = null, navigate) => ({
     },
     success: (data, dispatch) => {
       dispatch(actions.loadMyDrop(data))
-      navigate('/my/drop')
+      navigate(`${path}/my/drop`)
     }
   }
 })
@@ -89,11 +89,11 @@ actions.submitDrop = (dropId) => ({
 
 actions.fetchPeerDrop = () => (dispatch, getState) => {
   const state = getState()
-  const peerDrop = select.peerDrop(state)
+  const peerDrop = selectors.peerDrop(state)
 
   if (!peerDrop) {
-    const dropzone = select.dropzone(state)
-    const myTeamId = select.myTeamId(state)
+    const dropzone = selectors.dropzone(state)
+    const myTeamId = selectors.myTeamId(state)
 
     if (dropzone.parameters.dropType === constants.DROP_TYPE_USER) {
       dispatch({
@@ -125,7 +125,7 @@ actions.loadPeerDrop = makeActionCreator(PEER_DROP_LOAD, 'drop')
 actions.resetPeerDrop = makeActionCreator(PEER_DROP_RESET)
 actions.incPeerDrop = makeActionCreator(PEER_DROPS_INC)
 
-actions.submitCorrection = (correctionId, navigate) => ({
+actions.submitCorrection = (correctionId, navigate, path) => ({
   [API_REQUEST]: {
     url: ['claro_dropzone_correction_submit', {id: correctionId}],
     request: {
@@ -134,7 +134,7 @@ actions.submitCorrection = (correctionId, navigate) => ({
     success: (data, dispatch) => {
       dispatch(actions.incPeerDrop())
       dispatch(actions.resetPeerDrop())
-      navigate('/')
+      navigate(path)
     }
   }
 })
@@ -149,8 +149,8 @@ actions.submitDropForRevision = (dropId) => ({
       dispatch(actions.loadMyDrop(data.drop))
       dispatch(actions.loadCurrentRevisionId(data.revision.id))
       dispatch(actions.loadRevision(data.revision))
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.myRevisions'))
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.revisions'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.myRevisions'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.revisions'))
     }
   }
 })

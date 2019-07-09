@@ -6,21 +6,21 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 
 const MyRevisionsComponent = props =>
   <section className="resource-section revisions-list">
     <h2>{trans('revisions_list', {}, 'dropzone')}</h2>
 
     <ListData
-      name={`${select.STORE_NAME}.myRevisions`}
+      name={`${selectors.STORE_NAME}.myRevisions`}
       fetch={{
         url: ['claro_dropzone_drop_revisions_list', {drop: props.myDropId}],
         autoload: true
       }}
       primaryAction={(row) => ({
         type: LINK_BUTTON,
-        target: `/my/drop/revisions/${row.id}`,
+        target: `${props.path}/my/drop/revisions/${row.id}`,
         label: trans('show_revision', {}, 'dropzone')
       })}
       definition={[
@@ -47,12 +47,13 @@ const MyRevisionsComponent = props =>
   </section>
 
 MyRevisionsComponent.propTypes = {
+  path: T.string.isRequired,
   myDropId: T.string.isRequired
 }
 
 const MyRevisions = connect(
   (state) => ({
-    myDropId: select.myDropId(state)
+    myDropId: selectors.myDropId(state)
   })
 )(MyRevisionsComponent)
 

@@ -6,7 +6,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 
 import {DropzoneType, DropType, CorrectionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getCorrectionKey} from '#/plugin/drop-zone/resources/dropzone/utils'
 
@@ -73,9 +73,9 @@ Corrector.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    dropzone: select.dropzone(state),
-    drop: select.correctorDrop(state),
-    corrections: select.corrections(state)
+    dropzone: selectors.dropzone(state),
+    drop: selectors.correctorDrop(state),
+    corrections: selectors.corrections(state)
   }
 }
 

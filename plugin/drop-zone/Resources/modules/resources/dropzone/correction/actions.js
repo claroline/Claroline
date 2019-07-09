@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 
 export const DROP_UPDATE = 'DROP_UPDATE'
@@ -23,7 +23,7 @@ actions.resetCurrentDrop = makeActionCreator(CURRENT_DROP_RESET)
 actions.updateCurrentDropComment = makeActionCreator(CURRENT_DROP_COMMENT_UPDATE, 'comment')
 
 actions.fetchDrop = (dropId, type = 'current') => (dispatch, getState) => {
-  const dropsData = select.drops(getState())
+  const dropsData = selectors.drops(getState())
   let drop = null
 
   if (dropsData.data) {

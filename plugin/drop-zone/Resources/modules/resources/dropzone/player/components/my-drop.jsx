@@ -5,6 +5,7 @@ import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
 import {trans} from '#/main/app/intl/translation'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
@@ -15,7 +16,7 @@ import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {DropzoneType, DropType, Revision as RevisionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document'
@@ -102,7 +103,7 @@ const MyDropComponent = props =>
   <section className="resource-section drop-panel">
     <h2>{trans('my_drop', {}, 'dropzone')}</h2>
     {props.dropzone.instruction &&
-    <HtmlText>{props.dropzone.instruction}</HtmlText>
+      <HtmlText>{props.dropzone.instruction}</HtmlText>
     }
 
     <Documents
@@ -138,7 +139,7 @@ const MyDropComponent = props =>
               icon={'fa fa-fw fa-history icon-with-text-right'}
               label={trans('revisions_history', {}, 'dropzone')}
               className="btn"
-              target={'/my/drop/revisions'}
+              target={`${props.path}/my/drop/revisions`}
             />
           }
           <Button
@@ -170,6 +171,7 @@ const MyDropComponent = props =>
         dropId={props.myDrop.id}
         title={trans('drop_comments', {}, 'dropzone')}
         saveComment={props.saveDropComment}
+        currentUser={props.currentUser}
       />
     }
 
@@ -183,11 +185,14 @@ const MyDropComponent = props =>
         revisionId={props.currentRevisionId}
         title={trans('revision_comments', {}, 'dropzone')}
         saveComment={props.saveRevisionComment}
+        currentUser={props.currentUser}
       />
     }
   </section>
 
 MyDropComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   dropzone: T.shape(DropzoneType.propTypes).isRequired,
   myDrop: T.shape(DropType.propTypes).isRequired,
   isDropEnabled: T.bool.isRequired,
@@ -206,11 +211,12 @@ MyDropComponent.propTypes = {
 
 const MyDrop = connect(
   (state) => ({
-    dropzone: select.dropzone(state),
-    myDrop: select.myDrop(state),
-    isDropEnabled: select.isDropEnabled(state),
-    currentRevisionId: select.currentRevisionId(state),
-    revision: select.revision(state),
+    currentUser: securitySelectors.currentUser(state),
+    dropzone: selectors.dropzone(state),
+    myDrop: selectors.myDrop(state),
+    isDropEnabled: selectors.isDropEnabled(state),
+    currentRevisionId: selectors.currentRevisionId(state),
+    revision: selectors.revision(state),
     resourceNode: resourceSelect.resourceNode(state)
   }),
   (dispatch) => ({

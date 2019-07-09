@@ -7,7 +7,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
@@ -18,14 +18,14 @@ const DropsList = props =>
     <h2>{trans('corrections_management', {}, 'dropzone')}</h2>
 
     <ListData
-      name={`${select.STORE_NAME}.drops`}
+      name={`${selectors.STORE_NAME}.drops`}
       fetch={{
         url: ['claro_dropzone_drops_search', {id: props.dropzone.id}],
         autoload: true
       }}
       primaryAction={(row) => ({
         type: LINK_BUTTON,
-        target: `/drop/${row.id}`,
+        target: `${props.path}/drop/${row.id}`,
         label: trans('correct_a_copy', {}, 'dropzone')
       })}
       definition={[
@@ -93,7 +93,7 @@ const DropsList = props =>
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('correct_the_copy', {}, 'dropzone'),
-          target: `/drop/${rows[0].id}`,
+          target: `${props.path}/drop/${rows[0].id}`,
           scope: ['object']
         },
         {
@@ -121,6 +121,7 @@ const DropsList = props =>
   </section>
 
 DropsList.propTypes = {
+  path: T.string.isRequired,
   dropzone: T.shape(
     DropzoneType.propTypes
   ).isRequired,
@@ -131,7 +132,7 @@ DropsList.propTypes = {
 
 const Drops = connect(
   (state) => ({
-    dropzone: select.dropzone(state)
+    dropzone: selectors.dropzone(state)
   }),
   (dispatch) => ({
     unlockDrop: (dropId) => dispatch(actions.unlockDrop(dropId)),

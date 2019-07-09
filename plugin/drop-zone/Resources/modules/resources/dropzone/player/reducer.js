@@ -1,11 +1,12 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 
 import {
   MY_DROP_LOAD,
@@ -29,7 +30,7 @@ import {
 } from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
 const myDropReducer = makeReducer({}, {
-  [RESOURCE_LOAD]: (state, action) => action.resourceData.myDrop,
+  [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.myDrop,
   [MY_DROP_LOAD]: (state, action) => action.drop,
   [MY_DROP_UPDATE]: (state, action) => {
     return Object.assign({}, state, {[action.property]: action.value})
@@ -95,7 +96,7 @@ const myDropReducer = makeReducer({}, {
 })
 
 const nbCorrectionsReducer = makeReducer({}, {
-  [RESOURCE_LOAD]: (state, action) => action.resourceData.nbCorrections,
+  [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.nbCorrections,
   [PEER_DROPS_INC]: (state) => {
     return state + 1
   }
@@ -167,7 +168,7 @@ const revisionReducer = makeReducer(null, {
 })
 
 const currentRevisionIdReducer = makeReducer(null, {
-  [RESOURCE_LOAD]: (state, action) => action.resourceData.currentRevisionId,
+  [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.currentRevisionId,
   [CURRENT_REVISION_ID_LOAD]: (state, action) => action.revisionId
 })
 
@@ -175,8 +176,8 @@ const reducer = {
   myDrop: myDropReducer,
   nbCorrections: nbCorrectionsReducer,
   peerDrop: peerDropReducer,
-  myRevisions: makeListReducer(select.STORE_NAME+'.myRevisions'),
-  revisions: makeListReducer(select.STORE_NAME+'.revisions'),
+  myRevisions: makeListReducer(selectors.STORE_NAME+'.myRevisions'),
+  revisions: makeListReducer(selectors.STORE_NAME+'.revisions'),
   revision: revisionReducer,
   currentRevisionId: currentRevisionIdReducer
 }

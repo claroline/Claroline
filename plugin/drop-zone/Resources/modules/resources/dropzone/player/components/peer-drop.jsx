@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {generateCorrectionGrades} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
@@ -26,7 +26,7 @@ class PeerDrop extends Component {
   }
 
   cancelCorrection(navigate) {
-    navigate('/')
+    navigate(this.props.path)
   }
 
   getCorrection() {
@@ -61,7 +61,7 @@ class PeerDrop extends Component {
           dropzone={this.props.dropzone}
           saveCorrection={this.saveCorrection}
           showSubmitButton={true}
-          submitCorrection={this.props.submitCorrection}
+          submitCorrection={(correctionId, navigate) => this.props.submitCorrection(correctionId, navigate, this.props.path)}
           cancelCorrection={this.cancelCorrection}
         />
       </div> :
@@ -73,6 +73,7 @@ class PeerDrop extends Component {
 }
 
 PeerDrop.propTypes = {
+  path: T.string.isRequired,
   dropzone: T.shape(DropzoneType.propTypes).isRequired,
   drop: T.shape(DropType.propTypes),
   user: T.shape({
@@ -88,18 +89,18 @@ PeerDrop.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: select.user(state),
-    dropzone: select.dropzone(state),
-    drop: select.peerDrop(state),
-    myTeamId: select.myTeamId(state)
+    user: selectors.user(state),
+    dropzone: selectors.dropzone(state),
+    drop: selectors.peerDrop(state),
+    myTeamId: selectors.myTeamId(state)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     saveCorrection: (correction) => dispatch(correctionActions.saveCorrection(correction)),
-    submitCorrection: (correctionId, navigate) => dispatch(actions.submitCorrection(correctionId, navigate)).then(() => {
-      navigate('/')
+    submitCorrection: (correctionId, navigate, path) => dispatch(actions.submitCorrection(correctionId, navigate, path)).then(() => {
+      navigate(path)
     })
   }
 }

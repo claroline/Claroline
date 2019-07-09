@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
@@ -9,8 +8,6 @@ import {UserMessageForm} from '#/main/core/user/message/components/user-message-
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 
 import {Comment as CommentType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-
-const authenticatedUser = currentUser()
 
 class Comments extends Component {
   constructor(props) {
@@ -40,20 +37,23 @@ class Comments extends Component {
             date={comment.meta ? comment.meta.creationDate : ''}
             content={comment.content}
             allowHtml={true}
-            position={comment.meta && comment.meta.user && authenticatedUser && comment.meta.user.id === authenticatedUser.id ? 'left' : 'right'}
+            position={comment.meta && comment.meta.user && this.props.currentUser && comment.meta.user.id === this.props.currentUser.id ?
+              'left' :
+              'right'
+            }
           />
         )}
 
         {this.state.showForm ?
           <UserMessageForm
-            user={authenticatedUser}
+            user={this.props.currentUser}
             allowHtml={true}
             submitLabel={trans('add_comment')}
             submit={(content) => {
               const comment = {
                 content: content,
                 meta: {
-                  user: authenticatedUser
+                  user: this.props.currentUser
                 }
               }
 
@@ -86,6 +86,7 @@ class Comments extends Component {
 }
 
 Comments.propTypes = {
+  currentUser: T.object,
   comments: T.arrayOf(T.shape(CommentType.propTypes)).isRequired,
   revisionId: T.string,
   dropId: T.string,

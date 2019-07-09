@@ -10,7 +10,7 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {Button} from '#/main/app/action/components/button'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
@@ -63,7 +63,7 @@ const Drop = props => props.drop ?
           url: url(['claro_dropzone_drop_previous', {id: props.drop.id}])+props.slideshowQueryString,
           success: (previous) => {
             if (previous && previous.id) {
-              props.history.push(`/drop/${previous.id}`)
+              props.history.push(`${props.path}/drop/${previous.id}`)
             }
           }
         }}
@@ -99,7 +99,7 @@ const Drop = props => props.drop ?
           url: url(['claro_dropzone_drop_next', {id: props.drop.id}])+props.slideshowQueryString,
           success: (next) => {
             if (next && next.id) {
-              props.history.push(`/drop/${next.id}`)
+              props.history.push(`${props.path}/drop/${next.id}`)
             }
           }
         }}
@@ -119,6 +119,7 @@ const Drop = props => props.drop ?
 
 
 Drop.propTypes = {
+  path: T.string.isRequired,
   currentUser: T.object,
   dropzone: T.shape(DropzoneType.propTypes),
   drop: T.shape(DropType.propTypes),
@@ -131,11 +132,11 @@ Drop.propTypes = {
 
 const ConnectedDrop = withRouter(connect(
   (state) => ({
-    currentUser: select.user(state),
-    dropzone: select.dropzone(state),
-    drop: select.currentDrop(state),
-    tools: select.tools(state),
-    slideshowQueryString: select.slideshowQueryString(state, select.STORE_NAME+'.drops')
+    currentUser: selectors.user(state),
+    dropzone: selectors.dropzone(state),
+    drop: selectors.currentDrop(state),
+    tools: selectors.tools(state),
+    slideshowQueryString: selectors.slideshowQueryString(state, selectors.STORE_NAME+'.drops')
   }),
   (dispatch) => ({
     saveCorrection: (correction) => dispatch(actions.saveCorrection(correction)),

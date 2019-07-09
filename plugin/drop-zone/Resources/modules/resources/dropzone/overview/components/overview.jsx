@@ -10,7 +10,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 
@@ -58,8 +58,10 @@ const OverviewComponent = props =>
         type: !props.myDrop ? CALLBACK_BUTTON : LINK_BUTTON,
         icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
-        target: props.myDrop ? '/my/drop' : undefined,
-        callback: !props.myDrop ? () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams, props.history.push) : undefined,
+        target: props.myDrop ? `${props.path}/my/drop` : undefined,
+        callback: !props.myDrop ?
+          () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams, props.history.push, props.path) :
+          undefined,
         primary: !props.myDrop || !props.myDrop.finished,
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
@@ -67,7 +69,7 @@ const OverviewComponent = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-check-square-o icon-with-text-right',
         label: trans('correct_a_copy', {}, 'dropzone'),
-        target: '/peer/drop',
+        target: `${props.path}/peer/drop`,
         primary: props.myDrop && props.myDrop.finished,
         disabled: !props.peerReviewEnabled,
         disabledMessages: props.peerReviewDisabledMessages
@@ -91,6 +93,7 @@ const OverviewComponent = props =>
   </ResourceOverview>
 
 OverviewComponent.propTypes = {
+  path: T.string.isRequired,
   user: T.object,
   dropzone: T.shape(DropzoneType.propTypes).isRequired,
   myDrop: T.shape(DropType.propTypes),
@@ -123,29 +126,29 @@ OverviewComponent.defaultProps = {
 
 const Overview = connect(
   (state) => ({
-    user: select.user(state),
-    dropzone: select.dropzone(state),
-    myDrop: select.myDrop(state),
-    dropEnabled: select.isDropEnabled(state),
-    dropDisabledMessages: select.dropDisabledMessages(state),
-    peerReviewEnabled: select.isPeerReviewEnabled(state),
-    peerReviewDisabledMessages: select.peerReviewDisabledMessages(state),
-    nbCorrections: select.nbCorrections(state),
-    currentState: select.currentState(state),
-    userEvaluation: select.userEvaluation(state),
-    errorMessage: select.errorMessage(state),
-    teams: select.teams(state),
-    dropStatus: select.getMyDropStatus(state)
+    user: selectors.user(state),
+    dropzone: selectors.dropzone(state),
+    myDrop: selectors.myDrop(state),
+    dropEnabled: selectors.isDropEnabled(state),
+    dropDisabledMessages: selectors.dropDisabledMessages(state),
+    peerReviewEnabled: selectors.isPeerReviewEnabled(state),
+    peerReviewDisabledMessages: selectors.peerReviewDisabledMessages(state),
+    nbCorrections: selectors.nbCorrections(state),
+    currentState: selectors.currentState(state),
+    userEvaluation: selectors.userEvaluation(state),
+    errorMessage: selectors.errorMessage(state),
+    teams: selectors.teams(state),
+    dropStatus: selectors.getMyDropStatus(state)
   }),
   (dispatch) => ({
-    startDrop(dropzoneId, dropType, teams = [], navigate) {
+    startDrop(dropzoneId, dropType, teams = [], navigate, path) {
       switch (dropType) {
         case constants.DROP_TYPE_USER :
-          dispatch(actions.initializeMyDrop(dropzoneId, null, navigate))
+          dispatch(actions.initializeMyDrop(dropzoneId, null, navigate, path))
           break
         case constants.DROP_TYPE_TEAM :
           if (teams.length === 1) {
-            dispatch(actions.initializeMyDrop(dropzoneId, teams[0].id, navigate))
+            dispatch(actions.initializeMyDrop(dropzoneId, teams[0].id, navigate, path))
           } else {
             dispatch(
               modalActions.showModal(MODAL_SELECTION, {
@@ -155,7 +158,7 @@ const Overview = connect(
                   label: t.name,
                   icon: 'fa fa-users'
                 })),
-                handleSelect: (type) => dispatch(actions.initializeMyDrop(dropzoneId, type.type, navigate))
+                handleSelect: (type) => dispatch(actions.initializeMyDrop(dropzoneId, type.type, navigate, path))
               })
             )
           }

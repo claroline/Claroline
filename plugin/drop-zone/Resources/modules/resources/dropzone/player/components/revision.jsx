@@ -8,6 +8,7 @@ import {matchPath, withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Button} from '#/main/app/action/components/button'
@@ -20,7 +21,7 @@ import {
   DropType,
   Revision as RevisionType
 } from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
@@ -30,7 +31,7 @@ const RevisionComponent = props => props.revision && props.drop ?
   <section className="resource-section revision-panel">
     <div className="revision-nav">
 
-      {matchPath(props.location.pathname, {path: '/revisions/'}) &&
+      {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
         <Button
           className="btn-link btn-revision-nav"
           type={ASYNC_BUTTON}
@@ -41,7 +42,7 @@ const RevisionComponent = props => props.revision && props.drop ?
             url: url(['claro_dropzone_revision_previous', {id: props.revision.id}]) + props.slideshowQueryString,
             success: (previous) => {
               if (previous && previous.id) {
-                props.history.push(`/revisions/${previous.id}`)
+                props.history.push(`${props.path}/revisions/${previous.id}`)
               }
             }
           }}
@@ -71,7 +72,7 @@ const RevisionComponent = props => props.revision && props.drop ?
           {...props}
         />
 
-        {matchPath(props.location.pathname, {path: '/revisions/'}) &&
+        {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
           <CallbackButton
             className="btn pull-right"
             callback={() => props.addDocument(props.drop.id, props.revision.id, props.dropzone.parameters.documents)}
@@ -81,7 +82,7 @@ const RevisionComponent = props => props.revision && props.drop ?
         }
       </div>
 
-      {matchPath(props.location.pathname, {path: '/revisions/'}) &&
+      {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
         <Button
           className="btn-link btn-revision-nav"
           type={ASYNC_BUTTON}
@@ -92,7 +93,7 @@ const RevisionComponent = props => props.revision && props.drop ?
             url: url(['claro_dropzone_revision_next', {id: props.revision.id}])+props.slideshowQueryString,
             success: (next) => {
               if (next && next.id) {
-                props.history.push(`/revisions/${next.id}`)
+                props.history.push(`${props.path}/revisions/${next.id}`)
               }
             }
           }}
@@ -101,13 +102,14 @@ const RevisionComponent = props => props.revision && props.drop ?
 
     </div>
 
-    <hr className={matchPath(props.location.pathname, {path: '/revisions/'}) ? 'revision-comments-separator' : ''}/>
+    <hr className={matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) ? 'revision-comments-separator' : ''}/>
 
     <Comments
       comments={props.drop.comments}
       dropId={props.drop.id}
       title={trans('drop_comments', {}, 'dropzone')}
       saveComment={props.saveDropComment}
+      currentUser={props.currentUser}
     />
 
     <hr className="revision-comments-separator"/>
@@ -117,12 +119,15 @@ const RevisionComponent = props => props.revision && props.drop ?
       revisionId={props.revision.id}
       title={trans('revision_comments', {}, 'dropzone')}
       saveComment={props.saveRevisionComment}
+      currentUser={props.currentUser}
     />
   </section> :
   <div>
   </div>
 
 RevisionComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   location: T.shape({
     pathname: T.string
   }),
@@ -140,11 +145,12 @@ RevisionComponent.propTypes = {
 
 const Revision = withRouter(connect(
   (state) => ({
+    currentUser: securitySelectors.currentUser(state),
     isManager: hasPermission('edit', resourceSelect.resourceNode(state)),
-    dropzone: select.dropzone(state),
-    revision: select.revision(state),
-    drop: select.currentDrop(state),
-    slideshowQueryString: select.slideshowQueryString(state, select.STORE_NAME+'.revisions')
+    dropzone: selectors.dropzone(state),
+    revision: selectors.revision(state),
+    drop: selectors.currentDrop(state),
+    slideshowQueryString: selectors.slideshowQueryString(state, selectors.STORE_NAME+'.revisions')
   }),
   (dispatch) => ({
     saveDropComment(comment) {

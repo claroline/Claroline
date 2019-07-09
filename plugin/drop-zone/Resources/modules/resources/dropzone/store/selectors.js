@@ -2,20 +2,20 @@ import {createSelector} from 'reselect'
 
 import {trans} from '#/main/app/intl/translation'
 import {now} from '#/main/app/intl/date'
-import {currentUser} from '#/main/app/security'
 import {selectors as searchSelectors} from '#/main/app/content/search/store/selectors'
 import {selectors as listSelectors} from '#/main/app/content/list/store/selectors'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'claroline_dropzone'
 
-const user = () => currentUser()
+const user = (state) => securitySelectors.currentUser(state)
 const resource = (state) => state[STORE_NAME]
 
-const userEvaluation = state => resourceSelect.resourceEvaluation(state)
+const userEvaluation = (state) => resourceSelect.resourceEvaluation(state)
 
 const dropzone = createSelector(
   [resource],
@@ -349,7 +349,7 @@ const slideshowQueryString = (state, name) => {
   return ''
 }
 
-export const select = {
+export const selectors = {
   STORE_NAME,
   resource,
   user,
