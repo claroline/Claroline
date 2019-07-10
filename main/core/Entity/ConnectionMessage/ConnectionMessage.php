@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ConnectionMessage.
  *
  * @ORM\Table(name="claro_connection_message")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository")
  */
 class ConnectionMessage
 {
@@ -73,7 +73,7 @@ class ConnectionMessage
     private $roles;
 
     /**
-     * List of users who have already read the message.
+     * List of users for who the message doesn't have to be displayed anymore.
      *
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_connection_message_user")
