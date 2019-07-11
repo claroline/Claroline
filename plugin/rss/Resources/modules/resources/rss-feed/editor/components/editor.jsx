@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -8,7 +9,7 @@ import {selectors} from '#/plugin/rss/resources/rss-feed/editor/store'
 
 // TODO : should be merged with creation form
 
-const Editor = () =>
+const Editor = (props) =>
   <FormData
     level={3}
     displayLevel={2}
@@ -17,7 +18,7 @@ const Editor = () =>
     target={(rssFeed) => ['apiv2_rss_feed_update', {id: rssFeed.id}]}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -35,6 +36,10 @@ const Editor = () =>
       }
     ]}
   />
+
+Editor.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   Editor

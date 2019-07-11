@@ -1,3 +1,4 @@
+import {reducer} from '#/plugin/rss/resources/rss-feed/store'
 import {RssFeedCreation} from '#/plugin/rss/resources/rss-feed/containers/creation'
 import {RssFeedResource} from '#/plugin/rss/resources/rss-feed/containers/resource'
 
@@ -8,9 +9,7 @@ export const Creation = () => ({
   component: RssFeedCreation
 })
 
-/**
- * @constructor
- */
-export const App = () => ({
-  component: RssFeedResource
-})
+export default {
+  component: RssFeedResource,
+  store: reducer
+}

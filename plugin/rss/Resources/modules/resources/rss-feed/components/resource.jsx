@@ -13,6 +13,7 @@ const RssFeedResource = props =>
     customActions={[]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -20,7 +21,12 @@ const RssFeedResource = props =>
           exact: true
         }, {
           path: '/edit',
-          component: Editor,
+          render: () => {
+            const component = <Editor path={props.path} />
+
+            return component
+          },
+          onEnter: () => props.resetForm(props.rssFeed),
           disabled: !props.editable
         }
       ]}
@@ -28,7 +34,13 @@ const RssFeedResource = props =>
   </ResourcePage>
 
 RssFeedResource.propTypes = {
-  editable: T.bool.isRequired
+  path: T.string.isRequired,
+  rssFeed: T.shape({
+    id: T.string,
+    url: T.string
+  }).isRequired,
+  editable: T.bool.isRequired,
+  resetForm: T.func.isRequired
 }
 
 export {

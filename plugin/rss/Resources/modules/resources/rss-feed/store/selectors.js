@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'rss_feed'
 
 const resource = (state) => state[STORE_NAME]
 

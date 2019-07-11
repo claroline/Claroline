@@ -15,21 +15,25 @@ class RssSerializer
 {
     use SerializerTrait;
 
+    /** @var ReaderProvider */
+    private $rssReader;
+
     /**
      * @DI\InjectParams({
-     *      "rssReader" = @DI\Inject("claroline.rss_reader.provider")
+     *     "rssReader" = @DI\Inject("claroline.rss_reader.provider")
      * })
+     *
+     * @param ReaderProvider $rssReader
      */
-    public function __construct(
-        ReaderProvider $rssReader
-    ) {
+    public function __construct(ReaderProvider $rssReader)
+    {
         $this->rssReader = $rssReader;
     }
 
     public function serialize(RssFeed $rss)
     {
         return [
-            'id' => $rss->getId(),
+            'id' => $rss->getUuid(),
             'url' => $rss->getUrl(),
             'items' => $this->getItems($rss->getUrl()),
         ];
