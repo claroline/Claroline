@@ -5,35 +5,22 @@ import {connect} from 'react-redux'
 
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
-import {selectors} from '#/main/core/tools/desktop-parameters/store'
-import {
-  PageContainer,
-  PageHeader,
-  PageActions,
-  PageAction
-} from '#/main/core/layout/page'
+import {selectors} from '#/main/core/tools/parameters/store'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 
+import {FormData} from '#/main/app/content/form/containers/data'
+
 const ToolComponent = (props) =>
-  <PageContainer>
-    <PageHeader
-      title={trans('parameters', {}, 'tools')}
-    >
-      <PageActions>
-        <PageAction
-          id="save"
-          type={CALLBACK_BUTTON}
-          label={trans('save')}
-          icon="fa fa-fw fa-save"
-          disabled={!props.saveEnabled}
-          primary={true}
-          callback={() => props.save()}
-        />
-      </PageActions>
-    </PageHeader>
+  <FormData
+    level={2}
+    buttons={true}
+    name={selectors.STORE_NAME+'.toolsConfig'}
+    title={trans('parameters')}
+    target={['apiv2_desktop_tools_configure']}
+    sections={[]}
+  >
     <div className="list-group" fill={true}>
       {props.tools
         .filter(t => !props.toolsConfig[t.name] || props.toolsConfig[t.name]['visible'] || !props.toolsConfig[t.name]['locked'])
@@ -50,7 +37,7 @@ const ToolComponent = (props) =>
         )
       }
     </div>
-  </PageContainer>
+  </FormData>
 
 ToolComponent.propTypes = {
   tools: T.array,
@@ -60,22 +47,19 @@ ToolComponent.propTypes = {
   save: T.func
 }
 
-const List = connect(
+const Parameters = connect(
   (state) => ({
     tools: selectors.tools(state),
-    toolsConfig: formSelect.data(formSelect.form(state, 'toolsConfig')),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'toolsConfig'))
+    toolsConfig: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.toolsConfig')),
+    saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME+'.toolsConfig'))
   }),
   (dispatch) => ({
     updateProp(propName, propValue) {
-      dispatch(formActions.updateProp('toolsConfig', propName, propValue))
-    },
-    save() {
-      dispatch(formActions.save('toolsConfig', ['apiv2_desktop_tools_configure']))
+      dispatch(formActions.updateProp(selectors.STORE_NAME+'.toolsConfig', propName, propValue))
     }
   })
 )(ToolComponent)
 
 export {
-  List
+  Parameters
 }

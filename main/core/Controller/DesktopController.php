@@ -100,8 +100,9 @@ class DesktopController
         }
 
         $tools = $this->toolManager->getDisplayedDesktopOrderedTools($currentUser);
+
         if (0 === count($tools)) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedException('no tools');
         }
 
         return new JsonResponse([

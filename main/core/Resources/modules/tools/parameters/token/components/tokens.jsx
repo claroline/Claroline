@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {ListData} from '#/main/app/content/list/containers/data'
-import {TokenList} from '#/main/core/tools/desktop-parameters/token/components/token-list'
+import {TokenList} from '#/main/core/tools/parameters/token/components/token-list'
 
 
 const Tokens = () =>

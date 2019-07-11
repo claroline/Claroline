@@ -825,8 +825,13 @@ class ToolManager
                 $orderedTool = $this->orderedToolRepo->findOneBy(['user' => $user, 'tool' => $tool, 'type' => 0]);
 
                 if ($orderedTool) {
-                    $orderedTool->setVisibleInDesktop($data['visible']);
-                    $orderedTool->setLocked($data['locked']);
+                    if (isset($data['visible'])) {
+                        $orderedTool->setVisibleInDesktop($data['visible']);
+                    }
+
+                    if (isset($data['locked'])) {
+                        $orderedTool->setLocked($data['locked']);
+                    }
                     $this->om->persist($orderedTool);
                 }
             }

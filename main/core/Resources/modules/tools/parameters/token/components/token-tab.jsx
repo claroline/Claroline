@@ -3,11 +3,11 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
-import {actions} from '#/main/core/tools/desktop-parameters/token/store/actions'
+import {actions} from '#/main/core/tools/parameters/token/store/actions'
 import {Routes} from '#/main/app/router'
 
-import {Tokens} from '#/main/core/tools/desktop-parameters/token/components/tokens'
-import {Token} from '#/main/core/tools/desktop-parameters/token/components/token'
+import {Tokens} from '#/main/core/tools/parameters/token/components/tokens'
+import {Token} from '#/main/core/tools/parameters/token/components/token'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 

@@ -59,5 +59,5 @@ export const reducer = combineReducers({
    */
   models: makeListReducer('workspaces.models', {
     sortBy: {property: 'created', direction: -1}
-  }),
+  })
 })

@@ -9,9 +9,7 @@
       "workspace-user-management": "workspace/user",
       "resource-logs": "resource/logs",
       "trash-tool": "tools/trash/bootstrap",
-      "desktop-parameters-tool": "tools/desktop-parameters",
       "dashboard-tool": "tools/dashboard/bootstrap",
-
       "integration": "administration/integration/bootstrap",
       "admin-desktop-tool": "administration/home/bootstrap",
       "templates-management": "administration/template/bootstrap",
