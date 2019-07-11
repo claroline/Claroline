@@ -8,6 +8,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors} from '#/main/core/administration/template/store'
 import {constants} from '#/main/core/administration/template/constants'
 import {Template as TemplateType} from '#/main/core/administration/template/prop-types'
@@ -70,7 +71,7 @@ const generateSections = (defaultLocale, locales) => {
 const TemplateForm = (props) =>
   <FormData
     level={2}
-    name="template"
+    name={selectors.STORE_NAME + '.template'}
     target={(template, isNew) => isNew ?
       ['apiv2_template_create'] :
       ['apiv2_template_update', {id: template.id}]
@@ -78,7 +79,7 @@ const TemplateForm = (props) =>
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={generateSections(props.defaultLocale, props.locales)}
@@ -118,6 +119,7 @@ const TemplateForm = (props) =>
   </FormData>
 
 TemplateForm.propTypes = {
+  path: T.string.isRequired,
   new: T.bool.isRequired,
   template: T.shape(TemplateType.propTypes).isRequired,
   defaultLocale: T.string,
@@ -126,8 +128,9 @@ TemplateForm.propTypes = {
 
 const Template = connect(
   state => ({
-    new: formSelect.isNew(formSelect.form(state, 'template')),
-    template: formSelect.data(formSelect.form(state, 'template')),
+    path: toolSelectors.path(state),
+    new: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME + '.template')),
+    template: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.template')),
     defaultLocale: selectors.defaultLocale(state),
     locales: selectors.locales(state)
   })

@@ -80,7 +80,10 @@ implementPropTypes(TemplateTypeInput, FormFieldTypes, {
     confirmText: T.string
   })
 }, {
-  value: null
+  value: null,
+  picker: {
+    title: trans('template_type_selector', {}, 'template')
+  }
 })
 
 export {

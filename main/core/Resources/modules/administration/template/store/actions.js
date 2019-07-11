@@ -2,6 +2,8 @@ import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
+import {selectors} from '#/main/core/administration/template/store/selectors'
+
 const actions = {}
 
 actions.openForm = (formName, defaultData = {}, id = null) => (dispatch) => {
@@ -30,7 +32,7 @@ actions.defineDefaultTemplate = (templateId) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('templates'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.templates'))
     }
   }
 })

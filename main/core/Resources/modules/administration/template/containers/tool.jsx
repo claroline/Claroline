@@ -15,13 +15,13 @@ const TemplateTool = withRouter(
         const defaultData = {
           lang: defaultLocale
         }
-        dispatch(actions.openForm('template', defaultData, id))
+        dispatch(actions.openForm(selectors.STORE_NAME + '.template', defaultData, id))
       },
       resetForm(defaultLocale) {
         const defaultData = {
           lang: defaultLocale
         }
-        dispatch(actions.resetForm('template', defaultData))
+        dispatch(actions.resetForm(selectors.STORE_NAME + '.template', defaultData))
       }
     })
   )(TemplateToolComponent)
