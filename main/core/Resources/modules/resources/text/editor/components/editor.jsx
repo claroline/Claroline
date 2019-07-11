@@ -17,7 +17,7 @@ const EditorComponent = (props) =>
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     lock={{
@@ -47,6 +47,7 @@ const EditorComponent = (props) =>
   />
 
 EditorComponent.propTypes = {
+  path: T.string.isRequired,
   workspace: T.object,
   text: T.shape(
     TextTypes.propTypes
@@ -55,6 +56,7 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   state => ({
+    path: resourceSelectors.path(state),
     workspace: resourceSelectors.workspace(state),
     text: selectors.text(state)
   })
