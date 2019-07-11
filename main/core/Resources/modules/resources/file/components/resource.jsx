@@ -25,6 +25,7 @@ const FileResource = props =>
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -40,6 +41,7 @@ const FileResource = props =>
   </ResourcePage>
 
 FileResource.propTypes = {
+  path: T.string.isRequired,
   file: T.shape(FileType.propTypes),
   url: T.string,
   resetForm: T.func.isRequired

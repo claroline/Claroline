@@ -35,7 +35,7 @@ class EditorMain extends Component {
         target={['apiv2_resource_file_update', {id: this.props.file.id}]}
         cancel={{
           type: LINK_BUTTON,
-          target: '/',
+          target: this.props.path,
           exact: true
         }}
         sections={[
@@ -69,7 +69,8 @@ class EditorMain extends Component {
                     title={trans(getTypeName(this.props.mimeType))}
                   >
                     {createElement(get(module, 'fileType.components.editor'), {
-                      file: this.props.file
+                      file: this.props.file,
+                      path: this.props.path
                     })}
 
                     {get(module, 'fileType.styles') &&
@@ -88,6 +89,7 @@ class EditorMain extends Component {
 }
 
 EditorMain.propTypes = {
+  path: T.string.isRequired,
   mimeType: T.string.isRequired,
   file: T.shape({
     id: T.number.isRequired

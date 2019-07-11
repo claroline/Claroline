@@ -15,6 +15,7 @@ import {actions, selectors} from '#/main/core/resources/file/store'
 
 const PlayerMain = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     currentUser: securitySelectors.currentUser(state),
     mimeType: selectors.mimeType(state),
     file: selectors.file(state),

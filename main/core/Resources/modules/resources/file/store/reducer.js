@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
@@ -11,7 +12,7 @@ import {selectors} from '#/main/core/resources/file/store/selectors'
 const reducer = combineReducers({
   fileForm: editorReducer.fileForm,
   file: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.file,
+    [makeInstanceAction(RESOURCE_LOAD, 'file')]: (state, action) => action.resourceData.file,
     // replaces file data after success updates
     [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.fileForm']: (state, action) => action.updatedData,
     [FILE_PROP_UPDATE]: (state, action) => {

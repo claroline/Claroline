@@ -2,7 +2,7 @@ import {createSelector} from 'reselect'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store/selectors'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'file'
 
 const resource = (state) => state[STORE_NAME]
 

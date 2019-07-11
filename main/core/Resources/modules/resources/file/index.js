@@ -1,4 +1,4 @@
-
+import {reducer} from '#/main/core/resources/file/store'
 import {FileCreation} from '#/main/core/resources/file/containers/creation'
 import {FileResource} from '#/main/core/resources/file/containers/resource'
 
@@ -12,6 +12,7 @@ export const Creation = () => ({
 /**
  * File resource application.
  */
-export const App = () => ({
-  component: FileResource
-})
+export default {
+  component: FileResource,
+  store: reducer
+}

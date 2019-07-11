@@ -27,7 +27,8 @@ const PlayerMain = (props) => {
             <div>
               <div>
                 {React.createElement(get(module, 'fileType.components.player'), {
-                  file: props.file
+                  file: props.file,
+                  path: props.path
                 })}
 
                 {get(module, 'fileType.styles') &&
@@ -57,6 +58,7 @@ const PlayerMain = (props) => {
 }
 
 PlayerMain.propTypes = {
+  path: T.string.isRequired,
   currentUser: T.object,
   mimeType: T.string.isRequired,
   download: T.func.isRequired,
