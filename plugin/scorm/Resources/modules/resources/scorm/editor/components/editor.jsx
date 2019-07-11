@@ -2,11 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {trans} from '#/main/app/intl/translation'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {constants} from '#/plugin/scorm/resources/scorm/constants'
 import {selectors} from '#/plugin/scorm/resources/scorm/store'
@@ -20,7 +21,7 @@ const EditorComponent = props =>
     target={(scorm) => ['apiv2_scorm_update', {scorm: scorm.id}]}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -56,11 +57,14 @@ const EditorComponent = props =>
   />
 
 EditorComponent.propTypes = {
+  path: T.string.isRequired,
   updateProp: T.func.isRequired
 }
 
 const Editor = connect(
-  null,
+  (state) => ({
+    path: resourceSelectors.path(state)
+  }),
   (dispatch) => ({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(selectors.STORE_NAME+'.scormForm', propName, propValue))

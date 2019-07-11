@@ -2,10 +2,11 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {SummarizedContent} from '#/main/app/content/summary/components/content'
-
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {SummarizedContent} from '#/main/app/content/summary/components/content'
+
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {APIClass} from '#/plugin/scorm/resources/scorm/player/api'
@@ -24,12 +25,12 @@ class PlayerComponent extends Component {
   }
 
   componentDidMount() {
-    this.props.initializeScormAPI(this.state.currentSco, this.props.scorm, this.props.trackings)
+    this.props.initializeScormAPI(this.state.currentSco, this.props.scorm, this.props.trackings, this.props.currentUser)
   }
 
   openSco(sco) {
     this.setState({currentSco: sco})
-    this.props.initializeScormAPI(sco, this.props.scorm, this.props.trackings)
+    this.props.initializeScormAPI(sco, this.props.scorm, this.props.trackings, this.props.currentUser)
   }
 
   render() {
@@ -81,6 +82,7 @@ class PlayerComponent extends Component {
 }
 
 PlayerComponent.propTypes = {
+  currentUser: T.object,
   scorm: T.shape(ScormType.propTypes),
   trackings: T.object,
   scos: T.arrayOf(T.shape(ScoType.propTypes)).isRequired,
@@ -90,17 +92,18 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     scorm: selectors.scorm(state),
     trackings: selectors.trackings(state),
     scos: flattenScos(selectors.scos(state)),
     workspaceUuid: resourceSelect.resourceNode(state).workspace.id
   }),
   dispatch => ({
-    initializeScormAPI(sco, scorm, tracking) {
-      window.API = new APIClass(sco, scorm, tracking[sco.id], dispatch)
-      window.api = new APIClass(sco, scorm, tracking[sco.id], dispatch)
-      window.API_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch)
-      window.api_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch)
+    initializeScormAPI(sco, scorm, tracking, currentUser) {
+      window.API = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
+      window.api = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
+      window.API_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
+      window.api_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
     }
   })
 )(PlayerComponent)

@@ -1,3 +1,4 @@
+import {reducer} from '#/plugin/scorm/resources/scorm/store'
 import {ScormCreation} from '#/plugin/scorm/resources/scorm/components/creation'
 import {ScormResource} from '#/plugin/scorm/resources/scorm/containers/resource'
 
@@ -10,9 +11,9 @@ export const Creation = () => ({
 
 /**
  * Scorm resource application.
- *
- * @constructor
  */
-export const App = () => ({
-  component: ScormResource
-})
+export default {
+  component: ScormResource,
+  store: reducer,
+  styles: ['claroline-distribution-plugin-scorm-resource']
+}

@@ -13,13 +13,12 @@ import {Results} from '#/plugin/scorm/resources/scorm/player/components/results'
 
 const ScormResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-scorm-resource']}
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('play_scorm', {}, 'scorm'),
-        target: '/play',
+        target: `${props.path}/play`,
         exact: true
       }, {
         type: LINK_BUTTON,
@@ -27,12 +26,13 @@ const ScormResource = props =>
         label: trans('results_list', {}, 'scorm'),
         disabled: !props.editable,
         displayed: props.editable,
-        target: '/results',
+        target: `${props.path}/results`,
         exact: true
       }
     ]}
   >
     <Routes
+      path={props.path}
       key="resource-content"
       redirect={[
         {from: '/', exact: true, to: '/play'}
@@ -57,6 +57,7 @@ const ScormResource = props =>
   </ResourcePage>
 
 ScormResource.propTypes = {
+  path: T.string.isRequired,
   scorm: T.shape(ScormType.propTypes),
   editable: T.bool.isRequired,
   resetForm: T.func.isRequired

@@ -1,8 +1,4 @@
-import {currentUser} from '#/main/app/security'
-
 import {actions} from '#/plugin/scorm/resources/scorm/player/actions'
-
-const authenticatedUser = currentUser()
 
 const scorm12Errors = {
   '0': 'No error',
@@ -47,20 +43,20 @@ const scorm2004Errors = {
   '408': 'Data Model Dependency Not Established'
 }
 
-function commitResult(scoId, mode, scoData, dispatch) {
-  if (authenticatedUser) {
+function commitResult(scoId, mode, scoData, dispatch, currentUser) {
+  if (currentUser) {
     dispatch(actions.commitData(scoId, mode, scoData))
   }
 }
 
-function APIClass(sco, scormData, tracking, dispatch) {
+function APIClass(sco, scormData, tracking, dispatch, currentUser) {
   this.apiInitialized = false
   this.apiLastError = 'scorm_12' === scormData.version ? '301' : '0'
   this.scoData = Array.isArray(tracking['details']) ? {} : Object.assign({}, tracking['details'])
 
   if ('scorm_12' === scormData.version) {
-    this.scoData['cmi.core.student_id'] = authenticatedUser ? authenticatedUser.autoId : -1
-    this.scoData['cmi.core.student_name'] = authenticatedUser ? `${authenticatedUser.firstName}, ${authenticatedUser.lastName}` : 'anon., anon.'
+    this.scoData['cmi.core.student_id'] = currentUser ? currentUser.autoId : -1
+    this.scoData['cmi.core.student_name'] = currentUser ? `${currentUser.firstName}, ${currentUser.lastName}` : 'anon., anon.'
     this.scoData['cmi.core.lesson_mode'] = tracking['lessonMode']
     this.scoData['cmi.core.lesson_location'] = tracking['lessonLocation']
     this.scoData['cmi.core.credit'] = tracking['credit']
@@ -85,8 +81,8 @@ function APIClass(sco, scormData, tracking, dispatch) {
     this.scoData['cmi.student_data.max_time_allowed'] = null !== sco.data.maxTimeAllowed ? sco.data.maxTimeAllowed : ''
     this.scoData['cmi.student_data.time_limit_action'] = null !== sco.data.timeLimitAction ? sco.data.timeLimitAction : ''
   } else {
-    this.scoData['cmi.learner_id'] = authenticatedUser ? authenticatedUser.autoId : -1
-    this.scoData['cmi.learner_name'] = authenticatedUser ? `${authenticatedUser.firstName}, ${authenticatedUser.lastName}` : 'anon., anon.'
+    this.scoData['cmi.learner_id'] = currentUser ? currentUser.autoId : -1
+    this.scoData['cmi.learner_name'] = currentUser ? `${currentUser.firstName}, ${currentUser.lastName}` : 'anon., anon.'
     this.scoData['cmi.time_limit_action'] = null !== sco.data.timeLimitAction ? sco.data.timeLimitAction : 'continue,no message'
     this.scoData['cmi.total_time'] = null !== tracking['totalTimeString'] ? tracking['totalTimeString'] : 'PT0S'
     this.scoData['cmi.launch_data'] = null !== sco.data.launchData ? sco.data.launchData : ''
@@ -173,7 +169,7 @@ function APIClass(sco, scormData, tracking, dispatch) {
       } else {
         this.scoData['cmi.core.entry'] = ''
       }
-      commitResult(sco.id, 'log', this.scoData, dispatch)
+      commitResult(sco.id, 'log', this.scoData, dispatch, currentUser)
 
       return 'true'
     } else {
@@ -362,7 +358,7 @@ function APIClass(sco, scormData, tracking, dispatch) {
         return 'false'
       } else {
         this.apiLastError = '0'
-        commitResult(sco.id, 'persist', this.scoData, dispatch)
+        commitResult(sco.id, 'persist', this.scoData, dispatch, currentUser)
 
         return 'true'
       }
@@ -477,7 +473,7 @@ function APIClass(sco, scormData, tracking, dispatch) {
     } else {
       this.scoData['cmi.entry'] = ''
     }
-    commitResult(sco.id, 'log', this.scoData, dispatch)
+    commitResult(sco.id, 'log', this.scoData, dispatch, currentUser)
 
     return 'true'
   }
@@ -1444,7 +1440,7 @@ function APIClass(sco, scormData, tracking, dispatch) {
       return 'false'
     }
     this.apiLastError = '0'
-    commitResult(sco.id, 'persist', this.scoData, dispatch)
+    commitResult(sco.id, 'persist', this.scoData, dispatch, currentUser)
 
     return 'true'
   }

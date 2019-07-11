@@ -2,9 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
