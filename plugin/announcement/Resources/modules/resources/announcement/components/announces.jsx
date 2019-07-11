@@ -35,6 +35,7 @@ const AnnouncesList = props =>
         deletable={props.deletable}
         removePost={() => props.removePost(props.aggregateId, post)}
         sendPost={() => props.sendPost(props.aggregateId, post)}
+        path={props.path}
       />
     )}
 
@@ -76,6 +77,7 @@ const AnnouncesList = props =>
   </div>
 
 AnnouncesList.propTypes = {
+  path: T.string.isRequired,
   sortOrder: T.number.isRequired,
   currentPage: T.number.isRequired,
   pages: T.number.isRequired,
@@ -93,6 +95,7 @@ AnnouncesList.propTypes = {
 
 const Announces = connect(
   state => ({
+    path: resourceSelect.path(state),
     sortOrder: selectors.sortOrder(state),
     currentPage: selectors.currentPage(state),
     pages: selectors.pages(state),

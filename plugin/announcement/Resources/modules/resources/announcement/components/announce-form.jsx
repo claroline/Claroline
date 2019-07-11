@@ -11,6 +11,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 
@@ -22,14 +23,14 @@ const AnnounceFormComponent = props =>
     buttons={true}
     save={{
       type: CALLBACK_BUTTON,
-      target: `/${props.announcement.id}`,
+      target: `${props.path}/${props.announcement.id}`,
       callback: () => props.new ?
-        props.saveNewForm(props.aggregateId, props.history, props.addAnnounce) :
-        props.saveForm(props.aggregateId, props.announcement, props.history, props.updateAnnounce)
+        props.saveNewForm(props.aggregateId, props.history, props.addAnnounce, props.path) :
+        props.saveForm(props.aggregateId, props.announcement, props.history, props.updateAnnounce, props.path)
     }}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -106,6 +107,7 @@ const AnnounceFormComponent = props =>
   />
 
 AnnounceFormComponent.propTypes = {
+  path: T.string.isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,
@@ -128,6 +130,7 @@ AnnounceFormComponent.defaultProps = {
 
 const AnnounceForm = withRouter(connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     workspace: resourceSelectors.workspace(state),
     new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
     announcement: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
@@ -143,25 +146,25 @@ const AnnounceForm = withRouter(connect(
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(selectors.STORE_NAME+'.announcementForm', propName, propValue))
     },
-    saveNewForm(aggregateId, history, onSuccess) {
+    saveNewForm(aggregateId, history, onSuccess, path) {
       dispatch(formActions.saveForm(
         selectors.STORE_NAME+'.announcementForm',
         ['claro_announcement_create', {aggregateId: aggregateId}]
       )).then(
         (announcement) => {
           onSuccess(announcement)
-          history.push('/' + announcement.id)
+          history.push(`${path}/${announcement.id}`)
         }
       )
     },
-    saveForm(aggregateId, announcement, history, onSuccess) {
+    saveForm(aggregateId, announcement, history, onSuccess, path) {
       dispatch(formActions.saveForm(
         selectors.STORE_NAME+'.announcementForm',
         ['claro_announcement_update', {aggregateId: aggregateId, id: announcement.id}]
       )).then(
         (announcement) => {
           onSuccess(announcement)
-          history.push('/' + announcement.id)
+          history.push(`${path}/${announcement.id}`)
         }
       )
     }

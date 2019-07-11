@@ -1,4 +1,4 @@
-
+import {reducer} from '#/plugin/announcement/resources/announcement/store'
 import {AnnouncementResource} from '#/plugin/announcement/resources/announcement/containers/resource'
 
 /**
@@ -6,6 +6,8 @@ import {AnnouncementResource} from '#/plugin/announcement/resources/announcement
  *
  * @constructor
  */
-export const App = () => ({
-  component: AnnouncementResource
-})
+export default {
+  component: AnnouncementResource,
+  store: reducer,
+  styles: ['claroline-distribution-plugin-announcement-announcement-resource']
+}

@@ -6,11 +6,12 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
-
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {actions as listActions} from '#/main/app/content/list/store'
+import {FormData} from '#/main/app/content/form/containers/data'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
@@ -28,12 +29,12 @@ const AnnounceSendComponent = props =>
       disabled: 0 === parseInt(get(props.announcement, 'meta.notifyUsers') || 0),
       callback: () => {
         props.send(props.aggregateId, props.announcement)
-        props.history.push('/')
+        props.history.push(props.path)
       }
     }}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -73,6 +74,7 @@ const AnnounceSendComponent = props =>
   />
 
 AnnounceSendComponent.propTypes = {
+  path: T.string.isRequired,
   aggregateId: T.string.isRequired,
   announcement: T.shape(
     AnnouncementTypes.propTypes
@@ -95,6 +97,7 @@ const RoutedAnnounceSend = withRouter(AnnounceSendComponent)
 
 const AnnounceSend = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     announcement: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
     aggregateId: selectors.aggregateId(state),
     workspaceRoles: selectors.workspaceRoles(state)

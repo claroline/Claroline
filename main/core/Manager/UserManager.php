@@ -935,8 +935,8 @@ class UserManager
             $user = $this->objectManager->getRepository(User::class)->findOneByUsername($user->getUsername());
         }
         // TODO : nope, we should let Symfony handles token creation
-        //$token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        //$this->tokenStorage->setToken($token);
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->tokenStorage->setToken($token);
 
         if (!$fromApi) {
             $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);

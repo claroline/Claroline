@@ -24,12 +24,13 @@ const AnnouncementResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('announcements_list', {}, 'announcement'),
-        target: '/',
+        target: props.path,
         exact: true
       }
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -65,6 +66,7 @@ const AnnouncementResource = props =>
   </ResourcePage>
 
 AnnouncementResource.propTypes = {
+  path: T.string.isRequired,
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
   ).isRequired,

@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
@@ -36,7 +37,7 @@ const pageReducer = makeReducer(0, {
  * Manages announcements post CRUD actions.
  */
 const announcementReducer = makeReducer({posts: []}, {
-  [RESOURCE_LOAD]: (state, action) => action.resourceData.announcement,
+  [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.announcement,
   [ANNOUNCE_ADD]: (state, action) => {
     const newState = cloneDeep(state)
 
@@ -80,14 +81,7 @@ const reducer = combineReducers({
   sortOrder: sortReducer,
   announcement: announcementReducer,
 
-  announcementForm: makeFormReducer(selectors.STORE_NAME+'.announcementForm', {}, {
-    data: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.announcement
-    }),
-    originalData: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.announcement
-    })
-  }),
+  announcementForm: makeFormReducer(selectors.STORE_NAME+'.announcementForm'),
   announcementDetail: announcementDetailReducer,
 
   selected: combineReducers({
@@ -98,7 +92,7 @@ const reducer = combineReducers({
     })
   }),
   workspaceRoles: makeReducer([], {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.workspaceRoles
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.workspaceRoles
   })
 })
 
