@@ -14,3 +14,10 @@ icap_notification_follower_api:
     type: api
     options:
         expose: true
+
+claro_new_api:
+    resource: "@IcapNotificationBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

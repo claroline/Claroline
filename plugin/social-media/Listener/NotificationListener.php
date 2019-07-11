@@ -13,6 +13,8 @@ namespace Icap\SocialmediaBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class NotificationListener.
@@ -21,16 +23,16 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class NotificationListener
 {
-    private $templating;
-
     /**
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
+     *     "translator" = @DI\Inject("translator"),
+     *     "router"     = @DI\Inject("router")
      * })
      */
-    public function __construct($templating)
+    public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
-        $this->templating = $templating;
+        $this->translator = $translator;
+        $this->router = $router;
     }
 
     /**
@@ -43,16 +45,40 @@ class NotificationListener
     {
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
-        $content = $this->templating->render(
-            'IcapSocialmediaBundle:notification:notification_item.html.twig',
-            [
-                'notification' => $notification,
-                'status' => $notificationView->getStatus(),
-                'systemName' => $event->getSystemName(),
-            ]
-        );
 
-        $event->setResponseContent($content);
-        $event->stopPropagation();
+        $primaryAction = [
+          'url' => 'claro_resource_open_short',
+          'parameters' => [
+            'node' => $notification->getDetails()['resource']['id'],
+          ],
+        ];
+
+        $text = '';
+
+        switch ($notification->getActionKey()) {
+          case LogSocialmediaLikeEvent::ACTION:
+            $text .= $this->translator->trans('liked', [], 'icap_socialmedia');
+            break;
+          case LogSocialmediaShareEvent::ACTION:
+            if (isset($notification->getDetails()['share']) && isset($notification->getDetails()['network'])) {
+                $text .= $this->translator->trans('shared_on', ['%network%' => $notification->getDetails()['network']], 'icap_socialmedia');
+            } else {
+                $text .= $this->translator->trans('shared_on', ['%network%' => 'claroline'], 'icap_socialmedia');
+            }
+            break;
+          case LogSocialmediaCommentEvent::ACTION:
+            $text .= $this->translator->trans('commented', [], 'icap_socialmedia');
+            $primaryAction = [
+              'url' => 'icap_socialmedia_comments_view',
+              'parameters' => [
+                'resourceId' => $notification->getDetails()['resource']['id'],
+              ],
+            ];
+            break;
+        }
+
+        $text .= ' '.$notification->getDetails()['resource']['name'];
+        $event->setText($text);
+        $event->setPrimaryAction($primaryAction);
     }
 }

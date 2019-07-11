@@ -4,6 +4,8 @@ namespace Icap\LessonBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class NotificationListener.
@@ -16,12 +18,14 @@ class NotificationListener
 
     /**
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
+     *     "translator" = @DI\Inject("translator"),
+     *     "router"     = @DI\Inject("router")
      * })
      */
-    public function __construct($templating)
+    public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
-        $this->templating = $templating;
+        $this->translator = $translator;
+        $this->router = $router;
     }
 
     /**
@@ -34,16 +38,16 @@ class NotificationListener
     {
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
-        $content = $this->templating->render(
-            'IcapLessonBundle:notification:notification_item.html.twig',
-            [
-                'notification' => $notification,
-                'status' => $notificationView->getStatus(),
-                'systemName' => $event->getSystemName(),
-            ]
-        );
 
-        $event->setResponseContent($content);
-        $event->stopPropagation();
+        $event->setPrimaryAction([
+          'url' => 'icap_lesson_chapter',
+          'parameters' => [
+            'resourceId' => $notification->getDetails()['resource']['id'],
+            'chapterId' => $notification->getDetails()['chapter']['chapter'],
+          ],
+        ]);
+
+        $text = $this->translator->trans($notification->getActionKey(), ['%lesson%' => $notification->getDetails()['resource']['name'], '%chapter%' => $notification->getDetails()['chapter']['title']], 'notification');
+        $event->setText($text);
     }
 }

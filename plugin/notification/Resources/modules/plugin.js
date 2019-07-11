@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import {registry} from '#/main/app/plugins/registry'
 
 /**
@@ -13,5 +11,9 @@ registry.add('IcapNotificationBundle', {
       // 'notifications': () => { return import(/* webpackChunkName: "resource-action-notifications" */ '#/plugin/notification/resource/actions/notifications') },
       'unfollow'     : () => { return import(/* webpackChunkName: "resource-action-unfollow" */      '#/plugin/notification/resource/actions/unfollow') }
     }
-  }
+  },
+
+  tools: {
+    'notification'   : () => { return import(/* webpackChunkName: "plugin-tool-notification" */       '#/plugin/notification/tools/notification') }
+  },
 })

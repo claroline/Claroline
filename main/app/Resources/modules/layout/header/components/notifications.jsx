@@ -8,18 +8,6 @@ import {URL_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 const NotificationsMenu = props =>
   <ul className="app-notifications dropdown-menu dropdown-menu-right">
     <li role="presentation">
-      <Button
-        type={URL_BUTTON}
-        icon="fa fa-fw fa-bell"
-        subscript={0 !== props.count.notifications ? {
-          type: 'label',
-          status: 'primary',
-          value: 100 > props.count.notifications ? props.count.notifications : '99+'
-        } : undefined}
-        label={trans('notifications')}
-        target={['icap_notification_view']}
-      />
-
       {props.tools.map((tool) =>
         <Button
           key={tool.name}
@@ -49,7 +37,7 @@ const HeaderNotifications = props => {
   let totalCount = 0
 
   Object.keys(props.count).forEach(key => totalCount += props.count[key])
-  
+
   return (
     <Button
       id="app-notifications-menu"

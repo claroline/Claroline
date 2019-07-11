@@ -11,6 +11,8 @@ class NotificationCreateDelegateViewEvent extends Event
     private $notificationView;
     private $systemName = '';
     private $isPopulated = false;
+    private $primaryAction = null;
+    private $text;
 
     public function __construct(NotificationViewer $notificationView, $systemName)
     {
@@ -52,5 +54,25 @@ class NotificationCreateDelegateViewEvent extends Event
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+
+    public function setPrimaryAction(array $primaryAction)
+    {
+        $this->primaryAction = $primaryAction;
+    }
+
+    public function getPrimaryAction()
+    {
+        return $this->primaryAction;
+    }
+
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    public function getText()
+    {
+        return $this->text;
     }
 }

@@ -14,22 +14,24 @@ namespace Claroline\ForumBundle\Listener;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service()
  */
 class NotificationListener
 {
-    private $templating;
-
     /**
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
+     *     "translator" = @DI\Inject("translator"),
+     *     "router"     = @DI\Inject("router")
      * })
      */
-    public function __construct($templating)
+    public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
-        $this->templating = $templating;
+        $this->translator = $translator;
+        $this->router = $router;
     }
 
     /**
@@ -40,17 +42,22 @@ class NotificationListener
     {
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
-        $content = $this->templating->render(
-            'ClarolineForumBundle:notification:notification_item.html.twig',
-            [
-                'notification' => $notification,
-                'status' => $notificationView->getStatus(),
-                'systemName' => $event->getSystemName(),
-            ]
-        );
 
-        $event->setResponseContent($content);
-        $event->stopPropagation();
+        $event->setPrimaryAction([
+          'url' => 'claro_resource_show_short',
+          'parameters' => [
+            'id' => $notification->getDetails()['resource']['guid'],
+            '#' => 'subjects/show/'.$notification->getDetails()['details']['subject']['uuid'],
+          ],
+        ]);
+
+        $text = $this->translator->trans('resource-claroline_forum-create_message', ['%forum%' => $notification->getDetails()['resource']['name']], 'notification');
+
+        if (isset($notification->getDetails()['workspace'])) {
+            $text .= ' - '.$notification->getDetails()['workspace']['name'];
+        }
+
+        $event->setText($text);
     }
 
     /**

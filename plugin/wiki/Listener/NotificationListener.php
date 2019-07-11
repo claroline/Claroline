@@ -4,7 +4,8 @@ namespace Icap\WikiBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * NotificationListener.
@@ -13,21 +14,16 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
  */
 class NotificationListener
 {
-    /** @var TwigEngine */
-    private $templating;
-
     /**
-     * NotificationListener constructor.
-     *
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
+     *     "translator" = @DI\Inject("translator"),
+     *     "router"     = @DI\Inject("router")
      * })
-     *
-     * @param TwigEngine $templating
      */
-    public function __construct(TwigEngine $templating)
+    public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
-        $this->templating = $templating;
+        $this->translator = $translator;
+        $this->router = $router;
     }
 
     /**
@@ -41,16 +37,16 @@ class NotificationListener
     {
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
-        $content = $this->templating->render(
-            'IcapWikiBundle:notification:notification_item.html.twig',
-            [
-                'notification' => $notification,
-                'status' => $notificationView->getStatus(),
-                'systemName' => $event->getSystemName(),
-            ]
-        );
 
-        $event->setResponseContent($content);
-        $event->stopPropagation();
+        $primaryAction = [
+          'url' => 'claro_resource_show_short',
+          'parameters' => [
+            'id' => $notification->getDetails()['resource']['id'],
+          ],
+        ];
+
+        $text = $this->translator->trans($notification->getActionKey(), ['%wiki%' => $notification->getDetails()['resource']['name'], '%section%' => $notification->getDetails()['section']['title']], 'notification');
+        $event->setText($text);
+        $event->setPrimaryAction($primaryAction);
     }
 }
