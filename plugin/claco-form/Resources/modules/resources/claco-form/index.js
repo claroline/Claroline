@@ -1,10 +1,11 @@
 import {ClacoFormResource} from '#/plugin/claco-form/resources/claco-form/containers/resource'
+import {reducer} from '#/plugin/claco-form/resources/claco-form/store'
 
 /**
  * ClacoForm resource application.
- *
- * @constructor
  */
-export const App = () => ({
-  component: ClacoFormResource
-})
+export default {
+  component: ClacoFormResource,
+  store: reducer,
+  styles: ['claroline-distribution-plugin-claco-form-resource']
+}

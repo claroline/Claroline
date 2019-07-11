@@ -161,61 +161,62 @@ class EntrySerializer
                 $entry->setUser($user);
             }
         }
+        if (isset($data['clacoForm']['id']) && !$entry->getClacoForm()) {
+            $clacoForm = $this->clacoFormRepo->findOneBy(['uuid' => $data['clacoForm']['id']]);
+            $entry->setClacoForm($clacoForm);
+        }
+
         /* TODO: checks rights */
         $this->deserializeCategories($entry, $data['categories']);
         $this->deserializeKeywords($entry, $data['keywords']);
 
-        if (isset($data['clacoForm']['id'])) {
-            $clacoForm = $this->clacoFormRepo->findOneBy(['uuid' => $data['clacoForm']['id']]);
+        if ($entry->getClacoForm()) {
+            $clacoForm = $entry->getClacoForm();
 
-            if (!empty($clacoForm)) {
-                $entry->setClacoForm($clacoForm);
+            // Initializes status
+            if (empty($entry->getStatus())) {
+                $status = $clacoForm->isModerated() ? Entry::PENDING : Entry::PUBLISHED;
+                $entry->setStatus($status);
+            }
 
-                // Initializes status
-                if (empty($entry->getStatus())) {
-                    $status = $clacoForm->isModerated() ? Entry::PENDING : Entry::PUBLISHED;
-                    $entry->setStatus($status);
-                }
+            // Sets values for fields
+            $fields = $this->fieldRepo->findBy(['clacoForm' => $clacoForm]);
 
-                // Sets values for fields
-                $fields = $this->fieldRepo->findBy(['clacoForm' => $clacoForm]);
+            foreach ($fields as $field) {
+                $uuid = $field->getUuid();
 
-                foreach ($fields as $field) {
-                    $uuid = $field->getUuid();
+                if (isset($data['values'][$uuid])) {
+                    $fieldValue = $this->fieldValueRepo->findOneBy(['entry' => $entry, 'field' => $field]);
 
-                    if (isset($data['values'][$uuid])) {
-                        $fieldValue = $this->fieldValueRepo->findOneBy(['entry' => $entry, 'field' => $field]);
+                    if (empty($fieldValue)) {
+                        $fieldValue = new FieldValue();
+                        $fieldValue->setEntry($entry);
+                        $fieldValue->setField($field);
 
-                        if (empty($fieldValue)) {
-                            $fieldValue = new FieldValue();
-                            $fieldValue->setEntry($entry);
-                            $fieldValue->setField($field);
+                        $fielFacetValue = new FieldFacetValue();
+                        $fielFacetValue->setUser($entry->getUser());
+                        $fielFacetValue->setFieldFacet($field->getFieldFacet());
+                        $fielFacetValue->setValue($data['values'][$uuid]);
+                        $fieldValue->setFieldFacetValue($fielFacetValue);
 
-                            $fielFacetValue = new FieldFacetValue();
-                            $fielFacetValue->setUser($entry->getUser());
-                            $fielFacetValue->setFieldFacet($field->getFieldFacet());
-                            $fielFacetValue->setValue($data['values'][$uuid]);
-                            $fieldValue->setFieldFacetValue($fielFacetValue);
+                        $this->om->persist($fielFacetValue);
+                    } else {
+                        $fieldValue->setValue($data['values'][$uuid]);
+                    }
+                    $this->om->persist($fieldValue);
 
-                            $this->om->persist($fielFacetValue);
-                        } else {
-                            $fieldValue->setValue($data['values'][$uuid]);
+                    $fieldsCategories = $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
+
+                    foreach ($fieldsCategories as $fieldCategory) {
+                        switch ($field->getType()) {
+                            case FieldFacet::NUMBER_TYPE:
+                                $isCategoryValue = floatval($data['values'][$uuid]) === floatval($fieldCategory->getValue());
+                                break;
+                            default:
+                                $isCategoryValue = $data['values'][$uuid] === $fieldCategory->getValue();
                         }
-                        $this->om->persist($fieldValue);
-
-                        $fieldsCategories = $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
-
-                        foreach ($fieldsCategories as $fieldCategory) {
-                            switch ($field->getType()) {
-                                case FieldFacet::NUMBER_TYPE:
-                                    $isCategoryValue = floatval($data['values'][$uuid]) === floatval($fieldCategory->getValue());
-                                    break;
-                                default:
-                                    $isCategoryValue = $data['values'][$uuid] === $fieldCategory->getValue();
-                            }
-                            if ($isCategoryValue) {
-                                $entry->addCategory($fieldCategory->getCategory());
-                            }
+                        if ($isCategoryValue) {
+                            $entry->addCategory($fieldCategory->getCategory());
                         }
                     }
                 }

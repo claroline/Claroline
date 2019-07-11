@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
@@ -40,7 +40,7 @@ const messageReducer = makeReducer({}, {
 })
 
 const clacoFormReducer = makeReducer({}, {
-  [RESOURCE_LOAD]: (state, action) => action.resourceData.clacoForm || state,
+  [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.clacoForm || state,
   // replaces clacoForm data after success updates
   [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.clacoFormForm']: (state, action) => action.updatedData,
   [RESOURCE_PROPERTY_UPDATE]: (state, action) => {
@@ -119,16 +119,16 @@ const reducer = combineReducers({
   entries: entriesReducer,
   message: messageReducer,
   canGeneratePdf: makeReducer(false, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.canGeneratePdf || state
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.canGeneratePdf || state
   }),
   cascadeLevelMax: makeReducer(5, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.cascadeLevelMax || state
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.cascadeLevelMax || state
   }),
   roles: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.roles || state
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.roles || state
   }),
   myRoles: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.myRoles || state
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.myRoles || state
   })
 })
 

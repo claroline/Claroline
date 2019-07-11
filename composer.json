@@ -127,7 +127,6 @@
             "Claroline\\TextPlayerBundle\\": "plugin/text-player",
             "Claroline\\VideoPlayerBundle\\": "plugin/video-player",
             "Claroline\\WebResourceBundle\\": "plugin/web-resource",
-            "Innova\\CollecticielBundle\\": "plugin/collecticiel",
             "HeVinci\\FavouriteBundle\\": "plugin/favourite",
             "HeVinci\\CompetencyBundle\\": "plugin/competency",
             "HeVinci\\UrlBundle\\": "plugin/url",

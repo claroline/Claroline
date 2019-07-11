@@ -1,22 +1,21 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
 
-import {currentUser} from '#/main/app/security'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
-const authenticatedUser = currentUser()
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'claroline_claco_form'
 
 const resource = (state) => state[STORE_NAME]
+const authenticatedUser = (state) => securitySelectors.currentUser(state)
+const isAnon = (state) => !securitySelectors.isAuthenticated(state)
 
 const clacoForm = createSelector(
   [resource],
   (resource) => resource.clacoForm
 )
-
-const isAnon = () => authenticatedUser === null
 
 const params = createSelector(
   [clacoForm],
@@ -93,6 +92,11 @@ const usedCountries = createSelector(
   (entries) => entries.countries
 )
 
+const entryUsersShared = createSelector(
+  [entries],
+  (entries) => entries.entryUsersShared
+)
+
 const canEdit = createSelector(
   resourceSelect.resourceNode,
   (resourceNode) => hasPermission('edit', resourceNode)
@@ -111,17 +115,15 @@ const canSearchEntry = createSelector(
 )
 
 const isCurrentEntryOwner = createSelector(
-  isAnon,
-  currentEntry,
-  (isAnon, currentEntry) => {
+  [authenticatedUser, isAnon, currentEntry],
+  (authenticatedUser, isAnon, currentEntry) => {
     return !isAnon && authenticatedUser && currentEntry && currentEntry.user && currentEntry.user.id === authenticatedUser.id
   }
 )
 
 const isCurrentEntryManager = createSelector(
-  isAnon,
-  currentEntry,
-  (isAnon, currentEntry) => {
+  [authenticatedUser, isAnon, currentEntry],
+  (authenticatedUser, isAnon, currentEntry) => {
     let isManager = false
 
     if (!isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
@@ -141,10 +143,11 @@ const isCurrentEntryManager = createSelector(
 )
 
 const canManageCurrentEntry = createSelector(
+  authenticatedUser,
   isAnon,
   resourceSelect.resourceNode,
   currentEntry,
-  (isAnon, resourceNode, currentEntry) => {
+  (authenticatedUser, isAnon, resourceNode, currentEntry) => {
     let canManage = hasPermission('edit', resourceNode)
 
     if (!canManage && !isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
@@ -202,8 +205,8 @@ const canOpenCurrentEntry = createSelector(
 )
 
 const isCategoryManager = createSelector(
-  categories,
-  (categories) => {
+  [authenticatedUser, categories],
+  (authenticatedUser, categories) => {
     return authenticatedUser && categories.filter(c => c.managers.find(m => m.id === authenticatedUser.id)).length > 0
   }
 )
@@ -290,6 +293,7 @@ export const selectors = {
   myRoles,
   entryUser,
   usedCountries,
+  entryUsersShared,
   canGeneratePdf,
   message,
   listConfiguration,

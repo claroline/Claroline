@@ -7,17 +7,18 @@ import set from 'lodash/set'
 
 import {mount} from '#/main/app/dom/mount'
 import {withRouter} from '#/main/app/router'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {DataInput} from '#/main/app/data/components/input'
 
-import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
@@ -28,8 +29,6 @@ import {
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryFormData} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form-data'
-
-const authenticatedUser = currentUser()
 
 class EntryFormComponent extends Component {
   constructor(props) {
@@ -76,7 +75,7 @@ class EntryFormComponent extends Component {
           this.props.displayMetadata === 'all' ||
           (this.props.displayMetadata === 'manager' && this.props.isManager) ||
           !f.restrictions.isMetadata ||
-          (this.props.entry.user && this.props.entry.user.id === authenticatedUser.id),
+          (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id),
         disabled: !this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked)),
         options: f.options ? f.options : {}
       }
@@ -210,11 +209,11 @@ class EntryFormComponent extends Component {
             sections={this.getSections()}
             save={{
               type: CALLBACK_BUTTON,
-              callback: () => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push)
+              callback: () => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push, this.props.path)
             }}
             cancel={{
               type: LINK_BUTTON,
-              target: this.props.entry.id ? `/entries/${this.props.entry.id}` : '/',
+              target: this.props.entry.id ? `${this.props.path}/entries/${this.props.entry.id}` : this.props.path,
               exact: true
             }}
           />
@@ -261,6 +260,8 @@ class EntryFormComponent extends Component {
 
 
 EntryFormComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   canEdit: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
   fields: T.arrayOf(T.shape(FieldType.propTypes)).isRequired,
@@ -289,7 +290,9 @@ EntryFormComponent.propTypes = {
 
 const EntryForm = withRouter(connect(
   state => ({
-    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
+    path: resourceSelectors.path(state),
+    currentUser: securitySelectors.currentUser(state),
+    canEdit: hasPermission('edit', resourceSelectors.resourceNode(state)),
     clacoFormId: selectors.clacoForm(state).id,
     fields: selectors.visibleFields(state),
     useTemplate: selectors.useTemplate(state),
@@ -307,10 +310,10 @@ const EntryForm = withRouter(connect(
     keywords: selectors.keywords(state)
   }),
   (dispatch) => ({
-    saveForm(entry, isNew, navigate) {
+    saveForm(entry, isNew, navigate, path) {
       if (isNew) {
         dispatch(formActions.saveForm(selectors.STORE_NAME+'.entries.current', ['apiv2_clacoformentry_create'])).then(
-          (data) => navigate(`/entries/${data.id}`),
+          (data) => navigate(`${path}/entries/${data.id}`),
           () => true
         )
       } else {

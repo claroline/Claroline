@@ -40,6 +40,7 @@ class ClacoFormListener
 {
     private $clacoFormManager;
     private $om;
+    private $finder;
     private $platformConfigHandler;
     private $roleManager;
     private $serializer;
@@ -58,6 +59,7 @@ class ClacoFormListener
      *
      * @param ClacoFormManager             $clacoFormManager
      * @param ObjectManager                $om
+     * @param FinderProvider               $finder
      * @param PlatformConfigurationHandler $platformConfigHandler
      * @param RoleManager                  $roleManager,
      * @param SerializerProvider           $serializer
@@ -74,11 +76,11 @@ class ClacoFormListener
     ) {
         $this->clacoFormManager = $clacoFormManager;
         $this->om = $om;
+        $this->finder = $finder;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->roleManager = $roleManager;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
-        $this->finder = $finder;
     }
 
     /**

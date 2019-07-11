@@ -710,7 +710,7 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkEntryShareRight($entry);
         $this->clacoFormManager->switchEntryUserShared($entry, $user, true);
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse($this->serializer->serialize($user, [Options::SERIALIZE_MINIMAL]), 200);
     }
 
     /**

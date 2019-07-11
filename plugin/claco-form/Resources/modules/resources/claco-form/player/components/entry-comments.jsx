@@ -4,19 +4,17 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
-import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
-
-const authenticatedUser = currentUser()
 
 // TODO : make it a core component and reuse it here and in Blog (and everywhere we need comments)
 
@@ -35,11 +33,11 @@ class EntryCommentsComponent extends Component {
   }
 
   filterComment(comment) {
-    return this.props.canManage || comment.status === 1 || (authenticatedUser && comment.user && authenticatedUser.id === comment.user.id)
+    return this.props.canManage || comment.status === 1 || (this.props.currentUser && comment.user && this.props.currentUser.id === comment.user.id)
   }
 
   canEditComment(comment) {
-    return this.props.canManage || (authenticatedUser && comment.user && authenticatedUser.id === comment.user.id)
+    return this.props.canManage || (this.props.currentUser && comment.user && this.props.currentUser.id === comment.user.id)
   }
 
   deleteComment(commentId) {
@@ -112,7 +110,7 @@ class EntryCommentsComponent extends Component {
 
             {this.state.showNewCommentForm &&
               <UserMessageForm
-                user={authenticatedUser}
+                user={this.props.currentUser}
                 allowHtml={true}
                 submitLabel={trans('add_comment')}
                 submit={(comment) => this.createNewComment(comment)}
@@ -138,7 +136,7 @@ class EntryCommentsComponent extends Component {
               this.state[comment.id] && this.state[comment.id].showCommentForm ?
                 <UserMessageForm
                   key={`comment-${commentIndex}`}
-                  user={authenticatedUser}
+                  user={this.props.currentUser}
                   content={comment.content}
                   allowHtml={true}
                   submitLabel={trans('add_comment')}
@@ -193,6 +191,7 @@ class EntryCommentsComponent extends Component {
 }
 
 EntryCommentsComponent.propTypes = {
+  currentUser: T.object,
   opened: T.bool.isRequired,
   entry: T.object.isRequired,
   canComment: T.bool.isRequired,
@@ -210,6 +209,7 @@ EntryCommentsComponent.propTypes = {
 
 const EntryComments = connect(
   (state) => ({
+    currentUser: securitySelectors.currentUser(state),
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     displayCommentAuthor: selectors.params(state).display_comment_author,
     displayCommentDate: selectors.params(state).display_comment_date

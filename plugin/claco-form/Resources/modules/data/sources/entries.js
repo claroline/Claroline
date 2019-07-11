@@ -6,16 +6,15 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {DataCard} from '#/main/app/content/card/components/data'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {currentUser} from '#/main/app/security'
 import {displayDate} from '#/main/app/intl/date'
 import {constants as intlConstants} from '#/main/app/intl/constants'
 
 import {canViewEntryMetadata} from '#/plugin/claco-form/resources/claco-form/permissions'
 
-function formatFieldValue(entry, field, value) {
+function formatFieldValue(entry, field, value, clacoForm, currentUser) {
   let formattedValue = ''
 
-  if (field.isMetadata && !canViewEntryMetadata(entry)) {
+  if (field.isMetadata && !canViewEntryMetadata(entry, clacoForm, false, currentUser)) {
     formattedValue = '-'
   } else {
     formattedValue = value
@@ -43,7 +42,7 @@ function formatFieldValue(entry, field, value) {
   return formattedValue
 }
 
-function getCardValue(clacoForm, row, type) {
+function getCardValue(clacoForm, row, type, currentUser) {
   let value = row.title
   let key = ''
 
@@ -78,7 +77,7 @@ function getCardValue(clacoForm, row, type) {
       default:
         if (row.values && row.values[key]) {
           field = clacoForm.fields.find(f => f.id === key)
-          value = formatFieldValue(row, field, row.values[key])
+          value = formatFieldValue(row, field, row.values[key], clacoForm, currentUser)
         } else {
           value = ''
         }
@@ -94,7 +93,7 @@ function getCardValue(clacoForm, row, type) {
  * NB. This is not registered as a standard Claroline source
  * because it requires additional data to be computed
  */
-export default (clacoForm, canViewMetadata = false, canEdit = false, canAdministrate = false, isCategoryManager = false) => {
+export default (clacoForm, canViewMetadata = false, canEdit = false, canAdministrate = false, isCategoryManager = false, path = null, currentUser = null) => {
   const fields = clacoForm.fields || []
   const titleLabel = get(clacoForm, 'details.title_field_label') || trans('title')
   const hasCategories = get(clacoForm, 'details.display_categories') || false
@@ -107,7 +106,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
       primaryAction: (row) => ({
         type: LINK_BUTTON,
         label: trans('open'),
-        target: `/entries/${row.id}`
+        target: `${path}/entries/${row.id}`
       }),
       definition: [
         {
@@ -116,7 +115,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
           displayable: false,
           displayed: false,
           sortable: false,
-          filterable: !!currentUser(),
+          filterable: !!currentUser,
           type: 'choice',
           options: {
             choices: Object.assign({
@@ -155,7 +154,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
           displayed: canViewMetadata,
           displayable: canViewMetadata,
           sortable: canViewMetadata,
-          calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit) ? rowData.creationDate : null
+          calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) ? rowData.creationDate : null
         }, {
           name: 'createdAfter',
           label: trans('created_after'),
@@ -177,7 +176,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
           filterable: canViewMetadata,
           displayed: canViewMetadata,
           displayable: canViewMetadata,
-          calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit) && rowData.user ? `${rowData.user.firstName} ${rowData.user.lastName}` : null
+          calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) && rowData.user ? `${rowData.user.firstName} ${rowData.user.lastName}` : null
         },
         // Categories
         {
@@ -244,9 +243,9 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
             picture: props.data.user ? props.data.user.picture : undefined,
             alt: true
           }),
-          title: getCardValue(clacoForm, props.data, 'title'),
-          subtitle: getCardValue(clacoForm, props.data, 'subtitle'),
-          contentText: getCardValue(clacoForm, props.data, 'content')
+          title: getCardValue(clacoForm, props.data, 'title', currentUser),
+          subtitle: getCardValue(clacoForm, props.data, 'subtitle', currentUser),
+          contentText: getCardValue(clacoForm, props.data, 'content', currentUser)
         }))
 
         return EntryCard

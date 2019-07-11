@@ -1,15 +1,11 @@
-import {currentUser} from '#/main/app/security'
-
-function isEntryManager(entry) {
-  const authenticatedUser = currentUser()
-
+function isEntryManager(entry, currentUser) {
   let isManager = false
 
-  if (entry.categories && authenticatedUser) {
+  if (entry.categories && currentUser) {
     entry.categories.forEach(c => {
       if (!isManager && c.managers) {
         c.managers.forEach(m => {
-          if (m.id === authenticatedUser.id) {
+          if (m.id === currentUser.id) {
             isManager = true
           }
         })
@@ -20,25 +16,23 @@ function isEntryManager(entry) {
   return isManager
 }
 
-function isEntryOwner(entry) {
-  const authenticatedUser = currentUser()
-
-  return authenticatedUser && entry.user && entry.user.id === authenticatedUser.id
+function isEntryOwner(entry, currentUser) {
+  return currentUser && entry.user && entry.user.id === currentUser.id
 }
 
-function canEditEntry(entry, clacoForm) {
-  return canManageEntry(entry) || (clacoForm.details.editionEnabled && isEntryOwner(entry))
+function canEditEntry(entry, clacoForm, currentUser) {
+  return canManageEntry(entry, false, currentUser) || (clacoForm.details.editionEnabled && isEntryOwner(entry, currentUser))
 }
 
-function canManageEntry(entry, canEdit = false) {
-  return canEdit || isEntryManager(entry)
+function canManageEntry(entry, canEdit = false, currentUser = null) {
+  return canEdit || isEntryManager(entry, currentUser)
 }
 
-function canViewEntryMetadata(entry, clacoForm, canEdit = false) {
+function canViewEntryMetadata(entry, clacoForm, canEdit = false, currentUser = null) {
   return canEdit
     || 'all' === clacoForm.details.display_metadata
-    || isEntryOwner(entry)
-    || ('manager' === clacoForm.details.display_metadata && isEntryManager(entry))
+    || isEntryOwner(entry, currentUser)
+    || ('manager' === clacoForm.details.display_metadata && isEntryManager(entry, currentUser))
 }
 
 export {

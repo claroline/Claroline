@@ -34,20 +34,19 @@ function getHome(type) {
 
 const ClacoFormResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-claco-form-resource']}
     primaryAction="add-entry"
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        target: '/menu'
+        target: `${props.path}/menu`
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-search',
         label: trans('entries_list', {}, 'clacoform'),
         displayed: props.canSearchEntry,
-        target: '/entries',
+        target: `${props.path}/entries`,
         exact: true
       }, {
         type: URL_BUTTON,
@@ -60,6 +59,7 @@ const ClacoFormResource = props =>
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -71,7 +71,7 @@ const ClacoFormResource = props =>
                 props.loadAllUsedCountries(props.clacoForm.id)
                 break
               case 'add':
-                props.openEntryForm(null, props.clacoForm.id)
+                props.openEntryForm(null, props.clacoForm.id, [], props.currentUser)
                 break
               case 'random':
                 fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
@@ -81,8 +81,8 @@ const ClacoFormResource = props =>
                   .then(response => response.json())
                   .then(entryId => {
                     if (entryId) {
-                      props.openEntryForm(entryId, props.clacoForm.id)
-                      props.loadEntryUser(entryId)
+                      props.openEntryForm(entryId, props.clacoForm.id, [], props.currentUser)
+                      props.loadEntryUser(entryId, props.currentUser)
                     }
                   })
                 break
@@ -107,8 +107,8 @@ const ClacoFormResource = props =>
           path: '/entries/:id',
           component: Entry,
           onEnter: (params) => {
-            props.openEntryForm(params.id, props.clacoForm.id)
-            props.loadEntryUser(params.id)
+            props.openEntryForm(params.id, props.clacoForm.id, [], props.currentUser)
+            props.loadEntryUser(params.id, props.currentUser)
           },
           onLeave: () => {
             props.resetEntryForm()
@@ -118,10 +118,10 @@ const ClacoFormResource = props =>
           path: '/entry/form/:id?',
           component: EntryForm,
           onEnter: (params) => {
-            props.openEntryForm(params.id, props.clacoForm.id, props.clacoForm.fields)
+            props.openEntryForm(params.id, props.clacoForm.id, props.clacoForm.fields, props.currentUser)
 
             if (params.id) {
-              props.loadEntryUser(params.id)
+              props.loadEntryUser(params.id, props.currentUser)
             }
           },
           onLeave: () => {
@@ -134,6 +134,8 @@ const ClacoFormResource = props =>
   </ResourcePage>
 
 ClacoFormResource.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   clacoForm: T.shape(ClacoFormType.propTypes).isRequired,
   canEdit: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,

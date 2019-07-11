@@ -5,8 +5,11 @@ import merge from 'lodash/merge'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
@@ -27,7 +30,7 @@ const EntriesComponent = props =>
       autoload: true
     }}
 
-    source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.canAdministrate, props.isCategoryManager), {
+    source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.canAdministrate, props.isCategoryManager, props.path, props.currentUser), {
       parameters: {
         actions: (rows) => [
           {
@@ -50,8 +53,8 @@ const EntriesComponent = props =>
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-pencil',
             label: trans('edit', {}, 'actions'),
-            target: `/entry/form/${rows[0].id}`,
-            displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm),
+            target: `${props.path}/entry/form/${rows[0].id}`,
+            displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm, props.currentUser),
             scope: ['object'],
             group: trans('management')
           }, {
@@ -59,7 +62,7 @@ const EntriesComponent = props =>
             icon: 'fa fa-fw fa-eye',
             label: trans('publish', {}, 'actions'),
             callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
-            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit)).length === rows.length &&
+            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
             rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
             group: trans('management')
           }, {
@@ -67,7 +70,7 @@ const EntriesComponent = props =>
             icon: 'fa fa-fw fa-eye-slash',
             label: trans('unpublish', {}, 'actions'),
             callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
-            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit)).length === rows.length &&
+            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
             rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
             group: trans('management')
           }, {
@@ -93,7 +96,7 @@ const EntriesComponent = props =>
               message: transChoice('delete_selected_entries_confirm_message', rows.length, {count: rows.length}, 'clacoform')
             },
             callback: () => props.deleteEntries(rows),
-            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit)).length === rows.length,
+            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length,
             dangerous: true
           }
         ]
@@ -103,6 +106,8 @@ const EntriesComponent = props =>
   />
 
 EntriesComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   clacoForm: T.shape(
     ClacoFormTypes.propTypes
   ).isRequired,
@@ -125,6 +130,8 @@ EntriesComponent.propTypes = {
 
 const Entries = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
+    currentUser: securitySelectors.currentUser(state),
     listConfiguration: selectors.listConfiguration(state),
     clacoForm: selectors.clacoForm(state),
     canEdit: selectors.canEdit(state),
