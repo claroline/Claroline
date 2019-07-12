@@ -1,12 +1,17 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/plugin/url/resources/url/editor/store'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {constants} from '#/plugin/scorm/resources/scorm/constants'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {FormData} from '#/main/app/content/form/containers/data'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {selectors} from '#/plugin/url/resources/url/editor/store'
+
+import {constants} from '#/plugin/scorm/resources/scorm/constants'
 
 const UrlForm = props =>
   <FormData
@@ -16,7 +21,7 @@ const UrlForm = props =>
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -73,6 +78,7 @@ const UrlForm = props =>
   />
 
 UrlForm.propTypes = {
+  path: T.string.isRequired,
   url: T.shape({
     'id': T.number.isRequired
   }).isRequired,
@@ -81,6 +87,7 @@ UrlForm.propTypes = {
 
 const Editor = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     url: selectors.url(state)
   }),
   (dispatch) => ({

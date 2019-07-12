@@ -1,3 +1,4 @@
+import {reducer} from '#/plugin/url/resources/url/store'
 import {UrlCreation} from '#/plugin/url/resources/url/containers/creation'
 import {UrlResource} from '#/plugin/url/resources/url/containers/resource'
 
@@ -11,6 +12,8 @@ export const Creation = () => ({
 /**
  * @constructor
  */
-export const App = () => ({
-  component: UrlResource
-})
+export default {
+  component: UrlResource,
+  store: reducer,
+  styles: ['claroline-distribution-main-core-iframe']
+}
