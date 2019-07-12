@@ -54,17 +54,14 @@ class RssSerializer
     private function getItems($url)
     {
         // TODO : handle feed format exception...
-        $data = file_get_contents($url);
-
-        $content = strstr($data, '<?xml');
-        if (!$content && 0 === strpos($data, '<rss')) {
-            $content = $data;
-        }
-
         try {
-            $items = $this->rssReader
-              ->getReaderFor($content)
-              ->getFeedItems(10);
+            $data = file_get_contents($url);
+            $content = strstr($data, '<?xml');
+
+            if (!$content && 0 === strpos($data, '<rss')) {
+                $content = $data;
+            }
+            $items = $this->rssReader->getReaderFor($content)->getFeedItems(10);
         } catch (\Exception $e) {
             $items = [];
         }
