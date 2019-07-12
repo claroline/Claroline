@@ -973,21 +973,6 @@ class UserManager
         return $options;
     }
 
-    public function switchDesktopMode(User $user)
-    {
-        $options = $this->getUserOptions($user);
-        $mode = $options->getDesktopMode();
-
-        if (UserOptions::READ_ONLY_MODE === $mode) {
-            $options->setDesktopMode(UserOptions::EDITION_MODE);
-        } else {
-            $options->setDesktopMode(UserOptions::READ_ONLY_MODE);
-        }
-        $this->persistUserOptions($options);
-
-        return $options;
-    }
-
     public function getAllVisibleUsersIdsForUserPicker(User $user)
     {
         $usersIds = [];

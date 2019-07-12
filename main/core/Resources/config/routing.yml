@@ -9,10 +9,6 @@ claro_security_logout:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
-claro_index:
-    resource: "@ClarolineCoreBundle/Controller/HomeController.php"
-    type: annotation
-
 claro_redirect:
     resource: "@ClarolineCoreBundle/Controller/RedirectController.php"
     type: annotation
@@ -21,33 +17,8 @@ claro_locale:
     resource: "@ClarolineCoreBundle/Controller/LocaleController.php"
     type: annotation
 
-claro_content_typeerror:
-    path: /content/typeerror
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Home:typeerror.html.twig'
-
-claro_content_confirm:
-    path: /content/confirm
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:home:confirm.html.twig'
-
-claro_content_link:
-    path: /content/link
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:home:link.html.twig'
-
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
-    type: annotation
-
-claro_maintenance:
-    resource: "@ClarolineCoreBundle/Controller/MaintenanceController.php"
     type: annotation
 
 claro_log:

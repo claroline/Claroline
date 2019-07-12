@@ -5,7 +5,7 @@ import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
-import {getTool} from '#/main/core/administration'
+import {constants as toolConst} from '#/main/core/tool/constants'
 import {ToolMain} from '#/main/core/tool/containers/main'
 
 const AdministrationMain = (props) =>
@@ -29,9 +29,13 @@ const AdministrationMain = (props) =>
                   // tool is enabled for the admin
                   const AdministrationTool = (
                     <ToolMain
-                      getApp={getTool}
-                      open={props.openTool}
+                      path="/admin"
                       toolName={routeProps.match.params.toolName}
+                      toolContext={{
+                        type: toolConst.TOOL_ADMINISTRATION,
+                        url: ['claro_admin_open_tool', {toolName: routeProps.match.params.toolName}],
+                        data: {}
+                      }}
                     />
                   )
 
@@ -60,8 +64,7 @@ AdministrationMain.propTypes = {
   tools: T.arrayOf(T.shape({
 
   })),
-  open: T.func.isRequired,
-  openTool: T.func.isRequired
+  open: T.func.isRequired
 }
 
 AdministrationMain.defaultProps = {

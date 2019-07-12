@@ -37,22 +37,30 @@ HistoryDropdown.propTypes = {
 
 }
 
-const HistoryMenu = () =>
-  <Button
-    id="app-favorites"
-    type={MENU_BUTTON}
-    className="app-header-btn app-header-item"
-    icon="fa fa-fw fa-history"
-    label={trans('history')}
-    tooltip="bottom"
-    menu={
-      <HistoryDropdown
+const HistoryMenu = (props) => {
+  if (!props.isAuthenticated) {
+    return null
+  }
 
-      />
-    }
-  />
+  return (
+    <Button
+      id="app-history"
+      type={MENU_BUTTON}
+      className="app-header-btn app-header-item"
+      icon="fa fa-fw fa-history"
+      label={trans('history')}
+      tooltip="bottom"
+      menu={
+        <HistoryDropdown
+
+        />
+      }
+    />
+  )
+}
 
 HistoryMenu.propTypes = {
+  isAuthenticated: T.bool.isRequired,
   history: T.arrayOf(T.shape({
 
   }))

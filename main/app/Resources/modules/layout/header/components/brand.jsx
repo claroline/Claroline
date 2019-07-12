@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config'
-import {url} from '#/main/app/api'
+import {LinkButton} from '#/main/app/buttons/link'
 
 // todo add alt to logo
 // todo make colorized svg work
@@ -18,21 +18,11 @@ const StandardLogo = props =>
     src={asset(props.url)}
   />
 
-const HomeLink = (props) => props.redirectHome ?
-  <a className="app-header-item app-header-brand hidden-xs" href={url(['claro_index'])}>
-    {props.children}
-  </a> :
-  <div className="app-header-item app-header-brand hidden-xs">
-    {props.children}
-  </div>
-
-HomeLink.propTypes = {
-  redirectHome: T.bool.isRequired,
-  children: T.any
-}
-
 const HeaderBrand = props =>
-  <HomeLink redirectHome={props.redirectHome}>
+  <LinkButton
+    className="app-header-item app-header-brand hidden-xs"
+    target="/"
+  >
     {props.logo && props.logo.colorized &&
       <SvgLogo url={props.logo.url} />
     }
@@ -50,7 +40,7 @@ const HeaderBrand = props =>
         }
       </h1>
     }
-  </HomeLink>
+  </LinkButton>
 
 
 HeaderBrand.propTypes = {
@@ -60,8 +50,7 @@ HeaderBrand.propTypes = {
   }),
   title: T.string.isRequired,
   subtitle: T.string,
-  showTitle: T.bool,
-  redirectHome: T.bool.isRequired
+  showTitle: T.bool
 }
 
 export {

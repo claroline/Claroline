@@ -2,7 +2,6 @@
   "webpack": {
     "entry": {
       "transfer-management": "tools/transfer/bootstrap",
-      "user-registration": "user/registration",
       "user-profile": "user/profile",
       "user-tracking": "user/tracking",
       "workspace-user-management": "workspace/user",

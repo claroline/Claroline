@@ -1,9 +1,6 @@
 import {bootstrap} from '#/main/app/dom/bootstrap'
 
-import {App} from '#/main/core/tools/home'
-
-// generate application
-const AdminDesktopApp = new App()
+import AdminDesktopApp from '#/main/core/tools/home'
 
 // mount the react application
 bootstrap('.desktop-container', AdminDesktopApp.component, AdminDesktopApp.store, AdminDesktopApp.initialData)

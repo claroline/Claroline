@@ -5,11 +5,6 @@ import {selectors} from '#/main/app/security/login/store/selectors'
 
 export const reducer = combineReducers({
   /**
-   * Does the self registration enabled (to know if we need to display the button) ?
-   */
-  registration: makeReducer(false),
-
-  /**
    * The list of enabled sso for the platform.
    */
   sso: makeReducer([]),

@@ -456,7 +456,7 @@ class ResourceController
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->find(ResourceNode::class, $id);
         if (!$resourceNode) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException('Resource not found');
         }
 
         return new JsonResponse(

@@ -3,11 +3,22 @@ import {PropTypes as T} from 'prop-types'
 
 import {Await} from '#/main/app/components/await'
 
+import {constants} from '#/main/core/tool/constants'
+import {getTool} from '#/main/core/tools'
+import {getTool as getAdminTool} from '#/main/core/administration'
+
 const ToolMenu = props => {
   if (props.name && props.loaded) {
+    let app
+    if (constants.TOOL_ADMINISTRATION === props.contextType) {
+      app = getAdminTool(props.name)
+    } else {
+      app = getTool(props.name)
+    }
+
     return (
       <Await
-        for={props.getApp(props.name)}
+        for={app}
         then={(module) => {
           if (module.default.menu) {
             return createElement(module.default.menu, {
@@ -29,8 +40,8 @@ const ToolMenu = props => {
 ToolMenu.propTypes = {
   path: T.string,
   name: T.string,
+  contextType: T.string,
   loaded: T.bool.isRequired,
-  getApp: T.func.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

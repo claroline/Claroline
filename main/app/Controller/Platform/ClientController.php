@@ -132,16 +132,18 @@ class ClientController
 
         return [
             'meta' => [],
-            'maintenance' => MaintenanceHandler::isMaintenanceEnabled(),
+            'maintenance' => [
+                'enabled' => MaintenanceHandler::isMaintenanceEnabled(),
+                'message' => $this->configHandler->getParameter('maintenance.message'),
+            ],
             'impersonated' => $this->isImpersonated(),
 
             'header' => [
                 'menus' => $this->configHandler->getParameter('header_menu'),
                 'display' => [
+                    'name' => $this->configHandler->getParameter('name_active'),
                     'about' => $this->configHandler->getParameter('show_about_button'),
                     'help' => $this->configHandler->getParameter('show_help_button'),
-                    'registration' => $this->configHandler->getParameter('allow_self_registration'),
-                    'name' => $this->configHandler->getParameter('name_active'),
                 ],
 
                 'notifications' => [

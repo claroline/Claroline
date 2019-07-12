@@ -621,7 +621,6 @@
     "locked": "Vergrendeld",
     "login": "Verbinding",
     "login_failure": "De verbinding is mislukt. Kijk na of uw gebruikersnaam en uw wachtwoord correct zijn.",
-    "login_target_route_option": "",
     "login_with_third_party": "Verbinden met %name%",
     "logout": "Zich uitloggen",
     "logs": "Toezicht",

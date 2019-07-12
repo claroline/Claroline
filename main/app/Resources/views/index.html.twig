@@ -47,10 +47,11 @@
             class="app-container"
             role="presentation"
 
-            data-maintenance="{{ maintenance ? 'true' : 'false' }}"
+            data-maintenance="{{ maintenance | json_encode | raw | escape }}"
             data-impersonated="{{ impersonated ? 'true' : 'false' }}"
             data-current-user="{{ app.user | api_serialize | json_encode | raw | escape }}"
             data-header="{{ header | json_encode | raw | escape }}"
+            data-config="{{ platform_config() | json_encode | raw | escape }}"
         ></div>
 
         {# Anchor for UI portals (eg. modals, walkthroughs) #}

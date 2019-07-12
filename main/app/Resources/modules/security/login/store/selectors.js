@@ -5,11 +5,6 @@ const FORM_NAME = `${STORE_NAME}.form`
 
 const store = (state) => state[STORE_NAME]
 
-const registration = createSelector(
-  [store],
-  (store) => store.registration
-)
-
 const sso = createSelector(
   [store],
   (store) => store.sso
@@ -24,7 +19,6 @@ export const selectors = {
   STORE_NAME,
   FORM_NAME,
 
-  registration,
   sso,
   primarySso
 }

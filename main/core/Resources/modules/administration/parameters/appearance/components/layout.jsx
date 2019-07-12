@@ -33,10 +33,6 @@ const Layout = () =>
             name: 'display.logo',
             type: 'image',
             label: trans('logo')
-          }, {
-            name: 'display.logo_redirect_home',
-            type: 'boolean',
-            label: trans('logo_redirect_home')
           }
         ]
       }, {

@@ -6,7 +6,6 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
-import {getTool} from '#/main/core/administration'
 
 const AdministrationMenu = props =>
   <MenuMain
@@ -47,9 +46,7 @@ const AdministrationMenu = props =>
     ]}
   >
     <ToolMenu
-      path="/admin"
       opened={'tool' === props.section}
-      getApp={getTool}
       toggle={() => props.changeSection('tool')}
     />
   </MenuMain>

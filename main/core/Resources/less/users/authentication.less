@@ -2,13 +2,6 @@
  * Authentication styles.
  */
 
-.authentication-help {
-    font-style: italic;
-    color: #666;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
 
 /**
  * Login modal
@@ -33,7 +26,7 @@
  * Login page
  */
 
-.app-login {
+.login-page {
     background-color: @body-bg; // fallback to body color if theme has no image
 
     // styles for bg image
@@ -42,54 +35,35 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
-}
 
-.login-page {
     // vertically center the login form in the page
     // if there is lots of space
     justify-content: center;
-    margin: 0 auto;
+    //margin: 0 auto;
     
     // makes logo, title, info text the same width as login form
-    max-width: floor(@login-max-width / 2);
+    //max-width: floor(@login-max-width / 2);
 
-    &.login-with-sso {
+    /*&.login-with-sso {
         max-width: @login-max-width;
+    }*/
+
+    .login-logo {
+        align-self: center; // avoid image to be stretched
+        margin-bottom: @component-margin-bottom;
+        max-width: 100%;
     }
-}
 
-.login-logo {
-    align-self: center; // avoid image to be stretched
-    margin-bottom: @component-margin-bottom;
-    max-width: 100%;
-}
+    .login-title {
+        margin-top: 0;
+        margin-bottom: @component-margin-bottom;
+    }
 
-.login-title {
-    margin-top: 0;
-    margin-bottom: @component-margin-bottom;
-}
-
-.login-info {
-    text-align: justify;
-    max-width: @login-max-width;
-    align-self: center;
-    margin-bottom: @component-margin-bottom;
-}
-
-.login-container {
-    width: 100%;
-    margin: 0 auto @component-margin-bottom;
-    
-    // for cases when the auth block is not displayed in the login page
-    max-width: floor(@login-max-width / 2);
-    &.login-with-sso {
+    .login-info {
+        text-align: justify;
         max-width: @login-max-width;
-    }
-    
-    form {
-        .btn-primary {
-            margin-top: 20px; // It should be 30px, but the remember-me checkbox adds a 10px margin-bottom
-        }
+        align-self: center;
+        margin-bottom: @component-margin-bottom;
     }
 }
 
@@ -104,6 +78,30 @@
     border: 1px solid @panel-default-border;
     box-shadow: @panel-box-shadow;
     background-color: @panel-bg;
+    width: 100%;
+    margin: 0 auto @component-margin-bottom;
+
+    // for cases when the auth block is not displayed in the login page
+    max-width: floor(@login-max-width / 2);
+    &.login-with-sso {
+        max-width: @login-max-width;
+    }
+
+    .form-primary-section {
+        border: none;
+        box-shadow: none;
+
+        .panel-body {
+            padding: 0;
+        }
+    }
+
+    .authentication-help {
+        font-style: italic;
+        color: #666;
+        margin-bottom: 30px;
+        text-align: center;
+    }
 
     .authentication-column {
         position: relative;
@@ -171,7 +169,6 @@
 @media (max-width: @screen-sm-min) {
     // In screen < SM, Claroline login form and SSO btns
     // are displayed vertically
-    .login_form_container, // for retro compatibility
     .login-container {
         flex-direction: column;
 
@@ -208,8 +205,12 @@
 }
 
 .btn-registration {
-    max-width: @login-max-width;
     align-self: center;
+    // for cases when the auth block is not displayed in the login page
+    max-width: floor(@login-max-width / 2);
+    &.login-with-sso {
+        max-width: @login-max-width;
+    }
 }
 
 .btn-third-party-login {

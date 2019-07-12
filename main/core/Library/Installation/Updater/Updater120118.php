@@ -76,7 +76,6 @@ class Updater120118 extends Updater
                     'footer_workspaces' => $this->getParameter($parameters, 'footer_workspaces'),
                     'header_locale' => $this->getParameter($parameters, 'header_locale'),
                     'resource_icon_set' => $this->getParameter($parameters, 'resource_icon_set'),
-                    'logo_redirect_home' => $this->getParameter($parameters, 'logo_redirect_home'),
                     'name' => $this->getParameter($parameters, 'name'),
                     'secondary_name' => $this->getParameter($parameters, 'secondary_name'),
                     'name_active' => $this->getParameter($parameters, 'name_active'),
@@ -142,7 +141,6 @@ class Updater120118 extends Updater
                 'authentication' => [
                     'redirect_after_login_option' => $this->getParameter($parameters, 'redirect_after_login_option'),
                     'redirect_after_login_url' => $this->getParameter($parameters, 'redirect_after_login_url'),
-                    'login_target_route' => $this->getParameter($parameters, 'login_target_route'),
                     //used by cas
                     'direct_third_party' => $this->getParameter($parameters, 'direct_third_party_authentication'),
                 ],

@@ -17,29 +17,34 @@ use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LockManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @EXT\Route("/home")
  */
 class HomeController extends AbstractApiController
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var ObjectManager */
+    private $om;
+    /** @var TranslatorInterface */
+    private $translator;
     /** @var FinderProvider */
     private $finder;
     /** @var Crud */
     private $crud;
     /** @var HomeTabSerializer */
     private $serializer;
-    /** @var ObjectManager */
-    private $om;
     /** @var LockManager */
     private $lockManager;
 
@@ -47,63 +52,87 @@ class HomeController extends AbstractApiController
      * HomeController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"      = @DI\Inject("claroline.api.finder"),
-     *     "lockManager" = @DI\Inject("claroline.manager.lock_manager"),
-     *     "crud"        = @DI\Inject("claroline.api.crud"),
-     *     "serializer"  = @DI\Inject("claroline.serializer.home_tab"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "translator"    = @DI\Inject("translator"),
+     *     "finder"        = @DI\Inject("claroline.api.finder"),
+     *     "lockManager"   = @DI\Inject("claroline.manager.lock_manager"),
+     *     "crud"          = @DI\Inject("claroline.api.crud"),
+     *     "serializer"    = @DI\Inject("claroline.serializer.home_tab")
      * })
      *
-     * @param FinderProvider    $finder
-     * @param Crud              $crud
-     * @param HomeTabSerializer $serializer
-     * @param ObjectManager     $om
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ObjectManager                 $om
+     * @param TranslatorInterface           $translator
+     * @param FinderProvider                $finder
+     * @param Crud                          $crud
+     * @param LockManager                   $lockManager
+     * @param HomeTabSerializer             $serializer
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
+        TranslatorInterface $translator,
         FinderProvider $finder,
         Crud $crud,
         LockManager $lockManager,
-        HomeTabSerializer $serializer,
-        ObjectManager $om
+        HomeTabSerializer $serializer
     ) {
+        $this->authorization = $authorization;
+        $this->om = $om;
+        $this->translator = $translator;
         $this->finder = $finder;
         $this->crud = $crud;
         $this->lockManager = $lockManager;
         $this->serializer = $serializer;
-        $this->om = $om;
     }
 
     /**
-     * @EXT\Route("/workspace/{workspace}", name="apiv2_home_get_workspace", options={"method_prefix"=false})
-     * @EXT\Method("GET")
-     * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     * Get the platform home data.
      *
-     * @param Request $request
-     * @param string  $context
-     * @param string  $contextId
+     * @EXT\Route("/", name="apiv2_home", options={"method_prefix"=false})
+     * @EXT\Method("GET")
      *
      * @return JsonResponse
      */
-    public function getWorkspaceAction(Request $request, Workspace $workspace)
+    public function homeAction()
     {
-        $orderedTabs = [];
+        $tabs = $this->finder->search(
+            HomeTab::class,
+            ['filters' => ['type' => HomeTab::TYPE_HOME]]
+        );
 
-        $tabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['workspace' => $workspace->getUuid()],
-        ]);
-
-        // but why ? finder should never give you an empty row
         $tabs = array_filter($tabs['data'], function ($data) {
             return $data !== [];
         });
+        $orderedTabs = [];
 
         foreach ($tabs as $tab) {
             $orderedTabs[$tab['position']] = $tab;
         }
-
         ksort($orderedTabs);
 
-        return new JsonResponse(array_values($orderedTabs));
+        if (0 === count($orderedTabs)) {
+            $defaultTab = new HomeTab();
+            $defaultTab->setType(HomeTab::TYPE_HOME);
+            $this->om->persist($defaultTab);
+            $defaultHomeTabConfig = new HomeTabConfig();
+            $defaultHomeTabConfig->setHomeTab($defaultTab);
+            $defaultHomeTabConfig->setName($this->translator->trans('home', [], 'platform'));
+            $defaultHomeTabConfig->setLongTitle($this->translator->trans('home', [], 'platform'));
+            $defaultHomeTabConfig->setLocked(true);
+            $defaultHomeTabConfig->setTabOrder(0);
+            $this->om->persist($defaultHomeTabConfig);
+            $this->om->flush();
+            $orderedTabs[] = $this->serializer->serialize($defaultTab);
+        }
+
+        return new JsonResponse([
+            'editable' => $this->authorization->isGranted('ROLE_ADMIN') ||
+                $this->authorization->isGranted('ROLE_HOME_MANAGER'),
+            'administration' => false,
+            'tabs' => array_values($orderedTabs),
+        ]);
     }
 
     /**
@@ -174,7 +203,7 @@ class HomeController extends AbstractApiController
      *
      * @return JsonResponse
      */
-    public function adminAction(Request $request, $context)
+    public function adminUpdateAction(Request $request, $context)
     {
         // grab tabs data
         $tabs = $this->decodeRequest($request);

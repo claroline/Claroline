@@ -35,8 +35,8 @@ class PlatformDefaults implements ParameterProviderInterface
     {
         return [
             'home' => [
-              'redirection_type' => null,
-              'redirection_url' => null,
+              'type' => 'none',
+              'data' => null,
             ],
             'profile' => [
               'roles_confidential' => [],
@@ -112,7 +112,6 @@ class PlatformDefaults implements ParameterProviderInterface
               'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
               'redirect_after_login_url' => null,
               'direct_third_party' => false,
-              'login_target_route' => 'claro_security_login',
             ],
             'registration' => [
               'self' => false,
@@ -157,7 +156,6 @@ class PlatformDefaults implements ParameterProviderInterface
               'resource_icon_set' => 'claroline',
               'name' => 'Claroline Connect',
               'secondary_name' => 'Easy & flexible learning',
-              'logo_redirect_home' => true,
               'name_active' => true,
             ],
             'mailer' => [

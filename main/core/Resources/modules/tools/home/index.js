@@ -6,14 +6,7 @@ import {reducer} from '#/main/core/tools/home/store'
 
 /**
  * HomeTool application.
- *
- * @constructor
  */
-export const App = () => ({
-  component: HomeTool,
-  styles: ['claroline-distribution-main-core-home-tool']
-})
-
 export default {
   component: HomeTool,
   menu: HomeMenu,

@@ -114,8 +114,7 @@ class CasServerConfigurationFactory
             $this->platformConfigHandler->getParameter('cas_server_logout_url'),
             $this->platformConfigHandler->getParameter('cas_server_validation_url'),
             $this->platformConfigHandler->getParameter('cas_server_login_option'),
-            $this->platformConfigHandler->getParameter('cas_server_login_name'),
-            $this->platformConfigHandler->getParameter('login_target_route')
+            $this->platformConfigHandler->getParameter('cas_server_login_name')
         );
     }
 }

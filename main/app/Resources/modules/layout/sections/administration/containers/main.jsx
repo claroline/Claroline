@@ -21,10 +21,6 @@ const AdministrationMain = withRouter(
           }
 
           return dispatch(actions.open())
-        },
-
-        openTool(toolName) {
-          return dispatch(actions.openTool(toolName))
         }
       })
     )(AdministrationMainComponent)

@@ -440,6 +440,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __construct()
     {
         parent::__construct();
+
+        $this->refreshUuid();
+        $this->setEmailValidationHash(uniqid('', true));
+
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->wkUserQueues = new ArrayCollection();
@@ -447,12 +451,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->orderedTools = new ArrayCollection();
         $this->fieldsFacetValue = new ArrayCollection();
-        $this->organizations = new ArrayCollection();
         $this->scheduledTasks = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
-        $this->refreshUuid();
-        $this->setEmailValidationHash(uniqid('', true));
     }
 
     /**

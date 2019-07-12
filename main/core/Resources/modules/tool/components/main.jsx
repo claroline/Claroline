@@ -1,10 +1,15 @@
 import React, {createElement, Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {theme} from '#/main/app/config'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
+
+import {constants} from '#/main/core/tool/constants'
+import {getTool} from '#/main/core/tools'
+import {getTool as getAdminTool} from '#/main/core/administration'
 
 const Tool = props => {
   if (props.loaded) {
@@ -35,17 +40,20 @@ Tool.propTypes = {
 
 class ToolMain extends Component {
   componentDidMount() {
-    this.props.open(this.props.toolName)
+    this.props.open(this.props.toolName, this.props.toolContext, this.props.path)
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.toolName !== prevProps.toolName) {
+    if (this.props.toolName !== prevProps.toolName
+      || this.props.toolContext.type !== prevProps.toolContext.type
+      || get(this.props.toolContext, 'data.id') !== get(prevProps.toolContext, 'data.id')
+    ) {
       if (prevProps.toolName) {
         this.props.close()
       }
 
       if (this.props.toolName) {
-        this.props.open(this.props.toolName)
+        this.props.open(this.props.toolName, this.props.toolContext, this.props.path)
       }
     }
   }
@@ -55,11 +63,16 @@ class ToolMain extends Component {
   }
 
   render() {
-    const props = this.props
+    let app
+    if (constants.TOOL_ADMINISTRATION === this.props.toolContext.type) {
+      app = getAdminTool(this.props.toolName)
+    } else {
+      app = getTool(this.props.toolName)
+    }
 
     return (
       <Await
-        for={props.getApp(props.toolName)}
+        for={app}
         placeholder={
           <ContentLoader
             size="lg"
@@ -68,15 +81,15 @@ class ToolMain extends Component {
         }
         then={(module) => {
           if (module.default) {
-            const ToolApp = withReducer(props.toolName, module.default.store)(Tool)
+            const ToolApp = withReducer(this.props.toolName, module.default.store)(Tool)
 
             return (
               <ToolApp
-                loaded={props.loaded}
+                loaded={this.props.loaded}
                 styles={module.default.styles}
               >
                 {module.default.component && createElement(module.default.component, {
-                  path: props.path
+                  path: this.props.path + '/' + this.props.toolName
                 })}
               </ToolApp>
             )
@@ -90,13 +103,22 @@ class ToolMain extends Component {
 }
 
 ToolMain.propTypes = {
-  path: T.string.isRequired,
+  path: T.string,
   toolName: T.string.isRequired,
+  toolContext: T.shape({
+    type: T.string.isRequired,
+    url: T.oneOfType([T.array, T.string]),
+    data: T.object
+  }).isRequired,
 
-  getApp: T.func.isRequired,
+  // from store
   loaded: T.bool.isRequired,
   open: T.func.isRequired,
   close: T.func.isRequired
+}
+
+ToolMain.defaultProps = {
+  path: ''
 }
 
 export {

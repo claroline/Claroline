@@ -6,7 +6,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-const WorkspacesMenu = (props) =>
+const ParametersMenu = (props) =>
   <MenuSection
     title={trans('parameters')}
   >
@@ -24,11 +24,11 @@ const WorkspacesMenu = (props) =>
     />
   </MenuSection>
 
-WorkspacesMenu.propTypes = {
+ParametersMenu.propTypes = {
   path: T.string,
   creatable: T.bool.isRequired
 }
 
 export {
-  WorkspacesMenu
+  ParametersMenu
 }

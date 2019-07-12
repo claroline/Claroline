@@ -162,6 +162,16 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->userManager->logUser($user, $fromApi);
     }
 
+    /**
+     * @param Request        $request
+     * @param TokenInterface $token
+     *
+     * @return RedirectResponse
+     *
+     * @deprecated
+     *
+     * @todo remove me
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->tokenStorage->getToken()->getUser();

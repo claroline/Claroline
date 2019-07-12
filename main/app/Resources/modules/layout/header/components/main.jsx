@@ -31,7 +31,6 @@ const HeaderMain = props =>
           title={props.title}
           subtitle={props.subtitle}
           showTitle={props.display.name}
-          redirectHome={props.redirectHome}
         />
       }
 
@@ -58,8 +57,7 @@ const HeaderMain = props =>
         currentUser={props.currentUser}
         authenticated={props.authenticated}
         impersonated={props.impersonated}
-        login={props.loginUrl}
-        registration={props.registrationUrl}
+        registration={props.registration}
         tools={props.tools}
         locale={props.locale}
         actions={[
@@ -135,10 +133,8 @@ HeaderMain.propTypes = {
   tools: T.array,
   notificationTools: T.array,
   administration: T.array,
-  loginUrl: T.string.isRequired,
   helpUrl: T.string,
-  registrationUrl: T.string,
-  redirectHome: T.bool.isRequired,
+  registration: T.bool,
   startWalkthrough: T.func.isRequired,
   toggleMenu: T.func.isRequired
 }

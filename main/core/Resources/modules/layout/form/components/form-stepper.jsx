@@ -19,7 +19,7 @@ const FormStepperNav = props =>
     {props.steps.map((step, stepIndex) =>
       <NavLink
         key={stepIndex}
-        to={step.path}
+        to={props.path+step.path}
         exact={step.exact}
         className={classes('form-stepper-link', {
           done: props.activeIndex > stepIndex
@@ -32,6 +32,7 @@ const FormStepperNav = props =>
   </nav>
 
 FormStepperNav.propTypes = {
+  path: T.string,
   activeIndex: T.number.isRequired,
   steps: T.arrayOf(T.shape({
     title: T.string.isRequired,
@@ -55,7 +56,7 @@ const FormStepperFooter = props =>
     {props.nextStep && !props.action &&
       <a
         className="btn btn-next btn-link"
-        href={`#${props.nextStep}`}
+        href={`#${props.path}${props.nextStep}`}
       >
         {trans('form_next_step')}
         <span className="fa fa-angle-double-right" />
@@ -81,6 +82,7 @@ const FormStepperFooter = props =>
   </div>
 
 FormStepperFooter.propTypes = {
+  path: T.string,
   nextStep: T.string,
   //find a much better definition
   action: T.shape(ButtonTypes.propTypes),
@@ -92,7 +94,7 @@ FormStepperFooter.propTypes = {
 }
 
 const FormStepper = props => {
-  let activeIndex = props.steps.findIndex(step => props.location && step.path === props.location.pathname)
+  let activeIndex = props.steps.findIndex(step => props.location && props.path+step.path === props.location.pathname)
   if (-1 === activeIndex) {
     activeIndex = 0
   }
@@ -100,16 +102,19 @@ const FormStepper = props => {
   return (
     <div className={classes('form-stepper', props.className)}>
       <FormStepperNav
+        path={props.path}
         steps={props.steps}
         activeIndex={activeIndex}
       />
 
       <Routes
+        path={props.path}
         routes={props.steps}
         redirect={props.redirect}
       />
 
       <FormStepperFooter
+        path={props.path}
         action={props.steps[activeIndex].action}
         nextStep={props.steps[activeIndex+1] ? props.steps[activeIndex+1].path : undefined}
         submit={props.submit}
@@ -119,6 +124,7 @@ const FormStepper = props => {
 }
 
 FormStepper.propTypes = {
+  path: T.string,
   className: T.string,
   location: T.shape({
     pathname: T.string

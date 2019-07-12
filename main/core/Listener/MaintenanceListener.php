@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Router;
@@ -25,20 +25,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class MaintenanceListener
 {
-    /**
-     * The list of public routes of the application.
-     * NB. This is not the best place to declare it.
-     *
-     * @var array
-     */
-    const PUBLIC_ROUTES = [
-        'claro_index',
-
-        // allow login to let administrator access the platform.
-        'claro_security_login',
-        'claro_security_login_check',
-    ];
-
     /**
      * PlatformListener constructor.
      *
@@ -87,13 +73,11 @@ class MaintenanceListener
                 $connected = true;
             }
         }
-        $currentUri = $this->requestStack->getMasterRequest()->getUri();
-        $url = $this->router->generate('claroline_maintenance_alert');
 
-        if (!$isAdmin && $connected && $this->config->getParameter('maintenance.enable') && !strpos($currentUri, $url)) {
-            $response = new RedirectResponse($url);
-
-            $event->setResponse($response);
+        if (!$isAdmin && $connected && $this->config->getParameter('maintenance.enable')) {
+            $event->setResponse(
+                new JsonResponse(null, 401)
+            );
         }
     }
 }

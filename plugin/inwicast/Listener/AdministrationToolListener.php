@@ -12,7 +12,6 @@
 namespace Icap\InwicastBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Listener\Administration\AdministrationToolListener as BaseAdministrationToolListener;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,7 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  *
  * @DI\Service()
  */
-class AdministrationToolListener extends BaseAdministrationToolListener
+class AdministrationToolListener
 {
     /**
      * @DI\Observe("administration_tool_inwicast_configuration")

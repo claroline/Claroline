@@ -8,7 +8,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {ListForm} from '#/main/app/content/list/parameters/containers/form'
 import {selectors} from '#/main/core/resources/directory/editor/store'
 
-import resourcesList from '#/main/core/data/sources/resources'
+import resourcesSource from '#/main/core/data/sources/resources'
 
 import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-types'
 
@@ -43,7 +43,7 @@ const EditorMain = (props) =>
       level={3}
       name={selectors.FORM_NAME}
       dataPart="list"
-      list={resourcesList.parameters}
+      list={resourcesSource.parameters}
       parameters={props.directory.list}
     />
   </FormData>

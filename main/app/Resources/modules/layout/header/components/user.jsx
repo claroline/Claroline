@@ -52,19 +52,19 @@ const UserMenu = props =>
     {!props.authenticated &&
       <div className="app-current-user-body">
         <Button
-          type={URL_BUTTON}
+          type={LINK_BUTTON}
           className="btn btn-block btn-emphasis"
           label={trans('login', {}, 'actions')}
           primary={true}
-          target={props.login}
+          target="/login"
         />
 
         {props.registration &&
           <Button
-            type={URL_BUTTON}
+            type={LINK_BUTTON}
             className="btn btn-block"
             label={trans('self-register', {}, 'actions')}
-            target={props.registration}
+            target="/registration"
           />
         }
       </div>
@@ -151,8 +151,7 @@ UserMenu.propTypes = {
   impersonated: T.bool.isRequired,
   tools: T.array.isRequired,
   actions: T.array.isRequired,
-  login: T.string.isRequired,
-  registration: T.string,
+  registration: T.bool,
   currentUser: T.shape({
     id: T.string,
     name: T.string,
@@ -189,7 +188,6 @@ const HeaderUser = props =>
         authenticated={props.authenticated}
         impersonated={props.impersonated}
         currentUser={props.currentUser}
-        login={props.login}
         registration={props.registration}
         tools={props.tools}
         locale={props.locale}
@@ -199,12 +197,11 @@ const HeaderUser = props =>
   />
 
 HeaderUser.propTypes = {
-  login: T.string.isRequired,
   tools: T.array,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
-  registration: T.string,
+  registration: T.bool,
   maintenance: T.bool,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,

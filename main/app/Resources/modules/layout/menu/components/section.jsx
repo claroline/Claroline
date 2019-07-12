@@ -27,7 +27,7 @@ MenuSection.propTypes = {
   title: T.string.isRequired,
   opened: T.bool.isRequired,
   toggle: T.func.isRequired,
-  children: T.element
+  children: T.node
 }
 
 export {

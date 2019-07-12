@@ -51,6 +51,26 @@ class Updater120500 extends Updater
                 'favourites',
             ]);
         }
+
+        $homeType = $this->configHandler->getParameter('home.redirection_type');
+        $homeData = null;
+        if ('login' === $homeType) {
+            $homeType = 'none';
+        } elseif ('new' === $homeType) {
+            $homeType = 'tool';
+        } elseif ('url' === $homeType) {
+            $homeUrl = $this->configHandler->getParameter('home.redirection_url');
+            if (!empty($homeUrl)) {
+                $homeData = $homeUrl;
+            } else {
+                $homeType = 'none';
+            }
+        }
+
+        $this->configHandler->setParameter('home', [
+            'type' => $homeType,
+            'data' => $homeData,
+        ]);
     }
 
     private function removeTool($toolName, $admin = false)

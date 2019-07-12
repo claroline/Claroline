@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilename;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
@@ -95,6 +94,7 @@ class ClientSerializer
      * @param PluginManager                $pluginManager
      * @param IconSetManager               $iconManager
      * @param ResourceTypeSerializer       $resourceTypeSerializer
+     * @param EventDispatcherInterface     $eventDispatcher
      */
     public function __construct(
         $env,
@@ -138,18 +138,17 @@ class ClientSerializer
         ]);
 
         $data = [
-            'maintenance' => MaintenanceHandler::isMaintenanceEnabled(),
             'logo' => $logo ? [
                 'url' => $logo->getUrl(),
                 'colorized' => 'image/svg+xml' === $logo->getMimeType(),
             ] : null,
-            'logo_redirect_home' => $this->config->getParameter('logo_redirect_home'),
             'name' => $this->config->getParameter('name'),
             'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale
             'version' => $this->versionManager->getDistributionVersion(),
             'environment' => $this->env,
-            'links' => $this->serializeLinks(),
+            'helpUrl' => $this->config->getParameter('help_url'),
+            'selfRegistration' => $this->config->getParameter('allow_self_registration'),
             'asset' => $this->assets->getUrl(''),
             'server' => [
                 'protocol' => $request->isSecure() || $this->config->getParameter('ssl_enabled') ? 'https' : 'http',
@@ -161,6 +160,7 @@ class ClientSerializer
             'openGraph' => [
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],
+            'home' => $this->config->getParameter('home'),
             'resources' => [
                 'types' => array_map(function (ResourceType $resourceType) {
                     return $this->resourceTypeSerializer->serialize($resourceType);
@@ -224,22 +224,6 @@ class ClientSerializer
                 $icons->getDefaultIcons()->getAllIcons(),
                 $icons->getSetIcons()->getAllIcons()
             ))),
-        ];
-    }
-
-    private function serializeLinks()
-    {
-        $loginTargetRoute = $this->config->getParameter('login_target_route');
-        if (!$loginTargetRoute) {
-            $loginTarget = $this->router->generate('claro_security_login');
-        } else {
-            $loginTarget = $this->router->getRouteCollection()->get($loginTargetRoute) ? $this->router->generate($loginTargetRoute) : $loginTargetRoute;
-        }
-
-        return [
-            'help' => $this->config->getParameter('help_url'),
-            'registration' => $this->router->generate('claro_user_registration'),
-            'login' => $loginTarget,
         ];
     }
 }
