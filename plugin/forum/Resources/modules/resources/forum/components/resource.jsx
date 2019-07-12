@@ -15,7 +15,6 @@ import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 
 const ForumResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-forum-forum-resource']}
     primaryAction="post"
     customActions={[
       {
@@ -23,13 +22,13 @@ const ForumResource = props =>
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         displayed: !!get(props.forum, 'display.showOverview'),
-        target: '/',
+        target: props.path,
         exact: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list-ul',
         label: trans('see_subjects', {}, 'forum'),
-        target: '/subjects',
+        target: `${props.path}/subjects`,
         exact: true
       }, {
         type: CALLBACK_BUTTON,
@@ -49,7 +48,7 @@ const ForumResource = props =>
         label: trans('blocked_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
         displayed: !!get(props.forum, 'restrictions.moderator'),
-        target: '/moderation/blocked/subjects',
+        target: `${props.path}/moderation/blocked/subjects`,
         exact: true
       }, {
         type: LINK_BUTTON,
@@ -57,12 +56,13 @@ const ForumResource = props =>
         label: trans('flagged_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
         displayed: !!get(props.forum, 'restrictions.moderator'),
-        target: '/moderation/flagged/subjects',
+        target: `${props.path}/moderation/flagged/subjects`,
         exact: true
       }
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/edit',
@@ -79,7 +79,11 @@ const ForumResource = props =>
           component: Player
         },  {
           path: '/moderation',
-          component: Moderation
+          render: () => {
+            const component = <Moderation path={props.path} />
+
+            return component
+          }
         }
       ]}
       redirect={[
@@ -94,6 +98,7 @@ const ForumResource = props =>
   </ResourcePage>
 
 ForumResource.propTypes = {
+  path: T.string.isRequired,
   currentUser: T.object,
   forum: T.shape(ForumType.propTypes).isRequired,
   editable: T.bool.isRequired,

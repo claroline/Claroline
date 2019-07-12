@@ -7,13 +7,15 @@ import {trans} from '#/main/app/intl/translation'
 import {number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
-import {HtmlText} from '#/main/core/layout/components/html-text'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
+
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {selectors} from '#/plugin/forum/resources/forum/store'
 import {LastMessages} from '#/plugin/forum/resources/forum/overview/components/last-messages'
 import {ForumInfo} from '#/plugin/forum/resources/forum/overview/components/forum-info'
 
@@ -40,7 +42,7 @@ const OverviewComponent = props =>
             <Button
               label={trans('see_subjects', {}, 'forum')}
               type={LINK_BUTTON}
-              target="/subjects"
+              target={`${props.path}/subjects`}
               className="btn btn-block"
               primary={true}
             />
@@ -48,7 +50,7 @@ const OverviewComponent = props =>
               <Button
                 label={trans('create_subject', {}, 'forum')}
                 type={LINK_BUTTON}
-                target="/subjects/form"
+                target={`${props.path}/subjects/form`}
                 className="btn btn-block"
               />
             }
@@ -65,7 +67,7 @@ const OverviewComponent = props =>
 
                   if (forumTag) {
                     props.goToList(forumTag.id)
-                    props.history.push('/subjects')
+                    props.history.push(`${props.path}/subjects`)
                   }
                 }}
               />
@@ -88,6 +90,7 @@ const OverviewComponent = props =>
           {0 !== props.lastMessages.length &&
             <LastMessages
               lastMessages={props.lastMessages}
+              path={props.path}
             />
           }
         </div>
@@ -96,6 +99,7 @@ const OverviewComponent = props =>
   </div>
 
 OverviewComponent.propTypes = {
+  path: T.string.isRequired,
   forum: T.shape(ForumType.propTypes),
   lastMessages: T.array.isRequired,
   bannedUser: T.bool.isRequired,
@@ -114,18 +118,19 @@ OverviewComponent.defaultProps = {
 
 const Overview = connect(
   (state) => ({
-    subject: select.subject(state),
-    forum: select.forum(state),
-    lastMessages: select.lastMessages(state).data,
-    tagsCount: select.tagsCount(state),
-    bannedUser: select.bannedUser(state),
-    moderator: select.moderator(state),
-    myMessages: select.myMessages(state)
+    path: resourceSelectors.path(state),
+    subject: selectors.subject(state),
+    forum: selectors.forum(state),
+    lastMessages: selectors.lastMessages(state).data,
+    tagsCount: selectors.tagsCount(state),
+    bannedUser: selectors.bannedUser(state),
+    moderator: selectors.moderator(state),
+    myMessages: selectors.myMessages(state)
   }),
   dispatch =>({
     goToList(tag) {
-      dispatch(listActions.addFilter(`${select.STORE_NAME}.subjects.list`, 'tags', tag))
-      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.list`))
+      dispatch(listActions.addFilter(`${selectors.STORE_NAME}.subjects.list`, 'tags', tag))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.subjects.list`))
     }
   })
 )(OverviewComponent)

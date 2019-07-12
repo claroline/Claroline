@@ -4,18 +4,16 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {withModal} from '#/main/app/overlays/modal/withModal'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
-import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
+import {selectors} from '#/plugin/forum/resources/forum/store'
+import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {CommentForm, Comment} from '#/plugin/forum/resources/forum/player/components/comments'
-
-const authenticatedUser = currentUser()
 
 class MessageCommentsComponent extends Component {
   constructor(props) {
@@ -78,25 +76,25 @@ class MessageCommentsComponent extends Component {
                         type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-pencil',
                         label: trans('edit', {}, 'actions'),
-                        displayed: authenticatedUser && (comment.meta.creator.id === authenticatedUser.id) && !get(this.props.subject, 'meta.closed'),
+                        displayed: this.props.currentUser && (comment.meta.creator.id === this.props.currentUser.id) && !get(this.props.subject, 'meta.closed'),
                         callback: () => this.setState({showCommentForm: comment.id})
                       }, {
                         type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-flag-o',
                         label: trans('flag', {}, 'forum'),
-                        displayed: authenticatedUser && (comment.meta.creator.id !== authenticatedUser.id) && !comment.meta.flagged,
+                        displayed: this.props.currentUser && (comment.meta.creator.id !== this.props.currentUser.id) && !comment.meta.flagged,
                         callback: () => this.props.flag(comment, this.props.subject.id)
                       }, {
                         type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-flag',
                         label: trans('unflag', {}, 'forum'),
-                        displayed: authenticatedUser && (comment.meta.creator.id !== authenticatedUser.id) && comment.meta.flagged,
+                        displayed: this.props.currentUser && (comment.meta.creator.id !== this.props.currentUser.id) && comment.meta.flagged,
                         callback: () => this.props.unFlag(comment, this.props.subject.id)
                       }, {
                         type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-trash-o',
                         label: trans('delete', {}, 'actions'),
-                        displayed: authenticatedUser && (comment.meta.creator.id === authenticatedUser.id || this.props.moderator),
+                        displayed: this.props.currentUser && (comment.meta.creator.id === this.props.currentUser.id || this.props.moderator),
                         callback: () => this.props.deleteComment(comment.id),
                         dangerous: true,
                         confirm: {
@@ -110,7 +108,7 @@ class MessageCommentsComponent extends Component {
 
                 {this.state.showCommentForm === comment.id &&
                   <CommentForm
-                    user={currentUser()}
+                    user={this.props.currentUser}
                     allowHtml={true}
                     submitLabel={trans('add_comment')}
                     content={comment.content}
@@ -124,7 +122,7 @@ class MessageCommentsComponent extends Component {
         )}
         {this.state.showNewCommentForm === this.props.message.id &&
           <CommentForm
-            user={currentUser()}
+            user={this.props.currentUser}
             allowHtml={true}
             submitLabel={trans('add_comment')}
             // content={comment.content}
@@ -158,6 +156,7 @@ class MessageCommentsComponent extends Component {
 }
 
 MessageCommentsComponent.propTypes = {
+  currentUser: T.object,
   subject: T.shape(SubjectType.propTypes).isRequired,
   message: T.shape({
     id: T.string.Required,
@@ -185,11 +184,12 @@ MessageCommentsComponent.defaultProps = {
 
 const MessageComments =  withModal(connect(
   state => ({
-    forum: select.forum(state),
-    isValidatedUser: select.isValidatedUser(state),
-    subject: select.subject(state),
-    bannedUser: select.bannedUser(state),
-    moderator: select.moderator(state)
+    currentUser: securitySelectors.currentUser(state),
+    forum: selectors.forum(state),
+    isValidatedUser: selectors.isValidatedUser(state),
+    subject: selectors.subject(state),
+    bannedUser: selectors.bannedUser(state),
+    moderator: selectors.moderator(state)
   }),
   dispatch => ({
     createComment(messageId, comment, moderation) {

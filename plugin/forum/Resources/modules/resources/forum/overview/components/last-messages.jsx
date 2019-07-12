@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -15,7 +16,7 @@ const LastMessages = (props) =>
             <Button
               label={trans('see_subject', {}, 'forum')}
               type={LINK_BUTTON}
-              target={'/subjects/show/'+message.subject.id}
+              target={`${props.path}/subjects/show/${message.subject.id}`}
               className="btn-link"
               primary={true}
             />
@@ -30,6 +31,11 @@ const LastMessages = (props) =>
       )}
     </ul>
   </section>
+
+LastMessages.propTypes = {
+  path: T.string.isRequired,
+  lastMessages: T.array.isRequired
+}
 
 export {
   LastMessages

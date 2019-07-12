@@ -10,21 +10,19 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
-import {currentUser} from '#/main/app/security'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
-import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {selectors} from '#/plugin/forum/resources/forum/store'
 
 const SubjectFormWrapper = (props) => {
-  const authenticatedUser = currentUser()
   //this is a hack while we don't have the proper login redirection
-  if (!authenticatedUser) {
+  if (!props.user) {
     window.location.replace(url(['claro_security_login', {}, true]))
   }
 
@@ -119,15 +117,15 @@ const SubjectFormComponent = (props) => {
           {trans('banned_user_warning', {}, 'forum')}
         </div> :
         <SubjectFormWrapper
-          user={currentUser()}
+          user={props.currentUser}
           callback={() => saveSubjectForm(props.forum.id, props.editingSubject, props.subject.id, props.forum.moderation)}
-          cancel={() => props.history.push(`/subjects/show/${props.subject.id}`)}
+          cancel={() => props.history.push(`${props.path}/subjects/show/${props.subject.id}`)}
           editingSubject={props.editingSubject}
         >
           <FormData
             level={3}
             displayLevel={2}
-            name={`${select.STORE_NAME}.subjects.form`}
+            name={`${selectors.STORE_NAME}.subjects.form`}
             className="content-container"
             sections={[
               {
@@ -184,31 +182,32 @@ const SubjectFormComponent = (props) => {
   )
 }
 
-
 const SubjectForm = withRouter(withModal(connect(
   state => ({
+    path: resourceSelectors.path(state),
+    currentUser: securitySelectors.currentUser(state),
     workspace: resourceSelectors.workspace(state),
-    bannedUser: select.bannedUser(state),
-    subject: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.subjects.form`)),
-    editingSubject: select.editingSubject(state),
-    forum: select.forum(state),
-    moderator: select.moderator(state),
-    isValidatedUser: select.isValidatedUser(state)
+    bannedUser: selectors.bannedUser(state),
+    subject: formSelect.data(formSelect.form(state, `${selectors.STORE_NAME}.subjects.form`)),
+    editingSubject: selectors.editingSubject(state),
+    forum: selectors.forum(state),
+    moderator: selectors.moderator(state),
+    isValidatedUser: selectors.isValidatedUser(state)
   }),
   (dispatch, ownProps) => ({
     editSubject(forumId, subjectId) {
-      dispatch(formActions.saveForm(`${select.STORE_NAME}.subjects.form`, ['apiv2_forum_subject_update', {id: subjectId}])).then(() => {
-        ownProps.history.push(`/subjects/show/${subjectId}`)
+      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['apiv2_forum_subject_update', {id: subjectId}])).then(() => {
+        ownProps.history.push(`${ownProps.path}/subjects/show/${subjectId}`)
       })
     },
     createModeratedSubject(forumId) {
-      dispatch(formActions.saveForm(`${select.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
-        ownProps.history.push('/subjects')
+      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
+        ownProps.history.push(`${ownProps.path}/subjects`)
       })
     },
     createSubject(forumId, subjectId) {
-      dispatch(formActions.saveForm(`${select.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
-        ownProps.history.push(`/subjects/show/${subjectId}`)
+      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
+        ownProps.history.push(`${ownProps.path}/subjects/show/${subjectId}`)
       })
     }
   })

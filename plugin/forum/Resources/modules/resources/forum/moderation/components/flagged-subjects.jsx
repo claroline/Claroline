@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -7,13 +8,16 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {actions as listActions} from '#/main/app/content/list/store'
 
-import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
+import {selectors} from '#/plugin/forum/resources/forum/store'
+import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {SubjectCard} from '#/plugin/forum/resources/forum/data/components/subject-card'
 
 const FlaggedSubjectsComponent = (props) =>
   <ListData
-    name={`${select.STORE_NAME}.moderation.flaggedSubjects`}
+    name={`${selectors.STORE_NAME}.moderation.flaggedSubjects`}
     fetch={{
       url: ['apiv2_forum_subject_flagged_list', {forum: props.forum.id}],
       autoload: true
@@ -57,7 +61,7 @@ const FlaggedSubjectsComponent = (props) =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-eye',
         label: trans('see_subject', {}, 'forum'),
-        target: '/subjects/show/'+rows[0].id,
+        target: `${props.path}/subjects/show/${rows[0].id}`,
         scope: ['object']
       }, {
         type: CALLBACK_BUTTON,
@@ -75,16 +79,24 @@ const FlaggedSubjectsComponent = (props) =>
     }
   />
 
+FlaggedSubjectsComponent.propTypes = {
+  path: T.string.isRequired,
+  forum: T.shape(ForumType.propTypes),
+  subject: T.object,
+  data: T.object,
+  unFlagSubject: T.func.isRequired
+}
 
 const FlaggedSubjects = connect(
   state => ({
-    forum: select.forum(state),
-    subject: select.subject(state)
+    path: resourceSelectors.path(state),
+    forum: selectors.forum(state),
+    subject: selectors.subject(state)
   }),
   dispatch => ({
     unFlagSubject(subject) {
       dispatch(actions.unFlag(subject))
-      dispatch(listActions.invalidateData(`${select.STORE_NAME}.moderation.flaggedSubjects`))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.moderation.flaggedSubjects`))
     }
   })
 )(FlaggedSubjectsComponent)

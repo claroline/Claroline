@@ -5,8 +5,8 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
+
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
@@ -26,7 +26,7 @@ const EditorComponent = (props) =>
     }}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -112,6 +112,7 @@ const EditorComponent = (props) =>
   />
 
 EditorComponent.propTypes = {
+  path: T.string.isRequired,
   workspace: T.object,
   forumForm: T.shape(ForumType.propTypes).isRequired,
   saveForm: T.func.isRequired
@@ -119,6 +120,7 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     workspace: resourceSelectors.workspace(state),
     forumForm: formSelect.data(formSelect.form(state, selectors.FORM_NAME))
   }),

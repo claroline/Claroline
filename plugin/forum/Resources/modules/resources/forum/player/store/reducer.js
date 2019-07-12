@@ -2,6 +2,7 @@ import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
+
 import {
   SUBJECT_LOAD,
   SUBJECT_FORM_OPEN,
@@ -9,11 +10,10 @@ import {
   SUBJECT_EDIT,
   SUBJECT_STOP_EDIT
 } from '#/plugin/forum/resources/forum/player/store/actions'
-
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {selectors} from '#/plugin/forum/resources/forum/store/selectors'
 
 const reducer = combineReducers({
-  form: makeFormReducer(`${select.STORE_NAME}.subjects.form`, {
+  form: makeFormReducer(`${selectors.STORE_NAME}.subjects.form`, {
     showSubjectForm: false,
     editingSubject: false
   }, {
@@ -26,14 +26,14 @@ const reducer = combineReducers({
       [SUBJECT_STOP_EDIT]: () => false
     })
   }),
-  list: makeListReducer(`${select.STORE_NAME}.subjects.list`, {
+  list: makeListReducer(`${selectors.STORE_NAME}.subjects.list`, {
     sortBy: {property: 'sticked', direction: -1}
   }),
   current: makeReducer({}, {
-    [FORM_SUBMIT_SUCCESS+`/${select.STORE_NAME}.subjects.form`]: (state, action) => action.updatedData,
+    [FORM_SUBMIT_SUCCESS+`/${selectors.STORE_NAME}.subjects.form`]: (state, action) => action.updatedData,
     [SUBJECT_LOAD]: (state, action) => action.subject
   }),
-  messages: makeListReducer(`${select.STORE_NAME}.subjects.messages`, {
+  messages: makeListReducer(`${selectors.STORE_NAME}.subjects.messages`, {
     pageSize: 10,
     sortBy: {property: 'creationDate', direction : 1}
   })

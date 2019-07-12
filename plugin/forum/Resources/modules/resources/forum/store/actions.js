@@ -2,7 +2,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store'
 
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {selectors} from '#/plugin/forum/resources/forum/store/selectors'
 
 export const LAST_MESSAGES_LOAD = 'LAST_MESSAGES_LOAD'
 export const USER_NOTIFIED = 'USER_NOTIFIED'
@@ -27,7 +27,7 @@ actions.validatePost = (message, subjectId, formName) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.'+formName))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.'+formName))
     }
   }
 })
@@ -40,7 +40,7 @@ actions.validateSubject = (subject, formName) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.'+formName))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.'+formName))
     }
   }
 })
@@ -52,8 +52,8 @@ actions.unLockUser = (userId, forumId) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.moderation.blockedMessages'))
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.moderation.blockedSubjects'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.moderation.blockedMessages'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.moderation.blockedSubjects'))
     }
   }
 })
@@ -65,7 +65,7 @@ actions.banUser = (userId, forumId) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.moderation.blockedMessages'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.moderation.blockedMessages'))
     }
   }
 })

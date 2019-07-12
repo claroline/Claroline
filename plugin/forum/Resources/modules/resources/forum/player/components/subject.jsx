@@ -6,11 +6,8 @@ import get from 'lodash/get'
 
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
-import {UserMessage} from '#/main/core/user/message/components/user-message'
-import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 import {withModal} from '#/main/app/overlays/modal/withModal'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
@@ -19,15 +16,18 @@ import {
   select as listSelect
 } from '#/main/app/content/list/store'
 import {selectors as formSelect} from '#/main/app/content/form/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {UserMessage} from '#/main/core/user/message/components/user-message'
+import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 
 import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
-import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
+import {selectors} from '#/plugin/forum/resources/forum/store'
+import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {MessageComments} from '#/plugin/forum/resources/forum/player/components/message-comments'
 import {SubjectForm} from '#/plugin/forum/resources/forum/player/components/subject-form'
 import {MessagesSort} from '#/plugin/forum/resources/forum/player/components/messages-sort'
-
-const authenticatedUser = currentUser()
 
 class SubjectComponent extends Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class SubjectComponent extends Component {
 
   editSubject(subjectId) {
     this.props.subjectEdition()
-    this.props.history.push(`/subjects/form/${subjectId}`)
+    this.props.history.push(`${this.props.path}/subjects/form/${subjectId}`)
   }
 
   createMessage(subjectId, content) {
@@ -78,7 +78,7 @@ class SubjectComponent extends Component {
       icon: 'fa fa-fw fa-trash-o',
       title: trans('delete_subject', {}, 'forum'),
       question: trans('remove_subject_confirm_message', {}, 'forum'),
-      handleConfirm: () => this.props.deleteSubject([subjectId], this.props.history.push)
+      handleConfirm: () => this.props.deleteSubject([subjectId], this.props.history.push, this.props.path)
     })
   }
 
@@ -104,7 +104,7 @@ class SubjectComponent extends Component {
           <Button
             label={trans('forum_back_to_subjects', {}, 'forum')}
             type={LINK_BUTTON}
-            target="/subjects"
+            target={`${this.props.path}/subjects`}
             className="btn-link"
             primary={true}
           />
@@ -157,7 +157,7 @@ class SubjectComponent extends Component {
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-pencil',
                 label: trans('edit'),
-                displayed: authenticatedUser && get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id,
+                displayed: this.props.currentUser && get(this.props.subject, 'meta.creator.id', false) === this.props.currentUser.id,
                 callback: () => this.editSubject(this.props.subject.id)
               }, {
                 type: CALLBACK_BUTTON,
@@ -175,31 +175,31 @@ class SubjectComponent extends Component {
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-times-circle',
                 label: trans('close_subject', {}, 'forum'),
-                displayed: !(get(this.props.subject, 'meta.closed', true)) && authenticatedUser && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
+                displayed: !(get(this.props.subject, 'meta.closed', true)) && this.props.currentUser && (get(this.props.subject, 'meta.creator.id', false) === this.props.currentUser.id || this.props.moderator),
                 callback: () => this.props.closeSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-check-circle',
                 label: trans('open_subject', {}, 'forum'),
-                displayed: (get(this.props.subject, 'meta.closed', false)) && authenticatedUser && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
+                displayed: (get(this.props.subject, 'meta.closed', false)) && this.props.currentUser && (get(this.props.subject, 'meta.creator.id', false) === this.props.currentUser.id || this.props.moderator),
                 callback: () => this.props.unCloseSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-flag-o',
                 label: trans('flag', {}, 'forum'),
-                displayed: authenticatedUser && (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && !(get(this.props.subject, 'meta.flagged', true)),
+                displayed: this.props.currentUser && (get(this.props.subject, 'meta.creator.id') !== this.props.currentUser.id) && !(get(this.props.subject, 'meta.flagged', true)),
                 callback: () => this.props.flagSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-flag',
                 label: trans('unflag', {}, 'forum'),
-                displayed: authenticatedUser && (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && (get(this.props.subject, 'meta.flagged', false)),
+                displayed: this.props.currentUser && (get(this.props.subject, 'meta.creator.id') !== this.props.currentUser.id) && (get(this.props.subject, 'meta.flagged', false)),
                 callback: () => this.props.unFlagSubject(this.props.subject)
               }, {
                 type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete'),
-                displayed: authenticatedUser && get(this.props.subject, 'meta.creator.id') === authenticatedUser.id || this.props.moderator,
+                displayed: this.props.currentUser && get(this.props.subject, 'meta.creator.id') === this.props.currentUser.id || this.props.moderator,
                 callback: () => this.deleteSubject(this.props.subject.id),
                 dangerous: true
               }
@@ -230,25 +230,25 @@ class SubjectComponent extends Component {
                           type: CALLBACK_BUTTON,
                           icon: 'fa fa-fw fa-pencil',
                           label: trans('edit', {}, 'actions'),
-                          displayed: authenticatedUser && (message.meta.creator.id === authenticatedUser.id)  && !(get(this.props.subject, 'meta.closed', true)),
+                          displayed: this.props.currentUser && (message.meta.creator.id === this.props.currentUser.id)  && !(get(this.props.subject, 'meta.closed', true)),
                           callback: () => this.setState({showMessageForm: message.id})
                         }, {
                           type: CALLBACK_BUTTON,
                           icon: 'fa fa-fw fa-flag-o',
                           label: trans('flag', {}, 'forum'),
-                          displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && !message.meta.flagged,
+                          displayed: this.props.currentUser && (message.meta.creator.id !== this.props.currentUser.id) && !message.meta.flagged,
                           callback: () => this.props.flag(message, this.props.subject.id)
                         }, {
                           type: CALLBACK_BUTTON,
                           icon: 'fa fa-fw fa-flag',
                           label: trans('unflag', {}, 'forum'),
-                          displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && message.meta.flagged,
+                          displayed: this.props.currentUser && (message.meta.creator.id !== this.props.currentUser.id) && message.meta.flagged,
                           callback: () => this.props.unFlag(message, this.props.subject.id)
                         }, {
                           type: CALLBACK_BUTTON,
                           icon: 'fa fa-fw fa-trash-o',
                           label: trans('delete', {}, 'actions'),
-                          displayed:  authenticatedUser && (message.meta.creator.id === authenticatedUser.id || this.props.moderator),
+                          displayed:  this.props.currentUser && (message.meta.creator.id === this.props.currentUser.id || this.props.moderator),
                           callback: () => this.deleteMessage(message.id),
                           dangerous: true
                         }
@@ -257,7 +257,7 @@ class SubjectComponent extends Component {
                   }
                   {this.state.showMessageForm === message.id &&
                       <UserMessageForm
-                        user={currentUser()}
+                        user={this.props.currentUser}
                         allowHtml={true}
                         submitLabel={trans('save')}
                         content={message.content}
@@ -276,7 +276,7 @@ class SubjectComponent extends Component {
 
         {!this.props.bannedUser && !this.props.showSubjectForm && !get(this.props.subject, 'meta.closed') &&
           <UserMessageForm
-            user={currentUser()}
+            user={this.props.currentUser}
             allowHtml={true}
             submitLabel={trans('reply', {}, 'actions')}
             submit={(message) => this.createMessage(this.props.subject.id, message)}
@@ -288,6 +288,8 @@ class SubjectComponent extends Component {
 }
 
 SubjectComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   subject: T.shape(SubjectType.propTypes).isRequired,
   subjectForm: T.shape({
     title: T.string
@@ -340,43 +342,45 @@ SubjectComponent.defaultProps = {
 
 const Subject =  withRouter(withModal(connect(
   state => ({
-    forum: select.forum(state),
-    isValidatedUser: select.isValidatedUser(state),
-    subject: select.subject(state),
-    subjectForm: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.subjects.form`)),
-    editingSubject: select.editingSubject(state),
-    sortOrder: listSelect.sortBy(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)).direction,
-    showSubjectForm: select.showSubjectForm(state),
-    messages: select.visibleMessages(state),
-    moderatedMessages: select.moderatedMessages(state),
-    totalResults: listSelect.totalResults(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
-    invalidated: listSelect.invalidated(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
-    loaded: listSelect.loaded(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
-    pages: listSelect.pages(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
-    currentPage: listSelect.currentPage(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
-    bannedUser: select.bannedUser(state),
-    moderator: select.moderator(state)
+    path: resourceSelectors.path(state),
+    currentUser: securitySelectors.currentUser(state),
+    forum: selectors.forum(state),
+    isValidatedUser: selectors.isValidatedUser(state),
+    subject: selectors.subject(state),
+    subjectForm: formSelect.data(formSelect.form(state, `${selectors.STORE_NAME}.subjects.form`)),
+    editingSubject: selectors.editingSubject(state),
+    sortOrder: listSelect.sortBy(listSelect.list(state, `${selectors.STORE_NAME}.subjects.messages`)).direction,
+    showSubjectForm: selectors.showSubjectForm(state),
+    messages: selectors.visibleMessages(state),
+    moderatedMessages: selectors.moderatedMessages(state),
+    totalResults: listSelect.totalResults(listSelect.list(state, `${selectors.STORE_NAME}.subjects.messages`)),
+    invalidated: listSelect.invalidated(listSelect.list(state, `${selectors.STORE_NAME}.subjects.messages`)),
+    loaded: listSelect.loaded(listSelect.list(state, `${selectors.STORE_NAME}.subjects.messages`)),
+    pages: listSelect.pages(listSelect.list(state, `${selectors.STORE_NAME}.subjects.messages`)),
+    currentPage: listSelect.currentPage(listSelect.list(state, `${selectors.STORE_NAME}.subjects.messages`)),
+    bannedUser: selectors.bannedUser(state),
+    moderator: selectors.moderator(state)
   }),
   dispatch => ({
     createMessage(subjectId, content, moderation) {
       dispatch(actions.createMessage(subjectId, content, moderation))
     },
-    deleteSubject(id, push) {
-      dispatch(actions.deleteSubject(id, push))
+    deleteSubject(id, push, path) {
+      dispatch(actions.deleteSubject(id, push, path))
     },
     deleteMessage(id) {
-      dispatch(listActions.deleteData(`${select.STORE_NAME}.subjects.messages`, ['apiv2_forum_message_delete_bulk'], [{id: id}]))
+      dispatch(listActions.deleteData(`${selectors.STORE_NAME}.subjects.messages`, ['apiv2_forum_message_delete_bulk'], [{id: id}]))
     },
     reload(id, forumId) {
-      dispatch(listActions.fetchData(`${select.STORE_NAME}.subjects.messages`, ['apiv2_forum_subject_get_message', {id, forumId}]))
+      dispatch(listActions.fetchData(`${selectors.STORE_NAME}.subjects.messages`, ['apiv2_forum_subject_get_message', {id, forumId}]))
     },
     toggleSort(sortOrder) {
-      dispatch(listActions.updateSortDirection(`${select.STORE_NAME}.subjects.messages`, -sortOrder))
-      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.messages`))
+      dispatch(listActions.updateSortDirection(`${selectors.STORE_NAME}.subjects.messages`, -sortOrder))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.subjects.messages`))
     },
     changePage(page) {
-      dispatch(listActions.changePage(`${select.STORE_NAME}.subjects.messages`, page))
-      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.messages`))
+      dispatch(listActions.changePage(`${selectors.STORE_NAME}.subjects.messages`, page))
+      dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.subjects.messages`))
     },
     subjectEdition() {
       dispatch(actions.subjectEdition())

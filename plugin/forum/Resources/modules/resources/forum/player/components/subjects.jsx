@@ -1,34 +1,37 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {currentUser} from '#/main/app/security'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {ListData} from '#/main/app/content/list/containers/data'
 
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
-import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
+import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'
+import {selectors} from '#/plugin/forum/resources/forum/store'
+import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {SubjectCard} from '#/plugin/forum/resources/forum/data/components/subject-card'
-
-const authenticatedUser = currentUser()
 
 const SubjectsList = props =>
   <div>
     <h2>{trans('subjects', {}, 'forum')}</h2>
     <ListData
-      name={`${select.STORE_NAME}.subjects.list`}
+      name={`${selectors.STORE_NAME}.subjects.list`}
       fetch={{
         url: ['claroline_forum_api_forum_getsubjects', {id: props.forum.id}],
         autoload: true
       }}
       delete={{
         url: ['apiv2_forum_subject_delete_bulk'],
-        displayed: (rows) => authenticatedUser && ((rows[0].meta.creator.id === authenticatedUser.id) || props.moderator)
+        displayed: (rows) => props.currentUser && ((rows[0].meta.creator.id === props.currentUser.id) || props.moderator)
       }}
       primaryAction={(subject) => ({
         type: LINK_BUTTON,
-        target: '/subjects/show/'+subject.id,
+        target: `${props.path}/subjects/show/${subject.id}`,
         label: trans('open', {}, 'actions')
       })}
       display={{
@@ -130,15 +133,15 @@ const SubjectsList = props =>
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-eye',
           label: trans('see_subject', {}, 'forum'),
-          target: '/subjects/show/'+rows[0].id,
+          target: `${props.path}/subjects/show/${rows[0].id}`,
           scope: ['object']
         }, {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('edit'),
-          target: '/subjects/form/'+rows[0].id,
+          target: `${props.path}/subjects/form/${rows[0].id}`,
           scope: ['object'],
-          displayed: authenticatedUser && rows[0].meta.creator.id === authenticatedUser.id
+          displayed: props.currentUser && rows[0].meta.creator.id === props.currentUser.id
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-thumb-tack',
@@ -155,14 +158,14 @@ const SubjectsList = props =>
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-flag-o',
           label: trans('flag', {}, 'forum'),
-          displayed: !rows[0].meta.flagged && authenticatedUser && rows[0].meta.creator.id !== authenticatedUser.id,
+          displayed: !rows[0].meta.flagged && props.currentUser && rows[0].meta.creator.id !== props.currentUser.id,
           callback: () => props.flagSubject(rows[0]),
           scope: ['object']
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-flag',
           label: trans('unflag', {}, 'forum'),
-          displayed: rows[0].meta.flagged && authenticatedUser && rows[0].meta.creator.id !== authenticatedUser.id,
+          displayed: rows[0].meta.flagged && props.currentUser && rows[0].meta.creator.id !== props.currentUser.id,
           callback: () => props.unFlagSubject(rows[0]),
           scope: ['object']
         }, {
@@ -170,13 +173,13 @@ const SubjectsList = props =>
           icon: 'fa fa-fw fa-times-circle',
           label: trans('close_subject', {}, 'forum'),
           callback: () => props.closeSubject(rows[0]),
-          displayed: !rows[0].meta.closed && authenticatedUser && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
+          displayed: !rows[0].meta.closed && props.currentUser && (rows[0].meta.creator.id === props.currentUser.id || props.moderator)
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-check-circle',
           label: trans('open_subject', {}, 'forum'),
           callback: () => props.unCloseSubject(rows[0]),
-          displayed: rows[0].meta.closed && authenticatedUser && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
+          displayed: rows[0].meta.closed && props.currentUser && (rows[0].meta.creator.id === props.currentUser.id || props.moderator)
         }
       ]}
       card={(props) =>
@@ -188,12 +191,28 @@ const SubjectsList = props =>
     />
   </div>
 
+SubjectsList.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
+  forum: T.shape(ForumType.propTypes),
+  subject: T.shape(SubjectType.propTypes),
+  moderator: T.object,
+  data: T.object,
+  stickSubject: T.func.isRequired,
+  unStickSubject: T.func.isRequired,
+  closeSubject: T.func.isRequired,
+  unCloseSubject: T.func.isRequired,
+  flagSubject: T.func.isRequired,
+  unFlagSubject: T.func.isRequired
+}
 
 const Subjects = connect(
   state => ({
-    forum: select.forum(state),
-    subject: select.subject(state),
-    moderator: select.moderator(state)
+    path: resourceSelectors.path(state),
+    currentUser: securitySelectors.currentUser(state),
+    forum: selectors.forum(state),
+    subject: selectors.subject(state),
+    moderator: selectors.moderator(state)
   }),
   dispatch => ({
     stickSubject(subject) {

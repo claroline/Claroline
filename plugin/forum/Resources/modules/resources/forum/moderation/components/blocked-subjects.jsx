@@ -1,18 +1,21 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
-import {actions} from '#/plugin/forum/resources/forum/store/actions'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
+import {actions, selectors} from '#/plugin/forum/resources/forum/store'
 import {SubjectCard} from '#/plugin/forum/resources/forum/data/components/subject-card'
 
 const BlockedSubjectsComponent = (props) =>
   <ListData
-    name={`${select.STORE_NAME}.moderation.blockedSubjects`}
+    name={`${selectors.STORE_NAME}.moderation.blockedSubjects`}
     fetch={{
       url: ['apiv2_forum_subject_blocked_list', {forum: props.forum.id}],
       autoload: true
@@ -56,7 +59,7 @@ const BlockedSubjectsComponent = (props) =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-eye',
         label: trans('see_subject', {}, 'forum'),
-        target: '/subjects/show/'+rows[0].id,
+        target: `${props.path}/subjects/show/${rows[0].id}`,
         scope: ['object']
       },
       // if moderation all => validateMessage
@@ -88,10 +91,18 @@ const BlockedSubjectsComponent = (props) =>
     }
   />
 
+BlockedSubjectsComponent.propTypes = {
+  path: T.string.isRequired,
+  forum: T.shape(ForumType.propTypes),
+  validateSubject: T.func.isRequired,
+  banUser: T.func.isRequired,
+  unLockUser: T.func.isRequired
+}
 
 const BlockedSubjects = connect(
   state => ({
-    forum: select.forum(state)
+    path: resourceSelectors.path(state),
+    forum: selectors.forum(state)
   }),
   dispatch => ({
     validateSubject(subject, formName) {

@@ -1,15 +1,15 @@
 import merge from 'lodash/merge'
 
 import {now} from '#/main/app/intl/date'
-import {currentUser} from '#/main/app/security'
 import {makeId} from '#/main/core/scaffolding/id'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {Subject as SubjectTypes} from '#/plugin/forum/resources/forum/player/prop-types'
-import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {selectors} from '#/plugin/forum/resources/forum/store/selectors'
 
 export const SUBJECT_LOAD = 'SUBJECT_LOAD'
 export const SUBJECT_FORM_OPEN = 'SUBJECT_FORM_OPEN'
@@ -23,7 +23,7 @@ actions.closeSubjectForm = makeActionCreator(SUBJECT_FORM_CLOSE)
 actions.subjectEdition = makeActionCreator(SUBJECT_EDIT)
 actions.stopSubjectEdition = makeActionCreator(SUBJECT_STOP_EDIT)
 
-actions.newSubject = (id = null) => (dispatch) => {
+actions.newSubject = (id = null) => (dispatch, getState) => {
   dispatch(actions.openSubjectForm())
   if (id) {
     dispatch(actions.subjectEdition())
@@ -31,16 +31,16 @@ actions.newSubject = (id = null) => (dispatch) => {
       [API_REQUEST]: {
         url: ['apiv2_forum_subject_get', {id}],
         success: (data, dispatch) => {
-          dispatch(formActions.resetForm(select.STORE_NAME+'.subjects.form', data, false))
+          dispatch(formActions.resetForm(selectors.STORE_NAME+'.subjects.form', data, false))
         }
       }
     })
   } else {
     dispatch(formActions.resetForm(
-      select.STORE_NAME+'.subjects.form',
+      selectors.STORE_NAME+'.subjects.form',
       merge({}, SubjectTypes.defaultProps, {
         id: makeId(),
-        meta: {creator: currentUser()}
+        meta: {creator: securitySelectors.currentUser(getState())}
       }),
       true
     ))
@@ -58,24 +58,24 @@ actions.fetchSubject = (id) => ({
 })
 
 actions.openSubject = (id) => (dispatch, getState) => {
-  const subject = select.subject(getState())
+  const subject = selectors.subject(getState())
   // showform state
   if (subject.id !== id) {
     dispatch(actions.loadSubject({id: id}))
     dispatch(actions.fetchSubject(id))
-    dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
+    dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.messages'))
   }
 }
 
-actions.deleteSubject = (id, push) => ({
+actions.deleteSubject = (id, push, path) => ({
   [API_REQUEST]: {
     url: ['apiv2_forum_subject_delete_bulk', {ids: id}],
     request: {
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
-      push('/subjects')
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
+      push(`${path}/subjects`)
     }
   }
 })
@@ -88,7 +88,7 @@ actions.stickSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -102,7 +102,7 @@ actions.unStickSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -116,7 +116,7 @@ actions.closeSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -130,7 +130,7 @@ actions.unCloseSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -144,7 +144,7 @@ actions.flagSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -158,56 +158,60 @@ actions.unFlagSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
 })
 
-actions.createMessage = (subjectId, content, moderation) => ({
-  [API_REQUEST]: {
-    url: ['claroline_forum_api_subject_createmessage', {id: subjectId}],
-    request: {
-      method: 'POST',
-      body: JSON.stringify({
-        id: makeId(),
-        content: content,
-        meta: {
-          creator: currentUser(),
-          created: now(),
-          updated: now(),
-          moderation: moderation
-        },
-        comments: []
-      })
-    },
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
+actions.createMessage = (subjectId, content, moderation) => (dispatch, getState) => {
+  dispatch({
+    [API_REQUEST]: {
+      url: ['claroline_forum_api_subject_createmessage', {id: subjectId}],
+      request: {
+        method: 'POST',
+        body: JSON.stringify({
+          id: makeId(),
+          content: content,
+          meta: {
+            creator: securitySelectors.currentUser(getState()),
+            created: now(),
+            updated: now(),
+            moderation: moderation
+          },
+          comments: []
+        })
+      },
+      success: (data, dispatch) => {
+        dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.messages'))
+      }
     }
-  }
-})
+  })
+}
 
-actions.createComment = (messageId, comment, moderation) => ({
-  [API_REQUEST]: {
-    url: ['claroline_forum_api_message_createcomment', {id: messageId}],
-    request: {
-      method: 'POST',
-      body: JSON.stringify({
-        id: makeId(),
-        content: comment,
-        meta: {
-          creator: currentUser(),
-          created: now(),
-          updated: now(),
-          moderation: moderation
-        }
-      })
-    },
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
+actions.createComment = (messageId, comment, moderation) => (dispatch, getState) => {
+  dispatch({
+    [API_REQUEST]: {
+      url: ['claroline_forum_api_message_createcomment', {id: messageId}],
+      request: {
+        method: 'POST',
+        body: JSON.stringify({
+          id: makeId(),
+          content: comment,
+          meta: {
+            creator: securitySelectors.currentUser(getState()),
+            created: now(),
+            updated: now(),
+            moderation: moderation
+          }
+        })
+      },
+      success: (data, dispatch) => {
+        dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.messages'))
+      }
     }
-  }
-})
+  })
+}
 
 actions.editContent = (message, subjectId, content) => ({
   [API_REQUEST]: {
@@ -217,7 +221,7 @@ actions.editContent = (message, subjectId, content) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.messages'))
     }
   }
 })
@@ -231,7 +235,7 @@ actions.flag = (message, subjectId) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.messages'))
     }
   }
 })
@@ -244,7 +248,7 @@ actions.unFlag = (message, subjectId) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME+'.subjects.messages'))
     }
   }
 })
