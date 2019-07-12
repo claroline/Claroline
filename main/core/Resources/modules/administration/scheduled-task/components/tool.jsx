@@ -2,43 +2,38 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {
-  PageContainer,
-  PageActions,
-  PageAction,
-  PageHeader
-} from '#/main/core/layout/page'
-import {
-  RoutedPageContent
-} from '#/main/core/layout/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {Routes} from '#/main/app/router'
+
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {ScheduledTasks} from '#/main/core/administration/scheduled-task/components/scheduled-tasks'
-import {ScheduledTask}  from '#/main/core/administration/scheduled-task/components/scheduled-task'
+import {ScheduledTask} from '#/main/core/administration/scheduled-task/components/scheduled-task'
 
 const ScheduledTaskTool = props =>
-  <PageContainer>
-    <PageHeader
-      title={trans('tasks_scheduling', {}, 'tools')}
-    >
-      <PageActions>
-        <PageAction
-          type={LINK_BUTTON}
-          icon="fa fa-plus"
-          label={trans('add_scheduled_task')}
-          disabled={!props.isCronConfigured}
-          target="/form"
-          exact={true}
-          primary={true}
-        />
-      </PageActions>
-    </PageHeader>
-
-    <RoutedPageContent
+  <ToolPage
+    actions={[
+      {
+        name: 'new_scheduled_task',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('add_scheduled_task'),
+        target: `${props.path}/form`,
+        primary: true,
+        displayed: props.isCronConfigured
+      }
+    ]}
+  >
+    <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
-          component: ScheduledTasks,
+          render: () => {
+            const component = <ScheduledTasks path={props.path} />
+
+            return component
+          },
           exact: true
         }, {
           path: '/form/:id?',
@@ -47,9 +42,10 @@ const ScheduledTaskTool = props =>
         }
       ]}
     />
-  </PageContainer>
+  </ToolPage>
 
 ScheduledTaskTool.propTypes = {
+  path: T.string.isRequired,
   isCronConfigured: T.bool.isRequired,
   openForm: T.func.isRequired
 }

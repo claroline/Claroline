@@ -1,22 +1,24 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {ScheduledTaskCard} from '#/main/core/administration/scheduled-task/data/components/scheduled-task-card'
 import {constants} from '#/main/core/administration/scheduled-task/constants'
+import {selectors} from '#/main/core/administration/scheduled-task/store'
+import {ScheduledTaskCard} from '#/main/core/administration/scheduled-task/data/components/scheduled-task-card'
 
-const ScheduledTasks = () =>
+const ScheduledTasks = (props) =>
   <ListData
-    name="tasks"
+    name={selectors.STORE_NAME + '.tasks'}
     fetch={{
       url: ['apiv2_scheduledtask_list'],
       autoload: true
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `/form/${row.id}`
+      target: `${props.path}/form/${row.id}`
     })}
     delete={{
       url: ['apiv2_scheduledtask_delete_bulk']
@@ -57,6 +59,10 @@ const ScheduledTasks = () =>
 
     card={ScheduledTaskCard}
   />
+
+ScheduledTasks.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   ScheduledTasks

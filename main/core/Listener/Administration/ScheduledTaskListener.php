@@ -2,11 +2,10 @@
 
 namespace Claroline\CoreBundle\Listener\Administration;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Scheduled tasks tool.
@@ -15,29 +14,21 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ScheduledTaskListener
 {
-    /** @var TwigEngine */
-    private $templating;
-
-    /** @var PlatformConfigurationHandler */
-    private $configHandler;
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
 
     /**
      * ScheduledTaskListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating"    = @DI\Inject("templating"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters")
      * })
      *
-     * @param TwigEngine                   $templating
-     * @param PlatformConfigurationHandler $configHandler
+     * @param ParametersSerializer $parametersSerializer
      */
-    public function __construct(
-        TwigEngine $templating,
-        PlatformConfigurationHandler $configHandler)
+    public function __construct(ParametersSerializer $parametersSerializer)
     {
-        $this->templating = $templating;
-        $this->configHandler = $configHandler;
+        $this->parametersSerializer = $parametersSerializer;
     }
 
     /**
@@ -49,13 +40,11 @@ class ScheduledTaskListener
      */
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:administration:scheduled_tasks.html.twig', [
-                'isCronConfigured' => $this->configHandler->hasParameter('is_cron_configured') && $this->configHandler->getParameter('is_cron_configured'),
-            ]
-        );
+        $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
-        $event->setResponse(new Response($content));
+        $event->setData([
+            'isCronConfigured' => isset($parameters['is_cron_configured']) && $parameters['is_cron_configured'],
+        ]);
         $event->stopPropagation();
     }
 }

@@ -5,6 +5,8 @@ import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
+import {selectors} from '#/main/core/administration/scheduled-task/store/selectors'
+
 export const actions = {}
 
 actions.open = (formName, id = null) => (dispatch) => {
@@ -31,8 +33,8 @@ actions.addUsers = (id, users) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('task'))
-      dispatch(listActions.invalidateData('task.users'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.task'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.task.users'))
     }
   }
 })
