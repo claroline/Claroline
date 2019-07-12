@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {actions as securityActions} from '#/main/app/security/store'
-import {selectors as layoutSelectors} from '#/main/app/layout/store'
+import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {LoginForm as LoginFormComponent} from '#/main/app/security/login/components/form'
@@ -11,7 +11,7 @@ import {reducer, selectors} from '#/main/app/security/login/store'
 const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      registration: layoutSelectors.selfRegistration(state),
+      registration: configSelectors.selfRegistration(state),
       sso: selectors.sso(state),
       primarySso: selectors.primarySso(state)
     }),
