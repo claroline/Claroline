@@ -41,7 +41,7 @@ class PlayerComponent extends Component {
         ref={el => this.iframe = el}
         onLoad={this.handleResize()}
         height={this.state.height}
-        src={asset(this.props.path)}
+        src={asset(this.props.resourcePath)}
         allowFullScreen={true}
       />
     )
@@ -49,12 +49,12 @@ class PlayerComponent extends Component {
 }
 
 PlayerComponent.propTypes = {
-  path: T.string.isRequired
+  resourcePath: T.string.isRequired
 }
 
 const Player = connect(
   state => ({
-    path: selectors.path(state)
+    resourcePath: selectors.path(state)
   })
 )(PlayerComponent)
 

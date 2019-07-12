@@ -1,4 +1,4 @@
-
+import {reducer} from '#/plugin/web-resource/resources/web-resource/store'
 import {WebResource} from '#/plugin/web-resource/resources/web-resource/containers/resource'
 import {WebResourceCreation} from '#/plugin/web-resource/resources/web-resource/components/creation'
 /**
@@ -12,6 +12,7 @@ export const Creation = () => ({
 /**
  * WebResource application.
  */
-export const App = () => ({
-  component: WebResource
-})
+export default {
+  component: WebResource,
+  store: reducer
+}

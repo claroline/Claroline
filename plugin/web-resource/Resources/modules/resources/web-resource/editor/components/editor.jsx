@@ -3,10 +3,13 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/plugin/web-resource/resources/web-resource/editor/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {selectors} from '#/plugin/web-resource/resources/web-resource/editor/store/selectors'
 
 const WebResourceForm = props =>
   <FormData
@@ -19,7 +22,7 @@ const WebResourceForm = props =>
     }}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -45,6 +48,7 @@ const WebResourceForm = props =>
 
 
 WebResourceForm.propTypes = {
+  path: T.string.isRequired,
   update: T.func.isRequired,
   workspaceId: T.string.isRequired,
   node: T.object.isRequired,
@@ -53,8 +57,9 @@ WebResourceForm.propTypes = {
 
 const WebResourceEdit = connect(
   state => ({
-    workspaceId: state.resourceNode.workspace.id,
-    node: state.resourceNode
+    path: resourceSelectors.path(state),
+    workspaceId: resourceSelectors.workspace(state).id,
+    node: resourceSelectors.resourceNode(state)
   }),
   (dispatch) => ({
     update(data) {
