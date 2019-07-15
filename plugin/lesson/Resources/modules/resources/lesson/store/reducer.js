@@ -1,11 +1,13 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
-
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
-import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 import {FORM_SUBMIT_SUCCESS, FORM_RESET} from '#/main/app/content/form/store/actions'
 
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
 import {
   SUMMARY_PIN_TOGGLE,
   SUMMARY_OPEN_TOGGLE,
@@ -15,7 +17,6 @@ import {
   CHAPTER_DELETED,
   POSITION_SELECTED
 } from '#/plugin/lesson/resources/lesson/store/actions'
-import {constants} from '#/plugin/lesson/resources/lesson/constants'
 
 const formDefault = {
   id: null,
@@ -43,15 +44,15 @@ const reducer = combineReducers({
     })
   }),
   lesson: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.lesson
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lesson
   }),
   chapter: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.chapter,
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.chapter,
     [CHAPTER_LOAD]: (state, action) => action.chapter,
     [CHAPTER_RESET]: () => ({}),
     [CHAPTER_DELETED]: () => null
   }),
-  chapter_form: makeFormReducer(constants.CHAPTER_EDIT_FORM_NAME, {}, {
+  chapter_form: makeFormReducer(selectors.CHAPTER_EDIT_FORM_NAME, {}, {
     data: makeReducer({}, {
       [CHAPTER_LOAD]: (state, action) => Object.assign(cloneDeep(state), action.chapter),
       [CHAPTER_RESET]: () => (formDefault),
@@ -60,7 +61,7 @@ const reducer = combineReducers({
         data.position = action.isRoot ? 'subchapter' : data.position
         return data
       },
-      [FORM_RESET + '/resource.chapter_form']: (state) => ({
+      [FORM_RESET + '/' + selectors.STORE_NAME + '.chapter_form']: (state) => ({
         position: 'subchapter',
         order: {
           sibling: 'before',
@@ -71,21 +72,21 @@ const reducer = combineReducers({
     })
   }),
   exportPdfEnabled: makeReducer(false, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.exportPdfEnabled
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.exportPdfEnabled
   }),
   tree: combineReducers({
     invalidated: makeReducer(false, {
       [TREE_LOADED]: () => false,
-      [FORM_SUBMIT_SUCCESS + '/resource.chapter_form']: () => true
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.chapter_form']: () => true
     }),
     data: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.tree,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.tree,
       [TREE_LOADED]: (state, action) => action.tree,
       [CHAPTER_DELETED]: (state, action) => action.tree
     })
   }),
   root: makeReducer(null, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.root
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.root
   })
 })
 

@@ -8,15 +8,15 @@ import {LINK_BUTTON} from '#/main/app/buttons'
  *
  * @param tree
  */
-export const normalizeTree = (tree, lessonId, canEdit) => {
+export const normalizeTree = (tree, lessonId, canEdit, path) => {
   const copy = cloneDeep(tree)
 
-  let elems = normalizeTreeNode(copy.children, lessonId, canEdit)
+  let elems = normalizeTreeNode(copy.children, lessonId, canEdit, path)
 
   if (canEdit) {
     elems.push({
       label: trans('chapter_creation', {}, 'icap_lesson'),
-      target: '/new',
+      target: `${path}/new`,
       icon: 'fa fa-fw fa-plus',
       type: LINK_BUTTON
     })
@@ -29,25 +29,25 @@ export const normalizeTree = (tree, lessonId, canEdit) => {
   }
 }
 
-const normalizeTreeNode = (node, lessonId, canEdit) => {
+const normalizeTreeNode = (node, lessonId, canEdit, path) => {
 
   return node.map((elem) => {
 
     const element = {
       type: LINK_BUTTON,
-      target: `/${elem['slug']}`,
+      target: `${path}/${elem['slug']}`,
       label: elem['title'],
       additional: [
         {
           type: LINK_BUTTON,
-          target: `/${elem['slug']}/edit`,
+          target: `${path}/${elem['slug']}/edit`,
           label: trans('edit_chapter_button', {}, 'icap_lesson'),
           icon: 'fa fa-pencil',
           displayed: canEdit
         },
         {
           type: LINK_BUTTON,
-          target: `/${elem['slug']}/copy`,
+          target: `${path}/${elem['slug']}/copy`,
           label: trans('copy'),
           icon: 'fa fa-copy',
           displayed: canEdit
@@ -56,7 +56,7 @@ const normalizeTreeNode = (node, lessonId, canEdit) => {
     }
 
     if (elem.children.length > 0) {
-      element.children = normalizeTreeNode(elem.children, lessonId, canEdit)
+      element.children = normalizeTreeNode(elem.children, lessonId, canEdit, path)
     }
 
     return element

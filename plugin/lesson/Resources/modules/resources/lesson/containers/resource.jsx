@@ -5,7 +5,6 @@ import {withReducer} from '#/main/app/store/components/withReducer'
 
 import {LessonResource as LessonResourceComponent} from '#/plugin/lesson/resources/lesson/components/resource'
 import {actions, reducer, selectors} from '#/plugin/lesson/resources/lesson/store'
-import {constants} from '#/plugin/lesson/resources/lesson/constants'
 
 const LessonResource = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
@@ -23,13 +22,13 @@ const LessonResource = withRouter(
           dispatch(actions.loadChapter(lessonId, chapterSlug))
         },
         editChapter(lessonId, chapterSlug) {
-          dispatch(actions.editChapter(constants.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
+          dispatch(actions.editChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
         },
         copyChapter(lessonId, chapterSlug) {
-          dispatch(actions.copyChapter(constants.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
+          dispatch(actions.copyChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
         },
         createChapter(lessonId, parentChapterSlug = null) {
-          dispatch(actions.createChapter(constants.CHAPTER_EDIT_FORM_NAME, lessonId, parentChapterSlug))
+          dispatch(actions.createChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, parentChapterSlug))
         },
         fetchChapterTree(lessonId) {
           dispatch(actions.fetchChapterTree(lessonId))

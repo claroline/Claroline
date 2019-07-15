@@ -2,9 +2,11 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store'
 
@@ -32,7 +34,7 @@ const Chapter = props =>
               className="btn btn-lg btn-link default"
               icon="fa fa-chevron-circle-left"
               label={trans('previous', {}, 'icap_lesson')}
-              target={`/${props.chapter.previousSlug}`}
+              target={`${props.path}/${props.chapter.previousSlug}`}
               disabled={!props.chapter.previousSlug}
               tooltip="right"
             />
@@ -41,7 +43,7 @@ const Chapter = props =>
               className="btn btn-lg btn-link default float-right"
               icon="fa fa-chevron-circle-right"
               label={trans('next', {}, 'icap_lesson')}
-              target={`/${props.chapter.nextSlug}`}
+              target={`${props.path}/${props.chapter.nextSlug}`}
               disabled={!props.chapter.nextSlug}
               tooltip="left"
             />
@@ -53,6 +55,7 @@ const Chapter = props =>
 
 const ChapterResource = connect(
   state => ({
+    path: resourceSelectors.path(state),
     chapter: selectors.chapter(state)
   })
 )(Chapter)

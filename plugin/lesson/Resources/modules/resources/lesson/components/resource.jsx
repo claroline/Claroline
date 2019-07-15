@@ -37,14 +37,13 @@ class LessonResource extends Component {
   render() {
     return (
       <ResourcePage
-        styles={['claroline-distribution-plugin-lesson-lesson-resource']}
         primaryAction="chapter"
         customActions={[
           {
             type: LINK_BUTTON,
             icon: 'fa fa-home',
             label: trans('show_overview'),
-            target: '/',
+            target: this.props.path,
             exact: true
           },
           {
@@ -64,40 +63,44 @@ class LessonResource extends Component {
             opened: true,
             pinned: true,
             title: trans('summary'),
-            links: !isEmpty(this.props.tree) ? normalizeTree(this.props.tree, this.props.lesson.id, this.props.canEdit).children : []
+            links: !isEmpty(this.props.tree) ? normalizeTree(this.props.tree, this.props.lesson.id, this.props.canEdit, this.props.path).children : []
           }}
         >
-          <Routes className="lesson-page-content" routes={[
-            {
-              path: '/',
-              component: ChapterResource,
-              exact: true
-            }, {
-              path: '/edit',
-              component: Editor,
-              exact: true
-            }, {
-              path: '/new',
-              component: ChapterForm,
-              exact: true,
-              onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
-            }, {
-              path: '/:slug',
-              component: ChapterResource,
-              exact: true,
-              onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug)
-            }, {
-              path: '/:slug/edit',
-              component: ChapterForm,
-              exact: true,
-              onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
-            }, {
-              path: '/:slug/copy',
-              component: ChapterForm,
-              exact: true,
-              onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
-            }
-          ]}/>
+          <Routes
+            className="lesson-page-content"
+            path={this.props.path}
+            routes={[
+              {
+                path: '/',
+                component: ChapterResource,
+                exact: true
+              }, {
+                path: '/edit',
+                component: Editor,
+                exact: true
+              }, {
+                path: '/new',
+                component: ChapterForm,
+                exact: true,
+                onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
+              }, {
+                path: '/:slug',
+                component: ChapterResource,
+                exact: true,
+                onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug)
+              }, {
+                path: '/:slug/edit',
+                component: ChapterForm,
+                exact: true,
+                onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
+              }, {
+                path: '/:slug/copy',
+                component: ChapterForm,
+                exact: true,
+                onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
+              }
+            ]}
+          />
         </SummarizedContent>
       </ResourcePage>
     )
@@ -105,6 +108,7 @@ class LessonResource extends Component {
 }
 
 LessonResource.propTypes = {
+  path: T.string.isRequired,
   invalidated: T.bool.isRequired,
   fetchChapterTree: T.func.isRequired,
   lesson: T.any.isRequired,
