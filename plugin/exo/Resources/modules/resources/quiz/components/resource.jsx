@@ -19,35 +19,34 @@ import {CorrectionMain}   from '#/plugin/exo/resources/quiz/correction/container
 
 const QuizResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-exo-quiz-resource']}
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         displayed: props.hasOverview,
-        target: '/',
+        target: props.path,
         exact: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
         disabled: props.empty,
-        target: '/play'
+        target: `${props.path}/play`
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-flask',
         label: trans('test', {}, 'actions'),
         displayed: props.editable,
         disabled: props.empty,
-        target: '/test',
+        target: `${props.path}/test`,
         group: trans('management')
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-tasks',
         label: trans('show-results', {}, 'actions'),
         displayed: props.registeredUser,
-        target: '/papers',
+        target: `${props.path}/papers`,
         exact: true
       }, {
         type: URL_BUTTON,
@@ -75,14 +74,14 @@ const QuizResource = props =>
         icon: 'fa fa-fw fa-check-square-o',
         label: trans('correct', {}, 'actions'),
         displayed: props.papersAdmin,
-        target: '/correction',
+        target: `${props.path}/correction`,
         group: trans('management')
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-bar-chart',
         label: trans('show-statistics', {}, 'actions'),
         displayed: props.papersAdmin,
-        target: '/statistics'
+        target: `${props.path}/statistics`
       }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-pie-chart',
@@ -94,6 +93,7 @@ const QuizResource = props =>
   >
     <Routes
       key="resource-content"
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -150,6 +150,7 @@ const QuizResource = props =>
   </ResourcePage>
 
 QuizResource.propTypes = {
+  path: T.string.isRequired,
   quizId: T.string,
   empty: T.bool.isRequired,
   editable: T.bool.isRequired,

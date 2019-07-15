@@ -8,6 +8,7 @@ import {Paper}  from '#/plugin/exo/resources/quiz/papers/components/paper'
 
 const PapersMain = props =>
   <Routes
+    path={props.path}
     routes={[
       {
         path: '/papers',
@@ -29,6 +30,7 @@ const PapersMain = props =>
   />
 
 PapersMain.propTypes = {
+  path: T.string.isRequired,
   quizId: T.string.isRequired,
   showStatistics: T.bool.isRequired,
   statistics: T.func.isRequired,

@@ -236,6 +236,7 @@ const PaperComponent = props =>
   </div>
 
 PaperComponent.propTypes = {
+  path: T.string.isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,
@@ -259,6 +260,7 @@ const Paper = withRouter(
       const paper = selectors.currentPaper(state)
 
       return ({
+        path: resourceSelect.path(state),
         quizId: selectors.quizId(state),
         admin: admin,
         paper: paper,
@@ -273,7 +275,7 @@ const Paper = withRouter(
       delete(quizId, paper) {
         dispatch(actions.deletePapers(quizId, [paper]))
 
-        ownProps.history.push('/papers')
+        ownProps.history.push(`${ownProps.path}/papers`)
       }
     })
   )(PaperComponent)

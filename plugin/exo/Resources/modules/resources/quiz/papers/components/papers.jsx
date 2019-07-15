@@ -27,7 +27,7 @@ const Papers = props =>
       primaryAction={(row) => ({
         type: LINK_BUTTON,
         label: trans('open', {}, 'actions'),
-        target: `/papers/${row.id}`
+        target: `${props.path}/papers/${row.id}`
       })}
       fetch={{
         url: ['exercise_paper_list', {exerciseId: props.quizId}],
@@ -129,6 +129,7 @@ const Papers = props =>
   </Fragment>
 
 Papers.propTypes = {
+  path: T.string.isRequired,
   quizId: T.string.isRequired,
   admin: T.bool.isRequired,
   hasScore: T.bool.isRequired,
@@ -137,6 +138,7 @@ Papers.propTypes = {
 
 const ConnectedPapers = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     admin: hasPermission('edit', resourceSelectors.resourceNode(state)) || hasPermission('manage_papers', resourceSelectors.resourceNode(state)),
     quizId: paperSelectors.quizId(state),
     hasScore: paperSelectors.quizHasScore(state)

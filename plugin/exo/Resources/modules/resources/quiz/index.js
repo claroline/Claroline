@@ -1,3 +1,4 @@
+import {reducer} from '#/plugin/exo/resources/quiz/store'
 import {QuizCreation} from '#/plugin/exo/resources/quiz/containers/creation'
 import {QuizResource} from '#/plugin/exo/resources/quiz/containers/resource'
 
@@ -18,7 +19,8 @@ export const Creation = () => ({
 /**
  * Quiz resource application.
  */
-export const App = () => ({
+export default {
   component: QuizResource,
+  store: reducer,
   styles: ['claroline-distribution-plugin-exo-quiz-resource']
-})
+}

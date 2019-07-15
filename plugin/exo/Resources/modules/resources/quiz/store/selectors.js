@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'ujm_exercise'
 
 /**
  * Gets the whole quiz store object.

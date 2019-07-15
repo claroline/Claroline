@@ -2,12 +2,14 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
+import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 import {Quiz, Step} from '#/plugin/exo/resources/quiz/prop-types'
 import {
   QUIZ_STEP_ADD,
@@ -84,7 +86,7 @@ function pushItem(item, items, position) {
   return newItems
 }
 
-export const reducer = makeFormReducer('resource.editor', {}, {
+export const reducer = makeFormReducer(quizSelectors.STORE_NAME + '.editor', {}, {
   pendingChanges: makeReducer(false, {
     [QUIZ_STEP_ADD]: () => true,
     [QUIZ_STEP_COPY]: () => true,
@@ -94,7 +96,7 @@ export const reducer = makeFormReducer('resource.editor', {}, {
     [QUIZ_ITEM_COPY]: () => true
   }),
   originalData: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => setDefaults(action.resourceData.quiz) || state
+    [makeInstanceAction(RESOURCE_LOAD, quizSelectors.STORE_NAME)]: (state, action) => setDefaults(action.resourceData.quiz) || state
   }),
   data: makeReducer({}, {
     /**
@@ -102,7 +104,7 @@ export const reducer = makeFormReducer('resource.editor', {}, {
      *
      * @param {object} state - the quiz object @see Quiz.propTypes
      */
-    [RESOURCE_LOAD]: (state, action) => setDefaults(action.resourceData.quiz) || state,
+    [makeInstanceAction(RESOURCE_LOAD, quizSelectors.STORE_NAME)]: (state, action) => setDefaults(action.resourceData.quiz) || state,
 
     /**
      * Adds a new step to the quiz.

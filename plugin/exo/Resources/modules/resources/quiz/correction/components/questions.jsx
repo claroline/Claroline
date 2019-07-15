@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {selectors as correctionSelectors} from '#/plugin/exo/resources/quiz/correction/store/selectors'
@@ -20,7 +21,7 @@ export const QuestionRow = props =>
         id={props.question.id}
         tip={trans('correct', {}, 'actions')}
       >
-        <a className="btn btn-link-default" href={`#correction/${props.question.id}`}>
+        <a className="btn btn-link-default" href={`${props.path}/correction/${props.question.id}`}>
           <span className="fa fa-fw fa-check-square-o" />
           <span className="sr-only">{trans('correct', {}, 'actions')}</span>
         </a>
@@ -29,6 +30,7 @@ export const QuestionRow = props =>
   </tr>
 
 QuestionRow.propTypes = {
+  path: T.string.isRequired,
   question: T.shape({
     id: T.string.isRequired,
     title: T.string,
@@ -41,7 +43,7 @@ QuestionRow.propTypes = {
   answers: T.arrayOf(T.object)
 }
 
-const Questions = props =>
+const QuestionsComponent = props =>
   props.questions.length > 0 ?
     <div className="questions-list">
       <table className="table table-striped table-hover">
@@ -54,7 +56,11 @@ const Questions = props =>
         </thead>
         <tbody>
           {props.questions.map((question, idx) =>
-            <QuestionRow key={idx} {...question}/>
+            <QuestionRow
+              key={idx}
+              path={props.path}
+              {...question}
+            />
           )}
         </tbody>
       </table>
@@ -65,20 +71,20 @@ const Questions = props =>
       </div>
     </div>
 
-Questions.propTypes = {
+QuestionsComponent.propTypes = {
+  path: T.string.isRequired,
   questions: T.arrayOf(T.object).isRequired
 }
 
-Questions.defaultProps = {
+QuestionsComponent.defaultProps = {
   questions: []
 }
 
-function mapStateToProps(state) {
-  return {
+const Questions = connect(
+  (state) => ({
+    path: resourceSelectors.path(state),
     questions: correctionSelectors.questions(state)
-  }
-}
+  })
+)(QuestionsComponent)
 
-const ConnectedQuestions = connect(mapStateToProps)(Questions)
-
-export {ConnectedQuestions as Questions}
+export {Questions}

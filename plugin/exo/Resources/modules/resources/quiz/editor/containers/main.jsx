@@ -1,8 +1,9 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
-import {makeId} from '#/main/core/scaffolding/id'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
+
+import {makeId} from '#/main/core/scaffolding/id'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {EditorMain as EditorMainComponent} from '#/plugin/exo/resources/quiz/editor/components/main'
@@ -11,6 +12,7 @@ import {actions, selectors} from '#/plugin/exo/resources/quiz/editor/store'
 const EditorMain = withRouter(
   connect(
     (state) => ({
+      path: resourceSelectors.path(state),
       formName: selectors.FORM_NAME,
       validating: formSelectors.validating(formSelectors.form(state, selectors.FORM_NAME)),
       pendingChanges: formSelectors.pendingChanges(formSelectors.form(state, selectors.FORM_NAME)),
@@ -55,7 +57,7 @@ const EditorMain = withRouter(
 
         dispatch(actions.addStep({id: stepId}))
 
-        ownProps.history.push(`/edit/${stepId}`)
+        ownProps.history.push(`${ownProps.path}/edit/${stepId}`)
       },
 
       /**
@@ -66,8 +68,8 @@ const EditorMain = withRouter(
       removeStep(stepId) {
         dispatch(actions.removeStep(stepId))
 
-        if (`/edit/${stepId}` === ownProps.history.location.pathname) {
-          ownProps.history.push('/edit')
+        if (`${ownProps.path}/edit/${stepId}` === ownProps.history.location.pathname) {
+          ownProps.history.push(`${ownProps.path}/edit`)
         }
       },
 

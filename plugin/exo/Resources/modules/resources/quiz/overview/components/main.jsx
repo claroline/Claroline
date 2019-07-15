@@ -97,7 +97,7 @@ const OverviewMain = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('exercise_start', {}, 'quiz'),
-        target: '/play',
+        target: `${props.path}/play`,
         primary: true,
         disabled: props.empty,
         disabledMessages: [
@@ -122,6 +122,7 @@ const OverviewMain = props =>
   </ResourceOverview>
 
 OverviewMain.propTypes = {
+  path: T.string.isRequired,
   empty: T.bool.isRequired,
   editable: T.bool.isRequired,
   quiz: T.shape({

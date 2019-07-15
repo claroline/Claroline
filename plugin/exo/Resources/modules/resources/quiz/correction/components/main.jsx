@@ -8,6 +8,7 @@ import {Answers}    from '#/plugin/exo/resources/quiz/correction/components/answ
 
 const CorrectionMain = props =>
   <Routes
+    path={props.path}
     routes={[
       {
         path: '/correction',
@@ -23,6 +24,7 @@ const CorrectionMain = props =>
   />
 
 CorrectionMain.propTypes = {
+  path: T.string.isRequired,
   correction: T.func.isRequired
 }
 

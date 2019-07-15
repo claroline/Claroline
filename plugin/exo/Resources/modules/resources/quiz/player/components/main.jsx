@@ -9,6 +9,7 @@ import {PlayerEnd} from '#/plugin/exo/resources/quiz/player/components/end'
 
 const PlayerMain = (props) =>
   <Routes
+    path={props.path}
     routes={[
       {
         path: '/:id',
@@ -31,7 +32,7 @@ const PlayerMain = (props) =>
             return Step
           }
 
-          routeProps.history.push('/')
+          routeProps.history.push(props.path)
 
           return null
         }
@@ -43,6 +44,7 @@ const PlayerMain = (props) =>
   />
 
 PlayerMain.propTypes = {
+  path: T.string.isRequired,
   numberingType: T.string,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
