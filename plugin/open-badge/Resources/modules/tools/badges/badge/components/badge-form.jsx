@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
 import {
   ISSUING_MODE_ORGANIZATION,
@@ -80,7 +81,7 @@ const BadgeFormComponent = (props) => {
   return (
     <FormData
       {...props}
-      name="badges.current"
+      name={selectors.STORE_NAME +'.badges.current'}
       meta={true}
       buttons={true}
       target={(badge, isNew) => isNew ?
@@ -144,8 +145,8 @@ const BadgeFormComponent = (props) => {
 const BadgeForm = connect(
   (state) => ({
     currentContext: state.currentContext,
-    new: formSelect.isNew(formSelect.form(state, 'badges.current')),
-    badge: formSelect.data(formSelect.form(state, 'badges.current')),
+    new: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME +'.badges.current')),
+    badge: formSelect.data(formSelect.form(state, selectors.STORE_NAME +'.badges.current')),
     workspace: state.workspace
   }),
   (dispatch, ownProps) =>({

@@ -2,15 +2,16 @@ import React from 'react'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {BadgeForm} from  '#/plugin/open-badge/tools/badges/badge/components/badge-form'
+import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
-const Badge = () =>
+const Badge = props =>
   <div>
     <BadgeForm
-      name="badges.current"
+      name={selectors.STORE_NAME +'.badges.current'}
       buttons={true}
       cancel={{
         type: LINK_BUTTON,
-        target: '/badges',
+        target: props.path + '/badges',
         exact: true
       }}
     >

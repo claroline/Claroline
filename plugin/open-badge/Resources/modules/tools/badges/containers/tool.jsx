@@ -1,15 +1,15 @@
 import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 
-import {OpenBadgeAdminTool as OpenBadgeAdminToolComponent} from '#/plugin/open-badge/tools/badges/components/tool'
+import {Tool} from '#/plugin/open-badge/tools/badges/components/tool'
 
-const ConnectedOpenBadgeAdminTool = withRouter(connect(
+const ConnectedTool = withRouter(connect(
   state => ({
-    currentContext: state.currentContext
+    currentContext: state.tool.currentContext
   }),
   null
-)(OpenBadgeAdminToolComponent))
+)(Tool))
 
 export {
-  ConnectedOpenBadgeAdminTool as OpenBadgeAdminTool
+  ConnectedTool as OpenBadgeTool
 }

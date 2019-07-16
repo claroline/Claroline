@@ -11,54 +11,28 @@
 
 namespace Claroline\OpenBadgeBundle\Listener;
 
-use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Home tool.
+ * Badge tool.
  *
  * @DI\Service()
  */
 class ToolListener
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var TwigEngine */
-    private $templating;
-
-    /** @var FinderProvider */
-    private $finder;
-
     /**
-     * HomeListener constructor.
+     * BadgeListener constructor.
      *
      * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "templating"    = @DI\Inject("templating"),
-     *     "finder"        = @DI\Inject("claroline.api.finder")
+     *     "serializer"        = @DI\Inject("claroline.api.serializer")
      * })
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param TwigEngine                    $templating
-     * @param FinderProvider                $finder
-     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        TwigEngine $templating,
-        FinderProvider $finder,
-        AuthorizationCheckerInterface $authorization
+        SerializerProvider $serializer
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
-        $this->finder = $finder;
-        $this->authorization = $authorization;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -70,8 +44,7 @@ class ToolListener
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $content = $this->templating->render('ClarolineOpenBadgeBundle::desktop.html.twig', []);
-        $event->setContent($content);
+        $event->setData([]);
 
         $event->stopPropagation();
     }
@@ -81,11 +54,10 @@ class ToolListener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
+    public function onDisplayWorkspace(DisplayToolEvent $event)
     {
         $workspace = $event->getWorkspace();
-        $content = $this->templating->render('ClarolineOpenBadgeBundle::workspace.html.twig', ['workspace' => $workspace]);
 
-        $event->setContent($content);
+        $event->setData(['workspace' => $this->serializer->serialize($workspace)]);
     }
 }

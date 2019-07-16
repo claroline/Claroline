@@ -21,48 +21,55 @@ const BadgeTabActionsComponent = props =>
         type={LINK_BUTTON}
         icon="fa fa-plus"
         label={trans('add_badge')}
-        target="/badges/form"
+        target={props.path+'/badges/form'}
         primary={true}
       />
     }
   </PageActions>
 
-const BadgeTabComponent = props =>
-  <Routes
-    routes={[
-      {
-        path: '/badges',
-        exact: true,
-        component: Badges
-      }, {
-        path: '/badges/form/:id?',
-        component: Badge,
-        exact: true,
-        onEnter: (params) => props.openBadge(params.id, props.workspace)
-      }, {
-        path: '/badges/assertion/:id',
-        component: Assertion,
-        exact: true,
-        onEnter: (params) => props.openAssertion(params.id)
-      }, {
-        path: '/badges/view/:id',
-        component: BadgeViewer,
-        exact: true,
-        onEnter: (params) => props.openBadge(params.id, props.workspace)
-      }
-    ]}
-  />
+const BadgeTabComponent = props => <Routes
+  path={props.path}
+  routes={[
+    {
+      path: '/badges',
+      exact: true,
+      component: Badges
+    }, {
+      path: '/badges/form/:id?',
+      component: () => {
+        const BadgeWithPath = <Badge path={props.path}/>
+
+        return BadgeWithPath
+      },
+      exact: true,
+      onEnter: (params) => props.openBadge(params.id, props.workspace)
+    }, {
+      path: '/badges/assertion/:id',
+      component: Assertion,
+      exact: true,
+      onEnter: (params) => props.openAssertion(params.id)
+    }, {
+      path: '/badges/view/:id',
+      component: BadgeViewer,
+      exact: true,
+      onEnter: (params) => props.openBadge(params.id, props.workspace)
+    }
+  ]}
+/>
+
 
 BadgeTabComponent.propTypes = {
   openBadge: T.func.isRequired,
   openAssertion: T.func.isRequired,
-  workspace: T.object
+  workspace: T.object,
+  path: T.string
 }
 
 const BadgeTab = connect(
-  (state) => ({
-    currentContext: state.currentContext,
-    workspace: state.workspace
+  (state, ownProps) => ({
+    currentContext: state.tool.currentContext,
+    workspace: state.workspace,
+    path: ownProps.path
   }),
   dispatch => ({
     openBadge(id = null, workspace = null) {

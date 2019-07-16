@@ -9,11 +9,12 @@ import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {actions} from '#/plugin/open-badge/tools/badges/badge/store/actions'
 
+import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 import {constants as listConstants} from '#/main/app/content/list/constants'
 // todo : restore custom actions the same way resource actions are implemented
 const BadgesList = props =>
   <ListData
-    name="badges.list"
+    name={selectors.STORE_NAME +'.badges.list'}
     fetch={{
       url: props.currentContext === 'workspace' ? ['apiv2_badge-class_workspace_badge_list', {workspace: props.workspace.uuid}]: ['apiv2_badge-class_list'],
       autoload: true
@@ -31,7 +32,7 @@ const BadgesList = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pen',
         label: trans('edit'),
-        target: `/badges/form/${rows[0].id}`,
+        target: props.path + `/badges/form/${rows[0].id}`,
         scope: ['object']
       }, {
         type: CALLBACK_BUTTON,
@@ -55,9 +56,10 @@ const BadgesList = props =>
   />
 
 const Badges = connect(
-  (state) => ({
+  (state, ownProps) => ({
     currentContext: state.currentContext,
-    workspace: state.workspace
+    workspace: state.workspace,
+    path: ownProps.path
   }),
   dispatch => ({
     enable(badges) {
