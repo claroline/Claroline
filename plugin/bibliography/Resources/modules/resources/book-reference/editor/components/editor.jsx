@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -6,7 +7,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 
-const Editor = () =>
+const Editor = (props) =>
   <FormData
     level={2}
     title={trans('parameters')}
@@ -15,7 +16,7 @@ const Editor = () =>
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -84,6 +85,10 @@ const Editor = () =>
       }
     ]}
   />
+
+Editor.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   Editor

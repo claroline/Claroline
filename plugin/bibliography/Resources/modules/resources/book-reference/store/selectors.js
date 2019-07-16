@@ -1,4 +1,4 @@
-const STORE_NAME = 'resource'
+const STORE_NAME = 'icap_bibliography'
 
 const FORM_NAME = `${STORE_NAME}.bookReference`
 

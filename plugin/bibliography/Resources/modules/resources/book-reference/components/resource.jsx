@@ -10,6 +10,7 @@ import {Editor} from '#/plugin/bibliography/resources/book-reference/editor/comp
 const BookReferenceResource = props =>
   <ResourcePage>
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -18,13 +19,18 @@ const BookReferenceResource = props =>
         }, {
           path: '/edit',
           disabled: !props.canEdit,
-          component: Editor
+          render: () => {
+            const component = <Editor path={props.path} />
+
+            return component
+          }
         }
       ]}
     />
   </ResourcePage>
 
 BookReferenceResource.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired
 }
 

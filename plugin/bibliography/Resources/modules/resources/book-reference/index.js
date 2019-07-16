@@ -1,4 +1,4 @@
-
+import {reducer} from '#/plugin/bibliography/resources/book-reference/store'
 import {BookReferenceResource} from '#/plugin/bibliography/resources/book-reference/containers/resource'
 
 /**
@@ -6,6 +6,7 @@ import {BookReferenceResource} from '#/plugin/bibliography/resources/book-refere
  *
  * @constructor
  */
-export const App = () => ({
-  component: BookReferenceResource
-})
+export default {
+  component: BookReferenceResource,
+  store: reducer
+}

@@ -1,3 +1,4 @@
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
@@ -8,10 +9,10 @@ import {selectors} from '#/plugin/bibliography/resources/book-reference/store/se
 const reducer = combineReducers({
   bookReference: makeFormReducer(selectors.STORE_NAME+'.bookReference', {}, {
     data: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.bookReference
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.bookReference
     }),
     originalData: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.bookReference
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.bookReference
     })
   })
 })
