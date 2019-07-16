@@ -17,14 +17,13 @@ import {DeletedSections} from '#/plugin/wiki/resources/wiki/deleted/components/d
 
 const WikiResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-wiki-wiki-resource']}
     primaryAction="add-section"
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        target: '/',
+        target: props.path,
         exact: true
       }, {
         type: DOWNLOAD_BUTTON,
@@ -39,11 +38,12 @@ const WikiResource = props =>
         icon: 'fa fa-fw fa-trash-o',
         displayed: props.canEdit,
         label: trans('deleted_sections', {}, 'icap_wiki'),
-        target: '/section/deleted'
+        target: `${props.path}/section/deleted`
       }
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -82,6 +82,7 @@ const WikiResource = props =>
   </ResourcePage>
 
 WikiResource.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   canExport: T.bool.isRequired,
   wiki: T.shape({

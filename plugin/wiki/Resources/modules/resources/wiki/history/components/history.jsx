@@ -1,19 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import {withRouter} from '#/main/app/router'
 import isEmpty from 'lodash/isEmpty'
 
+import {withRouter} from '#/main/app/router'
+import {hasPermission} from '#/main/app/security'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {currentUser} from '#/main/app/security'
 import {ListData} from '#/main/app/content/list/containers/data'
+
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+
 import {actions} from '#/plugin/wiki/resources/wiki/history/store'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/app/security'
-
-const loggedUser = currentUser()
 
 const HistoryComponent = props =>
   <section className="wiki-section-history">
@@ -28,7 +28,7 @@ const HistoryComponent = props =>
       primaryAction={(row) => ({
         label: trans('view', {}, 'platform'),
         type: LINK_BUTTON,
-        target: `/contribution/${props.section.id}/${row.id}`
+        target: `${props.path}/contribution/${props.section.id}/${row.id}`
       })}
       definition={[
         {
@@ -67,13 +67,13 @@ const HistoryComponent = props =>
           scope: ['object'],
           displayed: props.section.activeContribution.id !== rows[0].id && (
             props.canEdit ||
-              (props.mode === '0' && loggedUser !== null) ||
-              (props.mode !== '2' && loggedUser !== null && props.section.meta.creator !== null && props.section.meta.creator.id === loggedUser.id)
+              (props.mode === '0' && props.currentUser !== null) ||
+              (props.mode !== '2' && props.currentUser !== null && props.section.meta.creator !== null && props.section.meta.creator.id === props.currentUser.id)
           )
         }, {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-arrows-h',
-          target: rows.length === 2 ? `/contribution/compare/${props.section.id}/${rows[0].id}/${rows[1].id}` : '',
+          target: rows.length === 2 ? `${props.path}/contribution/compare/${props.section.id}/${rows[0].id}/${rows[1].id}` : props.path,
           label: trans('compare_versions', {}, 'icap_wiki'),
           scope: ['collection'],
           displayed: rows.length === 2
@@ -84,6 +84,8 @@ const HistoryComponent = props =>
   </section>
 
 HistoryComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   section: T.object.isRequired,
   canEdit: T.bool.isRequired,
   setActiveContribution: T.func.isRequired,
@@ -92,6 +94,8 @@ HistoryComponent.propTypes = {
 
 const History = withRouter(connect(
   state => ({
+    path: resourceSelect.path(state),
+    currentUser: securitySelectors.currentUser(state),
     section: selectors.currentSection(state),
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     mode: selectors.mode(state)

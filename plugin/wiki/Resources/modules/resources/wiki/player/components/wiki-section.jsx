@@ -6,24 +6,22 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {currentUser} from '#/main/app/security'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {implementPropTypes} from '#/main/app/prop-types'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {Heading} from '#/main/core/layout/components/heading'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Section as SectionTypes} from '#/plugin/wiki/resources/wiki/prop-types'
-import {WikiSectionForm} from '#/plugin/wiki/resources/wiki/player/components/wiki-section-form'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {actions} from '#/plugin/wiki/resources/wiki/player/store'
-import {MODAL_WIKI_SECTION_DELETE} from '#/plugin/wiki/resources/wiki/player/modals/section'
-import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
-const loggedUser = currentUser()
+import {Section as SectionTypes} from '#/plugin/wiki/resources/wiki/prop-types'
+import {actions} from '#/plugin/wiki/resources/wiki/player/store'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+import {MODAL_WIKI_SECTION_DELETE} from '#/plugin/wiki/resources/wiki/player/modals/section'
+import {WikiSectionForm} from '#/plugin/wiki/resources/wiki/player/components/wiki-section-form'
 
 const WikiSectionContent = props =>
   <section className="wiki-section-content">
@@ -73,7 +71,7 @@ const WikiSectionContent = props =>
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-history',
               label: trans('history', {}, 'icap_wiki'),
-              target: `/history/${props.section.id}`
+              target: `${props.path}/history/${props.section.id}`
             }, {
               type: CALLBACK_BUTTON,
               icon: props.section.meta.visible ? 'fa fa-fw fa-eye' : 'fa fa-fw fa-eye-slash',
@@ -99,6 +97,7 @@ const WikiSectionContent = props =>
   </section>
 
 implementPropTypes(WikiSectionContent, SectionTypes, {
+  path: T.string.isRequired,
   isRoot: T.bool.isRequired
 })
 
@@ -158,12 +157,13 @@ implementPropTypes(WikiSectionComponent, SectionTypes)
 
 const WikiSection = connect(
   (state, props = {}) => ({
+    path: resourceSelect.path(state),
     displaySectionNumbers: props.displaySectionNumbers ? props.displaySectionNumbers : selectors.wiki(state).display.sectionNumbers,
     mode: selectors.mode(state),
     wikiId: selectors.wiki(state).id,
     currentSection: selectors.sections(state).currentSection,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
-    loggedUserId: loggedUser === null ? null : loggedUser.id,
+    loggedUserId: securitySelectors.currentUser(state) === null ? null : securitySelectors.currentUser(state).id,
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.sections.currentSection'))
   }),
   (dispatch, props = {}) => (

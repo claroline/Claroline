@@ -1,9 +1,11 @@
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
-import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 import {
   UPDATE_CURRENT_EDIT_SECTION,
   UPDATE_CURRENT_PARENT_SECTION,
@@ -42,7 +44,7 @@ const reducer = combineReducers({
       }
       return updateInTree(state, action.updatedData.id, 'activeContribution', action.updatedData.activeContribution)
     },
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.sections || state
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.sections || state
   }),
   invalidated: makeReducer(false, {
     [LOADED_SECTION_TREE]: () => false,

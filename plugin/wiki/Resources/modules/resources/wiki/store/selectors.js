@@ -2,7 +2,7 @@ import {createSelector} from 'reselect'
 
 import {findInTree} from '#/plugin/wiki/resources/wiki/utils'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'icap_wiki'
 
 const resource = (state) => state[STORE_NAME]
 

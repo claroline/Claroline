@@ -6,6 +6,9 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as formSelect} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 import {Wiki as WikiTypes} from '#/plugin/wiki/resources/wiki/prop-types'
 import {WIKI_MODES, WIKI_MODE_CHOICES} from '#/plugin/wiki/resources/wiki/constants'
@@ -18,7 +21,7 @@ const EditorComponent = props =>
     target={() => ['apiv2_wiki_update_options', {id: props.wiki.id}]}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     name={selectors.STORE_NAME + '.wikiForm'}
@@ -60,11 +63,13 @@ const EditorComponent = props =>
   />
 
 EditorComponent.propTypes = {
+  path: T.string.isRequired,
   wiki: T.shape(WikiTypes.propTypes)
 }
 
 const Editor = connect(
   state => ({
+    path: resourceSelectors.path(state),
     wiki: formSelect.data(formSelect.form(state, selectors.STORE_NAME +'.wikiForm'))
   })
 )(EditorComponent)
