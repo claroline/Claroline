@@ -4,7 +4,6 @@ import omit from 'lodash/omit'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {Summary} from '#/main/app/content/components/summary'
 

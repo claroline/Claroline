@@ -9,7 +9,6 @@ import {Routes} from '#/main/app/router'
 import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
-import {normalizeTree} from '#/plugin/lesson/resources/lesson/utils'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
 import {Editor} from '#/plugin/lesson/resources/lesson/editor/components/editor'
 
