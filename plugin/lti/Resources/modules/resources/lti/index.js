@@ -1,10 +1,11 @@
+import {reducer} from '#/plugin/lti/resources/lti/store'
 import {LtiResource} from '#/plugin/lti/resources/lti/containers/resource'
 
 /**
  * LTI resource application.
- *
- * @constructor
  */
-export const App = () => ({
-  component: LtiResource
-})
+export default {
+  component: LtiResource,
+  store: reducer,
+  styles: ['claroline-distribution-main-core-iframe']
+}

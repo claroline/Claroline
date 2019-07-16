@@ -7,6 +7,8 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {constants} from '#/plugin/lti/resources/lti/constants'
 import {selectors} from '#/plugin/lti/resources/lti/store'
 import {LtiApp as LtiAppType} from '#/plugin/lti/resources/lti/prop-types'
@@ -20,7 +22,7 @@ const EditorComponent = props =>
     target={(ltiResource) => ['apiv2_ltiresource_update', {id: ltiResource.id}]}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -78,12 +80,14 @@ const EditorComponent = props =>
   />
 
 EditorComponent.propTypes = {
+  path: T.string.isRequired,
   ltiApps: T.arrayOf(T.shape(LtiAppType.propTypes)).isRequired,
   updateProp: T.func.isRequired
 }
 
 const Editor = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     ltiApps: selectors.ltiApps(state)
   }),
   (dispatch) => ({

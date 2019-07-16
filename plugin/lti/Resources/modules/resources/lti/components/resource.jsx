@@ -10,11 +10,10 @@ import {Player} from '#/plugin/lti/resources/lti/player/components/player'
 import {Editor} from '#/plugin/lti/resources/lti/editor/components/editor'
 
 const LtiResource = props =>
-  <ResourcePage
-    styles={['claroline-distribution-main-core-iframe']}
-  >
+  <ResourcePage>
     <Routes
       key="resource-content"
+      path={props.path}
       redirect={[
         {from: '/', exact: true, to: '/play'}
       ]}
@@ -34,6 +33,7 @@ const LtiResource = props =>
   </ResourcePage>
 
 LtiResource.propTypes = {
+  path: T.string.isRequired,
   ltiResource: T.shape(LtiResourceType.propTypes),
   editable: T.bool.isRequired,
   resetForm: T.func.isRequired
