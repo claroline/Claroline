@@ -1,13 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {Routes} from '#/main/app/router'
-import {SummarizedContent} from '#/main/app/content/summary/components/content'
 import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
@@ -57,51 +55,41 @@ class LessonResource extends Component {
           }
         ]}
       >
-        <SummarizedContent
-          summary={{
-            displayed: true,
-            opened: true,
-            pinned: true,
-            title: trans('summary'),
-            links: !isEmpty(this.props.tree) ? normalizeTree(this.props.tree, this.props.lesson.id, this.props.canEdit, this.props.path).children : []
-          }}
-        >
-          <Routes
-            className="lesson-page-content"
-            path={this.props.path}
-            routes={[
-              {
-                path: '/',
-                component: ChapterResource,
-                exact: true
-              }, {
-                path: '/edit',
-                component: Editor,
-                exact: true
-              }, {
-                path: '/new',
-                component: ChapterForm,
-                exact: true,
-                onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
-              }, {
-                path: '/:slug',
-                component: ChapterResource,
-                exact: true,
-                onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug)
-              }, {
-                path: '/:slug/edit',
-                component: ChapterForm,
-                exact: true,
-                onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
-              }, {
-                path: '/:slug/copy',
-                component: ChapterForm,
-                exact: true,
-                onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
-              }
-            ]}
-          />
-        </SummarizedContent>
+        <Routes
+          className="lesson-page-content"
+          path={this.props.path}
+          routes={[
+            {
+              path: '/',
+              component: ChapterResource,
+              exact: true
+            }, {
+              path: '/edit',
+              component: Editor,
+              exact: true
+            }, {
+              path: '/new',
+              component: ChapterForm,
+              exact: true,
+              onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
+            }, {
+              path: '/:slug',
+              component: ChapterResource,
+              exact: true,
+              onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug)
+            }, {
+              path: '/:slug/edit',
+              component: ChapterForm,
+              exact: true,
+              onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
+            }, {
+              path: '/:slug/copy',
+              component: ChapterForm,
+              exact: true,
+              onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
+            }
+          ]}
+        />
       </ResourcePage>
     )
   }
