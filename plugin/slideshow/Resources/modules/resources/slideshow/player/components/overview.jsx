@@ -4,11 +4,13 @@ import {connect} from 'react-redux'
 
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
+import {Button} from '#/main/app/action/components/button'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
@@ -44,7 +46,7 @@ const OverviewComponent = props =>
         <ul className="slides">
           {props.slides.map(slide =>
             <li key={slide.id} className="slide-preview">
-              <LinkButton target={`/play/${slide.id}`}>
+              <LinkButton target={`${props.path}/play/${slide.id}`}>
                 <img src={asset(slide.content.url)} alt={slide.title} className="img-thumbnail"/>
               </LinkButton>
             </li>
@@ -58,13 +60,14 @@ const OverviewComponent = props =>
       className="btn btn-block btn-emphasis"
       icon="fa fa-fw fa-play"
       label={trans('start_slideshow', {}, 'slideshow')}
-      target="/play"
+      target={`${props.path}/play`}
       primary={true}
       disabled={0 === props.slides.length}
     />
   </section>
 
 OverviewComponent.propTypes = {
+  path: T.string.isRequired,
   overviewMessage: T.string,
   slides: T.arrayOf(T.shape(
     SlideTypes.propTypes
@@ -73,6 +76,7 @@ OverviewComponent.propTypes = {
 
 const Overview = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     overviewMessage: selectors.overviewMessage(state),
     slides: selectors.slides(state)
   })

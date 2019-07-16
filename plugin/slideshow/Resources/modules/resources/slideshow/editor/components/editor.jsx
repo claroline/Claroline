@@ -4,16 +4,18 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {Button} from '#/main/app/action/components/button'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/editor/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
-import {Slides} from '#/plugin/slideshow/resources/slideshow/components/slides'
 import {MODAL_SLIDE} from '#/plugin/slideshow/resources/slideshow/editor/modals/slide'
+import {Slides} from '#/plugin/slideshow/resources/slideshow/components/slides'
 
 const EditorComponent = props =>
   <FormData
@@ -24,7 +26,7 @@ const EditorComponent = props =>
     target={(slideshow) => ['apiv2_slideshow_update', {id: slideshow.id}]}
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -142,6 +144,7 @@ const EditorComponent = props =>
   </FormData>
 
 EditorComponent.propTypes = {
+  path: T.string.isRequired,
   slides: T.arrayOf(T.shape(
     SlideTypes.propTypes
   )),
@@ -154,6 +157,7 @@ EditorComponent.defaultProps = {
 
 const Editor = connect(
   (state) => ({
+    path: resourceSelectors.path(state),
     slides: selectors.slides(state)
   }),
   (dispatch) => ({

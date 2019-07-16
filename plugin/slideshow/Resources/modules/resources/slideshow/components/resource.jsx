@@ -12,24 +12,24 @@ import {Player} from '#/plugin/slideshow/resources/slideshow/player/components/p
 
 const SlideshowResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-slideshow-slideshow-resource']}
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         displayed: props.showOverview,
-        target: '/',
+        target: props.path,
         exact: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
-        target: '/play'
+        target: `${props.path}/play`
       }
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
@@ -61,6 +61,7 @@ const SlideshowResource = props =>
   </ResourcePage>
 
 SlideshowResource.propTypes = {
+  path: T.string.isRequired,
   showOverview: T.bool.isRequired,
   editable: T.bool.isRequired
 }
