@@ -6,6 +6,9 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {selectors} from '#/plugin/blog/resources/blog/store'
 import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation'
 
@@ -16,9 +19,9 @@ const UnpublishedCommentsComponent = (props) =>
       url: ['apiv2_blog_comment_unpublished', {blogId: props.blogId}],
       autoload: true
     }}
-    open={(row) => ({
+    primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `/${row.slug}`
+      target: `${props.path}/${row.slug}`
     })}
     definition={[
       {
@@ -47,11 +50,13 @@ const UnpublishedCommentsComponent = (props) =>
   />
 
 UnpublishedCommentsComponent.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string.isRequired
 }
 
 const UnpublishedComments = connect(
   state => ({
+    path: resourceSelectors.path(state),
     blogId: selectors.blog(state).data.id
   })
 )(UnpublishedCommentsComponent)

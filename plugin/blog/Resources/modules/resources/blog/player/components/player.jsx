@@ -22,6 +22,7 @@ const PlayerComponent = props =>
   <div className="row">
     <div className="col-lg-9 col-md-8 col-sm-7 col-xs-12">
       <Routes
+        path={props.path}
         routes={[
           {
             path: '/author/:authorId',
@@ -68,6 +69,7 @@ const PlayerComponent = props =>
   </div>
 
 PlayerComponent.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string.isRequired,
   postId: T.string,
   mode: T.string,
@@ -84,6 +86,7 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
+    path: resourceSelect.path(state),
     blogId: selectors.blog(state).data.id,
     postId: !isEmpty(selectors.postEdit(state)) ? selectors.postEdit(state).data.id : null,
     mode: selectors.mode(state),

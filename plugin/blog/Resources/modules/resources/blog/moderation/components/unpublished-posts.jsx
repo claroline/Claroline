@@ -1,9 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+
 import {trans} from '#/main/app/intl/translation'
 import {constants as listConst} from '#/main/app/content/list/constants'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {PostCard} from '#/plugin/blog/resources/blog/post/components/card'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
@@ -14,9 +19,10 @@ const UnpublishedPostsComponent = (props) =>
       url: ['apiv2_blog_post_list_unpublished', {blogId: props.blogId}],
       autoload: true
     }}
-    open={{
-      action: (row) => `#/${row.slug}`
-    }}
+    primaryAction={(row) => ({
+      type: LINK_BUTTON,
+      target: `${props.path}/${row.slug}`
+    })}
     definition={[
       {
         name: 'title',
@@ -68,12 +74,14 @@ const UnpublishedPostsComponent = (props) =>
   />
 
 UnpublishedPostsComponent.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string.isRequired,
   posts: T.array
 }
 
 const UnpublishedPosts = connect(
   state => ({
+    path: resourceSelectors.path(state),
     posts: selectors.posts(state).data,
     blogId: selectors.blog(state).data.id
   })

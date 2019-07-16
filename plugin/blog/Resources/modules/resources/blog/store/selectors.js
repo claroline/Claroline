@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {hasPermission} from '#/main/app/security'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'icap_blog'
 
 const resource = (state) => state[STORE_NAME]
 

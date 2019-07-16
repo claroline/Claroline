@@ -3,11 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-import {trans} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
 import {hasPermission} from '#/main/app/security'
+import {trans} from '#/main/app/intl/translation'
+import {constants as listConst} from '#/main/app/content/list/constants'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {ListData} from '#/main/app/content/list/containers/data'
+
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
@@ -15,8 +16,6 @@ import {constants} from '#/plugin/blog/resources/blog/constants'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 import {CommentCard} from '#/plugin/blog/resources/blog/comment/components/comment'
 import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
-
-const authenticatedUser = currentUser()
 
 const CommentsComponent = props =>
   <section className={classes('comments-container', {
@@ -39,7 +38,7 @@ const CommentsComponent = props =>
       </button>
     </h3>
 
-    {props.opened && props.canComment && (authenticatedUser !== null || props.canAnonymousComment) &&
+    {props.opened && props.canComment && (props.currentUser !== null || props.canAnonymousComment) &&
       <section className="comments-section">
         {!props.showComments && !props.showForm &&
           <button
@@ -54,7 +53,7 @@ const CommentsComponent = props =>
           <div>
             <h4>{trans('add_comment', {}, 'icap_blog')}</h4>
             <UserMessageForm
-              user={authenticatedUser !== null ? authenticatedUser : {}}
+              user={props.currentUser !== null ? props.currentUser : {}}
               allowHtml={true}
               submitLabel={trans('add_comment')}
               submit={(comment) => props.submitComment(props.blogId, props.postId, comment)}
@@ -112,6 +111,7 @@ const CommentsComponent = props =>
   </section>
 
 CommentsComponent.propTypes = {
+  currentUser: T.object,
   switchCommentFormDisplay: T.func.isRequired,
   switchCommentsDisplay: T.func.isRequired,
   switchEditCommentFormDisplay: T.func.isRequired,
@@ -133,6 +133,7 @@ CommentsComponent.propTypes = {
 
 const Comments = connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     user: selectors.user(state),
     opened: selectors.showComments(state),
     isModerated: selectors.blog(state).data.options.data.commentModerationMode !== constants.COMMENT_MODERATION_MODE_NONE,

@@ -6,6 +6,9 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ListData} from '#/main/app/content/list/containers/data'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
@@ -16,9 +19,9 @@ const ReportedComponent = (props) =>
       url: ['apiv2_blog_comment_reported', {blogId: props.blogId}],
       autoload: true
     }}
-    open={(row) => ({
+    primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `/${row.slug}`
+      target: `${props.path}/${row.slug}`
     })}
     definition={[
       {
@@ -47,11 +50,13 @@ const ReportedComponent = (props) =>
   />
 
 ReportedComponent.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string.isRequired
 }
 
 const Reported = connect(
   state => ({
+    path: resourceSelectors.path(state),
     blogId: selectors.blog(state).data.id
   })
 )(ReportedComponent)

@@ -90,7 +90,7 @@ const CardActions = props =>
         tooltip="top"
         label={trans('edit_post_short', {}, 'icap_blog')}
         title={trans('edit_post_short', {}, 'icap_blog')}
-        target={`/${props.post.slug}/edit`}
+        target={`${props.path}/${props.post.slug}/edit`}
       />
     }
 
@@ -136,6 +136,7 @@ const CardActions = props =>
   </ButtonToolbar>
 
 CardActions.propTypes = {
+  path: T.string.isRequired,
   canEdit:T.bool,
   canModerate:T.bool,
   post: T.shape(PostType.propTypes),
@@ -204,7 +205,7 @@ const PostCardComponent = props =>
   <div className="data-card data-card-col">
     <div className="post-header">
       <h2 className="post-title">
-        <LinkButton target={`/${props.data.slug}`}>{props.data.title}</LinkButton>
+        <LinkButton target={`${props.path}/${props.data.slug}`}>{props.data.title}</LinkButton>
       </h2>
 
       <CardMeta
@@ -223,6 +224,7 @@ const PostCardComponent = props =>
         publishPost={props.publishPost}
         pinPost={props.pinPost}
         deletePost={props.deletePost}
+        path={props.path}
       />
     </div>
 
@@ -231,7 +233,7 @@ const PostCardComponent = props =>
         <HtmlText>{`${props.data.content}${(props.data.abstract ? '[...]' : '')}`}</HtmlText>
 
         {props.data.abstract &&
-          <LinkButton target={`/${props.data.slug}`} className="btn btn-block">
+          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-block">
             {trans('read_more', {}, 'icap_blog')}
           </LinkButton>
         }
@@ -248,6 +250,7 @@ const PostCardComponent = props =>
   </div>
 
 PostCardComponent.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string.isRequired,
   canEdit: T.bool,
   size: T.string,
@@ -267,6 +270,7 @@ PostCardComponent.propTypes = {
 const PostCard = withRouter(
   connect(
     (state) => ({
+      path: resourceSelect.path(state),
       blogId: selectors.blog(state).data.id,
       canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
       canModerate: hasPermission('moderate', resourceSelect.resourceNode(state)),

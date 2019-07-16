@@ -162,7 +162,7 @@ const BlogOptionsComponent = props =>
             type={CALLBACK_BUTTON}
             className="btn"
             callback={() => {
-              props.cancel(props.history)
+              props.cancel(props.history, props.path)
             }}
           />
         </ButtonToolbar>
@@ -171,6 +171,7 @@ const BlogOptionsComponent = props =>
   </section>
 
 BlogOptionsComponent.propTypes = {
+  path: T.string.isRequired,
   workspace: T.object,
   options: T.shape(BlogOptionsType.propTypes),
   mode: T.string,
@@ -184,6 +185,7 @@ BlogOptionsComponent.propTypes = {
 
 const BlogOptions = withRouter(connect(
   state => ({
+    path: resourceSelectors.path(state),
     workspace: resourceSelectors.workspace(state),
     blogId: selectors.blog(state).data.id,
     options: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
@@ -193,11 +195,11 @@ const BlogOptions = withRouter(connect(
     || formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).maxTag !== formSelect.originalData(formSelect.form(state, selectors.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).maxTag
   }),
   dispatch => ({
-    cancel: (history) => {
+    cancel: (history, path) => {
       dispatch(
         formActions.cancelChanges(selectors.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)
       )
-      history.push('/')
+      history.push(path)
     },
     saveOptions: (blogId, tagOptionsChanged) => {
       dispatch(

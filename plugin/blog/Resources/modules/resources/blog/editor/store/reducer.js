@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
@@ -23,7 +24,7 @@ const reducer = {
       [BLOG_OPTIONS_WIDGET_DOWN]: () => true
     }),
     data: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.blog.options || state,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.blog.options || state,
       [BLOG_OPTIONS_WIDGET_VISIBILITY]: (state, action) => {
         const data = cloneDeep(state)
         const widget = find(data.widgetOrder, ['id', action.id])

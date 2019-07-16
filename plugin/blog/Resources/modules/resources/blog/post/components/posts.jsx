@@ -2,16 +2,18 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {hasPermission} from '#/main/app/security'
+import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {PostCard} from '#/plugin/blog/resources/blog/post/components/card'
-import {hasPermission} from '#/main/app/security'
+
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {selectors} from '#/plugin/blog/resources/blog/store'
-import {withRouter} from '#/main/app/router'
+
 import {buildQueryParameters, initDatalistFilters} from '#/plugin/blog/resources/blog/utils'
+import {selectors} from '#/plugin/blog/resources/blog/store'
+import {PostCard} from '#/plugin/blog/resources/blog/post/components/card'
 
 class PostsComponent extends Component {
   constructor(props) {
@@ -46,9 +48,9 @@ class PostsComponent extends Component {
           url: ['apiv2_blog_post_list', {blogId: this.props.blogId}],
           autoload: true
         }}
-        open={(row) => ({
+        primaryAction={(row) => ({
           type: LINK_BUTTON,
-          target: `/${row.slug}`
+          target: `${this.props.path}/${row.slug}`
         })}
         definition={[
           {
@@ -104,6 +106,7 @@ class PostsComponent extends Component {
 }
 
 PostsComponent.propTypes ={
+  path: T.string.isRequired,
   blogId: T.string.isRequired,
   posts: T.array,
   canEdit: T.bool,
@@ -117,6 +120,7 @@ PostsComponent.propTypes ={
 const Posts = withRouter(
   connect(
     (state) => ({
+      path: resourceSelect.path(state),
       filters: selectors.posts(state).filters,
       posts: selectors.posts(state).data,
       blogId: selectors.blog(state).data.id,

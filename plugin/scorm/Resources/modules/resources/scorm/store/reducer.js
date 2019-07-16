@@ -13,7 +13,7 @@ import {TRACKING_UPDATE} from '#/plugin/scorm/resources/scorm/player/actions'
 
 const reducer = combineReducers({
   scorm: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, 'claroline_scorm')]: (state, action) => action.resourceData.scorm || state,
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.scorm || state,
     [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.scormForm']: (state, action) => action.updatedData
   }),
   trackings: makeReducer({}, {

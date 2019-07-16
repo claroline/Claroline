@@ -1,12 +1,13 @@
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
+
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {SWITCH_MODE} from '#/plugin/blog/resources/blog/store/actions'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
-
 import {reducer as editorReducer} from '#/plugin/blog/resources/blog/editor/store/reducer'
 import {reducer as postReducer} from '#/plugin/blog/resources/blog/post/store/reducer'
 import {reducer as commentReducer} from '#/plugin/blog/resources/blog/comment/store/reducer'
@@ -33,7 +34,7 @@ const reducer = combineReducers({
     [SWITCH_MODE]: () => false
   }),
   user: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.user || state
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.user || state
   }),
   mode: makeReducer(selectors.STORE_NAME + '.list_posts', {
     [SWITCH_MODE]: (state, action) => action.mode
@@ -51,19 +52,19 @@ const reducer = combineReducers({
   moderationPosts: moderationReducer.moderationPosts,
   trustedUsers: moderationReducer.trustedUsers,
   pdfEnabled: makeReducer(false, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.pdfEnabled
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.pdfEnabled
   }),
   blog: combineReducers({
     data: combineReducers({
       id: makeReducer('', {
-        [RESOURCE_LOAD]: (state, action) => action.resourceData.blog.id || state
+        [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.blog.id || state
       }),
       title: makeReducer('', {
-        [RESOURCE_LOAD]: (state, action) => action.resourceData.blog.title || state
+        [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.blog.title || state
       }),
       authors: toolbarReducer.authors,
       archives: makeReducer({}, {
-        [RESOURCE_LOAD]: (state, action) => action.resourceData.archives || state
+        [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.archives || state
       }),
       tags: toolbarReducer.tags,
       options: editorReducer.options

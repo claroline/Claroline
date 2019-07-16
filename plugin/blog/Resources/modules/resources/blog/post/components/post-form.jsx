@@ -5,25 +5,22 @@ import isEmpty from 'lodash/isEmpty'
 // todo : remove me
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
-import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {withRouter} from '#/main/app/router'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {Button} from '#/main/app/action/components/button'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {constants} from '#/plugin/blog/resources/blog/constants'
-import {currentUser} from '#/main/app/security'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
-const loggedUser = currentUser()
-
 // todo : use standard form buttons
-
 const PostFormComponent = props =>
   <div>
     {(props.mode === constants.CREATE_POST || !isEmpty(props.post.data)) &&
@@ -79,7 +76,7 @@ const PostFormComponent = props =>
             type={CALLBACK_BUTTON}
             className="btn"
             callback={() => {
-              props.save(props.blogId, props.mode, props.postId, props.history, props.originalTags)
+              props.save(props.blogId, props.mode, props.postId, props.history, props.originalTags, props.path, props.currentUser)
             }}
           />
           <Button
@@ -87,7 +84,7 @@ const PostFormComponent = props =>
             type={CALLBACK_BUTTON}
             className="btn"
             callback={() => {
-              props.cancel(props.history)
+              props.cancel(props.history, props.path)
             }}
           />
         </ButtonToolbar>
@@ -96,6 +93,8 @@ const PostFormComponent = props =>
   </div>
 
 PostFormComponent.propTypes = {
+  path: T.string.isRequired,
+  currentUser: T.object,
   workspace: T.object,
   mode: T.string,
   blogId: T.string,
@@ -111,6 +110,8 @@ PostFormComponent.propTypes = {
 
 const PostForm = withRouter(connect(
   state => ({
+    path: resourceSelectors.path(state),
+    currentUser: securitySelectors.currentUser(state),
     workspace: resourceSelectors.workspace(state),
     mode: selectors.mode(state),
     blogId: selectors.blog(state).data.id,
@@ -120,7 +121,7 @@ const PostForm = withRouter(connect(
     goHome: selectors.goHome(state),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.post_edit'))
   }), dispatch => ({
-    save: (blogId, mode, postId, history, originalTags) => {
+    save: (blogId, mode, postId, history, originalTags, path, currentUser) => {
       if (mode === constants.CREATE_POST){
         dispatch(
           formActions.saveForm(selectors.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_new', {blogId: blogId}])
@@ -130,8 +131,8 @@ const PostForm = withRouter(connect(
             dispatch(toolbarActions.addTags('', response.tags))
           }
           //upate author list
-          dispatch(toolbarActions.addAuthor(loggedUser, response.tags))
-          history.push('/')
+          dispatch(toolbarActions.addAuthor(currentUser, response.tags))
+          history.push(path)
         })
       }else if (mode === constants.EDIT_POST && postId !== null){
         dispatch(
@@ -141,15 +142,15 @@ const PostForm = withRouter(connect(
             //update tag list
             dispatch(toolbarActions.addTags(originalTags, response.tags))
           }
-          history.push('/')
+          history.push(path)
         })
       }
     },
-    cancel: (history) => {
+    cancel: (history, path) => {
       dispatch(
         formActions.cancelChanges(selectors.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME)
       )
-      history.push('/')
+      history.push(path)
     }
 
   })

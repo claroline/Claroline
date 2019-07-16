@@ -3,31 +3,30 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
-import {ResourcePage} from '#/main/core/resource/containers/page'
+import {DOWNLOAD_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 
-import {DOWNLOAD_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/moderation'
 import {Player} from '#/plugin/blog/resources/blog/player/components/player'
 
 const BlogResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-blog-blog-resource']}
     primaryAction="blog_post"
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        target: '/',
+        target: props.path,
         exact: true
       },{
         displayed : props.canEdit || props.canModerate,
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-gavel',
         label: trans('moderation', {}, 'icap_blog'),
-        target: '/moderation/posts'
+        target: `${props.path}/moderation/posts`
       },{
         displayed : props.pdfEnabled && props.canExport,
         type: DOWNLOAD_BUTTON,
@@ -45,6 +44,7 @@ const BlogResource = props =>
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/moderation',
@@ -58,6 +58,7 @@ const BlogResource = props =>
   </ResourcePage>
 
 BlogResource.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string.isRequired,
   saveEnabled: T.bool.isRequired,
   pdfEnabled: T.bool.isRequired,

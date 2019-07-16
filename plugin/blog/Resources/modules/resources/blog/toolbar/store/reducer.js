@@ -1,19 +1,24 @@
-import {makeReducer} from '#/main/app/store/reducer'
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import difference from 'lodash/difference'
+
+import {makeInstanceAction} from '#/main/app/store/actions'
+import {makeReducer} from '#/main/app/store/reducer'
+
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {
   ADD_TAGS,
   ADD_AUTHOR,
   LOAD_TAGS,
   LOAD_AUTHORS
 } from '#/plugin/blog/resources/blog/toolbar/store/actions'
-import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 const reducer = {
   tags: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.tags || state,
     [LOAD_TAGS]: (state, action) => action.tags,
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.tags || state,
     [ADD_TAGS]: (state, action) => {
       let originalTagsArray = action.originalTags.split(',').map(item =>item.trim())
       let tagsArray = action.tags.split(',').map(item =>item.trim())
@@ -47,8 +52,8 @@ const reducer = {
     }
   }),
   authors: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.authors || state,
     [LOAD_AUTHORS]: (state, action) => action.authors,
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.authors || state,
     [ADD_AUTHOR]: (state, action) => {
       const authors = cloneDeep(state)
       const authorIndex = authors.findIndex(e => e.id === action.author.id)

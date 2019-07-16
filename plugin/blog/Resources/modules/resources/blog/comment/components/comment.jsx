@@ -4,18 +4,17 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
-import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
+
 import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
 import {selectors} from '#/plugin/blog/resources/blog/store'
-
-const authenticatedUser = currentUser()
 
 const CommentComponent = (props) =>
   <div key={`comment-container-${props.comment.id}`} className={classes({'unpublished': !props.comment.isPublished}, 'comment')}>
@@ -40,7 +39,7 @@ const CommentComponent = (props) =>
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-pencil',
             label: trans('edit', {}, 'actions'),
-            displayed: props.showEdit && (props.canEdit || (props.comment.author !== null && authenticatedUser !== null && props.comment.author.id === authenticatedUser.id && !props.comment.isPublished)),
+            displayed: props.showEdit && (props.canEdit || (props.comment.author !== null && props.currentUser !== null && props.comment.author.id === props.currentUser.id && !props.comment.isPublished)),
             callback: () => props.switchEditCommentFormDisplay(props.comment.id)
           },{
             type: CALLBACK_BUTTON,
@@ -58,7 +57,7 @@ const CommentComponent = (props) =>
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-flag',
             label: trans('icap_blog_comment_report', {}, 'icap_blog'),
-            displayed: authenticatedUser !== null,
+            displayed: props.currentUser !== null,
             callback: () => props.reportComment(props.blogId, props.comment.id),
             dangerous: true,
             confirm: {
@@ -69,7 +68,7 @@ const CommentComponent = (props) =>
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-trash',
             label: trans('delete', {}, 'actions'),
-            displayed: props.canEdit || (props.comment.author !== null && authenticatedUser !== null && props.comment.author.id === authenticatedUser.id && !props.comment.isPublished),
+            displayed: props.canEdit || (props.comment.author !== null && props.currentUser !== null && props.comment.author.id === props.currentUser.id && !props.comment.isPublished),
             callback: () => props.deleteComment(props.blogId, props.comment.id),
             dangerous: true,
             confirm: {
@@ -83,6 +82,7 @@ const CommentComponent = (props) =>
   </div>
 
 CommentComponent.propTypes = {
+  currentUser: T.object,
   comment: T.object,
   showEditCommentForm: T.string,
   canEdit: T.bool,
@@ -105,6 +105,7 @@ CommentComponent.defaultProps = {
 
 const Comment = connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     blogId: selectors.blog(state).data.id,
     showEditCommentForm: selectors.showEditCommentForm(state),
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),

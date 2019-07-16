@@ -1,13 +1,18 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import {Reported} from '#/plugin/blog/resources/blog/moderation/components/reported.jsx'
-import {UnpublishedPosts} from '#/plugin/blog/resources/blog/moderation/components/unpublished-posts.jsx'
-import {UnpublishedComments} from '#/plugin/blog/resources/blog/moderation/components/unpublished-comments.jsx'
+
 import {Routes} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {NavLink} from '#/main/app/router'
 
-const ModerationComponent = () =>
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {Reported} from '#/plugin/blog/resources/blog/moderation/components/reported'
+import {UnpublishedPosts} from '#/plugin/blog/resources/blog/moderation/components/unpublished-posts'
+import {UnpublishedComments} from '#/plugin/blog/resources/blog/moderation/components/unpublished-comments'
+
+const ModerationComponent = (props) =>
   <div>
     <h2>{trans('moderation', {}, 'icap_blog')}</h2>
     <div className="row">
@@ -15,19 +20,19 @@ const ModerationComponent = () =>
         <div>
           <nav className="lateral-nav">
             <NavLink
-              to='/moderation/posts'
+              to={`${props.path}/moderation/posts`}
               className="lateral-link"
             >
               {trans('unpublished-posts', {}, 'icap_blog')}
             </NavLink>
             <NavLink
-              to='/moderation/comments/unpublished'
+              to={`${props.path}/moderation/comments/unpublished`}
               className="lateral-link"
             >
               {trans('unpublished-comments', {}, 'icap_blog')}
             </NavLink>
             <NavLink
-              to='/moderation/comments/reported'
+              to={`${props.path}/moderation/comments/reported`}
               className="lateral-link"
             >
               {trans('reported-comments', {}, 'icap_blog')}
@@ -37,6 +42,7 @@ const ModerationComponent = () =>
       </div>
       <div className="col-md-9">
         <Routes
+          path={props.path}
           routes={[
             {
               path: '/moderation/posts',
@@ -57,10 +63,12 @@ const ModerationComponent = () =>
   </div>
 
 ModerationComponent.propTypes = {
+  path: T.string.isRequired
 }
 
 const Moderation = connect(
-  () => ({
+  (state) => ({
+    path: resourceSelectors.path(state)
   })
 )(ModerationComponent)
 

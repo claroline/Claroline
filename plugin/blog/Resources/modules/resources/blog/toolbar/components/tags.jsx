@@ -8,6 +8,8 @@ import {withRouter} from '#/main/app/router'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {cleanTag} from '#/plugin/blog/resources/blog/utils'
@@ -28,7 +30,7 @@ const TagsComponent = props =>
               minSize={12}
               maxSize={22}
               onClick={(tag) => {
-                props.goHome(props.history)
+                props.goHome(props.history, props.path)
                 props.searchByTag(props.history, props.location.search, cleanTag(props.tagMode, tag))
               }}
             />)
@@ -39,7 +41,7 @@ const TagsComponent = props =>
                     <CallbackButton
                       className='link'
                       callback={() => {
-                        props.goHome(props.history)
+                        props.goHome(props.history, props.path)
                         props.searchByTag(props.history, props.location.search, tag)
                       }}
                     >
@@ -59,6 +61,7 @@ const TagsComponent = props =>
   </div>
 
 TagsComponent.propTypes = {
+  path: T.string.isRequired,
   searchByTag: T.func.isRequired,
   tags: T.object,
   tagMode: T.string,
@@ -70,6 +73,7 @@ TagsComponent.propTypes = {
 
 const Tags = withRouter(connect(
   state => ({
+    path: resourceSelectors.path(state),
     tags: selectors.blog(state).data.options.data.tagCloud === constants.TAGCLOUD_TYPE_CLASSIC_NUM ? selectors.displayTagsFrequency(state) : selectors.blog(state).data.tags,
     tagMode: selectors.blog(state).data.options.data.tagCloud,
     maxSize: selectors.blog(state).data.options.data.maxTag
@@ -78,8 +82,8 @@ const Tags = withRouter(connect(
     searchByTag: (history, querystring, tag) => {
       history.push(updateQueryParameters(querystring, 'tag', tag))
     },
-    goHome: (history) => {
-      history.push('/')
+    goHome: (history, path) => {
+      history.push(path)
     }
   })
 )(TagsComponent))

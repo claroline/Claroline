@@ -8,6 +8,8 @@ import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {UrlButton} from '#/main/app/buttons/url/components/button'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
@@ -23,7 +25,7 @@ const RedactorsComponent = props =>
             <UserAvatar className="user-picture" picture={author ? author.picture : undefined} alt={true} />
           </UrlButton>
           <CallbackButton className="redactor-name link" callback={() => {
-            props.goHome(props.history)
+            props.goHome(props.history, props.path)
             props.getPostsByAuthor(props.history, props.location.search, author.firstName + ' ' + author.lastName)
           }}>{author.firstName + ' ' + author.lastName}
           </CallbackButton>
@@ -35,6 +37,7 @@ const RedactorsComponent = props =>
   </div>
 
 RedactorsComponent.propTypes = {
+  path: T.string.isRequired,
   blogId: T.string,
   authors: T.array,
   getPostsByAuthor: T.func.isRequired,
@@ -45,6 +48,7 @@ RedactorsComponent.propTypes = {
 
 const Redactors = withRouter(connect(
   state => ({
+    path: resourceSelectors.path(state),
     blogId: selectors.blog(state).id,
     authors: selectors.blog(state).data.authors
   }),
@@ -52,8 +56,8 @@ const Redactors = withRouter(connect(
     getPostsByAuthor: (history, querystring, authorName) => {
       history.push(updateQueryParameters(querystring, 'author', authorName))
     },
-    goHome: (history) => {
-      history.push('/')
+    goHome: (history, path) => {
+      history.push(path)
     }
   })
 )(RedactorsComponent))
