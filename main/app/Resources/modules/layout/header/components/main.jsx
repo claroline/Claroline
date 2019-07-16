@@ -83,7 +83,7 @@ const HeaderMain = props =>
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-power-off',
             label: trans('logout'),
-            target: ['claro_main_app', {_switch: '_exit'}],
+            target: ['claro_index', {_switch: '_exit'}],
             displayed: props.impersonated,
             dangerous: true
           }

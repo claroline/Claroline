@@ -5,7 +5,6 @@ import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
-import {constants as toolConst} from '#/main/core/tool/constants'
 import {ToolMain} from '#/main/core/tool/containers/main'
 
 const AdministrationMain = (props) =>
@@ -24,30 +23,17 @@ const AdministrationMain = (props) =>
           routes={[
             {
               path: '/:toolName',
-              render: (routeProps) => {
-                if (-1 !== props.tools.findIndex(tool => tool.name === routeProps.match.params.toolName)) {
+              onEnter: (params = {}) => {
+                if (-1 !== props.tools.findIndex(tool => tool.name === params.toolName)) {
                   // tool is enabled for the admin
-                  const AdministrationTool = (
-                    <ToolMain
-                      path="/admin"
-                      toolName={routeProps.match.params.toolName}
-                      toolContext={{
-                        type: toolConst.TOOL_ADMINISTRATION,
-                        url: ['claro_admin_open_tool', {toolName: routeProps.match.params.toolName}],
-                        data: {}
-                      }}
-                    />
-                  )
-
-                  return AdministrationTool
+                  props.openTool(params.toolName)
+                } else {
+                  // tool is disabled (or does not exist) for the desktop
+                  // let's go to the default opening of the desktop
+                  props.history.replace('/admin')
                 }
-
-                // tool is disabled (or does not exist) for the admin
-                // let's go to the default opening of the admin
-                routeProps.history.push('/admin')
-
-                return null
-              }
+              },
+              component: ToolMain
             }
           ]}
           redirect={[
@@ -59,12 +45,16 @@ const AdministrationMain = (props) =>
   />
 
 AdministrationMain.propTypes = {
+  history: T.shape({
+    replace: T.func.isRequired
+  }).isRequired,
   loaded: T.bool.isRequired,
   defaultOpening: T.string,
   tools: T.arrayOf(T.shape({
 
   })),
-  open: T.func.isRequired
+  open: T.func.isRequired,
+  openTool: T.func.isRequired
 }
 
 AdministrationMain.defaultProps = {

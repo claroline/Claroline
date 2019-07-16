@@ -83,7 +83,7 @@ class ClientController
     /**
      * Renders the Claroline web application.
      *
-     * @EXT\Route("/client", name="claro_main_app")
+     * @EXT\Route("/", name="claro_index")
      * @EXT\Template("ClarolineAppBundle::index.html.twig")
      *
      * @param Request $request
@@ -148,7 +148,7 @@ class ClientController
 
                 'notifications' => [
                     'count' => [
-                        'notifications' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : 0,
+                        'notification' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : 0,
                         'messaging' => $token->getUser() instanceof User ? $this->finder->fetch(
                             Message::class,
                             ['removed' => false, 'read' => false, 'sent' => false],

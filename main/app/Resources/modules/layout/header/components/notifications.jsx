@@ -3,18 +3,25 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {URL_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 const NotificationsMenu = props =>
-  <ul className="app-notifications dropdown-menu dropdown-menu-right">
-    <li role="presentation">
+  <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
+    <div className="app-header-dropdown-header">
+      <h2 className="h4">
+        {trans('notifications')}
+      </h2>
+    </div>
+
+    <div className="list-group">
       {props.tools.map((tool) =>
         <Button
           key={tool.name}
-          type={URL_BUTTON}
+          className="list-group-item"
+          type={LINK_BUTTON}
           icon={`fa fa-fw fa-${tool.icon}`}
           label={trans(tool.name, {}, 'tools')}
-          target={tool.open}
+          target={`/desktop/${tool.name}`}
           subscript={0 !== props.count[tool.name] ? {
             type: 'label',
             status: 'primary',
@@ -22,8 +29,8 @@ const NotificationsMenu = props =>
           } : undefined}
         />
       )}
-    </li>
-  </ul>
+    </div>
+  </div>
 
 NotificationsMenu.propTypes = {
   count: T.shape({

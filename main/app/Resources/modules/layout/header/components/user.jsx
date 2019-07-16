@@ -17,8 +17,8 @@ import {constants as roleConstants} from '#/main/core/user/role/constants'
 // TODO : add user poster when available
 
 const UserMenu = props =>
-  <div className="app-current-user dropdown-menu dropdown-menu-right">
-    <div className="app-current-user-header">
+  <div className="app-header-dropdown app-current-user dropdown-menu dropdown-menu-right">
+    <div className="app-header-dropdown-header">
       <div className="app-current-user-icon">
         <UserAvatar picture={props.currentUser.picture} alt={true} />
       </div>

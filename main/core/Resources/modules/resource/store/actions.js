@@ -8,6 +8,7 @@ export const RESOURCE_UPDATE_NODE           = 'RESOURCE_UPDATE_NODE'
 export const USER_EVALUATION_UPDATE         = 'USER_EVALUATION_UPDATE'
 export const RESOURCE_OPEN                  = 'RESOURCE_OPEN'
 export const RESOURCE_LOAD                  = 'RESOURCE_LOAD'
+export const RESOURCE_LOAD_NODE             = 'RESOURCE_LOAD_NODE'
 export const RESOURCE_SET_LOADED            = 'RESOURCE_SET_LOADED'
 export const RESOURCE_SERVER_ERRORS         = 'RESOURCE_SERVER_ERRORS'
 export const RESOURCE_RESTRICTIONS_DISMISS  = 'RESOURCE_RESTRICTIONS_DISMISS'
@@ -26,9 +27,18 @@ actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED, 'loaded')
 actions.setRestrictionsError = makeActionCreator(RESOURCE_RESTRICTIONS_ERROR, 'errors')
 actions.setServerErrors = makeActionCreator(RESOURCE_SERVER_ERRORS, 'errors')
 actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
+actions.loadNode = makeActionCreator(RESOURCE_LOAD_NODE, 'resourceNode')
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
-actions.openResource = makeActionCreator(RESOURCE_OPEN, 'resourceNode')
+actions.openResource = (resourceId) => (dispatch, getState) => {
+  const id = selectors.id(getState())
+  if (id !== resourceId) {
+    dispatch({
+      type: RESOURCE_OPEN,
+      resourceId: resourceId
+    })
+  }
+}
 
 actions.fetchNode = (id) => (dispatch, getState) => {
   const resourceNode = selectors.resourceNode(getState())
@@ -40,8 +50,7 @@ actions.fetchNode = (id) => (dispatch, getState) => {
     [API_REQUEST]: {
       silent: true,
       url: ['claro_resource_get', {id: id}],
-      before: (dispatch) => dispatch(actions.setResourceLoaded(false)),
-      success: (response, dispatch) => dispatch(actions.openResource(response))
+      success: (response, dispatch) => dispatch(actions.loadNode(response))
     }
   })
 }

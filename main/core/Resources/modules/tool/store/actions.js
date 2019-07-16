@@ -1,7 +1,10 @@
+import isEqual from 'lodash/isEqual'
+
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
-
 import {actions as menuActions} from '#/main/app/layout/menu/store/actions'
+
+import {selectors} from '#/main/core/tool/store/selectors'
 
 // actions
 export const TOOL_OPEN        = 'TOOL_OPEN'
@@ -13,9 +16,24 @@ export const TOOL_SET_LOADED  = 'TOOL_SET_LOADED'
 export const actions = {}
 
 actions.load = makeInstanceActionCreator(TOOL_LOAD, 'toolData')
-actions.setLoaded = makeActionCreator(TOOL_SET_LOADED)
+actions.setLoaded = makeActionCreator(TOOL_SET_LOADED, 'loaded')
 
-actions.open = makeActionCreator(TOOL_OPEN, 'name', 'context', 'basePath')
+actions.open = (name, context, basePath) => (dispatch, getState) => {
+  const prevName = selectors.name(getState())
+  const prevContext = selectors.context(getState())
+
+  if (name !== prevName || !isEqual(prevContext, context)) {
+    dispatch({
+      type: TOOL_OPEN,
+      name: name,
+      context: context,
+      basePath: basePath
+    })
+
+    dispatch(actions.setLoaded(false))
+  }
+}
+
 actions.close = makeActionCreator(TOOL_CLOSE)
 
 /**
@@ -23,30 +41,22 @@ actions.close = makeActionCreator(TOOL_CLOSE)
  *
  * @param {string} toolName
  * @param {object} context
- * @param {string} basePath
  */
-actions.fetch = (toolName, context, basePath = '') => (dispatch, getState) => {
-  const state = getState()
-
-  if (state.tool.loaded) {
-    return Promise.resolve(true)
-  }
-
-  dispatch(actions.open(toolName, context, basePath))
-  dispatch(menuActions.changeSection('tool'))
-
+actions.fetch = (toolName, context) => (dispatch) => {
   if (context.url) {
-    return dispatch({
+    dispatch({
       [API_REQUEST]: {
         silent: true,
         url: context.url,
         success: (response, dispatch) => {
           dispatch(actions.load(toolName, response))
-          dispatch(actions.setLoaded())
+          dispatch(actions.setLoaded(true))
+          dispatch(menuActions.changeSection('tool'))
         }
       }
     })
   } else {
-    dispatch(actions.setLoaded())
+    dispatch(actions.setLoaded(true))
+    dispatch(menuActions.changeSection('tool'))
   }
 }

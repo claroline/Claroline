@@ -5,7 +5,6 @@ import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
-import {constants as toolConst} from '#/main/core/tool/constants'
 import {ToolMain} from '#/main/core/tool/containers/main'
 
 const DesktopMain = (props) =>
@@ -23,30 +22,17 @@ const DesktopMain = (props) =>
         routes={[
           {
             path: '/:toolName',
-            render: (routeProps) => {
-              if (-1 !== props.tools.findIndex(tool => tool.name === routeProps.match.params.toolName)) {
+            onEnter: (params = {}) => {
+              if (-1 !== props.tools.findIndex(tool => tool.name === params.toolName)) {
                 // tool is enabled for the desktop
-                const DesktopTool = (
-                  <ToolMain
-                    path="/desktop"
-                    toolName={routeProps.match.params.toolName}
-                    toolContext={{
-                      type: toolConst.TOOL_DESKTOP,
-                      url: ['claro_desktop_open_tool', {toolName: routeProps.match.params.toolName}],
-                      data: {}
-                    }}
-                  />
-                )
-
-                return DesktopTool
+                props.openTool(params.toolName)
+              } else {
+                // tool is disabled (or does not exist) for the desktop
+                // let's go to the default opening of the desktop
+                props.history.replace('/desktop')
               }
-
-              // tool is disabled (or does not exist) for the desktop
-              // let's go to the default opening of the desktop
-              routeProps.history.push('/desktop')
-
-              return null
-            }
+            },
+            component: ToolMain
           }
         ]}
         redirect={[
@@ -57,12 +43,16 @@ const DesktopMain = (props) =>
   />
 
 DesktopMain.propTypes = {
+  history: T.shape({
+    replace: T.func.isRequired
+  }).isRequired,
   loaded: T.bool.isRequired,
   defaultOpening: T.string,
   tools: T.arrayOf(T.shape({
 
   })),
-  open: T.func.isRequired
+  open: T.func.isRequired,
+  openTool: T.func.isRequired
 }
 
 DesktopMain.defaultProps = {

@@ -17,6 +17,7 @@ const AgendaMenu = props =>
     title={trans('agenda', {}, 'tools')}
   >
     <Calendar
+      light={true}
       selected={props.selected}
       onChange={(selected) => props.history.push(
         calendarUrl(props.path, props.view, selected)

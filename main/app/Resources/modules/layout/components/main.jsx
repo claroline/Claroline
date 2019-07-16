@@ -28,9 +28,6 @@ const LayoutMain = props =>
         <Routes
           routes={[
             {
-              path: '/',
-              exact: true
-            }, {
               path: '/desktop',
               component: DesktopMenu
             }, {

@@ -1,0 +1,57 @@
+.agenda-week {
+    flex: 1; // fill .page-content
+    display: flex;
+    flex-direction: row;
+    margin: 0 -(floor(@grid-gutter-width / 2)); // absorb .page-content padding
+
+    .calendar-col {
+        flex: 1;
+        background: @agenda-bg;
+
+        + .calendar-col {
+            border-left: 1px solid @agenda-grid-border;
+        }
+    }
+
+    .hours {
+        flex: 0;
+    }
+
+    .day-name {
+        padding: 5px;
+        color: @gray-light;
+        font-family: @headings-font-family;
+        font-size: @font-size-small;
+        text-align: center;
+        text-transform: uppercase; // todo : use a var
+        border-bottom: 1px solid @agenda-grid-border;
+    }
+
+    .day-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 5px auto 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: @font-size-large;
+        font-weight: bold;
+
+        color: @agenda-color;
+        background: transparent;
+        border: 1px solid transparent;
+    }
+
+    .now .day-number {
+        color: @brand-primary;
+        background: transparent;
+        border-color: @brand-primary;
+    }
+
+    .selected .day-number {
+        color: white;
+        background: @brand-primary;
+        border-color: @brand-primary;
+    }
+}

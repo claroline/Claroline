@@ -42,7 +42,7 @@ const Calendar = {
     /**
      * A callback executed when the selected date changes.
      */
-    onChange: T.func.isRequired,
+    onChange: T.func,
 
     /**
      * The minimum selectable date in the calendar.
@@ -79,7 +79,9 @@ const Calendar = {
      *
      * @type {string}
      */
-    maxTime: T.string
+    maxTime: T.string,
+
+    light: T.bool
   },
   defaultProps: {
     selected: '',
@@ -91,7 +93,11 @@ const Calendar = {
     // time configuration
     time: false,
     minTime: '00:00',
-    maxTime: '23:59'
+    maxTime: '23:59',
+
+    light: false,
+
+    onChange: () => true
   }
 }
 

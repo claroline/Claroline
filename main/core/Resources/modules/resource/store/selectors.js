@@ -9,6 +9,11 @@ const STORE_NAME = 'resource'
 
 const store = (state) => state[STORE_NAME]
 
+const id = createSelector(
+  [store],
+  (store) => store.id
+)
+
 const resourceNode = createSelector(
   [store],
   (store) => store.resourceNode || {}
@@ -35,6 +40,11 @@ const managed = createSelector(
   (store) => store.managed
 )
 
+const nodeLoaded = createSelector(
+  [store],
+  (store) => store.nodeLoaded
+)
+
 const loaded = createSelector(
   [store],
   (store) => store.loaded
@@ -47,11 +57,6 @@ const resourceLifecycle = createSelector(
 )
 
 // node selectors
-const id = createSelector(
-  [resourceNode],
-  (resourceNode) => resourceNode.id
-)
-
 const parent = createSelector(
   [resourceNode],
   (resourceNode) => resourceNode.parent
@@ -139,6 +144,7 @@ export const selectors = {
   embedded,
   showHeader,
   managed,
+  nodeLoaded,
   loaded,
   // lifecycle
   resourceLifecycle,

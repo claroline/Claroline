@@ -17,7 +17,11 @@ const SummaryStep = props =>
     {0 !== props.step.children.length &&
       <ul>
         {props.step.children.map(child =>
-          <SummaryStep key={child.id} step={child} />
+          <SummaryStep
+            key={child.id}
+            basePath={props.basePath}
+            step={child}
+          />
         )}
       </ul>
     }

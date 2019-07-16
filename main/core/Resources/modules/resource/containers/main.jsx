@@ -13,12 +13,13 @@ const ResourceMain = withRouter(
     connect(
       (state) => ({
         path: selectors.path(state),
+        resourceId: selectors.id(state),
         resourceType: selectors.resourceType(state),
-        loaded: selectors.loaded(state)
+        loaded: selectors.nodeLoaded(state)
       }),
       (dispatch) => ({
-        loadNode(resourceId) {
-          return dispatch(actions.fetchNode(resourceId))
+        open(resourceId) {
+          dispatch(actions.fetchNode(resourceId))
         }
       })
     )(ResourceMainComponent)

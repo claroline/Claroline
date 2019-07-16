@@ -41,7 +41,7 @@ const EditorStep = props =>
       buttons={true}
       cancel={{
         type: LINK_BUTTON,
-        target: '/',
+        target: props.basePath,
         exact: true
       }}
       sections={[
@@ -141,6 +141,7 @@ const EditorStep = props =>
   </Fragment>
 
 implementPropTypes(EditorStep, StepTypes, {
+  basePath: T.string,
   workspace: T.object,
   pathId: T.string.isRequired,
   stepPath: T.string.isRequired,

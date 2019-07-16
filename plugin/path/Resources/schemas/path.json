@@ -17,14 +17,6 @@
           "type": "boolean",
           "description": "Wether the overview is displayed or not"
         },
-        "showSummary": {
-          "type": "boolean",
-          "description": "Wether the summary is displayed or not"
-        },
-        "openSummary": {
-          "type": "boolean",
-          "description": "Wether the summary is opened by default or not"
-        },
         "numbering": {
           "enum": ["none", "numeric", "literal", "custom"],
           "description": "Numbering of the steps"
@@ -34,7 +26,7 @@
           "description": "Wether setting progression manually is allowed or not"
         }
       },
-      "required": ["showOverview", "showSummary", "openSummary", "manualProgressionAllowed"]
+      "required": ["showOverview", "manualProgressionAllowed"]
     },
     "steps": {
       "type": "array",

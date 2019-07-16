@@ -233,6 +233,8 @@ class Calendar extends Component {
   render() {
     return (
       <div className={classes('calendar-container', {
+        light: this.props.light,
+        dark: !this.props.light,
         vertical: this.props.vertical
       })}>
         {this.props.showCurrent &&

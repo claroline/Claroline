@@ -5,7 +5,7 @@ import {Routes} from '#/main/app/router'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceMain} from '#/main/core/resource/containers/main'
-import {ResourcesRoot} from '#/main/core/tools/resources/components/root'
+import {ResourcesRoot} from '#/main/core/tools/resources/containers/root'
 
 const ResourcesTool = props =>
   <Routes
@@ -18,38 +18,21 @@ const ResourcesTool = props =>
         path: '/',
         exact: true,
         disabled: !!props.root,
-        render: () => {
-          return (
-            <ResourcesRoot
-              path={props.path}
-              currentUser={props.currentUser}
-              listName={props.listRootName}
-              invalidate={props.invalidateRoot}
-            />
-          )
-        }
+        component: ResourcesRoot
       }, {
         path: '/:id',
-        render: (routeProps) => {
-          return (
-            <ResourceMain
-              path={props.path}
-              resourceId={routeProps.match.params.id}
-            />
-          )
-        }
+        onEnter: (params = {}) => props.openResource(params.id),
+        component: ResourceMain
       }
     ]}
   />
 
 ResourcesTool.propTypes = {
   path: T.string.isRequired,
-  currentUser: T.object,
   root: T.shape(
     ResourceNodeTypes.propTypes
   ),
-  listRootName: T.string.isRequired,
-  invalidateRoot: T.func.isRequired
+  openResource: T.func.isRequired
 }
 
 export {

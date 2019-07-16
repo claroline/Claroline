@@ -23,8 +23,6 @@
     "max_per_page": "Items per page",
     "minutes_ago": "{0} 0 minutes ago|{1} 1 minute ago|]1,Inf] %count% minutes ago",
     "months": "January, February, March, April, May, June, July, August, September, October, November, December",
-    "notification_configuration": "Notifications configuration",
-    "notification_user_configuration": "Notifications parameters",
     "notifications_title": "Notifications list",
     "now": "Now",
     "path": "Path",

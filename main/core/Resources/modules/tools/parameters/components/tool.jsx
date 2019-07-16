@@ -1,11 +1,11 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-
-import {Parameters} from '#/main/core/tools/parameters/components/parameters'
-import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router'
 import {ToolPage} from '#/main/core/tool/containers/page'
+
+import {Parameters} from '#/main/core/tools/parameters/components/parameters'
 
 const ParametersTool = (props) =>
   <ToolPage
@@ -23,11 +23,7 @@ const ParametersTool = (props) =>
       routes={[
         {
           path: '/',
-          render: () => {
-            const Params = <Parameters/>
-
-            return Params
-          }
+          component: Parameters
         }]
       }
     />

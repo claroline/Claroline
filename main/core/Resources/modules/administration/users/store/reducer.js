@@ -19,7 +19,7 @@ const reducer = combineReducers({
   locations: locationReducer,
   profile: profileReducer,
   organizations: organizationReducer,
-  platformRoles: makeReducer({}, {
+  platformRoles: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, 'user_management')]: (state, action) => action.toolData.platformRoles.data
   }),
 

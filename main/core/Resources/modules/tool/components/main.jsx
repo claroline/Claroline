@@ -1,10 +1,9 @@
 import React, {createElement, Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
 import {theme} from '#/main/app/config'
 import {withReducer} from '#/main/app/store/components/withReducer'
-import {Await} from '#/main/app/components/await'
+import {makeCancelable} from '#/main/app/api'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {constants} from '#/main/core/tool/constants'
@@ -39,66 +38,102 @@ Tool.propTypes = {
 }
 
 class ToolMain extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      appLoaded: false,
+      app: null,
+      component: null,
+      styles: []
+    }
+  }
+
   componentDidMount() {
-    this.props.open(this.props.toolName, this.props.toolContext, this.props.path)
+    this.loadApp()
+    if (!this.props.loaded) {
+      this.props.open(this.props.toolName, this.props.toolContext)
+    }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.toolName !== prevProps.toolName
-      || this.props.toolContext.type !== prevProps.toolContext.type
-      || get(this.props.toolContext, 'data.id') !== get(prevProps.toolContext, 'data.id')
-    ) {
-      if (prevProps.toolName) {
-        this.props.close()
+    if (this.props.toolName && this.props.toolName !== prevProps.toolName) {
+      if (this.pending) {
+        this.pending.cancel()
+        this.pending = null
       }
 
-      if (this.props.toolName) {
-        this.props.open(this.props.toolName, this.props.toolContext, this.props.path)
+      this.loadApp()
+    }
+
+    if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
+      this.props.open(this.props.toolName, this.props.toolContext)
+    }
+  }
+
+  loadApp() {
+    if (!this.pending) {
+      this.setState({appLoaded: false})
+
+      let app
+      if (constants.TOOL_ADMINISTRATION === this.props.toolContext.type) {
+        app = getAdminTool(this.props.toolName)
+      } else {
+        app = getTool(this.props.toolName)
       }
+
+      this.pending = makeCancelable(app)
+
+      this.pending.promise
+        .then(
+          (resolved) => {
+            if (resolved.default) {
+              this.setState({
+                appLoaded: true,
+                // I build the store here because if I do it in the render()
+                // it will be called many times and will cause multiple mount/unmount of the app
+                app: withReducer(this.props.toolName, resolved.default.store)(Tool),
+                component: resolved.default.component,
+                styles: resolved.default.styles
+              })
+            }
+          }
+        )
+        .then(
+          () => this.pending = null,
+          () => this.pending = null
+        )
     }
   }
 
   componentWillUnmount() {
-    this.props.close()
+    if (this.pending) {
+      this.pending.cancel()
+      this.pending = null
+    }
   }
 
   render() {
-    let app
-    if (constants.TOOL_ADMINISTRATION === this.props.toolContext.type) {
-      app = getAdminTool(this.props.toolName)
-    } else {
-      app = getTool(this.props.toolName)
+    if (!this.state.appLoaded) {
+      return (
+        <ContentLoader
+          size="lg"
+          description="Nous chargeons votre outil"
+        />
+      )
     }
 
-    return (
-      <Await
-        for={app}
-        placeholder={
-          <ContentLoader
-            size="lg"
-            description="Nous chargeons votre outil"
-          />
-        }
-        then={(module) => {
-          if (module.default) {
-            const ToolApp = withReducer(this.props.toolName, module.default.store)(Tool)
+    if (this.state.app) {
+      return createElement(this.state.app, {
+        loaded: this.props.loaded,
+        styles: this.state.styles,
+        children: this.state.component && createElement(this.state.component, {
+          path: this.props.path
+        })
+      })
+    }
 
-            return (
-              <ToolApp
-                loaded={this.props.loaded}
-                styles={module.default.styles}
-              >
-                {module.default.component && createElement(module.default.component, {
-                  path: this.props.path + '/' + this.props.toolName
-                })}
-              </ToolApp>
-            )
-          }
-
-          return null
-        }}
-      />
-    )
+    return null
   }
 }
 
@@ -110,11 +145,8 @@ ToolMain.propTypes = {
     url: T.oneOfType([T.array, T.string]),
     data: T.object
   }).isRequired,
-
-  // from store
   loaded: T.bool.isRequired,
-  open: T.func.isRequired,
-  close: T.func.isRequired
+  open: T.func.isRequired
 }
 
 ToolMain.defaultProps = {

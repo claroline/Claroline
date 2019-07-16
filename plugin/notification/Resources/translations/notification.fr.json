@@ -23,8 +23,6 @@
     "max_per_page": "Éléments par page",
     "minutes_ago": "{0} Il y a 0 minutes|{1} Il y a 1 minute|]1,Inf] Il y a %count% minutes",
     "months": "Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Décembre",
-    "notification_configuration": "Configuration des notifications",
-    "notification_user_configuration": "Paramètres des notifications",
     "notifications_title": "Liste des notifications",
     "now": "Maintenant",
     "path": "Parcours",

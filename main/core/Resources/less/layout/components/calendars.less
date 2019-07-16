@@ -236,8 +236,7 @@
             position: relative;
             flex: 1;
             min-width: 60px; // todo temp fix to avoid too huge resize on view changes
-            margin: 1px;
-            margin-left: 2px;
+            margin: 1px 1px 1px 2px;
 
             &:first-child {
                 margin-left: 0;
@@ -307,12 +306,30 @@
     }
 }
 
-.calendar-dark {
+.calendar-container.dark {
     color: @datepicker-color;
+
+    .calendar-current {
+        color: @datepicker-color;
+    }
 }
 
-.calendar-light {
+.calendar-container.light {
     color: #ededed;
+
+    .calendar-current {
+        color: #ededed;
+    }
+
+    .calendar-previous,
+    .calendar-next {
+        color: fadeOut(#ededed, 50%);
+
+        &:hover,
+        &:focus {
+            color: #ededed;
+        }
+    }
 }
 
 .calendar-vertical {

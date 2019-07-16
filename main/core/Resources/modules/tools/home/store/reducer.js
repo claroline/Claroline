@@ -10,8 +10,11 @@ import {
 import {reducer as editorReducer} from '#/main/core/tools/home/editor/store/reducer'
 
 const reducer = combineReducers({
+  administration: makeReducer(false, {
+    [makeInstanceAction(TOOL_LOAD, 'home')]: (state, action) => action.toolData.administration || false
+  }),
   editable: makeReducer(false, {
-    [makeInstanceAction(TOOL_LOAD, 'home')]: (state, action) => action.toolData.editable
+    [makeInstanceAction(TOOL_LOAD, 'home')]: (state, action) => action.toolData.editable || false
   }),
 
   currentTabId: makeReducer(null, {

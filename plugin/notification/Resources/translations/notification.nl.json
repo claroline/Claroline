@@ -22,8 +22,6 @@
     "max_per_page": "Elementen per pagina",
     "minutes_ago": "{0} minuut geleden|{1} Il y a 1 minute geleden|]1,Inf] Il y a %count% minutes geleden",
     "months": "Januari, Februari, Maart, April, Mei, Juni, Juli, Augustus, September, Oktober, November, December",
-    "notification_configuration": "Configuratie van de meldingen",
-    "notification_user_configuration": "Instellingen van de notities",
     "notifications_title": "Lijst van de notities",
     "now": "Nu",
     "path": "Plaats",

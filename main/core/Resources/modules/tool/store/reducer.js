@@ -8,7 +8,7 @@ import {
 
 const reducer = combineReducers({
   loaded: makeReducer(false, {
-    [TOOL_SET_LOADED]: () => true,
+    [TOOL_SET_LOADED]: (state, action) => action.loaded,
     [TOOL_CLOSE]: () => false
   }),
   name: makeReducer(null, {

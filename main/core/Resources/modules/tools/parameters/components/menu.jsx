@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -8,7 +9,8 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 
 const ParametersMenu = (props) =>
   <MenuSection
-    title={trans('parameters')}
+    {...omit(props, 'path')}
+    title={trans('parameters', {}, 'tools')}
   >
     <Toolbar
       className="list-group"
@@ -18,15 +20,14 @@ const ParametersMenu = (props) =>
           name: 'parameters',
           type: LINK_BUTTON,
           label: trans('tools'),
-          target: props.path+'/parameters'
+          target: props.path
         }
       ]}
     />
   </MenuSection>
 
 ParametersMenu.propTypes = {
-  path: T.string,
-  creatable: T.bool.isRequired
+  path: T.string
 }
 
 export {

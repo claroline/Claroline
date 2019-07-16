@@ -29,7 +29,7 @@ const EditorParameters = props =>
       buttons={true}
       cancel={{
         type: LINK_BUTTON,
-        target: '/',
+        target: props.basePath,
         exact: true
       }}
       sections={[
@@ -98,6 +98,7 @@ const EditorParameters = props =>
   </Fragment>
 
 EditorParameters.propTypes = {
+  basePath: T.string,
   workspace: T.object,
   path: T.shape({
     id: T.string,

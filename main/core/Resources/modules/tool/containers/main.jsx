@@ -10,14 +10,14 @@ const ToolMain = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
       (state) => ({
+        path: selectors.path(state),
+        toolName: selectors.name(state),
+        toolContext: selectors.context(state),
         loaded: selectors.loaded(state)
       }),
       (dispatch) => ({
-        open(toolName, context, basePath) {
-          return dispatch(actions.fetch(toolName, context, basePath))
-        },
-        close() {
-          dispatch(actions.close())
+        open(toolName, context) {
+          return dispatch(actions.fetch(toolName, context))
         }
       })
     )(ToolMainComponent)

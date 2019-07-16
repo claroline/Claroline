@@ -100,6 +100,7 @@ class EditorMain extends Component {
               render: () => {
                 const Parameters = (
                   <EditorParameters
+                    basePath={this.props.basePath}
                     path={this.props.path}
                     workspace={this.props.workspace}
                   />
@@ -122,6 +123,7 @@ class EditorMain extends Component {
                     >
                       <EditorStep
                         {...step}
+                        basePath={this.props.basePath}
                         pathId={this.props.path.id}
                         workspace={this.props.workspace}
                         resourceParent={this.props.resourceParent}
