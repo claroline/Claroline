@@ -1,14 +1,15 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
+import {convertTimestampToString} from '#/main/app/intl/date'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {convertTimestampToString} from '#/main/app/intl/date'
+import {selectors} from '#/main/core/administration/dashboard/store'
 import {LogConnectCard} from '#/main/core/layout/logs/components/connect-card'
 
 const Connections = () =>
   <ListData
-    name="connections.list"
+    name={selectors.STORE_NAME + '.connections.list'}
     fetch={{
       url: ['apiv2_log_connect_platform_list'],
       autoload: true

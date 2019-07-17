@@ -1,16 +1,38 @@
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
 
-import {makeLogReducer} from '#/main/core/layout/logs/reducer'
-
+import {LOAD_LOG, RESET_LOG, LOAD_CHART_DATA} from '#/main/core/layout/logs/actions'
 import {
   LOAD_OVERVIEW,
   LOAD_AUDIENCE,
   LOAD_RESOURCES,
   LOAD_WIDGETS
 } from '#/main/core/administration/dashboard/store/actions'
+import {selectors} from '#/main/core/administration/dashboard/store/selectors'
 
-const reducer = makeLogReducer({}, {
+const reducer = combineReducers({
+  logs: makeListReducer(selectors.STORE_NAME + '.logs', {
+    sortBy: { property: 'dateLog', direction: -1 }
+  }),
+  userActions: makeListReducer(selectors.STORE_NAME + '.userActions', {
+    sortBy: { property: 'doer.name', direction: 1 }
+  }),
+  log: makeReducer({}, {
+    [RESET_LOG]: (state, action) => action.log,
+    [LOAD_LOG]: (state, action) => action.log
+  }),
+  actions: makeReducer([], {}),
+  chart: combineReducers({
+    invalidated: makeReducer(true, {
+      [SEARCH_FILTER_ADD + '/' + selectors.STORE_NAME + '.logs'] : () => true,
+      [SEARCH_FILTER_REMOVE + '/' + selectors.STORE_NAME + '.logs'] : () => true,
+      [LOAD_CHART_DATA] : () => false
+    }),
+    data: makeReducer({}, {
+      [LOAD_CHART_DATA]: (state, action) => action.data
+    })
+  }),
   overview: combineReducers({
     loaded: makeReducer(false, {
       [LOAD_OVERVIEW] : () => true
@@ -43,11 +65,11 @@ const reducer = makeLogReducer({}, {
       [LOAD_WIDGETS]: (state, action) => action.data
     })
   }),
-  topActions: makeListReducer('topActions', {
+  topActions: makeListReducer(selectors.STORE_NAME + '.topActions', {
     filters: [{property: 'type', value: 'top_users_connections'}]
   }),
   connections: combineReducers({
-    list: makeListReducer('connections.list', {
+    list: makeListReducer(selectors.STORE_NAME + '.connections.list', {
       sortBy: {property: 'connectionDate', direction: -1}
     })
   })

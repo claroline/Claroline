@@ -10,7 +10,7 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/components/data'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-import {actions} from '#/main/core/administration/dashboard/store'
+import {actions, selectors} from '#/main/core/administration/dashboard/store'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 import {DashboardCard} from '#/main/core/layout/dashboard'
 
@@ -182,7 +182,7 @@ AudienceComponent.propTypes = {
 
 const Audience = connect(
   state => ({
-    audience: state.audience
+    audience: selectors.audience(state)
   }),
   dispatch => ({
     getAudienceData(filters = {}) {

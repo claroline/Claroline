@@ -19,45 +19,44 @@ class LogList extends Component {
   }
   
   render() {
-    let props =  this.props
     return (
       <div>
-        { props.chart &&
-        <div className="text-center">
-          <LineChart
-            data={props.chart.data}
-            xAxisLabel={{
-              show: true,
-              text: trans('date'),
-              grid: true
-            }}
-            yAxisLabel={{
-              show: true,
-              text: trans('actions'),
-              grid: true
-            }}
-            height={250}
-            width={700}
-            showArea={true}
-            margin={{
-              top: 20,
-              bottom: 50,
-              left: 50,
-              right: 20
-            }}
-          />
-        </div>
+        {this.props.chart &&
+          <div className="text-center">
+            <LineChart
+              data={this.props.chart.data}
+              xAxisLabel={{
+                show: true,
+                text: trans('date'),
+                grid: true
+              }}
+              yAxisLabel={{
+                show: true,
+                text: trans('actions'),
+                grid: true
+              }}
+              height={250}
+              width={700}
+              showArea={true}
+              margin={{
+                top: 20,
+                bottom: 50,
+                left: 50,
+                right: 20
+              }}
+            />
+          </div>
         }
         <ListData
-          name="logs"
+          name={this.props.name}
           fetch={{
-            url: props.listUrl,
+            url: this.props.listUrl,
             autoload: true
           }}
           primaryAction={(row) =>({
             label: trans('date'),
             type: LINK_BUTTON,
-            target: `/log/${row.id}`
+            target: `${this.props.path}/log/${row.id}`
           })}
           delete={false}
           definition={[
@@ -76,7 +75,7 @@ class LogList extends Component {
               label: trans('action'),
               displayed: true,
               options: {
-                choices: props.actions,
+                choices: this.props.actions,
                 transDomain: 'log'
               }
             }, {
@@ -114,13 +113,16 @@ LogList.propTypes = {
   actions: T.array.isRequired,
   chart: T.object.isRequired,
   getChartData: T.func.isRequired,
-  queryString: T.string
+  queryString: T.string,
+  name: T.string.isRequired,
+  path: T.string
 }
 
 LogList.defaultProps = {
-  id: null
+  id: null,
+  name: 'logs',
+  path: ''
 }
-
 
 export {
   LogList

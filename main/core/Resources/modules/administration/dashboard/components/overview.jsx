@@ -6,7 +6,7 @@ import {Grid, Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {actions} from '#/main/core/administration/dashboard/store'
+import {actions, selectors} from '#/main/core/administration/dashboard/store'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {DashboardTable, DashboardCard} from '#/main/core/layout/dashboard'
@@ -182,7 +182,7 @@ OverviewComponent.propTypes = {
 
 const Overview = connect(
   state => ({
-    overview: state.overview
+    overview: selectors.overview(state)
   }),
   dispatch => ({
     getOverviewData() {

@@ -5,18 +5,23 @@ import {PropTypes as T} from 'prop-types'
 import {select as listSelect} from '#/main/app/content/list/store'
 
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
+import {selectors as toolSelectors} from  '#/main/core/tool/store'
+import {selectors} from '#/main/core/administration/dashboard/store'
 import {LogList} from '#/main/core/layout/logs'
 
 const LogsComponent = (props) =>
   <LogList
     listUrl={['apiv2_admin_tool_logs_list']}
+    name={selectors.STORE_NAME + '.logs'}
     actions={props.actions}
     chart={props.chart}
     getChartData={props.getChartData}
     queryString={props.queryString}
+    path={props.path}
   />
 
 LogsComponent.propTypes = {
+  path: T.string.isRequired,
   actions: T.array.isRequired,
   chart: T.object.isRequired,
   getChartData: T.func.isRequired,
@@ -25,9 +30,10 @@ LogsComponent.propTypes = {
 
 const Logs = connect(
   state => ({
-    chart: state.chart,
-    actions: state.actions,
-    queryString: listSelect.queryString(listSelect.list(state, 'logs'))
+    path: toolSelectors.path(state),
+    chart: selectors.chart(state),
+    actions: selectors.actions(state),
+    queryString: listSelect.queryString(listSelect.list(state, selectors.STORE_NAME + '.logs'))
   }),
   dispatch => ({
     getChartData(id, filters) {

@@ -7,6 +7,8 @@ import {select} from '#/main/app/content/list/store'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {selectors} from '#/main/core/administration/dashboard/store'
+
 const topTypes = {
   top_extension: trans('top_extension'),
   top_workspaces_resources: trans('top_workspaces_resources'),
@@ -221,7 +223,7 @@ class TopActionsComponent extends Component {
   render() {
     return (
       <ListData
-        name="topActions"
+        name={selectors.STORE_NAME + '.topActions'}
         fetch={{
           url: ['apiv2_admin_tool_analytics_top_actions'],
           autoload: true
@@ -244,7 +246,7 @@ TopActionsComponent.propTypes = {
 const TopActions = connect(
   state => ({
     type: select
-      .filters(select.list(state, 'topActions'))
+      .filters(select.list(state, selectors.STORE_NAME + '.topActions'))
       .filter(it => it.property === 'type')
       .reduce((t, i) => i.value || t, '')
   })

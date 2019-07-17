@@ -6,7 +6,7 @@ import {Grid, Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {actions} from '#/main/core/administration/dashboard/store'
+import {actions, selectors} from '#/main/core/administration/dashboard/store'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {DashboardTable, DashboardCard} from '#/main/core/layout/dashboard'
 
@@ -107,7 +107,7 @@ ResourcesComponent.propTypes = {
 
 const Resources = connect(
   state => ({
-    resources: state.resources
+    resources: selectors.resources(state)
   }),
   dispatch => ({
     getResourcesData() {

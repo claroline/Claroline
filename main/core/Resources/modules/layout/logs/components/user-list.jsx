@@ -7,7 +7,7 @@ import {UserActionCard} from '#/main/core/layout/logs/components/user-action-car
 
 const UserLogList = props =>
   <ListData
-    name="userActions"
+    name={props.name}
     fetch={{
       url: props.listUrl,
       autoload: true
@@ -38,6 +38,10 @@ const UserLogList = props =>
 
 UserLogList.propTypes = {
   listUrl: T.oneOfType([T.string, T.array]).isRequired
+}
+
+UserLogList.defaultProps = {
+  name: 'userActions'
 }
 
 export {
