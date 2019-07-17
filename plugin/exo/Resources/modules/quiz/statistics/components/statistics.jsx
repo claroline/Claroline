@@ -1,12 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-
 import Panel from 'react-bootstrap/lib/Panel'
 
 import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
-import {URL_BUTTON} from '#/main/app/buttons'
 
 import quizSelect from '#/plugin/exo/quiz/selectors'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
