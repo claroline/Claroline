@@ -37,6 +37,7 @@ const UserLogList = props =>
   />
 
 UserLogList.propTypes = {
+  name: T.string.isRequired,
   listUrl: T.oneOfType([T.string, T.array]).isRequired
 }
 
