@@ -68,7 +68,7 @@ class EditorMain extends Component {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
-        callback: () => this.props.removeStep(step.id),
+        callback: () => this.props.removeStep(step.id, this.props.path),
         confirm: {
           title: trans('deletion'),
           subtitle: step.title || trans('step', {number: index + 1}, 'quiz'),
@@ -111,7 +111,7 @@ class EditorMain extends Component {
             title: step.title,
             actions: this.getStepActions(step, stepIndex)
           }))}
-          add={this.props.addStep}
+          add={() => this.props.addStep(this.props.path)}
           path={this.props.path}
         />
 
@@ -162,7 +162,7 @@ class EditorMain extends Component {
                     )
                   }
 
-                  // routeProps.history.push(`${this.props.path}/edit`)
+                  routeProps.history.push(`${this.props.path}/edit`)
 
                   return null
                 }

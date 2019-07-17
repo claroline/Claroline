@@ -50,26 +50,29 @@ const EditorMain = withRouter(
 
       /**
        * Create a new step in the quiz.
+       *
+       * @param {string} path
        */
-      addStep() {
+      addStep(path) {
         // generate id now to be able to redirect to new step
         const stepId = makeId()
 
         dispatch(actions.addStep({id: stepId}))
 
-        ownProps.history.push(`${ownProps.path}/edit/${stepId}`)
+        ownProps.history.push(`${path}/edit/${stepId}`)
       },
 
       /**
        * Remove a step from the quiz.
        *
        * @param {string} stepId - the id of the step to delete
+       * @param {string} path
        */
-      removeStep(stepId) {
+      removeStep(stepId, path) {
         dispatch(actions.removeStep(stepId))
 
-        if (`${ownProps.path}/edit/${stepId}` === ownProps.history.location.pathname) {
-          ownProps.history.push(`${ownProps.path}/edit`)
+        if (`${path}/edit/${stepId}` === ownProps.history.location.pathname) {
+          ownProps.history.push(`${path}/edit`)
         }
       },
 
