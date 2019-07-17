@@ -1,18 +1,10 @@
-import {TagsTool} from '#/plugin/tag/administration/tags/containers/tool'
 import {reducer} from '#/plugin/tag/administration/tags/store'
+import {TagsTool} from '#/plugin/tag/administration/tags/containers/tool'
 
 /**
  * Tags administration tool application.
- *
- * @constructor
  */
-export const App = () => ({
+export default {
   component: TagsTool,
-  store: reducer,
-  initialData: initialData => ({
-    tool: {
-      name: 'claroline_tag_admin_tool',
-      currentContext: initialData.currentContext
-    }
-  })
-})
+  store: reducer
+}

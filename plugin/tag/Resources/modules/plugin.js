@@ -18,5 +18,8 @@ registry.add('ClarolineTagBundle', {
     types: {
       'tag'  : () => { return import(/* webpackChunkName: "plugin-tag-data-tag" */  '#/plugin/tag/data/types/tag') }
     }
+  },
+  administration: {
+    'claroline_tag_admin_tool' : () => { return import(/* webpackChunkName: "plugin-tag-admin-tags" */ '#/plugin/tag/administration/tags') }
   }
 })

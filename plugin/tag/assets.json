@@ -1,9 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "admin-tags": "administration/tags/bootstrap"
-    }
-  },
   "styles": {
     "entry": {
       "main": "index.less"

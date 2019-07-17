@@ -1,14 +1,16 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {selectors} from '#/plugin/tag/administration/tags/store'
 import {TagCard} from '#/plugin/tag/card/components/tag'
 
-const TagList = () =>
+const TagList = (props) =>
   <ListData
-    name="tags"
+    name={selectors.STORE_NAME + '.tags'}
     fetch={{
       url: ['apiv2_tag_list'],
       autoload: true
@@ -18,7 +20,7 @@ const TagList = () =>
     }}
     primaryAction={(tag) => ({
       type: LINK_BUTTON,
-      target: `/${tag.id}`
+      target: `${props.path}/${tag.id}`
     })}
     definition={[
       {
@@ -44,7 +46,7 @@ const TagList = () =>
       }, {
         name: 'elements',
         type: 'number',
-        label: trans('elements'),
+        label: trans('elements', {}, 'tag'),
         displayed: true
       }
     ]}
@@ -52,7 +54,7 @@ const TagList = () =>
   />
 
 TagList.propTypes = {
-
+  path: T.string.isRequired
 }
 
 export {

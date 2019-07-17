@@ -17,17 +17,22 @@ const TagsTool = (props) =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_tag', {}, 'tag'),
-        target: '/new',
+        target: `${props.path}/new`,
         primary: true
       }
     ]}
   >
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/',
           exact: true,
-          component: TagList
+          render: () => {
+            const component = <TagList path={props.path} />
+
+            return component
+          }
         }, {
           path: '/new',
           component: TagForm,
@@ -43,6 +48,7 @@ const TagsTool = (props) =>
   </ToolPage>
 
 TagsTool.propTypes = {
+  path: T.string.isRequired,
   openForm: T.func.isRequired
 }
 

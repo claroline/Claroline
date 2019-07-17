@@ -8,11 +8,14 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
+import {selectors} from '#/plugin/tag/administration/tags/store'
 import {TaggedObjectCard} from '#/plugin/tag/card/components/tagged-object'
 
 const TagFormComponent = (props) =>
   <FormData
-    name="tag.form"
+    name={selectors.STORE_NAME + '.tag.form'}
     buttons={true}
     target={(tag, isNew) => isNew ?
       ['apiv2_tag_create'] :
@@ -20,7 +23,7 @@ const TagFormComponent = (props) =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: '/',
+      target: props.path,
       exact: true
     }}
     sections={[
@@ -62,14 +65,14 @@ const TagFormComponent = (props) =>
     ]}
   >
     <ListData
-      name="tag.objects"
+      name={selectors.STORE_NAME + '.tag.objects'}
       fetch={{
         url: ['apiv2_tag_list_objects', {id: props.tagId}],
         autoload: props.tagId && !props.new
       }}
       primaryAction={() => ({
         type: URL_BUTTON,
-        target: '/' // TODO
+        target: props.path // TODO
       })}
       delete={{
         url: ['apiv2_tag_remove_objects', {id: props.tagId}]
@@ -87,14 +90,16 @@ const TagFormComponent = (props) =>
   </FormData>
 
 TagFormComponent.propTypes = {
+  path: T.bool.isRequired,
   new: T.bool.isRequired,
   tagId: T.string
 }
 
 const TagForm = connect(
   (state) => ({
-    new: formSelectors.isNew(formSelectors.form(state, 'tag.form')),
-    tagId: formSelectors.data(formSelectors.form(state, 'tag.form')).id
+    path: toolSelectors.path(state),
+    new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME + '.tag.form')),
+    tagId: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.tag.form')).id
   })
 )(TagFormComponent)
 

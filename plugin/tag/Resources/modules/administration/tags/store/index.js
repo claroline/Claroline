@@ -1,10 +1,9 @@
-
 import {actions} from '#/plugin/tag/administration/tags/store/actions'
-import {selectors} from '#/plugin/tag/administration/tags/store/selectors'
 import {reducer} from '#/plugin/tag/administration/tags/store/reducer'
+import {selectors} from '#/plugin/tag/administration/tags/store/selectors'
 
 export {
   actions,
-  selectors,
-  reducer
+  reducer,
+  selectors
 }
