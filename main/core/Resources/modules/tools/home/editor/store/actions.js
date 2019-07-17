@@ -1,10 +1,34 @@
 import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 
+import {trans} from '#/main/app/intl/translation'
+import {makeId} from '#/main/core/scaffolding/id'
+
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+
+import {selectors} from '#/main/core/tools/home/editor/store/selectors'
+import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
 // action creators
 export const actions = {}
+
+actions.createTab = (context, administration, position, currentUser, navigate) => (dispatch) => {
+  const newTabId = makeId()
+
+  dispatch(formActions.updateProp(selectors.FORM_NAME, `[${position}]`, merge({}, TabTypes.defaultProps, {
+    id: newTabId,
+    title: trans('tab'),
+    longTitle: trans('tab'),
+    position: position + 1,
+    type: administration ? 'administration' : context.type,
+    administration: administration,
+    user: context.type === 'desktop' && !administration ? currentUser : null,
+    workspace: context.type === 'workspace' ? {uuid: context.data.uuid} : null
+  })))
+
+  // open new tab
+  navigate(`/edit/tab/${newTabId}`)
+}
 
 actions.deleteTab = (tabs, tabToDelete) => (dispatch) => {
   const tabIndex = tabs.findIndex(tab => tab.id === tabToDelete.id)

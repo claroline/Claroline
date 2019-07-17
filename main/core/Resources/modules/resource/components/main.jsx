@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import {theme} from '#/main/app/config'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {makeCancelable} from '#/main/app/api'
-import {Await} from '#/main/app/components/await'
 import {getResource} from '#/main/core/resources'
 
 import {ContentLoader} from '#/main/app/content/components/loader'

@@ -8,7 +8,7 @@ import {selectors} from '#/main/core/tools/home/store'
 const HomeMenu = withRouter(
   connect(
     (state) => ({
-      tabs: selectors.sortedTabs(state)
+      editable: selectors.editable(state)
     })
   )(HomeMenuComponent)
 )

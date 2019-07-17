@@ -11,7 +11,7 @@ import {PlayerMenu} from '#/plugin/path/resources/path/player/containers/menu'
 
 const PathMenu = props =>
   <MenuSection
-    {...omit(props, 'path')}
+    {...omit(props, 'path', 'editable')}
     title={trans('innova_path', {}, 'resource')}
   >
     <Routes
@@ -19,19 +19,11 @@ const PathMenu = props =>
       routes={[
         {
           path: '/edit',
-          render: () => {
-            return (
-              <EditorMenu path={props.path} />
-            )
-          },
+          component: EditorMenu,
           disabled: !props.editable
         }, {
           path: '/',
-          render: () => {
-            return (
-              <PlayerMenu path={props.path} />
-            )
-          }
+          component: PlayerMenu
         }
       ]}
     />
@@ -39,7 +31,6 @@ const PathMenu = props =>
 
 PathMenu.propTypes = {
   path: T.string.isRequired,
-
   editable: T.bool.isRequired,
 
   // from menu

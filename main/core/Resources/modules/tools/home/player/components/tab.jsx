@@ -36,15 +36,15 @@ const PlayerTab = props =>
       }
 
       {(props.currentTab && props.editable) &&
-      <PageActions>
-        <PageAction
-          type={LINK_BUTTON}
-          label={trans('configure', {}, 'actions')}
-          icon="fa fa-fw fa-cog"
-          primary={true}
-          target={`${props.path}/edit/tab/${props.currentTab.id}`}
-        />
-      </PageActions>
+        <PageActions>
+          <PageAction
+            type={LINK_BUTTON}
+            label={trans('configure', {}, 'actions')}
+            icon="fa fa-fw fa-cog"
+            primary={true}
+            target={`${props.path}/edit/tab/${props.currentTab.id}`}
+          />
+        </PageActions>
       }
     </PageHeader>
 

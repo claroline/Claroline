@@ -1,50 +1,41 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {Routes} from '#/main/app/router'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-const HomeMenu = (props) =>
+import {EditorMenu} from '#/main/core/tools/home/editor/containers/menu'
+import {PlayerMenu} from '#/main/core/tools/home/player/containers/menu'
+
+const HomeMenu = props =>
   <MenuSection
-    {...omit(props, 'path', 'tabs')}
+    {...omit(props, 'path', 'editable')}
     title={trans('home', {}, 'tools')}
   >
-    {0 < props.tabs.length &&
-      <div className="list-group">
-        {props.tabs.map(tab =>
-          <Button
-            key={tab.id}
-            className="list-group-item"
-            type={LINK_BUTTON}
-            icon={tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined}
-            label={tab.title}
-            target={`${props.path}/tab/${tab.id}`}
-            activeStyle={{
-              borderColor: get(tab, 'display.color')
-            }}
-          />
-        )}
-      </div>
-    }
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/edit',
+          component: EditorMenu,
+          disabled: !props.editable
+        }, {
+          path: '/',
+          component: PlayerMenu
+        }
+      ]}
+    />
   </MenuSection>
 
 HomeMenu.propTypes = {
-  path: T.string,
-  tabs: T.arrayOf(T.shape({
-    // TODO : tab types
-  })),
+  path: T.string.isRequired,
+  editable: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,
   toggle: T.func.isRequired
-}
-
-HomeMenu.defaultProps = {
-  tabs: []
 }
 
 export {
