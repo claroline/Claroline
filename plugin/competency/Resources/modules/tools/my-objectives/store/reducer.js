@@ -1,15 +1,24 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer} from '#/main/app/store/reducer'
+
+import {makeInstanceAction} from '#/main/app/store/actions'
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
+
+import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+
+import {selectors} from '#/plugin/competency/tools/my-objectives/store/selectors'
 import {
   COMPETENCIES_DATA_UPDATE,
   COMPETENCY_DATA_RESET,
   COMPETENCY_DATA_LOAD,
   COMPETENCY_DATA_UPDATE
-} from './actions'
+} from '#/plugin/competency/tools/my-objectives/store/actions'
 
-const objectivesReducers =  makeReducer({}, {})
+const objectivesReducer =  makeReducer({}, {
+  [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.objectives
+})
 
-const competenciesReducers = makeReducer({}, {
+const competenciesReducer = makeReducer({}, {
+  [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.competencies,
   [COMPETENCIES_DATA_UPDATE]: (state, action) => {
     const copy = {}
     Object.keys(state).forEach(key => {
@@ -29,7 +38,11 @@ const competenciesReducers = makeReducer({}, {
   }
 })
 
-const competencyReducers = makeReducer({}, {
+const objectivesCompetenciesReducer = makeReducer({}, {
+  [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.objectivesCompetencies
+})
+
+const competencyReducer = makeReducer({}, {
   [COMPETENCY_DATA_RESET]: () => {return {}},
   [COMPETENCY_DATA_LOAD]: (state, action) => {
     return {
@@ -53,8 +66,14 @@ const competencyReducers = makeReducer({}, {
   }
 })
 
+
+const reducer = combineReducers({
+  objectives: objectivesReducer,
+  competencies: competenciesReducer,
+  objectivesCompetencies: objectivesCompetenciesReducer,
+  competency: competencyReducer
+})
+
 export {
-  objectivesReducers,
-  competenciesReducers,
-  competencyReducers
+  reducer
 }

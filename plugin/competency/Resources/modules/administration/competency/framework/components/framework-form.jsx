@@ -1,13 +1,16 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-const FrameworkForm = () =>
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
+
+const FrameworkForm = (props) =>
   <FormData
     level={3}
-    name="frameworks.form"
+    name={competencySelectors.STORE_NAME + '.frameworks.form'}
     buttons={true}
     target={(competency, isNew) => isNew ?
       ['apiv2_competency_create'] :
@@ -15,7 +18,7 @@ const FrameworkForm = () =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: '/frameworks',
+      target: `${props.path}/frameworks`,
       exact: true
     }}
     sections={[
@@ -42,6 +45,10 @@ const FrameworkForm = () =>
       }
     ]}
   />
+
+FrameworkForm.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   FrameworkForm

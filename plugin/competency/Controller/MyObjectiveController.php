@@ -47,57 +47,6 @@ class MyObjectiveController
     }
 
     /**
-     * Displays the index of the learner version of the learning
-     * objectives tool, i.e the list of his learning objectives.
-     *
-     * @EXT\Route(
-     *     "/",
-     *     name="hevinci_my_objectives_index"
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
-     * @EXT\Template
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    public function objectivesAction(User $user)
-    {
-        $objectives = $this->objectiveManager->loadSubjectObjectives($user);
-        $objectivesCompetencies = [];
-        $competencies = [];
-
-        foreach ($objectives as $objectiveData) {
-            $objective = $this->objectiveManager->getObjectiveById($objectiveData['id']);
-            $objectiveComps = $this->objectiveManager->loadUserObjectiveCompetencies($objective, $user);
-            $objectivesCompetencies[$objectiveData['id']] = $objectiveComps;
-            $competencies[$objectiveData['id']] = [];
-
-            foreach ($objectiveComps as $comp) {
-                if (isset($comp['__children']) && count($comp['__children']) > 0) {
-                    $this->objectiveManager->getCompetencyFinalChildren(
-                        $comp,
-                        $competencies[$objectiveData['id']],
-                        $comp['levelValue'],
-                        $comp['nbLevels']
-                    );
-                } else {
-                    $comp['id'] = $comp['originalId'];
-                    $comp['requiredLevel'] = $comp['levelValue'];
-                    $competencies[$objectiveData['id']][$comp['id']] = $comp;
-                }
-            }
-        }
-
-        return [
-            'user' => $user,
-            'objectives' => $objectives,
-            'objectivesCompetencies' => $objectivesCompetencies,
-            'competencies' => $competencies,
-        ];
-    }
-
-    /**
      * Fetches data for competency page of My Objectives tool.
      *
      * @EXT\Route(

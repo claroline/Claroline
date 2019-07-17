@@ -3,13 +3,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {matchPath, Routes, withRouter} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
 import {actions} from '#/plugin/competency/administration/competency/framework/store'
 import {Frameworks} from '#/plugin/competency/administration/competency/framework/components/frameworks'
 import {FrameworkForm} from '#/plugin/competency/administration/competency/framework/components/framework-form'
@@ -19,57 +18,41 @@ import {Competency} from '#/plugin/competency/administration/competency/framewor
 import {CompetencyAbility} from '#/plugin/competency/administration/competency/framework/components/competency-ability'
 import {CompetencyAbilityChoice} from '#/plugin/competency/administration/competency/framework/components/competency-ability-choice'
 
-const FrameworkTabActionsComponent = (props) =>
-  <PageActions>
-    {matchPath(props.location.pathname, {path: '/frameworks', exact: true}) &&
-      <PageAction
-        type={LINK_BUTTON}
-        icon="fa fa-plus"
-        label={trans('framework.create', {}, 'competency')}
-        target="/frameworks/form"
-        primary={true}
-      />
-    }
-    {matchPath(props.location.pathname, {path: '/frameworks', exact: true}) &&
-      <PageAction
-        type={LINK_BUTTON}
-        icon="fa fa-upload"
-        label={trans('framework.import', {}, 'competency')}
-        target="/frameworks/import"
-      />
-    }
-  </PageActions>
-
-FrameworkTabActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
-
-const FrameworkTabActions = withRouter(FrameworkTabActionsComponent)
-
 const FrameworkTabComponent = (props) =>
   <Routes
+    path={props.path}
     routes={[
       {
         path: '/frameworks',
         exact: true,
-        component: Frameworks
+        render: () => {
+          const component = <Frameworks path={props.path} />
+
+          return component
+        }
       }, {
         path: '/frameworks/import',
         exact: true,
         component: FrameworkImport,
-        onEnter: () => props.resetForm('frameworks.import'),
-        onLeave: () => props.resetForm('frameworks.import')
+        onEnter: () => props.resetForm(competencySelectors.STORE_NAME + '.frameworks.import'),
+        onLeave: () => props.resetForm(competencySelectors.STORE_NAME + '.frameworks.import')
       }, {
         path: '/frameworks/form/:id?',
-        component: FrameworkForm,
+        render: () => {
+          const component = <FrameworkForm path={props.path} />
+
+          return component
+        },
         onEnter: (params) => props.openForm(params.id),
-        onLeave: () => props.resetForm('frameworks.form')
+        onLeave: () => props.resetForm(competencySelectors.STORE_NAME + '.frameworks.form')
       }, {
         path: '/frameworks/:id?',
         exact: true,
-        component: Framework,
+        render: () => {
+          const component = <Framework path={props.path} />
+
+          return component
+        },
         onEnter: (params) => props.loadCurrent(params.id),
         onLeave: () => props.resetCurrent()
       }, {
@@ -92,6 +75,7 @@ const FrameworkTabComponent = (props) =>
   />
 
 FrameworkTabComponent.propTypes = {
+  path: T.string.isRequired,
   openForm: T.func.isRequired,
   resetForm: T.func.isRequired,
   loadCurrent: T.func.isRequired,
@@ -104,33 +88,35 @@ FrameworkTabComponent.propTypes = {
 }
 
 const FrameworkTab = connect(
-  null,
+  (state) => ({
+    path: toolSelectors.path(state)
+  }),
   (dispatch) => ({
     openForm(id = null) {
       const defaultProps = {}
       set(defaultProps, 'id', makeId())
 
-      dispatch(actions.open('frameworks.form', defaultProps, id))
+      dispatch(actions.open(competencySelectors.STORE_NAME + '.frameworks.form', defaultProps, id))
     },
     resetForm(formName) {
       dispatch(actions.reset(formName))
     },
     loadCurrent(id) {
-      dispatch(actions.loadCurrent('frameworks.current', id))
+      dispatch(actions.loadCurrent(competencySelectors.STORE_NAME + '.frameworks.current', id))
     },
     resetCurrent() {
-      dispatch(actions.resetCurrent('frameworks.current'))
+      dispatch(actions.resetCurrent(competencySelectors.STORE_NAME + '.frameworks.current'))
     },
     openCompetency(parentId, id = null) {
       const defaultProps = {}
       set(defaultProps, 'id', makeId())
       set(defaultProps, 'parent', {'id': parentId})
 
-      dispatch(actions.open('frameworks.competency', defaultProps, id))
+      dispatch(actions.open(competencySelectors.STORE_NAME + '.frameworks.competency', defaultProps, id))
     },
     resetCompetency() {
-      dispatch(actions.reset('frameworks.competency'))
-      dispatch(actions.invalidateList('frameworks.competency.abilities.list'))
+      dispatch(actions.reset(competencySelectors.STORE_NAME + '.frameworks.competency'))
+      dispatch(actions.invalidateList(competencySelectors.STORE_NAME + '.frameworks.competency.abilities.list'))
     },
     openAbility(competencyId, id = null) {
       const defaultProps = {}
@@ -138,25 +124,24 @@ const FrameworkTab = connect(
       set(defaultProps, 'competency', {'id': competencyId})
       set(defaultProps, 'ability', {'id': makeId()})
 
-      dispatch(actions.openCompetencyAbility('frameworks.competency_ability', defaultProps, id))
-      dispatch(actions.open('frameworks.competency', {}, competencyId))
+      dispatch(actions.openCompetencyAbility(competencySelectors.STORE_NAME + '.frameworks.competency_ability', defaultProps, id))
+      dispatch(actions.open(competencySelectors.STORE_NAME + '.frameworks.competency', {}, competencyId))
     },
     openAbilityChoice(competencyId) {
       const defaultProps = {}
       set(defaultProps, 'id', makeId())
       set(defaultProps, 'competency', {'id': competencyId})
 
-      dispatch(actions.openCompetencyAbility('frameworks.competency_ability', defaultProps))
-      dispatch(actions.open('frameworks.competency', {}, competencyId))
+      dispatch(actions.openCompetencyAbility(competencySelectors.STORE_NAME + '.frameworks.competency_ability', defaultProps))
+      dispatch(actions.open(competencySelectors.STORE_NAME + '.frameworks.competency', {}, competencyId))
     },
     resetAbility() {
-      dispatch(actions.reset('frameworks.competency'))
-      dispatch(actions.reset('frameworks.competency_ability'))
+      dispatch(actions.reset(competencySelectors.STORE_NAME + '.frameworks.competency'))
+      dispatch(actions.reset(competencySelectors.STORE_NAME + '.frameworks.competency_ability'))
     }
   })
 )(FrameworkTabComponent)
 
 export {
-  FrameworkTabActions,
   FrameworkTab
 }

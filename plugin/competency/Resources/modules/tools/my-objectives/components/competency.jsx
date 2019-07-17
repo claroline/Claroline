@@ -1,10 +1,14 @@
-import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {trans} from '#/main/app/intl/translation'
-import {actions} from '../actions'
+import {connect} from 'react-redux'
 
-class Competency extends Component {
+import {trans} from '#/main/app/intl/translation'
+
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
+import {actions} from '#/plugin/competency/tools/my-objectives/store'
+
+class CompetencyComponent extends Component {
   getProgressPercentage() {
     return this.props.competency.userLevelValue !== undefined ?
       Math.round(((this.props.competency.userLevelValue + 1) / (this.props.competency.requiredLevel + 1)) * 100) :
@@ -55,7 +59,7 @@ class Competency extends Component {
                 <i className="fa fa-check-square-o fa-5x" aria-hidden="true"></i>
                 <h4>{trans('competency.acquired', {}, 'competency')}</h4>
               </div>
-              <a href={`#${this.props.objective.id}/competency/${this.props.competency.id}`} className="btn btn-primary">
+              <a href={`${this.props.path}/${this.props.objective.id}/competency/${this.props.competency.id}`} className="btn btn-primary">
                 {trans('objective.train', {}, 'competency')}
               </a>
             </div>
@@ -78,7 +82,7 @@ class Competency extends Component {
                   <div className="fill"></div>
                 </div>
               </div>
-              <a href={`#${this.props.objective.id}/competency/${this.props.competency.id}`} className="btn btn-primary">
+              <a href={`${this.props.path}/${this.props.objective.id}/competency/${this.props.competency.id}`} className="btn btn-primary">
                 {trans('objective.continue', {}, 'competency')}
               </a>
             </div>
@@ -89,7 +93,8 @@ class Competency extends Component {
   }
 }
 
-Competency.propTypes = {
+CompetencyComponent.propTypes = {
+  path: T.string.isRequired,
   objective: T.shape({
     id: T.number,
     name: T.string
@@ -107,18 +112,15 @@ Competency.propTypes = {
   getRelevantResource: T.func.isRequired
 }
 
-function mapStateToProps() {
-  return {}
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    getRelevantResource: (competencyId, level) => {
+const Competency = connect(
+  (state) => ({
+    path: toolSelectors.path(state)
+  }),
+  (dispatch) => ({
+    getRelevantResource(competencyId, level) {
       dispatch(actions.fetchRelevantResource(competencyId, level))
     }
-  }
-}
+  })
+)(CompetencyComponent)
 
-const ConnectedCompetency = connect(mapStateToProps, mapDispatchToProps)(Competency)
-
-export {ConnectedCompetency as Competency}
+export {Competency}

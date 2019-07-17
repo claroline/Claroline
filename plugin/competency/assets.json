@@ -1,11 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "competencies": "administration/competency/bootstrap",
-      "my-objectives": "my-objectives/index.jsx"
-    }
-  },
-
   "styles": {
     "entry": {
       "competency": "tools/competency.less",

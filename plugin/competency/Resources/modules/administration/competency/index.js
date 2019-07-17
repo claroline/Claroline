@@ -1,8 +1,10 @@
 import {reducer} from '#/plugin/competency/administration/competency/store'
-import {CompetencyTool} from '#/plugin/competency/administration/competency/components/tool'
+import {CompetencyTool} from '#/plugin/competency/administration/competency/containers/tool'
+import {CompetencyMenu} from '#/plugin/competency/administration/competency/components/menu'
 
-export const App = () => ({
+export default {
   component: CompetencyTool,
+  menu: CompetencyMenu,
   store: reducer,
-  initialData: (initialData) => Object.assign({}, initialData)
-})
+  styles: ['claroline-distribution-plugin-competency-competency']
+}

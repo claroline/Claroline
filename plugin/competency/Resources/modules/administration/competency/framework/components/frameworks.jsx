@@ -1,16 +1,22 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {FrameworkList} from '#/plugin/competency/administration/competency/framework/components/framework-list'
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
+import {CompetencyCard} from '#/plugin/competency/administration/competency/data/components/competency-card'
 
-const Frameworks = () =>
+const Frameworks = (props) =>
   <ListData
-    name="frameworks.list"
-    primaryAction={FrameworkList.open}
+    name={competencySelectors.STORE_NAME + '.frameworks.list'}
+    primaryAction={(row) => ({
+      type: LINK_BUTTON,
+      target: `${props.path}/frameworks/${row.id}`,
+      label: trans('open', {}, 'actions')
+    })}
     fetch={{
       url: ['apiv2_competency_root_list'],
       autoload: true
@@ -21,7 +27,7 @@ const Frameworks = () =>
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit'),
         scope: ['object'],
-        target: `/frameworks/form/${rows[0].id}`
+        target: `${props.path}/frameworks/form/${rows[0].id}`
       }, {
         type: DOWNLOAD_BUTTON,
         icon: 'fa fa-fw fa-download',
@@ -35,9 +41,33 @@ const Frameworks = () =>
     delete={{
       url: ['apiv2_competency_delete_bulk']
     }}
-    definition={FrameworkList.definition}
-    card={FrameworkList.card}
+    definition={[
+      {
+        name: 'name',
+        label: trans('name'),
+        displayed: true,
+        type: 'string',
+        primary: true
+      }, {
+        name: 'description',
+        label: trans('description'),
+        displayed: true,
+        type: 'html'
+      }, {
+        name: 'scale',
+        alias: 'scale.name',
+        label: trans('scale', {}, 'competency'),
+        displayed: true,
+        type: 'string',
+        calculated: (rowData) => rowData.scale.name
+      }
+    ]}
+    card={CompetencyCard}
   />
+
+Frameworks.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   Frameworks

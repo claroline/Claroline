@@ -3,29 +3,31 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
+import {selectors} from '#/plugin/competency/administration/competency/store/selectors'
+
 const reducer = combineReducers({
-  list: makeListReducer('frameworks.list', {
+  list: makeListReducer(selectors.STORE_NAME + '.frameworks.list', {
     sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/frameworks.form']: () => true,
-      [FORM_SUBMIT_SUCCESS+'/frameworks.import']: () => true
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.frameworks.form']: () => true,
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.frameworks.import']: () => true
     })
   }),
-  form: makeFormReducer('frameworks.form', {}, {}),
-  import: makeFormReducer('frameworks.import', {}, {}),
-  current: makeListReducer('frameworks.current', {}, {}),
-  competency: makeFormReducer('frameworks.competency', {}, {
+  form: makeFormReducer(selectors.STORE_NAME + '.frameworks.form', {}, {}),
+  import: makeFormReducer(selectors.STORE_NAME + '.frameworks.import', {}, {}),
+  current: makeListReducer(selectors.STORE_NAME + '.frameworks.current', {}, {}),
+  competency: makeFormReducer(selectors.STORE_NAME + '.frameworks.competency', {}, {
     abilities: combineReducers({
-      list: makeListReducer('frameworks.competency.abilities.list', {}, {
+      list: makeListReducer(selectors.STORE_NAME + '.frameworks.competency.abilities.list', {}, {
         invalidated: makeReducer(false, {
-          [FORM_SUBMIT_SUCCESS+'/frameworks.competency_ability']: () => true
+          [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.frameworks.competency_ability']: () => true
         })
       }),
-      picker: makeListReducer('frameworks.competency.abilities.picker')
+      picker: makeListReducer(selectors.STORE_NAME + '.frameworks.competency.abilities.picker')
     })
   }),
-  competency_ability: makeFormReducer('frameworks.competency_ability', {}, {})
+  competency_ability: makeFormReducer(selectors.STORE_NAME + '.frameworks.competency_ability', {}, {})
 })
 
 export {

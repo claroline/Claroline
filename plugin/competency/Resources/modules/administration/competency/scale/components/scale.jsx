@@ -1,13 +1,16 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-const Scale = () =>
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
+
+const Scale = (props) =>
   <FormData
     level={3}
-    name="scales.current"
+    name={competencySelectors.STORE_NAME + '.scales.current'}
     buttons={true}
     target={(scale, isNew) => isNew ?
       ['apiv2_competency_scale_create'] :
@@ -15,7 +18,7 @@ const Scale = () =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: '/scales',
+      target: `${props.path}/scales`,
       exact: true
     }}
     sections={[
@@ -43,6 +46,10 @@ const Scale = () =>
       }
     ]}
   />
+
+Scale.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   Scale

@@ -1,33 +1,65 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {TabbedPageContainer} from '#/main/core/layout/tabs'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {matchPath, Routes} from '#/main/app/router'
 
-import {FrameworkTabActions, FrameworkTab} from '#/plugin/competency/administration/competency/framework/components/framework-tab'
-import {ScaleTabActions, ScaleTab} from '#/plugin/competency/administration/competency/scale/components/scale-tab'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
-const CompetencyTool = () =>
-  <TabbedPageContainer
-    title={trans('competencies', {}, 'tools')}
-    redirect={[
-      {from: '/', exact: true, to: '/frameworks'}
-    ]}
-    tabs={[
+import {FrameworkTab} from '#/plugin/competency/administration/competency/framework/components/framework-tab'
+import {ScaleTab} from '#/plugin/competency/administration/competency/scale/components/scale-tab'
+
+const CompetencyTool = (props) =>
+  <ToolPage
+    actions={[
       {
-        icon: 'fa fa-graduation-cap',
-        title: trans('competencies', {}, 'tools'),
-        path: '/frameworks',
-        actions: FrameworkTabActions,
-        content: FrameworkTab
+        name: 'new_framework',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('framework.create', {}, 'competency'),
+        target: `${props.path}/frameworks/form`,
+        primary: true,
+        displayed: !!matchPath(props.location.pathname, {path: `${props.path}/frameworks`, exact: true})
       }, {
-        icon: 'fa fa-arrow-up',
-        title: trans('scales', {}, 'competency'),
-        path: '/scales',
-        actions: ScaleTabActions,
-        content: ScaleTab
+        name: 'import_framework',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-upload',
+        label: trans('framework.import', {}, 'competency'),
+        target: `${props.path}/frameworks/import`,
+        displayed: !!matchPath(props.location.pathname, {path: `${props.path}/frameworks`, exact: true})
+      }, {
+        name: 'new_scale',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('scale.create', {}, 'competency'),
+        target: `${props.path}/scales/form`,
+        primary: true,
+        displayed: !!matchPath(props.location.pathname, {path: `${props.path}/scales`, exact: true})
       }
     ]}
-  />
+  >
+    <Routes
+      path={props.path}
+      redirect={[
+        {from: '/', exact: true, to: '/frameworks'}
+      ]}
+      routes={[
+        {
+          path: '/frameworks',
+          component: FrameworkTab
+        }, {
+          path: '/scales',
+          component: ScaleTab
+        }
+      ]}
+    />
+  </ToolPage>
+
+CompetencyTool.propTypes = {
+  location: T.object.isRequired,
+  path: T.string.isRequired
+}
 
 export {
   CompetencyTool

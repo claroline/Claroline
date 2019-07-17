@@ -9,14 +9,17 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
 import {Competency as CompetencyType} from '#/plugin/competency/administration/competency/prop-types'
-import {CompetencyAbilityList} from '#/plugin/competency/administration/competency/framework/components/competency-ability-list'
+import {CompetencyAbilityCard} from '#/plugin/competency/administration/competency/data/components/competency-ability-card'
 
 const CompetencyComponent = (props) =>
   <FormData
     level={2}
     title={props.new ? trans('competency.sub_creation', {}, 'competency') : trans('competency.sub_edition', {}, 'competency')}
-    name="frameworks.competency"
+    name={competencySelectors.STORE_NAME + '.frameworks.competency'}
     buttons={true}
     target={(competency, isNew) => isNew ?
       ['apiv2_competency_create'] :
@@ -24,7 +27,7 @@ const CompetencyComponent = (props) =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: props.competency.parent ? `/frameworks/${props.competency.parent.id}` : `/frameworks/${props.competency.id}`,
+      target: props.competency.parent ? `${props.path}/frameworks/${props.competency.parent.id}` : `${props.path}/frameworks/${props.competency.id}`,
       exact: true
     }}
     sections={[
@@ -54,27 +57,44 @@ const CompetencyComponent = (props) =>
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-plus',
               label: trans('ability.create', {}, 'competency'),
-              target: `/frameworks/${props.competency.id}/ability`
+              target: `${props.path}/frameworks/${props.competency.id}/ability`
             }, {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-plus-square',
               label: trans('ability.add', {}, 'competency'),
-              target: `/frameworks/${props.competency.id}/ability_choice`
+              target: `${props.path}/frameworks/${props.competency.id}/ability_choice`
             }
           ]}
         >
           <ListData
-            name="frameworks.competency.abilities.list"
+            name={competencySelectors.STORE_NAME + '.frameworks.competency.abilities.list'}
             fetch={{
               url: ['apiv2_competency_ability_competency_list', {competency: props.competency.id}],
               autoload: props.competency.id && !props.new
             }}
-            primaryAction={CompetencyAbilityList.open}
+            primaryAction={(row) => ({
+              type: LINK_BUTTON,
+              target: `${props.path}/frameworks/${row.competency.id}/ability/${row.id}`,
+              label: trans('open', {}, 'actions')
+            })}
             delete={{
               url: ['apiv2_competency_ability_delete_bulk']
             }}
-            definition={CompetencyAbilityList.definition}
-            card={CompetencyAbilityList.card}
+            definition={[
+              {
+                name: 'ability.name',
+                label: trans('name'),
+                displayed: true,
+                type: 'string',
+                primary: true
+              }, {
+                name: 'level.name',
+                label: trans('level', {}, 'competency'),
+                displayed: true,
+                type: 'string'
+              }
+            ]}
+            card={CompetencyAbilityCard}
           />
         </FormSection>
       </FormSections>
@@ -82,14 +102,16 @@ const CompetencyComponent = (props) =>
   </FormData>
 
 CompetencyComponent.propTypes = {
+  path: T.string.isRequired,
   new: T.bool.isRequired,
   competency: T.shape(CompetencyType.propTypes)
 }
 
 const Competency = connect(
   state => ({
-    new: formSelect.isNew(formSelect.form(state, 'frameworks.competency')),
-    competency: formSelect.data(formSelect.form(state, 'frameworks.competency'))
+    path: toolSelectors.path(state),
+    new: formSelect.isNew(formSelect.form(state, competencySelectors.STORE_NAME + '.frameworks.competency')),
+    competency: formSelect.data(formSelect.form(state, competencySelectors.STORE_NAME + '.frameworks.competency'))
   })
 )(CompetencyComponent)
 

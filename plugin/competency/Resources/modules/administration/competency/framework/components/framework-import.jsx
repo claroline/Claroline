@@ -7,15 +7,19 @@ import {actions as formActions} from '#/main/app/content/form/store'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
+
 const FrameworkImportComponent = (props) =>
   <FormData
     level={3}
-    name="frameworks.import"
+    name={competencySelectors.STORE_NAME + '.frameworks.import'}
     buttons={true}
     target={() => ['apiv2_competency_framework_import']}
     cancel={{
       type: LINK_BUTTON,
-      target: '/frameworks',
+      target: `${props.path}/frameworks`,
       exact: true
     }}
     sections={[
@@ -39,11 +43,14 @@ const FrameworkImportComponent = (props) =>
   />
 
 FrameworkImportComponent.propTypes = {
+  path: T.string.isRequired,
   updateProp: T.func.isRequired
 }
 
 const FrameworkImport = connect(
-  null,
+  (state) => ({
+    path: toolSelectors.path(state)
+  }),
   (dispatch) => ({
     updateProp(storeName, prop, value) {
       dispatch(formActions.updateProp(storeName, prop, value))

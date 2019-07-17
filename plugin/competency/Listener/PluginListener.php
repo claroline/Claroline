@@ -7,12 +7,14 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
+use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -28,8 +30,12 @@ class PluginListener
     private $authorization;
     /** @var CompetencyManager */
     private $competencyManager;
+    /** @var ObjectiveManager */
+    private $objectiveManager;
     /** @var TwigEngine */
     private $templating;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var ToolManager */
     private $toolManager;
 
@@ -42,7 +48,9 @@ class PluginListener
      * @DI\InjectParams({
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
+     *     "objectiveManager"  = @DI\Inject("hevinci.competency.objective_manager"),
      *     "templating"        = @DI\Inject("templating"),
+     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
      *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager"),
      *     "stack"             = @DI\Inject("request_stack"),
      *     "kernel"            = @DI\Inject("http_kernel")
@@ -50,7 +58,9 @@ class PluginListener
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param CompetencyManager             $competencyManager
+     * @param ObjectiveManager              $objectiveManager
      * @param TwigEngine                    $templating
+     * @param TokenStorageInterface         $tokenStorage
      * @param ToolManager                   $toolManager
      * @param RequestStack                  $stack
      * @param HttpKernelInterface           $kernel
@@ -58,14 +68,18 @@ class PluginListener
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         CompetencyManager $competencyManager,
+        ObjectiveManager $objectiveManager,
         TwigEngine $templating,
+        TokenStorageInterface $tokenStorage,
         ToolManager $toolManager,
         RequestStack $stack,
         HttpKernelInterface $kernel
     ) {
         $this->authorization = $authorization;
         $this->competencyManager = $competencyManager;
+        $this->objectiveManager = $objectiveManager;
         $this->templating = $templating;
+        $this->tokenStorage = $tokenStorage;
         $this->toolManager = $toolManager;
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
@@ -96,7 +110,39 @@ class PluginListener
      */
     public function onOpenMyLearningObjectivesTool(DisplayToolEvent $event)
     {
-        $this->forward('HeVinciCompetencyBundle:MyObjective:objectives', $event);
+        $user = $this->tokenStorage->getToken()->getUser();
+        $objectives = 'anon.' !== $user ? $this->objectiveManager->loadSubjectObjectives($user) : [];
+        $objectivesCompetencies = [];
+        $competencies = [];
+
+        foreach ($objectives as $objectiveData) {
+            $objective = $this->objectiveManager->getObjectiveById($objectiveData['id']);
+            $objectiveComps = $this->objectiveManager->loadUserObjectiveCompetencies($objective, $user);
+            $objectivesCompetencies[$objectiveData['id']] = $objectiveComps;
+            $competencies[$objectiveData['id']] = [];
+
+            foreach ($objectiveComps as $comp) {
+                if (isset($comp['__children']) && count($comp['__children']) > 0) {
+                    $this->objectiveManager->getCompetencyFinalChildren(
+                        $comp,
+                        $competencies[$objectiveData['id']],
+                        $comp['levelValue'],
+                        $comp['nbLevels']
+                    );
+                } else {
+                    $comp['id'] = $comp['originalId'];
+                    $comp['requiredLevel'] = $comp['levelValue'];
+                    $competencies[$objectiveData['id']][$comp['id']] = $comp;
+                }
+            }
+        }
+
+        $event->setData([
+            'objectives' => $objectives,
+            'objectivesCompetencies' => $objectivesCompetencies,
+            'competencies' => $competencies,
+        ]);
+        $event->stopPropagation();
     }
 
     /**

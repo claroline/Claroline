@@ -5,8 +5,6 @@ namespace HeVinci\CompetencyBundle\Listener\Administration;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Defines the listening methods for all the core extension
@@ -18,26 +16,19 @@ class CompetenciesListener
 {
     /** @var CompetencyManager */
     private $competencyManager;
-    /** @var TwigEngine */
-    private $templating;
 
     /**
      * CompetenciesListener constructor.
      *
      * @DI\InjectParams({
-     *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "templating"        = @DI\Inject("templating")
+     *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager")
      * })
      *
      * @param CompetencyManager $competencyManager
-     * @param TwigEngine        $templating
      */
-    public function __construct(
-        CompetencyManager $competencyManager,
-        TwigEngine $templating
-    ) {
+    public function __construct(CompetencyManager $competencyManager)
+    {
         $this->competencyManager = $competencyManager;
-        $this->templating = $templating;
     }
 
     /**
@@ -48,10 +39,7 @@ class CompetenciesListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $this->competencyManager->ensureHasScale();
-
-        $content = $this->templating->render('HeVinciCompetencyBundle:administration:competencies.html.twig');
-
-        $event->setResponse(new Response($content));
+        $event->setData([]);
         $event->stopPropagation();
     }
 }

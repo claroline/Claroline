@@ -7,6 +7,9 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
+import {selectors as competencySelectors} from '#/plugin/competency/administration/competency/store'
 import {
   Competency as CompetencyType,
   CompetencyAbility as CompetencyAbilityType
@@ -17,7 +20,7 @@ const CompetencyAbilityComponent = (props) =>
     <h2>{props.new ? trans('ability.creation', {}, 'competency') : trans('ability.edition', {}, 'competency')}</h2>
     <FormData
       level={3}
-      name="frameworks.competency_ability"
+      name={competencySelectors.STORE_NAME + '.frameworks.competency_ability'}
       buttons={true}
       target={(competencyAbility, isNew) => isNew ?
         ['apiv2_competency_ability_create'] :
@@ -26,10 +29,10 @@ const CompetencyAbilityComponent = (props) =>
       cancel={{
         type: LINK_BUTTON,
         target: props.competency && props.competency.parent ?
-          `/frameworks/${props.competency.parent.id}/competency/${props.competency.id}` :
+          `${props.path}/frameworks/${props.competency.parent.id}/competency/${props.competency.id}` :
           props.competency ?
-            `/frameworks/${props.competency.id}` :
-            '/frameworks',
+            `${props.path}/frameworks/${props.competency.id}` :
+            `${props.path}/frameworks`,
         exact: true
       }}
       sections={[
@@ -79,6 +82,7 @@ const CompetencyAbilityComponent = (props) =>
   </section>
 
 CompetencyAbilityComponent.propTypes = {
+  path: T.string.isRequired,
   new: T.bool.isRequired,
   competencyAbility: T.shape(CompetencyAbilityType.propTypes),
   competency: T.shape(CompetencyType.propTypes)
@@ -86,9 +90,10 @@ CompetencyAbilityComponent.propTypes = {
 
 const CompetencyAbility = connect(
   state => ({
-    new: formSelect.isNew(formSelect.form(state, 'frameworks.competency_ability')),
-    competencyAbility: formSelect.data(formSelect.form(state, 'frameworks.competency_ability')),
-    competency: formSelect.data(formSelect.form(state, 'frameworks.competency'))
+    path: toolSelectors.path(state),
+    new: formSelect.isNew(formSelect.form(state, competencySelectors.STORE_NAME + '.frameworks.competency_ability')),
+    competencyAbility: formSelect.data(formSelect.form(state, competencySelectors.STORE_NAME + '.frameworks.competency_ability')),
+    competency: formSelect.data(formSelect.form(state, competencySelectors.STORE_NAME + '.frameworks.competency'))
   })
 )(CompetencyAbilityComponent)
 

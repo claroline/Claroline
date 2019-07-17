@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
 import classes from 'classnames'
-import {trans} from '#/main/app/intl/translation'
-import {actions} from '../actions'
 
-class CompetencyView extends Component {
+import {trans} from '#/main/app/intl/translation'
+
+import {actions, selectors} from '#/plugin/competency/tools/my-objectives/store'
+
+class CompetencyViewComponent extends Component {
   componentDidMount() {
     this.props.fetchCompetencyData(this.props.match.params.oId, this.props.match.params.cId)
   }
@@ -195,7 +196,7 @@ class CompetencyView extends Component {
   }
 }
 
-CompetencyView.propTypes = {
+CompetencyViewComponent.propTypes = {
   match: T.shape({
     path: T.string.isRequired,
     url: T.string.isRequired,
@@ -236,35 +237,30 @@ CompetencyView.propTypes = {
   getRelevantResource: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    competency: state.competency.data,
-    objective: state.competency.objective,
-    progress: state.competency.progress,
-    nbLevels: state.competency.nbLevels,
-    currentLevel: state.competency.currentLevel,
-    challenge: state.competency.challenge,
-    competencies: state.competency.objective ? state.competencies[state.competency.objective.id] : {}
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    fetchCompetencyData: (objectiveId, competencyId) => {
+const CompetencyView = connect(
+  (state) => ({
+    competency: selectors.competency(state).data,
+    objective: selectors.competency(state).objective,
+    progress: selectors.competency(state).progress,
+    nbLevels: selectors.competency(state).nbLevels,
+    currentLevel: selectors.competency(state).currentLevel,
+    challenge: selectors.competency(state).challenge,
+    competencies: selectors.competency(state).objective ? selectors.competencies(state)[selectors.competency(state).objective.id] : {}
+  }),
+  (dispatch) => ({
+    fetchCompetencyData(objectiveId, competencyId) {
       dispatch(actions.fetchCompetencyData(objectiveId, competencyId))
     },
-    resetCompetency: () => {
+    resetCompetency() {
       dispatch(actions.resetCompetencyData())
     },
-    getLevelData: (competencyId, level) => {
+    getLevelData(competencyId, level) {
       dispatch(actions.fetchLevelData(competencyId, level))
     },
-    getRelevantResource: (competencyId, level) => {
+    getRelevantResource(competencyId, level) {
       dispatch(actions.fetchRelevantResource(competencyId, level))
     }
-  }
-}
+  })
+)(CompetencyViewComponent)
 
-const ConnectedCompetencyView = withRouter(connect(mapStateToProps, mapDispatchToProps)(CompetencyView))
-
-export {ConnectedCompetencyView as CompetencyView}
+export {CompetencyView}
