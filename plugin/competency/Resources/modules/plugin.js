@@ -15,7 +15,8 @@ registry.add('HeVinciCompetencyBundle', {
     }
   },
   administration: {
-    'competencies' : () => { return import(/* webpackChunkName: "plugin-competency-admin-competency" */ '#/plugin/competency/administration/competency') }
+    'competencies'        : () => { return import(/* webpackChunkName: "plugin-competency-admin-competency" */ '#/plugin/competency/administration/competency') },
+    'learning-objectives' : () => { return import(/* webpackChunkName: "plugin-competency-admin-objectives" */ '#/plugin/competency/administration/objectives') }
   },
   tools: {
     'my-learning-objectives' :   () => { return import(/* webpackChunkName: "plugin-competency-tool-my-objectives" */ '#/plugin/competency/tools/my-objectives') }
