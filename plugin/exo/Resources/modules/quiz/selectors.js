@@ -2,7 +2,7 @@ import {createSelector} from 'reselect'
 
 // TODO : there is possible code refactoring with editor/selectors.js
 
-const STORE_NAME = 'resource'
+const STORE_NAME = 'ujm_exercise'
 
 const resource = (state) => state[STORE_NAME]
 

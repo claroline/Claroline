@@ -7,7 +7,6 @@ import Panel from 'react-bootstrap/lib/Panel'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {URL_BUTTON} from '#/main/app/buttons'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import quizSelect from '#/plugin/exo/quiz/selectors'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
@@ -53,20 +52,9 @@ const Statistics = props =>
         </div>
       )
     }
-
-    {props.workspaceId &&
-      <Button
-        type={URL_BUTTON}
-        className="btn btn-block btn-emphasis"
-        icon="fa fa-fw fa-home"
-        label={trans('return-home', {}, 'actions')}
-        target={['claro_workspace_open', {workspaceId: props.workspaceId}]}
-      />
-    }
   </div>
 
 Statistics.propTypes = {
-  workspaceId: T.number,
   numbering: T.string,
   quiz: T.object.isRequired,
   stats: T.object
@@ -74,7 +62,6 @@ Statistics.propTypes = {
 
 const ConnectedStatistics = connect(
   (state) => ({
-    workspaceId: resourceSelect.workspaceId(state),
     quiz: quizSelect.quiz(state),
     numbering: quizSelect.quizNumbering(state),
     stats: quizSelect.statistics(state)
