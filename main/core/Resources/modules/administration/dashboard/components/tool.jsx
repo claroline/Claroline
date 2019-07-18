@@ -49,6 +49,39 @@ const DashboardTool = (props) =>
         displayed: matchPath(props.location.pathname, {path: `${props.path}/logs/users`, exact: true})
       }
     ]}
+    subtitle={
+      <Routes
+        path={props.path}
+        routes={[
+          {
+            path: '/',
+            render: () => trans('analytics_home'),
+            exact: true
+          }, {
+            path: '/audience',
+            render: () => trans('user_visit')
+          }, {
+            path: '/resources',
+            render: () => trans('analytics_resources')
+          }, {
+            path: '/widgets',
+            render: () => trans('widgets')
+          }, {
+            path: '/top',
+            render: () => trans('analytics_top')
+          }, {
+            path: '/connections',
+            render: () => trans('connection_time')
+          }, {
+            path: '/log',
+            render: () => trans('users_tracking')
+          }, {
+            path: '/logs/users',
+            render: () => trans('user_tracking', {}, 'log')
+          }
+        ]}
+      />
+    }
   >
     <Routes
       path={props.path}

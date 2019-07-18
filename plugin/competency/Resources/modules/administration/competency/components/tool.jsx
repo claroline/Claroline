@@ -38,6 +38,21 @@ const CompetencyTool = (props) =>
         displayed: !!matchPath(props.location.pathname, {path: `${props.path}/scales`, exact: true})
       }
     ]}
+    subtitle={
+      <Routes
+        path={props.path}
+        routes={[
+          {
+            path: '/frameworks',
+            render: () => trans('competencies', {}, 'tools'),
+            exact: true
+          }, {
+            path: '/scales',
+            render: () => trans('scales', {}, 'competency')
+          }
+        ]}
+      />
+    }
   >
     <Routes
       path={props.path}
