@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {getPlainText} from '#/main/app/data/types/html/utils'
@@ -6,7 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {DataCard} from '#/main/app/content/card/components/data'
 
-const Apps = () =>
+const Apps = (props) =>
   <ListData
     name="lti.apps"
     fetch={{
@@ -15,7 +16,7 @@ const Apps = () =>
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `/form/${row.id}`
+      target: `${props.path}/lti/form/${row.id}`
     })}
     delete={{
       url: ['apiv2_lti_delete_bulk']
@@ -49,6 +50,10 @@ const Apps = () =>
       />
     }
   />
+
+Apps.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   Apps

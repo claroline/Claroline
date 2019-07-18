@@ -1,10 +1,11 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-const App = () => {
+const App = (props) => {
   return(
     <FormData
       level={2}
@@ -16,7 +17,7 @@ const App = () => {
       buttons={true}
       cancel={{
         type: LINK_BUTTON,
-        target: '/',
+        target: `${props.path}/lti`,
         exact: true
       }}
       sections={[
@@ -55,6 +56,10 @@ const App = () => {
       ]}
     />
   )}
+
+App.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   App

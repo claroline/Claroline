@@ -6,7 +6,7 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 const reducer = combineReducers({
   apps: makeListReducer('lti.apps', {}, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/lti.apps']: () => true
+      [FORM_SUBMIT_SUCCESS+'/lti.app']: () => true
     })
   }),
   app: makeFormReducer('lti.app', {}, {})

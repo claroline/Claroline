@@ -18,18 +18,18 @@ const ApiToken = props =>
           name: 'token-add',
           type: LINK_BUTTON,
           icon: 'fa fa-plus',
-          target: '/tokens/form',
+          target: `${props.path}/tokens/form`,
           primary: true,
           hideLabel: true
         }
       ]}
     />
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/tokens',
           component: Tokens,
-          onEnter: () => {},
           exact: true
         }/*, {
           path: '/token/form/:id?',
@@ -42,7 +42,11 @@ const ApiToken = props =>
           }
         }*/, {
           path: '/tokens/form',
-          component: Token,
+          render: () => {
+            const component = <Token path={props.path} />
+
+            return component
+          },
           onLeave: () => {
             props.resetForm()
           },
@@ -53,6 +57,7 @@ const ApiToken = props =>
   </Fragment>
 
 ApiToken.propTypes = {
+  path: T.string.isRequired,
   openForm: T.func.isRequired,
   resetForm: T.func.isRequired
 }

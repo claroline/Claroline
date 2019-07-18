@@ -8,7 +8,6 @@
       "resource-logs": "resource/logs",
       "trash-tool": "tools/trash/bootstrap",
       "dashboard-tool": "tools/dashboard/bootstrap",
-      "integration": "administration/integration/bootstrap",
       "admin-desktop-tool": "administration/home/bootstrap"
     }
   },

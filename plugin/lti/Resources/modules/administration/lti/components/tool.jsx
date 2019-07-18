@@ -18,22 +18,31 @@ const LtiTool = props =>
           name: 'lti-add',
           type: LINK_BUTTON,
           icon: 'fa fa-plus',
-          target: '/lti/form',
+          target: `${props.path}/lti/form`,
           primary: true,
           hideLabel: true
         }
       ]}
     />
     <Routes
+      path={props.path}
       routes={[
         {
           path: '/lti',
-          component: Apps,
+          render: () => {
+            const component = <Apps path={props.path} />
+
+            return component
+          },
           exact: true,
           onEnter: () => {}
         }, {
           path: '/lti/form/:id?',
-          component: App,
+          render: () => {
+            const component = <App path={props.path} />
+
+            return component
+          },
           onEnter: (params) => {
             props.openForm(params.id || null)
           },
@@ -46,6 +55,7 @@ const LtiTool = props =>
   </Fragment>
 
 LtiTool.propTypes = {
+  path: T.string.isRequired,
   openForm: T.func.isRequired,
   resetForm: T.func.isRequired
 }

@@ -1,11 +1,12 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
-import {Await} from '#/main/app/components/await'
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {Vertical} from '#/main/app/content/tabs/components/vertical'
-import {ToolPage} from '#/main/core/tool/containers/page'
 import {getApps} from '#/main/app/plugins'
+import {Routes} from '#/main/app/router'
+import {Await} from '#/main/app/components/await'
+
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 function getIntegrationApps() {
   const apps = getApps('integration', false)
@@ -13,45 +14,46 @@ function getIntegrationApps() {
   return Promise.all(Object.keys(apps).map(type => apps[type]()))
 }
 
-export const IntegrationTool = () =>
-  <ToolPage>
-    <Await
-      for={getIntegrationApps()}
-      then={(apps) => {
+const IntegrationTool = props =>
+  <Await
+    for={getIntegrationApps()}
+    then={(apps) => {
+      const routes = []
+      const subtitlesRoutes = []
 
-        const tabs = []
-        const routes = []
-
-        apps.map(app => {
-          tabs.push({
-            icon: app.default.icon,
-            title: trans(app.default.name, {}, 'tools'),
-            path: '/'+app.default.name
-          })
-
-          routes.push({
-            path: '/'+app.default.name,
-            component: app.default.component
-          })
+      apps.map(app => {
+        routes.push({
+          path: `/${app.default.name}`,
+          component: app.default.component
         })
+        subtitlesRoutes.push({
+          path: `/${app.default.name}`,
+          render: () => trans(app.default.name, {}, 'tools')
+        })
+      })
 
-        return (
-          <div className="row">
-            <div className="col-md-3">
-              <Vertical
-                style={{
-                  marginTop: '20px' // FIXME
-                }}
-                tabs={tabs}
-              />
-            </div>
+      return (
+        <ToolPage
+          subtitle={
+            <Routes
+              path={props.path}
+              routes={subtitlesRoutes}
+            />
+          }
+        >
+          <Routes
+            path={props.path}
+            routes={routes}
+          />
+        </ToolPage>
+      )
+    }}
+  />
 
-            <div className="col-md-9">
-              <Routes
-                routes={routes}
-              />
-            </div>
-          </div>
-        )}}
-    />
-  </ToolPage>
+IntegrationTool.propTypes = {
+  path: T.string.isRequired
+}
+
+export {
+  IntegrationTool
+}
