@@ -20,7 +20,8 @@ const WorkspacesMenu = (props) =>
           name: 'registered',
           type: LINK_BUTTON,
           label: trans('my_workspaces', {}, 'workspace'),
-          target: props.path+'/registered'
+          target: props.path+'/registered',
+          displayed: props.authenticated
         }, {
           name: 'public',
           type: LINK_BUTTON,
@@ -30,7 +31,8 @@ const WorkspacesMenu = (props) =>
           name: 'managed',
           type: LINK_BUTTON,
           label: trans('managed_workspaces', {}, 'workspace'),
-          target: props.path+'/managed'
+          target: props.path+'/managed',
+          displayed: props.authenticated
         }, {
           name: 'model',
           type: LINK_BUTTON,
@@ -51,6 +53,7 @@ const WorkspacesMenu = (props) =>
 
 WorkspacesMenu.propTypes = {
   path: T.string,
+  authenticated: T.bool.isRequired,
   creatable: T.bool.isRequired
 }
 

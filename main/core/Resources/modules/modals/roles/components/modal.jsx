@@ -17,7 +17,7 @@ const RolesModal = props => {
   return (
     <Modal
       {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
-      icon="fa fa-fw fa-id-card"
+      icon="fa fa-fw fa-id-badge"
       className="data-picker-modal"
       bsSize="lg"
       onExiting={props.resetSelect}

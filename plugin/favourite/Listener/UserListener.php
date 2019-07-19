@@ -7,11 +7,11 @@ use HeVinci\FavouriteBundle\Manager\FavouriteManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class ApiListener.
+ * Class UserListener.
  *
  * @DI\Service
  */
-class ApiListener
+class UserListener
 {
     /** @var FavouriteManager */
     private $favouriteManager;

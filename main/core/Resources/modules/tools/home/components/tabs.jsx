@@ -18,7 +18,7 @@ const Tabs = props =>
         className={classes('nav-tab', {
           'nav-tab-hidden': props.editing && tab.restrictions && tab.restrictions.hidden
         })}
-        target={`${props.prefix}/tab/${tab.id}`}
+        target={`${props.prefix}/${tab.id}`}
         exact={true}
         activeStyle={{
           backgroundColor: get(tab, 'display.color'),

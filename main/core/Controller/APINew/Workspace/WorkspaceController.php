@@ -216,7 +216,36 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             Workspace:: class,
-            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true]]),
+            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true, 'model' => false]]),
+            $this->getOptions()['list']
+        ));
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="The list of workspace models for the current security token.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!model",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
+     * @Route(
+     *    "/list/model",
+     *    name="apiv2_workspace_list_model"
+     * )
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listModelAction(Request $request)
+    {
+        return new JsonResponse($this->finder->search(
+            Workspace:: class,
+            array_merge($request->query->all(), ['hiddenFilters' => ['model' => true]]),
             $this->getOptions()['list']
         ));
     }

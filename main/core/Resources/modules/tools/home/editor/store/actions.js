@@ -27,7 +27,7 @@ actions.createTab = (context, administration, position, currentUser, navigate) =
   })))
 
   // open new tab
-  navigate(`/edit/tab/${newTabId}`)
+  navigate(`/edit/${newTabId}`)
 }
 
 actions.deleteTab = (tabs, tabToDelete) => (dispatch) => {

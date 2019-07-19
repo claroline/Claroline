@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\CoreBundle\Manager\LocaleManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,9 +18,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @EXT\Route("/locale", options={"expose" = true})
- */
 class LocaleController
 {
     /** @var LocaleManager */
@@ -50,7 +47,7 @@ class LocaleController
     /**
      * Change locale.
      *
-     * @EXT\Route("/change/{locale}", name="claroline_locale_change")
+     * @EXT\Route("/locale/{locale}", name="claroline_locale_change")
      *
      * @param Request $request
      * @param string  $locale

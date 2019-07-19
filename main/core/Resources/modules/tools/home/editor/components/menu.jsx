@@ -16,7 +16,7 @@ const EditorMenu = (props) => {
             type={LINK_BUTTON}
             icon={tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined}
             label={tab.title}
-            target={`${props.path}/edit/tab/${tab.id}`}
+            target={`${props.path}/edit/${tab.id}`}
             activeStyle={{
               borderColor: get(tab, 'display.color')
             }}

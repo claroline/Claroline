@@ -16,6 +16,9 @@ import {DesktopMain} from '#/main/app/layout/sections/desktop/containers/main'
 import {AdministrationMenu} from '#/main/app/layout/sections/administration/containers/menu'
 import {AdministrationMain} from '#/main/app/layout/sections/administration/containers/main'
 
+import {WorkspaceMenu} from '#/main/core/workspace/containers/menu'
+import {WorkspaceMain} from '#/main/core/workspace/containers/main'
+
 const LayoutMain = props =>
   <Fragment>
     <div className="app" role="presentation">
@@ -28,6 +31,9 @@ const LayoutMain = props =>
         <Routes
           routes={[
             {
+              path: '/desktop/workspaces/open/:id',
+              component: WorkspaceMenu
+            }, {
               path: '/desktop',
               component: DesktopMenu
             }, {
@@ -46,6 +52,10 @@ const LayoutMain = props =>
           ]}
           routes={[
             {
+              path: '/desktop/workspaces/open/:id',
+              onEnter: (params = {}) => props.openWorkspace(parseInt(params.id)),
+              component: WorkspaceMain
+            }, {
               path: '/desktop',
               component: DesktopMain,
               disabled: !props.authenticated && props.maintenance
@@ -84,6 +94,8 @@ const LayoutMain = props =>
 LayoutMain.propTypes = {
   maintenance: T.bool.isRequired,
   authenticated: T.bool.isRequired,
+
+  openWorkspace: T.func.isRequired,
 
   menuOpened: T.bool.isRequired,
   toggleMenu: T.func.isRequired,

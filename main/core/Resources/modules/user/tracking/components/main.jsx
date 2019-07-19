@@ -37,7 +37,7 @@ class TrackingComponent extends Component {
         customActions={[
           {
             type: 'url',
-            icon: 'fa fa-fw fa-id-card-o',
+            icon: 'fa fa-fw fa-address-card',
             label: trans('show_profile', {}, 'platform'),
             target: ['claro_user_profile', {user: this.props.user.meta.publicUrl}]
           }, {

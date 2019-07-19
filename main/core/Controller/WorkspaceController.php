@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
@@ -47,6 +48,8 @@ class WorkspaceController
     private $eventDispatcher;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var ToolManager */
     private $toolManager;
     /** @var TranslatorInterface */
@@ -66,6 +69,7 @@ class WorkspaceController
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
      *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
+     *     "serializer"          = @DI\Inject("claroline.api.serializer"),
      *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"          = @DI\Inject("translator"),
      *     "utils"               = @DI\Inject("claroline.security.utilities"),
@@ -77,6 +81,7 @@ class WorkspaceController
      * @param ObjectManager                 $om
      * @param EventDispatcherInterface      $eventDispatcher
      * @param TokenStorageInterface         $tokenStorage
+     * @param SerializerProvider            $serializer
      * @param ToolManager                   $toolManager
      * @param TranslatorInterface           $translator
      * @param Utilities                     $utils
@@ -88,6 +93,7 @@ class WorkspaceController
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
+        SerializerProvider $serializer,
         ToolManager $toolManager,
         TranslatorInterface $translator,
         Utilities $utils,
@@ -98,6 +104,7 @@ class WorkspaceController
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
+        $this->serializer = $serializer;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
         $this->utils = $utils;
@@ -132,8 +139,9 @@ class WorkspaceController
         // switch to the workspace locale if needed
         $this->forceWorkspaceLang($workspace, $request);
 
+        $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);
-        if (empty($accessErrors) || $this->manager->isManager($workspace, $this->tokenStorage->getToken())) {
+        if (empty($accessErrors) || $isManager) {
             // Log workspace opening
             $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
 
@@ -153,6 +161,8 @@ class WorkspaceController
             }
 
             return new JsonResponse([
+                'workspace' => $this->serializer->serialize($workspace),
+                'managed' => $isManager,
                 'impersonated' => $this->manager->isImpersonated($this->tokenStorage->getToken()),
                 // append access restrictions to the loaded data if any
                 // to let the manager knows that other users can not enter the workspace
@@ -203,6 +213,30 @@ class WorkspaceController
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 
         return new JsonResponse($event->getData());
+    }
+
+    /**
+     * Gets the current user history.
+     *
+     * @EXT\Route("/history", name="claro_workspace_history_get")
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
+     *
+     * @param User $currentUser
+     *
+     * @return JsonResponse
+     */
+    public function getHistoryAction(User $currentUser = null)
+    {
+        // TODO
+
+        $workspaces = [];
+        if ($currentUser instanceof User) {
+            $workspaces = $this->workspaceManager->getRecentWorkspaceForUser($currentUser, $currentUser->getRoles());
+        }
+
+        return new JsonResponse(array_map(function (Workspace $workspace) {
+            return $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+        }, $workspaces));
     }
 
     private function forceWorkspaceLang(Workspace $workspace, Request $request)

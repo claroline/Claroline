@@ -1,10 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {MenuSection} from '#/main/app/layout/menu/components/section'
@@ -50,7 +51,7 @@ const MenuMain = props =>
       </MenuSection>
     }
 
-    {0 !== props.actions.length &&
+    {(!isEmpty(props.actions) || typeof props.actions === 'object') &&
       <MenuSection
         className="actions"
         icon="fa fa-fw fa-ellipsis-v"
@@ -59,6 +60,7 @@ const MenuMain = props =>
         toggle={() => props.changeSection('actions')}
       >
         <Toolbar
+          id="app-menu-actions"
           className="list-group"
           buttonName="list-group-item"
           actions={props.actions}
@@ -77,9 +79,16 @@ MenuMain.propTypes = {
     name: T.string.isRequired,
     path: T.string.isRequired
   })),
-  actions: T.arrayOf(T.shape({
-
-  })),
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
 
   children: T.node,
 

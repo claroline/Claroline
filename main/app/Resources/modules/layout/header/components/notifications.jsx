@@ -8,6 +8,10 @@ import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 const NotificationsMenu = props =>
   <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
     <div className="app-header-dropdown-header">
+      <div className="app-header-dropdown-icon">
+        <span className="fa fa-bell" />
+      </div>
+
       <h2 className="h4">
         {trans('notifications')}
       </h2>

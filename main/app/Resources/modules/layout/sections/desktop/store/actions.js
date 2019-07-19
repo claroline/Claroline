@@ -1,10 +1,8 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-
 import {API_REQUEST} from '#/main/app/api'
 
 // actions
-export const DESKTOP_LOAD = 'DESKTOP_LOAD'
-export const DESKTOP_INVALIDATE = 'DESKTOP_INVALIDATE'
+export const DESKTOP_LOAD         = 'DESKTOP_LOAD'
 export const DESKTOP_HISTORY_LOAD = 'DESKTOP_HISTORY_LOAD'
 
 // action creators
@@ -12,7 +10,6 @@ export const actions = {}
 
 actions.load = makeActionCreator(DESKTOP_LOAD, 'tools', 'userProgression')
 actions.loadHistory = makeActionCreator(DESKTOP_HISTORY_LOAD, 'history')
-actions.invalidate = makeActionCreator(DESKTOP_INVALIDATE)
 
 /**
  * Fetch the required data to open the current user desktop.

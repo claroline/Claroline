@@ -50,12 +50,12 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
           type: LINK_BUTTON,
           label: contextData.name,
           displayed: -1 !== breadcrumbItems.indexOf('current'),
-          target: '/desktop/workspaces/' + contextData.id
+          target: '/desktop/workspaces/open/' + contextData.id
         }, {
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
           displayed: -1 !== breadcrumbItems.indexOf('tool'),
-          target: '/desktop/workspaces/' + contextData.id + '/' + toolName
+          target: '/desktop/workspaces/open/' + contextData.id + '/' + toolName
         }
       ]
       break

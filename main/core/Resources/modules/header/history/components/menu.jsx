@@ -8,6 +8,10 @@ import {MENU_BUTTON} from '#/main/app/buttons'
 const HistoryDropdown = () =>
   <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
     <div className="app-header-dropdown-header">
+      <div className="app-header-dropdown-icon">
+        <span className="fa fa-history" />
+      </div>
+
       <h2 className="h4">
         {trans('history')}
       </h2>

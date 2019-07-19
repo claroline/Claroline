@@ -14,6 +14,7 @@ import {
 } from '#/main/core/resource/prop-types'
 import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {constants as toolConst} from '#/main/core/tool/constants'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
 import {ServerErrors} from '#/main/core/resource/components/errors'
@@ -51,11 +52,11 @@ class ResourcePage extends Component {
     // remove workspace root from path (it's already known by the breadcrumb)
     // find a better way to handle this
     let ancestors
-    /*if (this.props.resourceNode.workspace) {
+    if (toolConst.TOOL_WORKSPACE === this.props.contextType) {
       ancestors = this.props.resourceNode.path.slice(1)
-    } else {*/
-    ancestors = this.props.resourceNode.path.slice(0)
-    /*}*/
+    } else {
+      ancestors = this.props.resourceNode.path.slice(0)
+    }
 
     return (
       <ToolPage
@@ -140,6 +141,7 @@ class ResourcePage extends Component {
 
 ResourcePage.propTypes = {
   basePath: T.string,
+  contextType: T.string.isRequired,
   currentUser: T.object,
   loaded: T.bool.isRequired,
   embedded: T.bool,

@@ -9,8 +9,6 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {WorkspaceForm} from '#/main/core/workspace/components/form'
 import {WorkspaceList} from '#/main/core/workspace/components/list'
 
-// TODO : redirect to public list if user is not registered
-
 const WorkspacesTool = (props) =>
   <ToolPage
     actions={[
@@ -44,7 +42,7 @@ const WorkspacesTool = (props) =>
           path: '/new',
           disabled: !props.creatable,
           render: () => {
-            return (
+            const NewForm = (
               <WorkspaceForm
                 name="workspaces.creation"
                 buttons={true}
@@ -55,66 +53,72 @@ const WorkspacesTool = (props) =>
                 }}
               />
             )
+
+            return NewForm
           }
         }, {
           path: '/registered',
           render: () => {
-            return (
+            const Registered = (
               <WorkspaceList
                 url={['apiv2_workspace_list_registered']}
                 name="workspaces.registered"
               />
             )
+
+            return Registered
           }
         }, {
           path: '/public',
           render: () => {
-            return (
+            const PublicList = (
               <WorkspaceList
                 url={['apiv2_workspace_list_registerable']}
                 name="workspaces.public"
               />
             )
+
+            return PublicList
           }
         }, {
           path: '/managed',
           render: () => {
-            return (
+            const ManagedList = (
               <WorkspaceList
                 url={['apiv2_workspace_list_managed']}
                 name="workspaces.managed"
               />
             )
+
+            return ManagedList
           }
         }, {
           path: '/model',
           disabled: !props.creatable,
           render: () => {
-            return (
+            const ModelList = (
               <WorkspaceList
-                url={['apiv2_workspace_list_managed']}
+                url={['apiv2_workspace_list_model']}
                 name="workspaces.models"
               />
             )
-          }
-        }, {
-          path: '/:id',
-          render: () => {
-            return 'workspace open'
+
+            return ModelList
           }
         }
       ]}
 
       redirect={[
-        {from: '/', exact: true, to: '/registered'}
+        {from: '/', exact: true, to: '/registered', disabled: !props.authenticated},
+        {from: '/', exact: true, to: '/public', disabled: props.authenticated}
       ]}
     />
   </ToolPage>
 
 WorkspacesTool.propTypes = {
   path: T.string.isRequired,
-  creatable: T.bool.isRequired,
-  open: T.func.isRequired
+  authenticated: T.bool.isRequired,
+  creatable: T.bool.isRequired
 }
 
 export {

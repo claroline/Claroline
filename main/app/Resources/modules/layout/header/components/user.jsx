@@ -19,7 +19,7 @@ import {constants as roleConstants} from '#/main/core/user/role/constants'
 const UserMenu = props =>
   <div className="app-header-dropdown app-current-user dropdown-menu dropdown-menu-right">
     <div className="app-header-dropdown-header">
-      <div className="app-current-user-icon">
+      <div className="app-header-dropdown-icon">
         <UserAvatar picture={props.currentUser.picture} alt={true} />
       </div>
 

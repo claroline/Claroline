@@ -35,7 +35,7 @@ const EditorForm = props =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: `${props.path}/tab/${props.currentTab.id}`,
+      target: `${props.path}/${props.currentTab.id}`,
       exact: true
     }}
     sections={[

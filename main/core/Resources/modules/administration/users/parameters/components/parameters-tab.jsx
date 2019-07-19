@@ -121,7 +121,7 @@ const Parameters = (props) => {
           ]
         }, {
           id: 'profile',
-          icon: 'fa fa-fw fa-id-card-o',
+          icon: 'fa fa-fw fa-address-card',
           title: trans('user_profile'),
           fields: [
             {

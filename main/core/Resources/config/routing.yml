@@ -13,17 +13,8 @@ claro_redirect:
     resource: "@ClarolineCoreBundle/Controller/RedirectController.php"
     type: annotation
 
-claro_locale:
-    resource: "@ClarolineCoreBundle/Controller/LocaleController.php"
-    type: annotation
-
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
-    type: annotation
-
-claro_log:
-    resource: "@ClarolineCoreBundle/Controller/Log/LogController.php"
-    prefix: log
     type: annotation
 
 # new

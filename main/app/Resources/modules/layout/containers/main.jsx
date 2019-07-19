@@ -7,6 +7,8 @@ import {actions, selectors} from '#/main/app/layout/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as menuActions, selectors as menuSelectors} from '#/main/app/layout/menu/store'
 
+import {actions as workspaceActions} from '#/main/core/workspace/store'
+
 const LayoutMain = withRouter(
   connect(
     (state) => ({
@@ -16,6 +18,10 @@ const LayoutMain = withRouter(
       sidebar: selectors.sidebar(state)
     }),
     (dispatch) => ({
+      openWorkspace(workspaceId) {
+        dispatch(workspaceActions.open(workspaceId))
+      },
+
       /**
        * Open/close the main app menu.
        */

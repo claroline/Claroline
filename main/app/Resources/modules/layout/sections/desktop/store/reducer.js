@@ -1,5 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
+import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {
   DESKTOP_LOAD,
   DESKTOP_HISTORY_LOAD
@@ -7,6 +8,7 @@ import {
 
 const reducer = combineReducers({
   loaded: makeReducer(false, {
+    [SECURITY_USER_CHANGE]: () => false,
     [DESKTOP_LOAD]: () => true
   }),
 

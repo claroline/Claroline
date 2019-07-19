@@ -12,7 +12,7 @@ export default (workspaces) => ({
   primary: true,
   displayed: hasPermission('open', workspaces[0]),
   icon: 'fa fa-fw fa-arrow-circle-o-right',
-  target: `/desktop/workspaces/${workspaces[0].id}`,
+  target: `/desktop/workspaces/open/${workspaces[0].id}`,
   scope: ['object'],
   default: true
 })
