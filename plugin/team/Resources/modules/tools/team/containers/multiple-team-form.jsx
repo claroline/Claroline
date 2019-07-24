@@ -1,6 +1,5 @@
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
