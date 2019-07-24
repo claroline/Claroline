@@ -2,76 +2,55 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {
-  PageContainer,
-  PageHeader,
-  PageActions,
-  PageAction,
-  MoreAction
-} from '#/main/core/layout/page'
-import {RoutedPageContent} from '#/main/core/layout/router/components/page'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {Routes} from '#/main/app/router'
+
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {TeamParams as TeamParamsType} from '#/plugin/team/tools/team/prop-types'
-import {Editor} from '#/plugin/team/tools/team/components/editor'
-import {Teams} from '#/plugin/team/tools/team/components/teams'
-import {Team} from '#/plugin/team/tools/team/components/team'
-import {TeamForm} from '#/plugin/team/tools/team/components/team-form'
-import {MultipleTeamForm} from '#/plugin/team/tools/team/components/multiple-team-form'
+import {Editor} from '#/plugin/team/tools/team/containers/editor'
+import {Teams} from '#/plugin/team/tools/team/containers/teams'
+import {Team} from '#/plugin/team/tools/team/containers/team'
+import {TeamForm} from '#/plugin/team/tools/team/containers/team-form'
+import {MultipleTeamForm} from '#/plugin/team/tools/team/containers/multiple-team-form'
 
 const TeamTool = props =>
-  <PageContainer>
-    <PageHeader title={trans('team', {}, 'team')}>
-      {props.canEdit ?
-        <PageActions>
-          <PageAction
-            id="team-add"
-            type="link"
-            icon="fa fa-fw fa-plus"
-            primary={true}
-            label={trans('create_a_team', {}, 'team')}
-            target="/team/form"
-            exact={true}
-          />
-          <PageAction
-            id="team-params"
-            type="link"
-            icon="fa fa-fw fa-cog"
-            label={trans('configure')}
-            target="/edit"
-          />
-          <MoreAction
-            actions={[
-              {
-                type: 'link',
-                icon: 'fa fa-fw fa-home',
-                label: trans('home'),
-                target: '/teams',
-                exact: true
-              }, {
-                type: 'link',
-                icon: 'fa fa-fw fa-user-plus',
-                label: trans('create_teams', {}, 'team'),
-                target: '/teams/multiple/form'
-              }
-            ]}
-          />
-        </PageActions> :
-        <PageActions>
-          <PageAction
-            id="team-home"
-            type="link"
-            icon="fa fa-fw fa-home"
-            primary={true}
-            label={trans('home')}
-            target="/teams"
-            exact={true}
-          />
-        </PageActions>
+  <ToolPage
+    actions={[
+      {
+        name: 'team-create',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('create_a_team', {}, 'team'),
+        target: `${props.path}/team/form`,
+        primary: true,
+        displayed: props.canEdit
+      }, {
+        name: 'team-params',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-cog',
+        label: trans('configure'),
+        target: `${props.path}/edit`,
+        displayed: props.canEdit
+      }, {
+        name: 'teams-create',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-user-plus',
+        label: trans('create_teams', {}, 'team'),
+        target: `${props.path}/teams/multiple/form`,
+        displayed: props.canEdit
+      }, {
+        name: 'home',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-home',
+        label: trans('home'),
+        target: `${props.path}/teams`,
+        exact: true
       }
-    </PageHeader>
-    <RoutedPageContent
-      key="team-tool-content"
-      headerSpacer={true}
+    ]}
+  >
+    <Routes
+      path={props.path}
       redirect={[
         {from: '/', exact: true, to: '/teams'}
       ]}
@@ -107,9 +86,10 @@ const TeamTool = props =>
         }
       ]}
     />
-  </PageContainer>
+  </ToolPage>
 
 TeamTool.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   teamParams: T.shape(TeamParamsType.propTypes).isRequired,
   resourceTypes: T.arrayOf(T.string).isRequired,

@@ -3,6 +3,8 @@ import {API_REQUEST, url} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
+import {selectors} from '#/plugin/team/tools/team/store/selectors'
+
 const MY_TEAMS_ADD = 'MY_TEAMS_ADD'
 const MY_TEAMS_REMOVE = 'MY_TEAMS_REMOVE'
 
@@ -33,10 +35,10 @@ actions.registerUsers = (teamId, users, role = 'user') => ({
     success: (data, dispatch) => {
       switch (role) {
         case 'user':
-          dispatch(listActions.invalidateData('teams.current.users'))
+          dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.current.users'))
           break
         case 'manager':
-          dispatch(listActions.invalidateData('teams.current.managers'))
+          dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.current.managers'))
           break
       }
     }
@@ -51,8 +53,8 @@ actions.selfRegister = (teamId) => ({
     },
     success: (data, dispatch) => {
       dispatch(actions.addToMyTeams(teamId))
-      dispatch(listActions.invalidateData('teams.current.users'))
-      dispatch(listActions.invalidateData('teams.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.current.users'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.list'))
     }
   }
 })
@@ -65,8 +67,8 @@ actions.selfUnregister = (teamId) => ({
     },
     success: (data, dispatch) => {
       dispatch(actions.removeFromMyTeams(teamId))
-      dispatch(listActions.invalidateData('teams.current.users'))
-      dispatch(listActions.invalidateData('teams.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.current.users'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.list'))
     }
   }
 })
@@ -78,7 +80,7 @@ actions.fillTeams = (teams) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('teams.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.list'))
     }
   }
 })
@@ -90,7 +92,7 @@ actions.emptyTeams = (teams) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('teams.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.teams.list'))
     }
   }
 })

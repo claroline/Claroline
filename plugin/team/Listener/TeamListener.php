@@ -11,6 +11,7 @@
 
 namespace Claroline\TeamBundle\Listener;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
@@ -18,7 +19,6 @@ use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -31,10 +31,10 @@ class TeamListener
     private $authorization;
     /** @var ObjectManager */
     private $om;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var TeamManager */
     private $teamManager;
-    /** @var TwigEngine */
-    private $templating;
     /** @var TokenStorage */
     private $tokenStorage;
 
@@ -45,28 +45,28 @@ class TeamListener
      * @DI\InjectParams({
      *     "authorization" = @DI\Inject("security.authorization_checker"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
      *     "teamManager"   = @DI\Inject("claroline.manager.team_manager"),
-     *     "templating"    = @DI\Inject("templating"),
      *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om
+     * @param SerializerProvider            $serializer
      * @param TeamManager                   $teamManager
-     * @param TwigEngine                    $templating
      * @param TokenStorage                  $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
+        SerializerProvider $serializer,
         TeamManager $teamManager,
-        TwigEngine $templating,
         TokenStorage $tokenStorage
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
+        $this->serializer = $serializer;
         $this->teamManager = $teamManager;
-        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
 
         $this->resourceTypeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
@@ -87,20 +87,16 @@ class TeamListener
         $myTeams = 'anon.' !== $user ?
             $this->teamManager->getTeamsByUserAndWorkspace($user, $workspace) :
             [];
-        $content = $this->templating->render(
-            'ClarolineTeamBundle:team:tool.html.twig', [
-                'workspace' => $workspace,
-                'teamParams' => $teamParams,
-                'canEdit' => $canEdit,
-                'myTeams' => array_map(function (Team $team) {
-                    return $team->getUuid();
-                }, $myTeams),
-                'resourceTypes' => array_map(function (ResourceType $resourceType) {
-                    return $resourceType->getName();
-                }, $resouceTypes),
-            ]
-        );
-        $event->setContent($content);
+        $event->setData([
+            'teamParams' => $this->serializer->serialize($teamParams),
+            'canEdit' => $canEdit,
+            'myTeams' => array_map(function (Team $team) {
+                return $team->getUuid();
+            }, $myTeams),
+            'resourceTypes' => array_map(function (ResourceType $resourceType) {
+                return $resourceType->getName();
+            }, $resouceTypes),
+        ]);
         $event->stopPropagation();
     }
 }

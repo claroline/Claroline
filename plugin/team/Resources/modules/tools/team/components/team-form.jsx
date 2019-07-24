@@ -1,40 +1,31 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
-
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
 import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
+
 import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
-import {actions, selectors} from '#/plugin/team/tools/team/store'
+import {selectors} from '#/plugin/team/tools/team/store'
 
-const TeamFormComponent = props =>
+const TeamForm = props =>
   <section className="tool-section">
     <h2>{props.isNew ? trans('team_creation', {}, 'team') : trans('team_edition', {}, 'team')}</h2>
     <FormData
       level={3}
-      name="teams.current"
+      name={selectors.STORE_NAME + '.teams.current'}
       buttons={true}
       target={(team, isNew) => isNew ?
         ['apiv2_team_create'] :
         ['apiv2_team_update', {id: team.id}]
       }
-      // save={{
-      //   type: CALLBACK_BUTTON,
-      //   target: `/teams/${props.team.id}`,
-      //   callback: () => props.history.push(`/teams/${props.team.id}`)
-      // }}
       cancel={{
         type: LINK_BUTTON,
-        target: '/',
+        target: props.path,
         exact: true
       }}
       sections={[
@@ -132,7 +123,7 @@ const TeamFormComponent = props =>
             ]}
           >
             <ListData
-              name="teams.current.users"
+              name={selectors.STORE_NAME + '.teams.current.users'}
               fetch={{
                 url: ['apiv2_role_list_users', {id: props.team.role.id}],
                 autoload: !props.isNew
@@ -161,7 +152,7 @@ const TeamFormComponent = props =>
             ]}
           >
             <ListData
-              name="teams.current.managers"
+              name={selectors.STORE_NAME + '.teams.current.managers'}
               fetch={{
                 url: ['apiv2_role_list_users', {id: props.team.teamManagerRole.id}],
                 autoload: !props.isNew
@@ -178,7 +169,8 @@ const TeamFormComponent = props =>
     </FormData>
   </section>
 
-TeamFormComponent.propTypes = {
+TeamForm.propTypes = {
+  path: T.string.isRequired,
   team: T.shape(TeamType.propTypes).isRequired,
   workspace: T.shape({
     uuid: T.string.isRequired
@@ -190,32 +182,6 @@ TeamFormComponent.propTypes = {
   }).isRequired,
   pickUsers: T.func.isRequired
 }
-
-const TeamForm = connect(
-  (state) => ({
-    team: formSelectors.data(formSelectors.form(state, 'teams.current')),
-    workspace: state.workspace,
-    isNew: formSelectors.isNew(formSelectors.form(state, 'teams.current')),
-    resourceTypes: selectors.resourceTypes(state)
-  }),
-  (dispatch) => ({
-    pickUsers(teamId, workspaceId, pickManagers = false) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: pickManagers ? trans('add_managers', {}, 'team') : trans('add_members', {}, 'team'),
-        confirmText: trans('add'),
-        name: 'teams.current.usersPicker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_workspace_list_users', {id: workspaceId}],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.registerUsers(teamId, selected, pickManagers ? 'manager' : 'user'))
-      }))
-    }
-  })
-)(TeamFormComponent)
 
 export {
   TeamForm

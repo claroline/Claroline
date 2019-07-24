@@ -1,26 +1,23 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
-
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/plugin/team/tools/team/store'
 
-const MultipleTeamFormComponent = props =>
+const MultipleTeamForm = props =>
   <section className="tool-section">
     <h2>{trans('multiple_teams_creation', {}, 'team')}</h2>
     <FormData
       level={3}
-      name="teams.multiple"
+      name={selectors.STORE_NAME + '.teams.multiple'}
       buttons={true}
       target={['apiv2_team_multiple_create', {workspace: props.workspace.uuid}]}
       cancel={{
         type: LINK_BUTTON,
-        target: '/',
+        target: props.path,
         exact: true
       }}
       sections={[
@@ -98,7 +95,8 @@ const MultipleTeamFormComponent = props =>
     />
   </section>
 
-MultipleTeamFormComponent.propTypes = {
+MultipleTeamForm.propTypes = {
+  path: T.string.isRequired,
   form: T.shape({
     name: T.string,
     description: T.string,
@@ -119,14 +117,6 @@ MultipleTeamFormComponent.propTypes = {
     push: T.func.isRequired
   }).isRequired
 }
-
-const MultipleTeamForm = connect(
-  (state) => ({
-    form: formSelectors.data(formSelectors.form(state, 'teams.multiple')),
-    workspace: state.workspace,
-    resourceTypes: selectors.resourceTypes(state)
-  })
-)(MultipleTeamFormComponent)
 
 export {
   MultipleTeamForm

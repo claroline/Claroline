@@ -1,23 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
+import {selectors} from '#/plugin/team/tools/team/store'
 
-import {selectors, actions} from '#/plugin/team/tools/team/store'
-
-const TeamsComponent = props =>
+const Teams = props =>
   <ListData
-    name="teams.list"
+    name={selectors.STORE_NAME + '.teams.list'}
     primaryAction={(row) => ({
       type: 'link',
       label: trans('open'),
-      target: `/teams/${row.id}`
+      target: `${props.path}/teams/${row.id}`
     })}
     fetch={{
       url: ['apiv2_workspace_team_list', {workspace: props.workspaceId}],
@@ -76,7 +72,7 @@ const TeamsComponent = props =>
         label: trans('edit'),
         displayed: props.canEdit,
         scope: ['object'],
-        target: `/team/form/${rows[0].id}`
+        target: `${props.path}/team/form/${rows[0].id}`
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-sign-in',
@@ -109,7 +105,8 @@ const TeamsComponent = props =>
     ]}
   />
 
-TeamsComponent.propTypes = {
+Teams.propTypes = {
+  path: T.string.isRequired,
   workspaceId: T.string.isRequired,
   myTeams: T.arrayOf(T.string),
   canEdit: T.bool.isRequired,
@@ -118,44 +115,6 @@ TeamsComponent.propTypes = {
   fillTeams: T.func.isRequired,
   emptyTeams: T.func.isRequired
 }
-
-const Teams = connect(
-  (state) => ({
-    workspaceId: workspaceSelect.workspace(state).uuid,
-    myTeams: selectors.myTeams(state),
-    canEdit: selectors.canEdit(state)
-  }),
-  (dispatch) => ({
-    selfRegister(teamId) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('register_to_team', {}, 'team'),
-        question: trans('register_to_team_confirm_message', {}, 'team'),
-        handleConfirm: () => dispatch(actions.selfRegister(teamId))
-      }))
-    },
-    selfUnregister(teamId) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('unregister_from_team', {}, 'team'),
-        question: trans('unregister_from_team_confirm_message', {}, 'team'),
-        handleConfirm: () => dispatch(actions.selfUnregister(teamId))
-      }))
-    },
-    fillTeams(teams) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('fill_teams', {}, 'team'),
-        question: trans('fill_selected_teams_confirm_message', {}, 'team'),
-        handleConfirm: () => dispatch(actions.fillTeams(teams))
-      }))
-    },
-    emptyTeams(teams) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('empty_teams', {}, 'team'),
-        question: trans('empty_selected_teams_confirm_message', {}, 'team'),
-        handleConfirm: () => dispatch(actions.emptyTeams(teams))
-      }))
-    }
-  })
-)(TeamsComponent)
 
 export {
   Teams

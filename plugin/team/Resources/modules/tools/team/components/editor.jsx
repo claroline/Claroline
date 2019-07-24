@@ -1,22 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
-
-import {selectors as formSelectors} from '#/main/app/content/form/store'
-import {actions as formActions} from '#/main/app/content/form/store'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors} from '#/plugin/team/tools/team/store'
 import {TeamParams as TeamParamsType} from '#/plugin/team/tools/team/prop-types'
 
-const EditorComponent = props =>
+const Editor = props =>
   <section className="tool-section">
     <h2>{trans('configuration', {}, 'platform')}</h2>
     <FormData
       level={3}
-      name="teamParamsForm"
+      name={selectors.STORE_NAME + '.teamParamsForm'}
       buttons={true}
       save={{
         type: CALLBACK_BUTTON,
@@ -24,7 +21,7 @@ const EditorComponent = props =>
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: '/',
+        target: props.path,
         exact: true
       }}
       sections={[
@@ -68,21 +65,11 @@ const EditorComponent = props =>
     />
   </section>
 
-EditorComponent.propTypes = {
+Editor.propTypes = {
+  path: T.string.isRequired,
   teamParams: T.shape(TeamParamsType.propTypes).isRequired,
   saveForm: T.func.isRequired
 }
-
-const Editor = connect(
-  (state) => ({
-    teamParams: formSelectors.data(formSelectors.form(state, 'teamParamsForm'))
-  }),
-  (dispatch) => ({
-    saveForm(id) {
-      dispatch(formActions.saveForm('teamParamsForm', ['apiv2_workspaceteamparameters_update', {id: id}]))
-    }
-  })
-)(EditorComponent)
 
 export {
   Editor

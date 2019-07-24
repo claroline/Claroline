@@ -18,10 +18,10 @@ const TeamTool = withRouter(
     }),
     (dispatch) => ({
       resetForm(formData) {
-        dispatch(formActions.resetForm('teamParamsForm', formData))
+        dispatch(formActions.resetForm(selectors.STORE_NAME + '.teamParamsForm', formData))
       },
       openCurrentTeam(id, teamParams, workspaceId, resourceTypes) {
-        dispatch(actions.openForm('teams.current', id, {
+        dispatch(actions.openForm(selectors.STORE_NAME + '.teams.current', id, {
           id: makeId(),
           workspace: {
             uuid: workspaceId
@@ -34,10 +34,10 @@ const TeamTool = withRouter(
         }))
       },
       resetCurrentTeam() {
-        dispatch(formActions.resetForm('teams.current', {}, true))
+        dispatch(formActions.resetForm(selectors.STORE_NAME + '.teams.current', {}, true))
       },
       openMultipleTeamsForm(teamParams, resourceTypes) {
-        dispatch(formActions.resetForm('teams.multiple', {
+        dispatch(formActions.resetForm(selectors.STORE_NAME + '.teams.multiple', {
           nbTeams: 1,
           selfRegistration: teamParams.selfRegistration,
           selfUnregistration: teamParams.selfUnregistration,
@@ -47,7 +47,7 @@ const TeamTool = withRouter(
         }, true))
       },
       resetMultipleTeamsForm() {
-        dispatch(formActions.resetForm('teams.multiple', {}, true))
+        dispatch(formActions.resetForm(selectors.STORE_NAME + '.teams.multiple', {}, true))
       }
     })
   )(TeamToolComponent)

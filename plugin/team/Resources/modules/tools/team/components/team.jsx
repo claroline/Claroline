@@ -1,21 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
-import {select as listSelectors} from '#/main/app/content/list/store/selectors'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
-
-import {trans} from '#/main/app/intl/translation'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
+
 import {UserList} from '#/main/core/administration/users/user/components/user-list'
 
-import {selectors, actions} from '#/plugin/team/tools/team/store'
+import {selectors} from '#/plugin/team/tools/team/store'
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 
 const getUserActions = (team, myTeams, totalUsers, allowedTeams, register, unregister) => {
@@ -52,19 +47,19 @@ const canUnregister = (team, myTeams) => {
   return team.selfUnregistration && 0 <= myTeams.indexOf(team.id)
 }
 
-const TeamComponent = props =>
+const Team = props =>
   <div>
     {props.canEdit &&
       <LinkButton
         className="btn-link page-actions-btn pull-right"
         disabled={!props.canEdit}
-        target={`/team/form/${props.team.id}`}
+        target={`${props.path}/team/form/${props.team.id}`}
       >
         <span className="fa fa-fw fa-pencil" />
       </LinkButton>
     }
     <DetailsData
-      name="teams.current"
+      name={selectors.STORE_NAME + '.teams.current'}
       title={props.team.name}
       sections={[
         {
@@ -101,7 +96,7 @@ const TeamComponent = props =>
           )}
         >
           <ListData
-            name="teams.current.users"
+            name={selectors.STORE_NAME + '.teams.current.users'}
             fetch={{
               url: ['apiv2_role_list_users', {id: props.team.role.id}],
               autoload: true
@@ -118,7 +113,7 @@ const TeamComponent = props =>
           title={trans('team_managers', {}, 'team')}
         >
           <ListData
-            name="teams.current.managers"
+            name={selectors.STORE_NAME + '.teams.current.managers'}
             fetch={{
               url: ['apiv2_role_list_users', {id: props.team.teamManagerRole.id}],
               autoload: true
@@ -131,7 +126,8 @@ const TeamComponent = props =>
     </FormSections>
   </div>
 
-TeamComponent.propTypes = {
+Team.propTypes = {
+  path: T.string.isRequired,
   workspace: T.object,
   team: T.shape(TeamType.propTypes).isRequired,
   canEdit: T.bool.isRequired,
@@ -141,34 +137,6 @@ TeamComponent.propTypes = {
   selfRegister: T.func.isRequired,
   selfUnregister: T.func.isRequired
 }
-
-const Team = connect(
-  (state) => ({
-    workspace: state.workspace,
-    team: formSelectors.data(formSelectors.form(state, 'teams.current')),
-    canEdit: selectors.canEdit(state),
-    allowedTeams: selectors.allowedTeams(state),
-    myTeams: selectors.myTeams(state),
-    teamTotalUsers: listSelectors.totalResults(listSelectors.list(state, 'teams.current.users'))
-  }),
-  (dispatch) => ({
-    selfRegister(teamId) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('register_to_team', {}, 'team'),
-        question: trans('register_to_team_confirm_message', {}, 'team'),
-        handleConfirm: () => dispatch(actions.selfRegister(teamId))
-      }))
-    },
-    selfUnregister(teamId) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: trans('unregister_from_team', {}, 'team'),
-        question: trans('unregister_from_team_confirm_message', {}, 'team'),
-        handleConfirm: () => dispatch(actions.selfUnregister(teamId))
-      }))
-    }
-  })
-)(TeamComponent)
-
 
 export {
   Team
