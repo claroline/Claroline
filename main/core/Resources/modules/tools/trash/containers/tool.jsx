@@ -4,6 +4,7 @@ import {actions as listActions} from '#/main/app/content/list/store/actions'
 
 import {TrashTool as TrashToolComponent} from '#/main/core/tools/trash/components/tool'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {selectors} from '#/main/core/tools/trash/store'
 
 // TODO : make it available in desktop
 
@@ -13,7 +14,7 @@ const TrashTool = connect(
   }),
   (dispatch) => ({
     invalidate() {
-      dispatch(listActions.invalidateData('resources'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.resources'))
     }
   })
 )(TrashToolComponent)

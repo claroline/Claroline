@@ -3,15 +3,15 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
-
-import {ListSource} from '#/main/app/content/list/containers/source'
 import {constants} from '#/main/app/content/list/constants'
 import {createListDefinition} from '#/main/app/content/list/utils'
+import {ListSource} from '#/main/app/content/list/containers/source'
 
 import resourcesSource from '#/main/core/data/sources/resources'
 import deleteAction from '#/main/core/resource/actions/delete'
 import restoreAction from '#/main/core/resource/actions/restore'
+import {selectors} from '#/main/core/tools/trash/store'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 const TrashTool = props => {
   const definition = createListDefinition(resourcesSource.parameters.definition)
@@ -26,7 +26,7 @@ const TrashTool = props => {
       subtitle={trans('trash')}
     >
       <ListSource
-        name="resources"
+        name={selectors.STORE_NAME + '.resources'}
         fetch={{
           url: ['apiv2_resource_workspace_removed_list', {
             workspace: props.workspace.uuid
@@ -59,6 +59,7 @@ const TrashTool = props => {
 }
 
 TrashTool.propTypes = {
+  path: T.string.isRequired,
   workspace: T.shape({
     uuid: T.string.isRequired
   }),
