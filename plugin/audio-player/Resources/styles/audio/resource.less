@@ -1,10 +1,18 @@
 .audio-resource-player {
     margin-top: 10px;
 
-    .comments-mode-btn {
+    .comments-buttons {
         display: flex;
         justify-content: flex-end;
         margin-bottom: 20px;
+
+        .btn {
+            margin-left: 4px;
+        }
+    }
+
+    wave, canvas {
+        z-index: 1 !important;
     }
 }
 
@@ -26,11 +34,7 @@
         }
 
         .activated {
-            background-color: rgba(29, 105, 153, 0.5);
-        }
-
-        .activated:hover {
-            background-color: rgba(29, 105, 153, 0.7);
+            filter: brightness(120%);
         }
     }
 
@@ -85,4 +89,8 @@
     .sections-comments, .sections-comments-list {
         margin-top: 30px;
     }
+}
+
+.wavesurfer-region:hover {
+  filter: brightness(80%);
 }

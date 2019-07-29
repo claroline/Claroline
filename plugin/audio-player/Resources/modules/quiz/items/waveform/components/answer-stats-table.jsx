@@ -16,6 +16,15 @@ export const AnswerStatsTable = props =>
   >
     <h3 className="title">{props.title}</h3>
 
+    <div className="well well-sm">
+      <div>
+        {trans('correct_zone_desc', {}, 'quiz')}
+      </div>
+      <div>
+        {trans('tolerance_zone_desc', {}, 'quiz')}
+      </div>
+    </div>
+
     {props.sections.map((section) =>
       <div
         key={section.id}

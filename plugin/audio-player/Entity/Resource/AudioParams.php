@@ -3,6 +3,7 @@
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,6 +18,7 @@ class AudioParams
     const NO_TYPE = 'none';
 
     use Uuid;
+    use Description;
 
     /**
      * @ORM\Id

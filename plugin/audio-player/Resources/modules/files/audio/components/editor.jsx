@@ -17,6 +17,7 @@ import {selectors as fileSelect} from '#/main/core/resources/file/store'
 import {selectors as editorSelect} from '#/main/core/resources/file/editor/store/selectors'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {TextGroup}  from '#/main/core/layout/form/components/group/text-group'
 
 import {constants} from '#/plugin/audio-player/files/audio/constants'
 import {Audio as AudioType, Section as SectionType} from '#/plugin/audio-player/files/audio/prop-types'
@@ -94,6 +95,13 @@ const SectionConfiguration = (props) =>
         </CallbackButton>
       </div>
     </div>
+    <TextGroup
+      key={`section-${props.section.id}-title`}
+      id={`section-${props.section.id}-title`}
+      label={trans('title')}
+      value={props.section.title}
+      onChange={value => props.onUpdate('title', value)}
+    />
     <Checkbox
       key={`section-${props.section.id}-comments`}
       id={`section-${props.section.id}-comments`}
@@ -104,7 +112,7 @@ const SectionConfiguration = (props) =>
     <Checkbox
       key={`section-${props.section.id}-show-transcript`}
       id={`section-${props.section.id}-show-transcript`}
-      label={trans('transcript', {}, 'audio')}
+      label={trans('show_transcript', {}, 'audio')}
       checked={props.section.showTranscript}
       onChange={checked => props.onUpdate('showTranscript', checked)}
     />
@@ -280,6 +288,10 @@ const Audio = props =>
         primary: true,
         fields: [
           {
+            name: 'description',
+            label: trans('introduction', {}, 'audio'),
+            type: 'html'
+          }, {
             name: 'sectionsType',
             type: 'choice',
             label: trans('sections_type', {}, 'audio'),

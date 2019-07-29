@@ -6,6 +6,8 @@
     "display_sections": "Display sections",
     "end": "End",
     "end_tolerance": "End tolerance",
+    "export_comments_to_csv": "Export comments (CSV)",
+    "introduction": "Introduction",
     "pause": "Pause",
     "play": "Play",
     "section_deletion": "Delete section",
@@ -17,6 +19,7 @@
     "sections_type": "Sections type",
     "show_help": "Show help",
     "show_section_audio": "Show section audio",
+    "show_transcript": "Show transcript",
     "start": "Start",
     "start_tolerance": "Start tolerance",
     "transcript": "Transcript"

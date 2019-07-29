@@ -66,7 +66,7 @@ class EditorMain extends Component {
                 <FormSections level={3}>
                   <FormSection
                     className="embedded-list-section"
-                    title={trans(getTypeName(this.props.mimeType))}
+                    title={trans(getTypeName(this.props.mimeType) + '_section')}
                   >
                     {createElement(get(module, 'fileType.components.editor'), {
                       file: this.props.file,

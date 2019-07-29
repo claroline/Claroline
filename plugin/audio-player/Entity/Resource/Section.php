@@ -45,6 +45,11 @@ class Section
     protected $user;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $title;
+
+    /**
      * @ORM\Column(name="section_start", type="float", nullable=false)
      */
     private $start;
@@ -152,6 +157,22 @@ class Section
     public function setUser(User $user = null)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 
     /**

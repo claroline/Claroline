@@ -1,5 +1,8 @@
 {
+    "correct_zone_desc": "Blue zone = Expected zone",
     "default_tolerance": "Default tolerance",
+    "expected_zones": "Expected zones",
     "nb_authorized_selection": "Number of authorized selections",
-    "pick_audio_file": "Pick an audio file"
+    "pick_audio_file": "Pick an audio file",
+    "tolerance_zone_desc": "Pink zone = Tolerance"
 }

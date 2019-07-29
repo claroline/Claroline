@@ -26,6 +26,7 @@ class AudioParamsSerializer
             'id' => $audioParams->getUuid(),
             'sectionsType' => $audioParams->getSectionsType(),
             'rateControl' => $audioParams->getRateControl(),
+            'description' => $audioParams->getDescription(),
         ];
     }
 
@@ -40,6 +41,7 @@ class AudioParamsSerializer
     {
         $this->sipe('sectionsType', 'setSectionsType', $data, $audioParams);
         $this->sipe('rateControl', 'setRateControl', $data, $audioParams);
+        $this->sipe('description', 'setDescription', $data, $audioParams);
 
         return $audioParams;
     }

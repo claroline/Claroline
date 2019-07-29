@@ -49,6 +49,7 @@ class SectionSerializer
         $serialized = [
             'id' => $section->getUuid(),
             'type' => $section->getType(),
+            'title' => $section->getTitle(),
             'start' => $section->getStart(),
             'end' => $section->getEnd(),
             'color' => $section->getColor(),
@@ -75,6 +76,7 @@ class SectionSerializer
     {
         $this->sipe('id', 'setUuid', $data, $section);
         $this->sipe('type', 'setType', $data, $section);
+        $this->sipe('title', 'setTitle', $data, $section);
         $this->sipe('start', 'setStart', $data, $section);
         $this->sipe('end', 'setEnd', $data, $section);
         $this->sipe('color', 'setColor', $data, $section);

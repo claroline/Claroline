@@ -4,7 +4,7 @@ import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
-import {transChoice} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
@@ -57,6 +57,17 @@ const AnswerTable = props =>
     }}
   >
     <h3 className="title">{props.title}</h3>
+
+    {props.showLegend &&
+      <div className="well well-sm">
+        <div>
+          {trans('correct_zone_desc', {}, 'quiz')}
+        </div>
+        <div>
+          {trans('tolerance_zone_desc', {}, 'quiz')}
+        </div>
+      </div>
+    }
 
     {props.sections.map((section) =>
       <div
@@ -140,7 +151,12 @@ AnswerTable.propTypes = {
     score: T.number,
     feedback: T.string
   })).isRequired,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  showLegend: T.bool.isRequired
+}
+
+AnswerTable.defaultProps = {
+  showLegend: false
 }
 
 export {

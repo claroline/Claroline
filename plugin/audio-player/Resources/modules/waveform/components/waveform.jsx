@@ -391,7 +391,7 @@ class Waveform extends Component {
                 callback={() => {
                   const newRate = parseFloat((this.state.wavesurfer.getPlaybackRate() - 0.1).toFixed(1))
 
-                  if (newRate > 0) {
+                  if (0.8 <= newRate && 1.2 >= newRate) {
                     this.state.wavesurfer.setPlaybackRate(newRate)
                     this.setState({playbackRate: newRate})
                   }
@@ -429,8 +429,11 @@ class Waveform extends Component {
                 className="btn"
                 callback={() => {
                   const newRate = parseFloat((this.state.wavesurfer.getPlaybackRate() + 0.1).toFixed(1))
-                  this.state.wavesurfer.setPlaybackRate(newRate)
-                  this.setState({playbackRate: newRate})
+
+                  if (0.8 <= newRate && 1.2 >= newRate) {
+                    this.state.wavesurfer.setPlaybackRate(newRate)
+                    this.setState({playbackRate: newRate})
+                  }
                 }}
                 primary={true}
                 size="sm"

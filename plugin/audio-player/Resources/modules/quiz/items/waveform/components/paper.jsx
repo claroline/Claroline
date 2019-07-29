@@ -65,7 +65,7 @@ const WaveformPaper = props =>
         />
         {0 < props.item.solutions.filter(s => 0 < s.score).length &&
           <AnswerTable
-            title={trans('expected_answers', {}, 'quiz')}
+            title={trans('expected_zones', {}, 'quiz')}
             sections={props.item.solutions.filter(s => 0 < s.score).map(s => Object.assign({}, s.section, {
               start: s.section.start,
               end: s.section.end,
@@ -74,6 +74,7 @@ const WaveformPaper = props =>
             }))}
             showScore={props.showScore}
             highlightScore={false}
+            showLegend={true}
           />
         }
       </div>

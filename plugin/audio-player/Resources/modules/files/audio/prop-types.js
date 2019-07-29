@@ -20,6 +20,7 @@ const Section = {
   propTypes: {
     id: T.string.isRequired,
     regionId: T.string,
+    title: T.string,
     start: T.number.isRequired,
     end: T.number.isRequired,
     color: T.string,
@@ -43,6 +44,7 @@ const Audio = merge({}, FileType, {
   propTypes: {
     sectionsType: T.string.isRequired,
     rateControl: T.bool.isRequired,
+    description: T.string,
     sections: T.arrayOf(T.shape(Section.propTypes))
   }
 })

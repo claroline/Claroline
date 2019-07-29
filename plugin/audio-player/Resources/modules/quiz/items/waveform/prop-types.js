@@ -4,6 +4,7 @@ const Section = {
   propTypes: {
     id: T.string.isRequired,
     regionId: T.string,
+    title: T.string,
     start: T.number.isRequired,
     end: T.number.isRequired,
     startTolerance: T.number.isRequired,

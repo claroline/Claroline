@@ -6,6 +6,8 @@
     "display_sections": "Afficher les sections",
     "end": "Fin",
     "end_tolerance": "Tolérance de fin",
+    "export_comments_to_csv": "Exporter les commentaires (CSV)",
+    "introduction": "Introduction",
     "pause": "Pause",
     "play": "Play",
     "section_deletion": "Suppression de la section",
@@ -17,6 +19,7 @@
     "sections_type": "Type de zones",
     "show_help": "Afficher l'aide",
     "show_section_audio": "Afficher le fichier audio associé à la section",
+    "show_transcript": "Afficher la transcription",
     "start": "Début",
     "start_tolerance": "Tolérance de début",
     "transcript": "Transcription"
