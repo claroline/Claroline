@@ -6,11 +6,14 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {selectors} from '#/main/core/tools/transfer/store'
+import {actions as logActions} from '#/main/core/tools/transfer/log/store'
 import {Logs} from '#/main/core/tools/transfer/log/components/logs'
-import {actions} from '#/main/core/tools/transfer/log/actions'
 
 const Tab = (props) =>
   <Routes
+    path={props.path}
     routes={[
       {
         path: '/history',
@@ -26,13 +29,13 @@ const Tab = (props) =>
 
 const List = props =>
   <ListData
-    name="history"
+    name={selectors.STORE_NAME + '.history'}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: '/history/' + row.log
+      target: `${props.path}/history/${row.log}`
     })}
     fetch={{
-      url: props.workspace ? ['apiv2_workspace_transfer_list', {workspaceId: props.workspace.id}]: ['apiv2_transfer_list'],
+      url: props.workspace && props.workspace.id ? ['apiv2_workspace_transfer_list', {workspaceId: props.workspace.id}]: ['apiv2_transfer_list'],
       autoload: true
     }}
     delete={{
@@ -68,18 +71,20 @@ const List = props =>
 
 const History = connect(
   state => ({
-    workspace: state.currentContext.data
+    path: toolSelectors.path(state),
+    workspace: toolSelectors.contextData(state)
   }),
   dispatch => ({
     loadLog(filename) {
-      dispatch(actions.load(filename))
+      dispatch(logActions.load(filename))
     }
   })
 )(Tab)
 
 const ConnectedList = connect(
   state => ({
-    workspace: state.currentContext.data
+    path: toolSelectors.path(state),
+    workspace: toolSelectors.contextData(state)
   })
 )(List)
 

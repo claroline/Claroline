@@ -1,21 +1,12 @@
+import {reducer} from '#/main/core/tools/transfer/store'
 import {TransferTool} from '#/main/core/tools/transfer/containers/tool'
-//import {reducer} from '#/main/core/tools/transfer/store'
-import {reducer} from '#/main/core/tools/transfer/store/reducer'
+import {TransferMenu} from '#/main/core/tools/transfer/components/menu'
 
 /**
  * Resources tool application.
- *
- * @constructor
  */
-export const App = () => ({
+export default {
   component: TransferTool,
-  store: reducer,
-  initialData: initialData => {
-    return {
-      tool: {
-        name: 'transfer'
-      },
-      explanation: initialData.explanation,
-      currentContext: initialData.currentContext
-    }}
-})
+  menu: TransferMenu,
+  store: reducer
+}

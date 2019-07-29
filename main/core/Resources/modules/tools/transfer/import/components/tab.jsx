@@ -4,21 +4,26 @@ import classes from 'classnames'
 import has from 'lodash/has'
 
 import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {Routes, withRouter} from '#/main/app/router'
-import {Heading} from '#/main/core/layout/components/heading'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {Routes, withRouter} from '#/main/app/router'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {LinkButton} from '#/main/app/buttons/link/components/button'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {actions, selectors} from '#/main/core/tools/transfer/store'
+import {actions as logActions} from '#/main/core/tools/transfer/log/store'
 import {Logs} from '#/main/core/tools/transfer/log/components/logs'
-import {select} from '#/main/core/tools/transfer/store/selectors'
-import {actions} from '#/main/core/tools/transfer/store/actions'
-import {actions as logActions} from '#/main/core/tools/transfer/log/actions'
+import {Heading} from '#/main/core/layout/components/heading'
 
 const Tabs = props =>
   <ul className="nav nav-pills nav-stacked">
     {Object.keys(props.explanation).map((key) =>
       <li key={key} role="presentation" className="">
-        <a href={'#/import/' + key + '/none'}>{trans(key)}</a>
+        <LinkButton
+          target={`${props.path}/import/${key}/none`}
+        >
+          {trans(key)}
+        </LinkButton>
       </li>
     )}
   </ul>
@@ -87,7 +92,7 @@ class RoutedExplain extends Component {
         type: 'choice',
         label: trans('action'),
         onChange: (value) => {
-          props.history.push('/import/' + entity + '/' + value.substring(value.indexOf('_') + 1))
+          props.history.push(`${this.props.path}/import/${entity}/${value.substring(value.indexOf('_') + 1)}`)
           props.resetLog()
         },
         required: true,
@@ -101,7 +106,7 @@ class RoutedExplain extends Component {
         type: 'file',
         label: trans('file'),
         options: {
-          uploadUrl: ['apiv2_transfer_upload_file', {workspace: props.workspace ? props.workspace.id: 0}]
+          uploadUrl: ['apiv2_transfer_upload_file', {workspace: props.workspace && props.workspace.id ? props.workspace.id : 0}]
         }
       }
     ]
@@ -113,9 +118,9 @@ class RoutedExplain extends Component {
       <div>
         <FormData
           level={2}
-          name="import"
+          name={selectors.STORE_NAME + '.import'}
           title={trans(entity)}
-          target={['apiv2_transfer_start', {log: this.getLogId(), workspace: props.workspace ? props.workspace.uuid: null }]}
+          target={['apiv2_transfer_start', {log: this.getLogId(), workspace: props.workspace && props.workspace.uuid ? props.workspace.uuid : null }]}
           buttons={true}
           save={{
             type: CALLBACK_BUTTON,
@@ -135,7 +140,7 @@ class RoutedExplain extends Component {
           }}
           cancel={{
             type: LINK_BUTTON,
-            target: '/import',
+            target: `${this.props.path}/import`,
             exact: true
           }}
           sections={[
@@ -162,9 +167,10 @@ class RoutedExplain extends Component {
 
 const ConnectedExplain = withRouter(connect(
   state => ({
-    explanation: select.explanation(state),
-    logs: state.log,
-    workspace: state.currentContext.data
+    path: toolSelectors.path(state),
+    explanation: selectors.explanation(state),
+    logs: selectors.log(state),
+    workspace: toolSelectors.contextData(state)
   }),
   dispatch =>({
     updateProp: (prop, value, form, entity) => dispatch(actions.updateProp(prop, value, form, entity)),
@@ -182,6 +188,7 @@ const Import = props =>
     </div>
     <div className="col-md-9">
       <Routes
+        path={props.path}
         routes={[{
           path: '/import/:entity/:action',
           exact: true,
@@ -194,11 +201,12 @@ const Import = props =>
 
 const ConnectedImport = connect(
   state => ({
-    explanation: select.explanation(state)
+    path: toolSelectors.path(state),
+    explanation: selectors.explanation(state)
   }),
   dispatch =>({
     openForm(params) {
-      dispatch(actions.open('import', params))
+      dispatch(actions.open(selectors.STORE_NAME + '.import', params))
     }
   })
 )(Import)

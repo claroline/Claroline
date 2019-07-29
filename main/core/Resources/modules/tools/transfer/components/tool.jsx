@@ -1,33 +1,50 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {TabbedPageContainer} from '#/main/core/layout/tabs'
+import {Routes} from '#/main/app/router'
 
+import {ToolPage} from '#/main/core/tool/containers/page'
 import {Import as ImportTab} from '#/main/core/tools/transfer/import/components/tab'
-//import {Export as ExportTab} from '#/main/core/administration/transfer/export/components/tab'
 import {History as HistoryTab} from '#/main/core/tools/transfer/history/components/tab'
 
-const TransferTool = () =>
-  <TabbedPageContainer
-    title={trans('data_transfer', {}, 'tools')}
-    redirect={[
-      {from: '/', exact: true, to: '/import'}
-    ]}
+const TransferTool = (props) =>
+  <ToolPage
+    subtitle={
+      <Routes
+        path={props.path}
+        routes={[
+          {
+            path: '/import',
+            render: () => trans('import')
+          }, {
+            path: '/history',
+            render: () => trans('history')
+          }
+        ]}
+      />
+    }
+  >
+    <Routes
+      path={props.path}
+      redirect={[
+        {from: '/', exact: true, to: '/import'}
+      ]}
+      routes={[
+        {
+          path: '/import',
+          component: ImportTab
+        }, {
+          path: '/history',
+          component: HistoryTab
+        }
+      ]}
+    />
+  </ToolPage>
 
-    tabs={[
-      {
-        icon: 'fa fa-save',
-        title: trans('import'),
-        path: '/import',
-        content: ImportTab
-      }, {
-        icon: 'fa fa-download',
-        title: trans('history'),
-        path: '/history',
-        content: HistoryTab
-      }
-    ]}
-  />
+TransferTool.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   TransferTool

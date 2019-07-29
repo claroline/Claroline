@@ -3,7 +3,7 @@ import {makeReducer} from '#/main/app/store/reducer'
 import {
   LOG_REFRESH,
   LOG_RESET
-} from './actions'
+} from '#/main/core/tools/transfer/log/store/actions'
 
 const reducer = makeReducer({}, {
   [LOG_REFRESH]: (state, action) => {

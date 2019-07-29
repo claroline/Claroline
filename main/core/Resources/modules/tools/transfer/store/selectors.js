@@ -1,11 +1,22 @@
+import {createSelector} from 'reselect'
 
-const explanation = (state) => {
-  return state.explanation
-}
+const STORE_NAME = 'data_transfer'
 
-const log = (state) => state.log
+const store = (state) => state[STORE_NAME]
 
-export const select = {
+const explanation = createSelector(
+  [store],
+  (store) => store.explanation
+)
+
+const log = createSelector(
+  [store],
+  (store) => store.log
+)
+
+export const selectors = {
+  STORE_NAME,
+  store,
   explanation,
   log
 }
