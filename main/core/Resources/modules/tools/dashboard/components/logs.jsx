@@ -4,6 +4,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {select as listSelect} from '#/main/app/content/list/store'
 
+import {selectors as toolSelectors} from  '#/main/core/tool/store'
+import {selectors} from '#/main/core/tools/dashboard/store'
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
 import {LogList} from '#/main/core/layout/logs'
 
@@ -15,9 +17,12 @@ const LogsComponent = (props) =>
     chart={props.chart}
     getChartData={props.getChartData}
     queryString={props.queryString}
+    name={selectors.STORE_NAME + '.logs'}
+    path={props.path}
   />
 
 LogsComponent.propTypes = {
+  path: T.string.isRequired,
   workspaceId: T.number.isRequired,
   actions: T.array.isRequired,
   chart: T.object.isRequired,
@@ -27,10 +32,11 @@ LogsComponent.propTypes = {
 
 const Logs = connect(
   state => ({
-    workspaceId: state.workspace.id,
-    chart: state.chart,
-    actions: state.actions,
-    queryString: listSelect.queryString(listSelect.list(state, 'logs'))
+    path: toolSelectors.path(state),
+    workspaceId: toolSelectors.contextData(state).id,
+    chart: selectors.chart(state),
+    actions: selectors.actions(state),
+    queryString: listSelect.queryString(listSelect.list(state, selectors.STORE_NAME + '.logs'))
   }),
   dispatch => ({
     getChartData(workspaceId, filters) {

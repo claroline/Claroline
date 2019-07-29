@@ -1,7 +1,9 @@
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
 
+import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {LOAD_LOG, RESET_LOG, LOAD_CHART_DATA} from '#/main/core/layout/logs/actions'
 import {
   LOAD_OVERVIEW,
@@ -22,7 +24,9 @@ const reducer = combineReducers({
     [RESET_LOG]: (state, action) => action.log,
     [LOAD_LOG]: (state, action) => action.log
   }),
-  actions: makeReducer([], {}),
+  actions: makeReducer([], {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.actions
+  }),
   chart: combineReducers({
     invalidated: makeReducer(true, {
       [SEARCH_FILTER_ADD + '/' + selectors.STORE_NAME + '.logs'] : () => true,

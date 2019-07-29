@@ -1,19 +1,13 @@
+import {reducer} from '#/main/core/tools/dashboard/store'
 import {DashboardTool} from '#/main/core/tools/dashboard/containers/tool'
-import {reducer} from '#/main/core/tools/dashboard/store/reducer'
+import {DashboardMenu} from '#/main/core/tools/dashboard/components/menu'
 
 /**
  * Dashboard tool application.
- *
- * @constructor
  */
-export const App = () => ({
+export default {
   component: DashboardTool,
-  store: reducer,
-  initialData: (initialData) => Object.assign({}, initialData, {
-    tool: {
-      name: 'dashboard',
-      currentContext: initialData.currentContext
-    }
-  })
-})
+  menu: DashboardMenu,
+  store: reducer
+}
 
