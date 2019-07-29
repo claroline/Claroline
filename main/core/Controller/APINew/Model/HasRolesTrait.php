@@ -21,10 +21,7 @@ trait HasRolesTrait
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     },
      *     parameters={
-     *         "id": {
-     *              "type": {"string"},
-     *              "description": "The parent object uuid"
-     *          }
+     *         {"name": "id", "type": "string", "description": "The object id."}
      *     }
      * )
      *
