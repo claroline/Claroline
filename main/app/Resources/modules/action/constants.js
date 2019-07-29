@@ -28,7 +28,7 @@ const ACTIONS = {
     icon: 'fa fa-search'
   },
   [ACTION_REFRESH]: {
-    icon: 'fa fa-recycle'
+    icon: 'fa fa-sync'
   },
   [ACTION_SAVE]: {
     icon: 'fa fa-save'

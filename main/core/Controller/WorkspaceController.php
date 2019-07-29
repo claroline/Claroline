@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -142,13 +143,10 @@ class WorkspaceController
         $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);
         if (empty($accessErrors) || $isManager) {
+            $this->eventDispatcher->dispatch('workspace.open', new OpenWorkspaceEvent($workspace));
+
             // Log workspace opening
             $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
-
-            // Add workspace to recent workspaces if user is not Usurped
-            if ($user && !$this->manager->isImpersonated($this->tokenStorage->getToken())) {
-                $this->manager->addRecentWorkspaceForUser($user, $workspace);
-            }
 
             // Get the list of enabled workspace tool
             if ($this->manager->isManager($workspace, $this->tokenStorage->getToken())) {
@@ -213,30 +211,6 @@ class WorkspaceController
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 
         return new JsonResponse($event->getData());
-    }
-
-    /**
-     * Gets the current user history.
-     *
-     * @EXT\Route("/history", name="claro_workspace_history_get")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $currentUser
-     *
-     * @return JsonResponse
-     */
-    public function getHistoryAction(User $currentUser = null)
-    {
-        // TODO
-
-        $workspaces = [];
-        if ($currentUser instanceof User) {
-            $workspaces = $this->workspaceManager->getRecentWorkspaceForUser($currentUser, $currentUser->getRoles());
-        }
-
-        return new JsonResponse(array_map(function (Workspace $workspace) {
-            return $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
-        }, $workspaces));
     }
 
     private function forceWorkspaceLang(Workspace $workspace, Request $request)

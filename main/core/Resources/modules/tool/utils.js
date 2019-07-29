@@ -5,6 +5,10 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/main/core/tool/constants'
 
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {route as adminRoute} from '#/main/core/administration/routing'
+
 /**
  * Gets the path of a tool based on its rendering context.
  *
@@ -29,7 +33,7 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
         }, {
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
-          target: '/desktop/' + toolName
+          target: toolRoute(toolName)
         }
       ]
       break
@@ -45,17 +49,17 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
           type: LINK_BUTTON,
           label: trans('my_workspaces', {}, 'workspace'),
           displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
-          target: '/desktop/workspaces'
+          target: toolRoute('workspaces')
         }, {
           type: LINK_BUTTON,
           label: contextData.name,
           displayed: -1 !== breadcrumbItems.indexOf('current'),
-          target: '/desktop/workspaces/open/' + contextData.id
+          target: workspaceRoute(contextData)
         }, {
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
           displayed: -1 !== breadcrumbItems.indexOf('tool'),
-          target: '/desktop/workspaces/open/' + contextData.id + '/' + toolName
+          target: workspaceRoute(contextData, toolName)
         }
       ]
       break
@@ -69,7 +73,7 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
         }, {
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
-          target: '/administration/' + toolName
+          target: adminRoute(toolName)
         }
       ]
       break

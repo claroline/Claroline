@@ -49,15 +49,14 @@ claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     type: annotation
 
+claro_search:
+    resource: "@ClarolineCoreBundle/Controller/SearchController.php"
+    type: annotation
+
 claro_file:
     resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation
     prefix: file
-
-claro_admin_plugin:
-    resource: "@ClarolineCoreBundle/Controller/Administration/PluginController.php"
-    prefix: admin/plugins
-    type: annotation
 
 claro_admin_resource_icons:
     resource: "@ClarolineCoreBundle/Controller/Administration/IconController.php"

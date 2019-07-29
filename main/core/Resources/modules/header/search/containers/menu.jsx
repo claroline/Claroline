@@ -9,6 +9,7 @@ const SearchMenu = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       fetching: selectors.fetching(state),
+      empty: selectors.empty(state),
       results: selectors.results(state)
     }),
     (dispatch) => ({

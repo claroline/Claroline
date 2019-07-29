@@ -49,6 +49,18 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
         $this->platformConfigHandler = $platformConfigHandler;
     }
 
+    public function search(string $search, int $nbResults)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('(UPPER(u.username) LIKE :search OR UPPER(u.firstName) LIKE :search OR UPPER(u.lastName) LIKE :search)')
+            ->andWhere('u.isEnabled = true AND u.isRemoved = false')
+            ->setFirstResult(0)
+            ->setMaxResults($nbResults)
+            ->setParameter('search', '%'.strtoupper($search).'%')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findOneBy(array $criteria = null, array $orderBy = null)
     {
         $trueFilter = [];

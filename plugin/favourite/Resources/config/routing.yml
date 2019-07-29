@@ -1,7 +1,4 @@
 # JSON API
 hevinci_favourite_api:
     resource: "@HeVinciFavouriteBundle/Controller/"
-    prefix: apiv2
-    type: api
-    options:
-        expose: true
+    type: annotation

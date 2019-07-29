@@ -2,9 +2,9 @@
 
 namespace Icap\NotificationBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationRepository")
@@ -12,59 +12,40 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Notification
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @JMS\Groups({"api_notification"})
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
-     * @JMS\Groups({"api_notification"})
      */
-    protected $creationDate;
+    private $creationDate;
 
     /**
      * @ORM\Column(type="integer", name="user_id", nullable=true)
      */
-    protected $userId;
+    private $userId;
 
     /**
      * @ORM\Column(type="integer", name="resource_id", nullable=true)
      */
-    protected $resourceId;
+    private $resourceId;
 
     /**
      * @ORM\Column(type="string", name="icon_key", nullable=true)
      */
-    protected $iconKey;
+    private $iconKey;
 
     /**
      * @ORM\Column(type="string", name="action_key")
-     * @JMS\Groups({"api_notification"})
      */
-    protected $actionKey;
+    private $actionKey;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
-     * @JMS\Groups({"api_notification"})
      */
-    protected $details;
+    private $details;
 
-    protected $iconColor = null;
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $iconColor = null;
 
     /**
      * Get creationDate.
@@ -185,7 +166,7 @@ class Notification
     /**
      * Set $iconColor.
      *
-     * @param string iconColor
+     * @param string $iconColor
      *
      * @return notification
      */
@@ -214,7 +195,7 @@ class Notification
      *
      * @param array $details
      *
-     * @return Log
+     * @return $this
      */
     public function setDetails($details)
     {

@@ -15,10 +15,21 @@ use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 class WorkspaceRepository extends EntityRepository
 {
+    public function search(string $search, int $nbResults)
+    {
+        return $this->createQueryBuilder('w')
+            ->where('UPPER(w.name) LIKE :search')
+            ->orWhere('UPPER(w.code) LIKE :search')
+            ->setFirstResult(0)
+            ->setMaxResults($nbResults)
+            ->setParameter('search', '%'.strtoupper($search).'%')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Returns the workspaces a user is member of.
      *
@@ -233,35 +244,6 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('restrictionIds', $restrictionIds);
 
         return $query->getResult();
-    }
-
-    /**
-     * Returns the latest workspaces a user has visited.
-     *
-     * @param User          $user
-     * @param array[string] $roles
-     * @param int           $max
-     *
-     * @return array
-     */
-    public function findLatestWorkspacesByUser(User $user, array $roles, $max = 5)
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT DISTINCT w AS workspace, MAX(wr.entryDate) AS max_date
-                FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
-                JOIN w.roles r
-                INNER JOIN Claroline\\CoreBundle\\Entity\\Workspace\\WorkspaceRecent wr WITH wr.workspace = w
-                AND wr.user = :usr
-                AND r.name IN (:roles)
-                GROUP BY w.id
-                ORDER BY max_date DESC
-            ')
-            ->setMaxResults($max)
-            ->setParameter('usr', $user)
-            ->setParameter('roles', $roles)
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
     }
 
     /**

@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {UserCard} from '#/main/core/user/data/components/user-card'
+import {UserCard} from '#/main/core/user/components/card'
 
 export default {
   name: 'users',

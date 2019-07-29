@@ -7,7 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {UserCard} from '#/main/core/user/data/components/user-card'
+import {UserCard} from '#/main/core/user/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserType} from '#/main/core/user/prop-types'
 

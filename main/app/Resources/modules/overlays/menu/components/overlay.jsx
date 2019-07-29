@@ -6,6 +6,7 @@ import Dropdown from 'react-bootstrap/lib/Dropdown'
 const MenuOverlay = props =>
   <Dropdown
     id={props.id}
+    open={props.open}
     pullRight={'right' === props.align}
     dropup={'top' === props.position}
     className={props.className}
@@ -17,6 +18,7 @@ const MenuOverlay = props =>
 
 MenuOverlay.propTypes = {
   id: T.string.isRequired,
+  open: T.bool,
   className: T.string,
   disabled: T.bool,
   position: T.oneOf(['top', 'bottom']),

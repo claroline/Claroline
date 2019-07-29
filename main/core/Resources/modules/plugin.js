@@ -10,8 +10,7 @@ registry.add('ClarolineCoreBundle', {
    * Provides menu which can be used in the main header menu.
    */
   header: {
-    'search'    : () => { return import(/* webpackChunkName: "core-header-search" */   '#/main/core/header/search') },
-    'history'    : () => { return import(/* webpackChunkName: "core-header-history" */ '#/main/core/header/history') }
+    'search'    : () => { return import(/* webpackChunkName: "core-header-search" */   '#/main/core/header/search') }
   },
 
   integration: {
@@ -150,5 +149,10 @@ registry.add('ClarolineCoreBundle', {
       'managed_workspaces': () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') },
       'workspace_models'  : () => { return import(/* webpackChunkName: "core-data-source-workspaces" */ '#/main/core/data/sources/workspaces') }
     }
+  },
+
+  notifications: {
+    'resource-create': () => { return import(/* webpackChunkName: "core-notification-resource-create" */ '#/main/core/notifications/resource/create') },
+    'resource-publish': () => { return import(/* webpackChunkName: "core-notification-resource-publish" */ '#/main/core/notifications/resource/publish') }
   }
 })

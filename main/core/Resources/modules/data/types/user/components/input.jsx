@@ -8,7 +8,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {User as UserType} from '#/main/core/user/prop-types'
-import {UserCard} from '#/main/core/user/data/components/user-card'
+import {UserCard} from '#/main/core/user/components/card'
 import {MODAL_USERS} from '#/main/core/modals/users'
 
 //todo: implement badge picker

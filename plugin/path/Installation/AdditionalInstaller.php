@@ -10,16 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
  */
 class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
-    protected $logger;
-
-    public function __construct()
-    {
-        $self = $this;
-        $this->logger = function ($message) use ($self) {
-            $self->log($message);
-        };
-    }
-
     public function preUpdate($currentVersion, $targetVersion)
     {
         if (version_compare($currentVersion, '12.0.0', '<')) {

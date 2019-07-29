@@ -15,21 +15,13 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @DI\Service("claroline.api.finder.contact")
+ * @DI\Service("claroline.api.finder.notification")
  * @DI\Tag("claroline.finder")
  */
 class NotificationViewerFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function getClass()
     {
         return NotificationViewer::class;
@@ -41,7 +33,11 @@ class NotificationViewerFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'user':
+                case 'read':
+                    $qb->andWhere('obj.status = :filter');
+                    $qb->setParameter('filter', $filterValue);
+                    break;
+              case 'notification.meta.creator':
                 $qb->andWhere('obj.viewerId = :viewerId');
                 $qb->setParameter('viewerId', $filterValue);
                 break;
@@ -57,37 +53,18 @@ class NotificationViewerFinder extends AbstractFinder
                     break;
                 }
                 break;
-              case 'category':
-                if ('system' !== $category) {
-                    $qb->andWhere('notification.iconKey = :category')
-                        ->setParameter('category', $category);
-                } else {
-                    $qb->andWhere(
-                      $qb->expr()->isNull('notification.iconKey')
-                    );
-                }
-                break;
           }
         }
 
-        $this->sortBy($qb, $sortBy);
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
-        return $qb;
-    }
-
-    //probably deprecated since we try hard to optimize everything and is a duplicata of getExtraFieldMapping
-    private function sortBy($qb, array $sortBy = null)
-    {
-        // manages custom sort properties
-        if ($sortBy && 0 !== $sortBy['direction']) {
-            switch ($sortBy['property']) {
-              case 'name':
-                  $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                  break;
-              case 'isDisabled':
-                  $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                  break;
-          }
+            switch ($sortByProperty) {
+                case 'notification.meta.created':
+                    $qb->orderBy('notification.creationDate', $sortByDirection);
+                    break;
+            }
         }
 
         return $qb;

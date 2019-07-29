@@ -7,7 +7,6 @@ import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
-import {DesktopHistory} from '#/main/app/layout/sections/desktop/components/history'
 
 const DesktopMenu = props =>
   <MenuMain
@@ -70,20 +69,6 @@ const DesktopMenu = props =>
       opened={'tool' === props.section}
       toggle={() => props.changeSection('tool')}
     />
-
-    <DesktopHistory
-      opened={'history' === props.section}
-      toggle={() => {
-        if ('history' !== props.section && !props.historyLoaded) {
-          // we are opening the section
-          props.getHistory()
-        }
-
-        props.changeSection('history')
-      }}
-      loaded={props.historyLoaded}
-      results={props.historyResults}
-    />
   </MenuMain>
 
 // <h3 className="h4">Collaborateur</h3>
@@ -94,13 +79,7 @@ DesktopMenu.propTypes = {
     icon: T.string.isRequired,
     name: T.string.isRequired
   })),
-  historyLoaded: T.bool.isRequired,
-  historyResults: T.arrayOf(T.shape({
-
-  })).isRequired,
-
-  changeSection: T.func.isRequired,
-  getHistory: T.func.isRequired
+  changeSection: T.func.isRequired
 }
 
 DesktopMenu.defaultProps = {

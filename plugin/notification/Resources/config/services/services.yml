@@ -1,9 +1,0 @@
-services:
-    icap_notification.twig.notification_extension:
-        class: Icap\NotificationBundle\Twig\NotificationExtension
-        arguments: ["@translator"]
-        tags:
-            - { name: twig.extension }
-
-    icap.notification.orm.entity_manager:
-        alias: doctrine.orm.entity_manager

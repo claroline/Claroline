@@ -170,6 +170,7 @@ const MenuButton = props => {
   return (
     <MenuOverlay
       id={props.id}
+      open={props.opened}
       position={props.menu.position}
       align={props.menu.align}
       className={props.containerClassName}
@@ -177,7 +178,7 @@ const MenuButton = props => {
       onToggle={props.onToggle}
     >
       <CallbackButton
-        {...omit(props, 'menu', 'containerClassName', 'onToggle')}
+        {...omit(props, 'menu', 'containerClassName', 'onToggle', 'opened')}
         className={classes('dropdown-toggle', props.className)}
         bsRole="toggle"
         callback={identity}
@@ -196,6 +197,7 @@ const MenuButton = props => {
 
 implementPropTypes(MenuButton, ButtonTypes, {
   id: T.string.isRequired,
+  opened: T.bool,
   onToggle: T.func,
   containerClassName: T.string, // permits to add a custom class to the wrapping .dropdown element
   menu: T.oneOfType([

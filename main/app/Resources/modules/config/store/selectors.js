@@ -1,17 +1,14 @@
-import {createSelector} from 'reselect'
+import get from 'lodash/get'
 
 const STORE_NAME = 'config'
 
 const store = (state) => state[STORE_NAME]
 
-const selfRegistration = createSelector(
-  [store],
-  (store) => store.selfRegistration
-)
+const param = (state, paramPath) => get(store(state), paramPath)
 
 export const selectors = {
   STORE_NAME,
 
   store,
-  selfRegistration
+  param
 }

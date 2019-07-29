@@ -25,20 +25,25 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     /** @var AbstractResource */
     private $resource;
 
+    /** @var bool */
+    private $embedded;
+
     /** @var array */
     private $data = [];
 
     /** @var bool */
-    private $isPopulated = false;
+    private $populated = false;
 
     /**
      * LoadResourceEvent constructor.
      *
      * @param AbstractResource $resource
+     * @param bool             $embedded
      */
-    public function __construct(AbstractResource $resource)
+    public function __construct(AbstractResource $resource, $embedded = false)
     {
         $this->resource = $resource;
+        $this->embedded = $embedded;
     }
 
     /**
@@ -61,6 +66,11 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
         return $this->resource->getResourceNode();
     }
 
+    public function isEmbedded()
+    {
+        return $this->embedded;
+    }
+
     /**
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
@@ -70,7 +80,7 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     public function setData(array $data)
     {
         $this->data = $data;
-        $this->isPopulated = true;
+        $this->populated = true;
     }
 
     public function getData()
@@ -80,6 +90,6 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
 
     public function isPopulated()
     {
-        return $this->isPopulated;
+        return $this->populated;
     }
 }

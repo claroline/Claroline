@@ -7,7 +7,6 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {HeaderBrand} from '#/main/app/layout/header/components/brand'
-import {HeaderNotifications} from '#/main/app/layout/header/components/notifications'
 import {HeaderUser} from '#/main/app/layout/header/components/user'
 
 import {getMenu} from '#/main/app/layout/header/utils'
@@ -44,13 +43,6 @@ const HeaderMain = props =>
           })}
         />
       ))}
-
-      {props.authenticated &&
-        <HeaderNotifications
-          count={props.count}
-          tools={props.notificationTools}
-        />
-      }
 
       <HeaderUser
         maintenance={props.maintenance}
@@ -124,14 +116,8 @@ HeaderMain.propTypes = {
     roles: T.array
   }),
   impersonated: T.bool.isRequired,
-
-  count: T.shape({
-    notifications: T.number,
-    messages: T.number
-  }),
   authenticated: T.bool.isRequired,
   tools: T.array,
-  notificationTools: T.array,
   administration: T.array,
   helpUrl: T.string,
   registration: T.bool,

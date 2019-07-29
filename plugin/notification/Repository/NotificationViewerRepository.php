@@ -32,6 +32,17 @@ class NotificationViewerRepository extends EntityRepository
         $queryBuilder->getQuery()->execute();
     }
 
+    public function markAsUnviewed($notificationViewIds)
+    {
+        $queryBuilder = $this->createQueryBuilder('notificationViewer');
+        $queryBuilder
+            ->update()
+            ->set('notificationViewer.status', 0)
+            ->andWhere($queryBuilder->expr()->in('notificationViewer.id', $notificationViewIds));
+
+        $queryBuilder->getQuery()->execute();
+    }
+
     public function markAllAsViewed($userId)
     {
         $queryBuilder = $this->createQueryBuilder('notificationViewer');
@@ -79,8 +90,8 @@ class NotificationViewerRepository extends EntityRepository
 
     private function addCategoryRestriction(QueryBuilder $qb, $category)
     {
-        if ($category != null) {
-            if ($category != 'system') {
+        if (!empty($category)) {
+            if ('system' !== $category) {
                 $qb->andWhere('notification.iconKey = :category')
                     ->setParameter('category', $category);
             } else {

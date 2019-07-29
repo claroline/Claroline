@@ -3,6 +3,7 @@ import {ResourceCard} from '#/main/core/resource/components/card'
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
+import {route} from '#/main/core/resource/routing'
 import {getTypes} from '#/main/core/resource/utils'
 
 export default {
@@ -11,10 +12,7 @@ export default {
   parameters: {
     primaryAction: (resourceNode) => ({
       type: URL_BUTTON,
-      target: ['claro_resource_show', {
-        type: resourceNode.meta.type,
-        id: resourceNode.id
-      }]
+      target: `#${route(resourceNode)}`
     }),
     definition: [
       {

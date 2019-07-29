@@ -11,15 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -48,9 +45,6 @@ class DesktopController
     /** @var ToolManager */
     private $toolManager;
 
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-
     /**
      * DesktopController constructor.
      *
@@ -58,28 +52,24 @@ class DesktopController
      *     "authorization"    = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
      *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param EventDispatcherInterface      $eventDispatcher
      * @param SerializerProvider            $serializer
      * @param ToolManager                   $toolManager
-     * @param WorkspaceManager              $workspaceManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
         SerializerProvider $serializer,
-        ToolManager $toolManager,
-        WorkspaceManager $workspaceManager
+        ToolManager $toolManager
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
-        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -142,27 +132,5 @@ class DesktopController
         $this->eventDispatcher->dispatch('log', new LogDesktopToolReadEvent($toolName));
 
         return new JsonResponse($event->getData());
-    }
-
-    /**
-     * Gets the current user history.
-     *
-     * @EXT\Route("/history", name="claro_desktop_history_get")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $currentUser
-     *
-     * @return JsonResponse
-     */
-    public function getHistoryAction(User $currentUser = null)
-    {
-        $workspaces = [];
-        if ($currentUser instanceof User) {
-            $workspaces = $this->workspaceManager->getRecentWorkspaceForUser($currentUser, $currentUser->getRoles());
-        }
-
-        return new JsonResponse(array_map(function (Workspace $workspace) {
-            return $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
-        }, $workspaces));
     }
 }

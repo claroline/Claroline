@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {UserCard} from '#/main/core/user/data/components/user-card'
+import {UserCard} from '#/main/core/user/components/card'
 
 const ContactCard = props =>
   <UserCard

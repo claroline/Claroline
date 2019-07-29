@@ -38,6 +38,18 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $this->builder->setBundles($bundles);
     }
 
+    public function search(string $search, int $nbResults)
+    {
+        return $this->createQueryBuilder('n')
+            ->where('UPPER(n.name) LIKE :search')
+            ->andWhere('n.active = true')
+            ->setFirstResult(0)
+            ->setMaxResults($nbResults)
+            ->setParameter('search', '%'.strtoupper($search).'%')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @param string|int $id The id or guid of the node
      *

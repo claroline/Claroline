@@ -650,7 +650,6 @@
     "note": "",
     "notification_activated": "Notificaciones activas.",
     "notification_deactivated": "Notificaciones desacivadas.",
-    "notifications": "Notificaciones",
     "number": "Numero",
     "number_of_attempts": "Número de intentos",
     "number_of_attempts_explanation": "El significado del número de intentos puede variar dependiendo de la actividad. No se trata necesariamente del número de veces que la actividad ha sido realizada.",

@@ -1482,7 +1482,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
               'resource.load',
               LoadResourceEvent::class,
-              [$resource]
+              [$resource, $embedded]
           );
 
             return $event->getData();

@@ -3,7 +3,6 @@
 namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\ToolsOptions;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -13,8 +12,6 @@ use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\MessageBundle\Entity\Message;
-use Icap\NotificationBundle\Manager\NotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,19 +39,15 @@ class ClientController
     /** @var ToolManager */
     private $toolManager;
 
-    /** @var NotificationManager */
-    private $notificationManager;
-
     /**
      * ClientController constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "configHandler"       = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "finder"              = @DI\Inject("claroline.api.finder"),
-     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
-     *     "notificationManager" = @DI\Inject("icap.notification.manager")
+     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "finder"        = @DI\Inject("claroline.api.finder"),
+     *     "toolManager"   = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
      * @param TokenStorageInterface        $tokenStorage
@@ -62,22 +55,19 @@ class ClientController
      * @param PlatformConfigurationHandler $configHandler
      * @param FinderProvider               $finder
      * @param ToolManager                  $toolManager
-     * @param NotificationManager          $notificationManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $configHandler,
         FinderProvider $finder,
-        ToolManager $toolManager,
-        NotificationManager $notificationManager
+        ToolManager $toolManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->configHandler = $configHandler;
         $this->finder = $finder;
         $this->toolManager = $toolManager;
-        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -115,21 +105,6 @@ class ClientController
             }
         }
 
-        $tools = array_filter($orderedTools, function (OrderedTool $ot) {
-            $tool = $ot->getTool();
-
-            return $ot->isVisibleInDesktop() &&
-                !in_array($tool->getName(), ToolsOptions::EXCLUDED_TOOLS) &&
-                (ToolsOptions::TOOL_CATEGORY === $tool->getDesktopCategory() || ToolsOptions::USER_CATEGORY === $tool->getDesktopCategory());
-        });
-        $notificationTools = array_filter($orderedTools, function (OrderedTool $ot) {
-            $tool = $ot->getTool();
-
-            return $ot->isVisibleInDesktop() &&
-                !in_array($tool->getName(), ToolsOptions::EXCLUDED_TOOLS) &&
-                ToolsOptions::NOTIFICATION_CATEGORY === $tool->getDesktopCategory();
-        });
-
         return [
             'meta' => [],
             'maintenance' => [
@@ -145,21 +120,6 @@ class ClientController
                     'about' => $this->configHandler->getParameter('show_about_button'),
                     'help' => $this->configHandler->getParameter('show_help_button'),
                 ],
-
-                'notifications' => [
-                    'count' => [
-                        'notification' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : 0,
-                        'messaging' => $token->getUser() instanceof User ? $this->finder->fetch(
-                            Message::class,
-                            ['removed' => false, 'read' => false, 'sent' => false],
-                            null,
-                            0,
-                            -1,
-                            true
-                        ) : 0,
-                    ],
-                    'refreshDelay' => $this->configHandler->getParameter('notifications_refresh_delay'),
-                ],
                 'administration' => array_map(function (AdminTool $tool) {
                     return [
                         'icon' => $tool->getClass(),
@@ -174,16 +134,7 @@ class ClientController
                         'icon' => $tool->getClass(),
                         'name' => $tool->getName(),
                     ];
-                }, array_values($tools)),
-
-                'notificationTools' => array_map(function (OrderedTool $orderedTool) {
-                    $tool = $orderedTool->getTool();
-
-                    return [
-                        'icon' => $tool->getClass(),
-                        'name' => $tool->getName(),
-                    ];
-                }, array_values($notificationTools)),
+                }, array_values($orderedTools)),
             ],
 
             'injectedJavascripts' => $this->injectJavascript(),

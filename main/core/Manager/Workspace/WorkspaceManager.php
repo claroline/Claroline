@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceRecent;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -32,7 +31,6 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Repository\WorkspaceRecentRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -329,22 +327,6 @@ class WorkspaceManager
         }
 
         return $accesses;
-    }
-
-    /**
-     * Returns an array containing.
-     *
-     * @param User  $user
-     * @param array $roles
-     * @param int   $max
-     *
-     * @return array
-     */
-    public function getLatestWorkspacesByUser(User $user, array $roles, $max = 5)
-    {
-        return count($roles) > 0 ?
-            $this->workspaceRepo->findLatestWorkspacesByUser($user, $roles, $max) :
-            [];
     }
 
     /**
@@ -827,34 +809,6 @@ class WorkspaceManager
         }
 
         return $workspaces;
-    }
-
-    public function addRecentWorkspaceForUser(User $user, Workspace $workspace)
-    {
-        /** @var WorkspaceRecentRepository $recentWorkspaceRepo */
-        $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
-        //If workspace already in recent workspaces, update date
-        $recentWorkspace = $recentWorkspaceRepo->findOneBy(['user' => $user, 'workspace' => $workspace]);
-        //Otherwise create new entry
-        if (empty($recentWorkspace)) {
-            $recentWorkspace = new WorkspaceRecent();
-            $recentWorkspace->setUser($user);
-            $recentWorkspace->setWorkspace($workspace);
-        }
-        $recentWorkspace->setEntryDate(new \DateTime());
-
-        $this->om->persist($recentWorkspace);
-        $this->om->flush();
-    }
-
-    // Clean all recent workspaces that are more than 6 months old
-    public function cleanRecentWorkspaces()
-    {
-        $this->log('Cleaning recent workspaces entries that are older than six months');
-
-        /** @var WorkspaceRecentRepository $recentWorkspaceRepo */
-        $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
-        $recentWorkspaceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
     }
 
     public function unregister(AbstractRoleSubject $subject, Workspace $workspace)

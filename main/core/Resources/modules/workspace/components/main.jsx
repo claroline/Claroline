@@ -23,8 +23,8 @@ const WorkspaceMain = (props) => {
     return (
       <WorkspaceRestrictions
         errors={props.accessErrors}
-        dismiss={this.props.dismissRestrictions}
-        managed={this.props.managed}
+        dismiss={props.dismissRestrictions}
+        managed={props.managed}
       />
     )
   }

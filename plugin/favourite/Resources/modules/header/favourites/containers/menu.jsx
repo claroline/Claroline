@@ -9,11 +9,16 @@ import {actions, reducer, selectors} from '#/plugin/favourite/header/favourites/
 const FavouritesMenu = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      isAuthenticated: securitySelectors.isAuthenticated(state)
+      isAuthenticated: securitySelectors.isAuthenticated(state),
+      loaded: selectors.loaded(state),
+      results: selectors.results(state)
     }),
     (dispatch) => ({
-      loadMenu() {
-        dispatch(actions.fetchMenu())
+      getFavourites() {
+        dispatch(actions.getFavourites())
+      },
+      deleteFavourite(object, type) {
+        dispatch(actions.deleteFavourite(object, type))
       }
     })
   )(FavouritesMenuComponent)

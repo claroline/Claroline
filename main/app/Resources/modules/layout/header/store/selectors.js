@@ -18,14 +18,6 @@ const tools = createSelector(
   [store],
   (store) => store.tools
 )
-const notificationTools = createSelector(
-  [store],
-  (store) => store.notificationTools
-)
-const count = createSelector(
-  [store],
-  (store) => store.notifications.count
-)
 
 const display = createSelector(
   [store],
@@ -55,8 +47,6 @@ export const selectors = {
   menus,
   administration,
   tools,
-  notificationTools,
-  count,
   logo,
   title,
   subtitle,

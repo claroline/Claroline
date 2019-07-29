@@ -1,3 +1,10 @@
 {
-  "favourites": "Favourites"
+  "favourites": "Favourites",
+  "empty_workspaces": "You have no favourite workspace",
+  "empty_workspaces_help": "Browse your workspaces to add them to your favorites and see them appear here",
+  "empty_resources": "You have no favourite resource",
+  "empty_resources_help": "Browse your resources to add them to your favourites and see them appear here",
+  "delete_favorite": "Delete favourite",
+  "delete_resource_message": "Are you sure you want to remove this resource from your favorites?",
+  "delete_workspace_message": "Are you sure you want to remove this workspace from your favorites?"
 }

@@ -91,6 +91,22 @@
             padding-left: 26px !important;
             border-left: 4px solid @toolbar-link-active-bg;
         }
+
+        &.danger {
+            color: @brand-danger;
+
+            &:hover,
+            &:focus {
+                color: white;
+                background: @brand-danger;
+            }
+
+            &.disabled {
+                opacity: .65; // same than standard button
+                color: @brand-danger;
+                background: transparent;
+            }
+        }
     }
 
     .list-group-item,
@@ -124,63 +140,6 @@
             &:focus {
                 color: @toolbar-link-disabled-color;
                 background-color: @toolbar-link-disabled-bg;
-            }
-        }
-    }
-
-    .history {
-        > ul {
-            margin: 0;
-            padding: 0;
-        }
-
-        li + li {
-            border-top: 1px solid transparent;
-        }
-
-        .data-card {
-            border: none;
-            box-shadow: none;
-
-            .data-card-header,
-            .data-card-content {
-                border-radius: 0;
-            }
-
-            // change color scheme
-            background: #373737;
-            color: @toolbar-link-color;
-
-            .data-card-header {
-                background: darken(#373737, 10%);
-                border-color: transparent;
-            }
-
-            .data-card-icon {
-
-            }
-
-            .data-card-content {
-                color: @toolbar-link-color;
-            }
-
-            .data-card-flag {
-                color: @toolbar-link-color;
-            }
-
-            &:hover {
-                color: @toolbar-link-hover-color;
-                background-color: @toolbar-link-hover-bg;
-                //.box-shadow(@data-card-active-box-shadow);
-
-                .data-card-header {
-                    background: darken(@toolbar-link-hover-bg, 10%);
-                    //border-color: @data-card-active-inner-border;
-                }
-
-                .data-card-content {
-                    color: @toolbar-link-hover-color;
-                }
             }
         }
     }

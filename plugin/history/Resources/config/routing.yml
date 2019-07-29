@@ -1,0 +1,4 @@
+# JSON API
+claro_history:
+    resource: "@ClarolineHistoryBundle/Controller/"
+    type: annotation

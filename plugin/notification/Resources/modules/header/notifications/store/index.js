@@ -1,7 +1,7 @@
 
-import {actions} from '#/plugin/favourite/header/favourites/store/actions'
-import {reducer} from '#/plugin/favourite/header/favourites/store/reducer'
-import {selectors} from '#/plugin/favourite/header/favourites/store/selectors'
+import {actions} from '#/plugin/notification/header/notifications/store/actions'
+import {reducer} from '#/plugin/notification/header/notifications/store/reducer'
+import {selectors} from '#/plugin/notification/header/notifications/store/selectors'
 
 export {
   actions,

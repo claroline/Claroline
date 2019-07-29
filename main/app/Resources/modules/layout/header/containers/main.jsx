@@ -18,9 +18,8 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
       title: selectors.title(state),
       subtitle: selectors.subtitle(state),
       display: selectors.display(state),
-      count: selectors.count(state),
       helpUrl: selectors.helpUrl(state),
-      registration: configSelectors.selfRegistration(state),
+      registration: configSelectors.param(state, 'selfRegistration'),
 
       // user related parameters
       currentUser: securitySelectors.currentUser(state) || securitySelectors.fakeUser(state),
@@ -28,8 +27,7 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
       impersonated: securitySelectors.isImpersonated(state),
       locale: selectors.locale(state),
       administration: selectors.administration(state),
-      tools: selectors.tools(state),
-      notificationTools: selectors.notificationTools(state)
+      tools: selectors.tools(state)
     }),
     (dispatch) => ({
       startWalkthrough(steps, additional, documentation) {

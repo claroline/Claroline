@@ -80,6 +80,11 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
     && (!scope || isEmpty(action.scope) || -1 !== action.scope.indexOf(scope))
   )
 
+  if (1 === actions.length) {
+    // avoid creating a more dropdown if there is only one action
+    return [actions]
+  }
+
   // retrieves defined actions groups
   const config = parseToolbar(toolbarConfig)
 
@@ -145,7 +150,17 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
       toolbar[groupIndex][actionIndex].menu.items = rest
     } else {
       // append all remaining actions in a new group
-      toolbar.push(rest)
+      toolbar.push(
+        rest.sort((a, b) => {
+          if (!a.dangerous && b.dangerous) {
+            return -1
+          } else if (a.dangerous && !b.dangerous) {
+            return 1
+          }
+
+          return 0
+        })
+      )
     }
   } else if (hasMore) {
     // all actions were configured in the toolbar, remove the more menu

@@ -74,22 +74,6 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::get('ws_2'), $workspaces[0]);
     }
 
-    public function testFindLatestWorkspaceByUser()
-    {
-        $workspaces = self::$repo->findLatestWorkspacesByUser(
-            self::get('john'),
-            ['ROLE_1', 'ROLE_2']
-        );
-        $this->assertEquals(2, count($workspaces));
-        $this->assertEquals('ws_2', $workspaces[0]['workspace']->getName());
-        $workspaces = self::$repo->findLatestWorkspacesByUser(
-            self::get('john'),
-            ['ROLE_1']
-        );
-        $this->assertEquals(1, count($workspaces));
-        $this->assertEquals('ws_1', $workspaces[0]['workspace']->getName());
-    }
-
     public function testFindWorkspacesWithMostResources()
     {
         $workspaces = self::$repo->findWorkspacesWithMostResources(10);

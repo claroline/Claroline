@@ -13,12 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @EXT\Route("/notificationfollower")
- *
- * @todo rewrite using the new resource action system
  */
 class FollowerResourceController extends AbstractCrudController
 {
-    protected $manager;
+    /** @var NotificationManager */
+    private $manager;
 
     /**
      * @DI\InjectParams({
@@ -62,7 +61,7 @@ class FollowerResourceController extends AbstractCrudController
      */
     public function followerResourcesToggleAction($mode, User $user, Request $request)
     {
-        $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $nodes = $this->decodeIdsString($request, ResourceNode::class);
         $this->manager->toggleFollowResources($user, $nodes, $mode);
 
         return new JsonResponse(array_map(function (ResourceNode $resourceNode) {

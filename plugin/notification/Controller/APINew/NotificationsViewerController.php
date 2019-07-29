@@ -11,69 +11,152 @@
 
 namespace  Icap\NotificationBundle\Controller\APINew;
 
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Entity\NotificationViewer;
+use Icap\NotificationBundle\Manager\NotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/notifications")
+ * @EXT\Route("/notifications")
  */
-class NotificationsViewerController extends AbstractCrudController
+class NotificationsViewerController
 {
+    use RequestDecoderTrait;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var FinderProvider */
+    private $finder;
+
+    /** @var Crud */
+    private $crud;
+
+    /** @var NotificationManager */
+    private $notificationManager;
+
     /**
+     * NotificationsViewerController constructor.
+     *
      * @DI\InjectParams({
-     *    "tokenStorage" = @DI\Inject("security.token_storage"),
-     *    "finder"       = @DI\Inject("claroline.api.finder")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "finder"              = @DI\Inject("claroline.api.finder"),
+     *     "crud"                = @DI\Inject("claroline.api.crud"),
+     *     "notificationManager" = @DI\Inject("icap.notification.manager")
      * })
      *
-     * @param StrictDispatcher $eventDispatcher
-     * @param MailManager      $mailManager
+     * @param ObjectManager       $om
+     * @param FinderProvider      $finder
+     * @param Crud                $crud
+     * @param NotificationManager $notificationManager
      */
     public function __construct(
-        $tokenStorage,
-        $finder
+        ObjectManager $om,
+        FinderProvider $finder,
+        Crud $crud,
+        NotificationManager $notificationManager
     ) {
-        $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
         $this->finder = $finder;
-    }
-
-    public function getName()
-    {
-        return 'notifications';
+        $this->crud = $crud;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
-     * @EXT\Route(
-     *    "/current",
-     *    name="apiv2_get_notifications_current",
-     *    options={ "method_prefix" = false }
-     * )
+     * @EXT\Route("/", name="apiv2_user_notifications_list")
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Method("GET")
+     *
+     * @param User    $user
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listAction(User $user, Request $request)
+    {
+        return new JsonResponse(
+            $this->finder->search(NotificationViewer::class, array_merge($request->query->all(), [
+                'hiddenFilters' => ['user' => $user->getId()],
+            ]))
+        );
+    }
+
+    /**
+     * @EXT\Route("/unread/count", name="apiv2_user_notifications_count")
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * @param User $user
+     *
+     * @return JsonResponse
+     */
+    public function countUnreadAction(User $user)
+    {
+        return new JsonResponse(
+            $this->notificationManager->countUnviewedNotifications($user)
+        );
+    }
+
+    /**
+     * @EXT\Route("/read", name="apiv2_user_notifications_read")
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
      * @return JsonResponse
-     *
-     * find notifications here
      */
-    public function getCurrent(Request $request)
+    public function markAsReadAction(Request $request)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $filters = [
-          'user' => $user->getId(),
-        ];
+        $this->notificationManager->markNotificationsAsViewed($request->query->get('ids'));
 
-        return new JsonResponse(
-          $this->finder->search(NotificationViewer::class,
-          array_merge($request->query->all(), ['hiddenFilters' => $filters]))
-        );
+        return new JsonResponse(null, 204);
     }
 
-    public function getClass()
+    /**
+     * @EXT\Route("/unread", name="apiv2_user_notifications_unread")
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function markAsUnreadAction(Request $request)
     {
-        return NotificationViewer::class;
+        $this->notificationManager->markNotificationsAsUnviewed($request->query->get('ids'));
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @EXT\Route("/", name="apiv2_user_notifications_delete")
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Method("DELETE")
+     *
+     * @param User    $user
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function deleteAction(User $user, Request $request)
+    {
+        /** @var NotificationViewer[] $notifications */
+        $notifications = $this->decodeIdsString($request, NotificationViewer::class);
+        foreach ($notifications as $notification) {
+            if ($notification->getViewerId() === $user->getId()) {
+                $this->om->remove($notification);
+            }
+        }
+
+        $this->om->flush();
+
+        return new JsonResponse(null, 204);
     }
 }

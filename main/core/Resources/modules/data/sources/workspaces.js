@@ -1,6 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
+import {route} from '#/main/core/workspace/routing'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
 
 export default {
@@ -9,9 +10,7 @@ export default {
   parameters: {
     primaryAction: (workspace) => ({
       type: URL_BUTTON,
-      target: ['claro_workspace_open', {
-        workspaceId: workspace.id
-      }]
+      target: `#${route(workspace)}`
     }),
     definition: [
       {

@@ -28,17 +28,17 @@
     flex-direction: row;
     align-items: stretch;
 
-    .dropdown-menu {
-        margin-top: 0;
-        .border-top-radius(0);
-    }
-
-    .dropdown {
+    > .dropdown {
         display: flex;
-        //justify-content: center;
-        //align-items: stretch;
+        justify-content: center;
+        align-items: stretch;
 
-        &.open .dropdown-toggle {
+        > .dropdown-menu {
+            margin-top: 0;
+            .border-top-radius(0);
+        }
+
+        &.open > .dropdown-toggle {
             &,
             &:hover,
             &:focus {
@@ -200,6 +200,26 @@
         }
     }
 
+    .app-header-dropdown-empty {
+        padding: 15px;
+        text-align: center;
+        font-family: @headings-font-family;
+        font-weight: bold;
+
+        > small {
+            display: block;
+            margin-top: 5px;
+            font-family: @font-family-base;
+            font-weight: normal;
+            font-style: italic;
+        }
+    }
+
+    .app-header-dropdown-footer {
+        background: @panel-footer-bg;
+        border-top: 1px solid @list-group-border;
+    }
+
     .alert {
         font-weight: bold;
         border-radius: 0;
@@ -282,14 +302,47 @@
     flex: 1;
     font-size: @font-size-large;
     display: flex;
-    align-items: center;
+    align-items: stretch;
+
+    .dropdown {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dropdown-menu {
+        padding: 0;
+    }
 
     .form-control {
-        width: 50%;
         font-family: @headings-font-family;
         color: @top-bar-link-color;
         background: #393939;
         border-color: transparent;
         box-shadow: none;
+    }
+
+    .result-header {
+        color: @brand-primary;
+        font-weight: bold;
+        padding: 10px;
+        margin: 0;
+        font-style: italic;
+        background: @panel-default-heading-bg;
+        border-top: 1px solid @data-card-border;
+        border-bottom: 1px solid @data-card-border;
+
+        &:first-child {
+            border-top: none;
+        }
+    }
+}
+
+@media (max-width: @screen-sm-max) {
+    .app-header-search {
+        .dropdown {
+            width: 100%;
+        }
     }
 }

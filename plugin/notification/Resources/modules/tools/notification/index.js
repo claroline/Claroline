@@ -1,8 +1,8 @@
-import {reducer} from '#/plugin/notification/tools/notification/store/reducer'
-import {List} from '#/plugin/notification/tools/notification/components/notifications'
+import {reducer} from '#/plugin/notification/tools/notification/store'
+import {NotificationTool} from '#/plugin/notification/tools/notification/containers/tool'
 
 export default {
-  component: List,
+  component: NotificationTool,
   store: reducer,
   styles: []
 }
