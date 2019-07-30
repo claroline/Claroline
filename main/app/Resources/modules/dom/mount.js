@@ -1,8 +1,6 @@
 import {createElement} from 'react'
 import {render, unmountComponentAtNode} from 'react-dom'
 
-// TODO : move in dom module
-
 // todo : find where I must put it
 // (I put it here for now because it's the root of all apps)
 // this give the source paths to webpack for dynamic loading
@@ -19,6 +17,11 @@ if ('development' === env()) {
 import {createStore} from '#/main/app/store'
 import {Main} from '#/main/app/components/main'
 
+// config
+import {reducer as configReducer, selectors as configSelectors} from '#/main/app/config/store'
+// security
+import {reducer as securityReducer, selectors as securitySelectors} from '#/main/app/security/store'
+
 /**
  * Mounts a new React/Redux app into the DOM.
  *
@@ -27,8 +30,13 @@ import {Main} from '#/main/app/components/main'
  * @param {object}      reducers      - an object containing the reducers of the app.
  * @param {object}      initialData   - the data to preload in store on app mount.
  * @param {boolean}     embedded      - is the mounted app is mounted into another ?
+ * @param {string}      defaultPath   - the path to match when mounting the router.
  */
-function mount(container, rootComponent, reducers = {}, initialData = {}, embedded = false) {
+function mount(container, rootComponent, reducers = {}, initialData = {}, embedded = false, defaultPath = '') {
+  // append base app reducers
+  reducers[configSelectors.STORE_NAME] = configReducer
+  reducers[securitySelectors.STORE_NAME] = securityReducer
+
   // create store
   // we initialize a new store even if the mounted app does not declare reducers
   // we have dynamic reducers which can be added during runtime and they will be fucked up
@@ -38,7 +46,8 @@ function mount(container, rootComponent, reducers = {}, initialData = {}, embedd
   const appRoot = createElement(
     Main, {
       store: store,
-      embedded: embedded
+      embedded: embedded,
+      defaultPath: defaultPath
     },
     createElement(rootComponent)
   )

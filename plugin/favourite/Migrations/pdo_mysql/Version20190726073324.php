@@ -15,9 +15,6 @@ class Version20190726073324 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE hevinci_favourite CHANGE resource_node_id resource_node_id INT NOT NULL
-        ');
-        $this->addSql('
             ALTER TABLE claro_workspace_favourite 
             DROP FOREIGN KEY FK_711A30BA76ED395
         ');
@@ -86,9 +83,6 @@ class Version20190726073324 extends AbstractMigration
             ADD CONSTRAINT FK_711A30B82D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
             ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE hevinci_favourite CHANGE resource_node_id resource_node_id INT DEFAULT NULL
         ');
     }
 }

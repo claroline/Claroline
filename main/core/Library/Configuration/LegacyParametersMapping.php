@@ -65,7 +65,7 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'footer_login' => 'display.footer_login',
             'footer_workspaces' => 'display.footer_workspaces',
             'header_locale' => 'display.header_locale',
-            'header_menu' => 'workspaces',
+            'header_menu' => 'header_menu',
             'portfolio_url' => 'portfolio.url',
             'max_storage_size' => 'workspace.max_storage_size',
             'max_upload_resources' => 'workspace.max_upload_resources',

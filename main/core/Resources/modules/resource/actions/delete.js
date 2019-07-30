@@ -22,9 +22,9 @@ export default (resourceNodes, nodesRefresher) => ({
   displayed: -1 !== resourceNodes.findIndex(node => !isEmpty(node.parent)),
   dangerous: true,
   confirm: {
-    title: transChoice('resources_delete_confirm', resourceNodes.length),
+    title: transChoice('resources_delete_confirm', resourceNodes.length, {}, 'resource'),
     subtitle: 1 === resourceNodes.length ? resourceNodes[0].name : transChoice('count_elements', resourceNodes.length, {count: resourceNodes.length}),
-    message: transChoice('resources_delete_message', resourceNodes.length, {count: resourceNodes.length}),
+    message: transChoice('resources_delete_message', resourceNodes.length, {count: resourceNodes.length}, 'resource'),
     additional: [
       createElement('div', {
         key: 'additional',

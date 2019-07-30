@@ -23,7 +23,7 @@ const EditorMain = withRouter(
       currentTabTitle: editorSelectors.currentTabTitle(state),
       currentTab: editorSelectors.currentTab(state)
     }),
-    (dispatch, ownProps) => ({
+    (dispatch) => ({
       setCurrentTab(tab){
         dispatch(actions.setCurrentTab(tab))
       },
@@ -34,8 +34,8 @@ const EditorMain = withRouter(
       setErrors(errors) {
         dispatch(formActions.setErrors(editorSelectors.FORM_NAME, errors))
       },
-      createTab(context, administration, position, navigate) {
-        dispatch(editorActions.createTab(context, administration, position, ownProps.currentUser, (path) => navigate(ownProps.path+path)))
+      createTab(context, administration, currentUser, position, navigate) {
+        dispatch(editorActions.createTab(context, administration, position, currentUser, navigate))
       },
       moveTab(tabs, currentTab, newPosition) {
         dispatch(editorActions.moveTab(tabs, currentTab, newPosition))
@@ -47,7 +47,7 @@ const EditorMain = withRouter(
         dispatch(editorActions.deleteTab(tabs, currentTab))
         const redirected = tabs[tabIndex]
         // redirect
-        navigate(ownProps.path + '/edit/' + redirected.id)
+        navigate('/edit/' + redirected.id)
       }
     })
   )(EditorMainComponent)

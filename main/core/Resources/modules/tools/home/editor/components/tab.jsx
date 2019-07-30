@@ -13,9 +13,11 @@ import {
 } from '#/main/core/layout/page'
 import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_WALKTHROUGHS} from '#/main/app/overlays/walkthrough/modals/walkthroughs'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {getWalkthroughs} from '#/main/core/tools/home/walkthroughs'
+import {WidgetGrid} from '#/main/core/widget/player/components/grid'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {Tabs} from '#/main/core/tools/home/components/tabs'
@@ -39,7 +41,7 @@ const EditorTab = props =>
       <Tabs
         prefix={`${props.path}/edit`}
         tabs={props.tabs}
-        create={() => props.createTab(props.currentContext, props.administration, props.tabs.length, props.history.push)}
+        create={() => props.createTab(props.currentContext, props.administration, props.currentUser, props.tabs.length, (path) => props.history.push(props.path+path))}
         currentContext={props.currentContext}
         editing={true}
       />
@@ -51,7 +53,6 @@ const EditorTab = props =>
             label={trans('configure', {}, 'actions')}
             icon="fa fa-fw fa-cog"
             target={`${props.path}/edit`}
-            disabled={true}
             primary={true}
           />
         </PageGroupActions>
@@ -73,12 +74,12 @@ const EditorTab = props =>
                 icon: 'fa fa-fw fa-trash-o',
                 dangerous: true,
                 confirm: {
-                  title: trans('home_tab_delete_confirm_title'),
-                  message: trans('home_tab_delete_confirm_message'),
+                  title: trans('home_tab_delete_confirm_title', {}, 'home'),
+                  message: trans('home_tab_delete_confirm_message', {}, 'home'),
                   subtitle: props.currentTab && props.currentTab.title
                 },
                 disabled: props.readOnly || 1 >= props.tabs.length,
-                callback: () => props.deleteTab(props.tabs, props.currentTab, props.history.push)
+                callback: () => props.deleteTab(props.tabs, props.currentTab, (path) => props.history.push(props.path+path))
               }
             ]}
           />
@@ -87,21 +88,38 @@ const EditorTab = props =>
     </PageHeader>
 
     <PageContent>
-      <EditorForm
-        path={props.path}
-        currentUser={props.currentUser}
-        currentContext={props.currentContext}
-        currentTabIndex={props.currentTabIndex}
-        currentTab={props.currentTab}
-        widgets={props.widgets}
-        administration={props.administration}
-        readOnly={props.readOnly}
-        tabs={props.tabs}
+      {props.readOnly &&
+        <AlertBlock
+          type="warning"
+          title={trans('home_tab_locked', {}, 'home')}
+        >
+          {trans('home_tab_locked_message', {}, 'home')}
+        </AlertBlock>
+      }
 
-        update={props.updateTab}
-        move={props.moveTab}
-        setErrors={props.setErrors}
-      />
+      {props.readOnly &&
+        <WidgetGrid
+          currentContext={props.currentContext}
+          widgets={props.widgets}
+        />
+      }
+
+      {!props.readOnly &&
+        <EditorForm
+          path={props.path}
+          currentUser={props.currentUser}
+          currentContext={props.currentContext}
+          currentTabIndex={props.currentTabIndex}
+          currentTab={props.currentTab}
+          widgets={props.widgets}
+          administration={props.administration}
+          tabs={props.tabs}
+
+          update={props.updateTab}
+          move={props.moveTab}
+          setErrors={props.setErrors}
+        />
+      }
     </PageContent>
   </PageSimple>
 

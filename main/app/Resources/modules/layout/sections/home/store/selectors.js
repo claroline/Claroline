@@ -5,7 +5,7 @@ import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 import {constants} from '#/main/app/layout/sections/home/constants'
 
 const home = createSelector(
-  [configSelectors.store],
+  [configSelectors.config],
   (store) => store.home
 )
 

@@ -8,20 +8,26 @@ import {
 const Router = props => {
   if (!props.embedded) {
     return (
-      <HashRouter>
+      <HashRouter basename={props.basename}>
         {props.children}
       </HashRouter>
     )
   }
 
   return (
-    <MemoryRouter>
+    <MemoryRouter
+      initialEntries={props.basename ? [
+        props.basename
+      ] : undefined}
+      initialIndex={props.basename ? 0 : undefined}
+    >
       {props.children}
     </MemoryRouter>
   )
 }
 
 Router.propTypes = {
+  basename: T.string,
   children: T.node.isRequired,
   embedded: T.bool
 }

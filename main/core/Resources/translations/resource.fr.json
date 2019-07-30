@@ -38,5 +38,7 @@
     "restricted_access_message": "Vous ne pouvez pas accéder à cette ressource car toutes les conditions d'accès ne sont pas satisfaites.",
     "text": "Texte",
     "text_desc": "Permet de rédiger un texte riche (lien, image, vidéo) directement dans la plateforme.",
-    "video": "Vidéo"
+    "video": "Vidéo",
+    "resources_delete_confirm": "{1} Suppression d'une ressource | [2,Inf[ Suppression de ressources",
+    "resources_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette ressource ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% ressources ?"
 }

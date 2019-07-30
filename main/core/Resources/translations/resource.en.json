@@ -38,5 +38,7 @@
     "restricted_access_message": "You can not access this resource because all access conditions are not met.",
     "text": "Text",
     "text_desc": "Allow to edit a rich text (link, image, video) directly on the platform.",
-    "video": "Video"
+    "video": "Video",
+    "resources_delete_confirm": "{1} Resource deletion | [2,Inf[ Resources deletion",
+    "resources_delete_message": "{1} Are you sure you want to delete this resource? | [2,Inf[ Are you sure you want to delete these %count% resources?"
 }

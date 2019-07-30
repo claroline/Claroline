@@ -40,7 +40,7 @@ actions.deleteTab = (tabs, tabToDelete) => (dispatch) => {
   newTabs.splice(tabIndex, 1)
 
   // inject updated data into the form
-  dispatch(formActions.update('editor', newTabs
+  dispatch(formActions.update(selectors.FORM_NAME, newTabs
     // recalculate tabs positions
     .sort((a,b) => a.position - b.position)
     .map((tab, index) => merge({}, tab, {
@@ -64,7 +64,7 @@ actions.moveTab = (tabs, tabToMove, newPosition) => (dispatch) => {
       }))
   }
 
-  dispatch(formActions.update('editor', [merge({}, tabToMove, {position: newPosition})]
+  dispatch(formActions.update(selectors.FORM_NAME, [merge({}, tabToMove, {position: newPosition})]
     .concat(newTabs)
     .sort((a,b) => a.position - b.position)
     .map((tab, index) => merge({}, tab, {

@@ -1018,8 +1018,6 @@
     "resource_to_open": "Resource to open",
     "resource_type": "Resource type",
     "resources": "Resources",
-    "resources_delete_confirm": "{1} Resource deletion | [2,Inf[ Resources deletion",
-    "resources_delete_message": "{1} Are you sure you want to delete this resource? | [2,Inf[ Are you sure you want to delete these %count% resources?",
     "resources_most_downloaded": "Most downloaded resources",
     "resources_usage_list": "Resources usage list",
     "resources_usage_ratio": "Resources usage ratio",

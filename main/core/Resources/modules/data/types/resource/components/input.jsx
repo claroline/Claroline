@@ -5,11 +5,11 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
+import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
@@ -42,8 +42,8 @@ const ResourceInput = props => {
             label: trans('delete', {}, 'actions'),
             dangerous: true,
             modal: [MODAL_CONFIRM, {
-              title: transChoice('resources_delete_confirm', 1),
-              question: transChoice('resources_delete_message', 1, {count: 1}),
+              title: transChoice('resources_delete_confirm', 1, {}, 'resource'),
+              question: transChoice('resources_delete_message', 1, {count: 1}, 'resource'),
               handleConfirm: () => props.onChange(null)
             }]
           }
@@ -61,8 +61,8 @@ const ResourceInput = props => {
           modal={[MODAL_CONFIRM, {
             dangerous: true,
             icon: 'fa fa-fw fa-trash-o',
-            title: transChoice('resources_delete_confirm', 1),
-            question: transChoice('resources_delete_message', 1, {count: 1}),
+            title: transChoice('resources_delete_confirm', 1, {}, 'resource'),
+            question: transChoice('resources_delete_message', 1, {count: 1}, 'resource'),
             handleConfirm: () => props.onChange(null)
           }]}
         >

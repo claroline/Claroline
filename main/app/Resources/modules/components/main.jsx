@@ -21,7 +21,7 @@ const Main = props =>
       <FileDrop>
         <AlertOverlay key="alert" />
 
-        <Router embedded={props.embedded}>
+        <Router basename={props.defaultPath} embedded={props.embedded}>
           {props.children}
         </Router>
 
@@ -34,6 +34,7 @@ const Main = props =>
   </Provider>
 
 Main.propTypes = {
+  defaultPath: T.string,
   embedded: T.bool,
   store: T.object.isRequired,
   children: T.any

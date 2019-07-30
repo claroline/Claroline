@@ -15,7 +15,7 @@ class ResourceFavourite extends AbstractFavourite
 {
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_node_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="resource_node_id", onDelete="CASCADE")
      *
      * @var ResourceNode
      */

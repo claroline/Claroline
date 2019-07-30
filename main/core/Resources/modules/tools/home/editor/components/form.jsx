@@ -18,24 +18,18 @@ const EditorForm = props =>
     name={selectors.FORM_NAME}
     dataPart={`[${props.currentTabIndex}]`}
     buttons={true}
-    lock={{
-      id: props.currentTab ? props.currentTab.id: null,
-      className:'Claroline\\CoreBundle\\Entity\\Tab\\HomeTab'
-    }}
+    lock={props.currentTab ? {
+      id: props.currentTab.id,
+      className: 'Claroline\\CoreBundle\\Entity\\Tab\\HomeTab'
+    } : undefined}
     disabled={props.readOnly}
-    target={props.administration ?
-      ['apiv2_home_admin', {
-        context: props.currentContext.type,
-        contextId: props.currentContext.data ? props.currentContext.data.uuid : get(props.currentUser, 'id')
-      }] :
-      ['apiv2_home_update', {
-        context: props.currentContext.type,
-        contextId: props.currentContext.data ? props.currentContext.data.uuid : get(props.currentUser, 'id')
-      }]
-    }
+    target={[props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
+      context: props.currentContext.type,
+      contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.uuid : get(props.currentUser, 'id')
+    }]}
     cancel={{
       type: LINK_BUTTON,
-      target: `${props.path}/${props.currentTab.id}`,
+      target: `${props.path}/${props.currentTab ? props.currentTab.id : ''}`,
       exact: true
     }}
     sections={[

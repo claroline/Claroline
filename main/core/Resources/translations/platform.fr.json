@@ -1041,8 +1041,6 @@
     "resource_to_open": "Ressource à ouvrir",
     "resource_type": "Type de ressource",
     "resources": "Ressources",
-    "resources_delete_confirm": "{1} Suppression d'une ressource | [2,Inf[ Suppression de ressources",
-    "resources_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette ressource ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% ressources ?",
     "resources_most_downloaded": "Ressources les plus téléchargées",
     "resources_usage_list": "Liste d'utilisation des ressources",
     "resources_usage_ratio": "Taux d'utilisation des ressources",

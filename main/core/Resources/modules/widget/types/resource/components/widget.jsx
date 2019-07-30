@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
-import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
+import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 const ResourceWidget = props => {

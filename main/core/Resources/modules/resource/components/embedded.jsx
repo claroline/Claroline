@@ -4,6 +4,12 @@ import classes from 'classnames'
 
 import {mount, unmount} from '#/main/app/dom/mount'
 
+import {selectors as configSelectors} from '#/main/app/config/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+
+// tool
+import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/tool/store'
+
 import {ResourceMain} from '#/main/core/resource/containers/main'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
@@ -20,9 +26,7 @@ class ResourceEmbedded extends Component {
       unmount(this.mountNode)
       this.props.onResourceClose(prevProps.resourceNode.id)
 
-      // FIXME : otherwise the new app is not correctly booted and I don't know why
-      setTimeout(this.mountResource.bind(this), 0)
-      //this.mountResource()
+      this.mountResource()
     }
   }
 
@@ -33,14 +37,30 @@ class ResourceEmbedded extends Component {
   }
 
   mountResource() {
-    // cloneElement(ResourceApp.component, {resourceId: this.props.resourceNode.id, path: ''})
-
-    mount(this.mountNode, ResourceMain, {}, {
-      resourceNode: this.props.resourceNode,
-      embedded: true,
-      showHeader: this.props.showHeader,
-      lifecycle: this.props.lifecycle
-    }, true)
+    mount(this.mountNode, ResourceMain, {
+      // add app required stores
+      [toolSelectors.STORE_NAME]: toolReducer
+    }, {
+      [securitySelectors.STORE_NAME]: {
+        currentUser: this.props.currentUser,
+        impersonated: this.props.impersonated
+      },
+      [configSelectors.STORE_NAME]: this.props.config,
+      tool: {
+        loaded: true,
+        name: 'resource_manager',
+        basePath: '',
+        currentContext: {
+          type: 'desktop'
+        }
+      },
+      resource: {
+        id: this.props.resourceNode.id,
+        embedded: true,
+        showHeader: this.props.showHeader,
+        lifecycle: this.props.lifecycle
+      }
+    }, true, `/resource_manager/${this.props.resourceNode.id}`)
   }
 
   render() {
@@ -64,7 +84,12 @@ ResourceEmbedded.propTypes = {
     end: T.func,
     close: T.func
   }),
-  onResourceClose: T.func.isRequired
+  onResourceClose: T.func.isRequired,
+
+  // from store (to build the embedded store)
+  currentUser: T.object,
+  impersonated: T.bool,
+  config: T.object
 }
 
 ResourceEmbedded.defaultProps = {
