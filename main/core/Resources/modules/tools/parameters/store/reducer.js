@@ -10,7 +10,14 @@ const reducer = combineReducers({
   tools: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.tools
   }),
-  toolsConfig: makeFormReducer(selectors.STORE_NAME+'.toolsConfig'),
+  toolsConfig: makeFormReducer(selectors.STORE_NAME+'.toolsConfig', {}, {
+    originalData: makeReducer([], {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.toolsConfig
+    }),
+    data: makeReducer([], {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.toolsConfig
+    })
+  }),
   tokens: tokenReducer
 })
 

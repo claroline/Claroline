@@ -21,7 +21,7 @@ const ToolComponent = (props) =>
     target={['apiv2_desktop_tools_configure']}
     sections={[]}
   >
-    <div className="list-group" fill={true}>
+    <div className="list-group">
       {props.tools
         .filter(t => !props.toolsConfig[t.name] || props.toolsConfig[t.name]['visible'] || !props.toolsConfig[t.name]['locked'])
         .map(tool =>
