@@ -30,6 +30,12 @@ const ParametersMenu = (props) =>
           label: trans('home'),
           target: props.path+'/home'
         }, {
+          name: 'messages',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-comment-dots',
+          label: trans('connection_messages'),
+          target: props.path+'/messages'
+        }, {
           name: 'i18n',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-language',

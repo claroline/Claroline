@@ -24,12 +24,12 @@ const reducer = combineReducers({
     [PLUGINS_LOAD]: (state, action) => action.plugins
   }),
   messages: combineReducers({
-    list: makeListReducer('messages.list', {}, {
+    list: makeListReducer(selectors.STORE_NAME+'.messages.list', {}, {
       invalidated: makeReducer(false, {
-        [FORM_SUBMIT_SUCCESS+'/messages.current']: () => true
+        [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.messages.current']: () => true
       })
     }),
-    current: makeFormReducer('messages.current')
+    current: makeFormReducer(selectors.STORE_NAME+'.messages.current')
   })
 })
 

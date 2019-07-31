@@ -1442,6 +1442,7 @@
     "restrict_by_dates": "Restrict by dates",
     "restrict_by_ips": "Restrict by IPs",
     "restrict_by_code": "Restrict by code",
+    "restrict_by_roles": "Restrict by roles",
     "rich_text_tools": "Rich text tools",
     "minimize": "Minimize",
     "display_parameters": "Display parameters",

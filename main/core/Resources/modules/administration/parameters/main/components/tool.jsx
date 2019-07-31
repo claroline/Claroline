@@ -17,13 +17,14 @@ import {Message} from '#/main/core/administration/parameters/main/components/mes
 
 const ParametersTool = (props) =>
   <ToolPage
-    actions={'/messages' === props.location.pathname ? [
+    className="main-settings-container"
+    actions={props.path+'/messages' === props.location.pathname ? [
       {
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_connection_message'),
-        target: '/messages/form',
+        target: props.path+'/messages/form',
         primary: true
       }
     ] : []}
@@ -67,7 +68,15 @@ const ParametersTool = (props) =>
         }, {
           path: '/messages',
           exact: true,
-          component: Messages
+          render() {
+            const MessagesList = (
+              <Messages
+                path={props.path}
+              />
+            )
+
+            return MessagesList
+          }
         }, {
           path: '/messages/form/:id?', // TODO : should be declared in messages submodule
           component: Message,

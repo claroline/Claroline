@@ -14,6 +14,8 @@ import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
+// TODO : manage disabled state
+
 const ResourceInput = props => {
   if (!isEmpty(props.value) && !props.embedded) {
     return(

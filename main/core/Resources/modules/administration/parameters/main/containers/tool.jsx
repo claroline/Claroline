@@ -4,7 +4,7 @@ import {withRouter} from '#/main/app/router'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {ConnectionMessage as ConnectionMessageType} from '#/main/core/administration/parameters/main/prop-types'
-import {actions} from '#/main/core/administration/parameters/main/store'
+import {actions, selectors} from '#/main/core/administration/parameters/main/store'
 import {ParametersTool as ParametersToolComponent} from '#/main/core/administration/parameters/main/components/tool'
 
 const ParametersTool = withRouter(connect(
@@ -14,10 +14,10 @@ const ParametersTool = withRouter(connect(
       const defaultProps = Object.assign({}, ConnectionMessageType.defaultProps, {
         id: makeId()
       })
-      dispatch(actions.openConnectionMessageForm('messages.current', defaultProps, id))
+      dispatch(actions.openConnectionMessageForm(selectors.STORE_NAME+'.messages.current', defaultProps, id))
     },
     resetConnectionMessageFrom() {
-      dispatch(actions.resetForm('messages.current'))
+      dispatch(actions.resetForm(selectors.STORE_NAME+'.messages.current'))
     }
   })
 )(ParametersToolComponent))

@@ -4,19 +4,19 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {selectors} from '#/main/core/administration/parameters/main/store/selectors'
 import {constants} from '#/main/core/administration/parameters/main/constants'
 
-const Messages = () =>
+const Messages = (props) =>
   <ListData
-    name="messages.list"
-    title={trans('connection_messages')}
+    name={selectors.STORE_NAME+'.messages.list'}
     fetch={{
       url: ['apiv2_connectionmessage_list'],
       autoload: true
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `/messages/form/${row.id}`,
+      target: `${props.path}/messages/form/${row.id}`,
       label: trans('edit', {}, 'actions')
     })}
     actions={(rows) => [
@@ -25,7 +25,7 @@ const Messages = () =>
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit'),
         scope: ['object'],
-        target: `messages/form/${rows[0].id}`,
+        target: `${props.path}/messages/form/${rows[0].id}`,
         displayed: !rows[0].locked
       }
     ]}

@@ -4,12 +4,12 @@ namespace Claroline\CoreBundle\API\Serializer\ConnectionMessage;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\ConnectionMessage\Slide;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -23,8 +23,8 @@ class ConnectionMessageSerializer
     /** @var ObjectManager */
     private $om;
 
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var RoleSerializer */
+    private $roleSerializer;
 
     private $roleRepo;
     private $slideRepo;
@@ -33,17 +33,19 @@ class ConnectionMessageSerializer
      * ConnectionMessageSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleSerializer" = @DI\Inject("claroline.serializer.role")
      * })
      *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * @param ObjectManager  $om
+     * @param RoleSerializer $roleSerializer
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
-    {
+    public function __construct(
+        ObjectManager $om,
+        RoleSerializer $roleSerializer
+    ) {
         $this->om = $om;
-        $this->serializer = $serializer;
+        $this->roleSerializer = $roleSerializer;
 
         $this->roleRepo = $om->getRepository(Role::class);
         $this->slideRepo = $om->getRepository(Slide::class);
@@ -81,21 +83,32 @@ class ConnectionMessageSerializer
             'type' => $message->getType(),
             'locked' => $message->isLocked(),
             'restrictions' => [
-                'dates' => [
-                    DateNormalizer::normalize($message->getAccessibleFrom()),
-                    DateNormalizer::normalize($message->getAccessibleUntil()),
-                ],
+                'dates' => DateRangeNormalizer::normalize(
+                    $message->getAccessibleFrom(),
+                    $message->getAccessibleUntil()
+                ),
             ],
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'slides' => array_values(array_map(function (Slide $slide) {
-                    return $this->serializer->serialize($slide, [Options::SERIALIZE_MINIMAL]);
+                    return [
+                        'id' => $slide->getUuid(),
+                        'title' => $slide->getTitle(),
+                        'content' => $slide->getContent(),
+                        'poster' => $slide->getPoster() ? [
+                            'url' => $slide->getPoster(),
+                            'mimeType' => 'image/*',
+                        ] : null,
+                        'order' => $slide->getOrder(),
+                    ];
                 }, $message->getSlides()->toArray())),
-                'roles' => array_values(array_map(function (Role $role) {
-                    return $this->serializer->serialize($role);
-                }, $message->getRoles()->toArray())),
+                'restrictions' => [
+                    'roles' => array_values(array_map(function (Role $role) {
+                        return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                    }, $message->getRoles()->toArray())),
+                ],
             ]);
         }
 
@@ -117,27 +130,29 @@ class ConnectionMessageSerializer
         $this->sipe('type', 'setType', $data, $message);
         $this->sipe('locked', 'setLocked', $data, $message);
 
-        $accessibleFrom = isset($data['restrictions']['dates'][0]) ?
-            DateNormalizer::denormalize($data['restrictions']['dates'][0]) :
-            null;
-        $accessibleUntil = isset($data['restrictions']['dates'][1]) ?
-            DateNormalizer::denormalize($data['restrictions']['dates'][1]) :
-            null;
-        $message->setAccessibleFrom($accessibleFrom);
-        $message->setAccessibleUntil($accessibleUntil);
+        if (isset($date['restrictions'])) {
+            if (isset($data['restrictions']['dates'])) {
+                $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 
-        $message->emptyRoles();
+                $message->setAccessibleFrom($dateRange[0]);
+                $message->setAccessibleUntil($dateRange[1]);
+            }
 
-        if (isset($data['roles'])) {
-            foreach ($data['roles'] as $roleData) {
-                $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
+            $message->emptyRoles();
+            if (isset($data['restrictions']['roles'])) {
+                foreach ($data['roles'] as $roleData) {
+                    /** @var Role $role */
+                    $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
 
-                if (!empty($role)) {
-                    $message->addRole($role);
+                    if (!empty($role)) {
+                        $message->addRole($role);
+                    }
                 }
             }
         }
+
         if (isset($data['slides'])) {
+            /** @var Slide[] $oldSlides */
             $oldSlides = $message->getSlides()->toArray();
             $newSlidesIds = [];
 
@@ -152,7 +167,7 @@ class ConnectionMessageSerializer
                 $slide->setOrder($slideOrder);
                 $this->sipe('content', 'setContent', $slideData, $slide);
                 $this->sipe('title', 'setTitle', $slideData, $slide);
-                $this->sipe('picture.url', 'setPicture', $slideData, $slide);
+                $this->sipe('poster.url', 'setPoster', $slideData, $slide);
 
                 $this->om->persist($slide);
 
