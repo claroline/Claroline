@@ -18,7 +18,7 @@ const NotificationsMenu = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       countNotifications() {
-        dispatch(actions.countNotifications())
+        return dispatch(actions.countNotifications())
       },
       getNotifications() {
         dispatch(actions.getNotifications())

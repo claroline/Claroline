@@ -62,6 +62,8 @@ class NotificationsMenu extends Component {
       opened: false
     }
 
+    this.count = this.count.bind(this)
+
     if (this.props.isAuthenticated) {
       this.count()
     }
@@ -83,14 +85,16 @@ class NotificationsMenu extends Component {
 
   count() {
     this.props.countNotifications()
-    if (this.props.refreshDelay) {
-      this.counter = setInterval(this.props.countNotifications, this.props.refreshDelay)
-    }
+      .then(() => {
+        if (this.props.refreshDelay) {
+          this.counter = setTimeout(this.count, this.props.refreshDelay)
+        }
+      })
   }
 
   stopCount() {
     if (this.counter) {
-      clearInterval(this.counter)
+      clearTimeout(this.counter)
     }
   }
 
