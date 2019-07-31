@@ -312,7 +312,7 @@ class WorkspaceSerializer
 
         return [
             'color' => !empty($options['background_color']) ? $options['background_color'] : null,
-            'showTools' => !isset($options['hide_tools_menu']) || !$options['hide_tools_menu'],
+            'showMenu' => !isset($options['hide_tools_menu']) || !$options['hide_tools_menu'],
             'openResource' => $openResource,
         ];
     }
@@ -477,7 +477,7 @@ class WorkspaceSerializer
 
             if (isset($data['display'])) {
                 $details['background_color'] = !empty($data['display']['color']) ? $data['display']['color'] : null;
-                $details['hide_tools_menu'] = isset($data['display']['showTools']) ? !$data['display']['showTools'] : true;
+                $details['hide_tools_menu'] = isset($data['display']['showMenu']) ? !$data['display']['showMenu'] : true;
                 $details['use_workspace_opening_resource'] = !empty($data['display']['openResource']);
                 $details['workspace_opening_resource'] = !empty($data['display']['openResource']) && !empty($data['display']['openResource']['autoId']) ?
                     $data['display']['openResource']['autoId'] :

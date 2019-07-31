@@ -1,5 +1,8 @@
+import get from 'lodash/get'
+
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
+import {actions as menuActions} from '#/main/app/layout/menu/store/actions'
 
 import {selectors} from '#/main/core/workspace/store/selectors'
 
@@ -42,6 +45,12 @@ actions.open = (workspaceId) => (dispatch, getState) => {
           // it's done through another action (not WORKSPACE_LOAD) to be sure all reducers have been resolved
           // and store is up-to-date
           dispatch(actions.setLoaded(true))
+
+          if (get(response, 'workspace.display.showMenu')) {
+            dispatch(menuActions.open())
+          } else {
+            dispatch(menuActions.close())
+          }
         },
         error: (response, status, dispatch) => {
           switch (status) {

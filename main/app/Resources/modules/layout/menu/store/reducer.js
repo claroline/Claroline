@@ -1,12 +1,16 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {
+  MENU_OPEN,
+  MENU_CLOSE,
   MENU_TOGGLE,
   MENU_CHANGE_SECTION
 } from '#/main/app/layout/menu/store/actions'
 
 export const reducer = combineReducers({
   opened: makeReducer(true, {
+    [MENU_OPEN]: () => true,
+    [MENU_CLOSE]: () => false,
     [MENU_TOGGLE]: (state) => !state
   }),
   section: makeReducer(null, {

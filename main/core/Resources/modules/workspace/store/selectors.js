@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 
 const STORE_NAME = 'workspace'
 
-const store = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME] || {}
 
 const loaded = createSelector(
   [store],
