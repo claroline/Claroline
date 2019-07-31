@@ -20,7 +20,13 @@ const UserMenu = props =>
   <div className="app-header-dropdown app-current-user dropdown-menu dropdown-menu-right">
     <div className="app-header-dropdown-header">
       <div className="app-header-dropdown-icon">
-        <UserAvatar picture={props.currentUser.picture} alt={true} />
+        {props.authenticated &&
+          <UserAvatar picture={props.currentUser.picture} alt={true} />
+        }
+
+        {!props.authenticated &&
+          <span className="user-avatar fa fa-user-secret" />
+        }
       </div>
 
       <h2 className="h4">
@@ -173,8 +179,9 @@ const HeaderUser = props =>
     id="app-user"
     className="app-header-user app-header-item app-header-btn"
     type={MENU_BUTTON}
-    icon={
-      <UserAvatar picture={props.currentUser.picture} alt={false} />
+    icon={props.authenticated ?
+      <UserAvatar picture={props.currentUser.picture} alt={true} /> :
+      <span className="user-avatar fa fa-user-secret" />
     }
     label={props.authenticated ? props.currentUser.username : trans('login')}
     tooltip="bottom"

@@ -250,8 +250,20 @@
         color: @top-bar-link-color;
         // for picture
         max-height: 30px;
-        // for .fa when no picture
-        font-size: 30px;
+
+        &.fa {
+            background: @top-bar-link-color;
+            width: 30px;
+            height: 30px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: @top-bar-bg;
+            font-size: 24px;
+            padding-top: 6px;
+            border: 2px solid @top-bar-link-color;
+        }
     }
 }
 
