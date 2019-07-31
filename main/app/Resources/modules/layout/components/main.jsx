@@ -76,7 +76,7 @@ const LayoutMain = props =>
         <FooterMain />
       </div>
 
-      {props.authenticated &&
+      {false && props.authenticated &&
         <LayoutToolbar
           opened={props.sidebar}
           open={props.openSidebar}
@@ -84,7 +84,7 @@ const LayoutMain = props =>
       }
     </div>
 
-    {(props.authenticated && props.sidebar) &&
+    {(false && props.authenticated && props.sidebar) &&
       <LayoutSidebar
         close={props.closeSidebar}
       />
