@@ -15,14 +15,7 @@ const HomeContent = props => {
 
     case 'tool':
       return (
-        <ToolMain
-          toolName="home"
-          toolContext={{
-            type: 'home', // TODO : use var
-            url: ['apiv2_home'],
-            data: {}
-          }}
-        />
+        <ToolMain />
       )
   }
 

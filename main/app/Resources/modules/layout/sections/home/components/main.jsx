@@ -32,6 +32,7 @@ const HomeMain = (props) =>
       }, {
         path: '/home',
         disabled: !props.hasHome,
+        onEnter: () => props.openHome(props.homeType),
         render: () => {
           const Home = (
             <HomeContent
@@ -51,7 +52,8 @@ HomeMain.propTypes = {
   isAuthenticated: T.bool.isRequired,
   hasHome: T.bool.isRequired,
   homeType: T.string.isRequired,
-  homeData: T.string
+  homeData: T.string,
+  openHome: T.func.isRequired
 }
 
 export {

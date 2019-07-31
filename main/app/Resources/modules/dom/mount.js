@@ -21,6 +21,8 @@ import {Main} from '#/main/app/components/main'
 import {reducer as configReducer, selectors as configSelectors} from '#/main/app/config/store'
 // security
 import {reducer as securityReducer, selectors as securitySelectors} from '#/main/app/security/store'
+// tool
+import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/tool/store'
 
 /**
  * Mounts a new React/Redux app into the DOM.
@@ -36,6 +38,7 @@ function mount(container, rootComponent, reducers = {}, initialData = {}, embedd
   // append base app reducers
   reducers[configSelectors.STORE_NAME] = configReducer
   reducers[securitySelectors.STORE_NAME] = securityReducer
+  reducers[toolSelectors.STORE_NAME] = toolReducer // maybe not declare here
 
   // create store
   // we initialize a new store even if the mounted app does not declare reducers
