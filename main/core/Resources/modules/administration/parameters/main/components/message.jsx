@@ -161,7 +161,7 @@ const MessageComponent = (props) => {
                 noEmpty: true,
                 choices: constants.MESSAGE_TYPES
               }
-            },
+            }
           ]
         }, {
           icon: 'fa fa-fw fa-key',

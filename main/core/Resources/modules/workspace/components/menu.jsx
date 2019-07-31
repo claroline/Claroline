@@ -43,9 +43,8 @@ const WorkspaceMenu = (props) =>
         type="user"
         value={50}
         displayValue={(value) => number(value) + '%'}
-        unit="%"
-        width={80}
-        height={80}
+        width={70}
+        height={70}
       />
 
       <div className="user-progression-info">

@@ -130,7 +130,7 @@ class ConnectionMessageSerializer
         $this->sipe('type', 'setType', $data, $message);
         $this->sipe('locked', 'setLocked', $data, $message);
 
-        if (isset($date['restrictions'])) {
+        if (isset($data['restrictions'])) {
             if (isset($data['restrictions']['dates'])) {
                 $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 

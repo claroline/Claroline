@@ -46,7 +46,7 @@ before_install:
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
-  - echo "memory_limit=6144M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "memory_limit=7G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   # disable xdebug
   - phpenv config-rm xdebug.ini
   # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)

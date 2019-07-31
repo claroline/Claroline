@@ -56,8 +56,8 @@ const DesktopMenu = props =>
         type="user"
         value={25}
         displayValue={(value) => number(value) + '%'}
-        width={80}
-        height={80}
+        width={70}
+        height={70}
       />
 
       <div className="user-progression-info">

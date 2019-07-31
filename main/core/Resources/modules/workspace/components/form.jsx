@@ -7,19 +7,16 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 
-//import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
   actions as formActions,
   selectors as formSelect
 } from '#/main/app/content/form/store'
-import {actions} from '#/main/core/workspace/creation/store/actions'
 
 // todo : fix tool selection for opening
 
 // easy selection for restrictions
-// TODO : create selectors
 const restrictByDates   = (workspace) => get(workspace, 'restrictions.enableDates') || !isEmpty(get(workspace, 'restrictions.dates'))
 const restrictByCode    = (workspace) => get(workspace, 'restrictions.enableCode') || !!get(workspace, 'restrictions.code')
 const restrictByIps     = (workspace) => get(workspace, 'restrictions.enableIps') || !isEmpty(get(workspace, 'restrictions.allowedIps'))
