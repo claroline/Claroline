@@ -51,7 +51,7 @@ const ParametersModal = props =>
 
 ParametersModal.propTypes = {
   currentUser: T.shape({
-    // TODO
+    email: T.string.isRequired
   }).isRequired,
   mailNotified: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,

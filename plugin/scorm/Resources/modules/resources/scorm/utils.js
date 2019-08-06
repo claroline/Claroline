@@ -32,22 +32,7 @@ function getFirstOpenableSco(scos) {
   return scos[0]
 }
 
-function generateSummary(scos, callback) {
-  return scos.map(sco => ({
-    label: sco.data.title,
-    type: 'callback',
-    callback: () => {
-      if (sco.data.entryUrl) {
-        callback(sco)
-      }
-    },
-    children: sco.children && sco.children.length > 0 ? generateSummary(sco.children, callback) : []
-  }))
-
-}
-
 export {
   flattenScos,
-  getFirstOpenableSco,
-  generateSummary
+  getFirstOpenableSco
 }

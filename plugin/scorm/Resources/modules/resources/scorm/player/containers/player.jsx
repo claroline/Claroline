@@ -1,15 +1,12 @@
-import React from 'react'
 import {connect} from 'react-redux'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'
-
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {APIClass} from '#/plugin/scorm/resources/scorm/player/api'
 import {Player as PlayerComponent} from '#/plugin/scorm/resources/scorm/player/components/player'
 import {selectors} from '#/plugin/scorm/resources/scorm/store'
-import {flattenScos, getFirstOpenableSco, generateSummary} from '#/plugin/scorm/resources/scorm/utils'
-
+import {flattenScos} from '#/plugin/scorm/resources/scorm/utils'
 
 const Player = connect(
   state => ({

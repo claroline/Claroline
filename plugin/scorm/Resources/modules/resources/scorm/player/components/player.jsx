@@ -4,7 +4,6 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {Routes} from '#/main/app/router'
-import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
