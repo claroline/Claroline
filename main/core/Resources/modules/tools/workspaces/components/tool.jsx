@@ -6,8 +6,8 @@ import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {WorkspaceForm} from '#/main/core/workspace/components/form'
 import {WorkspaceList} from '#/main/core/workspace/components/list'
+import {WorkspaceCreation} from '#/main/core/tools/workspaces/containers/creation'
 
 const WorkspacesTool = (props) =>
   <ToolPage
@@ -41,21 +41,7 @@ const WorkspacesTool = (props) =>
         {
           path: '/new',
           disabled: !props.creatable,
-          render: () => {
-            const NewForm = (
-              <WorkspaceForm
-                name="workspaces.creation"
-                buttons={true}
-                cancel={{
-                  type: LINK_BUTTON,
-                  target: props.path,
-                  exact: true
-                }}
-              />
-            )
-
-            return NewForm
-          }
+          component: WorkspaceCreation
         }, {
           path: '/registered',
           render: () => {

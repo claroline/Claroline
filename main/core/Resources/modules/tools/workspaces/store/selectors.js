@@ -9,7 +9,14 @@ const creatable = createSelector(
   (store) => store.creatable
 )
 
+const creationLogs = createSelector(
+  [store],
+  (store) => store.creation.logs
+)
+
 export const selectors = {
   STORE_NAME,
-  creatable
+
+  creatable,
+  creationLogs
 }

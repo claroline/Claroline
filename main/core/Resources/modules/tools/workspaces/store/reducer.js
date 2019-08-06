@@ -5,6 +5,7 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
+import {WORKSPACE_CREATION_LOG} from '#/main/core/tools/workspaces/store/actions'
 import {Workspace} from '#/main/core/workspace/prop-types'
 
 export const reducer = combineReducers({
@@ -27,6 +28,16 @@ export const reducer = combineReducers({
     new: true,
     data: Workspace.defaultProps,
     originalData: Workspace.defaultProps
+  }, {
+    logs: makeReducer({}, {
+      [WORKSPACE_CREATION_LOG]: (state, action) => {
+        try {
+          return JSON.parse(action.content)
+        } catch (e) {
+          return {}
+        }
+      }
+    })
   }),
 
   /**
