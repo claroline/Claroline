@@ -201,7 +201,7 @@ const MessageComponent = (props) => {
               },
               linked: [
                 {
-                  name: 'roles',
+                  name: 'restrictions.roles',
                   label: trans('roles'),
                   type: 'roles',
                   displayed: restrictedByRoles,

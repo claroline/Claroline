@@ -1,5 +1,7 @@
 /**
  * Styles for summary
+ *
+ * ATTENTION : the current styles are set to only display the summary the app menu.
  */
 
 
@@ -16,36 +18,6 @@
     list-style: none;
     font-size: @summary-font;
     font-style: italic; // TODO : use a var
-
-    .active {
-        .step-progression {
-            color: @summary-link-active-color !important; // override status color
-        }
-    }
-
-    .btn-summary {
-        .btn-link;
-    }
-
-    a,
-    button,
-    .btn-summary {
-        font-size: @summary-font; // required to override default button size
-        color: @summary-link-color;
-        padding: floor(@grid-gutter-width / 2) 0;
-
-        &:hover {
-            color: @summary-link-hover-color;
-            background: @summary-link-hover-bg;
-        }
-
-        &.active,
-        &:active,
-        &:focus {
-            color: @summary-link-active-color;
-            background: @summary-link-active-bg;
-        }
-    }
 }
 
 .summary-link {
@@ -57,20 +29,75 @@
         background-color: @summary-link-hover-bg;
     }
 
-    > a,
-    > button {
-        border: none;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        padding: floor(@grid-gutter-width / 2) 0 floor(@grid-gutter-width / 2) 30px;
+    &.active,
+    &:focus {
+        color: @summary-link-active-color;
+        background: @summary-link-active-bg;
     }
 }
 
 .summary-link-actions {
     white-space: nowrap; // avoid buttons to be displayed in column
+}
 
-    .btn-summary {
-        padding: 2px;
+.btn-summary-primary,
+.btn-summary {
+    border: none;
+    font-size: @summary-font; // required to override default button size
+    color: @summary-link-color;
+    padding: floor(@grid-gutter-width / 2) 0;
+
+    &:hover {
+        color: @summary-link-hover-color;
+        background: @summary-link-hover-bg;
     }
+
+    &:focus
+    &:active,
+    &.active {
+        &,
+        &:hover,
+        &:focus {
+            color: @summary-link-active-color;
+            background: @summary-link-active-bg;
+        }
+    }
+
+    &[disabled],
+    &.disabled {
+        // avoid focus or hover effect on disabled
+        &,
+        &:hover,
+        &:focus {
+            color: @summary-link-disabled-color;
+            background: @summary-link-disabled-bg;
+        }
+
+        // preserve active state on disabled (because active links are disabled)
+        &.active {
+            &,
+            &:hover,
+            &:focus {
+                color: @summary-link-active-color;
+                background: @summary-link-active-bg;
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.btn-summary-primary {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: @grid-gutter-width;
+
+    .action-icon {
+        flex-shrink: 0;
+    }
+}
+
+.btn-summary {
+    padding-left: 5px;
+    padding-right: 5px;
 }

@@ -41,16 +41,17 @@ const normalizeTreeNode = (node, lessonId, canEdit, path) => {
         {
           type: LINK_BUTTON,
           target: `${path}/${elem['slug']}/edit`,
-          label: trans('edit_chapter_button', {}, 'icap_lesson'),
+          label: trans('edit', {}, 'actions'),
           icon: 'fa fa-pencil',
-          displayed: canEdit
-        },
-        {
+          displayed: canEdit,
+          group: trans('management')
+        }, {
           type: LINK_BUTTON,
           target: `${path}/${elem['slug']}/copy`,
-          label: trans('copy'),
-          icon: 'fa fa-copy',
-          displayed: canEdit
+          label: trans('copy', {}, 'actions'),
+          icon: 'fa fa-clone',
+          displayed: canEdit,
+          group: trans('management')
         }
       ]
     }

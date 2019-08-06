@@ -1,0 +1,30 @@
+
+.connection-message-modal {
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 5px @modal-inner-padding;
+
+        .checkbox {
+            flex: 1;
+            margin: 0;
+        }
+    }
+
+    .slide-header {
+        margin: 0;
+        padding: @modal-inner-padding;
+        display: flex;
+        align-items: flex-end;
+
+        &.poster {
+            height: 200px;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+
+            .text-movie-subtitles();
+        }
+    }
+}

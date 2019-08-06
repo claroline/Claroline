@@ -1,9 +1,10 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {route as adminRoute} from '#/main/core/administration/routing'
 import {selectors} from '#/main/core/administration/parameters/main/store'
 
 const Meta = () =>
@@ -14,8 +15,9 @@ const Meta = () =>
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
-      type: URL_BUTTON,
-      target: ['claro_admin_open']
+      type: LINK_BUTTON,
+      target: adminRoute('main_settings'),
+      exact: true
     }}
     sections={[
       {

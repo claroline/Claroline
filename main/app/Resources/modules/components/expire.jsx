@@ -2,9 +2,9 @@ import {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 class Expire extends Component {
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     // reset the timer if children are changed
-    if (nextProps.children !== this.props.children) {
+    if (prevProps.children !== this.props.children) {
       this.setTimer()
     }
   }

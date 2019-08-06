@@ -1,112 +1,90 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
+import {Routes} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
-import {selectors as securitySelectors} from '#/main/app/security/store'
-import {SummarizedContent} from '#/main/app/content/summary/components/content'
 
-import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
+import {getFirstOpenableSco} from '#/plugin/scorm/resources/scorm/utils'
 
-import {APIClass} from '#/plugin/scorm/resources/scorm/player/api'
-import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
-import {selectors} from '#/plugin/scorm/resources/scorm/store'
-import {flattenScos, getFirstOpenableSco, generateSummary} from '#/plugin/scorm/resources/scorm/utils'
+const ScormIframe = (props) =>
+  <div
+    className="scorm-content-container"
+    style={props.ratio ? {
+      position: 'relative',
+      paddingBottom: `${props.ratio}%`
+    } : {}}
+  >
+    <iframe
+      className="scorm-iframe"
+      src={`${props.baseUrl}/${props.sco.data.entryUrl}${props.sco.data.parameters ? props.sco.data.parameters : ''}`}
+    />
+  </div>
 
-class PlayerComponent extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      currentSco: getFirstOpenableSco(props.scos)
-    }
-    this.openSco = this.openSco.bind(this)
-  }
-
-  componentDidMount() {
-    this.props.initializeScormAPI(this.state.currentSco, this.props.scorm, this.props.trackings, this.props.currentUser)
-  }
-
-  openSco(sco) {
-    this.setState({currentSco: sco})
-    this.props.initializeScormAPI(sco, this.props.scorm, this.props.trackings, this.props.currentUser)
-  }
-
-  render() {
-    return (
-      1 < this.props.scos.length ?
-        <SummarizedContent
-          className="scorm-summary"
-          summary={{
-            displayed: true,
-            opened: true,
-            pinned: true,
-            title: trans('summary'),
-            links: generateSummary(this.props.scorm.scos, this.openSco)
-          }}
-        >
-          <div
-            className="content-container scorm-content-container"
-            style={this.props.scorm.ratio ?
-              {
-                position: 'relative',
-                paddingBottom: `${this.props.scorm.ratio}%`
-              } :
-              {}
-            }
-          >
-            <iframe
-              className="scorm-iframe"
-              src={`${asset('uploads/scorm/')}${this.props.workspaceUuid}/${this.props.scorm.hashName}/${this.state.currentSco.data.entryUrl}${this.state.currentSco.data.parameters ? this.state.currentSco.data.parameters : ''}`}
-            />
-          </div>
-        </SummarizedContent> :
-        <div
-          className="content-container scorm-content-container"
-          style={this.props.scorm.ratio ?
-            {
-              position: 'relative',
-              paddingBottom: `${this.props.scorm.ratio}%`
-            } :
-            {}
-          }
-        >
-          <iframe
-            className="scorm-iframe"
-            src={`${asset('uploads/scorm/')}${this.props.workspaceUuid}/${this.props.scorm.hashName}/${this.state.currentSco.data.entryUrl}${this.state.currentSco.data.parameters ? this.state.currentSco.data.parameters : ''}`}
-          />
-        </div>
-    )
-  }
+ScormIframe.propTypes = {
+  ratio: T.number,
+  baseUrl: T.string.isRequired,
+  sco: T.shape(
+    ScoTypes.propTypes
+  ).isRequired
 }
 
-PlayerComponent.propTypes = {
+const Player = (props) => {
+  const firstSco = getFirstOpenableSco(props.scos)
+
+  return (
+    <Routes
+      path={props.path}
+      redirect={[
+        {from: '/play', to: `/play/${firstSco.id}`, disabled: isEmpty(firstSco)}
+      ]}
+      routes={[
+        {
+          path: '/play/:id',
+          onEnter(params = {}) {
+            const currentSco = props.scos.find(sco => sco.id === params.id)
+            if (currentSco) {
+              props.initializeScormAPI(currentSco, props.scorm, props.trackings, props.currentUser)
+            }
+          },
+          render(routeProps) {
+            const currentSco = props.scos.find(sco => sco.id === routeProps.match.params.id)
+            if (currentSco && !isEmpty(currentSco.data.entryUrl)) {
+              return (
+                <ScormIframe
+                  ratio={get(props.scorm, 'ratio')}
+                  baseUrl={`${asset('uploads/scorm/')}${props.workspaceUuid}/${props.scorm.hashName}`}
+                  sco={currentSco}
+                />
+              )
+            }
+
+            routeProps.history.push(props.path+'/play')
+
+            return null
+          }
+        }
+      ]}
+    />
+  )
+}
+
+Player.propTypes = {
+  path: T.string.isRequired,
   currentUser: T.object,
-  scorm: T.shape(ScormType.propTypes),
+  scorm: T.shape(
+    ScormTypes.propTypes
+  ),
   trackings: T.object,
-  scos: T.arrayOf(T.shape(ScoType.propTypes)).isRequired,
+  scos: T.arrayOf(T.shape(
+    ScoTypes.propTypes
+  )).isRequired,
   workspaceUuid: T.string.isRequired,
   initializeScormAPI: T.func.isRequired
 }
-
-const Player = connect(
-  state => ({
-    currentUser: securitySelectors.currentUser(state),
-    scorm: selectors.scorm(state),
-    trackings: selectors.trackings(state),
-    scos: flattenScos(selectors.scos(state)),
-    workspaceUuid: resourceSelect.resourceNode(state).workspace.id
-  }),
-  dispatch => ({
-    initializeScormAPI(sco, scorm, tracking, currentUser) {
-      window.API = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
-      window.api = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
-      window.API_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
-      window.api_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch, currentUser)
-    }
-  })
-)(PlayerComponent)
 
 export {
   Player

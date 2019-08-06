@@ -1,8 +1,4 @@
 
-.app-menu-collapsed {
-    max-width: @toolbar-collapsed-size;
-}
-
 .app-menu {
     position: absolute;
     max-width: @toolbar-size;
@@ -85,11 +81,11 @@
 
     .list-group-item {
         font-style: italic;
-        padding-left: 30px !important;
+        padding-left: @grid-gutter-width !important;
 
         &.active {
             padding-left: 26px !important;
-            border-left: 4px solid @toolbar-link-active-bg;
+            border-left: 4px solid @toolbar-active-color;
         }
 
         &.danger {
@@ -119,27 +115,41 @@
         background: @toolbar-link-bg;
         border: none;
 
-        &:hover,
-        &:focus {
+        &:hover {
             color: @toolbar-link-hover-color;
             background: @toolbar-link-hover-bg;
         }
 
+        &:focus,
+        &:active,
         &.active {
             &,
             &:hover,
             &:focus {
                 color: @toolbar-link-active-color;
-                background-color: @toolbar-link-hover-bg;
+                background-color: @toolbar-link-active-bg;
             }
         }
 
+        &[disabled],
         &.disabled {
+            // avoid focus or hover effect on disabled
             &,
             &:hover,
             &:focus {
                 color: @toolbar-link-disabled-color;
                 background-color: @toolbar-link-disabled-bg;
+            }
+
+            // preserve active state on disabled (because active links are disabled)
+            &.active {
+                &,
+                &:hover,
+                &:focus {
+                    color: @toolbar-link-active-color;
+                    background: @toolbar-link-active-bg;
+                    opacity: 1;
+                }
             }
         }
     }

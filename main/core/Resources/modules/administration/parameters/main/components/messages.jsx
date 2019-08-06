@@ -1,9 +1,10 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {MODAL_CONNECTION} from '#/main/app/modals/connection'
 import {selectors} from '#/main/core/administration/parameters/main/store/selectors'
 import {constants} from '#/main/core/administration/parameters/main/constants'
 
@@ -23,10 +24,19 @@ const Messages = (props) =>
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pencil',
-        label: trans('edit'),
+        label: trans('edit', {}, 'actions'),
         scope: ['object'],
         target: `${props.path}/messages/form/${rows[0].id}`,
         displayed: !rows[0].locked
+      }, {
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-eye',
+        label: trans('preview', {}, 'actions'),
+        scope: ['object', 'collection'],
+        modal: [MODAL_CONNECTION, {
+          messages: rows,
+          noDiscard: true
+        }]
       }
     ]}
     delete={{
@@ -69,10 +79,9 @@ const Messages = (props) =>
         label: trans('end_date'),
         displayed: true
       }, {
-        name: 'roles',
-        type: 'string',
+        name: 'restrictions.roles',
+        type: 'roles',
         label: trans('roles'),
-        calculated: (message) => message.roles.map(r => trans(r.translationKey)).join(', '),
         displayed: true,
         filterable: false
       }

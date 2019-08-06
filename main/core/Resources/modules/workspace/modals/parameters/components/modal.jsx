@@ -13,7 +13,7 @@ import {selectors} from '#/main/core/workspace/modals/parameters/store'
 
 const ParametersModal = props =>
   <Modal
-    {...omit(props, 'workspace', 'saveEnabled', 'loadWorkspace', 'saveWorkspace')}
+    {...omit(props, 'workspace', 'saveEnabled', 'loadWorkspace', 'saveWorkspace', 'onSave')}
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     subtitle={props.workspace.name}
@@ -30,7 +30,7 @@ const ParametersModal = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.saveWorkspace(props.workspace)
+        props.saveWorkspace(props.workspace, props.onSave)
         props.fadeModal()
       }}
     />
@@ -40,6 +40,7 @@ ParametersModal.propTypes = {
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired,
+  onSave: T.func,
   saveEnabled: T.bool.isRequired,
   saveWorkspace: T.func.isRequired,
   loadWorkspace: T.func.isRequired,

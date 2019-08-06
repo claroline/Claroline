@@ -9,7 +9,9 @@ import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
+import {route as toolRoute} from '#/main/core/tool/routing'
 
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {getActions} from '#/main/core/workspace/utils'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
@@ -20,17 +22,23 @@ const WorkspaceMenu = (props) =>
       type: LINK_BUTTON,
       icon: 'fa fa-fw fa-angle-double-left',
       label: trans('workspaces'),
-      target: '/desktop/workspaces',
+      target: toolRoute('workspaces'),
       exact: true
     }}
 
     tools={props.tools.map(tool => ({
       name: tool.name,
       icon: tool.icon,
-      path: `/desktop/workspaces/open/${props.workspace.id}/${tool.name}`
+      path: workspaceRoute(props.workspace, tool.name)
     }))}
     actions={!isEmpty(props.workspace) ? getActions([props.workspace], {
-
+      add() {},
+      update(workspaces) {
+        props.update(workspaces[0])
+      },
+      delete() {
+        props.history.push(toolRoute('workspaces'))
+      }
     }, props.basePath, props.currentUser) : []}
   >
     <section className="user-progression">
@@ -60,6 +68,9 @@ const WorkspaceMenu = (props) =>
   </MenuMain>
 
 WorkspaceMenu.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   basePath: T.string,
   section: T.string,
   workspace: T.shape(
@@ -73,7 +84,8 @@ WorkspaceMenu.propTypes = {
     name: T.string.isRequired
   })),
   changeSection: T.func.isRequired,
-  startWalkthrough: T.func.isRequired
+  startWalkthrough: T.func.isRequired,
+  update: T.func.isRequired
 }
 
 WorkspaceMenu.defaultProps = {

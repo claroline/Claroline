@@ -22,7 +22,7 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
  */
 const LinkButtonComponent = props =>
   <NavLink
-    {...omit(props, 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm', 'history', 'match', 'staticContext')}
+    {...omit(props, 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm', 'history', 'match', 'staticContext', 'active')}
     tabIndex={props.tabIndex}
     to={props.target}
     exact={props.exact}

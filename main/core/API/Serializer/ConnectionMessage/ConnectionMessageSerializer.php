@@ -138,9 +138,9 @@ class ConnectionMessageSerializer
                 $message->setAccessibleUntil($dateRange[1]);
             }
 
-            $message->emptyRoles();
             if (isset($data['restrictions']['roles'])) {
-                foreach ($data['roles'] as $roleData) {
+                $message->emptyRoles();
+                foreach ($data['restrictions']['roles'] as $roleData) {
                     /** @var Role $role */
                     $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
 

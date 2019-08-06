@@ -1,4 +1,6 @@
 .list-group {
+    margin-bottom: @list-group-margin-bottom;
+
     .list-group-item-variant(selected; @state-info-bg; @state-info-text);
 }
 
@@ -34,6 +36,8 @@
 }
 
 .list-group-item {
+    padding: @list-group-item-padding-v @list-group-item-padding-h;
+
     .action-subscript {
         float: right; // todo : find a better approach
 

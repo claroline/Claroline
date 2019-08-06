@@ -44,14 +44,14 @@ class ListData extends Component {
     this.changeColumns = this.changeColumns.bind(this)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     // display config or definition have changed
-    if (!isEqual(this.props.definition, nextProps.definition)
-      || !isEqual(this.props.display, nextProps.display)
-      || !isEqual(this.props.card, nextProps.card)
+    if (!isEqual(this.props.definition, prevProps.definition)
+      || !isEqual(this.props.display, prevProps.display)
+      || !isEqual(this.props.card, prevProps.card)
     ) {
-      const definition = createListDefinition(nextProps.definition)
-      const currentDisplay = this.computeDisplay(definition, nextProps.display, !!nextProps.card)
+      const definition = createListDefinition(this.props.definition)
+      const currentDisplay = this.computeDisplay(definition, this.props.display, !!this.props.card)
 
       this.setState(Object.assign({}, currentDisplay, {
         definition: definition

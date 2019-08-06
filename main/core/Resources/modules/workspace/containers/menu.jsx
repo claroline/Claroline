@@ -8,7 +8,7 @@ import {actions as menuActions, selectors as menuSelectors} from '#/main/app/lay
 import {actions as walkthroughActions} from '#/main/app/overlays/walkthrough/store'
 
 import {WorkspaceMenu as WorkspaceMenuComponent} from '#/main/core/workspace/components/menu'
-import {reducer, selectors} from '#/main/core/workspace/store'
+import {actions, reducer, selectors} from '#/main/core/workspace/store'
 
 const WorkspaceMenu = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
@@ -17,20 +17,19 @@ const WorkspaceMenu = withRouter(
         currentUser: securitySelectors.currentUser(state),
         workspace: selectors.workspace(state),
         section: menuSelectors.openedSection(state),
-        tools: selectors.tools(state)//,
-        //historyLoaded: selectors.historyLoaded(state),
-        //historyResults: selectors.historyResults(state)
+        tools: selectors.tools(state)
       }),
       (dispatch) => ({
+        update(workspace) {
+          dispatch(actions.setLoaded(false))
+          dispatch(actions.open(workspace.id))
+        },
         changeSection(section) {
           dispatch(menuActions.changeSection(section))
         },
         startWalkthrough(steps) {
           dispatch(walkthroughActions.start(steps))
         }
-        /*getHistory() {
-          dispatch(actions.getHistory())
-        }*/
       })
     )(WorkspaceMenuComponent)
   )

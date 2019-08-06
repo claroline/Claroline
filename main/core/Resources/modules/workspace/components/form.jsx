@@ -178,6 +178,7 @@ const WorkspaceFormComponent = (props) => {
                   name: 'breadcrumb.items',
                   type: 'choice',
                   label: trans('links'),
+                  required: true,
                   displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
                   options: {
                     choices: {

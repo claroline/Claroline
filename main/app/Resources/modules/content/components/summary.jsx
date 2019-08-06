@@ -42,12 +42,15 @@ class SummaryLink extends Component {
 
     return (
       <li className="summary-link-container">
-        <div className="summary-link">
+        <div className={classes('summary-link', {
+          active: this.props.active
+        })}>
           <Button
+            className="btn-summary-primary"
             {...omit(this.props, 'children', 'additional', 'collapsible', 'collapsed', 'toggleCollapse')}
           />
 
-          {(this.props.opened && (collapsible || 0 !== this.props.additional.length)) &&
+          {(collapsible || 0 !== this.props.additional.length) &&
             <Toolbar
               className="summary-link-actions"
               buttonName="btn-summary"

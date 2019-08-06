@@ -1,9 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {
-  Role as RoleType,
-  User as UserType
-} from '#/main/core/user/prop-types'
+import {Role as RoleTypes} from '#/main/core/user/prop-types'
 
 import {constants} from '#/main/core/administration/parameters/main/constants'
 
@@ -30,11 +27,14 @@ const ConnectionMessage = {
     type: T.string,
     locked: T.bool,
     restrictions: T.shape({
-      dates: T.arrayOf(T.string)
+      dates: T.arrayOf(T.string),
+      roles: T.arrayOf(T.shape(
+        RoleTypes.propTypes
+      ))
     }),
-    slides: T.arrayOf(T.shape(Slide.propTypes)),
-    roles: T.arrayOf(T.shape(RoleType.propTypes)),
-    users: T.arrayOf(T.shape(UserType.propTypes))
+    slides: T.arrayOf(T.shape(
+      Slide.propTypes
+    ))
   },
   defaultProps: {
     type: constants.MESSAGE_TYPE_ONCE,

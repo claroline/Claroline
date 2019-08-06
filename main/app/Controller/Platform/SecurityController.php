@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
@@ -84,7 +85,7 @@ class SecurityController
      */
     public function loginAction(Request $request)
     {
-        // retrieve logged user
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         // switch to it's defined locale

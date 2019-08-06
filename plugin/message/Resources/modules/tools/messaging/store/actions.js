@@ -50,15 +50,11 @@ actions.newMessage = (id = null) => {
     })
   }
 
-  return formActions.resetForm(
-    `${selectors.STORE_NAME}.messageForm`,
-    merge({}, MessageTypes.defaultProps, {
-      id: makeId(),
-      from: currentUser(),
-      meta: {date : now()}
-    }),
-    true
-  )
+  return formActions.resetForm(`${selectors.STORE_NAME}.messageForm`, merge({}, MessageTypes.defaultProps, {
+    id: makeId(),
+    from: currentUser(),
+    meta: {date : now()}
+  }), true)
 }
 
 actions.deleteMessages = (messages) => ({

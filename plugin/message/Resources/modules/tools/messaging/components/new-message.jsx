@@ -8,9 +8,9 @@ import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {currentUser} from '#/main/app/security'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {selectors} from '#/plugin/message/tools/messaging/store'
 
@@ -48,7 +48,7 @@ NewMessageFormWrapper.propTypes = {
 
 const NewMessageComponent = (props) =>
   <NewMessageFormWrapper
-    user={currentUser()}
+    user={props.currentUser}
     callback={() =>  props.saveForm(props.history.push)}
   >
     <FormData
@@ -88,6 +88,9 @@ const NewMessageComponent = (props) =>
   </NewMessageFormWrapper>
 
 NewMessageComponent.propTypes = {
+  currentUser: T.shape({
+    // TODO
+  }).isRequired,
   saveForm: T.func.isRequired,
   reply: T.bool.isRequired,
   history: T.shape({
@@ -97,6 +100,7 @@ NewMessageComponent.propTypes = {
 
 const NewMessage = withRouter(connect(
   state => ({
+    currentUser: securitySelectors.currentUser(state),
     reply: selectors.reply(state)
   }),
   (dispatch) => ({

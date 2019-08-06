@@ -1764,5 +1764,7 @@
     "tokens": "Tokens",
     "add_token": "Ajouter un token",
     "token": "Token",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "current_of_total": "%current% sur %total%",
+    "do_not_display_anymore": "Ne plus afficher"
 }

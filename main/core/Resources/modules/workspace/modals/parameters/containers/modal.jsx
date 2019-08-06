@@ -19,8 +19,12 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
       loadWorkspace(workspace) {
         dispatch(formActions.resetForm(selectors.STORE_NAME, workspace))
       },
-      saveWorkspace(workspace) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_workspace_update', {id: workspace.id}]))
+      saveWorkspace(workspace, callback) {
+        dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_workspace_update', {id: workspace.id}])).then(() => {
+          if (callback) {
+            callback(workspace)
+          }
+        })
       }
     })
   )(ParametersModalComponent)

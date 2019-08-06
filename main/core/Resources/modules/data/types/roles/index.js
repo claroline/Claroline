@@ -10,6 +10,7 @@ const dataType = {
     label: trans('roles', {}, 'data'),
     description: trans('roles_desc', {}, 'data')
   },
+  render: (raw) => raw && raw.map(r => trans(r.translationKey)).join(', '),
   components: {
     details: RolesDisplay,
     input: RolesInput

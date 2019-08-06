@@ -3,15 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/plugin/message/tools/messaging/modals/parameters/store'
-
-const authenticatedUser = currentUser()
 
 // target={(parameters) => ['apiv2_contact_options_update', {id: parameters.id}]}
 
@@ -32,7 +29,7 @@ const ParametersModal = props =>
             {
               name: 'mailNotified',
               type: 'boolean',
-              label: transChoice('get_mail_notifications', authenticatedUser.email, {address: authenticatedUser.email})
+              label: transChoice('get_mail_notifications', props.currentUser.email, {address: props.currentUser.email})
             }
           ]
         }
@@ -46,13 +43,16 @@ const ParametersModal = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(authenticatedUser, props.mailNotified)
+        props.save(props.currentUser, props.mailNotified)
         props.fadeModal()
       }}
     />
   </Modal>
 
 ParametersModal.propTypes = {
+  currentUser: T.shape({
+    // TODO
+  }).isRequired,
   mailNotified: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\ConnectionMessage;
 
+use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -21,19 +22,20 @@ class ConnectionMessageRepository extends EntityRepository
         $dql = '
             SELECT DISTINCT m
             FROM Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage m
-            JOIN m.roles r
-            WHERE m.accessibleFrom <= :now
-            AND m.accessibleUntil >= :now
-            AND r.name IN (:roles)
-            AND NOT EXISTS (
+            LEFT JOIN m.roles r
+            WHERE (m.accessibleFrom IS NULL OR m.accessibleFrom <= :now)
+            AND (m.accessibleUntil IS NULL OR m.accessibleUntil >= :now)
+            AND (r IS NULL OR r.name IN (:roles))
+            AND (m.type = :type OR NOT EXISTS (
                 SELECT cm
                 FROM Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage cm
                 JOIN cm.users cmu
                 WHERE m = cm
                 AND cmu = :user
-            )
+            ))
         ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', ConnectionMessage::TYPE_ALWAYS);
         $query->setParameter('now', new \DateTime());
         $query->setParameter('user', $user);
         $query->setParameter('roles', $user->getRoles());

@@ -8,6 +8,9 @@ import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+
 import {
   ResourceNode as ResourceNodeTypes,
   UserEvaluation as UserEvaluationTypes
@@ -36,11 +39,11 @@ class ResourcePage extends Component {
     this.props.loadResource(this.props.resourceNode, this.props.embedded)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     // the resource has changed
-    if (this.props.resourceNode.id !== nextProps.resourceNode.id) {
+    if (this.props.resourceNode.id !== prevProps.resourceNode.id) {
       // load the new one
-      this.props.loadResource(nextProps.resourceNode, nextProps.embedded)
+      this.props.loadResource(this.props.resourceNode, this.props.embedded)
     }
   }
 
@@ -101,8 +104,18 @@ class ResourcePage extends Component {
             // checks if the action have deleted the current node
             const currentNode = resourceNodes.find(node => node.id === this.props.resourceNode.id)
             if (currentNode) {
-              // grabs updated data
-              //this.props.deleteNode(currentNode)
+              let redirect
+              if (toolConst.TOOL_WORKSPACE === this.props.contextType && currentNode.workspace) {
+                redirect = workspaceRoute(currentNode.workspace, 'resource_manager')
+              } else {
+                redirect = toolRoute('resource_manager')
+              }
+
+              if (currentNode.parent) {
+                redirect += '/'+currentNode.parent.id
+              }
+
+              this.props.history.push(redirect)
             }
           }
         }, this.props.basePath, this.props.currentUser).then((actions) => [].concat(this.props.customActions || [], actions, [
@@ -140,6 +153,10 @@ class ResourcePage extends Component {
 }
 
 ResourcePage.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
+
   basePath: T.string,
   contextType: T.string.isRequired,
   currentUser: T.object,

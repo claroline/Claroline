@@ -25,6 +25,7 @@ class EditorMain extends Component {
   }
 
   getStepActions(step) {
+    // TODO : find a way to merge with menu actions
     return [
       {
         name: 'add',

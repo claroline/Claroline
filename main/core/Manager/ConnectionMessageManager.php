@@ -23,6 +23,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ConnectionMessageManager
 {
+    /** @var ObjectManager */
+    private $om;
+
     /** @var SerializerProvider */
     private $serializer;
 
@@ -40,9 +43,24 @@ class ConnectionMessageManager
      */
     public function __construct(ObjectManager $om, SerializerProvider $serializer)
     {
+        $this->om = $om;
         $this->serializer = $serializer;
 
         $this->connectionMessageRepo = $om->getRepository(ConnectionMessage::class);
+    }
+
+    /**
+     * Discards a message for a user.
+     *
+     * @param ConnectionMessage $message
+     * @param User              $user
+     */
+    public function discard(ConnectionMessage $message, User $user)
+    {
+        $message->addUser($user);
+
+        $this->om->persist($message);
+        $this->om->flush();
     }
 
     /**

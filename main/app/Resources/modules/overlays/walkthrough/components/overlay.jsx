@@ -44,14 +44,14 @@ class Walkthrough extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.current, nextProps.current)) {
-      if (this.props.current) {
+  componentDidUpdate(prevProps) {
+    if (!isEqual(this.props.current, prevProps.current)) {
+      if (prevProps.current) {
         this.endStep(this.props.current)
       }
 
-      if (nextProps.current) {
-        this.startStep(nextProps.current)
+      if (this.props.current) {
+        this.startStep(this.props.current)
       }
     }
   }

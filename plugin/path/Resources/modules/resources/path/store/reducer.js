@@ -15,6 +15,7 @@ import {
 } from '#/plugin/path/resources/path/store/actions'
 
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/store/reducer'
+import {selectors as editorSelectors} from '#/plugin/path/resources/path/editor/store/selectors'
 import {reducer as dashboardReducer} from '#/plugin/path/resources/path/dashboard/store/reducer'
 import {getStepPath} from '#/plugin/path/resources/path/editor/utils'
 
@@ -37,7 +38,7 @@ const reducer = combineReducers({
   path: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => action.resourceData.path || state,
     // replaces path data after success updates
-    [FORM_SUBMIT_SUCCESS+'/resource.pathForm']: (state, action) => action.updatedData,
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData,
     [STEP_UPDATE_PROGRESSION]: (state, action) => {
       const newState = cloneDeep(state)
       const stepPath = getStepPath(action.stepId, newState.steps, 0, [])

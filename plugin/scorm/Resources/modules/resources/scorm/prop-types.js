@@ -36,7 +36,7 @@ const Scorm = {
     id: T.string.isRequired,
     version: T.string.isRequired,
     hashName: T.string.isRequired,
-    ratio: T.float,
+    ratio: T.number,
     scos: T.arrayOf(T.shape(Sco.propTypes))
   }
 }

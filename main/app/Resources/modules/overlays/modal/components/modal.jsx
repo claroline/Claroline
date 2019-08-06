@@ -5,6 +5,8 @@ import omit from 'lodash/omit'
 
 import BaseModal from 'react-bootstrap/lib/Modal'
 
+import {asset} from '#/main/app/config/asset'
+
 // TODO : implements modal actions
 
 class Modal extends Component {
@@ -25,22 +27,22 @@ class Modal extends Component {
     this.onExited = this.onExited.bind(this)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.show !== nextProps.show) {
+  componentDidUpdate(prevProps) {
+    if (this.props.show !== prevProps.show) {
       // we are showing / hiding the modal,
       // we need to enable lifecycle events
       this.setState({
-        enterEvents: nextProps.show,
-        exitEvents: !nextProps.show
+        enterEvents: this.props.show,
+        exitEvents: !this.props.show
       })
     }
 
-    if (this.props.disabled !== nextProps.disabled) {
+    if (this.props.disabled !== prevProps.disabled) {
       // we are enabling / disabling the modal,
       // we need to disable lifecycle events
       this.setState({
         enterEvents: false,
-        exitEvents: !nextProps.disabled
+        exitEvents: !this.props.disabled
       })
     }
   }
@@ -99,7 +101,15 @@ class Modal extends Component {
         onExited={this.onExited}
       >
         {(this.props.title || this.props.icon) &&
-          <BaseModal.Header closeButton={true}>
+          <BaseModal.Header
+            closeButton={true}
+            style={this.props.poster && {
+              backgroundImage: `url("${asset(this.props.poster)}")`
+            }}
+            className={classes({
+              'modal-poster': !!this.props.poster
+            })}
+          >
             <BaseModal.Title>
               {this.props.icon &&
                 <span className={classes('modal-icon', this.props.icon)} />
@@ -138,6 +148,7 @@ Modal.propTypes = {
   // over it. In this case we want to hide without trigger lifecycle events
   disabled: T.bool,
 
+  poster: T.string,
   icon: T.string,
   title: T.string,
   subtitle: T.string,
