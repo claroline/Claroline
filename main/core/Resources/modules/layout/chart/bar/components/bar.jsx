@@ -11,6 +11,7 @@ const Bar = (props) =>
     height={props.maxHeight - props.height}
     x={props.offsetX}
     y={props.height + props.offsetY}
+    onClick={() => props.onClick()}
   />
     
 
@@ -20,7 +21,8 @@ Bar.propTypes = {
   height: T.number.isRequired,
   maxHeight: T.number.isRequired,
   offsetX: T.number,
-  offsetY: T.number
+  offsetY: T.number,
+  onClick: T.func
 }
 
 Bar.defaultProps = {
@@ -28,7 +30,8 @@ Bar.defaultProps = {
   width: 10,
   height: 0,
   offsetX: 0,
-  offsetY: 0
+  offsetY: 0,
+  onClick: () => false
 }
 
 export {

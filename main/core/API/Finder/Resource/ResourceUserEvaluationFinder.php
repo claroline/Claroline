@@ -33,12 +33,33 @@ class ResourceUserEvaluationFinder extends AbstractFinder
         array $sortBy = null,
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
+        $userJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
-                    $qb->join('obj.user', 'u');
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'user.firstName':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('UPPER(u.firstName) LIKE :firstName');
+                    $qb->setParameter('firstName', '%'.strtoupper($filterValue).'%');
+                    break;
+                case 'user.lastName':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+                    $qb->andWhere('UPPER(u.lastName) LIKE :lastName');
+                    $qb->setParameter('lastName', '%'.strtoupper($filterValue).'%');
                     break;
                 case 'resourceNode':
                     $qb->join('obj.resourceNode', 'r');
@@ -68,6 +89,25 @@ class ResourceUserEvaluationFinder extends AbstractFinder
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
+                    break;
+            }
+        }
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                case 'user.firstName':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                    }
+                    $qb->orderBy('u.firstName', $sortByDirection);
+                    break;
+                case 'user.lastName':
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                    }
+                    $qb->orderBy('u.lastName', $sortByDirection);
                     break;
             }
         }

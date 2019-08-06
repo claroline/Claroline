@@ -114,6 +114,11 @@ const EditorStep = props =>
                 onEmbeddedResourceClose: props.onEmbeddedResourceClose
               }
             }, {
+              name: 'evaluated',
+              type: 'boolean',
+              label: trans('evaluated', {}, 'path'),
+              help: trans('evaluated_help', {}, 'path')
+            }, {
               name: 'showResourceHeader',
               type: 'boolean',
               label: trans('show_resource_header')

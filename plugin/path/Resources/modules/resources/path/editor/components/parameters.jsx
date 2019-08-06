@@ -92,6 +92,30 @@ const EditorParameters = props =>
               }
             }
           ]
+        }, {
+          icon: 'fa fa-fw fa-percentage',
+          title: trans('score'),
+          fields: [
+            {
+              name: 'display.showScore',
+              type: 'boolean',
+              label: trans('show_score', {}, 'path')
+            }, {
+              name: 'score.success',
+              label: trans('score_to_pass'),
+              type: 'number',
+              options: {
+                min: 0,
+                max: 100,
+                unit: '%'
+              }
+            }, {
+              name: 'score.total',
+              label: trans('score_total'),
+              type: 'number',
+              required: true
+            }
+          ]
         }
       ]}
     />

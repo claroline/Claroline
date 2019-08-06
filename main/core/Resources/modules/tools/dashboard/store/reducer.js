@@ -7,6 +7,7 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {LOAD_LOG, RESET_LOG, LOAD_CHART_DATA} from '#/main/core/layout/logs/actions'
 import {LOAD_ANALYTICS} from '#/main/core/tools/dashboard/store/actions'
 import {selectors} from '#/main/core/tools/dashboard/store/selectors'
+import {reducer as pathReducer} from '#/main/core/tools/dashboard/path/store/reducer'
 
 const reducer = combineReducers({
   logs: makeListReducer(selectors.STORE_NAME + '.logs', {
@@ -50,7 +51,11 @@ const reducer = combineReducers({
   }),
   levelMax: makeReducer(null, {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.levelMax
-  })
+  }),
+  nbConnections: makeReducer(null, {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.nbConnections
+  }),
+  path: pathReducer
 })
 
 export {

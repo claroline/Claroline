@@ -4,8 +4,10 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
@@ -60,23 +62,30 @@ class AttemptManager
     private $itemSerializer;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * AttemptManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "paperGenerator"      = @DI\Inject("ujm_exo.generator.paper"),
-     *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
-     *     "answerManager"       = @DI\Inject("ujm_exo.manager.answer"),
-     *     "itemManager"         = @DI\Inject("ujm_exo.manager.item"),
-     *     "itemSerializer"      = @DI\Inject("ujm_exo.serializer.item")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "paperGenerator"  = @DI\Inject("ujm_exo.generator.paper"),
+     *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
+     *     "answerManager"   = @DI\Inject("ujm_exo.manager.answer"),
+     *     "itemManager"     = @DI\Inject("ujm_exo.manager.item"),
+     *     "itemSerializer"  = @DI\Inject("ujm_exo.serializer.item"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param ObjectManager  $om
-     * @param PaperGenerator $paperGenerator
-     * @param PaperManager   $paperManager
-     * @param AnswerManager  $answerManager
-     * @param ItemManager    $itemManager
-     * @param ItemSerializer $itemSerializer
+     * @param ObjectManager            $om
+     * @param PaperGenerator           $paperGenerator
+     * @param PaperManager             $paperManager
+     * @param AnswerManager            $answerManager
+     * @param ItemManager              $itemManager
+     * @param ItemSerializer           $itemSerializer
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         ObjectManager $om,
@@ -84,8 +93,9 @@ class AttemptManager
         PaperManager $paperManager,
         AnswerManager $answerManager,
         ItemManager $itemManager,
-        ItemSerializer $itemSerializer)
-    {
+        ItemSerializer $itemSerializer,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->om = $om;
         $this->paperGenerator = $paperGenerator;
         $this->paperManager = $paperManager;
@@ -93,6 +103,7 @@ class AttemptManager
         $this->answerManager = $answerManager;
         $this->itemManager = $itemManager;
         $this->itemSerializer = $itemSerializer;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -299,12 +310,17 @@ class AttemptManager
         $paper->setScore($score);
 
         if ($generateEvaluation) {
-            $this->paperManager->generateResourceEvaluation($paper, $finished);
+            $evalutaion = $this->paperManager->generateResourceEvaluation($paper, $finished);
         }
         $this->om->persist($paper);
         $this->om->endFlushSuite();
 
         $this->paperManager->checkPaperEvaluated($paper);
+
+        if ($generateEvaluation) {
+            $event = new GenericDataEvent($evalutaion);
+            $this->eventDispatcher->dispatch('resource.score_evaluation.created', $event);
+        }
     }
 
     /**

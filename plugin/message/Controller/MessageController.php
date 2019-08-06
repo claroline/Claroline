@@ -14,8 +14,11 @@ namespace Claroline\MessageBundle\Controller;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
+use Claroline\MessageBundle\Manager\MessageManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +28,23 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MessageController extends AbstractCrudController
 {
+    /** @var MessageManager */
+    private $messageManager;
+
+    /**
+     * Constructor.
+     *
+     * @DI\InjectParams({
+     *     "messageManager" = @DI\Inject("claroline.manager.message_manager")
+     * })
+     *
+     * @param MessageManager $messageManager
+     */
+    public function __construct(MessageManager $messageManager)
+    {
+        $this->messageManager = $messageManager;
+    }
+
     /** @return string */
     public function getName()
     {
@@ -292,6 +312,35 @@ class MessageController extends AbstractCrudController
         $root = $this->om->getRepository($this->getClass())->find($rootId);
 
         return new JsonResponse($this->serializer->serialize($root, [Options::IS_RECURSIVE]));
+    }
+
+    /**
+     * @EXT\Route("/send", name="apiv2_message_send")
+     * @EXT\Method("POST")
+     * @ApiDoc(
+     *     description="Send a message to a list of users.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "The list of users ids."}
+     *     }
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function messageSendAction(Request $request)
+    {
+        $users = $this->decodeIdsString($request, User::class);
+        $data = $this->decodeRequest($request);
+
+        $message = $this->messageManager->create(
+            $data['content'],
+            isset($data['object']) ? $data['object'] : null,
+            $users
+        );
+        $this->messageManager->send($message, true, false);
+
+        return new JsonResponse();
     }
 
     public function getAction(Request $request, $id, $class)

@@ -23,6 +23,7 @@ class AnalyticsComponent extends Component {
       <div>
         <WorkspaceMetrics
           workspace={this.props.workspace}
+          nbConnections={this.props.nbConnections}
         />
 
         {this.props.analytics.loaded &&
@@ -42,6 +43,7 @@ AnalyticsComponent.propTypes = {
     loaded: T.bool.isRequired,
     data: T.object
   }).isRequired,
+  nbConnections: T.number.isRequired,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired,
@@ -51,6 +53,7 @@ AnalyticsComponent.propTypes = {
 const Analytics = connect(
   state => ({
     analytics: selectors.analytics(state),
+    nbConnections: selectors.nbConnections(state),
     workspace: toolSelectors.contextData(state)
   }),
   dispatch => ({

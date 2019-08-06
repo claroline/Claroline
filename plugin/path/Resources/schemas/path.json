@@ -24,9 +24,26 @@
         "manualProgressionAllowed": {
           "type": "boolean",
           "description": "Wether setting progression manually is allowed or not"
+        },
+        "showScore": {
+          "type": "boolean",
+          "description": "Wether the score is displayed or not"
         }
       },
       "required": ["showOverview", "manualProgressionAllowed"]
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "integer",
+          "description": "The percentage to obtain to pass the path"
+        },
+        "total": {
+          "type": "integer",
+          "description": "The displayed total for the score"
+        }
+      }
     },
     "steps": {
       "type": "array",

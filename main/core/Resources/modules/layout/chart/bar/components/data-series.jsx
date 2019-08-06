@@ -23,6 +23,7 @@ const DataSeries = props => {
             offsetY={isNegativeValue ? props.height / 2 : 0}
             maxHeight={hasNegativeValues ? props.height / 2 : props.height}
             color={isNegativeValue ? props.altColor : props.color}
+            onClick={() => props.onClick ? props.onClick(pair, i) : false}
           />
         )
       })}

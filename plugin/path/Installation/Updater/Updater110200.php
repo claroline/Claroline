@@ -96,7 +96,7 @@ class Updater110200 extends Updater
             }
             ++$i;
 
-            if ($i % 250 === 0) {
+            if (0 === $i % 250) {
                 $om->forceFlush();
             }
         }

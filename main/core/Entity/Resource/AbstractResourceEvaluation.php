@@ -26,9 +26,11 @@ class AbstractResourceEvaluation
     const STATUS_UNKNOWN = 'unknown';
     const STATUS_OPENED = 'opened';
     const STATUS_PARTICIPATED = 'participated';
+    const STATUS_TODO = 'todo';
 
     const STATUS_PRIORITY = [
         self::STATUS_NOT_ATTEMPTED => 0,
+        self::STATUS_TODO => 0,
         self::STATUS_UNKNOWN => 1,
         self::STATUS_OPENED => 2,
         self::STATUS_INCOMPLETE => 3,
@@ -84,6 +86,11 @@ class AbstractResourceEvaluation
      * @ORM\Column(name="progression", type="integer", nullable=true)
      */
     protected $progression;
+
+    /**
+     * @ORM\Column(name="progression_max", type="integer", nullable=true)
+     */
+    protected $progressionMax;
 
     public function getId()
     {
@@ -173,6 +180,16 @@ class AbstractResourceEvaluation
     public function setProgression($progression)
     {
         $this->progression = $progression;
+    }
+
+    public function getProgressionMax()
+    {
+        return $this->progressionMax;
+    }
+
+    public function setProgressionMax($progressionMax)
+    {
+        $this->progressionMax = $progressionMax;
     }
 
     public function isTerminated()

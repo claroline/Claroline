@@ -7,6 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -159,6 +160,18 @@ class PathListener
         $event->setCopy($path);
 
         $event->stopPropagation();
+    }
+
+    /**
+     * Fired when a Resource Evaluation with a score is created.
+     *
+     * @DI\Observe("resource.score_evaluation.created")
+     *
+     * @param GenericDataEvent $event
+     */
+    public function onScoreEvaluationCreated(GenericDataEvent $event)
+    {
+        $this->userProgressionManager->handleResourceEvaluation($event->getData());
     }
 
     /**

@@ -24,6 +24,11 @@ const levelMax = createSelector(
   (store) => store.levelMax
 )
 
+const nbConnections = createSelector(
+  [store],
+  (store) => store.nbConnections
+)
+
 const analytics = createSelector(
   [store],
   (store) => store.analytics
@@ -36,5 +41,6 @@ export const selectors = {
   chart,
   items,
   levelMax,
+  nbConnections,
   analytics
 }

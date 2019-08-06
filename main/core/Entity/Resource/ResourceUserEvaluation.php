@@ -66,6 +66,11 @@ class ResourceUserEvaluation extends AbstractResourceEvaluation
      */
     protected $nbOpenings = 0;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $required = false;
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -130,5 +135,15 @@ class ResourceUserEvaluation extends AbstractResourceEvaluation
     public function setNbOpenings($nbOpenings)
     {
         $this->nbOpenings = $nbOpenings;
+    }
+
+    public function isRequired()
+    {
+        return $this->required;
+    }
+
+    public function setRequired($required)
+    {
+        $this->required = $required;
     }
 }

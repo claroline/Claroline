@@ -51,11 +51,13 @@ class ResourceUserEvaluationSerializer
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
             'customScore' => $resourceUserEvaluation->getCustomScore(),
             'progression' => $resourceUserEvaluation->getProgression(),
+            'progressionMax' => $resourceUserEvaluation->getProgressionMax(),
             'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode()), // TODO : remove me or add an option
             'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser()),
             'userName' => $resourceUserEvaluation->getUserName(),
             'nbAttempts' => $resourceUserEvaluation->getNbAttempts(),
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
+            'required' => $resourceUserEvaluation->isRequired(),
         ];
 
         return $serialized;

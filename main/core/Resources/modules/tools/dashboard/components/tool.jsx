@@ -13,6 +13,7 @@ import {Logs} from '#/main/core/tools/dashboard/components/logs'
 import {UserLogs} from '#/main/core/tools/dashboard/components/logs-user'
 import {LogDetails} from '#/main/core/layout/logs'
 import {Progression} from '#/main/core/tools/dashboard/components/progression'
+import {Paths} from '#/main/core/tools/dashboard/path/containers/paths'
 
 const DashboardTool = (props) =>
   <ToolPage
@@ -59,13 +60,16 @@ const DashboardTool = (props) =>
             render: () => trans('connection_time')
           }, {
             path: '/log',
-            render: () => trans('users_tracking')
+            render: () => trans('users_actions')
           }, {
             path: '/logs/users',
-            render: () => trans('user_tracking', {}, 'log')
+            render: () => trans('user_actions')
           }, {
             path: '/progression',
             render: () => trans('progression')
+          }, {
+            path: '/paths',
+            render: () => trans('paths_tracking')
           }
         ]}
       />
@@ -97,6 +101,9 @@ const DashboardTool = (props) =>
         }, {
           path: '/progression',
           component: Progression
+        }, {
+          path: '/paths',
+          component: Paths
         }
       ]}
     />

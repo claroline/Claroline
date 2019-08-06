@@ -82,6 +82,7 @@ class UserProgression
      * @ORM\Column(name="authorized_access", type="boolean")
      */
     protected $authorized;
+
     /**
      * State of the access to the step.
      *

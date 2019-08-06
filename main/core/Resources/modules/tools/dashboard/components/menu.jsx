@@ -33,13 +33,13 @@ const DashboardMenu = (props) =>
           name: 'log',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-users',
-          label: trans('users_tracking'),
+          label: trans('users_actions'),
           target: `${props.path}/log`
         }, {
           name: 'logs_users',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-user',
-          label: trans('user_tracking', {}, 'log'),
+          label: trans('user_actions'),
           target: `${props.path}/logs/users`
         }, {
           name: 'progression',
@@ -47,6 +47,12 @@ const DashboardMenu = (props) =>
           icon: 'fa fa-fw fa-tasks',
           label: trans('progression'),
           target: `${props.path}/progression`
+        }, {
+          name: 'paths',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-wave-square',
+          label: trans('paths_tracking'),
+          target: `${props.path}/paths`
         }
       ]}
     />

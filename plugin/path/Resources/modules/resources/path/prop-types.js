@@ -18,6 +18,7 @@ const Step = {
         type: T.string.isRequired
       })
     }),
+    evaluated: T.bool,
     showResourceHeader: T.bool,
     secondaryResources: T.arrayOf(T.shape({
       // minimal resource
@@ -41,8 +42,13 @@ const Path = {
     display: T.shape({
       showOverview: T.bool,
       numbering: T.oneOf(['none', 'numeric', 'literal', 'custom']),
-      manualProgressionAllowed: T.bool
+      manualProgressionAllowed: T.bool,
+      showScore: T.bool
     }).isRequired,
+    score: T.shape({
+      success: T.number,
+      total: T.number
+    }),
     opening: T.shape({
       secondaryResources: T.oneOf(['_self', '_blank'])
     }),

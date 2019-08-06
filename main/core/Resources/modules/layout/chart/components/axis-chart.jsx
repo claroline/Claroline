@@ -65,7 +65,8 @@ const AxisChart = props => {
         xScale: xScale,
         color: props.color,
         altColor: props.altColor,
-        showArea: props.showArea
+        showArea: props.showArea,
+        onClick: props.onClick
       })}
     </Chart>
   )

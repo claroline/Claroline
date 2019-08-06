@@ -150,6 +150,13 @@ class Step
     protected $secondaryResources;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $evaluated = false;
+
+    /**
      * Class constructor.
      */
     public function __construct()
@@ -526,5 +533,21 @@ class Step
         $this->showResourceHeader = $showResourceHeader;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEvaluated()
+    {
+        return $this->evaluated;
+    }
+
+    /**
+     * @param bool $evaluated
+     */
+    public function setEvaluated($evaluated)
+    {
+        $this->evaluated = $evaluated;
     }
 }

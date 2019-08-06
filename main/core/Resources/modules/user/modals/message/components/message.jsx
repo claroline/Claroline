@@ -20,11 +20,11 @@ const MessageModal = props =>
           {
             name: 'object',
             type: 'string',
-            label: trans('message_form_object')
+            label: trans('object')
           }, {
             name: 'content',
             type: 'html',
-            label: trans('message_form_content'),
+            label: trans('content'),
             required: true,
             options: {
               minRows: 5

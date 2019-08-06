@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
@@ -32,27 +34,34 @@ class DashboardListener
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    private $logConnectWSRepo;
+
     /**
      * DashboardListener constructor.
      *
      * @DI\InjectParams({
      *     "eventManager"       = @DI\Inject("claroline.event.manager"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "progressionManager" = @DI\Inject("claroline.manager.progression_manager"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage")
      * })
      *
      * @param EventManager          $eventManager
+     * @param ObjectManager         $om
      * @param ProgressionManager    $progressionManager
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         EventManager $eventManager,
+        ObjectManager $om,
         ProgressionManager $progressionManager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->eventManager = $eventManager;
         $this->progressionManager = $progressionManager;
         $this->tokenStorage = $tokenStorage;
+
+        $this->logConnectWSRepo = $om->getRepository(LogConnectWorkspace::class);
     }
 
     /**
@@ -69,11 +78,13 @@ class DashboardListener
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $user = 'anon.' !== $authenticatedUser ? $authenticatedUser : null;
         $items = $this->progressionManager->fetchItems($workspace, $user, $levelMax);
+        $workspaceConnections = $this->logConnectWSRepo->findBy(['workspace' => $workspace]);
 
         $event->setData([
             'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
             'items' => $items,
             'levelMax' => null,    // how deep to process children recursively
+            'nbConnections' => count($workspaceConnections),
         ]);
         $event->stopPropagation();
     }
