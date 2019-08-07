@@ -2,10 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
-import {getActions, getDefaultAction} from '#/main/core/resource/utils'
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
+
 import resourcesSource from '#/main/core/data/sources/resources'
+import {getActions, getDefaultAction} from '#/main/core/resource/utils'
 
 const PlayerMain = props =>
   <ListSource

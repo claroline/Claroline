@@ -7,6 +7,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
@@ -22,8 +23,6 @@ import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
 import {ServerErrors} from '#/main/core/resource/components/errors'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
-
-// todo : manage fullscreen through store
 
 class ResourcePage extends Component {
   constructor(props) {
@@ -52,6 +51,15 @@ class ResourcePage extends Component {
   }
 
   render() {
+    if (!this.props.loaded) {
+      return (
+        <ContentLoader
+          size="lg"
+          description="Nous chargeons le contenu de votre ressource"
+        />
+      )
+    }
+
     // remove workspace root from path (it's already known by the breadcrumb)
     // find a better way to handle this
     let ancestors
@@ -144,7 +152,7 @@ class ResourcePage extends Component {
           <ServerErrors errors={this.props.serverErrors}/>
         }
 
-        {this.props.loaded && isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) &&
+        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) &&
           this.props.children
         }
       </ToolPage>

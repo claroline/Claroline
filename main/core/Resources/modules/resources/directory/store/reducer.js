@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
@@ -11,6 +12,36 @@ import {selectors as editorSelectors} from '#/main/core/resources/directory/edit
 import {reducer as editorReducer} from '#/main/core/resources/directory/editor/store/reducer'
 
 import {selectors as playerSelectors} from '#/main/core/resources/directory/player/store/selectors'
+import {DIRECTORIES_LOAD, DIRECTORY_TOGGLE_OPEN} from '#/main/core/resources/directory/store/actions'
+import {selectors} from '#/main/core/resources/directory/store/selectors'
+
+// TODO : move in `directories` & `resources` in player
+
+/**
+ * Replaces a directory data inside the directories tree.
+ *
+ * @param {Array}  directories - the directory tree
+ * @param {object} newDir      - the new directory data
+ *
+ * @return {Array} - the updated directories tree
+ */
+function replaceDirectory(directories, newDir) {
+  for (let i = 0; i < directories.length; i++) {
+    if (directories[i].id === newDir.id) {
+      const updatedDirs = cloneDeep(directories)
+      updatedDirs[i] = newDir
+
+      return updatedDirs
+    } else if (directories[i].children) {
+      const updatedDirs = cloneDeep(directories)
+      updatedDirs[i].children = replaceDirectory(directories[i].children, newDir)
+
+      return updatedDirs
+    }
+  }
+
+  return directories
+}
 
 const reducer = combineReducers({
   directoryForm: editorReducer.directoryForm,
@@ -20,7 +51,44 @@ const reducer = combineReducers({
     [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
   }),
 
-  // TODO : move in player
+  /**
+   * The list of available directories.
+   *
+   * NB. Each level is loaded on demand when the user uses directories nav,
+   * so you can not assert this contains the full directories list.
+   */
+  directories: makeReducer([], {
+    [DIRECTORIES_LOAD]: (state, action) => {
+      if (!action.parentId) {
+        return action.directories
+      }
+
+      const updatedParent = cloneDeep(selectors.directory(state, action.parentId))
+      if (updatedParent) {
+        // set parent children
+        updatedParent._loaded = true
+        updatedParent.children = action.directories
+
+        return replaceDirectory(state, updatedParent)
+      }
+
+      return state
+    },
+    [DIRECTORY_TOGGLE_OPEN]: (state, action) => {
+      const toToggle = cloneDeep(selectors.directory(state, action.directoryId))
+      if (toToggle) {
+        toToggle._opened = action.opened
+
+        return replaceDirectory(state, toToggle)
+      }
+
+      return state
+    },
+  }),
+
+  /**
+   * The list of the resources of the current directory.
+   */
   resources: makeListReducer(playerSelectors.LIST_NAME, {}, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => true

@@ -6,10 +6,11 @@ import {asset} from '#/main/app/config/asset'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {MENU_BUTTON, CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {MENU_BUTTON, CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
+import {route as resourceRoute} from '#/main/core/resource/routing'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {constants} from '#/plugin/path/resources/path/constants'
@@ -49,9 +50,9 @@ const SecondaryResources = props =>
         size="sm"
         orientation="row"
         primaryAction={{
-          type: URL_BUTTON,
+          type: LINK_BUTTON,
           label: trans('open', {}, 'actions'),
-          target: ['claro_resource_open', {node: resource.autoId, resourceType: resource.meta.type}],
+          target: resourceRoute(resource),
           open: props.target
         }}
         data={resource}
@@ -63,12 +64,7 @@ SecondaryResources.propTypes = {
   className: T.string,
   target: T.oneOf(['_self', '_blank']),
   resources: T.arrayOf(T.shape({
-    resource: T.shape({
-      autoId: T.number.isRequired,
-      meta: T.shape({
-        type: T.string.isRequired
-      }).isRequired
-    }).isRequired
+    // TODO : resource node type
   })).isRequired
 }
 

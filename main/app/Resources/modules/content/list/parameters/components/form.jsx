@@ -54,7 +54,7 @@ const ListForm = props => {
     .reduce((acc, current) => Object.assign(acc, {[current]: constants.DISPLAY_MODES[current].label}), {})
 
   const pageSizesList = constants.AVAILABLE_PAGE_SIZES
-    .reduce((pageChoices, current) => Object.assign(pageChoices, {[current]: -1 !== current ? current : trans('all')}), {})
+    .reduce((pageChoices, current) => Object.assign(pageChoices, {[current]: -1 !== current ? current+'' : trans('all')}), {})
 
   const filtersList = getFilterableProps(definition)
     .reduce(
