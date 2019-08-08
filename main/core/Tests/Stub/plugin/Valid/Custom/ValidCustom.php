@@ -28,11 +28,6 @@ class ValidCustom extends DistributionPluginBundle
         return [$firstPath, $secondPath];
     }
 
-    public function getRoutingPrefix()
-    {
-        return 'custom_routing_prefix';
-    }
-
     public function getDescriptionTranslationKey()
     {
         return 'Custom description translation key';

@@ -1,7 +1,0 @@
-{% if log.details.section is defined %}
-    <a href="{{ path('claro_resource_show_short', {'id': log.getResourceNode().getUuid()})}}"><strong>{{ log.details.section.title }}</strong></a>
-{% endif %}
-
-{% if log.details.contribution is defined %}
-    <a href="{{ path('claro_resource_show_short', {'id': log.getResourceNode().getUuid()})}}"><strong>{{ log.details.contribution.title }}</strong></a>
-{% endif %}

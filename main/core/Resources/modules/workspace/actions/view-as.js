@@ -26,6 +26,7 @@ export default (workspaces) => ({
       selectAction: (role) => ({
         type: URL_BUTTON,
         label: trans('view-as', {}, 'actions'),
+        //TODO: WORKSPACE OPEN URL CHANGE
         target: url(['claro_workspace_open', {workspaceId: workspaces[0].id}], {view_as: role.name})
       })
     }))

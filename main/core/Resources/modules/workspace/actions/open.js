@@ -1,6 +1,7 @@
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {route} from '#/main/core/workspace/routing'
 
 /**
  * Open workspace action.
@@ -12,7 +13,7 @@ export default (workspaces) => ({
   primary: true,
   displayed: hasPermission('open', workspaces[0]),
   icon: 'fa fa-fw fa-arrow-circle-o-right',
-  target: `/desktop/workspaces/open/${workspaces[0].id}`,
+  target: route(workspaces[0]),
   scope: ['object'],
   default: true
 })

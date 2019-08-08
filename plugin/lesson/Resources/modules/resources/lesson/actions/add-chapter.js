@@ -8,5 +8,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('chapter_creation', {}, 'icap_lesson'),
   icon: 'fa fa-fw fa-plus',
   primary: true,
-  target: `${path}/${resourceNodes[0].id}/new`
+  target: `${path}/${resourceNodes[0].meta.slug}/new`
 })

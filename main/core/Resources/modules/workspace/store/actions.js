@@ -29,14 +29,14 @@ actions.dismissRestrictions = makeActionCreator(WORKSPACE_RESTRICTIONS_DISMISS)
  *
  * @TODO : manage workspaces which change the current ui locale
  */
-actions.open = (workspaceId) => (dispatch, getState) => {
+actions.open = (slug) => (dispatch, getState) => {
   const workspace = selectors.workspace(getState())
   const loaded = selectors.loaded(getState())
-  if (!loaded || !workspace || workspace.id !== workspaceId) {
+  if (!loaded || !workspace || workspace.meta.slug !== slug) {
     dispatch({
       [API_REQUEST]: {
         silent: true,
-        url: ['claro_workspace_open', {workspaceId: workspaceId}],
+        url: ['claro_workspace_open', {slug}],
         before: (dispatch) => dispatch(actions.setLoaded(false)),
         success: (response, dispatch) => {
           dispatch(actions.load(response))

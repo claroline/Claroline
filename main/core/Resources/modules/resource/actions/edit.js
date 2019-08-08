@@ -11,5 +11,6 @@ export default (resourceNodes, nodesRefresher, path) => ({
   icon: 'fa fa-fw fa-pencil',
   label: trans('edit', {}, 'actions'),
   primary: true,
-  target: `${path}/${resourceNodes[0].id}/edit`
+  //maybe use the route function
+  target: `${path}/${resourceNodes[0].meta.slug}/edit`
 })

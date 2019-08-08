@@ -43,6 +43,8 @@ class NotificationListener
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
 
+        //TODO: WORKSPACE OPEN URL CHANGE
+
         $event->setPrimaryAction([
           'url' => 'claro_resource_show_short',
           'parameters' => [

@@ -13,11 +13,6 @@ use Icap\DropzoneBundle\Library\Installation\AdditionalInstaller;
 
 class IcapDropzoneBundle extends DistributionPluginBundle
 {
-    public function getRoutingPrefix()
-    {
-        return 'dropzone';
-    }
-
     public function getRequiredPlugins()
     {
         return [

@@ -49,7 +49,8 @@ const RoleList = {
         let WorkspaceLink
 
         if (rowData.workspace) {
-          WorkspaceLink = <a href={url(['claro_workspace_open', {workspaceId: rowData.workspace.id}])}>{rowData.workspace.name}</a>
+          //TODO: WORKSPACE OPEN URL CHANGE
+          WorkspaceLink = <a href={url(['claro_workspace_open', {workspaceId: rowData.workspaceid}])}>{rowData.workspace.name}</a>
         } else {
           WorkspaceLink = '-'
         }

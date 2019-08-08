@@ -66,37 +66,10 @@ class RoutingChecker implements CheckerInterface
         $this->plugin = $plugin;
         $this->pluginFqcn = get_class($plugin);
         $this->errors = [];
-        $this->checkRoutingPrefixIsValid();
-        count($this->errors) === 0 && $this->checkRoutingPrefixIsNotAlreadyRegistered();
+        0 === count($this->errors) && $this->checkRoutingPrefixIsNotAlreadyRegistered();
         $this->checkRoutingResourcesAreLoadable();
 
         return $this->errors;
-    }
-
-    private function checkRoutingPrefixIsValid()
-    {
-        $prefix = $this->plugin->getRoutingPrefix();
-
-        if (!is_string($prefix)) {
-            return $this->errors[] = new ValidationError(
-                "{$this->pluginFqcn} : routing prefix must be a string.",
-                self::INVALID_ROUTING_PREFIX
-            );
-        }
-
-        if (empty($prefix)) {
-            return $this->errors[] = new ValidationError(
-                "{$this->pluginFqcn} : routing prefix cannot be empty.",
-                self::INVALID_ROUTING_PREFIX
-            );
-        }
-
-        if (preg_match('#\s#', $prefix)) {
-            return $this->errors[] = new ValidationError(
-                "{$this->pluginFqcn} : routing prefix cannot contain white spaces.",
-                self::INVALID_ROUTING_PREFIX
-            );
-        }
     }
 
     private function checkRoutingPrefixIsNotAlreadyRegistered()
@@ -111,7 +84,7 @@ class RoutingChecker implements CheckerInterface
     {
         $paths = $this->plugin->getRoutingResourcesPaths();
 
-        if ($paths === null) {
+        if (null === $paths) {
             return;
         }
 
@@ -127,7 +100,7 @@ class RoutingChecker implements CheckerInterface
 
             $bundlePath = preg_quote(realpath($this->plugin->getPath()), '/');
 
-            if (preg_match("/^{$bundlePath}/", $path) === 0) {
+            if (0 === preg_match("/^{$bundlePath}/", $path)) {
                 $this->errors[] = new ValidationError(
                     "{$this->pluginFqcn} : Invalid routing file '{$path}' "
                     .'(must be located within the bundle).',

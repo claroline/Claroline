@@ -31,7 +31,7 @@ const LayoutMain = props =>
         <Routes
           routes={[
             {
-              path: '/desktop/workspaces/open/:id',
+              path: '/desktop/workspaces/open/:slug',
               component: WorkspaceMenu
             }, {
               path: '/desktop',
@@ -52,8 +52,8 @@ const LayoutMain = props =>
           ]}
           routes={[
             {
-              path: '/desktop/workspaces/open/:id',
-              onEnter: (params = {}) => props.openWorkspace(parseInt(params.id)),
+              path: '/desktop/workspaces/open/:slug',
+              onEnter: (params = {}) => props.openWorkspace(params.slug),
               component: WorkspaceMain
             }, {
               path: '/desktop',

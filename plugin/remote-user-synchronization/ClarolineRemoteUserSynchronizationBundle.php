@@ -12,17 +12,9 @@
 namespace Claroline\RemoteUserSynchronizationBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineRemoteUserSynchronizationBundle extends DistributionPluginBundle
 {
-    public function getConfiguration($environment)
-    {
-        $config = new ConfigurationBuilder();
-
-        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'remote-user-synchronization');
-    }
-
     public function hasMigrations()
     {
         return true;

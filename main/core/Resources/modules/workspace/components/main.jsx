@@ -8,6 +8,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {ToolMain} from '#/main/core/tool/containers/main'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {WorkspaceRestrictions} from '#/main/core/workspace/components/restrictions'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 const WorkspaceMain = (props) => {
   if (!props.loaded) {
@@ -32,7 +33,7 @@ const WorkspaceMain = (props) => {
   if (!isEmpty(props.workspace)) {
     return (
       <Routes
-        path={`/desktop/workspaces/open/${props.workspace.id}`}
+        path={workspaceRoute(props.workspace)}
         routes={[
           {
             path: '/:toolName',

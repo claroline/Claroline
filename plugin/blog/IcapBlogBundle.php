@@ -13,7 +13,7 @@ class IcapBlogBundle extends DistributionPluginBundle
         $config = new ConfigurationBuilder();
 
         return $config
-            ->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'icap_blog')
+            ->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null)
             ->addContainerResource($this->getPath().'/Resources/config/parameters.yml');
     }
 

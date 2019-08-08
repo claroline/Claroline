@@ -7,6 +7,7 @@ import {EventCard} from '#/plugin/agenda/data/components/event-card'
 export default {
   name: 'tasks',
   parameters: {
+    //TODO: WORKSPACE OPEN URL CHANGE
     primaryAction: (task) => ({
       type: URL_BUTTON,
       target: ['claro_workspace_open_tool', {

@@ -73,7 +73,7 @@ class ResourcePage extends Component {
         path={[].concat(ancestors.map(ancestorNode => ({
           type: LINK_BUTTON,
           label: ancestorNode.name,
-          target: `${this.props.basePath}/${ancestorNode.id}`
+          target: `${this.props.basePath}/${ancestorNode.slug}`
         })), this.props.path)}
         poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
         icon={get(this.props.resourceNode, 'display.showIcon') && (this.props.userEvaluation ?

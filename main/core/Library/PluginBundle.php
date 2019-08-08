@@ -56,7 +56,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         $config = new ConfigurationBuilder();
 
         if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
-            $config->addRoutingResource($routingFile, null, strtolower($this->getName()));
+            $config->addRoutingResource($routingFile, null, null);
         }
 
         return $config;
@@ -77,26 +77,6 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         }
 
         return [];
-    }
-
-    /**
-     * Deprecated: use getConfiguration instead.
-     *
-     * @deprecated
-     */
-    public function getRoutingPrefix()
-    {
-        $vendor = $this->getVendorName();
-        $prefix = $this->getBundleName();
-        $pattern = '#^(.+)Bundle$#';
-
-        if (preg_match($pattern, $prefix, $matches)) {
-            $prefix = $matches[1];
-        }
-
-        $prefix = strtolower("{$vendor}_{$prefix}");
-
-        return $prefix;
     }
 
     public function getConfigFile()

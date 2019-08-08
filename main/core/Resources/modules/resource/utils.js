@@ -116,12 +116,17 @@ function getActions(resourceNodes, nodesRefresher, path, currentUser = null, wit
  * @return {Promise.<Array>}
  */
 function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null) {
-  const defaultAction = getType(resourceNode).actions
-    .find(action => action.default)
+  const type = getType(resourceNode)
 
-  if (hasPermission(defaultAction.permission, resourceNode)) {
-    return loadActions([resourceNode], [defaultAction], nodesRefresher, path, currentUser)
-      .then(loadActions => loadActions[0] || null)
+  if (type) {
+    const defaultAction = getType(resourceNode).actions
+      .find(action => action.default)
+
+
+    if (hasPermission(defaultAction.permission, resourceNode)) {
+      return loadActions([resourceNode], [defaultAction], nodesRefresher, path, currentUser)
+        .then(loadActions => loadActions[0] || null)
+    }
   }
 
   return null

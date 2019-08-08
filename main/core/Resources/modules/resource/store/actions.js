@@ -40,16 +40,17 @@ actions.openResource = (resourceId) => (dispatch, getState) => {
   }
 }
 
-actions.fetchNode = (id) => (dispatch, getState) => {
+actions.fetchNode = (slug) => (dispatch, getState) => {
   const resourceNode = selectors.resourceNode(getState())
-  if (resourceNode && resourceNode.id === id) {
+
+  if (resourceNode && resourceNode.meta && resourceNode.meta.slug === slug) {
     return Promise.resolve(resourceNode)
   }
 
   return dispatch({
     [API_REQUEST]: {
       silent: true,
-      url: ['claro_resource_get', {id: id}],
+      url: ['claro_resource_get', {slug}],
       success: (response, dispatch) => dispatch(actions.loadNode(response))
     }
   })

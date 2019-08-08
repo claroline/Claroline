@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -87,6 +88,7 @@ class ResourceController
      * @DI\InjectParams({
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "templating"          = @DI\Inject("templating"),
+     *     "finder"              = @DI\Inject("claroline.api.finder"),
      *     "security"            = @DI\Inject("claroline.security.utilities"),
      *     "serializer"          = @DI\Inject("claroline.api.serializer"),
      *     "manager"             = @DI\Inject("claroline.manager.resource_manager"),
@@ -118,7 +120,8 @@ class ResourceController
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
-        EventManager $eventManager
+        EventManager $eventManager,
+        FinderProvider $finder
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -131,6 +134,7 @@ class ResourceController
         $this->rightsRepo = $om->getRepository(ResourceRights::class);
         $this->authorization = $authorization;
         $this->eventManager = $eventManager;
+        $this->finder = $finder;
     }
 
     /**
@@ -442,7 +446,7 @@ class ResourceController
     /**
      * Gets a resource node.
      *
-     * @EXT\Route("/{id}", name="claro_resource_get")
+     * @EXT\Route("/{slug}", name="claro_resource_get")
      * @EXT\Method("GET")
      *
      * @param int|string $id - the id of the target node (we don't use ParamConverter to support ID and UUID)
@@ -451,10 +455,11 @@ class ResourceController
      *
      * @throws ResourceNotFoundException
      */
-    public function getAction($id)
+    public function getAction($slug)
     {
         /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->om->find(ResourceNode::class, $id);
+        $resourceNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $slug]);
+
         if (!$resourceNode) {
             throw new ResourceNotFoundException('Resource not found');
         }

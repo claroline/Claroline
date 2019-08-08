@@ -26,6 +26,7 @@ const ImpersonationModal = props =>
           primaryAction={{
             type: 'url',
             label: trans('view-as', {}, 'actions'),
+            //TODO: WORKSPACE OPEN URL CHANGE
             target: url(['claro_workspace_open', {workspaceId: props.workspace.id}], {view_as: role.name})
           }}
         />

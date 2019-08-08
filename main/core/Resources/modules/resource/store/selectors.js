@@ -23,7 +23,9 @@ const basePath = toolSelectors.path
 
 const path = createSelector(
   [basePath, resourceNode],
-  (basePath, resourceNode) => basePath + '/' + resourceNode.id
+  (basePath, resourceNode) => {
+    return basePath + '/' + (resourceNode.meta ? resourceNode.meta.slug: null)
+  }
 )
 
 const embedded = createSelector(

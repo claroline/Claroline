@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/22/15
  */
 
@@ -69,25 +69,25 @@ class ShareActionManager
 
     public function createShare(Request $request, ShareAction $share)
     {
-        $return = array();
+        $return = [];
         $resourceId = $request->get('resourceId');
-        if ($resourceId === null) {
+        if (null === $resourceId) {
             $url = $request->get('url');
-            if ($url === null) {
+            if (null === $url) {
                 throw new BadRequestHttpException();
             }
             $share->setUrl($url);
             $return['url'] = $url;
             $title = $request->get('title');
             $share->setTitle($title);
-            if ($title !== null) {
+            if (null !== $title) {
                 $return['title'] = $title;
             }
         } else {
             $resourceNode = $this->resourceNodeRepository->find($resourceId);
             $share->setResource($resourceNode);
             $return['title'] = $resourceNode->getName();
-            $return['url'] = $this->router->generate('claro_resource_open_short', array('node' => $resourceNode->getId()), true);
+            $return['url'] = $this->router->generate('claro_resource_open_short', ['node' => $resourceNode->getId()], true);
         }
         $network = $request->get('network');
         $share->setNetwork($network);
@@ -99,27 +99,27 @@ class ShareActionManager
         return $return;
     }
 
-    public function countShares(Request $request = null, $criteria = array())
+    public function countShares(Request $request = null, $criteria = [])
     {
-        if ($request !== null) {
+        if (null !== $request) {
             $criteria = $this->getCriteriaFromRequest($request, null, $criteria);
         }
 
         return $this->shareActionRepository->countShares($criteria);
     }
 
-    private function getCriteriaFromRequest(Request $request = null, User $user = null, $criteria = array())
+    private function getCriteriaFromRequest(Request $request = null, User $user = null, $criteria = [])
     {
-        if ($user !== null) {
+        if (null !== $user) {
             $criteria['user'] = $user;
         }
 
-        if ($request !== null) {
+        if (null !== $request) {
             $resourceId = $request->get('resourceId');
-            if ($resourceId == null) {
+            if (null === $resourceId) {
                 $resourceId = $request->get('resource');
             }
-            if ($resourceId !== null) {
+            if (null !== $resourceId) {
                 $criteria['resource'] = $resourceId;
             } else {
                 $url = $request->get('url');

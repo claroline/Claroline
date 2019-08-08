@@ -165,7 +165,7 @@ class PlayerComponent extends Component {
         {(!this.state.fetching && this.state.error) &&
           <PlayerRestrictions
             {...this.state.error}
-            workspaceId={this.props.workspaceId}
+            workspace={this.props.workspace}
             showStatistics={this.props.showStatistics}
           />
         }
@@ -214,6 +214,7 @@ class PlayerComponent extends Component {
 
 PlayerComponent.propTypes = {
   workspaceId: T.number,
+  workspace: T.object,
   history: T.object.isRequired,
   quizId: T.string.isRequired,
   numbering: T.string.isRequired,
@@ -264,6 +265,7 @@ const Player = withRouter(connect(
     return {
       // general info
       workspaceId: resourceSelect.workspaceId(state),
+      workspace: resourceSelect.workspace(state),
       quizId: select.quizId(state),
 
       // general attempt info

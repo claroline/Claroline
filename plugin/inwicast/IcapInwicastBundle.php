@@ -12,17 +12,9 @@
 namespace Icap\InwicastBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class IcapInwicastBundle extends DistributionPluginBundle
 {
-    public function getConfiguration($environment)
-    {
-        $config = new ConfigurationBuilder();
-
-        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'inwicast_claroline_plugin');
-    }
-
     public function isActiveByDefault()
     {
         return false;

@@ -12,21 +12,9 @@
 namespace Claroline\TeamBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineTeamBundle extends DistributionPluginBundle
 {
-    public function getConfiguration($environment)
-    {
-        $config = new ConfigurationBuilder();
-
-        return $config->addRoutingResource(
-            __DIR__.'/Resources/config/routing.yml',
-            null,
-            'team'
-        );
-    }
-
     public function hasMigrations()
     {
         return true;

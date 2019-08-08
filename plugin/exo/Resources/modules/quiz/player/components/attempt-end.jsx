@@ -6,7 +6,8 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {route} from '#/main/core/workspace/routing'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
@@ -83,11 +84,11 @@ const AttemptEndComponent = props =>
                 displayed: props.showStatistics
               }, {
                 name: 'home',
-                type: URL_BUTTON,
+                type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-home',
                 label: trans('return-home', {}, 'actions'),
-                target: ['claro_workspace_open', {workspaceId: props.workspaceId}],
-                displayed: !!props.workspaceId
+                target: route(props.workspace),
+                displayed: !!props.workspace
               }
             ]}
           />
@@ -97,7 +98,7 @@ const AttemptEndComponent = props =>
   </div>
 
 AttemptEndComponent.propTypes = {
-  workspaceId: T.number,
+  workspace: T.object,
   paper: T.shape({ // TODO : paper prop types
     id: T.string.isRequired,
     structure: T.object.isRequired,
@@ -118,7 +119,7 @@ const AttemptEnd = connect(
     const paper = playerSelect.paper(state)
 
     return {
-      workspaceId: resourceSelect.workspaceId(state),
+      workspace: resourceSelect.workspace(state),
       paper: paper,
       testMode: playerSelect.testMode(state),
       hasMoreAttempts: playerSelect.hasMoreAttempts(state),

@@ -30,7 +30,9 @@ class ResourceSlugBuilderCommand extends ContainerAwareCommand
 
             foreach ($nodes as $node) {
                 //rebuild slug
-                $node->setSlug(null);
+                if (!$node->getSlug()) {
+                    $node->setSlug($node->getName());
+                }
                 $om->persist($node);
                 $output->writeln('Building slug for resource '.$node->getPathForDisplay());
                 ++$offset;
@@ -40,5 +42,8 @@ class ResourceSlugBuilderCommand extends ContainerAwareCommand
             $om->flush();
             $om->clear();
         }
+
+        $om->flush();
+        $om->clear();
     }
 }

@@ -78,11 +78,9 @@ class ResourceNodeController extends AbstractCrudController
 
         if ($parent) {
             // grab directory content
-            $parentNode = $this->om
-                ->getRepository(ResourceNode::class)
-                ->findOneBy(['uuid' => $parent]);
+            $parentNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $parent]);
 
-            $options['hiddenFilters']['parent'] = $parentNode ? $parentNode->getId() : null;
+            $options['hiddenFilters']['parent'] = $parentNode ? $parentNode->getUuid() : null;
 
             if ($parentNode) {
                 $permissions = $this->rightsManager->getCurrentPermissionArray($parentNode);

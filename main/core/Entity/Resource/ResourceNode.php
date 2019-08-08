@@ -305,7 +305,7 @@ class ResourceNode
 
     /**
      * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(length=128, unique=true, nullable=true)
+     * @ORM\Column(length=128, unique=true)
      */
     private $slug;
 
@@ -912,7 +912,9 @@ class ResourceNode
         $countAncestors = count($parts);
         for ($i = 0; $i < $countAncestors; $i += 2) {
             $ancestors[] = [
+                //retrocompatibility
                 'id' => $parts[$i + 1],
+                'slug' => $parts[$i + 1],
                 'name' => $parts[$i],
             ];
         }
@@ -944,9 +946,9 @@ class ResourceNode
     private function makePath(self $node, $path = '')
     {
         if ($node->getParent()) {
-            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getUuid().self::PATH_SEPARATOR.$path);
+            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getSlug().self::PATH_SEPARATOR.$path);
         } else {
-            $path = $node->getName().'%'.$node->getUuid().self::PATH_SEPARATOR.$path;
+            $path = $node->getName().'%'.$node->getSlug().self::PATH_SEPARATOR.$path;
         }
 
         return $path;
@@ -966,7 +968,8 @@ class ResourceNode
         for ($i = 0; $i < $countAncestors; $i += 2) {
             if (array_key_exists($i + 1, $parts)) {
                 $ancestors[] = [
-                    'id' => (int) $parts[$i + 1],
+                   'id' => $parts[$i + 1],
+                    'slug' => $parts[$i + 1],
                     'name' => $parts[$i],
                 ];
             }

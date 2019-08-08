@@ -50,22 +50,6 @@ class RedirectController extends Controller
     }
 
     /**
-     * @EXT\Route("ws/{slug}/")
-     * @EXT\Route("ws/{slug}")
-     * @EXT\ParamConverter("workspace",  options={"mapping": {"slug": "slug"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return RedirectResponse
-     */
-    public function openWorkspaceSlugAction(Workspace $workspace)
-    {
-        return $this->redirectToRoute('claro_workspace_open', [
-            'workspaceId' => $workspace->getId(),
-        ]);
-    }
-
-    /**
      * @EXT\Route("ws/{slug}/subscription", name="claro_workspace_subscription_url_generate")
      * @EXT\ParamConverter("workspace", options={"mapping": {"slug": "slug"}})
      *

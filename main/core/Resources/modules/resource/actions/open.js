@@ -14,5 +14,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('open', {}, 'actions'),
   default: true,
   icon: 'fa fa-fw fa-arrow-circle-o-right',
-  target: `${path}/${resourceNodes[0].id}`
+  target: `${path}/${resourceNodes[0].meta.slug}`
 })

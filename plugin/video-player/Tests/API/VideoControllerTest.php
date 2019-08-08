@@ -3,7 +3,6 @@
 namespace Claroline\VideoPlayerBundle\Tests\API;
 
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Library\Testing\Persister;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -25,7 +24,7 @@ class VideoControllerTest extends TransactionalTestCase
         $this->createTrack($file, 'en', 'English', false);
         $this->createTrack($file, 'fr', 'Français', false);
         $this->createTrack($file, 'es', 'español, castellano', false);
-        $this->client->request('GET', "/video-player/api/video/{$file->getId()}/tracks");
+        $this->client->request('GET', "/api/video/{$file->getId()}/tracks");
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(3, count($data));
@@ -42,7 +41,7 @@ class VideoControllerTest extends TransactionalTestCase
         $this->login($manager);
         $file = $this->persister->file('video', 'video/mp4', true, $manager);
         $track = $this->createTrack($file, 'en', 'English', false);
-        $this->client->request('GET', "/video-player/api/video/track/{$track->getId()}/stream");
+        $this->client->request('GET', "/api/video/track/{$track->getId()}/stream");
         //this is a bad check but it's better than nothing
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }

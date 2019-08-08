@@ -36,6 +36,8 @@ class NotificationListener
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
 
+        //to change later for the workspace open
+
         switch ($notification->getActionKey()) {
           case LogWorkspaceRoleChangeRightEvent::ACTION:
             if (isset($notification->getDetails()['resource']['id']) && '' !== $notification->getDetails()['resource']['id']) {

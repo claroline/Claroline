@@ -1,13 +1,14 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {route} from '#/main/core/workspace/routing'
 
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
 
 const WorkspaceList = {
   open: (row) => ({
     label: trans('open'),
-    type: URL_BUTTON,
-    target: ['claro_workspace_open', {workspaceId: row.id}]
+    type: LINK_BUTTON,
+    target: route(row[0])
   }),
   definition: [
     {

@@ -29,25 +29,6 @@ class RoutingCheckerTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider invalidRoutingPrefixProvider
-     */
-    public function testCheckerReturnsAnErrorOnInvalidRoutingPrefix($pluginFqcn)
-    {
-        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
-        $this->assertEquals(RoutingChecker::INVALID_ROUTING_PREFIX, $errors[0]->getCode());
-    }
-
-    /**
-     * @dataProvider alreadyRegisteredPrefixProvider
-     */
-    public function testCheckerReturnsAnErrorIfRoutingPrefixIsAlreadyRegistered($pluginFqcn)
-    {
-        $this->markTestSkipped('Symfony 2.2 doesn\'t provide a way to retrieve the registered prefixes');
-        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
-        $this->assertEquals(RoutingChecker::ALREADY_REGISTERED_PREFIX, $errors[0]->getCode());
-    }
-
-    /**
      * @dataProvider nonExistentRoutingResourceProvider
      */
     public function testCheckerReturnsAnErrorOnNonExistentRoutingResource($pluginFqcn)
@@ -89,22 +70,6 @@ class RoutingCheckerTest extends MockeryTestCase
     public function testCheckerReturnsNoErrorOnValidPlugin($pluginFqcn)
     {
         $this->assertEquals(0, count($this->checker->check($this->loadPlugin($pluginFqcn))));
-    }
-
-    public function invalidRoutingPrefixProvider()
-    {
-        return [
-            ['Invalid\UnexpectedRoutingPrefix1\InvalidUnexpectedRoutingPrefix1'],
-            ['Invalid\UnexpectedRoutingPrefix2\InvalidUnexpectedRoutingPrefix2'],
-            ['Invalid\UnexpectedRoutingPrefix3\InvalidUnexpectedRoutingPrefix3'],
-        ];
-    }
-
-    public function alreadyRegisteredPrefixProvider()
-    {
-        return [
-            ['Invalid\AlreadyRegisteredRoutingPrefix\InvalidAlreadyRegisteredRoutingPrefix'],
-        ];
     }
 
     public function nonExistentRoutingResourceProvider()

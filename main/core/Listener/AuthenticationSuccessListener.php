@@ -230,7 +230,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 $workspace = $workspaces[0];
                 $route = $this->router->generate(
                     'claro_workspace_open',
-                    ['workspaceId' => $workspace->getId()]
+                    ['slug' => $workspace->getSlug()]
                 );
 
                 return new RedirectResponse($route);
