@@ -3,6 +3,7 @@
     "message_form_content": "Content",
     "message_form_object": "Subject",
     "message_form_to": "To",
+    "message_from": "From",
     "messages": "Message",
     "messages_delete_title": "Delete messages",
     "messages_delete_confirm": "Are your sure you want to delete this file?",

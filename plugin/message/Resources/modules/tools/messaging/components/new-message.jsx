@@ -2,15 +2,17 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
-import {UserAvatar} from '#/main/core/user/components/avatar'
-import {User as UserTypes} from '#/main/core/user/prop-types'
-import {Button} from '#/main/app/action/components/button'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {Button} from '#/main/app/action/components/button'
+
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {User as UserTypes} from '#/main/core/user/prop-types'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 
 import {selectors} from '#/plugin/message/tools/messaging/store'
 
@@ -49,7 +51,7 @@ NewMessageFormWrapper.propTypes = {
 const NewMessageComponent = (props) =>
   <NewMessageFormWrapper
     user={props.currentUser}
-    callback={() =>  props.saveForm(props.history.push)}
+    callback={() => props.saveForm(props.history.push, props.path)}
   >
     <FormData
       level={3}
@@ -92,6 +94,7 @@ NewMessageComponent.propTypes = {
     // TODO
   }).isRequired,
   saveForm: T.func.isRequired,
+  path: T.string.isRequired,
   reply: T.bool.isRequired,
   history: T.shape({
     push: T.func.isRequired
@@ -101,11 +104,15 @@ NewMessageComponent.propTypes = {
 const NewMessage = withRouter(connect(
   state => ({
     currentUser: securitySelectors.currentUser(state),
+    path: toolSelectors.path(state),
     reply: selectors.reply(state)
   }),
   (dispatch) => ({
-    saveForm(push) {
-      dispatch(formActions.saveForm(`${selectors.STORE_NAME}.messageForm`, ['apiv2_message_create'])).then(() => push('/received'))
+    saveForm(push, path) {
+      dispatch(formActions.saveForm(
+        `${selectors.STORE_NAME}.messageForm`,
+        ['apiv2_message_create']
+      )).then(() => push(`${path}/received`))
     }
   })
 )(NewMessageComponent))

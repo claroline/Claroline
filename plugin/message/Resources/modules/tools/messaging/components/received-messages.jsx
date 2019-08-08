@@ -33,7 +33,7 @@ const ReceivedMessagesComponent = (props) =>
         name: 'from.username',
         alias: 'senderUsername',
         type: 'string',
-        label: trans('from_message', {}, 'message'),
+        label: trans('message_from', {}, 'message'),
         displayed: true,
         filterable: false,
         sortable: true
