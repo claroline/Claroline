@@ -43,6 +43,7 @@ const NotificationsDropdown = (props) =>
         label={trans('all_notifications', {}, 'notification')}
         target={toolRoute('notification')}
         primary={true}
+        onClick={props.closeMenu}
       />
     </div>
   </div>
@@ -51,7 +52,8 @@ NotificationsDropdown.propTypes = {
   count: T.number.isRequired,
   results: T.arrayOf(T.shape({
     // TODO
-  })).isRequired
+  })).isRequired,
+  closeMenu: T.func.isRequired
 }
 
 class NotificationsMenu extends Component {
@@ -63,6 +65,7 @@ class NotificationsMenu extends Component {
     }
 
     this.count = this.count.bind(this)
+    this.setOpened = this.setOpened.bind(this)
 
     if (this.props.isAuthenticated) {
       this.count()
@@ -81,6 +84,10 @@ class NotificationsMenu extends Component {
 
   componentWillUnmount() {
     this.stopCount()
+  }
+
+  setOpened(opened) {
+    this.setState({opened: opened})
   }
 
   count() {
@@ -120,12 +127,13 @@ class NotificationsMenu extends Component {
             this.props.getNotifications()
           }
 
-          this.setState({opened: opened})
+          this.setOpened(opened)
         }}
         menu={
           <NotificationsDropdown
             count={this.props.count}
             results={this.props.results}
+            closeMenu={() => this.setOpened(false)}
           />
         }
         subscript={0 !== this.props.count ? {

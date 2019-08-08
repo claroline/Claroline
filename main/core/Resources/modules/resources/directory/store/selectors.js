@@ -25,7 +25,6 @@ export const selectors = {
   STORE_NAME,
 
   resource,
-  current,
   directories,
   directory
 }

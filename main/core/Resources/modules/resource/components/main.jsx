@@ -94,6 +94,12 @@ class ResourceMain extends Component {
                 styles: resolved.default.styles
               })
             }
+          },
+          (errors) => {
+            // TODO : find better.
+            /* eslint-disable no-console */
+            console.error(errors)
+            /* eslint-enable no-console */
           }
         )
         .then(

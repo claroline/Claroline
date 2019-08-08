@@ -58,7 +58,7 @@ class Await extends Component {
                 error: error
               })
 
-              // TODO : find better. I don't understand why invariant is not thrown
+              // TODO : find better.
               /* eslint-disable no-console */
               console.error(error)
               /* eslint-enable no-console */

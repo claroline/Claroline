@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
@@ -63,6 +63,7 @@ const UserMenu = props =>
           label={trans('login', {}, 'actions')}
           primary={true}
           target="/login"
+          onClick={props.closeMenu}
         />
 
         {props.registration &&
@@ -71,6 +72,7 @@ const UserMenu = props =>
             className="btn btn-block"
             label={trans('self-register', {}, 'actions')}
             target="/registration"
+            onClick={props.closeMenu}
           />
         }
       </div>
@@ -85,6 +87,7 @@ const UserMenu = props =>
           label={trans('desktop')}
           target="/desktop"
           exact={true}
+          onClick={props.closeMenu}
         />
       }
 
@@ -95,6 +98,7 @@ const UserMenu = props =>
           icon="fa fa-fw fa-user"
           label={trans('user_profile')}
           target={['claro_user_profile', {user: props.currentUser.publicUrl}]}
+          onClick={props.closeMenu}
         />
       }
 
@@ -104,7 +108,8 @@ const UserMenu = props =>
           className="list-group-item"
           icon="fa fa-fw fa-cog"
           label={trans('parameters', {}, 'tools')}
-          target={'/desktop/parameters'}
+          target="/desktop/parameters"
+          onClick={props.closeMenu}
         />
       }
 
@@ -115,6 +120,7 @@ const UserMenu = props =>
           icon="fa fa-fw fa-cogs"
           label={trans('administration')}
           target="/admin"
+          onClick={props.closeMenu}
         />
       }
 
@@ -126,6 +132,7 @@ const UserMenu = props =>
           icon={`fa fa-fw fa-${tool.icon}`}
           label={trans(tool.name, {}, 'tools')}
           target={`/desktop/${tool.name}`}
+          onClick={props.closeMenu}
         />
       )}
     </div>
@@ -137,6 +144,7 @@ const UserMenu = props =>
         modal={[MODAL_LOCALE, props.locale]}
         icon={<LocaleFlag locale={props.locale.current} />}
         label={trans(props.locale.current)}
+        onClick={props.closeMenu}
       />
 
       {props.actions.map(action =>
@@ -145,6 +153,7 @@ const UserMenu = props =>
           key={toKey(action.label)}
           className="app-current-user-btn btn-link"
           tooltip="bottom"
+          onClick={props.closeMenu}
         />
       )}
     </div>
@@ -171,37 +180,60 @@ UserMenu.propTypes = {
   locale: T.shape({
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
-  }).isRequired
+  }).isRequired,
+  closeMenu: T.func.isRequired
 }
 
-const HeaderUser = props =>
-  <Button
-    id="app-user"
-    className="app-header-user app-header-item app-header-btn"
-    type={MENU_BUTTON}
-    icon={props.authenticated ?
-      <UserAvatar picture={props.currentUser.picture} alt={true} /> :
-      <span className="user-avatar fa fa-user-secret" />
+class HeaderUser extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      opened: false
     }
-    label={props.authenticated ? props.currentUser.username : trans('login')}
-    tooltip="bottom"
-    subscript={props.impersonated ? {
-      type: 'text',
-      status: 'danger',
-      value: (<span className="fa fa-mask" />)
-    } : undefined}
-    menu={
-      <UserMenu
-        authenticated={props.authenticated}
-        impersonated={props.impersonated}
-        currentUser={props.currentUser}
-        registration={props.registration}
-        tools={props.tools}
-        locale={props.locale}
-        actions={props.actions.filter(action => undefined === action.displayed || action.displayed)}
+
+    this.setOpened = this.setOpened.bind(this)
+  }
+
+  setOpened(opened) {
+    this.setState({opened: opened})
+  }
+
+  render() {
+    return (
+      <Button
+        id="app-user"
+        className="app-header-user app-header-item app-header-btn"
+        type={MENU_BUTTON}
+        icon={this.props.authenticated ?
+          <UserAvatar picture={this.props.currentUser.picture} alt={true} /> :
+          <span className="user-avatar fa fa-user-secret" />
+        }
+        label={this.props.authenticated ? this.props.currentUser.username : trans('login')}
+        tooltip="bottom"
+        opened={this.state.opened}
+        onToggle={this.setOpened}
+        subscript={this.props.impersonated ? {
+            type: 'text',
+            status: 'danger',
+            value: (<span className="fa fa-mask" />)
+          } : undefined}
+        menu={
+          <UserMenu
+            authenticated={this.props.authenticated}
+            impersonated={this.props.impersonated}
+            currentUser={this.props.currentUser}
+            registration={this.props.registration}
+            tools={this.props.tools}
+            locale={this.props.locale}
+            actions={this.props.actions.filter(action => undefined === action.displayed || action.displayed)}
+            closeMenu={() => this.setOpened(false)}
+          />
+        }
       />
-    }
-  />
+    )
+  }
+}
 
 HeaderUser.propTypes = {
   tools: T.array,

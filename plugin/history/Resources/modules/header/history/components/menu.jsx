@@ -64,7 +64,8 @@ const HistoryDropdown = props =>
         primaryAction: {
           type: LINK_BUTTON,
           label: trans('open', {}, 'actions'),
-          target: 'workspaces' === props.section ? workspaceRoute(result) : resourceRoute(result)
+          target: 'workspaces' === props.section ? workspaceRoute(result) : resourceRoute(result),
+          onClick: props.closeMenu
         }
       })
     )}
@@ -76,6 +77,7 @@ const HistoryDropdown = props =>
         label={trans('workspaces' === props.section ? 'all_workspaces' : 'all_resources', {}, 'history')}
         target={toolRoute('workspaces' === props.section ? 'workspaces' : 'resource_manager')}
         primary={true}
+        onClick={props.closeMenu}
       />
     </div>
   </div>
@@ -83,7 +85,8 @@ const HistoryDropdown = props =>
 HistoryDropdown.propTypes = {
   section: T.oneOf(['resources', 'workspaces']),
   results: T.array,
-  changeSection: T.func.isRequired
+  changeSection: T.func.isRequired,
+  closeMenu: T.func.isRequired
 }
 
 class HistoryMenu extends Component {
@@ -96,10 +99,15 @@ class HistoryMenu extends Component {
     }
 
     this.changeSection = this.changeSection.bind(this)
+    this.setOpened = this.setOpened.bind(this)
   }
 
   changeSection(section) {
     this.setState({section: section})
+  }
+
+  setOpened(opened) {
+    this.setState({opened: opened})
   }
 
   render() {
@@ -124,13 +132,14 @@ class HistoryMenu extends Component {
             this.props.getHistory()
           }
 
-          this.setState({opened: opened})
+          this.setOpened(opened)
         }}
         menu={
           <HistoryDropdown
             section={this.state.section}
             results={!isEmpty(this.props.results) ? this.props.results[this.state.section] : []}
             changeSection={this.changeSection}
+            closeMenu={() => this.setOpened(false)}
           />
         }
       />

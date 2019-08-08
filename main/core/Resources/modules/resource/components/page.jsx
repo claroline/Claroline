@@ -35,6 +35,7 @@ class ResourcePage extends Component {
   }
 
   componentDidMount() {
+    console.log('did mount')
     this.props.loadResource(this.props.resourceNode, this.props.embedded)
   }
 

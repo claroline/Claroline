@@ -63,7 +63,8 @@ const FavouritesDropdown = props =>
         primaryAction: {
           type: LINK_BUTTON,
           label: trans('open', {}, 'actions'),
-          target: 'workspaces' === props.section ? workspaceRoute(result) : resourceRoute(result)
+          target: 'workspaces' === props.section ? workspaceRoute(result) : resourceRoute(result),
+          onClick: props.closeMenu
         },
         actions: [
           {
@@ -87,7 +88,8 @@ FavouritesDropdown.propTypes = {
   section: T.oneOf(['resources', 'workspaces']),
   results: T.array,
   changeSection: T.func.isRequired,
-  deleteFavourite: T.func.isRequired
+  deleteFavourite: T.func.isRequired,
+  closeMenu: T.func.isRequired
 }
 
 class FavouritesMenu extends Component {
@@ -100,10 +102,15 @@ class FavouritesMenu extends Component {
     }
 
     this.changeSection = this.changeSection.bind(this)
+    this.setOpened = this.setOpened.bind(this)
   }
 
   changeSection(section) {
     this.setState({section: section})
+  }
+
+  setOpened(opened) {
+    this.setState({opened: opened})
   }
 
   render() {
@@ -128,7 +135,7 @@ class FavouritesMenu extends Component {
             this.props.getFavourites()
           }
 
-          this.setState({opened: opened})
+          this.setOpened(opened)
         }}
         menu={
           <FavouritesDropdown
@@ -136,6 +143,7 @@ class FavouritesMenu extends Component {
             results={!isEmpty(this.props.results) ? this.props.results[this.state.section] : []}
             changeSection={this.changeSection}
             deleteFavourite={this.props.deleteFavourite}
+            closeMenu={() => this.setOpened(false)}
           />
         }
       />
