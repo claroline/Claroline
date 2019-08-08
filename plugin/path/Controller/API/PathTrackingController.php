@@ -118,8 +118,10 @@ class PathTrackingController
         $data = [];
 
         foreach ($paths as $path) {
-            $steps = $path->getSteps();
+            // Reverse steps to proceed the latest steps first as we will only keep the most advanced step the users have done
+            $steps = array_reverse($path->getSteps()->toArray());
             $stepsData = [];
+            $usersDone = [];
 
             foreach ($steps as $step) {
                 $progressions = $this->userProgressionRepo->findBy(['step' => $step]);
@@ -128,14 +130,18 @@ class PathTrackingController
                 foreach ($progressions as $progression) {
                     if (in_array($progression->getStatus(), ['seen', 'done'])) {
                         $user = $progression->getUser();
+                        $userId = $user->getUuid();
 
-                        $stepUsers[] = [
-                            'id' => $user->getUuid(),
-                            'username' => $user->getUsername(),
-                            'firstName' => $user->getFirstName(),
-                            'lastName' => $user->getLastName(),
-                            'name' => $user->getFirstName().' '.$user->getLastName(),
-                        ];
+                        if (!isset($usersDone[$userId])) {
+                            $stepUsers[] = [
+                                'id' => $userId,
+                                'username' => $user->getUsername(),
+                                'firstName' => $user->getFirstName(),
+                                'lastName' => $user->getLastName(),
+                                'name' => $user->getFirstName().' '.$user->getLastName(),
+                            ];
+                            $usersDone[$userId] = true;
+                        }
                     }
                 }
                 $stepsData[] = [
@@ -153,7 +159,7 @@ class PathTrackingController
                     'name' => $path->getResourceNode()->getName(),
                     'resourceId' => $path->getResourceNode()->getUuid(),
                 ],
-                'steps' => $stepsData,
+                'steps' => array_reverse($stepsData),
             ];
         }
 
