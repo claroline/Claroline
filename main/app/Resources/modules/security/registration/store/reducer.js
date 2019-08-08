@@ -8,15 +8,21 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {LIST_TOGGLE_SELECT, LIST_TOGGLE_SELECT_ALL} from '#/main/app/content/list/store/actions'
 
 import {selectors} from '#/main/app/security/registration/store/selectors'
+import {REGISTRATION_DATA_LOAD} from '#/main/app/security/registration/store/actions'
 
 const getDefaultRole = (workspace) => workspace.registration.defaultRole
 
 export const reducer = combineReducers({
   workspaces: makeListReducer(selectors.STORE_NAME+'.workspaces'),
   defaultWorkspaces: (state = null) => state,
-  termOfService: (state = null) => state,
-  facets: (state = []) => state,
+  termOfService: makeReducer(null, {
+    [REGISTRATION_DATA_LOAD]: (state, action) => action.data.termOfService || null
+  }),
+  facets: makeReducer([], {
+    [REGISTRATION_DATA_LOAD]: (state, action) => action.data.facets || []
+  }),
   options: makeReducer({}, {
+    [REGISTRATION_DATA_LOAD]: (state, action) => action.data.options,
     /**
      * Redirects user after successful registration.
      * (It seems a little bit hacky to do it here but it's the simplest way to handle it).

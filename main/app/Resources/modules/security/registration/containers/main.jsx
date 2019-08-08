@@ -40,6 +40,9 @@ const RegistrationMain = withRouter(
             // create new account
             dispatch(actions.createUser(user, onRegister))
           }
+        },
+        fetchRegistrationData() {
+          dispatch(actions.fetchRegistrationData())
         }
       })
     )(RegistrationMainComponent)
