@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
@@ -75,15 +74,12 @@ class ConnectionModal extends Component {
         subtitle={trans('current_of_total', {current: this.state.currentSlide + 1, total: message.slides.length})}
         bsSize="lg"
       >
-        {(slide.title || slide.poster) &&
-          <h1
-            style={!isEmpty(slide.poster) ? {
-              backgroundImage: `url("${asset(slide.poster.url)}")`
-            } : undefined}
-            className={classes('slide-header h2', {
-              'poster': !isEmpty(slide.poster)
-            })}
-          >
+        {!isEmpty(slide.poster) &&
+          <img className="img-responsive" src={asset(slide.poster.url)} />
+        }
+
+        {slide.title &&
+          <h1 className="slide-header h2">
             {slide.title}
           </h1>
         }

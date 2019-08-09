@@ -96,7 +96,7 @@ class ResourceNodeController extends AbstractCrudController
                     $options['hiddenFilters']['hidden'] = false;
                 }
             }
-        } else if (!$all) {
+        } elseif (!$all) {
             $options['hiddenFilters']['parent'] = null;
         }
         $options['hiddenFilters']['active'] = true;

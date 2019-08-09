@@ -172,7 +172,7 @@ class ClientSerializer
             ],
             'desktop' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('desktop.default_tool'),
-                'showProgression' => $this->config->getParameter('desktop.show_progression')
+                'showProgression' => $this->config->getParameter('desktop.show_progression'),
             ],
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),

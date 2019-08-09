@@ -9,6 +9,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {Summary} from '#/main/app/content/components/summary'
 
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+
 class DirectoryMenu extends Component {
   constructor(props) {
     super(props)
@@ -45,13 +47,13 @@ class DirectoryMenu extends Component {
             {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-share fa-flip-horizontal',
-              label: /*trans('back')*/ `Retour à ${get(this.props.currentNode, 'parent.name')}`,
+              label: trans('back_to', {target: get(this.props.currentNode, 'parent.name')}),
               displayed: !!get(this.props.currentNode, 'parent'),
               target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.meta.slug')}`
             }, {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-list-ul',
-              label: trans('Toutes les ressources'),
+              label: trans('all_resources', {}, 'resource'),
               active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.meta.slug}/all`}),
               target: `${this.props.basePath}/${this.props.currentNode.meta.slug}/all`
             }
@@ -69,12 +71,12 @@ DirectoryMenu.propTypes = {
     pathname: T.string.isRequired
   }),
   basePath: T.string.isRequired,
-  currentNode: T.shape({
-    // TODO : node type
-  }).isRequired,
-  directories: T.arrayOf(T.shape({
-    // TODO : directory type
-  })).isRequired,
+  currentNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
+  directories: T.arrayOf(T.shape(
+    ResourceNodeTypes.propTypes
+  )).isRequired,
   fetchDirectories: T.func.isRequired,
   toggleDirectoryOpen: T.func.isRequired,
 

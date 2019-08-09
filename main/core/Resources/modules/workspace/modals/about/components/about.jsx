@@ -60,6 +60,7 @@ const AboutModal = props =>
               name: 'meta.model',
               label: 'Cet espace d\'activités n\'est pas un modèle.',
               type: 'boolean',
+              hideLabel: true,
               options: {
                 icon: 'fa fa-fw fa-briefcase',
                 labelChecked: 'Cet espace d\'activités est un modèle.'
@@ -68,6 +69,7 @@ const AboutModal = props =>
               name: 'meta.personal',
               label: 'Cet espace d\'activités n\'est pas un espace personnel.',
               type: 'boolean',
+              hideLabel: true,
               options: {
                 icon: 'fa fa-fw fa-user',
                 labelChecked: 'Cet espace d\'activités est un espace personnel.'
@@ -76,6 +78,7 @@ const AboutModal = props =>
               name: 'registration.selfRegistration',
               label: 'Les inscriptions sont gérées par les gestionnaires.',
               type: 'boolean',
+              hideLabel: true,
               options: {
                 icon: 'fa fa-fw fa-user-plus',
                 labelChecked: 'Les inscriptions sont publiques.'
@@ -84,6 +87,7 @@ const AboutModal = props =>
               name: 'registration.selfUnregistration',
               label: 'Les désinscriptions sont gérées par les gestionnaires.',
               type: 'boolean',
+              hideLabel: true,
               options: {
                 icon: 'fa fa-fw fa-user-times',
                 labelChecked: 'Les désinscriptions sont publiques.'
