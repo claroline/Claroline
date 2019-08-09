@@ -31,8 +31,8 @@ actions.loadNode = makeActionCreator(RESOURCE_LOAD_NODE, 'resourceNode')
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.openResource = (resourceSlug) => (dispatch, getState) => {
-  const id = selectors.id(getState())
-  if (id !== resourceSlug) {
+  const currentSlug = selectors.slug(getState())
+  if (currentSlug !== resourceSlug) {
     dispatch({
       type: RESOURCE_OPEN,
       resourceSlug: resourceSlug

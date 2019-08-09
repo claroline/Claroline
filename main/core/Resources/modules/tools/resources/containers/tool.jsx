@@ -14,8 +14,8 @@ const ResourcesTool = withRouter(
         root: selectors.root(state)
       }),
       (dispatch) => ({
-        openResource(resourceId) {
-          dispatch(resourceActions.openResource(resourceId))
+        openResource(resourceSlug) {
+          dispatch(resourceActions.openResource(resourceSlug))
         }
       })
     )(ResourcesToolComponent)
