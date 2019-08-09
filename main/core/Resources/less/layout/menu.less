@@ -1,6 +1,6 @@
 
 .app-menu {
-    position: absolute;
+    //position: absolute;
     max-width: @toolbar-size;
     width: 100%;
     top: @top-bar-height;
@@ -152,5 +152,14 @@
                 }
             }
         }
+    }
+}
+
+// XS/SM screens :
+@media (max-width: @screen-md-max) {
+    .app-menu {
+        position: absolute;
+        z-index: 2;
+        .box-shadow(0 0 3px 1px rgba(0, 0, 0, 0.5));
     }
 }
