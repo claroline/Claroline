@@ -10,7 +10,7 @@ const editorTabs = (state) => formSelectors.data(formSelectors.form(state, FORM_
 
 const currentTabIndex = createSelector(
   [editorTabs, homeSelectors.currentTabId],
-  (editorTabs, currentTabId) => editorTabs.findIndex(tab => currentTabId === tab.id)
+  (editorTabs, currentTabId) => editorTabs.findIndex(tab => currentTabId === tab.slug)
 )
 
 const currentTab = createSelector(

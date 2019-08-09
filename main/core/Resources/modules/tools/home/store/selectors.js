@@ -34,7 +34,7 @@ const tabs = createSelector(
 
 const currentTab = createSelector(
   [tabs, currentTabId],
-  (tabs, currentTabId) => tabs.find(tab => currentTabId === tab.id)
+  (tabs, currentTabId) => tabs.find(tab => currentTabId === tab.slug)
 )
 
 const currentTabTitle = createSelector(

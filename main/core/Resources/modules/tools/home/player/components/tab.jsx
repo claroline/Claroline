@@ -42,7 +42,7 @@ const PlayerTab = props =>
             label={trans('configure', {}, 'actions')}
             icon="fa fa-fw fa-cog"
             primary={true}
-            target={`${props.path}/edit/${props.currentTab.id}`}
+            target={`${props.path}/edit/${props.currentTab.slug}`}
           />
         </PageActions>
       }

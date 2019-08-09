@@ -16,7 +16,7 @@ const PlayerMenu = (props) => {
             type={LINK_BUTTON}
             icon={tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined}
             label={tab.title}
-            target={`${props.path}/${tab.id}`}
+            target={`${props.path}/${tab.slug}`}
             activeStyle={{
               borderColor: get(tab, 'display.color')
             }}

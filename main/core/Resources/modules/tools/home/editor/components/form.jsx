@@ -29,7 +29,7 @@ const EditorForm = props =>
     }]}
     cancel={{
       type: LINK_BUTTON,
-      target: `${props.path}/${props.currentTab ? props.currentTab.id : ''}`,
+      target: `${props.path}/${props.currentTab ? props.currentTab.slug : ''}`,
       exact: true
     }}
     sections={[

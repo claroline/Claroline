@@ -12,14 +12,14 @@ const EditorMain = props =>
   <Routes
     path={props.path}
     redirect={[
-      props.tabs[0] && {from: '/edit', exact: true, to: '/edit/'+props.tabs[0].id }
+      props.tabs[0] && {from: '/edit', exact: true, to: '/edit/'+props.tabs[0].slug }
     ].filter(redirect => !!redirect)}
     routes={[
       {
-        path: '/edit/:id',
-        onEnter: (params = {}) => props.setCurrentTab(params.id),
+        path: '/edit/:slug',
+        onEnter: (params = {}) => props.setCurrentTab(params.slug),
         render: (routeProps) => {
-          if (props.tabs.find(tab => tab.id === routeProps.match.params.id)) {
+          if (props.tabs.find(tab => tab.slug === routeProps.match.params.slug)) {
             const Editor = (
               <EditorTab
                 {...props}
