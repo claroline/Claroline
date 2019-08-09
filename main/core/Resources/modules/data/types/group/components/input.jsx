@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
@@ -19,6 +19,7 @@ const GroupButton = props =>
     icon="fa fa-fw fa-users"
     label={trans('add_groups')}
     primary={true}
+    disabled={props.disabled}
     modal={[MODAL_GROUPS, {
       url: ['apiv2_group_list_registerable'],
       title: props.title,
@@ -32,53 +33,52 @@ const GroupButton = props =>
 
 GroupButton.propTypes = {
   title: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 
 const GroupInput = props => {
-  const actions = props.disabled ? []: [
-    {
-      name: 'delete',
-      type: CALLBACK_BUTTON,
-      icon: 'fa fa-fw fa-trash-o',
-      label: trans('delete', {}, 'actions'),
-      dangerous: true,
-      callback: () => props.onChange(null)
-    }
-  ]
-
   if (props.value) {
-    return(
-      <div>
+    return (
+      <Fragment>
         <GroupCard
           data={props.value}
-          size="sm"
-          orientation="col"
-          actions={actions}
+          size="xs"
+          actions={[
+            {
+              name: 'delete',
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-trash-o',
+              label: trans('delete', {}, 'actions'),
+              dangerous: true,
+              disabled: props.disabled,
+              callback: () => props.onChange(null)
+            }
+          ]}
         />
 
-        {!props.disabled &&
-          <GroupButton
-            {...props.picker}
-            onChange={props.onChange}
-          />
-        }
-      </div>
-    )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-users"
-        title={trans('no_group')}
-      >
         <GroupButton
           {...props.picker}
+          disabled={props.disabled}
           onChange={props.onChange}
         />
-      </EmptyPlaceholder>
+      </Fragment>
     )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-users"
+      title={trans('no_group')}
+    >
+      <GroupButton
+        {...props.picker}
+        disabled={props.disabled}
+        onChange={props.onChange}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(GroupInput, FormFieldTypes, {

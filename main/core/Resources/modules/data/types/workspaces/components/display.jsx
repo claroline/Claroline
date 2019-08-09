@@ -16,6 +16,7 @@ const WorkspacesDisplay = (props) => {
           <WorkspaceCard
             key={`workspace-card-${workspace.id}`}
             data={workspace}
+            size="xs"
           />
         )}
       </Fragment>

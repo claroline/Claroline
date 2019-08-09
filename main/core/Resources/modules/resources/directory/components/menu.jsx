@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
@@ -16,20 +17,19 @@ class DirectoryMenu extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchDirectories(this.props.currentId)
+    this.props.fetchDirectories(this.props.currentNode.id)
   }
 
   getDirectorySummary(directory) {
     return {
       type: LINK_BUTTON,
       id: directory.id,
-      //icon: directory._opened ? 'fa fa-fw fa-folder-open' : 'fa fa-fw fa-folder',
       label: directory.name,
       collapsed: !directory._opened,
       collapsible: !directory._loaded || (directory.children && 0 !== directory.children.length),
-      toggleCollapse: (collapsed) => this.props.toggleDirectoryOpen(directory, !collapsed),
-      target: `${this.props.basePath}/${directory.id}`,
-      active: !!matchPath(this.props.location.pathname, {path: `${this.props.path}/${directory.id}`}),
+      toggleCollapse: (collapsed) => this.props.toggleDirectoryOpen(directory.id, !collapsed),
+      target: `${this.props.basePath}/${directory.meta.slug}`,
+      active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${directory.meta.slug}`}),
       children: directory.children ? directory.children.map(this.getDirectorySummary) : []
     }
   }
@@ -44,10 +44,16 @@ class DirectoryMenu extends Component {
           links={[
             {
               type: LINK_BUTTON,
+              icon: 'fa fa-fw fa-share fa-flip-horizontal',
+              label: /*trans('back')*/ `Retour à ${get(this.props.currentNode, 'parent.name')}`,
+              displayed: !!get(this.props.currentNode, 'parent'),
+              target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.meta.slug')}`
+            }, {
+              type: LINK_BUTTON,
               icon: 'fa fa-fw fa-list-ul',
               label: trans('Toutes les ressources'),
-              active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentId}/all`}),
-              target: `${this.props.basePath}/${this.props.currentId}/all`
+              active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.meta.slug}/all`}),
+              target: `${this.props.basePath}/${this.props.currentNode.meta.slug}/all`
             }
           ].concat(this.props.directories.map(this.getDirectorySummary), [
 
@@ -63,7 +69,9 @@ DirectoryMenu.propTypes = {
     pathname: T.string.isRequired
   }),
   basePath: T.string.isRequired,
-  currentId: T.string.isRequired,
+  currentNode: T.shape({
+    // TODO : node type
+  }).isRequired,
   directories: T.arrayOf(T.shape({
     // TODO : directory type
   })).isRequired,

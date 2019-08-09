@@ -19,6 +19,7 @@ const LocationsButton = props =>
     icon="fa fa-fw fa-location-arrow"
     label={trans('select_a_location')}
     primary={true}
+    disabled={props.disabled}
     modal={[MODAL_LOCATIONS, {
       url: ['apiv2_location_list'],
       title: props.title,
@@ -32,6 +33,7 @@ const LocationsButton = props =>
 
 LocationsButton.propTypes = {
   title: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 
@@ -48,6 +50,7 @@ const LocationInput = props => {
               icon: 'fa fa-fw fa-trash-o',
               label: trans('delete', {}, 'actions'),
               dangerous: true,
+              disabled: props.disabled,
               callback: () => props.onChange(null)
             }
           ]}
@@ -55,6 +58,7 @@ const LocationInput = props => {
 
         <LocationsButton
           {...props.picker}
+          disabled={props.disabled}
           onChange={props.onChange}
         />
       </Fragment>
@@ -69,6 +73,7 @@ const LocationInput = props => {
     >
       <LocationsButton
         {...props.picker}
+        disabled={props.disabled}
         onChange={props.onChange}
       />
     </EmptyPlaceholder>

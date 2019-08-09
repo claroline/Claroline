@@ -73,13 +73,12 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->andWhere('obj.published = :published');
                     $qb->setParameter('published', $filterValue);
                     break;
-                case 'meta.type':
-                    //should be the same as resourceType but something is wrong somewhere. It's an alias
-                case 'meta.uploadDestination':
+                case 'meta.uploadDestination': // TODO : remove me. this should not be managed here
                     $qb->andWhere("ort.name = 'directory'");
                     $qb->join(Directory::class, 'dir', 'WITH', 'dir.resourceNode = obj.id');
                     $qb->andWhere('dir.uploadDestination = true');
                     break;
+                case 'meta.type': //should be the same as resourceType but something is wrong somewhere. It's an alias
                 case 'resourceType':
                     if (is_array($filterValue)) {
                         $qb->andWhere('ort.name IN (:resourceType)');
@@ -113,22 +112,25 @@ class ResourceNodeFinder extends AbstractFinder
                     $this->usedJoin['parent'] = true;
                     break;
                 case 'path.after':
-                    $qb->andWhere('UPPER(obj.path) LIKE :path');
-                    $qb->setParameter('path', strtoupper($filterValue).'%');
+                    $qb->andWhere('UPPER(obj.path) != :path');// required otherwise we also get the parent in the results
+                    $qb->andWhere('UPPER(obj.path) LIKE :pathLike');
+                    $qb->setParameter('path', strtoupper($filterValue));
+                    $qb->setParameter('pathLike', strtoupper($filterValue).'%');
                     break;
                 case 'parent':
                     if (is_null($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');
                     } else {
-                        $qb->join('obj.parent', 'par');
-                        $qb->andWhere('par.uuid = :parent');
+                        $qb->join('obj.parent', 'op');
+                        $qb->andWhere('op.uuid = :parent');
                         $qb->setParameter('parent', $filterValue);
+                        $this->usedJoin['parent'] = true;
                     }
                     break;
                 case 'uuid_or_slug':
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('obj.uuid', ':uuid_or_slug'),
-                        $qb->expr()->like('obj.slug', ':uuid_or_slug')
+                        $qb->expr()->eq('obj.uuid', ':uuid_or_slug'),
+                        $qb->expr()->eq('obj.slug', ':uuid_or_slug')
                     ));
 
                     $qb->setParameter('uuid_or_slug', $filterValue);

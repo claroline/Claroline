@@ -21,6 +21,7 @@ const ResourceInput = props => {
     return(
       <ResourceCard
         data={props.value}
+        size="xs"
         actions={[
           {
             name: 'replace',
@@ -70,6 +71,7 @@ const ResourceInput = props => {
         >
           <span>{trans('delete', {}, 'actions')}</span>
         </ModalButton>
+
         <ResourceEmbedded
           resourceNode={props.value}
           onResourceClose={props.onEmbeddedResourceClose}
@@ -78,7 +80,7 @@ const ResourceInput = props => {
     )
   }
   else {
-    return(
+    return (
       <EmptyPlaceholder
         id={props.id}
         size="lg"

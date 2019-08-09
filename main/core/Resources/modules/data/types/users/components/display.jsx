@@ -16,6 +16,7 @@ const UsersDisplay = (props) => {
           <UserCard
             key={`user-card-${user.id}`}
             data={user}
+            size="xs"
           />
         )}
       </Fragment>

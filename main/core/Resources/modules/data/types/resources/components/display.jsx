@@ -16,6 +16,7 @@ const ResourcesDisplay = (props) => {
           <ResourceCard
             key={`resource-card-${resource.id}`}
             data={resource}
+            size="xs"
           />
         )}
       </Fragment>

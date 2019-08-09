@@ -32,12 +32,6 @@ const DesktopMenu = props =>
         label: trans('show-walkthrough', {}, 'actions'),
         callback: () => true
       }, {
-        name: 'parameters',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-cog',
-        label: trans('configure', {}, 'actions'),
-        modal: []
-      }, {
         name: 'impersonation',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-mask',
@@ -46,24 +40,26 @@ const DesktopMenu = props =>
       }
     ]}
   >
-    <section className="user-progression">
-      <h2 className="sr-only">
-        Ma progression
-      </h2>
+    {props.showProgression &&
+      <section className="user-progression">
+        <h2 className="sr-only">
+          Ma progression
+        </h2>
 
-      <LiquidGauge
-        id="desktop-progression"
-        type="user"
-        value={25}
-        displayValue={(value) => number(value) + '%'}
-        width={70}
-        height={70}
-      />
+        <LiquidGauge
+          id="desktop-progression"
+          type="user"
+          value={25}
+          displayValue={(value) => number(value) + '%'}
+          width={70}
+          height={70}
+        />
 
-      <div className="user-progression-info">
-        {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
-      </div>
-    </section>
+        <div className="user-progression-info">
+          {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
+        </div>
+      </section>
+    }
 
     <ToolMenu
       opened={'tool' === props.section}
@@ -74,6 +70,7 @@ const DesktopMenu = props =>
 // <h3 className="h4">Collaborateur</h3>
 
 DesktopMenu.propTypes = {
+  showProgression: T.bool.isRequired,
   section: T.string,
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
@@ -83,6 +80,7 @@ DesktopMenu.propTypes = {
 }
 
 DesktopMenu.defaultProps = {
+  showProgression: false,
   tools: []
 }
 

@@ -20,6 +20,7 @@ const WorkspacesButton = props =>
     icon="fa fa-fw fa-book"
     label={trans('add_workspaces')}
     primary={true}
+    disabled={props.disabled}
     modal={[MODAL_WORKSPACES, {
       url: ['apiv2_workspace_list_managed'],
       title: props.title,
@@ -33,6 +34,7 @@ const WorkspacesButton = props =>
 
 WorkspacesButton.propTypes = {
   title: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 
@@ -44,6 +46,7 @@ const WorkspacesInput = props => {
           <WorkspaceCard
             key={`workspace-card-${workspace.id}`}
             data={workspace}
+            size="xs"
             actions={[
               {
                 name: 'delete',
@@ -51,6 +54,7 @@ const WorkspacesInput = props => {
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete', {}, 'actions'),
                 dangerous: true,
+                disabled: props.disabled,
                 callback: () => {
                   const newValue = props.value
                   const index = newValue.findIndex(u => u.id === workspace.id)
@@ -67,6 +71,7 @@ const WorkspacesInput = props => {
 
         <WorkspacesButton
           {...props.picker}
+          disabled={props.disabled}
           onChange={(selected) => {
             const newValue = props.value
             selected.forEach(workspace => {
@@ -92,6 +97,7 @@ const WorkspacesInput = props => {
     >
       <WorkspacesButton
         {...props.picker}
+        disabled={props.disabled}
         onChange={props.onChange}
       />
     </EmptyPlaceholder>

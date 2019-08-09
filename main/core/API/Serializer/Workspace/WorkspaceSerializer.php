@@ -313,6 +313,7 @@ class WorkspaceSerializer
         return [
             'color' => !empty($options['background_color']) ? $options['background_color'] : null,
             'showMenu' => !isset($options['hide_tools_menu']) || !$options['hide_tools_menu'],
+            'showProgression' => $workspace->getShowProgression(),
             'openResource' => $openResource,
         ];
     }
@@ -469,8 +470,9 @@ class WorkspaceSerializer
         $workspaceOptions = $workspace->getOptions();
 
         if (isset($data['display']) || isset($data['opening'])) {
-            $details = $workspaceOptions->getDetails();
+            $this->sipe('display.showProgression', 'setShowProgression', $data, $workspace);
 
+            $details = $workspaceOptions->getDetails();
             if (empty($details)) {
                 $details = [];
             }

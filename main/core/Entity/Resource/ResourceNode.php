@@ -300,6 +300,8 @@ class ResourceNode
      * @ORM\OrderBy({"creationDate" = "DESC"})
      *
      * @todo : remove me. this relation should not be bi-directional
+     *
+     * @var ResourceComment[]|ArrayCollection
      */
     protected $comments;
 
@@ -912,8 +914,7 @@ class ResourceNode
         $countAncestors = count($parts);
         for ($i = 0; $i < $countAncestors; $i += 2) {
             $ancestors[] = [
-                //retrocompatibility
-                'id' => $parts[$i + 1],
+                'id' => $parts[$i + 1], // retro-compatibility
                 'slug' => $parts[$i + 1],
                 'name' => $parts[$i],
             ];
@@ -968,7 +969,7 @@ class ResourceNode
         for ($i = 0; $i < $countAncestors; $i += 2) {
             if (array_key_exists($i + 1, $parts)) {
                 $ancestors[] = [
-                   'id' => $parts[$i + 1],
+                    'id' => $parts[$i + 1], // retro-compatibility
                     'slug' => $parts[$i + 1],
                     'name' => $parts[$i],
                 ];

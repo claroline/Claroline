@@ -21,8 +21,8 @@ import {
 } from '#/main/core/resource/store/actions'
 
 const reducer = combineReducers({
-  id: makeReducer(null, {
-    [RESOURCE_OPEN]: (state, action) => action.resourceId
+  slug: makeReducer(null, {
+    [RESOURCE_OPEN]: (state, action) => action.resourceSlug
   }),
   nodeLoaded: makeReducer(false, {
     [SECURITY_USER_CHANGE]: () => false,

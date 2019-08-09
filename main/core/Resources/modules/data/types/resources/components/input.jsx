@@ -51,6 +51,7 @@ const ResourcesInput = props => {
           <ResourceCard
             key={`resource-card-${resource.id}`}
             data={resource}
+            size="xs"
             actions={[
               {
                 name: 'delete',

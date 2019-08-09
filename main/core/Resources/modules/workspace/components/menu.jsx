@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
@@ -41,25 +42,27 @@ const WorkspaceMenu = (props) =>
       }
     }, props.basePath, props.currentUser) : []}
   >
-    <section className="user-progression">
-      <h2 className="sr-only">
-        Ma progression
-      </h2>
+    {get(props.workspace, 'display.showProgression') &&
+      <section className="user-progression">
+        <h2 className="sr-only">
+          Ma progression
+        </h2>
 
-      <LiquidGauge
-        id="workspace-progression"
-        type="user"
-        value={50}
-        displayValue={(value) => number(value) + '%'}
-        width={70}
-        height={70}
-      />
+        <LiquidGauge
+          id="workspace-progression"
+          type="user"
+          value={50}
+          displayValue={(value) => number(value) + '%'}
+          width={70}
+          height={70}
+        />
 
-      <div className="user-progression-info">
-        <h3 className="h4">Collaborateur</h3>
-        {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
-      </div>
-    </section>
+        <div className="user-progression-info">
+          <h3 className="h4">Collaborateur</h3>
+          {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
+        </div>
+      </section>
+    }
 
     <ToolMenu
       opened={'tool' === props.section}

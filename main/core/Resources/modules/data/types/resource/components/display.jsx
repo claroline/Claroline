@@ -16,6 +16,7 @@ const ResourceDisplay = (props) => {
     return (
       <ResourceCard
         data={props.data}
+        size="xs"
       />
     )
   }

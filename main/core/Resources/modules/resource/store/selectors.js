@@ -9,14 +9,19 @@ const STORE_NAME = 'resource'
 
 const store = (state) => state[STORE_NAME]
 
-const id = createSelector(
+const slug = createSelector(
   [store],
-  (store) => store.id
+  (store) => store.slug
 )
 
 const resourceNode = createSelector(
   [store],
   (store) => store.resourceNode || {}
+)
+
+const id = createSelector(
+  [resourceNode],
+  (resourceNode) => resourceNode.id
 )
 
 const basePath = toolSelectors.path
@@ -155,6 +160,7 @@ export const selectors = {
   serverErrors,
   // node
   resourceNode,
+  slug,
   id,
   workspace,
   workspaceId,

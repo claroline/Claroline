@@ -19,16 +19,16 @@ const Main = props =>
   <Provider store={props.store}>
     <DragDropProvider>
       <FileDrop>
-        <AlertOverlay key="alert" />
-
         <Router basename={props.defaultPath} embedded={props.embedded}>
-          {props.children}
-        </Router>
+          <AlertOverlay key="alert" />
 
-        <OverlayStack>
-          <ModalOverlay key="modal" />
-          <WalkthroughOverlay key="walkthrough" />
-        </OverlayStack>
+          {props.children}
+
+          <OverlayStack>
+            <ModalOverlay key="modal" />
+            <WalkthroughOverlay key="walkthrough" />
+          </OverlayStack>
+        </Router>
       </FileDrop>
     </DragDropProvider>
   </Provider>

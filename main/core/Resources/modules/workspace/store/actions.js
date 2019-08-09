@@ -25,7 +25,7 @@ actions.dismissRestrictions = makeActionCreator(WORKSPACE_RESTRICTIONS_DISMISS)
 /**
  * Fetch the required data to open the current Workspace.
  *
- * @param {number} workspaceId
+ * @param {number} slug
  *
  * @TODO : manage workspaces which change the current ui locale
  */

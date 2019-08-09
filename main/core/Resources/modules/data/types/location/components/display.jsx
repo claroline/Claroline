@@ -10,6 +10,7 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 const LocationDisplay = (props) => props.data ?
   <LocationCard
     data={props.data}
+    size="xs"
   /> :
   <EmptyPlaceholder
     size="lg"

@@ -30,12 +30,12 @@ actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
 actions.loadNode = makeActionCreator(RESOURCE_LOAD_NODE, 'resourceNode')
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
-actions.openResource = (resourceId) => (dispatch, getState) => {
+actions.openResource = (resourceSlug) => (dispatch, getState) => {
   const id = selectors.id(getState())
-  if (id !== resourceId) {
+  if (id !== resourceSlug) {
     dispatch({
       type: RESOURCE_OPEN,
-      resourceId: resourceId
+      resourceSlug: resourceSlug
     })
   }
 }

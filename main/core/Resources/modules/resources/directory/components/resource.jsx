@@ -15,9 +15,15 @@ const DirectoryResource = (props) =>
       path={props.path}
       routes={[
         {
-          path: '/',
+          path: '/:all(all)?',
           exact: true,
-          component: PlayerMain
+          render(routeProps) {
+            return (
+              <PlayerMain
+                all={routeProps.match.params.all}
+              />
+            )
+          }
         }, {
           path: '/edit',
           component: EditorMain

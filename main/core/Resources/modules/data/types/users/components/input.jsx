@@ -20,6 +20,7 @@ const UsersButton = props =>
     icon="fa fa-fw fa-user"
     label={trans('add_users')}
     primary={true}
+    disabled={props.disabled}
     modal={[MODAL_USERS, {
       url: ['apiv2_user_list_registerable'], // maybe not the correct URL
       title: props.title,
@@ -33,6 +34,7 @@ const UsersButton = props =>
 
 UsersButton.propTypes = {
   title: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 
@@ -51,6 +53,7 @@ const UsersInput = props => {
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete', {}, 'actions'),
                 dangerous: true,
+                disabled: props.disabled,
                 callback: () => {
                   const newValue = props.value
                   const index = newValue.findIndex(u => u.id === user.id)
@@ -67,6 +70,7 @@ const UsersInput = props => {
 
         <UsersButton
           {...props.picker}
+          disabled={props.disabled}
           onChange={(selected) => {
             const newValue = props.value
             selected.forEach(user => {
@@ -90,6 +94,7 @@ const UsersInput = props => {
       >
         <UsersButton
           {...props.picker}
+          disabled={props.disabled}
           onChange={props.onChange}
         />
       </EmptyPlaceholder>

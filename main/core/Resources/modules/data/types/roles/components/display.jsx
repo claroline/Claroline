@@ -16,6 +16,7 @@ const RolesDisplay = (props) => {
           <RoleCard
             key={`role-card-${role.id}`}
             data={role}
+            size="xs"
           />
         )}
       </Fragment>

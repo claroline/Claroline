@@ -15,7 +15,7 @@ import {selectors as playerSelectors} from '#/main/core/resources/directory/play
 import {DIRECTORIES_LOAD, DIRECTORY_TOGGLE_OPEN} from '#/main/core/resources/directory/store/actions'
 import {selectors} from '#/main/core/resources/directory/store/selectors'
 
-// TODO : move in `directories` & `resources` in player
+// TODO : move `directories` & `resources` in player
 
 /**
  * Replaces a directory data inside the directories tree.
@@ -83,7 +83,7 @@ const reducer = combineReducers({
       }
 
       return state
-    },
+    }
   }),
 
   /**

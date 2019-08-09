@@ -1637,6 +1637,7 @@
     "restrict_hidden_help": "L'élément sera toujours accessible mais les utilisateurs ne le verront plus dans les listes.",
     "showBreadcrumbs": "Afficher le fil d'Ariane",
     "showTools": "Afficher le menu d'outils aux utilisateurs",
+    "showProgression": "Afficher la progression de l'utilisateur",
     "opening_parameters": "Paramètres d'ouverture",
     "enable_notifications": "Activer les notifications",
     "open_workspace_resource": "Ouvrir une ressource de l'espace d'activités",

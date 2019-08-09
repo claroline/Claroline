@@ -44,6 +44,7 @@ const RolesInput = props => {
           <RoleCard
             key={`role-card-${role.id}`}
             data={role}
+            size="xs"
             actions={!props.disabled ? [
               {
                 name: 'delete',

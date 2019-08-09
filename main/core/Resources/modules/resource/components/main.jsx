@@ -50,7 +50,7 @@ class ResourceMain extends Component {
   componentDidMount() {
     this.loadApp()
     if (!this.props.loaded) {
-      this.props.open(this.props.resourceId)
+      this.props.open(this.props.resourceSlug)
     }
   }
 
@@ -65,7 +65,7 @@ class ResourceMain extends Component {
     }
 
     if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
-      this.props.open(this.props.resourceId)
+      this.props.open(this.props.resourceSlug)
     }
   }
 
@@ -133,7 +133,7 @@ class ResourceMain extends Component {
 
 ResourceMain.propTypes = {
   path: T.string.isRequired,
-  resourceId: T.string.isRequired,
+  resourceSlug: T.string.isRequired,
   resourceType: T.string,
 
   loaded: T.bool.isRequired,

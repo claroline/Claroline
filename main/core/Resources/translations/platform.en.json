@@ -1601,6 +1601,7 @@
     "restrict_hidden_help": "The item will still be accessible but users will no longer see it in the lists.",
     "showBreadcrumbs": "Display breadcrumb",
     "showTools": "Display tools menu to users",
+    "showProgression": "Display user progression",
     "workspace_opening": "Opening parameters",
     "enable_notifications": "Enable notifications",
     "open_workspace_resource": "Open a workspace resource",

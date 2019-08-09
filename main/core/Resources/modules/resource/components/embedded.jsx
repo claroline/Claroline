@@ -60,7 +60,7 @@ class ResourceEmbedded extends Component {
         showHeader: this.props.showHeader,
         lifecycle: this.props.lifecycle
       }
-    }, true, `/resource_manager/${this.props.resourceNode.id}`)
+    }, true, `/resource_manager/${this.props.resourceNode.meta.slug}`)
   }
 
   render() {

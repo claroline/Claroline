@@ -214,10 +214,10 @@ class HeaderUser extends Component {
         opened={this.state.opened}
         onToggle={this.setOpened}
         subscript={this.props.impersonated ? {
-            type: 'text',
-            status: 'danger',
-            value: (<span className="fa fa-mask" />)
-          } : undefined}
+          type: 'text',
+          status: 'danger',
+          value: (<span className="fa fa-mask" />)
+        } : undefined}
         menu={
           <UserMenu
             authenticated={this.props.authenticated}

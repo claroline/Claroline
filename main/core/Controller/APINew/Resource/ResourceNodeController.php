@@ -64,23 +64,29 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{parent}", name="apiv2_resource_list", defaults={"parent"=null})
+     * @EXT\Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
      *
      * @param Request $request
      * @param string  $parent
+     * @param string  $all
      * @param string  $class
      *
      * @return JsonResponse
      */
-    public function listAction(Request $request, $parent, $class = ResourceNode::class)
+    public function listAction(Request $request, $parent, $all = null, $class = ResourceNode::class)
     {
         $options = $request->query->all();
 
         if ($parent) {
             // grab directory content
+            /** @var ResourceNode $parentNode */
             $parentNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $parent]);
 
-            $options['hiddenFilters']['parent'] = $parentNode ? $parentNode->getUuid() : null;
+            if ($all) {
+                $options['hiddenFilters']['path.after'] = $parentNode ? $parentNode->getPath() : null;
+            } else {
+                $options['hiddenFilters']['parent'] = $parentNode ? $parentNode->getUuid() : null;
+            }
 
             if ($parentNode) {
                 $permissions = $this->rightsManager->getCurrentPermissionArray($parentNode);
@@ -90,7 +96,7 @@ class ResourceNodeController extends AbstractCrudController
                     $options['hiddenFilters']['hidden'] = false;
                 }
             }
-        } else {
+        } else if (!$all) {
             $options['hiddenFilters']['parent'] = null;
         }
         $options['hiddenFilters']['active'] = true;
@@ -106,7 +112,7 @@ class ResourceNodeController extends AbstractCrudController
             $this->container->get('security.token_storage')->getToken()->getRoles()
         );
 
-        if (!in_array('ROLE_ADMIN', $roles) || null === $options['hiddenFilters']['parent']) {
+        if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
             $options['hiddenFilters']['roles'] = $roles;
         }
 

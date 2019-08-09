@@ -16,6 +16,7 @@ const GroupsDisplay = (props) => {
           <GroupCard
             key={`group-card-${group.id}`}
             data={group}
+            size="xs"
           />
         )}
       </Fragment>

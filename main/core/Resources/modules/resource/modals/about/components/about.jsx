@@ -57,6 +57,10 @@ const AboutModal = props =>
               name: 'meta.description',
               label: trans('description'),
               type: 'string'
+            }, {
+              name: 'workspace',
+              label: trans('workspace'),
+              type: 'workspace'
             }
           ]
         }

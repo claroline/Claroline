@@ -10,7 +10,7 @@ const DirectoryMenu = withRouter(
   connect(
     (state) => ({
       basePath: resourceSelectors.basePath(state),
-      currentId: resourceSelectors.id(state),
+      currentNode: resourceSelectors.resourceNode(state),
       directories: selectors.directories(state)
     }),
     (dispatch) => ({

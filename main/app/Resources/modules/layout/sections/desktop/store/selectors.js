@@ -18,7 +18,7 @@ const tools = createSelector(
 
 const defaultOpening = (state) => {
   const desktopTools = tools(state)
-  let defaultTool = configSelectors.param(state, 'desktop_default_tool')
+  let defaultTool = configSelectors.param(state, 'desktop.defaultTool')
 
   if (!defaultTool && desktopTools[0]) {
     // open the first available tool

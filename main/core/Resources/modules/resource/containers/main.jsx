@@ -13,7 +13,7 @@ const ResourceMain = withRouter(
     connect(
       (state) => ({
         path: selectors.path(state),
-        resourceId: selectors.id(state),
+        resourceSlug: selectors.slug(state),
         resourceType: selectors.resourceType(state),
         loaded: selectors.nodeLoaded(state)
       }),

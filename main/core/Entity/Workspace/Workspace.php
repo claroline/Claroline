@@ -133,6 +133,8 @@ class Workspace
      * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var OrderedTool[]|ArrayCollection
+     *
+     * @todo : remove me. relation should be unidirectional
      */
     protected $orderedTools;
 
@@ -221,6 +223,15 @@ class Workspace
      * @var WorkspaceOptions
      */
     protected $options;
+
+    /**
+     * Display user progression when the workspace is rendered.
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $showProgression = true;
 
     /**
      * @ORM\OneToOne(
@@ -691,5 +702,15 @@ class Workspace
     public function getLang()
     {
         return $this->lang;
+    }
+
+    public function getShowProgression()
+    {
+        return $this->showProgression;
+    }
+
+    public function setShowProgression($showProgression)
+    {
+        $this->showProgression = $showProgression;
     }
 }

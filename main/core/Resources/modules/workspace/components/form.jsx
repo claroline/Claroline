@@ -116,6 +116,10 @@ const WorkspaceFormComponent = (props) => {
               name: 'display.showMenu',
               type: 'boolean',
               label: trans('showTools')
+            }, {
+              name: 'display.showProgression',
+              type: 'boolean',
+              label: trans('showProgression')
             }
           ]
         }, {

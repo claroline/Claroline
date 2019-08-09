@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
@@ -20,6 +20,7 @@ const UserButton = props =>
     icon="fa fa-fw fa-user"
     label={trans('select_a_user')}
     primary={true}
+    disabled={props.disabled}
     modal={[MODAL_USERS, {
       url: ['apiv2_user_list_registerable'], // maybe not the correct URL
       title: props.title,
@@ -33,55 +34,52 @@ const UserButton = props =>
 
 UserButton.propTypes = {
   title: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 
 const UserInput = props => {
-  const actions = props.disabled ? []: [
-    {
-      name: 'delete',
-      type: CALLBACK_BUTTON,
-      icon: 'fa fa-fw fa-trash-o',
-      label: trans('delete', {}, 'actions'),
-      dangerous: true,
-      callback: () => props.onChange(null)
-    }
-  ]
-
   if (props.value) {
     return(
-      <div>
+      <Fragment>
         <UserCard
           data={props.value}
-          size="sm"
-          orientation="col"
-          actions={actions}
+          size="xs"
+          actions={[
+            {
+              name: 'delete',
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-trash-o',
+              label: trans('delete', {}, 'actions'),
+              dangerous: true,
+              disabled: props.disabled,
+              callback: () => props.onChange(null)
+            }
+          ]}
         />
 
-        {!props.disabled &&
-          <UserButton
-            {...props.picker}
-            onChange={props.onChange}
-          />
-        }
-      </div>
-    )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-user"
-        title={trans('no_user')}
-      >
-        {!props.disabled &&
-          <UserButton
-            {...props.picker}
-            onChange={props.onChange}
-          />
-        }
-      </EmptyPlaceholder>
+        <UserButton
+          {...props.picker}
+          disabled={props.disabled}
+          onChange={props.onChange}
+        />
+      </Fragment>
     )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-user"
+      title={trans('no_user')}
+    >
+      <UserButton
+        {...props.picker}
+        disabled={props.disabled}
+        onChange={props.onChange}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(UserInput, FormFieldTypes, {

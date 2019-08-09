@@ -10,13 +10,12 @@ import {OrganizationCard} from '#/main/core/user/data/components/organization-ca
 const OrganizationDisplay = (props) => props.data ?
   <OrganizationCard
     data={props.data}
-    size="sm"
-    orientation="col"
+    size="xs"
   /> :
   <EmptyPlaceholder
     size="lg"
-    icon="fa fa-books"
-    title={trans('no_workspace')}
+    icon="fa fa-building"
+    title={trans('no_organization')}
   />
 
 OrganizationDisplay.propTypes = {

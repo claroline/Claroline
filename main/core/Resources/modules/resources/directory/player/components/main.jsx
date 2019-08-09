@@ -12,7 +12,7 @@ const PlayerMain = props =>
   <ListSource
     name={props.listName}
     fetch={{
-      url: ['apiv2_resource_list', {parent: props.id}],
+      url: ['apiv2_resource_list', {parent: props.id, all: props.all}],
       autoload: true
     }}
     source={merge({}, resourcesSource, {
@@ -33,6 +33,7 @@ const PlayerMain = props =>
 
 PlayerMain.propTypes = {
   path: T.string,
+  all: T.string,
   currentUser: T.object,
   id: T.string,
   listName: T.string.isRequired,

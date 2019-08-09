@@ -152,6 +152,7 @@ class ResourceNodeSerializer
                 'id' => $parent->getUuid(),
                 'autoId' => $parent->getId(), // TODO : remove me
                 'name' => $parent->getName(),
+                'meta' => ['slug' => $parent->getSlug()],
             ];
         }
 

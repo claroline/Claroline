@@ -170,7 +170,10 @@ class ClientSerializer
             'swagger' => [
               'base' => $this->config->getParameter('swagger.base'),
             ],
-            'desktop_default_tool' => $this->config->getParameter('desktop_default_tool'), // TODO : find a better way to store and expose this
+            'desktop' => [ // TODO : find a better way to store and expose this
+                'defaultTool' => $this->config->getParameter('desktop.default_tool'),
+                'showProgression' => $this->config->getParameter('desktop.show_progression')
+            ],
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),
             'stylesheets' => $this->config->getParameter('stylesheets'),

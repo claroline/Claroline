@@ -21,6 +21,7 @@ const Workspace = {
       target: T.oneOfType([T.string, T.shape(ResourceNode.propTypes)])
     }),
     display: T.shape({
+      showProgression: T.bool,
       showMenu: T.bool,
       openResource: T.shape(
         ResourceNode.propTypes

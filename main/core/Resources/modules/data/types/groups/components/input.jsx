@@ -20,6 +20,7 @@ const GroupsButton = props =>
     icon="fa fa-fw fa-users"
     label={trans('add_groups')}
     primary={true}
+    disabled={props.disabled}
     modal={[MODAL_GROUPS, {
       url: ['apiv2_group_list_registerable'],
       title: props.title,
@@ -33,6 +34,7 @@ const GroupsButton = props =>
 
 GroupsButton.propTypes = {
   title: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 
@@ -51,6 +53,7 @@ const GroupsInput = props => {
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete', {}, 'actions'),
                 dangerous: true,
+                disabled: props.disabled,
                 callback: () => {
                   const newValue = props.value
                   const index = newValue.findIndex(g => g.id === group.id)
@@ -67,6 +70,7 @@ const GroupsInput = props => {
 
         <GroupsButton
           {...props.picker}
+          disabled={props.disabled}
           onChange={(selected) => {
             const newValue = props.value
             selected.forEach(group => {
@@ -91,6 +95,7 @@ const GroupsInput = props => {
     >
       <GroupsButton
         {...props.picker}
+        disabled={props.disabled}
         onChange={props.onChange}
       />
     </EmptyPlaceholder>
