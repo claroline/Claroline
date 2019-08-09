@@ -55,7 +55,7 @@ class ResourceEmbedded extends Component {
         }
       },
       resource: {
-        id: this.props.resourceNode.id,
+        slug: this.props.resourceNode.meta.slug,
         embedded: true,
         showHeader: this.props.showHeader,
         lifecycle: this.props.lifecycle
