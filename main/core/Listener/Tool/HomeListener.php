@@ -12,7 +12,9 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -38,6 +40,9 @@ class HomeListener
 
     /** @var SerializerProvider */
     private $serializer;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /**
      * HomeListener constructor.
@@ -80,6 +85,7 @@ class HomeListener
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
+        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
 
         $allTabs = $this->finder->search(HomeTab::class, [
             'filters' => ['user' => $currentUser->getUuid()],
@@ -116,9 +122,15 @@ class HomeListener
             $tab['position'] = $index;
         }
 
+        $roles = $isAdmin ?
+            $this->finder->search('Claroline\CoreBundle\Entity\Role', ['filters' => ['type' => Role::PLATFORM_ROLE]]) :
+            [];
+
         $event->setData([
             'editable' => true,
             'tabs' => $orderedTabs,
+            'roles' => $isAdmin ? $roles['data'] : [],
+            'desktopAdmin' => $isAdmin,
         ]);
         $event->stopPropagation();
     }
@@ -152,6 +164,9 @@ class HomeListener
         $event->setData([
             'editable' => $this->authorization->isGranted(['home', 'edit'], $workspace),
             'tabs' => array_values($orderedTabs),
+            'roles' => array_map(function (Role $role) {
+                return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+            }, $workspace->getRoles()->toArray()),
         ]);
         $event->stopPropagation();
     }

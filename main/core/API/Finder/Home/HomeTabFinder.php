@@ -164,6 +164,10 @@ class HomeTabFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     $qb->setParameter('roleNames', $roleNames);
                     break;
+                case 'type':
+                    $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 default:
                   $this->setDefaults($qb, $filterName, $filterValue);
             }

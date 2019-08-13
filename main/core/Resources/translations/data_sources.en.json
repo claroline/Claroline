@@ -1,6 +1,8 @@
 {
+  "admin_tools": "List of admin tools",
   "my_workspaces": "List of my workspaces",
   "resources": "List of resources",
+  "tools": "List of tools",
   "users": "List of users",
   "workspaces": "List of workspaces"
 }

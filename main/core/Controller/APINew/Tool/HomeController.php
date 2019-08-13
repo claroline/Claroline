@@ -18,6 +18,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Manager\LockManager;
@@ -26,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -227,13 +229,97 @@ class HomeController extends AbstractApiController
 
         // retrieve existing tabs for the context to remove deleted ones
         /** @var HomeTab[] $installedTabs */
-        $installedTabs = $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_ADMIN_DESKTOP]);
+        $installedTabs = $this->finder->fetch(
+            HomeTab::class,
+            ['type' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN]
+        );
 
         $this->cleanDatabase($installedTabs, $instanceIds, $containerIds, $ids);
 
         return new JsonResponse(array_values(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);
         }, $updated)));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home/tabs/fetch",
+     *     name="apiv2_home_user_fetch",
+     *     options={"method_prefix"=false}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param User $currentUser
+     *
+     * @return JsonResponse
+     */
+    public function userTabsFetchAction(User $currentUser)
+    {
+        $allTabs = $this->finder->search(HomeTab::class, ['filters' => ['user' => $currentUser->getUuid()]]);
+
+        // Order tabs. We want :
+        //   - Administration tabs to be at first
+        //   - Tabs to be ordered by position
+        // For this, we separate administration tabs and user ones, order them by position
+        // and then concat all tabs with admin in first (I don't have a easier solution to achieve this)
+
+        $adminTabs = [];
+        $userTabs = [];
+
+        foreach ($allTabs['data'] as $tab) {
+            if (!empty($tab)) {
+                // we use the define position for array keys for easier sort
+                if (HomeTab::TYPE_ADMIN_DESKTOP === $tab['type']) {
+                    $adminTabs[$tab['position']] = $tab;
+                } else {
+                    $userTabs[$tab['position']] = $tab;
+                }
+            }
+        }
+
+        // order tabs by position
+        ksort($adminTabs);
+        ksort($userTabs);
+
+        // generate the final list of tabs
+        $orderedTabs = array_merge(array_values($adminTabs), array_values($userTabs));
+
+        // we rewrite tab position because an admin and a user tab may have the same position
+        foreach ($orderedTabs as $index => &$tab) {
+            $tab['position'] = $index;
+        }
+
+        return new JsonResponse($orderedTabs);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/home/tabs/fetch",
+     *     name="apiv2_home_admin_fetch",
+     *     options={"method_prefix"=false}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @return JsonResponse
+     */
+    public function adminTabsFetchAction()
+    {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+        $tabs = $this->finder->search(HomeTab::class, ['filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP]]);
+        $tabs = array_filter($tabs['data'], function ($data) {
+            return $data !== [];
+        });
+        $orderedTabs = [];
+
+        foreach ($tabs as $tab) {
+            $orderedTabs[$tab['position']] = $tab;
+        }
+        ksort($orderedTabs);
+
+        return new JsonResponse(array_values($orderedTabs));
     }
 
     private function cleanDatabase(array $installedTabs, array $instanceIds, array $containerIds, array $ids)

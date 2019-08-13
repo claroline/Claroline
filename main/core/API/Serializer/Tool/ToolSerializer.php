@@ -21,6 +21,7 @@ class ToolSerializer
         return [
           'id' => $tool->getUuid(),
           'name' => $tool->getName(),
+          'icon' => $tool->getClass(),
         ];
     }
 }

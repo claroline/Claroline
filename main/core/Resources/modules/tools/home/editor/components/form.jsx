@@ -113,7 +113,7 @@ const EditorForm = props =>
       }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
-        displayed: props.currentContext.type === 'workspace' || props.administration,
+        displayed: props.currentContext.type === 'workspace' || (props.administration && 'desktop' === props.currentContext.type),
         fields: [
           {
             name: 'restrictions.hidden',
@@ -140,7 +140,7 @@ const EditorForm = props =>
                   inline: false,
                   multiple : true,
                   choices: props.currentContext.type === 'workspace' || props.administration ?
-                    props.currentContext.data.roles.reduce((acc, role) => {
+                    props.roles.reduce((acc, role) => {
                       acc[role.id] = trans(role.translationKey)
                       return acc
                     }, {})
@@ -176,6 +176,10 @@ EditorForm.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )).isRequired,
+  roles: T.arrayOf(T.shape({
+    id: T.string,
+    translationKey: T.string
+  })),
 
   created: T.bool,
   readOnly: T.bool,

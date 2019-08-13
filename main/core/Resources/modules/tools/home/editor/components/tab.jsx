@@ -8,10 +8,9 @@ import {
   PageContent,
   PageGroupActions,
   PageActions,
-  PageAction,
   MoreAction
 } from '#/main/core/layout/page'
-import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_WALKTHROUGHS} from '#/main/app/overlays/walkthrough/modals/walkthroughs'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
@@ -47,16 +46,6 @@ const EditorTab = props =>
       />
 
       <PageActions>
-        <PageGroupActions>
-          <PageAction
-            type={LINK_BUTTON}
-            label={trans('configure', {}, 'actions')}
-            icon="fa fa-fw fa-cog"
-            target={`${props.path}/edit`}
-            primary={true}
-          />
-        </PageGroupActions>
-
         <PageGroupActions>
           <MoreAction
             actions={[
@@ -114,6 +103,7 @@ const EditorTab = props =>
           widgets={props.widgets}
           administration={props.administration}
           tabs={props.tabs}
+          roles={props.roles}
 
           update={props.updateTab}
           move={props.moveTab}
@@ -132,6 +122,7 @@ EditorTab.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
+  roles: T.array,
   currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
   currentTabIndex: T.number.isRequired,

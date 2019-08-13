@@ -18,6 +18,7 @@ const EditorMain = withRouter(
       administration: selectors.administration(state),
       readOnly: editorSelectors.readOnly(state),
       tabs: editorSelectors.editorTabs(state),
+      roles: selectors.roles(state),
       widgets: editorSelectors.widgets(state),
       currentTabIndex: editorSelectors.currentTabIndex(state),
       currentTabTitle: editorSelectors.currentTabTitle(state),
@@ -27,7 +28,6 @@ const EditorMain = withRouter(
       setCurrentTab(tab){
         dispatch(actions.setCurrentTab(tab))
       },
-
       updateTab(currentTabIndex, field, value) {
         dispatch(formActions.updateProp(editorSelectors.FORM_NAME, `[${currentTabIndex}].${field}`, value))
       },

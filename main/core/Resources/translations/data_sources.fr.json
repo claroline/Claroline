@@ -1,6 +1,8 @@
 {
+  "admin_tools": "Liste des outils d'administration",
   "my_workspaces": "Liste de mes espaces d'activités",
   "resources": "Liste de ressources",
+  "tools": "Liste des outils",
   "users": "Liste d'utilisateurs",
   "workspaces": "Liste d'espaces d'activités"
 }

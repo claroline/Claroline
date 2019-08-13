@@ -14,14 +14,22 @@ const currentTabId = createSelector(
   [store],
   (store) => store.currentTabId
 )
+
 const editable = createSelector(
   [store],
   (store) => store.editable
 )
+
 const administration = createSelector(
   [store],
   (store) => store.administration
 )
+
+const desktopAdmin = createSelector(
+  [store],
+  (store) => store.desktopAdmin
+)
+
 const editing = createSelector(
   [store],
   (store) => store.editing
@@ -30,6 +38,11 @@ const editing = createSelector(
 const tabs = createSelector(
   [store],
   (store) => store.tabs || []
+)
+
+const roles = createSelector(
+  [store],
+  (store) => store.roles || []
 )
 
 const currentTab = createSelector(
@@ -74,8 +87,10 @@ export const selectors = {
   currentTabTitle,
   editable,
   administration,
+  desktopAdmin,
   editing,
   context,
   tabs,
+  roles,
   widgets
 }

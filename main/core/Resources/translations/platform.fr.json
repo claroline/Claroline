@@ -1168,6 +1168,8 @@
     "successfull_workspace_creation": "L'espace d'activités %name% a été créé avec succès.",
     "support_email": "Courriel du support",
     "switch": "Echanger",
+    "switch_to_admin_tabs": "Basculer vers les onglets communs",
+    "switch_to_user_tabs": "Basculer vers les onglers personnels",
     "tab": "Onglet",
     "tab_position": "Position de l'onglet",
     "tab_not_exists": "L'onglet %tab% n'existe pas à la ligne %line%.",

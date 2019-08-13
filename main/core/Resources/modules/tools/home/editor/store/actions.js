@@ -22,7 +22,9 @@ actions.createTab = (context, administration, position, currentUser, navigate) =
     longTitle: trans('tab'),
     position: position + 1,
     slug: newSlug,
-    type: administration ? 'administration' : context.type,
+    type: administration ?
+      'desktop' === context.type ? 'administration' : 'admin' :
+      context.type,
     administration: administration,
     user: context.type === 'desktop' && !administration ? currentUser : null,
     workspace: context.type === 'workspace' ? {uuid: context.data.uuid} : null

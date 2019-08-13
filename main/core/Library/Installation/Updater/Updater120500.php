@@ -12,9 +12,12 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class Updater120500 extends Updater
 {
@@ -24,6 +27,8 @@ class Updater120500 extends Updater
     private $om;
     /** @var PlatformConfigurationHandler */
     private $configHandler;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(ContainerInterface $container, $logger = null)
     {
@@ -31,6 +36,7 @@ class Updater120500 extends Updater
         $this->container = $container;
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->configHandler = $container->get('claroline.config.platform_config_handler');
+        $this->translator = $container->get('translator');
     }
 
     public function postUpdate()
@@ -39,6 +45,7 @@ class Updater120500 extends Updater
 
         $this->removeTool('my_contacts');
         $this->removeTool('workspace_management');
+        $this->createDefaultAdminHomeTab();
     }
 
     private function updatePlatformOptions()
@@ -81,6 +88,31 @@ class Updater120500 extends Updater
         if (!empty($tool)) {
             $this->om->remove($tool);
             $this->om->flush();
+        }
+    }
+
+    private function createDefaultAdminHomeTab()
+    {
+        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['type' => HomeTab::TYPE_ADMIN]);
+
+        if (0 === count($tabs)) {
+            $this->log('Creating default admin home tab...');
+
+            $homeTab = new HomeTab();
+            $homeTab->setType(HomeTab::TYPE_ADMIN);
+            $this->om->persist($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setLocked(true);
+            $homeTabConfig->setTabOrder(1);
+            $name = $this->translator->trans('informations', [], 'platform');
+            $homeTabConfig->setName($name);
+            $homeTabConfig->setLongTitle($name);
+            $this->om->persist($homeTabConfig);
+            $this->om->flush();
+
+            $this->log('Default admin home tab created.');
         }
     }
 }

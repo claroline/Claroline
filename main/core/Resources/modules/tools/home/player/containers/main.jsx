@@ -13,14 +13,22 @@ const PlayerMain = withRouter(
       path: toolSelectors.path(state),
       currentContext: selectors.context(state),
       editable: selectors.editable(state),
+      administration: selectors.administration(state),
+      desktopAdmin: selectors.desktopAdmin(state),
       tabs: playerSelectors.tabs(state),
       currentTab: selectors.currentTab(state),
       currentTabTitle: selectors.currentTabTitle(state),
       widgets: selectors.widgets(state)
     }),
     (dispatch) => ({
-      setCurrentTab(tab){
+      setCurrentTab(tab) {
         dispatch(actions.setCurrentTab(tab))
+      },
+      setAdministration(administration) {
+        dispatch(actions.setAdministration(administration))
+      },
+      fetchTabs(administration) {
+        dispatch(actions.fetchTabs(administration))
       }
     })
   )(PlayerMainComponent)

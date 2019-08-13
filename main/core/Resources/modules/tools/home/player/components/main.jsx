@@ -27,7 +27,11 @@ const PlayerMain = props =>
                 currentTabTitle={props.currentTabTitle}
                 currentTab={props.currentTab}
                 editable={props.editable}
+                administration={props.administration}
+                desktopAdmin={props.desktopAdmin}
                 widgets={props.widgets}
+                setAdministration={props.setAdministration}
+                fetchTabs={props.desktopAdmin ? props.fetchTabs : () => false}
               />
             )
 
@@ -54,11 +58,15 @@ PlayerMain.propTypes = {
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
   editable: T.bool.isRequired,
+  administration: T.bool.isRequired,
+  desktopAdmin: T.bool.isRequired,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
   )).isRequired,
 
-  setCurrentTab: T.func.isRequired
+  setCurrentTab: T.func.isRequired,
+  setAdministration: T.func.isRequired,
+  fetchTabs: T.func.isRequired
 }
 
 export {

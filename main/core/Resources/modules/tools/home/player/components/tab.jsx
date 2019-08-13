@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {PageSimple} from '#/main/app/page/components/simple'
 import {PageHeader, PageContent, PageActions, PageAction} from '#/main/core/layout/page'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
@@ -44,6 +44,28 @@ const PlayerTab = props =>
             primary={true}
             target={`${props.path}/edit/${props.currentTab.slug}`}
           />
+          {props.desktopAdmin && props.administration &&
+            <PageAction
+              type={CALLBACK_BUTTON}
+              label={trans('switch_to_user_tabs')}
+              icon="fa fa-fw fa-exchange"
+              callback={() => {
+                props.setAdministration(false)
+                props.fetchTabs(false)
+              }}
+            />
+          }
+          {props.desktopAdmin && !props.administration &&
+            <PageAction
+              type={CALLBACK_BUTTON}
+              label={trans('switch_to_admin_tabs')}
+              icon="fa fa-fw fa-exchange"
+              callback={() => {
+                props.setAdministration(true)
+                props.fetchTabs(true)
+              }}
+            />
+          }
         </PageActions>
       }
     </PageHeader>
@@ -65,9 +87,13 @@ PlayerTab.propTypes = {
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
   editable: T.bool.isRequired,
+  administration: T.bool.isRequired,
+  desktopAdmin: T.bool.isRequired,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
-  )).isRequired
+  )).isRequired,
+  setAdministration: T.func,
+  fetchTabs: T.func
 }
 
 export {

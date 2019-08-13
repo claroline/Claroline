@@ -158,7 +158,7 @@ plugin:
         - name: user_management
           class: user
 
-        - name: desktop_and_home
+        - name: home
           class: home
 
         - name: tasks_scheduling
@@ -179,7 +179,7 @@ plugin:
     widgets:
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, home, administration]
           tags: [content]
 
         - name: list
@@ -193,7 +193,7 @@ plugin:
 
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, home, administration]
           tags: [resources]
 
         - name: progression
@@ -204,22 +204,22 @@ plugin:
     data_sources:
         - name: resources
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, home, administration]
           tags: [resources]
 
         - name: workspaces
           type: list
-          context: [desktop, workspace, home]
+          context: [desktop, workspace, home, administration]
           tags: [workspaces]
 
         - name: public_workspaces
           type: list
-          context: [desktop, workspace, home]
+          context: [desktop, workspace, home, administration]
           tags: [workspaces]
 
         - name: my_workspaces
           type: list
-          context: [desktop, workspace]
+          context: [desktop, workspace, administration]
           tags: [workspaces]
 
         - name: managed_workspaces
@@ -234,8 +234,18 @@ plugin:
 
         - name: users
           type: list
-          context: [desktop, workspace]
+          context: [desktop, workspace, administration]
           tags: [community]
+
+        - name: admin_tools
+          type: list
+          context: [administration]
+          tags: [tools]
+
+        - name: tools
+          type: list
+          context: [desktop, workspace]
+          tags: [tools]
 
     tools:
         - name: workspaces

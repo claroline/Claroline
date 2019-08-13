@@ -3,85 +3,61 @@
 namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Service()
  */
 class HomeListener
 {
-    /** @var TwigEngine */
-    private $templating;
-
     /** @var FinderProvider */
     private $finder;
 
     /**
-     * AnalyticsListener constructor.
+     * HomeListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating"),
-     *     "finder"     = @DI\Inject("claroline.api.finder")
+     *     "finder" = @DI\Inject("claroline.api.finder")
      * })
      *
-     * @param TwigEngine     $templating
      * @param FinderProvider $finder
      */
-    public function __construct(
-        TwigEngine $templating,
-        FinderProvider $finder
-    ) {
-        $this->templating = $templating;
+    public function __construct(FinderProvider $finder)
+    {
         $this->finder = $finder;
     }
 
     /**
-     * Displays analytics administration tool.
+     * Displays home administration tool.
      *
-     * @DI\Observe("administration_tool_desktop_and_home")
+     * @DI\Observe("administration_tool_home")
      *
      * @param OpenAdministrationToolEvent $event
      */
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
-        $tabs = $this->finder->search(
+        $homeTabs = $this->finder->search(
           HomeTab::class,
-          ['filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP]]
+          ['filters' => ['type' => HomeTab::TYPE_ADMIN]]
         );
 
-        $tabs = array_filter($tabs['data'], function ($data) {
+        $tabs = array_filter($homeTabs['data'], function ($data) {
             return $data !== [];
         });
+        $orderedTabs = [];
 
         foreach ($tabs as $tab) {
             $orderedTabs[$tab['position']] = $tab;
         }
         ksort($orderedTabs);
 
-        $roles = $this->finder->search('Claroline\CoreBundle\Entity\Role',
-          ['filters' => ['type' => Role::PLATFORM_ROLE]]
-        );
-
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:administration:home.html.twig', [
-                'editable' => true,
-                'administration' => true,
-                'context' => [
-                    'type' => Widget::CONTEXT_DESKTOP,
-                    'data' => [
-                        'roles' => $roles['data'],
-                    ],
-                ],
-                'tabs' => array_values($orderedTabs),
-            ]
-        );
-        $event->setResponse(new Response($content));
+        $event->setData([
+            'editable' => true,
+            'administration' => true,
+            'tabs' => array_values($orderedTabs),
+        ]);
         $event->stopPropagation();
     }
 }

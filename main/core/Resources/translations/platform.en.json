@@ -1142,6 +1142,8 @@
     "successfull_workspace_creation": "The workspace %name% has been created successfully",
     "support_email": "Support email",
     "switch": "Switch",
+    "switch_to_admin_tabs": "Switch to admin tabs",
+    "switch_to_user_tabs": "Switch to personal tabs",
     "tab": "Tab",
     "tab_position": "Tab position",
     "tabs": "Tabs",
