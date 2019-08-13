@@ -26,6 +26,9 @@ const WorkspaceMain = (props) => {
         errors={props.accessErrors}
         dismiss={props.dismissRestrictions}
         managed={props.managed}
+        workspace={props.workspace}
+        checkAccessCode={(code) => props.checkAccessCode(props.workspace, code)}
+        selfRegister={() => props.selfRegister(props.workspace)}
       />
     )
   }
@@ -75,7 +78,9 @@ WorkspaceMain.propTypes = {
   })),
   openTool: T.func.isRequired,
   accessErrors: T.object,
-  dismissRestrictions: T.func.isRequired
+  dismissRestrictions: T.func.isRequired,
+  checkAccessCode: T.func,
+  selfRegister: T.func
 }
 
 WorkspaceMain.defaultProps = {

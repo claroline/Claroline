@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/workspace")
@@ -434,5 +435,43 @@ class RegistrationController extends AbstractApiController
         }
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Self-register to a workspace that allows it.",
+     *     parameters={
+     *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"}
+     *     }
+     * )
+     * @EXT\Route(
+     *     "/{workspace}/register/self",
+     *     name="apiv2_workspace_self_register"
+     * )
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter(
+     *     "workspace",
+     *     class = "ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"mapping": {"workspace": "uuid"}}
+     * )
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param Workspace $workspace
+     * @param User      $currentUser
+     *
+     * @return JsonResponse
+     */
+    public function selfRegisterAction(Workspace $workspace, User $currentUser)
+    {
+        if (!$workspace->getSelfRegistration()) {
+            throw new AccessDeniedException();
+        }
+        if (!$workspace->getRegistrationValidation()) {
+            $this->workspaceManager->addUser($workspace, $currentUser);
+        } elseif (!$this->workspaceManager->isUserInValidationQueue($workspace, $currentUser)) {
+            $this->workspaceManager->addUserQueue($workspace, $currentUser);
+        }
+
+        return new JsonResponse();
     }
 }

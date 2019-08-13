@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Manager\Workspace;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -211,25 +210,25 @@ class WorkspaceRestrictionsManager
     }
 
     /**
-     * Submits a code to unlock a resource.
-     * NB. The resource will stay unlocked as long as the user session stay alive.
+     * Submits a code to unlock a workspace.
+     * NB. The workspace will stay unlocked as long as the user session stay alive.
      *
-     * @param ResourceNode $resourceNode - The resource to unlock
-     * @param string       $code         - The code sent by the user
+     * @param Workspace $workspace - The workspace to unlock
+     * @param string    $code      - The code sent by the user
      *
      * @throws InvalidDataException - If the submitted code is incorrect
      */
-    public function unlock(ResourceNode $resourceNode, $code = null)
+    public function unlock(Workspace $workspace, $code = null)
     {
         //if a code is defined
-        if ($accessCode = $resourceNode->getAccessCode()) {
+        if ($accessCode = $workspace->getAccessCode()) {
             if (empty($code) || $accessCode !== $code) {
-                $this->session->set($resourceNode->getUuid(), false);
+                $this->session->set($workspace->getUuid(), false);
 
                 throw new InvalidDataException('Invalid code sent');
             }
 
-            $this->session->set($resourceNode->getUuid(), true);
+            $this->session->set($workspace->getUuid(), true);
         }
     }
 }

@@ -7,11 +7,12 @@ import {actions as menuActions} from '#/main/app/layout/menu/store/actions'
 import {selectors} from '#/main/core/workspace/store/selectors'
 
 // actions
-export const WORKSPACE_LOAD                 = 'WORKSPACE_LOAD'
-export const WORKSPACE_SET_LOADED           = 'WORKSPACE_SET_LOADED'
-export const WORKSPACE_SERVER_ERRORS        = 'WORKSPACE_SERVER_ERRORS'
-export const WORKSPACE_RESTRICTIONS_ERROR   = 'WORKSPACE_RESTRICTIONS_ERROR'
+export const WORKSPACE_LOAD = 'WORKSPACE_LOAD'
+export const WORKSPACE_SET_LOADED = 'WORKSPACE_SET_LOADED'
+export const WORKSPACE_SERVER_ERRORS = 'WORKSPACE_SERVER_ERRORS'
+export const WORKSPACE_RESTRICTIONS_ERROR = 'WORKSPACE_RESTRICTIONS_ERROR'
 export const WORKSPACE_RESTRICTIONS_DISMISS = 'WORKSPACE_RESTRICTIONS_DISMISS'
+export const WORKSPACE_RESTRICTIONS_UNLOCKED = 'WORKSPACE_RESTRICTIONS_UNLOCKED'
 
 // action creators
 export const actions = {}
@@ -21,6 +22,7 @@ actions.setLoaded = makeActionCreator(WORKSPACE_SET_LOADED, 'loaded')
 actions.setRestrictionsError = makeActionCreator(WORKSPACE_RESTRICTIONS_ERROR, 'errors')
 actions.setServerErrors = makeActionCreator(WORKSPACE_SERVER_ERRORS, 'errors')
 actions.dismissRestrictions = makeActionCreator(WORKSPACE_RESTRICTIONS_DISMISS)
+actions.unlockWorkspace = makeActionCreator(WORKSPACE_RESTRICTIONS_UNLOCKED)
 
 /**
  * Fetch the required data to open the current Workspace.
@@ -65,3 +67,26 @@ actions.open = (slug) => (dispatch, getState) => {
     })
   }
 }
+
+actions.checkAccessCode = (workspace, code) => ({
+  [API_REQUEST] : {
+    url: ['claro_workspace_unlock', {id: workspace.uuid}],
+    request: {
+      method: 'POST',
+      body: JSON.stringify({code: code})
+    },
+    success: (response, dispatch) => {
+      dispatch(actions.unlockWorkspace())
+    }
+  }
+})
+
+actions.selfRegister = (workspace) => ({
+  [API_REQUEST] : {
+    url: ['apiv2_workspace_self_register', {workspace: workspace.uuid}],
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+

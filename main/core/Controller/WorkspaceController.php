@@ -176,7 +176,10 @@ class WorkspaceController
             ]);
         }
 
-        return new JsonResponse($accessErrors, 403);
+        return new JsonResponse([
+            'workspace' => $this->serializer->serialize($workspace),
+            'accessErrors' => $accessErrors,
+        ]);
     }
 
     /**
@@ -213,6 +216,32 @@ class WorkspaceController
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 
         return new JsonResponse($event->getData());
+    }
+
+    /**
+     * Submit access code.
+     *
+     * @EXT\Route(
+     *     "/unlock/{id}",
+     *     name="claro_workspace_unlock"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Workspace $workspace
+     * @param Request   $request
+     *
+     * @return JsonResponse
+     */
+    public function unlockAction(Workspace $workspace, Request $request)
+    {
+        $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
+
+        return new JsonResponse(null, 204);
     }
 
     private function forceWorkspaceLang(Workspace $workspace, Request $request)
