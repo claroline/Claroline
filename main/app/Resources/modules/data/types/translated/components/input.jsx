@@ -22,6 +22,7 @@ const TranslatedInput = props =>
     onChangeMode={props.onChangeMode}
   />
 
+
 implementPropTypes(TranslatedInput, FormFieldTypes, {
   // more precise value type
   value: T.object,

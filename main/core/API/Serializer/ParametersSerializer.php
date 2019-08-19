@@ -115,10 +115,12 @@ class ParametersSerializer
 
     public function serializeTos()
     {
-        $result = $this->om->getRepository(Content::class)->findBy(['type' => 'termsOfService']);
+        $result = $this->om->getRepository(Content::class)->findOneBy(['type' => 'termsOfService']);
 
-        if (count($result) > 0) {
-            return $result[0]->getContent();
+        if ($result) {
+            $data = $this->serializer->serialize($result, ['property' => 'content']);
+
+            return $data;
         } else {
             $content = new Content();
             $content->setType('termsOfService');
