@@ -22,7 +22,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
 {
     protected function configure()
     {
-        $this->setName('claroline:workspace:archive')
+        $this->setName('claroline:workspace:archive-export')
             ->setDescription('export workspace archive');
         $this->setDefinition(
             [

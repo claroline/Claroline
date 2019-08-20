@@ -307,6 +307,11 @@ class Role extends BaseRole
         $this->users = new ArrayCollection();
     }
 
+    public function initGroups()
+    {
+        $this->users = new ArrayCollection();
+    }
+
     public function getGroups()
     {
         return $this->groups;

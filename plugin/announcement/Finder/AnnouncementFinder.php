@@ -46,6 +46,7 @@ class AnnouncementFinder extends AbstractFinder
                 case 'workspace':
                     $qb->leftJoin('node.workspace', 'w');
                     $qb->andWhere("w.uuid like :{$filterName}");
+                    $qb->andWhere('w.archived = false');
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'meta.publishedAt':
@@ -85,6 +86,7 @@ class AnnouncementFinder extends AbstractFinder
                     break;
                 case '_user':
                     $qb->leftJoin('node.workspace', 'w');
+                    $qb->andWhere('w.archived = false');
                     $qb->leftJoin('w.roles', 'r');
                     $qb->leftJoin('r.users', 'ru');
                     $qb->andWhere($qb->expr()->orX(
@@ -98,6 +100,7 @@ class AnnouncementFinder extends AbstractFinder
                     break;
                 case '_group':
                     $qb->leftJoin('node.workspace', 'w');
+                    $qb->andWhere('w.archived = false');
                     $qb->leftJoin('w.roles', 'r');
                     $qb->leftJoin('r.groups', 'rg');
                     $qb->leftJoin('rg.users', 'rgu');
