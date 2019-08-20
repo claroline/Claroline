@@ -85,6 +85,15 @@ const Workspaces = (props) => {
           label: trans('workspace_max_users'),
           type: 'number',
           alias: 'maxUsers'
+        }, {
+          name: 'tags',
+          type: 'tag',
+          label: trans('tags'),
+          displayable: false,
+          sortable: false,
+          options: {
+            objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace'
+          }
         }
       ]}
       card={WorkspaceCard}
