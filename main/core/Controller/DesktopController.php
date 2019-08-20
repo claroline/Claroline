@@ -118,6 +118,7 @@ class DesktopController
     public function openToolAction($toolName)
     {
         $tool = $this->toolManager->getToolByName($toolName);
+
         if (!$tool) {
             throw new NotFoundHttpException('Tool not found');
         }
