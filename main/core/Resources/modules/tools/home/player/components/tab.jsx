@@ -49,6 +49,7 @@ const PlayerTab = props =>
               type={CALLBACK_BUTTON}
               label={trans('switch_to_user_tabs')}
               icon="fa fa-fw fa-exchange"
+              dangerous={true}
               callback={() => {
                 props.setAdministration(false)
                 props.fetchTabs(false)
