@@ -306,7 +306,7 @@ class UserController extends AbstractCrudController
      *    "/list/registerable",
      *    name="apiv2_user_list_registerable"
      * )
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param User    $user
@@ -321,6 +321,19 @@ class UserController extends AbstractCrudController
           ['recursiveOrXOrganization' => array_map(function (Organization $organization) {
               return $organization->getUuid();
           }, $user->getOrganizations())];
+
+        //here we look to the posted search data
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['textSearch'])) {
+            $text = $data['textSearch'];
+            $data = array_map(function ($data) {
+                //trim and do other stuff here
+                return $data;
+            }, str_getcsv($text, PHP_EOL));
+            $filters['globalSearch'] = $data;
+        }
 
         return new JsonResponse($this->finder->search(
             User::class,

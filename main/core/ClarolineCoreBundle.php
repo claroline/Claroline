@@ -81,7 +81,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             'JMS\SecurityExtraBundle\JMSSecurityExtraBundle' => 'jms_security_extra',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
-            'FOS\RestBundle\FOSRestBundle' => 'fos_rest',
             'Knp\Bundle\MenuBundle\KnpMenuBundle' => 'knp_menu',
         ];
         // one configuration file for every standard environment (prod, dev, test)

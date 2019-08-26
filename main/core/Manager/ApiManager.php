@@ -15,7 +15,6 @@ use Claroline\AppBundle\Api\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Import\File as HistoryFile;
-use FOS\RestBundle\View\View;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,7 +28,6 @@ class ApiManager
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "curlManager"  = @DI\Inject("claroline.manager.curl_manager"),
-     *     "viewHandler"  = @DI\Inject("fos_rest.view_handler"),
      *     "container"    = @DI\Inject("service_container"),
      *     "transfer"     = @DI\Inject("claroline.api.transfer"),
      *     "finder"       =  @DI\Inject("claroline.api.finder"),
@@ -41,7 +39,6 @@ class ApiManager
     public function __construct(
         ObjectManager $om,
         CurlManager $curlManager,
-        $viewHandler,
         $container,
         $transfer,
         $finder,
@@ -51,7 +48,6 @@ class ApiManager
     ) {
         $this->om = $om;
         $this->curlManager = $curlManager;
-        $this->viewHandler = $viewHandler;
         $this->container = $container;
         $this->transfer = $transfer;
         $this->finder = $finder;

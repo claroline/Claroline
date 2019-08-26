@@ -1,11 +1,3 @@
-claro_video_api:
-    resource: "@ClarolineVideoPlayerBundle/Controller/API/VideoController.php"
-    type: rest
-    prefix: api
-    defaults: {_format: json}
-    options:
-        expose: true
-
 claro_video_api_new:
     resource: "@ClarolineVideoPlayerBundle/Controller/APINew/"
     prefix: apiv2

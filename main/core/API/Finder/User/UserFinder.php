@@ -243,6 +243,13 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere("UPPER(gn.name) LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
+                case 'globalSearch':
+                    $qb->orWhere($qb->expr()->orX(
+                        $qb->expr()->in('obj.email', ':globalSearch'),
+                        $qb->expr()->in('obj.username', ':globalSearch')
+                    ));
+                    $qb->setParameter('globalSearch', $filterValue);
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
