@@ -27,18 +27,20 @@ const PlayerMain = props => {
       <Routes
         path={props.basePath}
         redirect={[
-          {from: '/play', to: `/play/${props.steps[0].id}`}
+          {from: '/play', to: `/play/${props.steps[0].slug}`}
         ]}
         routes={[
           {
-            path: '/play/:id',
+            path: '/play/:slug',
             onEnter: (params) => {
-              if (props.currentUser && getStepUserProgression(props.steps, params.id) === constants.STATUS_UNSEEN) {
-                props.updateProgression(params.id)
+              const step = props.steps.find(step => params.slug === step.slug)
+
+              if (props.currentUser && getStepUserProgression(props.steps, step.id) === constants.STATUS_UNSEEN) {
+                props.updateProgression(step.id)
               }
             },
             render: (routeProps) => {
-              const step = props.steps.find(step => routeProps.match.params.id === step.id)
+              const step = props.steps.find(step => routeProps.match.params.slug === step.slug)
               if (step) {
                 const Current =
                   <PathCurrent

@@ -110,9 +110,9 @@ class EditorMain extends Component {
                 return Parameters
               }
             }, {
-              path: '/edit/:id',
+              path: '/edit/:slug',
               render: (routeProps) => {
-                const step = this.props.steps.find(step => routeProps.match.params.id === step.id)
+                const step = this.props.steps.find(step => routeProps.match.params.slug === step.slug)
 
                 if (step) {
                   const CurrentStep = (

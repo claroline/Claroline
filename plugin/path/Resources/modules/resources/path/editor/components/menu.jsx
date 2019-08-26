@@ -16,8 +16,8 @@ const EditorMenu = props => {
       type: LINK_BUTTON,
       icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
       label: step.title,
-      target: `${props.path}/edit/${step.id}`,
-      active: !!matchPath(props.location.pathname, {path: `${props.path}/edit/${step.id}`}),
+      target: `${props.path}/edit/${step.slug}`,
+      active: !!matchPath(props.location.pathname, {path: `${props.path}/edit/${step.slug}`}),
       additional: [
         {
           name: 'add',

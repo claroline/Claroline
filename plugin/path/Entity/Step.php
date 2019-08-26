@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Innova\PathBundle\Entity\Path\Path;
 
 /**
@@ -155,6 +156,12 @@ class Step
      * @var bool
      */
     private $evaluated = false;
+
+    /**
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(length=128, unique=true)
+     */
+    private $slug;
 
     /**
      * Class constructor.
@@ -549,5 +556,15 @@ class Step
     public function setEvaluated($evaluated)
     {
         $this->evaluated = $evaluated;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    public function setSlug($slug = null)
+    {
+        $this->slug = $slug;
     }
 }

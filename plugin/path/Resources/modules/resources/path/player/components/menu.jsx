@@ -13,8 +13,8 @@ const PlayerMenu = props => {
       type: LINK_BUTTON,
       icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
       label: step.title,
-      target: `${props.path}/play/${step.id}`,
-      active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${step.id}`}),
+      target: `${props.path}/play/${step.slug}`,
+      active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${step.slug}`}),
       children: step.children ? step.children.map(getStepSummary) : []
     }
   }

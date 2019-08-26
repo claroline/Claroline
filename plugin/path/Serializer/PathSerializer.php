@@ -161,6 +161,7 @@ class PathSerializer
         }
 
         return [
+            'slug' => $step->getSlug(),
             'id' => $step->getUuid(),
             'title' => $step->getTitle(),
             'description' => $step->getDescription(),
