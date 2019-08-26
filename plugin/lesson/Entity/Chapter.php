@@ -6,8 +6,6 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\NotificationBundle\Entity\UserPickerContent;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
  * @ORM\EntityListeners({"Icap\LessonBundle\Listener\ChapterListener"})
  * @ORM\HasLifecycleCallbacks()
- * @ExclusionPolicy("all")
  */
 class Chapter
 {
@@ -26,13 +23,11 @@ class Chapter
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", nullable=false)
-     * @Expose
      * @Assert\NotBlank()
      */
     private $title;
@@ -51,7 +46,6 @@ class Chapter
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
      * @ORM\Column(length=128, unique=true, nullable=false)
-     * @Expose
      */
     protected $slug;
 

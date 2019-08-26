@@ -11,8 +11,6 @@
 
 namespace Icap\InwicastBundle\Controller;
 
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -66,15 +64,5 @@ class Controller extends BaseController
     protected function getMediacenterUserManager()
     {
         return $this->get('inwicast.plugin.manager.mediacenteruser');
-    }
-
-    protected function serializeObject($object)
-    {
-        $serializer = SerializerBuilder::create()->build();
-        $serializationContext = new SerializationContext();
-        $serializationContext->setSerializeNull(true);
-        $objectJson = $serializer->serialize($object, 'json', $serializationContext);
-
-        return json_decode($objectJson);
     }
 }

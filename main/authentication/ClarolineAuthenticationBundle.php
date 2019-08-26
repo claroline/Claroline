@@ -13,8 +13,8 @@ namespace Claroline\AuthenticationBundle;
 
 use Claroline\AuthenticationBundle\DependencyInjection\Compiler\OauthConfigPass;
 use Claroline\AuthenticationBundle\DependencyInjection\Compiler\SsoServerPass;
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,7 +29,6 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
         $container->addCompilerPass(new SsoServerPass());
         $container->addCompilerPass(new OauthConfigPass());
     }
-
 
     public function getConfiguration($environment)
     {

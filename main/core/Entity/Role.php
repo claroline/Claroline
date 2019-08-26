@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use RuntimeException;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
@@ -45,7 +44,6 @@ class Role extends BaseRole
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user", "api_facet_admin", "api_role"})
      *
      * @var int
      */
@@ -54,7 +52,6 @@ class Role extends BaseRole
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api_user", "api_facet_admin", "api_role"})
      *
      * @var string
      */
@@ -63,7 +60,6 @@ class Role extends BaseRole
     /**
      * @ORM\Column(name="translation_key")
      * @Assert\NotBlank()
-     * @Groups({"api_role", "api_user", "api_facet_admin"})
      *
      * @var string
      */
@@ -108,7 +104,6 @@ class Role extends BaseRole
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"api_user", "api_role"})
      *
      * @var int
      */

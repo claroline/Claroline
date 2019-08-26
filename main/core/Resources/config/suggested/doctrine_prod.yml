@@ -1,16 +1,16 @@
 doctrine:
     dbal:
-        server_version: %database_version%
-        driver:         %database_driver%
-        host:           %database_host%
-        dbname:         %database_name%
-        user:           %database_user%
-        password:       %database_password%
-        port:           %database_port%
+        server_version: "%database_version%"
+        driver:         "%database_driver%"
+        host:           "%database_host%"
+        dbname:         "%database_name%"
+        user:           "%database_user%"
+        password:       "%database_password%"
+        port:           "%database_port%"
         charset:        UTF8
 
     orm:
-        auto_generate_proxy_classes: %kernel.debug%
+        auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         mappings:
             StofDoctrineExtensionsBundle: false

@@ -23,15 +23,14 @@ parameters:
     claroline.param.relative_thumbnail_base_path: "uploads/thumbnails"
     claroline.param.templates_directory: "%claroline.param.files_directory%/templates/"
     claroline.param.workspace.default: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/config/workspace.zip"
-    claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication"
-    claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+    claroline.param.platform_config_handler_class: "Claroline\\CoreBundle\\Library\\Configuration\\PlatformConfigurationHandler"
     #deprecated. Use json instead
-    claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
-    claroline.param.platform_options: %kernel.root_dir%/config/platform_options.json
+    claroline.param.platform_options_file: "%kernel.root_dir%/config/platform_options.yml"
+    claroline.param.platform_options: "%kernel.root_dir%/config/platform_options.json"
     claroline.param.web_dir: "%kernel.root_dir%/../web"
     claroline.param.data_web_dir: "%kernel.root_dir%/../web/data"
     claroline.param.icon_sets_web_dir: "%claroline.param.data_web_dir%/icon_sets"
-    claroline.param.platform_generated_archive_path: %kernel.root_dir%/config/tmp_files
+    claroline.param.platform_generated_archive_path: "%kernel.root_dir%/config/tmp_files"
     #todo: add .param. in the pathaname
     claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
     claroline.ip_white_list_file: "%kernel.root_dir%/config/ip_white_list.yml"
@@ -41,4 +40,4 @@ parameters:
     claroline.api.sample.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/samples"
     claroline.api.core_schema.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/schema"
 
-    firewall_api_regex: /(api|apiv2)|[\/]+\/(api|apiv2)/
+    firewall_api_regex: "/(api|apiv2)|[\/]+\/(api|apiv2)/"

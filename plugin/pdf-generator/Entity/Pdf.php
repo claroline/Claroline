@@ -14,7 +14,6 @@ namespace Claroline\PdfGeneratorBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\PdfGeneratorBundle\Repository\PdfRepository")
@@ -26,7 +25,6 @@ class Pdf
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_pdf"})
      */
     protected $id;
 

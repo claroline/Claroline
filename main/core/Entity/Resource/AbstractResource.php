@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\MappedSuperclass
@@ -23,7 +22,6 @@ abstract class AbstractResource
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_resource"})
      *
      * @var int
      */

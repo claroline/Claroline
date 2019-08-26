@@ -12,8 +12,6 @@
 namespace Claroline\ScormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity
@@ -25,133 +23,96 @@ class Scorm12ScoTracking
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
-     * @Groups({"api_user_min"})
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12Sco")
      * @ORM\JoinColumn(name="sco_id", onDelete="CASCADE", nullable=false)
-     * @Groups({"api_user_min"})
      */
     protected $sco;
 
     /**
      * @ORM\Column(name="score_raw", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("scoreRaw")
      */
     protected $scoreRaw;
 
     /**
      * @ORM\Column(name="score_min", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("scoreMin")
      */
     protected $scoreMin;
 
     /**
      * @ORM\Column(name="score_max", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("scoreMax")
      */
     protected $scoreMax;
 
     /**
      * @ORM\Column(name="lesson_status", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("lessonStatus")
      */
     protected $lessonStatus;
 
     /**
      * @ORM\Column(name="session_time", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("sessionTime")
      */
     protected $sessionTime;
 
     /**
      * @ORM\Column(name="total_time", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("totalTime")
      */
     protected $totalTime;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("entry")
      */
     protected $entry;
 
     /**
      * @ORM\Column(name="suspend_data", nullable=true, length=4096)
-     * @Groups({"api_user_min"})
-     * @SerializedName("suspendData")
      */
     protected $suspendData;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("credit")
      */
     protected $credit;
 
     /**
      * @ORM\Column(name="exit_mode", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("exitMode")
      */
     protected $exitMode;
 
     /**
      * @ORM\Column(name="lesson_location", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("lessonLocation")
      */
     protected $lessonLocation;
 
     /**
      * @ORM\Column(name="lesson_mode", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("lessonMode")
      */
     protected $lessonMode;
 
     /**
      * @ORM\Column(name="best_score_raw", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("bestScoreRaw")
      */
     protected $bestScoreRaw;
 
     /**
      * @ORM\Column(name="best_lesson_status", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("bestLessonStatus")
      */
     protected $bestLessonStatus;
 
     /**
      * @ORM\Column(name="is_locked", type="boolean", nullable=false)
-     * @Groups({"api_user_min"})
-     * @SerializedName("isLocked")
      */
     protected $isLocked;
 
-    /**
-     * @Groups({"api_user_min"})
-     * @SerializedName("lastSessionDate")
-     */
     protected $lastSessionDate;
 
     public function getId()

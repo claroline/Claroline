@@ -4,14 +4,12 @@ namespace Icap\InwicastBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * Media.
  *
  * @ORM\Table(name="inwicast_plugin_media")
  * @ORM\Entity(repositoryClass="Icap\InwicastBundle\Repository\MediaRepository")
- * @JMS\ExclusionPolicy("none")
  */
 class Media
 {
@@ -21,7 +19,6 @@ class Media
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @JMS\Exclude
      */
     protected $id;
 
@@ -29,7 +26,6 @@ class Media
      * @var string
      *
      * @ORM\Column(name="mediaRef", type="string", length=255)
-     * @JMS\SerializedName("mediaRef")
      */
     protected $mediaRef;
 
@@ -50,7 +46,6 @@ class Media
 
     /**
      * @ORM\Column(name="preview_url", type="string", nullable=true)
-     * @JMS\SerializedName("previewUrl")
      */
     protected $previewUrl = null;
 
@@ -72,7 +67,6 @@ class Media
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
      * @ORM\JoinColumn(name="widgetinstance_id", referencedColumnName="id", unique=true, onDelete="CASCADE")
-     * @JMS\Exclude
      **/
     protected $widgetInstance;
 

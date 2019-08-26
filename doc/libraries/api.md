@@ -7,7 +7,6 @@
 - doctrine/orm
 - jms/di-extra-bundle
 - jms/security-extra-bundle
-- jms/serializer-bundle
 - stof/doctrine-extensions-bundle
 - symfony/monolog-bundle
 - symfony/swiftmailer-bundle

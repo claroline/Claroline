@@ -21,7 +21,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,7 +44,6 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      *
      * @var int
      */
@@ -53,7 +51,7 @@ class Organization
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
+
      *
      * @var int
      */
@@ -62,7 +60,6 @@ class Organization
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
-     * @Serializer\Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      *
      * @var string
      */
@@ -71,7 +68,6 @@ class Organization
     /**
      * @ORM\Column(nullable=true, type="string")
      * @Assert\Email()
-     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
      *
      * @var string
      */
@@ -84,7 +80,6 @@ class Organization
      *     inversedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro__location_organization")
-     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
      *
      * @var ArrayCollection
      */
@@ -126,7 +121,6 @@ class Organization
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Groups({"api_organization_tree"})
      *
      * @var Organization
      */
@@ -135,7 +129,6 @@ class Organization
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
-     * @Serializer\Groups({"api_organization_tree"})
      *
      * @var Organization[]|ArrayCollection
      */
@@ -165,7 +158,6 @@ class Organization
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
-     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
      *
      * @var User[]|ArrayCollection
      */
@@ -173,7 +165,6 @@ class Organization
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
-     * @Serializer\Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      */
     protected $default = false;
 

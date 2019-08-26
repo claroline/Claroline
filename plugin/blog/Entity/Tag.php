@@ -5,15 +5,10 @@ namespace Icap\BlogBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Table(name="icap__blog_tag")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\TagRepository")
- * @ExclusionPolicy("all")
  */
 class Tag
 {
@@ -23,8 +18,6 @@ class Tag
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose
-     * @Groups({"blog_list", "blog_post"})
      */
     protected $id;
 
@@ -32,18 +25,12 @@ class Tag
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     *
-     * @Expose
-     * @Groups({"blog_list", "blog_post"})
-     * @SerializedName("text")
      */
     protected $name;
 
     /**
      * @Gedmo\Slug(fields={"name"}, unique=true)
      * @ORM\Column(length=128, unique=true, nullable=true)
-     * @Expose
-     * @Groups({"blog_list", "blog_post"})
      */
     protected $slug;
 

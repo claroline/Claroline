@@ -14,7 +14,6 @@
 namespace Claroline\CoreBundle\Library\Icon;
 
 use Claroline\CoreBundle\Entity\Icon\IconItem;
-use JMS\Serializer\Annotation as JMS;
 
 class ResourceIconItemFilenameList
 {
@@ -36,7 +35,6 @@ class ResourceIconItemFilenameList
      * Icons all icons regardless their reference to resource of files.
      *
      * @var array
-     * @JMS\Groups({"details"})
      */
     private $allIcons = [];
 
@@ -44,14 +42,11 @@ class ResourceIconItemFilenameList
      * Array of all mimeTypes present in the list.
      *
      * @var array
-     * @JMS\Groups({"details"})
      */
     private $mimeTypes = [];
 
     /**
      * Array of all icons in the list by original mimeType.
-     *
-     * @JMS\Groups({"details"})
      */
     private $icons = [];
 
@@ -76,7 +71,7 @@ class ResourceIconItemFilenameList
         $this->mimeTypes[] = $mimeType;
         $this->icons[$mimeType] = $icon;
         // Check if is resource icon
-        if (strpos($mimeType, 'custom/') !== false) {
+        if (false !== strpos($mimeType, 'custom/')) {
             // For every resoruce, give option for a different icon
             $filename = str_replace('custom/', '', $mimeType);
             $this->resourceIcons[$filename] = $this->allIcons[$filename] = new ResourceIconItemFilename(

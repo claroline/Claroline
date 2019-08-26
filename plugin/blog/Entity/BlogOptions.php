@@ -4,8 +4,6 @@ namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -13,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="icap__blog_options")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogOptionsRepository")
  * @ORM\HasLifecycleCallbacks
- * @ExclusionPolicy("all")
  */
 class BlogOptions
 {
@@ -54,84 +51,72 @@ class BlogOptions
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="authorize_comment")
      */
     protected $authorizeComment = false;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="authorize_anonymous_comment")
      */
     protected $authorizeAnonymousComment = false;
 
     /**
      * @var int
-     * @Expose
      * @ORM\Column(type="smallint", name="post_per_page")
      */
     protected $postPerPage = 10;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="auto_publish_post")
      */
     protected $autoPublishPost = false;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="auto_publish_comment")
      */
     protected $autoPublishComment = false;
 
     /**
      * @var int
-     * @Expose
      * @ORM\Column(type="smallint", name="comment_moderation_mode")
      */
     protected $commentModerationMode = self::COMMENT_MODERATION_NONE;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="display_title")
      */
     protected $displayTitle = true;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="display_full_posts")
      */
     protected $displayFullPosts = false;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="banner_activate")
      */
     protected $bannerActivate = true;
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="display_post_view_counter", options={"default": 1})
      */
     protected $displayPostViewCounter = true;
 
     /**
      * @var string
-     * @Expose
      * @ORM\Column(type="string", name="banner_background_color")
      */
     protected $bannerBackgroundColor = '#FFFFFF';
 
     /**
      * @var int
-     * @Expose
      * @ORM\Column(type="smallint", name="banner_height")
      * @Assert\GreaterThanOrEqual(value = 100)
      */
@@ -139,21 +124,18 @@ class BlogOptions
 
     /**
      * @var string
-     * @Expose
      * @ORM\Column(type="string", name="banner_background_image", nullable=true)
      */
     protected $bannerBackgroundImage;
 
     /**
      * @var string
-     * @Expose
      * @ORM\Column(type="string", name="banner_background_image_position")
      */
     protected $bannerBackgroundImagePosition = 'left top';
 
     /**
      * @var string
-     * @Expose
      * @ORM\Column(type="string", name="banner_background_image_repeat")
      */
     protected $bannerBackgroundImageRepeat = self::BANNER_NO_REPEAT;
@@ -162,14 +144,11 @@ class BlogOptions
      * @var UploadedFile
      *
      * @Assert\Image()
-     *
-     * @Expose
      */
     protected $file;
 
     /**
      * @var string
-     * @Expose
      */
     protected $oldFileName = null;
 
@@ -177,7 +156,6 @@ class BlogOptions
      * @var int
      *
      * Option for tag cloud rendering (Classic:0 (or null), 3D sphere:1, classic with number of article per tag: 2:1)
-     * @Expose
      * @ORM\Column(type="smallint", name="tag_cloud", nullable=true)
      */
     protected $tagCloud = null;
@@ -186,21 +164,18 @@ class BlogOptions
      * @var string
      *
      * Option to display the widget bar on the right
-     * @Expose
      * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false, options={"default" = "01112131415161"})
      */
     protected $listWidgetBlog = '01112131415161';
 
     /**
      * @var bool
-     * @Expose
      * @ORM\Column(type="boolean", name="tag_top_mode")
      */
     protected $tagTopMode = false;
 
     /**
      * @var int
-     * @Expose
      * @ORM\Column(type="smallint", name="max_tag", nullable=false, options={"default" = 50})
      */
     protected $maxTag = 50;

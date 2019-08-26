@@ -13,14 +13,11 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__lesson")
  * @ORM\HasLifecycleCallbacks()
- * @ExclusionPolicy("all")
  */
 class Lesson extends AbstractResource
 {
@@ -29,7 +26,6 @@ class Lesson extends AbstractResource
     /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Expose
      */
     private $root;
 

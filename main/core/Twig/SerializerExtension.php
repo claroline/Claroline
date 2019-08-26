@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\Twig;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use JMS\DiExtraBundle\Annotation as DI;
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 
 /**
  * @DI\Service
@@ -22,8 +20,6 @@ use JMS\Serializer\SerializerInterface;
  */
 class SerializerExtension extends \Twig_Extension
 {
-    /** @var SerializerInterface */
-    private $serializer;
     /** @var SerializerProvider */
     private $serializerProvider;
 
@@ -31,21 +27,18 @@ class SerializerExtension extends \Twig_Extension
      * SerializerExtension constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"         = @DI\Inject("jms_serializer"),
      *     "serializerProvider" = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param SerializerInterface $serializer
-     * @param SerializerProvider  $serializerProvider
+     * @param SerializerProvider $serializerProvider
      */
     public function __construct(
-        SerializerInterface $serializer,
         SerializerProvider $serializerProvider)
     {
-        $this->serializer = $serializer;
         $this->serializerProvider = $serializerProvider;
     }
 
+    /* JMS\Serializer */
     public function getFilters()
     {
         return [
@@ -86,12 +79,6 @@ class SerializerExtension extends \Twig_Extension
      */
     public function serialize($data, $group = null)
     {
-        $context = new SerializationContext();
-
-        if ($group) {
-            $context->setGroups($group);
-        }
-
-        return $this->serializer->serialize($data, 'json', $context);
+        throw new \Exception('Use api_serialize instead');
     }
 }

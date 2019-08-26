@@ -6,8 +6,6 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Table(name="formalibre_reservation_resource")
@@ -22,46 +20,37 @@ class Resource
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_reservation", "api_cursus"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="name")
-     * @Groups({"api_reservation", "api_cursus"})
      */
     private $name;
 
     /**
      * @ORM\Column(name="max_time_reservation", nullable=true)
-     * @Groups({"api_reservation", "api_cursus"})
-     * @SerializedName("maxTimeReservation")
      */
     private $maxTimeReservation;
 
     /**
      * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\ResourceType", inversedBy="resources")
      * @ORM\JoinColumn(name="resource_type", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_reservation", "api_cursus"})
-     * @SerializedName("resourceType")
      */
     private $resourceType;
 
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"api_reservation", "api_cursus"})
      */
     private $description;
 
     /**
      * @ORM\Column(name="localisation", nullable=true)
-     * @Groups({"api_reservation", "api_cursus"})
      */
     private $localisation;
 
     /**
      * @ORM\Column(name="quantity", type="integer", nullable=false)
-     * @Groups({"api_reservation", "api_cursus"})
      */
     private $quantity = 1;
 
@@ -79,7 +68,6 @@ class Resource
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_reservation", "api_cursus"})
      */
     private $color;
 
@@ -126,7 +114,7 @@ class Resource
     {
         if (!$maxTime || empty($maxTime)) {
             $maxTime = '00:00:00';
-        } elseif (count(explode(':', $maxTime)) === 2) {
+        } elseif (2 === count(explode(':', $maxTime))) {
             $maxTime = $maxTime.':00';
         }
 

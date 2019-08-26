@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,7 +37,6 @@ class Group extends AbstractRoleSubject
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_group", "api_group_min"})
      *
      * @var int
      */
@@ -47,7 +45,6 @@ class Group extends AbstractRoleSubject
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_group", "api_group_min"})
      *
      * @var string
      */
@@ -69,7 +66,6 @@ class Group extends AbstractRoleSubject
      *     inversedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_group_role")
-     * @Groups({"api_group"})
      */
     protected $roles;
 

@@ -12,8 +12,6 @@
 namespace Claroline\ScormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity
@@ -25,7 +23,6 @@ class Scorm12Sco
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user_min"})
      */
     protected $id;
 
@@ -62,19 +59,16 @@ class Scorm12Sco
 
     /**
      * @ORM\Column(name="scorm_identifier", nullable=false)
-     * @Groups({"api_user_min"})
      */
     protected $identifier;
 
     /**
      * @ORM\Column(nullable=false, length=200)
-     * @Groups({"api_user_min"})
      */
     protected $title;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
-     * @Groups({"api_user_min"})
      */
     protected $visible;
 
@@ -90,36 +84,26 @@ class Scorm12Sco
 
     /**
      * @ORM\Column(name="max_time_allowed", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("maxTimeAllowed")
      */
     protected $maxTimeAllowed;
 
     /**
      * @ORM\Column(name="time_limit_action", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("timeLimitAction")
      */
     protected $timeLimitAction;
 
     /**
      * @ORM\Column(name="launch_data", nullable=true, length=4096)
-     * @Groups({"api_user_min"})
-     * @SerializedName("launchData")
      */
     protected $launchData;
 
     /**
      * @ORM\Column(name="mastery_score", type="integer", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("masteryScore")
      */
     protected $masteryScore;
 
     /**
      * @ORM\Column(name="is_block", type="boolean", nullable=false)
-     * @Groups({"api_user_min"})
-     * @SerializedName("isBlock")
      */
     protected $isBlock;
 

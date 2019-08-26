@@ -16,7 +16,6 @@ namespace Claroline\CoreBundle\Entity\Icon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -99,7 +98,6 @@ class IconSet
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="IconItem", mappedBy="iconSet")
-     * @JMS\Groups({"details"})
      */
     private $icons;
 
@@ -191,7 +189,7 @@ class IconSet
      */
     public function setType($type)
     {
-        if ($type === null) {
+        if (null === $type) {
             $this->$type = $type;
         } else {
             $iconSetType = new IconSetTypeEnum($type);

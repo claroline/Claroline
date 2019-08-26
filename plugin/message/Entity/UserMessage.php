@@ -13,7 +13,6 @@ namespace Claroline\MessageBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity()
@@ -44,7 +43,6 @@ class UserMessage
      *     inversedBy="userMessages"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     * @JMS\Groups({"api_message"})
      */
     private $message;
 

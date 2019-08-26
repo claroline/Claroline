@@ -14,7 +14,6 @@ namespace Claroline\VideoPlayerBundle\Entity;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\VideoPlayerBundle\Repository\TrackRepository")
@@ -28,7 +27,6 @@ class Track
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_resource"})
      */
     protected $id;
 
@@ -45,31 +43,26 @@ class Track
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\File"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
-     * @Groups({"api_resource"})
      */
     protected $trackFile;
 
     /**
      * @ORM\Column(name="lang", nullable=true)
-     * @Groups({"api_resource"})
      */
     protected $lang = 'en';
 
     /**
      * @ORM\Column(name="label", nullable=true)
-     * @Groups({"api_resource"})
      */
     protected $label;
 
     /**
      * @ORM\Column(name="kind", nullable=false)
-     * @Groups({"api_resource"})
      */
     protected $kind = 'subtitles';
 
     /**
      * @ORM\Column(name="is_default", nullable=false, type="boolean")
-     * @Groups({"api_resource"})
      */
     protected $isDefault = false;
 
@@ -106,7 +99,7 @@ class Track
     public function setIsDefault($isDefault)
     {
         if (is_string($isDefault)) {
-            $isDefault = $isDefault === 'true' ? true : false;
+            $isDefault = 'true' === $isDefault ? true : false;
         }
 
         $this->isDefault = $isDefault;
