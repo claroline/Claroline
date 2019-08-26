@@ -54,7 +54,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
                 'no_asset',
                 'a',
                 InputOption::VALUE_NONE,
-                'When set to true, assetic:dump and assets:install isn\'t execute'
+                'assets:install doesn\'t execute'
             )
             ->addOption(
                 'no_theme',

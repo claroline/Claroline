@@ -33,30 +33,9 @@
 
 {# We have replaced WillDurand by our own to be able to lazy load trans domains #}
 {#<script src="{{ hotAsset('claroline-distribution-main-app-translator') }}"></script>#}
-{# Load some default translation domains #}
-{% javascripts debug=false
-    'js/translations/resource/*.js'
-    'js/translations/home/*.js'
-    'js/translations/platform/*.js'
-    'js/translations/error/*.js'
-    'js/translations/validators/*.js'
-    'js/translations/alerts/*.js'
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
 
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-
-{% javascripts debug=false output='vendor/claroline/js/libraries.js'
-    '@ClarolineCoreBundle/Resources/public/js/common.js'
-    '@ClarolineCoreBundle/Resources/public/js/modal.js'
-    '@ClarolineCoreBundle/Resources/public/js/home/home.js'
-    '@ClarolineCoreBundle/Resources/public/js/locale.js'
-    '@ClarolineCoreBundle/Resources/public/js/startup.js'
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
 
 {#<script src="{{ hotAsset('claroline-distribution-main-core-tinymce') }}"></script>#}
 

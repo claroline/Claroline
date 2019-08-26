@@ -58,14 +58,6 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('packages/bootstrap-additions/dist/modules/callout.min.css') }}" screen="media"/>
     <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" screen="media"/>
-    {% stylesheets
-    debug=false
-    filter='less, cssmin'
-    output='css/clarolinecore/resource-icon-sets.css'
-    "@ClarolineCoreBundle/Resources/less/tools/resource-icon-sets.less"
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
-    {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}

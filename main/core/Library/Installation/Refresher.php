@@ -78,8 +78,6 @@ class Refresher
         if ($this->output) {
             $this->output->writeln('Compiling javascripts...');
         }
-
-        $cmdManager->run(new ArrayInput(['command' => 'assetic:dump', '--env' => $environment]), $this->output ?: new NullOutput());
     }
 
     public function buildThemes()

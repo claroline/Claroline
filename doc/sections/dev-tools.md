@@ -191,16 +191,6 @@ $ php app/console cache:clear
 **Tips:** It's often better to remove the cache manually using
 **$ rm -rf app/cache/**
 
-### Dumping assets ###
-
-You can dump assets using:
-
-```sh
-$ php app/console assetic:dump
-```
-**Tips:** This command is required to compile less files and twigjs templates.
-
-
 [[Documentation index]][1]
 
 [1]:  ../index.md
