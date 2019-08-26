@@ -86,6 +86,10 @@ actions.selfRegister = (workspace) => ({
     url: ['apiv2_workspace_self_register', {workspace: workspace.uuid}],
     request: {
       method: 'PUT'
+    },
+    success: (response, dispatch) => {
+      dispatch(actions.setLoaded(false))
+      dispatch(actions.open(workspace.meta.slug))
     }
   }
 })
