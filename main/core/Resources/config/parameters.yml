@@ -40,4 +40,4 @@ parameters:
     claroline.api.sample.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/samples"
     claroline.api.core_schema.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/schema"
 
-    firewall_api_regex: "/(api|apiv2)|[\/]+\/(api|apiv2)/"
+    firewall_api_regex: /(api|apiv2)|[\/]+\/(api|apiv2)/
