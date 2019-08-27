@@ -3,6 +3,8 @@
 namespace Claroline\CoreBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
@@ -18,6 +20,9 @@ class ToolSource
     /** @var FinderProvider */
     private $finder;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
     /** @var TokenStorage */
     private $tokenStorage;
 
@@ -29,17 +34,24 @@ class ToolSource
      *
      * @DI\InjectParams({
      *     "finder"           = @DI\Inject("claroline.api.finder"),
+     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      *
-     * @param FinderProvider   $finder
-     * @param TokenStorage     $tokenStorage
-     * @param WorkspaceManager $workspaceManager
+     * @param FinderProvider     $finder
+     * @param SerializerProvider $serializer
+     * @param TokenStorage       $tokenStorage
+     * @param WorkspaceManager   $workspaceManager
      */
-    public function __construct(FinderProvider $finder, TokenStorage $tokenStorage, WorkspaceManager $workspaceManager)
-    {
+    public function __construct(
+        FinderProvider $finder,
+        SerializerProvider $serializer,
+        TokenStorage $tokenStorage,
+        WorkspaceManager $workspaceManager
+    ) {
         $this->finder = $finder;
+        $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
     }
@@ -79,8 +91,18 @@ class ToolSource
                 }
                 break;
         }
+        $context = [
+            'type' => $event->getContext(),
+            'data' => DataSource::CONTEXT_WORKSPACE === $event->getContext() ?
+                $this->serializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                null,
+        ];
+        $tools = $this->finder->search(Tool::class, $options);
 
-        $event->setData($this->finder->search(Tool::class, $options));
+        for ($i = 0; $i < count($tools['data']); ++$i) {
+            $tools['data'][$i]['context'] = $context;
+        }
+        $event->setData($tools);
         $event->stopPropagation();
     }
 }
