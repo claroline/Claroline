@@ -36,7 +36,6 @@
         "jms/di-extra-bundle": "1.8.2",
         "jms/security-extra-bundle": "1.6.1",
         "claroline/json-quiz": "dev-master",
-        "knplabs/knp-menu-bundle": "2.2.1",
         "knplabs/knp-snappy-bundle": "1.5.2",
         "meyfa/php-svg": "0.8.0",
         "mrclay/minify": "3.0.3",

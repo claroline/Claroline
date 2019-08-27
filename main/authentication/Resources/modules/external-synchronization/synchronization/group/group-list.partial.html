@@ -1,5 +1,0 @@
-<div class="tab-list-wrapper" data-ng-if="$ctrl.initialized">
-    <div class="margin-top-md alert alert-warning" data-ng-if="!$ctrl.configured">{{'no_group_configuration_found'|trans:{}:'claro_external_user_group'}}</div>
-    <div class="margin-top-md" data-ng-bind="'imported_groups_list'|trans:{}:'claro_external_user_group'"></div>
-    <search-list items="$ctrl.groups" total-items="$ctrl.totalGroups" field-names="$ctrl.fieldNames" actions="$ctrl.actions" order-by="{{'name'}}" on-change="$ctrl.getGroups($search)"></search-list>
-</div>

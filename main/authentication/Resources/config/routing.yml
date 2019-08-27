@@ -67,13 +67,3 @@ claro_ldap_connection:
     resource: "@ClarolineAuthenticationBundle/Controller/Ldap/LdapConnectionController.php"
     type: annotation
     prefix: /ldap
-
-claro_external_user_group_sync_admin:
-    resource: "@ClarolineAuthenticationBundle/Controller/ExternalSynchronization/AdminConfigurationController.php"
-    type: annotation
-    prefix: /admin/parameters/external-sync
-
-claro_external_user_group_sync_groups:
-    resource: "@ClarolineAuthenticationBundle/Controller/ExternalSynchronization/ExternalGroupSynchronizationController.php"
-    type: annotation
-    prefix: /external-sync/groups
