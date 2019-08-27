@@ -46,6 +46,7 @@ class Updater120500 extends Updater
         $this->removeTool('my_contacts');
         $this->removeTool('workspace_management');
         $this->createDefaultAdminHomeTab();
+        $this->updateSlugs();
     }
 
     private function updatePlatformOptions()
@@ -114,5 +115,28 @@ class Updater120500 extends Updater
 
             $this->log('Default admin home tab created.');
         }
+    }
+
+    private function updateSlugs()
+    {
+        $this->log('Generating slugs for workspaces without slugs...');
+        $conn = $this->container->get('doctrine.dbal.default_connection');
+        $sql = "
+             UPDATE claro_workspace workspace set slug = CONCAT(SUBSTR(workspace.code,1,100) , '-', workspace.id) WHERE workspace.slug = NULL
+        ";
+
+        $this->log($sql);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        $this->log('Generating slugs for resources without slugs...');
+        $conn = $this->container->get('doctrine.dbal.default_connection');
+        $sql = "
+             UPDATE claro_resource_node node set slug = CONCAT(SUBSTR(node.name,1,100) , '-', node.id) WHERE node.slug = NULL
+        ";
+
+        $this->log($sql);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
     }
 }
