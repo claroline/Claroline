@@ -25,6 +25,7 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
       currentUser: securitySelectors.currentUser(state) || securitySelectors.fakeUser(state),
       authenticated: securitySelectors.isAuthenticated(state),
       impersonated: securitySelectors.isImpersonated(state),
+      isAdmin: securitySelectors.isAdmin(state),
       locale: selectors.locale(state),
       administration: selectors.administration(state),
       tools: selectors.tools(state)

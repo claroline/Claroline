@@ -49,6 +49,7 @@ const HeaderMain = props =>
         currentUser={props.currentUser}
         authenticated={props.authenticated}
         impersonated={props.impersonated}
+        isAdmin={props.isAdmin}
         registration={props.registration}
         tools={props.tools}
         locale={props.locale}
@@ -117,6 +118,7 @@ HeaderMain.propTypes = {
   }),
   impersonated: T.bool.isRequired,
   authenticated: T.bool.isRequired,
+  isAdmin: T.bool.isRequired,
   tools: T.array,
   administration: T.array,
   helpUrl: T.string,
@@ -128,6 +130,7 @@ HeaderMain.propTypes = {
 HeaderMain.defaultProps = {
   menus: [],
   impersonated: true,
+  isAdmin: false,
   currentUser: null,
   tools: [],
   notificationTools: [],

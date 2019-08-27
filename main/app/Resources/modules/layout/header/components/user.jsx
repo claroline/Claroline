@@ -113,7 +113,7 @@ const UserMenu = props =>
         />
       }
 
-      {props.authenticated &&
+      {props.authenticated && props.isAdmin &&
         <Button
           type={LINK_BUTTON}
           className="list-group-item"
@@ -164,6 +164,7 @@ UserMenu.propTypes = {
   maintenance: T.bool,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
+  isAdmin: T.bool.isRequired,
   tools: T.array.isRequired,
   actions: T.array.isRequired,
   registration: T.bool,
@@ -222,6 +223,7 @@ class HeaderUser extends Component {
           <UserMenu
             authenticated={this.props.authenticated}
             impersonated={this.props.impersonated}
+            isAdmin={this.props.isAdmin}
             currentUser={this.props.currentUser}
             registration={this.props.registration}
             tools={this.props.tools}
@@ -244,6 +246,7 @@ HeaderUser.propTypes = {
   maintenance: T.bool,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
+  isAdmin: T.bool.isRequired,
   currentUser: T.shape({
     id: T.string,
     name: T.string,
