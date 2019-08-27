@@ -55,12 +55,12 @@ class ResourceEmbedded extends Component {
         }
       },
       resource: {
-        slug: this.props.resourceNode.meta.slug,
+        slug: this.props.resourceNode.slug,
         embedded: true,
         showHeader: this.props.showHeader,
         lifecycle: this.props.lifecycle
       }
-    }, true, `/resource_manager/${this.props.resourceNode.meta.slug}`)
+    }, true, `/resource_manager/${this.props.resourceNode.slug}`)
   }
 
   render() {

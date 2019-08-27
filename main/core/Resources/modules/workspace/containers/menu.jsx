@@ -22,7 +22,7 @@ const WorkspaceMenu = withRouter(
       (dispatch) => ({
         update(workspace) {
           dispatch(actions.setLoaded(false))
-          dispatch(actions.open(workspace.meta.slug))
+          dispatch(actions.open(workspace.slug))
         },
         changeSection(section) {
           dispatch(menuActions.changeSection(section))

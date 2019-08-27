@@ -148,6 +148,7 @@ class WorkspaceSerializer
         $serialized = [
             'name' => $workspace->getName(),
             'code' => $workspace->getCode(),
+            'slug' => $workspace->getSlug(),
             'thumbnail' => $workspace->getThumbnail() && $this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $workspace->getThumbnail(),
               ]) ? $this->publicFileSerializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
@@ -236,7 +237,6 @@ class WorkspaceSerializer
         $data = [
             'lang' => $workspace->getLang(),
             'forceLang' => (bool) $workspace->getLang(),
-            'slug' => $workspace->getSlug(),
             'model' => $workspace->isModel(),
             'personal' => $workspace->isPersonal(),
             'description' => $workspace->getDescription(),

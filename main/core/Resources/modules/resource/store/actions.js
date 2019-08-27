@@ -43,7 +43,7 @@ actions.openResource = (resourceSlug) => (dispatch, getState) => {
 actions.fetchNode = (slug) => (dispatch, getState) => {
   const resourceNode = selectors.resourceNode(getState())
 
-  if (resourceNode && resourceNode.meta && resourceNode.meta.slug === slug) {
+  if (resourceNode && resourceNode.meta && resourceNode.slug === slug) {
     return Promise.resolve(resourceNode)
   }
 

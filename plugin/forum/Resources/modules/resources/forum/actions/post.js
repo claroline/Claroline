@@ -7,5 +7,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('create_subject', {}, 'forum'),
   icon: 'fa fa-fw fa-plus',
   primary: true,
-  target: `${path}/${resourceNodes[0].meta.slug}/subjects/form`
+  target: `${path}/${resourceNodes[0].slug}/subjects/form`
 })

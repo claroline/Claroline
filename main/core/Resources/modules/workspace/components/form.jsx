@@ -207,7 +207,7 @@ const WorkspaceFormComponent = (props) => {
               name: 'registration.url',
               type: 'url',
               label: trans('registration_url'),
-              calculated: (workspace) => url(['claro_workspace_subscription_url_generate', {slug: workspace.meta ? workspace.meta.slug : ''}, true]),
+              calculated: (workspace) => url(['claro_workspace_subscription_url_generate', {slug: workspace.meta ? workspace.slug : ''}, true]),
               required: true,
               disabled: true,
               displayed: !props.new

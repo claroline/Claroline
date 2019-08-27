@@ -7,5 +7,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('create-announce', {}, 'actions'),
   icon: 'fa fa-fw fa-plus',
   primary: true,
-  target: `${path}/${resourceNodes[0].meta.slug}/add`
+  target: `${path}/${resourceNodes[0].slug}/add`
 })

@@ -30,8 +30,8 @@ class DirectoryMenu extends Component {
       collapsed: !directory._opened,
       collapsible: !directory._loaded || (directory.children && 0 !== directory.children.length),
       toggleCollapse: (collapsed) => this.props.toggleDirectoryOpen(directory.id, !collapsed),
-      target: `${this.props.basePath}/${directory.meta.slug}`,
-      active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${directory.meta.slug}`}),
+      target: `${this.props.basePath}/${directory.slug}`,
+      active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${directory.slug}`}),
       children: directory.children ? directory.children.map(this.getDirectorySummary) : []
     }
   }
@@ -49,13 +49,13 @@ class DirectoryMenu extends Component {
               icon: 'fa fa-fw fa-share fa-flip-horizontal',
               label: trans('back_to', {target: get(this.props.currentNode, 'parent.name')}),
               displayed: !!get(this.props.currentNode, 'parent'),
-              target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.meta.slug')}`
+              target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug')}`
             }, {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-list-ul',
               label: trans('all_resources', {}, 'resource'),
-              active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.meta.slug}/all`}),
-              target: `${this.props.basePath}/${this.props.currentNode.meta.slug}/all`
+              active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.slug}/all`}),
+              target: `${this.props.basePath}/${this.props.currentNode.slug}/all`
             }
           ].concat(this.props.directories.map(this.getDirectorySummary), [
 

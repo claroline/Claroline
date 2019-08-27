@@ -7,5 +7,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('new_post', {}, 'icap_blog'),
   icon: 'fa fa-fw fa-plus',
   primary: true,
-  target: `${path}/${resourceNodes[0].meta.slug}/new`
+  target: `${path}/${resourceNodes[0].slug}/new`
 })

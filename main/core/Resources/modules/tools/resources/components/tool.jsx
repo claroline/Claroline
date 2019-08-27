@@ -10,7 +10,7 @@ import {ResourcesRoot} from '#/main/core/tools/resources/containers/root'
 const ResourcesTool = props => <Routes
   path={props.path}
   redirect={props.root ? [
-    {from: '/', exact: true, to: `/${props.root.meta.slug}`}
+    {from: '/', exact: true, to: `/${props.root.slug}`}
   ] : undefined}
   routes={[
     {

@@ -12,7 +12,7 @@ const ResourceExplorer = props => {
     <Routes
       path={props.basePath}
       redirect={props.root ? [
-        {from: '/', exact: true, to: `/${props.root.meta.slug}`}
+        {from: '/', exact: true, to: `/${props.root.slug}`}
       ] : undefined}
       routes={[
         {

@@ -12,5 +12,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('edit', {}, 'actions'),
   primary: true,
   //maybe use the route function
-  target: `${path}/${resourceNodes[0].meta.slug}/edit`
+  target: `${path}/${resourceNodes[0].slug}/edit`
 })

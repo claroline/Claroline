@@ -42,7 +42,7 @@ const Parameters = props => {
               name: 'registration.url',
               type: 'url',
               label: trans('registration_url'),
-              calculated: () => url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta.slug}, true]),
+              calculated: () => url(['claro_workspace_subscription_url_generate', {slug: props.workspace.slug}, true]),
               required: true,
               disabled: true
             }, {
