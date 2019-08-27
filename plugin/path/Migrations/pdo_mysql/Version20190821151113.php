@@ -18,6 +18,9 @@ class Version20190821151113 extends AbstractMigration
             ALTER TABLE innova_step
             ADD slug VARCHAR(128) NOT NULL
         ');
+        $this->addSql("
+             UPDATE innova_step step SET slug = CONCAT(SUBSTR(step.title,1,100) , '-', step.id) WHERE step.slug = NULL
+        ");
         $this->addSql('
             CREATE UNIQUE INDEX UNIQ_86F48567989D9B62 ON innova_step (slug)
         ');
