@@ -418,8 +418,8 @@ class WorkspaceSerializer
             $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
         }
 
-        if (isset($data['extra']) && isset($data['extra']['model'])) {
-            $model = $this->om->getRepository(Workspace::class)->findOneByCode($data['extra']['model']);
+        if (isset($data['extra']) && isset($data['extra']['model']) && isset($data['extra']['model']['code'])) {
+            $model = $this->om->getRepository(Workspace::class)->findOneByCode($data['extra']['model']['code']);
             $workspace->setWorkspaceModel($model);
         }
 

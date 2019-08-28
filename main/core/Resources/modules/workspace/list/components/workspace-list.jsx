@@ -64,6 +64,51 @@ const WorkspaceList = {
       sortable: false
     }
   ],
+  modelDefinition: [
+    {
+      name: 'name',
+      label: trans('name'),
+      displayed: true,
+      primary: true
+    }, {
+      name: 'code',
+      label: trans('code'),
+      displayed: true
+    }, {
+      name: 'meta.created',
+      label: trans('creation_date'),
+      type: 'date',
+      alias: 'created',
+      displayed: true,
+      filterable: false
+    }, {
+      name: 'createdAfter',
+      label: trans('created_after'),
+      type: 'date',
+      displayable: false
+    }, {
+      name: 'createdBefore',
+      label: trans('created_before'),
+      type: 'date',
+      displayable: false
+    }, {
+      name: 'registration.selfRegistration',
+      label: trans('public_registration'),
+      type: 'boolean',
+      alias: 'selfRegistration'
+    }, {
+      name: 'registration.selfUnregistration',
+      label: trans('public_unregistration'),
+      type: 'boolean',
+      alias: 'selfUnregistration'
+    }, {
+      name: 'registration.waitingForRegistration',
+      label: trans('pending'),
+      type: 'boolean',
+      filterable: false,
+      sortable: false
+    }
+  ],
   card: WorkspaceCard
 }
 

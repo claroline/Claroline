@@ -28,7 +28,7 @@ const WorkspacesModal = props => {
           url: props.url,
           autoload: true
         }}
-        definition={WorkspaceList.definition}
+        definition={props.model ? WorkspaceList.modelDefinition : WorkspaceList.definition}
         card={WorkspaceList.card}
       />
 
@@ -47,6 +47,7 @@ const WorkspacesModal = props => {
 WorkspacesModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
+  model: T.bool,
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(T.shape(WorkspaceType.propTypes)).isRequired,
@@ -55,7 +56,8 @@ WorkspacesModal.propTypes = {
 
 WorkspacesModal.defaultProps = {
   url: ['apiv2_workspace_list_managed'],
-  title: trans('workspaces')
+  title: trans('workspaces'),
+  model: false
 }
 
 export {

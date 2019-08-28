@@ -4,8 +4,9 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
 
+import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
+import {ToolPage} from '#/main/core/tool/containers/page'
 import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {WorkspaceCreation} from '#/main/core/tools/workspaces/containers/creation'
 
@@ -41,7 +42,8 @@ const WorkspacesTool = (props) =>
         {
           path: '/new',
           disabled: !props.creatable,
-          component: WorkspaceCreation
+          component: WorkspaceCreation,
+          onEnter: () => props.resetForm('workspaces.creation', WorkspaceType.defaultProps)
         }, {
           path: '/registered',
           render: () => {
@@ -104,7 +106,8 @@ const WorkspacesTool = (props) =>
 WorkspacesTool.propTypes = {
   path: T.string.isRequired,
   authenticated: T.bool.isRequired,
-  creatable: T.bool.isRequired
+  creatable: T.bool.isRequired,
+  resetForm: T.func.isRequired
 }
 
 export {
