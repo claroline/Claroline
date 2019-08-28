@@ -9,17 +9,11 @@ use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Icap\DropzoneBundle\Form\DropsDownloadBetweenDatesType;
 use Icap\DropzoneBundle\Form\DropzoneCommonType;
-use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Exception\NotValidCurrentPageException;
-use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DropzoneController extends DropzoneBaseController
 {
@@ -305,135 +299,6 @@ class DropzoneController extends DropzoneBaseController
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'form' => $form->createView(),
-        ];
-    }
-
-    /**
-     * @Route(
-     *      "/{resourceId}/edit/criteria",
-     *      name="icap_dropzone_edit_criteria",
-     *      requirements={"resourceId" = "\d+"},
-     *      defaults={"page" = 1}
-     * )
-     *
-     * @Route(
-     *      "/{resourceId}/edit/criteria/{page}",
-     *      name="icap_dropzone_edit_criteria_paginated",
-     *      requirements={"resourceId" = "\d+", "page" = "\d+"},
-     *      defaults={"page" = 1}
-     * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
-     */
-    public function editCriteriaAction(Request $request, Dropzone $dropzone, $page)
-    {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
-
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('IcapDropzoneBundle:Criterion');
-        $query = $repository
-            ->createQueryBuilder('criterion')
-            ->andWhere('criterion.dropzone = :dropzone')
-            ->setParameter('dropzone', $dropzone)
-            ->orderBy('criterion.id', 'ASC');
-
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(DropzoneBaseController::CRITERION_PER_PAGE);
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $e) {
-            if ($page > 0) {
-                return $this->redirect(
-                    $this->generateUrl(
-                        'icap_dropzone_edit_criteria_paginated',
-                        [
-                            'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages(),
-                        ]
-                    )
-                );
-            } else {
-                throw new NotFoundHttpException();
-            }
-        }
-
-        $nbCorrection = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository('IcapDropzoneBundle:Correction')
-            ->countByDropzone($dropzone->getId());
-
-        $form = $this->createForm(DropzoneCriteriaType::class, $dropzone);
-        $add_criteria_after = false;
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $add_criteria_after = 'add-criterion' === $request->request->get('addCriteria') ? true : false;
-
-                $dropzone = $form->getData();
-                if ($dropzone->getEditionState() < 3) {
-                    $dropzone->setEditionState(3);
-                }
-
-                $em = $this->getDoctrine()->getManager();
-                $unitOfWork = $em->getUnitOfWork();
-                $unitOfWork->computeChangeSets();
-                $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
-
-                $em->persist($dropzone);
-                $em->flush();
-
-                if (1 === $form->get('recalculateGrades')->getData()) {
-                    $this->get('icap.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
-                    $request->getSession()->getFlashBag()->add(
-                        'success',
-                        $this->get('translator')->trans('Grades were recalculated', [], 'icap_dropzone')
-                    );
-                }
-
-                $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
-                $this->dispatch($event);
-
-                if (false === $dropzone->hasCriteria()) {
-                    $request->getSession()->getFlashBag()->add(
-                        'warning',
-                        $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', [], 'icap_dropzone')
-                    );
-                }
-                if ($add_criteria_after) {
-                    return new JsonResponse(['success' => true]);
-                }
-
-                $goBack = $form->get('goBack')->getData();
-                if (0 === $goBack) {
-                    $request->getSession()->getFlashBag()->add(
-                        'success',
-                        $this->get('translator')->trans('The evaluation has been successfully saved', [], 'icap_dropzone')
-                    );
-                } else {
-                    return $this->redirect(
-                        $this->generateUrl(
-                            'icap_dropzone_edit_common',
-                            [
-                                'resourceId' => $dropzone->getId(),
-                            ]
-                        )
-                    );
-                }
-            }
-        }
-
-        return [
-            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-            '_resource' => $dropzone,
-            'dropzone' => $dropzone,
-            'pager' => $pager,
-            'form' => $form->createView(),
-            'nbCorrection' => $nbCorrection,
-            'add_criteria_after' => $add_criteria_after,
         ];
     }
 

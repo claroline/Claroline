@@ -24,11 +24,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
-use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,7 +51,6 @@ class UserManager
     private $mailManager;
     private $objectManager;
     private $organizationManager;
-    private $pagerFactory;
     private $platformConfigHandler;
     private $roleManager;
     private $strictEventDispatcher;
@@ -73,7 +70,6 @@ class UserManager
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
-     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "platformConfigHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "strictEventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
@@ -88,7 +84,6 @@ class UserManager
      * @param MailManager                  $mailManager
      * @param ObjectManager                $objectManager
      * @param OrganizationManager          $organizationManager
-     * @param PagerFactory                 $pagerFactory
      * @param PlatformConfigurationHandler $platformConfigHandler
      * @param RoleManager                  $roleManager
      * @param StrictDispatcher             $strictEventDispatcher
@@ -103,7 +98,6 @@ class UserManager
         MailManager $mailManager,
         ObjectManager $objectManager,
         OrganizationManager $organizationManager,
-        PagerFactory $pagerFactory,
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
         StrictDispatcher $strictEventDispatcher,
@@ -117,7 +111,6 @@ class UserManager
         $this->mailManager = $mailManager;
         $this->objectManager = $objectManager;
         $this->organizationManager = $organizationManager;
-        $this->pagerFactory = $pagerFactory;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->roleManager = $roleManager;
         $this->strictEventDispatcher = $strictEventDispatcher;
@@ -637,28 +630,6 @@ class UserManager
             'firstName' => $firstName,
             'lastName' => $lastName,
         ]);
-    }
-
-    /**
-     * @param Workspace[] $workspaces
-     * @param int         $page
-     * @param int         $max
-     * @param bool        $withPager
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return User[]|Pagerfanta
-     */
-    public function getUsersByWorkspaces(array $workspaces, $page = 1, $max = 20, $withPager = true)
-    {
-        if ($withPager) {
-            $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
-
-            return $this->pagerFactory->createPager($query, $page, $max);
-        } else {
-            return  $this->userRepo->findUsersByWorkspaces($workspaces);
-        }
     }
 
     public function countUsersForPlatformRoles($organizations = null)

@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Repository\PostRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -91,80 +90,6 @@ class PostManager
         }
 
         return $post;
-    }
-
-    /**
-     * @param Blog $blog
-     * @param Tag  $tag
-     * @param $filterByPublishPost
-     * @param int $page
-     *
-     * @return array
-     */
-    public function getPostsByTagPaged(Blog $blog, Tag $tag, $filterByPublishPost, $page = 1)
-    {
-        $query = $this->repo->getByTag($blog, $tag, $filterByPublishPost, false);
-
-        return $this->setPager($query, $page, $blog->getOptions()->getPostPerPage());
-    }
-
-    /**
-     * @param Blog $blog
-     * @param User $author
-     * @param $filterByPublishPost
-     * @param int $page
-     *
-     * @return array
-     */
-    public function getPostsByAuthorPaged(Blog $blog, User $author, $filterByPublishPost, $page = 1)
-    {
-        $query = $this->repo->getByAuthor($blog, $author, $filterByPublishPost, false);
-
-        return $this->setPager($query, $page, $blog->getOptions()->getPostPerPage());
-    }
-
-    /**
-     * @param Blog $blog
-     * @param $date
-     * @param $filterByPublishPost
-     * @param int $page
-     *
-     * @return array
-     */
-    public function getPostsByDatePaged(Blog $blog, $date, $filterByPublishPost, $page = 1)
-    {
-        $query = $this->repo->getByDate($blog, $date, $filterByPublishPost, false);
-
-        return $this->setPager($query, $page, $blog->getOptions()->getPostPerPage());
-    }
-
-    /**
-     * @param $query
-     * @param $page
-     * @param $maxPerPage
-     *
-     * @return array
-     */
-    private function setPager($query, $page, $maxPerPage)
-    {
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new PagerFanta($adapter);
-        $pager
-            ->setMaxPerPage($maxPerPage)
-            ->setCurrentPage($page)
-        ;
-
-        // Pagerfanta returns a traversable object, not directly serializable
-        $posts = [];
-        foreach ($pager->getCurrentPageResults() as $post) {
-            $posts[] = $post;
-        }
-
-        return [
-            'total' => $pager->getNbResults(),
-            'count' => count($posts),
-            'posts' => $posts,
-        ];
     }
 
     /**

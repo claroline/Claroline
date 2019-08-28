@@ -41,7 +41,6 @@
 
 ## TO REMOVE WITH REFACTORING
 - mrclay/minify : minification des JS / remplacé par Webpack
-- white-october/pagerfanta-bundle : système de pagination
 - symfony/assetic-bundle
 - knplabs/knp-menu-bundle
 - gregwar/captcha-bundle

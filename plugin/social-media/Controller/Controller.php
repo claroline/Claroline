@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/22/15
  */
 
@@ -17,13 +17,12 @@ use Icap\SocialmediaBundle\Entity\ShareAction;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaCommentEvent;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaLikeEvent;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaShareEvent;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
 class Controller extends BaseController
 {
     const MAX_PER_PAGE = 10;
+
     /**
      * @return \Icap\SocialmediaBundle\Manager\LikeActionManager
      */
@@ -64,17 +63,6 @@ class Controller extends BaseController
         return $this->get('icap_socialmedia.manager.wall_item');
     }
 
-    protected function paginateQuery($queryBuilder, $page)
-    {
-        $adapter = new DoctrineORMAdapter($queryBuilder);
-        $pagerfanta = new Pagerfanta($adapter);
-
-        $pagerfanta->setMaxPerPage(self::MAX_PER_PAGE);
-        $pagerfanta->setCurrentPage($page);
-
-        return $pagerfanta;
-    }
-
     protected function getLoggedUser()
     {
         return $this->get('security.token_storage')->getToken()->getUser();
@@ -90,7 +78,7 @@ class Controller extends BaseController
     protected function dispatchLikeEvent(LikeAction $like)
     {
         $resource = $like->getResource();
-        if ($resource !== null) {
+        if (null !== $resource) {
             $event = new LogSocialmediaLikeEvent($like);
 
             return $this->dispatch($event);
@@ -100,7 +88,7 @@ class Controller extends BaseController
     protected function dispatchShareEvent(ShareAction $share)
     {
         $resource = $share->getResource();
-        if ($resource !== null) {
+        if (null !== $resource) {
             $event = new LogSocialmediaShareEvent($share);
 
             return $this->dispatch($event);
@@ -110,7 +98,7 @@ class Controller extends BaseController
     protected function dispatchCommentEvent(CommentAction $comment, $userIds)
     {
         $resource = $comment->getResource();
-        if ($resource !== null) {
+        if (null !== $resource) {
             $event = new LogSocialmediaCommentEvent($comment, $userIds);
 
             return $this->dispatch($event);

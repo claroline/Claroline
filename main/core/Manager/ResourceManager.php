@@ -239,7 +239,7 @@ class ResourceManager
         $node->setPathForCreationLog($parentPath.$node->getName());
 
         $usersToNotify = $workspace && $workspace->getId() ?
-            $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces([$workspace], null, null, false) :
+            $this->container->get('claroline.manager.user_manager')->findUsersByWorkspaces([$workspace]) :
             [];
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', [$node, $usersToNotify]);
@@ -617,7 +617,7 @@ class ResourceManager
             );
 
             $usersToNotify = $node->getWorkspace() && !$node->getWorkspace()->isDisabledNotifications() ?
-                $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces([$node->getWorkspace()], null, null, false) :
+                $this->container->get('claroline.manager.user_manager')->findUsersByWorkspaces([$node->getWorkspace()]) :
                 [];
 
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);

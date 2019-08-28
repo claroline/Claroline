@@ -67,7 +67,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
             'FOS\JsRoutingBundle\FOSJsRoutingBundle',
             'JMS\AopBundle\JMSAopBundle',
-            'WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle',
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
             'Claroline\Bundle\FrontEndBundle\FrontEndBundle',
             'Cocur\Slugify\Bridge\Symfony\CocurSlugifyBundle',
