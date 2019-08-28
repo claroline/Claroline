@@ -131,6 +131,7 @@ class ResourceNodeSerializer
         if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
+                'slug' => $resourceNode->getWorkspace()->getSlug(),
                 'autoId' => $resourceNode->getWorkspace()->getId(), // because open url does not work with uuid
                 'name' => $resourceNode->getWorkspace()->getName(),
                 'code' => $resourceNode->getWorkspace()->getCode(),
