@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
@@ -551,6 +552,94 @@ class WorkspaceController extends AbstractCrudController
                 ['hiddenFilters' => ['workspaceConfigurable' => [$id]]]
             ))
         );
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Adds shortcuts to a workspace for a given role.",
+     *     parameters={
+     *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"},
+     *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
+     *     }
+     * )
+     * @Route(
+     *     "/{workspace}/role/{role}/shortcuts/add",
+     *     name="apiv2_workspace_shortcuts_add"
+     * )
+     * @Method("PUT")
+     * @ParamConverter(
+     *     "workspace",
+     *     class = "ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"mapping": {"workspace": "uuid"}}
+     * )
+     * @ParamConverter(
+     *     "role",
+     *     class = "ClarolineCoreBundle:Role",
+     *     options={"mapping": {"role": "uuid"}}
+     * )
+     *
+     * @param Workspace $workspace
+     * @param Role      $role
+     * @param Request   $request
+     *
+     * @return JsonResponse
+     */
+    public function shortcutsAddAction(Workspace $workspace, Role $role, Request $request)
+    {
+        $data = $this->decodeRequest($request);
+
+        if (isset($data['shortcuts']) && 0 < count($data['shortcuts'])) {
+            $this->workspaceManager->addShortcuts($workspace, $role, $data['shortcuts']);
+        }
+        $shortcuts = array_values(array_map(function (Shortcuts $shortcuts) {
+            return $this->serializer->serialize($shortcuts);
+        }, $workspace->getShortcuts()->toArray()));
+
+        return new JsonResponse($shortcuts);
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Removes a shortcut from a workspace for a given role.",
+     *     parameters={
+     *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"},
+     *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
+     *     }
+     * )
+     * @Route(
+     *     "/{workspace}/role/{role}/shortcut/remove",
+     *     name="apiv2_workspace_shortcut_remove"
+     * )
+     * @Method("PUT")
+     * @ParamConverter(
+     *     "workspace",
+     *     class = "ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"mapping": {"workspace": "uuid"}}
+     * )
+     * @ParamConverter(
+     *     "role",
+     *     class = "ClarolineCoreBundle:Role",
+     *     options={"mapping": {"role": "uuid"}}
+     * )
+     *
+     * @param Workspace $workspace
+     * @param Role      $role
+     * @param Request   $request
+     *
+     * @return JsonResponse
+     */
+    public function shortcutRemoveAction(Workspace $workspace, Role $role, Request $request)
+    {
+        $data = $this->decodeRequest($request);
+
+        if (isset($data['type']) && 0 < count($data['name'])) {
+            $this->workspaceManager->removeShortcut($workspace, $role, $data['type'], $data['name']);
+        }
+        $shortcuts = array_values(array_map(function (Shortcuts $shortcuts) {
+            return $this->serializer->serialize($shortcuts);
+        }, $workspace->getShortcuts()->toArray()));
+
+        return new JsonResponse($shortcuts);
     }
 
     public function getClass()

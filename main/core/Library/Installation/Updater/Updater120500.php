@@ -14,7 +14,10 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -29,6 +32,8 @@ class Updater120500 extends Updater
     private $configHandler;
     /** @var TranslatorInterface */
     private $translator;
+    /** @var RoleManager */
+    private $roleManager;
 
     public function __construct(ContainerInterface $container, $logger = null)
     {
@@ -37,6 +42,7 @@ class Updater120500 extends Updater
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->configHandler = $container->get('claroline.config.platform_config_handler');
         $this->translator = $container->get('translator');
+        $this->roleManager = $container->get('claroline.manager.role_manager');
     }
 
     public function postUpdate()
@@ -47,6 +53,7 @@ class Updater120500 extends Updater
         $this->removeTool('workspace_management');
         $this->createDefaultAdminHomeTab();
         $this->updateSlugs();
+        $this->createDefaultWorkspaceShortcuts();
     }
 
     private function updatePlatformOptions()
@@ -138,5 +145,65 @@ class Updater120500 extends Updater
         $this->log($sql);
         $stmt = $conn->prepare($sql);
         $stmt->execute();
+    }
+
+    private function createDefaultWorkspaceShortcuts()
+    {
+        $this->log('Generating default shortcuts for workspaces...');
+
+        $managerShortCuts = [
+            ['type' => 'tool', 'name' => 'home'],
+            ['type' => 'tool', 'name' => 'resource_manager'],
+            ['type' => 'tool', 'name' => 'agenda_'],
+            ['type' => 'tool', 'name' => 'users'],
+            ['type' => 'tool', 'name' => 'dashboard'],
+            ['type' => 'action', 'name' => 'favourite'],
+            ['type' => 'action', 'name' => 'configure'],
+            ['type' => 'action', 'name' => 'impersonation'],
+        ];
+        $collaboratorShortCuts = [
+            ['type' => 'tool', 'name' => 'home'],
+            ['type' => 'tool', 'name' => 'resource_manager'],
+            ['type' => 'tool', 'name' => 'agenda_'],
+            ['type' => 'action', 'name' => 'favourite'],
+        ];
+        $shortcutsRepo = $this->om->getRepository(Shortcuts::class);
+        $workspaces = $this->om->getRepository(Workspace::class)->findBy([
+            'model' => false,
+            'personal' => false,
+            'archived' => false,
+        ]);
+        $i = 0;
+        $this->om->startFlushSuite();
+
+        foreach ($workspaces as $workspace) {
+            if (0 === count($shortcutsRepo->findBy(['workspace' => $workspace]))) {
+                $managerRole = $this->roleManager->getManagerRole($workspace);
+                $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
+
+                if ($managerRole) {
+                    $shortcuts = new Shortcuts();
+                    $shortcuts->setWorkspace($workspace);
+                    $shortcuts->setRole($managerRole);
+                    $shortcuts->setData($managerShortCuts);
+                    $this->om->persist($shortcuts);
+                }
+                if ($collaboratorRole) {
+                    $shortcuts = new Shortcuts();
+                    $shortcuts->setWorkspace($workspace);
+                    $shortcuts->setRole($collaboratorRole);
+                    $shortcuts->setData($collaboratorShortCuts);
+                    $this->om->persist($shortcuts);
+                }
+            }
+            ++$i;
+
+            if (0 === $i % 200) {
+                $this->om->forceFlush();
+            }
+        }
+        $this->om->endFlushSuite();
+
+        $this->log('Default shortcuts for workspaces generated');
     }
 }

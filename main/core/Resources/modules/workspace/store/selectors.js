@@ -25,6 +25,11 @@ const tools = createSelector(
   (store) => store.tools
 )
 
+const shortcuts = createSelector(
+  [store],
+  (store) => store.shortcuts
+)
+
 const defaultOpening = createSelector(
   [workspace, tools],
   (workspace, tools) => {
@@ -65,6 +70,7 @@ export const selectors = {
   workspace,
   managed,
   tools,
+  shortcuts,
   defaultOpening,
   accessErrors,
   serverErrors

@@ -1,0 +1,105 @@
+<?php
+
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Claroline\CoreBundle\Entity\Workspace;
+
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\Role;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table(name="claro_workspace_shortcuts")
+ * @ORM\Entity()
+ */
+class Shortcuts
+{
+    use Id;
+    use Uuid;
+
+    const SHORTCUTS_LIMIT = 8;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", inversedBy="shortcuts")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
+     *
+     * @var Workspace
+     */
+    private $workspace;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinColumn(name="role_id", onDelete="CASCADE")
+     *
+     * @var Role
+     */
+    private $role;
+
+    /**
+     * @ORM\Column(name="shortcuts_data", type="json_array", nullable=true)
+     *
+     * @var array
+     */
+    private $data = [];
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
+    /**
+     * @return Workspace
+     */
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    /**
+     * @param Workspace $workspace
+     */
+    public function setWorkspace(Workspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    /**
+     * @return Role
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param Role $role
+     */
+    public function setRole(Role $role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
+    }
+}

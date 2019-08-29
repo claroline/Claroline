@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+        public: false
+
+    Claroline\CoreBundle\API\Serializer\Workspace\ShortcutsSerializer:
+        arguments:
+            - '@claroline.serializer.role'
+        tags: [claroline.serializer]

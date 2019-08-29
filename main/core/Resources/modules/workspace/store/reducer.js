@@ -8,7 +8,8 @@ import {
   WORKSPACE_SERVER_ERRORS,
   WORKSPACE_RESTRICTIONS_ERROR,
   WORKSPACE_RESTRICTIONS_DISMISS,
-  WORKSPACE_RESTRICTIONS_UNLOCKED
+  WORKSPACE_RESTRICTIONS_UNLOCKED,
+  SHORTCUTS_LOAD
 } from '#/main/core/workspace/store/actions'
 
 const reducer = combineReducers({
@@ -26,6 +27,10 @@ const reducer = combineReducers({
   }),
   tools: makeReducer([], {
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.tools || state
+  }),
+  shortcuts: makeReducer([], {
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.shortcuts || state,
+    [SHORTCUTS_LOAD]: (state, action) => action.shortcuts || state
   }),
   userProgression: makeReducer(null, {
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userProgression || state

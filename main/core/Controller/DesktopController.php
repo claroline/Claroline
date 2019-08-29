@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
@@ -39,6 +41,9 @@ class DesktopController
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
+
     /** @var SerializerProvider */
     private $serializer;
 
@@ -49,25 +54,29 @@ class DesktopController
      * DesktopController constructor.
      *
      * @DI\InjectParams({
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager")
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
+     *     "parametersSerializer"  = @DI\Inject("claroline.serializer.parameters"),
+     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param EventDispatcherInterface      $eventDispatcher
+     * @param ParametersSerializer          $parametersSerializer
      * @param SerializerProvider            $serializer
      * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
+        ParametersSerializer $parametersSerializer,
         SerializerProvider $serializer,
         ToolManager $toolManager
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
+        $this->parametersSerializer = $parametersSerializer;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
     }
@@ -94,6 +103,7 @@ class DesktopController
         if (0 === count($tools)) {
             throw new AccessDeniedException('no tools');
         }
+        $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
         return new JsonResponse([
             'userProgression' => null,
@@ -103,6 +113,7 @@ class DesktopController
                     'name' => $orderedTool->getName(),
                 ];
             }, $tools)),
+            'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
         ]);
     }
 

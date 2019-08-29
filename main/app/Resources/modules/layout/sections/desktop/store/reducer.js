@@ -23,6 +23,13 @@ const reducer = combineReducers({
    */
   userProgression: makeReducer(null, {
     [DESKTOP_LOAD]: (state, action) => action.userProgression || null
+  }),
+
+  /**
+   * The list of shortcuts to tools or actions.
+   */
+  shortcuts: makeReducer(null, {
+    [DESKTOP_LOAD]: (state, action) => action.shortcuts || []
   })
 })
 

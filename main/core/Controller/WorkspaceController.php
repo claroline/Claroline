@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
@@ -173,6 +174,9 @@ class WorkspaceController
                         'name' => $orderedTool->getTool()->getName(),
                     ];
                 }, $orderedTools)),
+                'shortcuts' => array_values(array_map(function (Shortcuts $shortcuts) {
+                    return $this->serializer->serialize($shortcuts);
+                }, $workspace->getShortcuts()->toArray())),
             ]);
         }
 
