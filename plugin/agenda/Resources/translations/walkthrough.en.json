@@ -1,7 +1,7 @@
 {
   "workspace": {
     "tools": {
-      "agenda_": {
+      "agenda": {
         "documentation": "",
         "message": "Permits to create and share events or tasks."
       }

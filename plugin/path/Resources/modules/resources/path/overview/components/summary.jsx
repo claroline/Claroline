@@ -9,7 +9,7 @@ const SummaryStep = props =>
   <li>
     <LinkButton
       className="summary-link"
-      target={`${props.basePath}/play/${props.step.id}`}
+      target={`${props.basePath}/play/${props.step.slug}`}
     >
       {props.step.title}
     </LinkButton>

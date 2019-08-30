@@ -64,18 +64,6 @@ class UserCrud
         $this->om->flush();
     }
 
-    /**
-     * @DI\Observe("crud_post_create_object_claroline_corebundle_entity_user")
-     *
-     * @param CreateEvent $event
-     */
-    public function postCreate(CreateEvent $event)
-    {
-        if (in_array(Options::USER_SELF_LOG, $event->getOptions())) {
-            $this->userManager->logUser($event->getObject());
-        }
-    }
-
     public function create(User $user, $options = [], $extra = [])
     {
         $this->om->startFlushSuite();

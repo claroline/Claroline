@@ -58,7 +58,7 @@ const HeaderMain = props =>
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-street-view',
             label: trans('walkthroughs'),
-            callback: () => props.startWalkthrough(getWalkthrough(props.tools, props.administration, props.authenticated, props.display))
+            callback: () => props.startWalkthrough(getWalkthrough(props.tools, props.authenticated, props.display))
           }, {
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-question',
@@ -93,10 +93,7 @@ HeaderMain.propTypes = {
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
   }).isRequired,
-  logo: T.shape({
-    url: T.string.isRequired,
-    colorized: T.bool
-  }),
+  logo: T.string,
   title: T.string,
   subtitle: T.string,
   display: T.shape({
@@ -120,7 +117,6 @@ HeaderMain.propTypes = {
   authenticated: T.bool.isRequired,
   isAdmin: T.bool.isRequired,
   tools: T.array,
-  administration: T.array,
   helpUrl: T.string,
   registration: T.bool,
   startWalkthrough: T.func.isRequired,
@@ -134,7 +130,6 @@ HeaderMain.defaultProps = {
   currentUser: null,
   tools: [],
   notificationTools: [],
-  administration: [],
   registration: false
 }
 

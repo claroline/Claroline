@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-const STORE_NAME = 'resource_manager'
+const STORE_NAME = 'resources'
 
 const LIST_ROOT_NAME = `${STORE_NAME}.resources`
 

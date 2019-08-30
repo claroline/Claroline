@@ -25,6 +25,7 @@ const WorkspaceMain = (props) => {
       <WorkspaceRestrictions
         errors={props.accessErrors}
         dismiss={props.dismissRestrictions}
+        authenticated={props.authenticated}
         managed={props.managed}
         workspace={props.workspace}
         checkAccessCode={(code) => props.checkAccessCode(props.workspace, code)}
@@ -68,6 +69,7 @@ WorkspaceMain.propTypes = {
     replace: T.func.isRequired
   }).isRequired,
   loaded: T.bool.isRequired,
+  authenticated: T.bool.isRequired,
   managed: T.bool.isRequired,
   workspace: T.shape(
     WorkspaceTypes.propTypes

@@ -49,7 +49,7 @@ class ResourcesListener
     /**
      * Displays resources on Desktop.
      *
-     * @DI\Observe("open_tool_desktop_resource_manager")
+     * @DI\Observe("open_tool_desktop_resources")
      *
      * @param DisplayToolEvent $event
      */
@@ -64,7 +64,7 @@ class ResourcesListener
     /**
      * Displays resources on Workspace.
      *
-     * @DI\Observe("open_tool_workspace_resource_manager")
+     * @DI\Observe("open_tool_workspace_resources")
      *
      * @param DisplayToolEvent $event
      */

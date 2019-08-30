@@ -1,6 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 import {getApps} from '#/main/app/plugins'
 
+import {constants} from '#/main/core/user/constants'
+
 function getActions(users, refresher, path, currentUser, withDefault = false) {
   // get all actions declared for user
   const actions = getApps('actions.user')
@@ -24,7 +26,12 @@ function displayUsername(user = null) {
   return trans('unknown')
 }
 
+function getPlatformRoles(roles) {
+  return roles.filter(role => constants.ROLE_PLATFORM === role.type).map(role => trans(role.translationKey))
+}
+
 export {
   getActions,
-  displayUsername
+  displayUsername,
+  getPlatformRoles
 }

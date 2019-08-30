@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -34,6 +35,8 @@ class Updater120500 extends Updater
     private $translator;
     /** @var RoleManager */
     private $roleManager;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
 
     public function __construct(ContainerInterface $container, $logger = null)
     {
@@ -43,6 +46,18 @@ class Updater120500 extends Updater
         $this->configHandler = $container->get('claroline.config.platform_config_handler');
         $this->translator = $container->get('translator');
         $this->roleManager = $container->get('claroline.manager.role_manager');
+        $this->workspaceManager = $container->get('claroline.manager.workspace_manager');
+    }
+
+    public function preUpdate()
+    {
+        $this->renameTool('platform_dashboard', 'dashboard', true);
+        $this->renameTool('agenda_', 'agenda');
+        $this->renameTool('resource_manager', 'resources');
+        $this->renameTool('users', 'community');
+        $this->renameTool('user_management', 'community', true);
+        $this->renameTool('data_transfer', 'transfer');
+        $this->renameTool('data_transfer', 'transfer', true);
     }
 
     public function postUpdate()
@@ -50,14 +65,26 @@ class Updater120500 extends Updater
         $this->updatePlatformOptions();
 
         $this->removeTool('my_contacts');
-        $this->removeTool('workspace_management');
+        $this->removeTool('workspace_management', true);
+
+        // old inwicast plugin tools
+        $this->removeTool('inwicast_portal');
+        $this->removeTool('inwicast_configuration', true);
+
         $this->createDefaultAdminHomeTab();
         $this->updateSlugs();
         $this->createDefaultWorkspaceShortcuts();
+
+        $this->log('Build default workspace');
+        $this->workspaceManager->getDefaultModel(false, true);
+
+        $this->log('Build default personal workspace');
+        $this->workspaceManager->getDefaultModel(true, true);
     }
 
     private function updatePlatformOptions()
     {
+        // configure new header
         $header = $this->configHandler->getParameter('header_menu');
         if (!empty($header)) {
             $this->configHandler->setParameter('header_menu', [
@@ -67,6 +94,7 @@ class Updater120500 extends Updater
             ]);
         }
 
+        // configure new home
         $homeType = $this->configHandler->getParameter('home.redirection_type');
         $homeData = null;
         if ('login' === $homeType) {
@@ -86,6 +114,11 @@ class Updater120500 extends Updater
             'type' => $homeType,
             'data' => $homeData,
         ]);
+
+        // configure default admin tool
+        $this->configHandler->setParameter('admin', [
+            'default_tool' => 'home',
+        ]);
     }
 
     private function removeTool($toolName, $admin = false)
@@ -96,6 +129,25 @@ class Updater120500 extends Updater
         if (!empty($tool)) {
             $this->om->remove($tool);
             $this->om->flush();
+        }
+    }
+
+    private function renameTool($oldName, $newName, $admin = false)
+    {
+        $tool = $this->om->getRepository($admin ? 'ClarolineCoreBundle:Tool\AdminTool' : 'ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $oldName]);
+        if (!empty($tool)) {
+            $tool->setName($newName);
+            $this->om->persist($tool);
+            $this->om->flush();
+        }
+
+        if (!$admin) {
+            $conn = $this->container->get('doctrine.dbal.default_connection');
+            $sql = "UPDATE claro_ordered_tool SET name = '${newName}' WHERE name = '${oldName}'";
+
+            $this->log($sql);
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
         }
     }
 
@@ -153,9 +205,9 @@ class Updater120500 extends Updater
 
         $managerShortCuts = [
             ['type' => 'tool', 'name' => 'home'],
-            ['type' => 'tool', 'name' => 'resource_manager'],
-            ['type' => 'tool', 'name' => 'agenda_'],
-            ['type' => 'tool', 'name' => 'users'],
+            ['type' => 'tool', 'name' => 'resources'],
+            ['type' => 'tool', 'name' => 'agenda'],
+            ['type' => 'tool', 'name' => 'community'],
             ['type' => 'tool', 'name' => 'dashboard'],
             ['type' => 'action', 'name' => 'favourite'],
             ['type' => 'action', 'name' => 'configure'],
@@ -163,8 +215,8 @@ class Updater120500 extends Updater
         ];
         $collaboratorShortCuts = [
             ['type' => 'tool', 'name' => 'home'],
-            ['type' => 'tool', 'name' => 'resource_manager'],
-            ['type' => 'tool', 'name' => 'agenda_'],
+            ['type' => 'tool', 'name' => 'resources'],
+            ['type' => 'tool', 'name' => 'agenda'],
             ['type' => 'action', 'name' => 'favourite'],
         ];
         $shortcutsRepo = $this->om->getRepository(Shortcuts::class);

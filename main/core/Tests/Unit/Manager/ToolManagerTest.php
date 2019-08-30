@@ -352,20 +352,20 @@ class ToolManagerTest extends MockeryTestCase
         $resmanager = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $parameters = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $home->shouldReceive('getName')->once()->andReturn('home');
-        $resmanager->shouldReceive('getName')->once()->andReturn('resource_manager');
+        $resmanager->shouldReceive('getName')->once()->andReturn('resources');
         $parameters->shouldReceive('getName')->once()->andReturn('parameters');
 
         $this->toolRepo->shouldReceive('findOneBy')->once()->with(['name' => 'home'])->andReturn($home);
         $this->toolRepo->shouldReceive('findOneBy')
             ->once()
-            ->with(['name' => 'resource_manager'])
+            ->with(['name' => 'resources'])
             ->andReturn($resmanager);
         $this->toolRepo->shouldReceive('findOneBy')
             ->once()
             ->with(['name' => 'parameters'])
             ->andReturn($parameters);
         $manager->shouldReceive('addDesktopTool')->once()->with($home, $user, 1, 'home');
-        $manager->shouldReceive('addDesktopTool')->once()->with($resmanager, $user, 2, 'resource_manager');
+        $manager->shouldReceive('addDesktopTool')->once()->with($resmanager, $user, 2, 'resources');
         $manager->shouldReceive('addDesktopTool')->once()->with($parameters, $user, 3, 'parameters');
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('persist')->once()->with($user);

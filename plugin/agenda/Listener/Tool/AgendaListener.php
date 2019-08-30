@@ -39,7 +39,7 @@ class AgendaListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_agenda_")
+     * @DI\Observe("open_tool_workspace_agenda")
      *
      * @param DisplayToolEvent $event
      */
@@ -50,7 +50,7 @@ class AgendaListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_agenda_")
+     * @DI\Observe("open_tool_desktop_agenda")
      *
      * @param DisplayToolEvent $event
      */

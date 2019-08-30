@@ -33,7 +33,7 @@ class TransferListener
     /**
      * Displays transfer tool.
      *
-     * @DI\Observe("administration_tool_data_transfer")
+     * @DI\Observe("administration_tool_transfer")
      *
      * @param OpenAdministrationToolEvent $event
      */

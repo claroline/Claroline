@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("/", options={"expose"=true})
+ * @EXT\Route("/blog", options={"expose"=true})
  */
 class BlogController extends Controller
 {
@@ -69,20 +69,6 @@ class BlogController extends Controller
         $this->router = $router;
         $this->configHandler = $configHandler;
         $this->tokenStorage = $tokenStorage;
-    }
-
-    /**
-     * Route parameter is for backwards compatibility and redirects old URLS to the new react ones.
-     *
-     * @EXT\Route("/{blogId}", name="icap_blog_open")
-     * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     */
-    public function openAction(Blog $blog)
-    {
-        return $this->redirectToRoute('claro_resource_open', [
-            'node' => $blog->getResourceNode()->getId(),
-            'resourceType' => $blog->getResourceNode()->getResourceType()->getName(),
-        ], 301);
     }
 
     /**

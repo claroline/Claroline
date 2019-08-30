@@ -7,7 +7,7 @@ import {selectors} from '#/main/core/tools/resources/store/selectors'
 
 const reducer = combineReducers({
   root: makeReducer(null, {
-    [makeInstanceAction(TOOL_LOAD, 'resource_manager')]: (state, action) => action.toolData.root || null
+    [makeInstanceAction(TOOL_LOAD, 'resources')]: (state, action) => action.toolData.root || null
   }),
   // the resources with no parents (aka WS roots)
   // for other resources, they are mounted inside the parent directory store

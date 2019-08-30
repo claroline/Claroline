@@ -172,7 +172,7 @@ class TransferManager
         $idx = 0;
 
         foreach ($ot as $key => $tool) {
-            if ('resource_manager' === $tool->getName()) {
+            if ('resources' === $tool->getName()) {
                 $idx = $key;
             }
         }
@@ -315,7 +315,7 @@ class TransferManager
         $replaced = json_encode($serialized);
 
         foreach ($serialized['orderedTools'] as $tool) {
-            if ('resource_manager' === $tool['name']) {
+            if ('resources' === $tool['name']) {
                 $nodes = $tool['data']['nodes'];
 
                 foreach ($nodes as $data) {

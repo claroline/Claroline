@@ -39,7 +39,7 @@ const PathCurrent = props => {
               disabled={!previous}
               primary={true}
               size="lg"
-              target={previous ? `${props.prefix}/${previous.id}`:''}
+              target={previous ? `${props.prefix}/${previous.slug}`:''}
             >
               <span className="fa fa-angle-double-left icon-with-text-right" />
               {trans('previous')}
@@ -52,7 +52,7 @@ const PathCurrent = props => {
               disabled={!next}
               primary={true}
               size="lg"
-              target={next ? `${props.prefix}/${next.id}`:''}
+              target={next ? `${props.prefix}/${next.slug}`:''}
             >
               {trans('next')}
               <span className="fa fa-angle-double-right icon-with-text-left" />

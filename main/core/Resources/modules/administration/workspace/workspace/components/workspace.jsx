@@ -16,8 +16,8 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {WorkspaceForm} from '#/main/core/workspace/components/form'
 import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {OrganizationList} from '#/main/core/administration/users/organization/components/organization-list'
-import {UserList} from '#/main/core/administration/users/user/components/user-list'
+import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
+import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
 const WorkspaceComponent = (props) =>
   <div>

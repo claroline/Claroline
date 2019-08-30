@@ -21,44 +21,45 @@ class Editor extends Component {
   }
 
   componentDidMount() {
-    tinymce.init(
-      Object.assign({}, config, {
-        target: this.textarea,
-        ui_container: `#${this.props.id}-container`,
+    config.then((loadedConfig) => {
+      tinymce.init(
+        Object.assign({}, loadedConfig, {
+          target: this.textarea,
+          ui_container: `#${this.props.id}-container`,
 
-        // give access to the show modal action to tinymce plugins
-        // it's not really aesthetic but there is no other way
-        showModal: this.props.showModal,
-        // get the current workspace for the file upload and resource explorer plugins
-        workspace: this.props.workspace
+          // give access to the show modal action to tinymce plugins
+          // it's not really aesthetic but there is no other way
+          showModal: this.props.showModal,
+          // get the current workspace for the file upload and resource explorer plugins
+          workspace: this.props.workspace
+        })
+      )
+
+      this.editor = tinymce.get(this.props.id)
+      tinymce.setActive(this.editor)
+
+      this.editor.on('mouseup', () => {
+        this.getSelection()
       })
-    )
 
-    this.editor = tinymce.get(this.props.id)
-    tinymce.setActive(this.editor)
+      this.editor.on('change', () => {
+        const tinyContent = this.editor.getContent()
+        const tmp = document.createElement('div')
+        tmp.innerHTML = tinyContent
 
-    this.editor.on('mouseup', () => {
-      this.getSelection()
-    })
+        const offsets = getOffsets(tmp, this.editor.selection.getSel())
+        this.props.onChange(tinyContent, offsets)
+      })
 
-    this.editor.on('change', () => {
-      const tinyContent = this.editor.getContent()
-      const tmp = document.createElement('div')
-      tmp.innerHTML = tinyContent
-
-      const offsets = getOffsets(tmp, this.editor.selection.getSel())
-      this.props.onChange(tinyContent, offsets)
-    })
-
-    this.editor.on('click', e => {
-      this.props.onClick(e.target)
+      this.editor.on('click', e => {
+        this.props.onClick(e.target)
+      })
     })
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if ((nextProps.content !== this.editor.getContent()
-      && nextProps.content !== this.props.content)) {
-      this.editor.setContent(nextProps.content)
+  componentDidUpdate(prevProps) {
+    if ((this.props.content !== this.editor.getContent() && this.props.content !== prevProps.content)) {
+      this.editor.setContent(this.props.content)
     }
   }
 

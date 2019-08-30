@@ -12,13 +12,13 @@ import {route as adminRoute} from '#/main/core/administration/routing'
 /**
  * Gets the path of a tool based on its rendering context.
  *
- * @param {string} toolName
+ * @param {null|string} toolName
  * @param {string} contextType
  * @param {object} contextData
  *
  * @return {Array}
  */
-function getToolBreadcrumb(toolName, contextType, contextData = {}) {
+function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
   const breadcrumbItems = get(contextData, 'breadcrumb.items') || []
 
   let path = []
@@ -30,12 +30,17 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
           type: LINK_BUTTON,
           label: trans('desktop'),
           target: '/desktop'
-        }, {
+        }
+      ]
+
+      if (toolName) {
+        path.push({
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
           target: toolRoute(toolName)
-        }
-      ]
+        })
+      }
+
       break
 
     case constants.TOOL_WORKSPACE:
@@ -55,13 +60,18 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
           label: contextData.name,
           displayed: -1 !== breadcrumbItems.indexOf('current'),
           target: workspaceRoute(contextData)
-        }, {
+        }
+      ]
+
+      if (toolName) {
+        path.push({
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
           displayed: -1 !== breadcrumbItems.indexOf('tool'),
           target: workspaceRoute(contextData, toolName)
-        }
-      ]
+        })
+      }
+
       break
 
     case constants.TOOL_ADMINISTRATION:
@@ -70,12 +80,17 @@ function getToolBreadcrumb(toolName, contextType, contextData = {}) {
           type: LINK_BUTTON,
           label: trans('administration'),
           target: '/administration'
-        }, {
+        }
+      ]
+
+      if (toolName) {
+        path.push({
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
           target: adminRoute(toolName)
-        }
-      ]
+        })
+      }
+
       break
   }
 

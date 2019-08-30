@@ -7,16 +7,12 @@ import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-t
 import {getMainFacet} from '#/main/core/user/profile/utils'
 
 const ProfileFacets = props => {
-  let redirect
-  const mainFacet = getMainFacet(props.facets)
-  if (mainFacet) {
-    redirect = [{
-      from: `${props.prefix}`,
-      exact: true,
-      to: `${props.prefix}/${getMainFacet(props.facets).id}`
-    }]
-  }
-
+  const redirect = [{
+    from: `${props.prefix}`,
+    exact: true,
+    to: `${props.prefix}/${getMainFacet(props.facets).id}`
+  }]
+  
   return (
     <Routes
       routes={[

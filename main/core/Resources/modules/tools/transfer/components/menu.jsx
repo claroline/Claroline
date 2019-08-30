@@ -10,7 +10,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const TransferMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
-    title={trans('data_transfer', {}, 'tools')}
+    title={trans('transfer', {}, 'tools')}
   >
     <Toolbar
       className="list-group"

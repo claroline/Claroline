@@ -30,9 +30,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -898,20 +900,29 @@ class UserManager
 
     /**
      * Logs the current user.
+     *
+     * @param User    $user
+     * @param Request $request
      */
-    public function logUser(User $user, $fromApi = false)
+    public function logUser(User $user, Request $request)
     {
-        if ($fromApi) {
-            //need the refresh for some reason...
-            $user = $this->objectManager->getRepository(User::class)->findOneByUsername($user->getUsername());
-        }
-        // TODO : nope, we should let Symfony handles token creation
+        //need the refresh for some reason...
+        /** @var User $user */
+        $user = $this->objectManager->getRepository(User::class)->findOneBy([
+            'username' => $user->getUsername(),
+        ]);
+
+        $request->setLocale($user->getLocale());
+
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
+        $this->container->get('session')->set('_security_main', serialize($token));
 
-        if (!$fromApi) {
-            $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
-        }
+        // Fire the login event
+        // Logging the user in above the way we do it doesn't do this automatically
+        $this->strictEventDispatcher->dispatch('security.interactive_login', InteractiveLoginEvent::class, [$request, $token]);
+
+        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
 
         if (null === $user->getInitDate()) {
             $this->setUserInitDate($user);

@@ -72,17 +72,17 @@ class Update1205Command extends ContainerAwareCommand
           ],
           //open can be uuid or id
           '\/resource\/open\/([^\/]*)"' => [
-            '#/desktop/workspaces/open/:wslug/resource_manager/:nslug',
+            '#/desktop/workspaces/open/:wslug/resources/:nslug',
             ['Claroline\CoreBundle\Entity\Resource\ResourceNode'],
           ],
           //open can be uuid or id (resource type then id)
           '\/resource\/open\/([^\/]+)\/('.$endOfUrl.'*)' => [
-            '#/desktop/workspaces/open/:wslug/resource_manager/:nslug',
+            '#/desktop/workspaces/open/:wslug/resources/:nslug',
             [null, 'Claroline\CoreBundle\Entity\Resource\ResourceNode'],
           ],
           //show is type then id or uuid
           '\/resources\/show\/([^\/]*)"' => [
-            '#/desktop/workspaces/open/:wslug/resource_manager/:nslug',
+            '#/desktop/workspaces/open/:wslug/resources/:nslug',
             [
               null,
               'Claroline\CoreBundle\Entity\Resource\ResourceNode',
@@ -90,7 +90,7 @@ class Update1205Command extends ContainerAwareCommand
           ],
           //show is type then id or uuid
           '\/resources\/show\/([^\/]*)\/('.$endOfUrl.'*)' => [
-            '#/desktop/workspaces/open/:wslug/resource_manager/:nslug',
+            '#/desktop/workspaces/open/:wslug/resources/:nslug',
             [
               null,
               'Claroline\CoreBundle\Entity\Resource\ResourceNode',

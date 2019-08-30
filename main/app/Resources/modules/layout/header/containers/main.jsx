@@ -27,7 +27,6 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
       impersonated: securitySelectors.isImpersonated(state),
       isAdmin: securitySelectors.isAdmin(state),
       locale: selectors.locale(state),
-      administration: selectors.administration(state),
       tools: selectors.tools(state)
     }),
     (dispatch) => ({

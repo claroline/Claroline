@@ -8,7 +8,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/core/modals/organizations/store'
-import {OrganizationList} from '#/main/core/administration/users/organization/components/organization-list'
+import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
 import {Organization as OrganizationType} from '#/main/core/user/prop-types'
 
 const OrganizationsModal = props => {

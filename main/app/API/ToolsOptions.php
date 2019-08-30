@@ -14,14 +14,10 @@ namespace Claroline\AppBundle\API;
 final class ToolsOptions
 {
     const EXCLUDED_TOOLS = [
-        'all_my_badges',
         'formalibre_bulletin_tool',
         'formalibre_presence_tool',
         'formalibre_reservation_agenda',
-        //'home',
-        'inwicast_portal',
         'my-learning-objectives',
-        'my_portfolios',
     ];
 
     const USER_CATEGORY = 'user';

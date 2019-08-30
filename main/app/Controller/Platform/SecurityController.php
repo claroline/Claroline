@@ -88,10 +88,7 @@ class SecurityController
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        // switch to it's defined locale
-        $request->setLocale($user->getLocale());
-
-        $this->manager->logUser($user);
+        $this->manager->logUser($user, $request);
 
         return new JsonResponse([
             'user' => $this->serializer->serialize($user),

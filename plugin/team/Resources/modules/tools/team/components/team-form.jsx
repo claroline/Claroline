@@ -7,7 +7,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
-import {UserList} from '#/main/core/administration/users/user/components/user-list'
+import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 import {selectors} from '#/plugin/team/tools/team/store'

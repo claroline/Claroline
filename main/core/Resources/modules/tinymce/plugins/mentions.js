@@ -6,6 +6,8 @@ import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 
+import {route} from '#/main/core/user/routing'
+
 const AutoComplete = function (editor) {
   this.editor = editor
 
@@ -237,7 +239,7 @@ AutoComplete.prototype = {
       <li>
         <a role="button" class="user-mention-item" href="#">
             ${avatar}
-            
+
             ${this.highlight(item.name, query)}&nbsp;
             <small>${this.highlight(item.username, query)}</small>
         </a>
@@ -281,7 +283,7 @@ AutoComplete.prototype = {
   insert: function (item) {
     return (`
       <user id="${item.id}">
-        <a class="user-mention" href="${url(['claro_user_profile', {user: item.meta.publicUrl}])}">@${item.name}</a>
+        <a class="user-mention" href="${'#' + route(item)}">@${item.name}</a>
       </user>
     `)
   },

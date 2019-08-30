@@ -81,10 +81,10 @@ class WorkspaceRestrictionsManager
             // return restrictions details
             $errors = [
                 'noRights' => !$this->hasRights($workspace),
+                'selfRegistration' => $workspace->getSelfRegistration(),
             ];
 
             if ($user) {
-                $errors['autoRegistration'] = $workspace->getSelfRegistration();
                 $errors['pendingRegistration'] = $this->workspaceManager->isUserInValidationQueue($workspace, $user);
             }
 

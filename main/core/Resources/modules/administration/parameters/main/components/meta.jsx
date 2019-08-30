@@ -10,7 +10,6 @@ import {selectors} from '#/main/core/administration/parameters/main/store'
 const Meta = () =>
   <FormData
     level={2}
-    title={trans('information')}
     name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}

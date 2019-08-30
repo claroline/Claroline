@@ -248,14 +248,14 @@ class AgendaManager
 
     public function checkOpenAccess(Workspace $workspace)
     {
-        if (!$this->authorization->isGranted('agenda_', $workspace)) {
+        if (!$this->authorization->isGranted('agenda', $workspace)) {
             throw new AccessDeniedException('You cannot open the agenda');
         }
     }
 
     public function checkEditAccess(Workspace $workspace)
     {
-        if (!$this->authorization->isGranted(['agenda_', 'edit'], $workspace)) {
+        if (!$this->authorization->isGranted(['agenda', 'edit'], $workspace)) {
             throw new AccessDeniedException('You cannot edit the agenda');
         }
     }

@@ -32,7 +32,7 @@ class DashboardListener
     /**
      * Displays dashboard administration tool.
      *
-     * @DI\Observe("administration_tool_platform_dashboard")
+     * @DI\Observe("administration_tool_dashboard")
      *
      * @param OpenAdministrationToolEvent $event
      */

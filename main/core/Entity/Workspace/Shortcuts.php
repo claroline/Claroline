@@ -36,7 +36,7 @@ class Shortcuts
     private $workspace;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", inversedBy="shortcuts")
      * @ORM\JoinColumn(name="role_id", onDelete="CASCADE")
      *
      * @var Role
@@ -68,7 +68,12 @@ class Shortcuts
      */
     public function setWorkspace(Workspace $workspace)
     {
+        if ($this->workspace) {
+            $this->workspace->removeShortcuts($this);
+        }
+
         $this->workspace = $workspace;
+        $workspace->addShortcuts($this);
     }
 
     /**
@@ -84,7 +89,12 @@ class Shortcuts
      */
     public function setRole(Role $role)
     {
+        if ($this->role) {
+            $this->role->removeShortcuts($this);
+        }
+
         $this->role = $role;
+        $role->addShortcuts($this);
     }
 
     /**

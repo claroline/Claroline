@@ -9,6 +9,8 @@ import {PageSimple} from '#/main/app/page/components/simple'
 import {constants} from '#/main/app/security/login/constants'
 import {LoginForm} from '#/main/app/security/login/containers/form'
 
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+
 const LoginPage = (props) =>
   <PageSimple
     className="login-page"
@@ -24,7 +26,7 @@ const LoginPage = (props) =>
               props.history.push('/desktop')
               break
             case constants.LOGIN_REDIRECT_WORKSPACE:
-              props.history.push('/workspaces/'+response.redirect.data.id)
+              props.history.push(workspaceRoute(response.redirect.data))
               break
             case constants.LOGIN_REDIRECT_URL:
               window.location = response.redirect.data

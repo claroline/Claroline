@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-// TODO : this 3 methods should be moved in a `role` module
+// TODO : some of this methods should be moved in the `user` module
 const roleAnonymous = () => 'ROLE_ANONYMOUS'
 const roleUser = () => 'ROLE_USER'
 const roleWorkspace = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGER_':'ROLE_WS_COLLABORATOR_')+workspace.id

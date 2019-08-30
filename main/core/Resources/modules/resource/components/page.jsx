@@ -114,9 +114,9 @@ class ResourcePage extends Component {
             if (currentNode) {
               let redirect
               if (toolConst.TOOL_WORKSPACE === this.props.contextType && currentNode.workspace) {
-                redirect = workspaceRoute(currentNode.workspace, 'resource_manager')
+                redirect = workspaceRoute(currentNode.workspace, 'resources')
               } else {
-                redirect = toolRoute('resource_manager')
+                redirect = toolRoute('resources')
               }
 
               if (currentNode.parent) {

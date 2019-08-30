@@ -26,10 +26,6 @@ const Layout = () =>
             type: 'boolean',
             label: trans('show_name_in_top_bar')
           }, {
-            name: 'display.header_locale',
-            type: 'boolean',
-            label: trans('header_locale')
-          }, {
             name: 'display.logo',
             type: 'image',
             label: trans('logo')
@@ -50,15 +46,11 @@ const Layout = () =>
         title: trans('footer'),
         fields: [
           {
-            name: 'display.footer_login',
+            name: 'footer.show_locale',
             type: 'boolean',
-            label: trans('show_connection_button_at_footer', {}, 'home')
+            label: trans('footer_locale')
           }, {
-            name: 'display.footer_workspaces',
-            type: 'boolean',
-            label: trans('show_workspace_menu_at_footer', {}, 'home')
-          }, {
-            name: 'display.footer',
+            name: 'footer.content',
             type: 'html',
             label: trans('footer')
           }

@@ -2,9 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
+import {LinkButton} from '#/main/app/buttons/link'
 
+import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 /**
@@ -23,13 +24,13 @@ const UserMicro = props => {
 
   if (props.link && props.publicUrl) {
     return (
-      <a className={classes('user-micro', props.className)} href={url(['claro_user_profile', {user: props.publicUrl}])}>
+      <LinkButton className={classes('user-micro', props.className)} target={route(props)}>
         <UserAvatar picture={props.picture} alt={false} />
 
         {displayName ?
           displayName : trans('unknown')
         }
-      </a>
+      </LinkButton>
     )
   }
 

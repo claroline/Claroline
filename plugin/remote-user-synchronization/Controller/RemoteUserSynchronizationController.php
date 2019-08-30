@@ -258,7 +258,7 @@ class RemoteUserSynchronizationController extends Controller
 
             if (!is_null($workspace)) {
                 return new RedirectResponse(
-                    $this->router->generate('claro_workspace_open', ['workspaceId' => $workspace->getId()])
+                    $this->router->generate('claro_workspace_open', ['slug' => $workspace->getSlug()])
                 );
             }
 

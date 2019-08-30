@@ -2,7 +2,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 
-function getWalkthrough(tools = [], administration = [], authenticated = false, display = {}) {
+function getWalkthrough(tools = [], authenticated = false, display = {}) {
   const walkthrough = [
     // Intro
     {
@@ -71,42 +71,6 @@ function getWalkthrough(tools = [], administration = [], authenticated = false, 
      }*/
 
   })
-
-  // Administration
-  if (0 !== administration.length) {
-    walkthrough.push({
-      highlight: ['#app-administration'],
-      content: {
-        title: trans('administration_tools', {}, 'walkthrough'),
-        message: trans('header.administration_group.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '#app-administration',
-        placement: 'bottom'
-      }/*,
-       requiredInteraction: {
-       type: 'click',
-       target: '#app-administration',
-       message: trans('header.administration_group.action', {}, 'walkthrough')
-       }*/
-    })
-
-    // help for each tool
-    // TODO : enable when
-    /*administration.map(tool => walkthrough.push({
-     highlight: [`#app-administration-${tool.name}`],
-     content: {
-     icon: `fa fa-${tool.icon}`,
-     title: trans('tool', {toolName: trans(tool.name, {}, 'tools')}, 'walkthrough'),
-     message: trans(`header.administration.${tool.name}.message`, {}, 'walkthrough'),
-     link: trans(`header.administration.${tool.name}.documentation`, {}, 'walkthrough')
-     },
-     position: {
-     target: `#app-administration-${tool.name}`,
-     placement: 'left'
-     }
-     }))*/
-  }
 
   if (authenticated) {
     // Notifications

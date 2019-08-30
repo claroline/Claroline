@@ -233,12 +233,13 @@
 // Footer
 // ---
 
-@footer-height:            @navbar-height;
-@footer-max-width:         none; // max width for the footer content (do not affect footer container)
-@footer-bg:                #F3F3F3;
-@footer-color:             @gray-light;
-@footer-border-color:      transparent;
-@footer-box-shadow:        @box-shadow-base;
+@footer-height:             floor(@line-height-base*@font-size-base + 2*@padding-base-vertical + 2px); // the size of the locale button
+@footer-max-width:          none; // max width for the footer content (do not affect footer container)
+@footer-bg:                 #F3F3F3;
+@footer-color:              @gray-light;
+@footer-border-color:       transparent;
+@footer-inner-border-color: #E0E0E0;
+@footer-box-shadow:         @box-shadow-base;
 
 // Links
 @footer-link-color:        @gray;

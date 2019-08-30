@@ -11,7 +11,6 @@ import {constants} from '#/main/app/layout/sections/home/constants'
 const Home = () =>
   <FormData
     level={2}
-    title={trans('home')}
     name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}

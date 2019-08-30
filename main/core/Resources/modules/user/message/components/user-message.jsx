@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import merge from 'lodash/merge'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
@@ -11,9 +10,10 @@ import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
-import {UrlButton} from '#/main/app/buttons/url/components/button'
+import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
+import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 // TODO : buttons toolbar
@@ -36,9 +36,9 @@ const UserMessage = props => {
       'user-message-right': 'right' === props.position
     })}>
       {'left' === props.position &&
-        <UrlButton target={['claro_user_profile', {user: get(props.user, 'meta.publicUrl')}]}>
+        <LinkButton target={route(props.user)}>
           <UserAvatar picture={props.user && props.user.picture} alt={false} />
-        </UrlButton>
+        </LinkButton>
       }
 
       <div className="user-message">
@@ -76,7 +76,9 @@ const UserMessage = props => {
       </div>
 
       {'right' === props.position &&
-        <UserAvatar picture={props.user && props.user.picture} alt={false} />
+        <LinkButton target={route(props.user)}>
+          <UserAvatar picture={props.user && props.user.picture} alt={false} />
+        </LinkButton>
       }
     </div>
   )

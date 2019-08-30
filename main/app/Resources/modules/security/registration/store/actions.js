@@ -1,5 +1,7 @@
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
+
+import {actions as securityActions} from '#/main/app/security/store/actions'
 import {constants} from '#/main/app/security/registration/constants'
 
 const REGISTRATION_DATA_LOAD = 'REGISTRATION_DATA_LOAD'
@@ -16,7 +18,13 @@ actions.createUser = (user, onCreated = () => {}) => ({
       method: 'POST',
       body: JSON.stringify(user)
     },
-    success: onCreated
+    success: (response, dispatch) => {
+      if (response) {
+        dispatch(securityActions.changeUser(response))
+      }
+
+      onCreated(response)
+    }
   }
 })
 

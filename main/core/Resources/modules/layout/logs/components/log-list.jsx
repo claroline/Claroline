@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
@@ -9,18 +9,21 @@ import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
 class LogList extends Component {
-  
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.chart.invalidated) {
-      nextProps.getChartData(nextProps.id, nextProps.queryString)
+  componentDidMount() {
+    if (this.props.chart.invalidated) {
+      this.props.getChartData(this.props.id, this.props.queryString)
     }
-    
-    this.setState(nextProps)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.chart.invalidated !== this.props.chart.invalidated && this.props.chart.invalidated) {
+      this.props.getChartData(this.props.id, this.props.queryString)
+    }
   }
   
   render() {
     return (
-      <div>
+      <Fragment>
         {this.props.chart &&
           <div className="text-center">
             <LineChart
@@ -58,7 +61,6 @@ class LogList extends Component {
             type: LINK_BUTTON,
             target: `${this.props.path}/log/${row.id}`
           })}
-          delete={false}
           definition={[
             {
               name: 'dateLog',
@@ -102,7 +104,7 @@ class LogList extends Component {
           }}
           selectable={false}
         />
-      </div>
+      </Fragment>
     )
   }
 }

@@ -1,7 +1,7 @@
 {
   "workspace": {
     "tools": {
-      "agenda_": {
+      "agenda": {
         "documentation": "",
         "message": "Permet de créer et partager des évènements ou des tâches."
       }

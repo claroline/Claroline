@@ -26,7 +26,7 @@ const DashboardTool = (props) =>
         },
         label: trans('download_csv_list', {}, 'log'),
         icon: 'fa fa-download',
-        displayed: matchPath(props.location.pathname, {path: `${props.path}/connections`, exact: true})
+        displayed: !!matchPath(props.location.pathname, {path: `${props.path}/connections`, exact: true})
       }, {
         name: 'download',
         type: DOWNLOAD_BUTTON,
@@ -35,7 +35,7 @@ const DashboardTool = (props) =>
         },
         label: trans('download_csv_list', {}, 'log'),
         icon: 'fa fa-download',
-        displayed: matchPath(props.location.pathname, {path: `${props.path}/log`, exact: true})
+        displayed: !!matchPath(props.location.pathname, {path: `${props.path}/log`, exact: true})
       }, {
         name: 'download',
         type: DOWNLOAD_BUTTON,
@@ -44,7 +44,7 @@ const DashboardTool = (props) =>
         },
         label: trans('download_csv_list', {}, 'log'),
         icon: 'fa fa-download',
-        displayed: matchPath(props.location.pathname, {path: `${props.path}/logs/users`, exact: true})
+        displayed: !!matchPath(props.location.pathname, {path: `${props.path}/logs/users`, exact: true})
       }
     ]}
     subtitle={
@@ -53,7 +53,7 @@ const DashboardTool = (props) =>
         routes={[
           {
             path: '/',
-            render: () => trans('analytics'),
+            render: () => trans('analytics_home'),
             exact: true
           }, {
             path: '/connections',

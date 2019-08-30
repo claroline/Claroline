@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-const STORE_NAME = 'data_transfer'
+const STORE_NAME = 'transfer'
 
 const store = (state) => state[STORE_NAME]
 

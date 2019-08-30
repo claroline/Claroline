@@ -104,6 +104,7 @@ const EditorParameters = props =>
               name: 'score.success',
               label: trans('score_to_pass'),
               type: 'number',
+              required: true,
               options: {
                 min: 0,
                 max: 100,

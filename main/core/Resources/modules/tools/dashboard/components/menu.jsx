@@ -20,7 +20,7 @@ const DashboardMenu = (props) =>
           name: 'analytics',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pie-chart',
-          label: trans('analytics'),
+          label: trans('analytics_home'),
           target: props.path,
           exact: true
         }, {

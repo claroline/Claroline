@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Tool\ToolRole;
+use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -108,6 +109,10 @@ class RoleSerializer
 
             if ($workspace = $role->getWorkspace()) {
                 $serialized['workspace'] = $this->workspaceSerializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+            }
+
+            if ($role->getShortcuts()) {
+                //$serialized = array_values(array_map(function (Shortcuts $shortcuts)));
             }
 
             if (Role::USER_ROLE === $role->getType()) {

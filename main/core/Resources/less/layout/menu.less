@@ -29,7 +29,7 @@
         margin: 0;
     }
 
-    .user-progression {
+    .app-menu-progression {
         background: @toolbar-link-hover-bg;
         padding: floor(@grid-gutter-width / 2);
         display: flex;
@@ -40,7 +40,7 @@
             flex-shrink: 0;
         }
 
-        .user-progression-info {
+        .app-menu-progression-info {
             margin-left: floor(@grid-gutter-width / 2);
             font-style: italic;
             font-size: @font-size-small;
@@ -50,6 +50,29 @@
                 margin-top: 0;
                 font-style: normal;
                 color: @toolbar-color;
+            }
+        }
+
+        + .app-menu-shortcuts {
+            margin-top: 2px;
+        }
+    }
+
+    .app-menu-shortcuts {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .app-menu-shortcuts-btn {
+            flex: 1;
+            font-size: 16px;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: @toolbar-link-color;
+            background: @toolbar-link-hover-bg;
+
+            + .app-menu-shortcuts-btn {
+                margin-left: 2px;
             }
         }
     }

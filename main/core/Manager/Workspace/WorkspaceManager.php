@@ -865,6 +865,20 @@ class WorkspaceManager
         $this->om->flush();
     }
 
+    public function getShortcuts(Workspace $workspace, User $user = null)
+    {
+        $shortcuts = [];
+        if ($user) {
+            foreach ($workspace->getShortcuts() as $shortcut) {
+                if ($user->hasRole($shortcut->getRole()->getName())) {
+                    $shortcuts = array_merge($shortcuts, $shortcut->getData());
+                }
+            }
+        }
+
+        return $shortcuts;
+    }
+
     public function addShortcuts(Workspace $workspace, Role $role, array $toAdd)
     {
         $workspaceShortcuts = $this->shortcutsRepo->findOneBy(['workspace' => $workspace, 'role' => $role]);

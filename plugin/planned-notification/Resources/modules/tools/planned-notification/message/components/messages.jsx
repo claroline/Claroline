@@ -8,7 +8,7 @@ import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {ListData} from '#/main/app/content/list/containers/data.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {UserList} from '#/main/core/administration/users/user/components/user-list.jsx'
+import {UserList} from '#/main/core/administration/community/user/components/user-list.jsx'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/message/actions'

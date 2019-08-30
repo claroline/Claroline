@@ -8,7 +8,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/main/core/modals/groups/store'
-import {GroupList} from '#/main/core/administration/users/group/components/group-list'
+import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {Group as GroupType} from '#/main/core/user/prop-types'
 
 const GroupsModal = props => {

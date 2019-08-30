@@ -40,7 +40,7 @@ actions.open = (slug) => (dispatch, getState) => {
     dispatch({
       [API_REQUEST]: {
         silent: true,
-        url: ['claro_workspace_open', {slug}],
+        url: ['claro_workspace_open', {slug: slug}],
         before: (dispatch) => dispatch(actions.setLoaded(false)),
         success: (response, dispatch) => {
           dispatch(actions.load(response))

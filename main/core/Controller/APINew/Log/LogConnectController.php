@@ -331,7 +331,7 @@ class LogConnectController
      */
     private function checkAdminToolAccess($rights = 'OPEN')
     {
-        $logsTool = $this->toolManager->getAdminToolByName('platform_dashboard');
+        $logsTool = $this->toolManager->getAdminToolByName('dashboard');
 
         if (is_null($logsTool) || !$this->authorization->isGranted($rights, $logsTool)) {
             throw new AccessDeniedException();

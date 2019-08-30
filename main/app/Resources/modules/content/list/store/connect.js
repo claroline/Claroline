@@ -180,6 +180,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
     if (ownProps.delete) {
       const deleteAction = {
+        name: 'delete',
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),

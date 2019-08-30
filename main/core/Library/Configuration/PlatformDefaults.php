@@ -146,17 +146,16 @@ class PlatformDefaults implements ParameterProviderInterface
               'db_password' => null,
             ],
             'display' => [
-              'footer' => null,
               'logo' => 'logo-sm.svg',
               'theme' => 'claroline',
-              'home_menu' => null,
-              'footer_login' => false,
-              'footer_workspaces' => false,
-              'header_locale' => true,
               'resource_icon_set' => 'claroline',
               'name' => 'Claroline Connect',
               'secondary_name' => 'Easy & flexible learning',
               'name_active' => true,
+            ],
+            'footer' => [
+                'content' => null,
+                'show_locale' => false,
             ],
             'mailer' => [
               'transport' => 'sendmail',
@@ -208,8 +207,14 @@ class PlatformDefaults implements ParameterProviderInterface
                 'favourites',
                 'notifications',
             ],
+            'admin' => [
+                'default_tool' => 'home',
+            ],
+            'desktop' => [
+                'default_tool' => 'home',
+                'show_progression' => true,
+            ],
             'show_about_button' => true,
-            //not documented, for the cli tool claroline:user:mailing
             'notifications_refresh_delay' => 20000, // in ms
             'is_cron_configured' => false,
             'javascripts' => [],

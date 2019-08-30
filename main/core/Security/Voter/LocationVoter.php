@@ -23,7 +23,7 @@ class LocationVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        return $this->hasAdminToolAccess($token, 'user_management') ?
+        return $this->hasAdminToolAccess($token, 'community') ?
           VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
 

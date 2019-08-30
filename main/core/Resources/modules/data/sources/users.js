@@ -1,6 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
+import {route} from '#/main/core/user/routing'
 import {UserCard} from '#/main/core/user/components/card'
 
 export default {
@@ -9,7 +10,7 @@ export default {
   parameters: {
     primaryAction: (user) => ({
       type: URL_BUTTON,
-      target: ['claro_user_profile', {user: user.meta.publicUrl}]
+      target: '#' + route(user)
     }),
     definition: [
       {

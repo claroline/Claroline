@@ -8,7 +8,7 @@ import {DetailsData} from '#/main/app/content/details/containers/data'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
-import {UserList} from '#/main/core/administration/users/user/components/user-list'
+import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
 import {selectors} from '#/plugin/team/tools/team/store'
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'

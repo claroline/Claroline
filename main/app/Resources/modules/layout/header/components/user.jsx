@@ -6,12 +6,13 @@ import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 
+import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {constants as roleConstants} from '#/main/core/user/role/constants'
+import {constants as roleConstants} from '#/main/core/user/constants'
 
 // TODO : add email validation warning
 // TODO : add user poster when available
@@ -93,11 +94,11 @@ const UserMenu = props =>
 
       {props.authenticated &&
         <Button
-          type={URL_BUTTON}
+          type={LINK_BUTTON}
           className="list-group-item"
           icon="fa fa-fw fa-user"
           label={trans('user_profile')}
-          target={['claro_user_profile', {user: props.currentUser.publicUrl}]}
+          target={route(props.currentUser)}
           onClick={props.closeMenu}
         />
       }

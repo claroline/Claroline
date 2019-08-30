@@ -18,9 +18,7 @@ function getDefaultFacet() {
   }
 }
 
-function getDetailsDefaultSection(parameters) {
-  const user = currentUser()
-
+function getDetailsDefaultSection(parameters, user) {
   let displayEmail = false
   parameters.show_email.forEach(role => {
     user.roles.forEach(userRole => {

@@ -87,7 +87,7 @@ tools:
     - tool:
         type: 'badges'
     - tool:
-        type: 'resource_manager'
+        type: 'resources'
         import:
           - path: 'tools/resource_manager.yml'
 

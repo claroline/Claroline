@@ -57,9 +57,6 @@ final class Options
     const NO_PERMISSION_CHECK = 'no_permission_check';
     const GENERATE_UUID = 'generate_uuid';
 
-    //in user crud so the user can be logged automatically after creation
-    //but it's probably not where the option should be located
-    const USER_SELF_LOG = 'user_self_log';
     const FORCE_RANDOM_PUBLIC_URL = 'force_random_public_url';
     const ADD_PERSONAL_WORKSPACE = 'add_personal_workspace';
     const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';

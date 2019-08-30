@@ -250,7 +250,7 @@ class TeamManager
         $this->rightsManager->editPerms(['open' => true], $role, $root);
         $orderedTool = $this->om
             ->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
-            ->findOneBy(['workspace' => $workspace, 'name' => 'resource_manager']);
+            ->findOneBy(['workspace' => $workspace, 'name' => 'resources']);
 
         if (!empty($orderedTool)) {
             $this->toolRightsManager->setToolRights($orderedTool, $role, 1);

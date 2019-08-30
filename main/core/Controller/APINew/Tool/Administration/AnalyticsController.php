@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * @Route("/tools/admin/analytics")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_dashboard')")
+ * @SEC\PreAuthorize("canOpenAdminTool('dashboard')")
  */
 class AnalyticsController
 {

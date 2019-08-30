@@ -18,6 +18,6 @@ registry.add('ClarolineAgendaBundle', {
   },
 
   tools: {
-    'agenda_': () => { return import(/* webpackChunkName: "agenda-tool-agenda" */ '#/plugin/agenda/tools/agenda') }
+    'agenda': () => { return import(/* webpackChunkName: "agenda-tool-agenda" */ '#/plugin/agenda/tools/agenda') }
   }
 })

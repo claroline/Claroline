@@ -71,7 +71,10 @@ class RegistrationMain extends Component {
         submit={{
           icon: 'fa fa-user-plus',
           label: trans('registration_confirm'),
-          action: () => this.props.register(this.props.user, this.props.termOfService, () => this.props.history.push('/login'))
+          action: () => this.props.register(this.props.user, this.props.termOfService, (user) => {
+            this.props.onRegister(user)
+            this.props.history.push('/login')
+          })
         }}
         steps={steps}
         redirect={[

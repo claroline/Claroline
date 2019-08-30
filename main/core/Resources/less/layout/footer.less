@@ -11,18 +11,14 @@
     .box-shadow(@footer-box-shadow);
 
     .app-footer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
         max-width: @footer-max-width;
         width: 100%;
         margin: 0 auto;
         flex: 1 0 auto; // take parent full height
-    }
-
-    // don't know what to do with that
-    .container-fluid {
-        p, h1, h2, h3, h4, h5, h6 {
-            margin: floor(@grid-gutter-width / 2);
-            max-height: 100%;
-        }
     }
 
     // allow to customize links in footer
@@ -35,5 +31,45 @@
         &:focus {
             color: @footer-link-active-color;
         }
+    }
+
+    .app-footer-brand {
+        min-height: @footer-height;
+        padding: 0 floor(@grid-gutter-width / 2);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex: 1;
+
+        img {
+            max-height: 18px;
+            margin-right: 10px;
+        }
+
+        a {
+            font-weight: bold;
+        }
+
+        small {
+            margin-left: 5px;
+        }
+    }
+
+    .app-current-locale {
+        margin-left: auto;
+        padding: @padding-base-vertical floor(@grid-gutter-width / 2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .locale-icon {
+            margin: 0 @icon-text-spacer 0 0;
+        }
+    }
+
+    .app-footer-content {
+        min-width: 100%; // force display in a new line in flex container
+        padding: floor(@grid-gutter-width / 2);
+        border-bottom: 1px solid @footer-inner-border-color;
     }
 }

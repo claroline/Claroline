@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
+import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {
   WORKSPACE_LOAD,
   WORKSPACE_SET_LOADED,
@@ -14,6 +15,7 @@ import {
 
 const reducer = combineReducers({
   loaded: makeReducer(false, {
+    [SECURITY_USER_CHANGE]: () => false,
     [WORKSPACE_SET_LOADED]: (state, action) => action.loaded
   }),
   impersonated: makeReducer(false, {

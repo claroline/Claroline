@@ -1,5 +1,7 @@
 import {createSelector} from 'reselect'
 
+import {selectors as configSelectors} from '#/main/app/config/store'
+
 const STORE_NAME = 'administration'
 
 const store = (state) => state[STORE_NAME]
@@ -14,18 +16,17 @@ const tools = createSelector(
   (store) => store.tools
 )
 
-const defaultOpening = createSelector(
-  [tools],
-  (tools) => {
-    let defaultTool = null
-    if (tools[0]) {
-      // open the first available tool
-      defaultTool = tools[0].name
-    }
+const defaultOpening = (state) => {
+  const adminTools = tools(state)
+  let defaultTool = configSelectors.param(state, 'admin.defaultTool')
 
-    return defaultTool
+  if (!defaultTool && adminTools[0]) {
+    // open the first available tool
+    defaultTool = adminTools[0].name
   }
-)
+
+  return defaultTool
+}
 
 export const selectors = {
   STORE_NAME,

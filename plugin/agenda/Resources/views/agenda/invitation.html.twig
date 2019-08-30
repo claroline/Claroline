@@ -13,7 +13,7 @@
         macros.desktopBreadcrumbs([
             {
                 'name': 'agenda'|trans({}, 'tools'),
-                'href': path('claro_desktop_open_tool', {'toolName': 'agenda_'})
+                'href': path('claro_desktop_open_tool', {'toolName': 'agenda'})
             },
             {
                 'name': 'invitation'|trans({}, 'tools'),
@@ -52,7 +52,7 @@
             {% endif %}
         {% endif %}
 
-        <a href="{{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}" class="btn btn-primary">{{ 'invitation_back_to_calendar'|trans({}, 'agenda') }}</a>
+        <a href="{{ path('claro_desktop_open_tool', {'toolName': 'agenda'}) }}" class="btn btn-primary">{{ 'invitation_back_to_calendar'|trans({}, 'agenda') }}</a>
     </div>
 {% endblock %}
 {% block javascripts %}

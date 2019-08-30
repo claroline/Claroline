@@ -10,7 +10,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const DashboardMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
-    title={trans('platform_dashboard', {}, 'tools')}
+    title={trans('dashboard', {}, 'tools')}
   >
     <Toolbar
       className="list-group"
@@ -40,7 +40,8 @@ const DashboardMenu = (props) =>
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-list-alt',
           label: trans('widgets'),
-          target: props.path + '/widgets'
+          target: props.path + '/widgets',
+          displayed: false // TODO : fix app and restore
         }, {
           name: 'top',
           type: LINK_BUTTON,

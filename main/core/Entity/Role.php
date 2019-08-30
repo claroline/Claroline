@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
+use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -158,6 +159,17 @@ class Role extends BaseRole
      */
     protected $personalWorkspaceCreationEnabled = false;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Shortcuts",
+     *     mappedBy="role",
+     *     cascade={"persist", "merge"}
+     * )
+     *
+     * @var Shortcuts[]|ArrayCollection
+     */
+    protected $shortcuts;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -167,6 +179,7 @@ class Role extends BaseRole
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
         $this->adminTools = new ArrayCollection();
+        $this->shortcuts = new ArrayCollection();
     }
 
     public function getId()
@@ -420,5 +433,29 @@ class Role extends BaseRole
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
+    }
+
+    /**
+     * Get shortcuts.
+     *
+     * @return Shortcuts[]|ArrayCollection
+     */
+    public function getShortcuts()
+    {
+        return $this->shortcuts;
+    }
+
+    public function addShortcuts(Shortcuts $shortcuts)
+    {
+        if (!$this->shortcuts->contains($shortcuts)) {
+            $this->shortcuts->add($shortcuts);
+        }
+    }
+
+    public function removeShortcuts(Shortcuts $shortcuts)
+    {
+        if ($this->shortcuts->contains($shortcuts)) {
+            $this->shortcuts->removeElement($shortcuts);
+        }
     }
 }

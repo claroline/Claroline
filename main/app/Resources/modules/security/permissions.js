@@ -1,14 +1,26 @@
 /**
+ * Checks if the user a the specified role.
+ *
+ * @param {string} roleName
+ * @param {object} user
+ *
+ * @return {boolean}
+ */
+function hasRole(roleName, user) {
+  if (user && user.roles) {
+    return -1 !== user.roles.findIndex(role => role.name === roleName)
+  }
+
+  return false
+}
+
+/**
  * Checks if a user is an administrator.
  *
  * @param {object} user
  */
 function isAdmin(user) {
-  if (user) {
-    return !!user.roles.find(role => role.name === 'ROLE_ADMIN')
-  }
-
-  return false
+  return hasRole('ROLE_ADMIN', user)
 }
 
 /**
@@ -24,6 +36,7 @@ function hasPermission(permission, object) {
 }
 
 export {
+  hasRole,
   isAdmin,
   hasPermission
 }

@@ -126,6 +126,8 @@ ListData.propTypes = {
 
   /**
    * Provides data delete.
+   *
+   * @deprecated
    */
   delete: T.shape({
     url: T.oneOfType([T.string, T.array]).isRequired,

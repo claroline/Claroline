@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
@@ -28,56 +28,75 @@ CurrentType.propTypes = {
   description: T.string
 }
 
-const QuizType = props => {
-  const current = QUIZ_TYPES[props.type]
+class QuizType extends Component {
+  constructor(props) {
+    super(props)
 
-  return (
-    <div className="quiz-type-control">
-      <Button
-        id="quiz-type"
-        className="quiz-type form-control"
-        type={MENU_BUTTON}
-        label={current ?
-          <CurrentType
-            key="label"
-            icon={current.meta.icon}
-            label={current.meta.label}
-            description={current.meta.description}
-          /> :
-          <CurrentType
-            key="label"
-            label={trans('select_quiz_type', {}, 'quiz')}
-            description={trans('select_quiz_type_help', {}, 'quiz')}
-          />
-        }
-        menu={
-          <ul role="menu" className="dropdown-menu dropdown-menu-full">
-            {Object.keys(QUIZ_TYPES).map(typeName => {
-              const select = props.selectAction(typeName)
+    this.state = {
+      opened: false
+    }
 
-              return (
-                <li key={typeName} role="presentation">
-                  <Button
-                    {...select}
-                    className="quiz-type"
-                    active={typeName === props.type}
-                    label={
-                      <CurrentType
-                        key="label"
-                        icon={QUIZ_TYPES[typeName].meta.icon}
-                        label={QUIZ_TYPES[typeName].meta.label}
-                        description={QUIZ_TYPES[typeName].meta.description}
-                      />
-                    }
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        }
-      />
-    </div>
-  )
+    this.setOpened = this.setOpened.bind(this)
+  }
+
+  setOpened(opened) {
+    this.setState({opened: opened})
+  }
+
+  render() {
+    const current = QUIZ_TYPES[this.props.type]
+
+    return (
+      <div className="quiz-type-control">
+        <Button
+          id="quiz-type"
+          className="quiz-type form-control"
+          type={MENU_BUTTON}
+          label={current ?
+            <CurrentType
+              key="label"
+              icon={current.meta.icon}
+              label={current.meta.label}
+              description={current.meta.description}
+            /> :
+            <CurrentType
+              key="label"
+              label={trans('select_quiz_type', {}, 'quiz')}
+              description={trans('select_quiz_type_help', {}, 'quiz')}
+            />
+          }
+          opened={this.state.opened}
+          onToggle={this.setOpened}
+          menu={
+            <ul role="menu" className="dropdown-menu dropdown-menu-full">
+              {Object.keys(QUIZ_TYPES).map(typeName => {
+                const select = this.props.selectAction(typeName)
+
+                return (
+                  <li key={typeName} role="presentation">
+                    <Button
+                      {...select}
+                      className="quiz-type"
+                      active={typeName === this.props.type}
+                      label={
+                        <CurrentType
+                          key="label"
+                          icon={QUIZ_TYPES[typeName].meta.icon}
+                          label={QUIZ_TYPES[typeName].meta.label}
+                          description={QUIZ_TYPES[typeName].meta.description}
+                        />
+                      }
+                      onClick={() => this.setOpened(false)}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          }
+        />
+      </div>
+    )
+  }
 }
 
 QuizType.propTypes = {

@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
 
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {constants as toolConst} from '#/main/core/tool/constants'
 import {actions as toolActions} from '#/main/core/tool/store'
 
@@ -14,6 +15,7 @@ const WorkspaceMain = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
       (state) => ({
+        authenticated: securitySelectors.isAuthenticated(state),
         loaded: selectors.loaded(state),
         managed: selectors.managed(state),
         workspace: selectors.workspace(state),

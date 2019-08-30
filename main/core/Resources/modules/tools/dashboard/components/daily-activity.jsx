@@ -12,33 +12,37 @@ const DailyActivity = props =>
       {trans('last_30_days_activity')}
     </Heading>
 
-    <LineChart
-      responsive={true}
-      data={props.activity}
-      xAxisLabel={{
-        show: true,
-        text: trans('date'),
-        grid: true
-      }}
-      yAxisLabel={{
-        show: true,
-        text: trans('actions'),
-        grid: true
-      }}
-      height={250}
-      width={1200}
-      showArea={true}
-      margin={{
-        left: 50,
-        top: 5,
-        right: 1,
-        bottom: 50
-      }}
-    />
+    <div className="panel panel-default">
+      <div className="panel-body">
+        <LineChart
+          responsive={true}
+          data={props.activity}
+          xAxisLabel={{
+            show: true,
+            text: trans('date'),
+            grid: true
+          }}
+          yAxisLabel={{
+            show: true,
+            text: trans('actions'),
+            grid: true
+          }}
+          height={250}
+          width={1200}
+          showArea={true}
+          margin={{
+            left: 50,
+            top: 5,
+            right: 1,
+            bottom: 50
+          }}
+        />
+      </div>
+    </div>
   </section>
 
 DailyActivity.propTypes = {
-  activity: T.object.isRequired // todo check
+  activity: T.object // todo check
 }
 
 export {

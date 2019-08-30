@@ -51,7 +51,7 @@ class RoleVoter extends AbstractVoter
     {
         //probably do the check from the UserVoter or a security issue will arise
         if (!$object->getWorkspace()) {
-            return $this->hasAdminToolAccess($token, 'user_management') ?
+            return $this->hasAdminToolAccess($token, 'community') ?
               VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 

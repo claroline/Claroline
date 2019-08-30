@@ -12,7 +12,6 @@ import {selectors} from '#/main/core/administration/parameters/main/store'
 const I18nComponent = (props) =>
   <FormData
     level={2}
-    title={trans('language')}
     name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}

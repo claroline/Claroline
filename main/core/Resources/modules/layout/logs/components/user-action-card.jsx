@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/content/card/components/data'
@@ -9,7 +10,12 @@ import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 const UserActionCard = props =>
   <DataCard
     {...props}
-    icon={<UserAvatar picture={props.data.doer.picture} alt={true} />}
+    icon={
+      <UserAvatar
+        picture={get(props.data, 'doer.picture') ? {url: get(props.data, 'doer.picture')} : undefined}
+        alt={true}
+      />
+    }
     title={props.data.doer.name}
     subtitle={`${trans('actions', {}, 'platform')}: ${props.data.actions}`}
   >

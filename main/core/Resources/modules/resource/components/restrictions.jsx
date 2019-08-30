@@ -1,6 +1,5 @@
-import React, {Component}from 'react'
+import React, {Component, Fragment}from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import isUndefined from 'lodash/isUndefined'
 
 import {trans} from '#/main/app/intl/translation'
@@ -8,58 +7,7 @@ import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {ContentHelp} from '#/main/app/content/components/help'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-
-const Restriction = props => {
-  let title, help
-  if (props.failed) {
-    title = props.fail.title
-    help = props.fail.help
-  } else {
-    title = props.success.title
-    help = props.success.help
-  }
-
-  return (
-    <div className={classes('access-restriction alert alert-detailed', {
-      'alert-success': !props.failed,
-      'alert-warning': props.failed && props.onlyWarn,
-      'alert-danger': props.failed && !props.onlyWarn
-    })}>
-      <span className={classes('alert-icon', props.icon)} />
-
-      <div className="alert-content">
-        <h5 className="alert-title h4">{title}</h5>
-
-        {help &&
-          <p className="alert-text">{help}</p>
-        }
-
-        {props.failed && props.children}
-      </div>
-    </div>
-  )
-}
-
-Restriction.propTypes = {
-  icon: T.string.isRequired,
-  success: T.shape({
-    title: T.string.isRequired,
-    help: T.string
-  }).isRequired,
-  fail: T.shape({
-    title: T.string.isRequired,
-    help: T.string
-  }).isRequired,
-  failed: T.bool.isRequired,
-  onlyWarn: T.bool, // we only warn for restrictions that can be fixed
-  children: T.node
-}
-
-Restriction.defaultProps = {
-  validated: false,
-  onlyWarn: false
-}
+import {ContentRestriction} from '#/main/app/content/components/restriction'
 
 class ResourceRestrictions extends Component {
   constructor(props) {
@@ -85,13 +33,11 @@ class ResourceRestrictions extends Component {
 
   render() {
     return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-fw fa-lock"
-        title={trans('restricted_access')}
-        help={trans('restricted_access_message', {}, 'resource')}
-      >
-        <Restriction
+      <div className="access-restrictions">
+        <h2>{trans('restricted_access')}</h2>
+        <p>{trans('restricted_access_message', {}, 'resource')}</p>
+
+        <ContentRestriction
           icon="fa fa-fw fa-id-badge"
           failed={this.props.errors.noRights}
           success={{
@@ -104,7 +50,7 @@ class ResourceRestrictions extends Component {
           }}
         />
 
-        <Restriction
+        <ContentRestriction
           icon="fa fa-fw fa-eye"
           failed={this.props.errors.deleted || this.props.errors.notPublished}
           success={{
@@ -118,7 +64,7 @@ class ResourceRestrictions extends Component {
         />
 
         {(!isUndefined(this.props.errors.notStarted) || !isUndefined(this.props.errors.ended)) &&
-          <Restriction
+          <ContentRestriction
             icon="fa fa-fw fa-calendar"
             failed={this.props.errors.notStarted || this.props.errors.ended}
             success={{
@@ -133,7 +79,7 @@ class ResourceRestrictions extends Component {
         }
 
         {!isUndefined(this.props.errors.locked) &&
-          <Restriction
+          <ContentRestriction
             icon="fa fa-fw fa-key"
             onlyWarn={true}
             failed={this.props.errors.locked}
@@ -147,7 +93,7 @@ class ResourceRestrictions extends Component {
             }}
           >
             {this.props.errors.locked &&
-              <div>
+              <Fragment>
                 <PasswordInput
                   id="access-code"
                   value={this.state.codeAccess}
@@ -163,13 +109,13 @@ class ResourceRestrictions extends Component {
                   callback={this.submitCodeAccess}
                   primary={true}
                 />
-              </div>
+              </Fragment>
             }
-          </Restriction>
+          </ContentRestriction>
         }
 
         {!isUndefined(this.props.errors.invalidLocation) &&
-          <Restriction
+          <ContentRestriction
             icon="fa fa-fw fa-laptop"
             onlyWarn={true}
             failed={this.props.errors.invalidLocation}
@@ -200,7 +146,7 @@ class ResourceRestrictions extends Component {
             help="En tant que gestionnaire vous pouvez toujours accéder à la ressource, même si les conditions d'accès ne sont pas satisfaites."
           />
         }
-      </EmptyPlaceholder>
+      </div>
     )
   }
 }

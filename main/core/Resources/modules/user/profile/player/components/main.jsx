@@ -1,14 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 
+import {selectors as detailsSelectors} from '#/main/app/content/details/store'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+
+import {route} from '#/main/core/user/routing'
 import {UserDetails} from '#/main/core/user/components/details'
-
-import {connectProfile} from '#/main/core/user/profile/connect'
 import {ProfileNav} from '#/main/core/user/profile/components/nav'
 import {ProfileFacets} from '#/main/core/user/profile/components/facets'
-
-import {selectors} from '#/main/app/content/details/store'
 import {ProfileFacet} from '#/main/core/user/profile/player/components/facet'
+import {actions, selectors} from '#/main/core/user/profile/store'
 
 const ProfileShowComponent = props =>
   <div className="user-profile row">
@@ -17,9 +19,9 @@ const ProfileShowComponent = props =>
         user={props.user}
       />
 
-      {1 < props.facets.length &&
+      {props.facets && 1 < props.facets.length &&
         <ProfileNav
-          prefix="/show"
+          prefix={route(props.user, props.path) + '/show'}
           facets={props.facets}
         />
       }
@@ -27,7 +29,7 @@ const ProfileShowComponent = props =>
 
     <div className="user-profile-content col-md-9">
       <ProfileFacets
-        prefix="/show"
+        prefix={route(props.user, props.path) + '/show'}
         facets={props.facets}
         facetComponent={ProfileFacet}
         openFacet={props.openFacet}
@@ -36,14 +38,26 @@ const ProfileShowComponent = props =>
   </div>
 
 ProfileShowComponent.propTypes = {
+  path: T.string,
   user: T.object.isRequired,
   facets: T.array.isRequired,
   openFacet: T.func.isRequired
 }
 
-const ProfileShow = connectProfile(
-  state => ({
-    user: selectors.data(selectors.details(state, 'user'))
+ProfileShowComponent.defaultProps = {
+  facets: []
+}
+
+const ProfileShow = connect(
+  (state) => ({
+    path: toolSelectors.path(state),
+    user: detailsSelectors.data(detailsSelectors.details(state, selectors.FORM_NAME)),
+    facets: selectors.facets(state)
+  }),
+  (dispatch) => ({
+    openFacet(id) {
+      dispatch(actions.openFacet(id))
+    }
   })
 )(ProfileShowComponent)
 

@@ -1,5 +1,9 @@
 import {createSelector} from 'reselect'
 import isEmpty from 'lodash/isEmpty'
+import uniqWith from 'lodash/uniq'
+
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+import {hasRole} from '#/main/app/security/permissions'
 
 const STORE_NAME = 'workspace'
 
@@ -25,9 +29,26 @@ const tools = createSelector(
   (store) => store.tools
 )
 
+// all the shortcuts defined in the workspace
 const shortcuts = createSelector(
   [store],
   (store) => store.shortcuts
+)
+
+// the current user enabled shortcuts
+const userShortcuts = createSelector(
+  [shortcuts, securitySelectors.currentUser],
+  (shortcuts, currentUser) => {
+    let definedShortcuts = []
+    shortcuts.map(shortcut => {
+      if (hasRole(shortcut.role.name, currentUser)) {
+        definedShortcuts = definedShortcuts.concat(shortcut.data)
+      }
+    })
+
+    // remove duplicated shortcut
+    return uniqWith(definedShortcuts, (a, b) => a.type === b.type && a.name === b.name)
+  }
 )
 
 const defaultOpening = createSelector(
@@ -71,6 +92,7 @@ export const selectors = {
   managed,
   tools,
   shortcuts,
+  userShortcuts,
   defaultOpening,
   accessErrors,
   serverErrors

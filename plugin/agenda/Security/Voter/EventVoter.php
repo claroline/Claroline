@@ -38,7 +38,7 @@ class EventVoter extends AbstractVoter
     {
         $workspace = $object->getWorkspace();
 
-        $perm = $this->getWorkspaceToolPerm($workspace, 'agenda_', $token);
+        $perm = $this->getWorkspaceToolPerm($workspace, 'agenda', $token);
 
         return $perm & 2 ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }

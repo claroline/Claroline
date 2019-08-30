@@ -64,6 +64,13 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $updater->setLogger($this->logger);
             $updater->preUpdate();
         }
+
+        if (version_compare($currentVersion, '12.5.0', '<')) {
+            $updater = new Updater\Updater120500($this->container, $this->logger);
+
+            $updater->setLogger($this->logger);
+            $updater->preUpdate();
+        }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
@@ -226,15 +233,15 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $updater->postUpdate();
         }
 
-        if (version_compare($currentVersion, '12.5.0', '<')) {
-            $updater = new Updater\Updater120500($this->container, $this->logger);
+        if (version_compare($currentVersion, '12.4.14', '<')) {
+            $updater = new Updater\Updater120414($this->container, $this->logger);
 
             $updater->setLogger($this->logger);
             $updater->postUpdate();
         }
 
-        if (version_compare($currentVersion, '12.4.14', '<')) {
-            $updater = new Updater\Updater120414($this->container, $this->logger);
+        if (version_compare($currentVersion, '12.5.0', '<')) {
+            $updater = new Updater\Updater120500($this->container, $this->logger);
 
             $updater->setLogger($this->logger);
             $updater->postUpdate();
@@ -301,7 +308,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         }
 
         /** @var AdminTool $tool */
-        $userManagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('user_management');
+        $userManagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('community');
         $userManagement->addRole($adminOrganization);
 
         $om->persist($userManagement);

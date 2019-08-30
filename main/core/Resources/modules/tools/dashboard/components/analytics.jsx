@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
@@ -20,8 +20,11 @@ class AnalyticsComponent extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <WorkspaceMetrics
+          style={{
+            marginTop: 20 // FIXME
+          }}
           workspace={this.props.workspace}
           nbConnections={this.props.nbConnections}
         />
@@ -33,7 +36,7 @@ class AnalyticsComponent extends Component {
         {this.props.analytics.loaded &&
           <Resources resourceTypes={this.props.analytics.data.resourceTypes} />
         }
-      </div>
+      </Fragment>
     )
   }
 }

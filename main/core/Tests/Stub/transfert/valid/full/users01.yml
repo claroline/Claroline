@@ -22,5 +22,5 @@ users:
         code: USER03
 
 import:
-  - tools.resource_manager.file:
+  - tools.resources.file:
 

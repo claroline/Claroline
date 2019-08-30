@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+
 import {schemeCategory20c} from 'd3-scale'
-import {Grid, Row, Col} from 'react-bootstrap'
+import {Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/app/intl/translation'
 
@@ -21,21 +22,21 @@ class ResourcesComponent extends Component {
   
   render() {
     return(
-      <Grid className="analytics-resources-container">
+      <Fragment>
         {this.props.resources.data.workspaces &&
-        <Row>
-          <Col xs={12}>
-            <div className={'dashboard-standout'}>
-              <span className={'dashboard-standout-text-lg'}>
-                {this.props.resources.data.workspaces}
-              </span>
-              <span className={'dashboard-standout-text-sm'}>
-                <i className={'fa fa-book'}/>
-                <span>{trans('workspaces')}</span>
-              </span>
-            </div>
-          </Col>
-        </Row>
+          <Row>
+            <Col xs={12}>
+              <div className={'dashboard-standout'}>
+                <span className={'dashboard-standout-text-lg'}>
+                  {this.props.resources.data.workspaces}
+                </span>
+                <span className={'dashboard-standout-text-sm'}>
+                  <i className={'fa fa-book'}/>
+                  <span>{trans('workspaces')}</span>
+                </span>
+              </div>
+            </Col>
+          </Row>
         }
         <Row>
           <Col xs={12} md={6}>
@@ -59,40 +60,40 @@ class ResourcesComponent extends Component {
           <Col xs={12} md={6}>
             <DashboardCard title={trans('resources_usage_list')} icon={'fa-list'}>
               {this.props.resources.data.resources && Object.keys(this.props.resources.data.resources).length > 0 &&
-              <DashboardTable
-                definition={[
-                  {
-                    name: 'xData',
-                    label: trans('name'),
-                    transDomain: 'resource',
-                    colorLegend: true
-                  }, {
-                    name: 'yData',
-                    label: '#'
-                  }
-                ]}
-                data={Object.keys(this.props.resources.data.resources).map(v => this.props.resources.data.resources[v])}
-                colors={schemeCategory20c}
-              />
+                <DashboardTable
+                  definition={[
+                    {
+                      name: 'xData',
+                      label: trans('name'),
+                      transDomain: 'resource',
+                      colorLegend: true
+                    }, {
+                      name: 'yData',
+                      label: '#'
+                    }
+                  ]}
+                  data={Object.keys(this.props.resources.data.resources).map(v => this.props.resources.data.resources[v])}
+                  colors={schemeCategory20c}
+                />
               }
               {this.props.resources.data.other && Object.keys(this.props.resources.data.other).length > 0 &&
-              <DashboardTable
-                definition={[
-                  {
-                    name: 'xData',
-                    label: trans('others')
-                  }, {
-                    name: 'yData',
-                    label: '#'
-                  }
-                ]}
-                data={Object.keys(this.props.resources.data.other).map(v => this.props.resources.data.other[v])}
-              />
+                <DashboardTable
+                  definition={[
+                    {
+                      name: 'xData',
+                      label: trans('others')
+                    }, {
+                      name: 'yData',
+                      label: '#'
+                    }
+                  ]}
+                  data={Object.keys(this.props.resources.data.other).map(v => this.props.resources.data.other[v])}
+                />
               }
             </DashboardCard>
           </Col>
         </Row>
-      </Grid>
+      </Fragment>
     )
   }
 }

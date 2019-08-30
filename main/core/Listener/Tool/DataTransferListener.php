@@ -49,7 +49,7 @@ class DataTransferListener
     /**
      * Displays home on Workspace.
      *
-     * @DI\Observe("open_tool_workspace_data_transfer")
+     * @DI\Observe("open_tool_workspace_transfer")
      *
      * @param DisplayToolEvent $event
      */

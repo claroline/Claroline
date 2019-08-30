@@ -1,6 +1,7 @@
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
+import {route} from '#/main/core/resource/routing'
 
 import {MessageCard} from '#/plugin/forum/resources/forum/data/components/message-card'
 
@@ -9,7 +10,7 @@ export default {
   parameters: {
     primaryAction: (message) => ({
       type: LINK_BUTTON,
-      target: `/desktop/resource_manager/${message.meta.resource.id}/subjects/show/${message.subject.id}`
+      target: `${route(message.meta.resource)}/subjects/show/${message.subject.id}`
     }),
     definition: [
       {

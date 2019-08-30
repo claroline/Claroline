@@ -15,7 +15,7 @@ export const TOOL_SET_LOADED  = 'TOOL_SET_LOADED'
 // action creators
 export const actions = {}
 
-actions.load = makeInstanceActionCreator(TOOL_LOAD, 'toolData')
+actions.load = makeInstanceActionCreator(TOOL_LOAD, 'toolData', 'context')
 actions.setLoaded = makeActionCreator(TOOL_SET_LOADED, 'loaded')
 
 actions.open = (name, context, basePath) => (dispatch, getState) => {
@@ -49,7 +49,7 @@ actions.fetch = (toolName, context) => (dispatch) => {
         silent: true,
         url: context.url,
         success: (response, dispatch) => {
-          dispatch(actions.load(toolName, response))
+          dispatch(actions.load(toolName, response, context))
           dispatch(actions.setLoaded(true))
           dispatch(menuActions.changeSection('tool'))
         }

@@ -752,4 +752,18 @@ class Workspace
     {
         return $this->shortcuts;
     }
+
+    public function addShortcuts(Shortcuts $shortcuts)
+    {
+        if (!$this->shortcuts->contains($shortcuts)) {
+            $this->shortcuts->add($shortcuts);
+        }
+    }
+
+    public function removeShortcuts(Shortcuts $shortcuts)
+    {
+        if ($this->shortcuts->contains($shortcuts)) {
+            $this->shortcuts->removeElement($shortcuts);
+        }
+    }
 }

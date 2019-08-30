@@ -48,7 +48,7 @@ class ResourceEmbedded extends Component {
       [configSelectors.STORE_NAME]: this.props.config,
       tool: {
         loaded: true,
-        name: 'resource_manager',
+        name: 'resources',
         basePath: '',
         currentContext: {
           type: 'desktop'
@@ -60,7 +60,7 @@ class ResourceEmbedded extends Component {
         showHeader: this.props.showHeader,
         lifecycle: this.props.lifecycle
       }
-    }, true, `/resource_manager/${this.props.resourceNode.slug}`)
+    }, true, `/resources/${this.props.resourceNode.slug}`)
   }
 
   render() {

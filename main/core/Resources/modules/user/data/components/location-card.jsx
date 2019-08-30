@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {DataCard} from '#/main/app/content/card/components/data'
 
-import {locationTypes} from '#/main/core/administration/users/location/constants'
+import {locationTypes} from '#/main/core/administration/community/location/constants'
 import {Location as LocationTypes} from '#/main/core/user/prop-types'
 
 // todo display address

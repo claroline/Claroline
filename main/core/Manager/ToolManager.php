@@ -39,7 +39,7 @@ class ToolManager
     use LoggableTrait;
 
     // todo adds a config in tools to avoid this
-    const WORKSPACE_MODEL_TOOLS = ['home', 'resource_manager', 'users'];
+    const WORKSPACE_MODEL_TOOLS = ['home', 'resources', 'users'];
 
     /** @var OrderedToolRepository */
     private $orderedToolRepo;

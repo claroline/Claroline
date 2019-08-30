@@ -75,7 +75,7 @@ const HistoryDropdown = props =>
         className="btn-link btn-emphasis btn-block"
         type={LINK_BUTTON}
         label={trans('workspaces' === props.section ? 'all_workspaces' : 'all_resources', {}, 'history')}
-        target={toolRoute('workspaces' === props.section ? 'workspaces' : 'resource_manager')}
+        target={toolRoute('workspaces' === props.section ? 'workspaces' : 'resources')}
         primary={true}
         onClick={props.closeMenu}
       />

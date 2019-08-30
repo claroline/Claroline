@@ -4,7 +4,6 @@ namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
@@ -120,13 +119,6 @@ class ClientController
                     'about' => $this->configHandler->getParameter('show_about_button'),
                     'help' => $this->configHandler->getParameter('show_help_button'),
                 ],
-                'administration' => array_map(function (AdminTool $tool) {
-                    return [
-                        'icon' => $tool->getClass(),
-                        'name' => $tool->getName(),
-                    ];
-                }, $this->toolManager->getAdminToolsByRoles($token->getRoles())),
-
                 'tools' => array_map(function (OrderedTool $orderedTool) {
                     $tool = $orderedTool->getTool();
 
@@ -136,6 +128,7 @@ class ClientController
                     ];
                 }, array_values($orderedTools)),
             ],
+            'footer' => $this->configHandler->getParameter('footer'),
 
             'injectedJavascripts' => $this->injectJavascript(),
             'injectedStylesheets' => $this->injectStylesheet(),

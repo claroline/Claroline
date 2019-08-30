@@ -1,23 +1,13 @@
-// External claroline
 import {getApps} from '#/main/app/plugins'
 
-// Load external claroline plugins (formula, inwicast etc.)
-const loadExternalPlugins = (callback) => {
+function getExternalPlugins() {
   const asyncPlugins = getApps('tinymcePlugins')
-  Promise.all(
-    Object.keys(asyncPlugins).map(plugin => asyncPlugins[plugin]())
-  ).then(callback, callback)
-}
 
-const getExternalPlugins = () => {
-  const asyncPlugins = getApps('tinymcePlugins')
-  let externalPlugins = []
-  Object.keys(asyncPlugins).forEach(plugin => externalPlugins.push(plugin))
-  
-  return externalPlugins
+  return Promise.all(
+    Object.keys(asyncPlugins).map(plugin => asyncPlugins[plugin]())
+  ).then(() => Object.keys(asyncPlugins))
 }
 
 export {
-  loadExternalPlugins,
   getExternalPlugins
 }

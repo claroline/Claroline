@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {param} from '#/main/app/config'
+import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 
 const STORE_NAME = 'header'
 
@@ -10,10 +10,7 @@ const menus = createSelector(
   [store],
   (store) => store.menus
 )
-const administration = createSelector(
-  [store],
-  (store) => store.administration
-)
+
 const tools = createSelector(
   [store],
   (store) => store.tools
@@ -25,27 +22,24 @@ const display = createSelector(
 )
 
 // this will later be retrieved from the store
-const logo = () => param('logo')
-const title = () => param('name')
-const subtitle = () => param('secondaryName')
-const locale = () => param('locale')
+const logo = (state) => configSelectors.param(state, 'logo')
+const title = (state) => configSelectors.param(state, 'name')
+const subtitle = (state) => configSelectors.param(state, 'secondaryName')
+const locale = (state) => configSelectors.param(state, 'locale')
 
-const helpUrl = createSelector(
-  [display],
-  (display) => {
-    if (display.help) {
-      return param('helpUrl')
-    }
-
-    return null
+const helpUrl = (state) => {
+  const displayParams = display(state)
+  if (displayParams.help) {
+    return configSelectors.param(state, 'helpUrl')
   }
-)
+
+  return null
+}
 
 export const selectors = {
   STORE_NAME,
 
   menus,
-  administration,
   tools,
   logo,
   title,

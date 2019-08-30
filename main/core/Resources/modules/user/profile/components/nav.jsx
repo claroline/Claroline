@@ -21,25 +21,25 @@ const ProfileNav = props =>
           className="lateral-link"
         >
           {facet.icon &&
-          <span className={facet.icon} />
+            <span className={facet.icon} />
           }
 
           {facet.title}
 
           {0 !== actions.length &&
-          <div className="lateral-nav-actions">
-            {actions
-              .map((action) =>
-                <Button
-                  {...action}
-                  key={`${facet.id}-${toKey(action.label)}`}
-                  className="btn btn-link"
-                  displayed={true}
-                  tooltip="left"
-                />
-              )
-            }
-          </div>
+            <div className="lateral-nav-actions">
+              {actions
+                .map((action) =>
+                  <Button
+                    {...action}
+                    key={`${facet.id}-${toKey(action.label)}`}
+                    className="btn btn-link"
+                    displayed={true}
+                    tooltip="left"
+                  />
+                )
+              }
+            </div>
           }
         </NavLink>
       )

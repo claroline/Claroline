@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from 'd3-scale'
-import {Grid, Row, Col} from 'react-bootstrap'
+import {Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/app/intl/translation'
 
@@ -22,10 +22,10 @@ class OverviewComponent extends Component {
   
   render() {
     return(
-      <Grid className="analytics-overview-container">
+      <Fragment>
         <Row>
           <Col xs={12}>
-            <DashboardCard title={trans('last_30_days_activity')} icon={'fa-area-chart'}>
+            <DashboardCard title={trans('last_30_days_activity')} icon="fa-area-chart" style={{marginTop: 20}}>
               <LineChart
                 style={{maxHeight: 250}}
                 responsive={true}
@@ -167,7 +167,7 @@ class OverviewComponent extends Component {
             </Col>
           </Row>
         }
-      </Grid>
+      </Fragment>
     )
   }
 }

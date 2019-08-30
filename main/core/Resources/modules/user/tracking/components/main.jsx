@@ -7,11 +7,12 @@ import {trans} from '#/main/app/intl/translation'
 import {User} from '#/main/core/user/prop-types'
 import {actions} from '#/main/core/user/tracking/store'
 import {ResourceUserEvaluation} from '#/main/core/user/tracking/prop-types'
-import {UserPageContainer} from '#/main/core/user/containers/page'
+import {UserPage} from '#/main/core/user/components/page'
 import {UserDetails} from '#/main/core/user/components/details'
 import {Timeline} from '#/main/core/user/tracking/components/timeline'
 import {Search} from '#/main/core/user/tracking/components/search'
 import {Summary} from '#/main/core/user/tracking/components/summary'
+import {route} from '#/main/core/user/routing'
 
 class TrackingComponent extends Component {
   constructor(props) {
@@ -33,13 +34,13 @@ class TrackingComponent extends Component {
 
   render() {
     return(
-      <UserPageContainer
+      <UserPage
         customActions={[
           {
             type: 'url',
             icon: 'fa fa-fw fa-address-card',
             label: trans('show_profile', {}, 'platform'),
-            target: ['claro_user_profile', {user: this.props.user.meta.publicUrl}]
+            target: route(this.props.user)
           }, {
             type: 'callback',
             icon: 'fa fa-fw fa-file-pdf-o',
@@ -85,7 +86,7 @@ class TrackingComponent extends Component {
             />
           </div>
         </div>
-      </UserPageContainer>
+      </UserPage>
     )
   }
 }

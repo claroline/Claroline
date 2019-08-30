@@ -51,6 +51,7 @@
             data-impersonated="{{ impersonated ? 'true' : 'false' }}"
             data-current-user="{{ app.user | api_serialize | json_encode | raw | escape }}"
             data-header="{{ header | json_encode | raw | escape }}"
+            data-footer="{{ footer | json_encode | raw | escape }}"
             data-config="{{ platform_config() | json_encode | raw | escape }}"
         ></div>
 

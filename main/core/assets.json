@@ -1,7 +1,6 @@
 {
   "webpack": {
     "entry": {
-      "user-profile": "user/profile",
       "user-tracking": "user/tracking",
       "resource-logs": "resource/logs"
     }

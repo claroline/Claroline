@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 
 // TODO : remove me
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
@@ -18,8 +17,8 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
-import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
+import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
@@ -39,9 +38,9 @@ const CardMeta = props =>
       }}
     >
       <span>
-        <UrlButton target={['claro_user_profile', {user: get(props.post.author, 'meta.publicUrl')}]}>
+        <LinkButton target={route(props.post.author || {})}>
           <UserAvatar className="user-picture" picture={props.post.author ? props.post.author.picture : undefined} alt={true} />
-        </UrlButton>
+        </LinkButton>
         <a className="user-name link">{props.post.author.firstName} {props.post.author.lastName}</a>
       </span>
     </li>

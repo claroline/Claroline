@@ -92,24 +92,20 @@ const DashboardTool = (props) =>
           exact: true
         }, {
           path: '/audience',
-          component: Audience,
-          exact: true
+          component: Audience
         }, {
           path: '/resources',
-          component: Resources,
-          exact: true
+          component: Resources
         }, {
           path: '/widgets',
           component: Widgets,
-          exact: true
+          disabled: true // TODO : fix app and restore
         }, {
           path: '/top',
-          component: TopActions,
-          exact: true
+          component: TopActions
         }, {
           path: '/connections',
-          component: Connections,
-          exact: true
+          component: Connections
         }, {
           path: '/log',
           component: Logs,
@@ -120,8 +116,7 @@ const DashboardTool = (props) =>
           onEnter: (params) => props.openLog(params.id)
         }, {
           path: '/logs/users',
-          component: UserLogs,
-          exact: true
+          component: UserLogs
         }
       ]}
     />

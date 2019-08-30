@@ -1,20 +1,15 @@
 import get from 'lodash/get'
 
-import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
 import {selectors} from '#/main/app/security/store/selectors'
 
 // actions
-export const SECURITY_USER_LOGIN  = 'SECURITY_USER_LOGIN'
-export const SECURITY_USER_LOGOUT = 'SECURITY_USER_LOGOUT'
 export const SECURITY_USER_CHANGE = 'SECURITY_USER_CHANGE'
 
 // action creators
 export const actions = {}
 
-actions.loginUser = makeActionCreator(SECURITY_USER_LOGIN, 'user')
-actions.logoutUser = makeActionCreator(SECURITY_USER_LOGOUT)
 actions.changeUser = (user, impersonated = false) => (dispatch, getState) => {
   // we will dispatch action only if the user has really changed
   // this will avoid false positive as it is used by other ui components
@@ -29,8 +24,6 @@ actions.changeUser = (user, impersonated = false) => (dispatch, getState) => {
   }
 }
 
-makeActionCreator(SECURITY_USER_CHANGE, 'user', 'impersonated')
-
 actions.login = (username, password, rememberMe) => ({
   [API_REQUEST]: {
     silent: true,
@@ -43,10 +36,7 @@ actions.login = (username, password, rememberMe) => ({
         remember_me: rememberMe
       })
     },
-    success: (response, dispatch) => {
-      dispatch(actions.loginUser(response.user))
-      dispatch(actions.changeUser(response.user, false))
-    }
+    success: (response, dispatch) => dispatch(actions.changeUser(response.user, false))
   }
 })
 
@@ -54,9 +44,6 @@ actions.logout = () => ({
   [API_REQUEST]: {
     silent: true,
     url: ['claro_security_logout'],
-    success: (response, dispatch) => {
-      dispatch(actions.logoutUser())
-      dispatch(actions.changeUser(null, false))
-    }
+    success: (response, dispatch) => dispatch(actions.changeUser(null, false))
   }
 })

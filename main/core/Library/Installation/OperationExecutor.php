@@ -322,12 +322,7 @@ class OperationExecutor
                 //Otherwise convert the name in a dirty little way
                 //If it's a metapackage, check in the bundle list
                 foreach ($extra['bundles'] as $installedBundle) {
-                    if ($installedBundle === $bundle ||
-                        (
-                            'Icap\InwicastBundle\IcapInwicastBundle' === $bundle &&
-                            'Inwicast\ClarolinePluginBundle\InwicastClarolinePluginBundle' === $installedBundle
-                        )
-                    ) {
+                    if ($installedBundle === $bundle) {
                         return $package;
                     }
                 }
@@ -337,12 +332,7 @@ class OperationExecutor
                 //magic !
                 $packagePrettyName = preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName());
                 $bundlePrettyName = strtolower($bundleParts[2]);
-                if ($packagePrettyName === $bundlePrettyName ||
-                    (
-                        'icapinwicastbundle' === $bundlePrettyName &&
-                        'inwicastclarolinepluginbundle' === $packagePrettyName
-                    )
-                ) {
+                if ($packagePrettyName === $bundlePrettyName) {
                     return $package;
                 }
             }
@@ -372,25 +362,10 @@ class OperationExecutor
         }
 
         try {
-            return 'Icap\InwicastBundle\IcapInwicastBundle' === $bundleFqcn ?
-              $this->verifyInwicastBundleInstallation() :
-              $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn);
+            return $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn);
         } catch (TableNotFoundException $e) {
-            //we're probably installing the platform because the database isn't here yet do... return false
+            // we're probably installing the platform because the database isn't here yet do... return false
             return false;
         }
-    }
-
-    private function verifyInwicastBundleInstallation()
-    {
-        $pluginRepo = $this->om->getRepository('ClarolineCoreBundle:Plugin');
-        $newInwicastBundle = $pluginRepo
-            ->findOneByBundleFQCN('Icap\InwicastBundle\IcapInwicastBundle');
-        if (is_null($newInwicastBundle)) {
-            return $pluginRepo
-                ->findOneByBundleFQCN('Inwicast\ClarolinePluginBundle\InwicastClarolinePluginBundle');
-        }
-
-        return $newInwicastBundle;
     }
 }

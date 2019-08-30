@@ -10,7 +10,6 @@ import {selectors} from '#/main/core/administration/parameters/main/store'
 const Maintenance = () =>
   <FormData
     level={2}
-    title={trans('maintenance')}
     name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}

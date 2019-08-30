@@ -31,7 +31,7 @@ class PostLoadRolesData implements RequiredFixture
         $adminOrganization = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
 
         /** @var AdminTool $tool */
-        $userManagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('user_management');
+        $userManagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('community');
         $userManagement->addRole($adminOrganization);
 
         $manager->persist($userManagement);

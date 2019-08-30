@@ -74,7 +74,7 @@ registry.add('ClarolineCoreBundle', {
       'show-tracking'  : () => { return import(/* webpackChunkName: "core-action-user-show-tracking" */   '#/main/core/user/actions/show-tracking') },
       'ws-disable'     : () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */      '#/main/core/user/actions/ws-disable') },
       'ws-enable'      : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */       '#/main/core/user/actions/ws-enable') },
-      'merge'          : () => { return import(/* webpackChunkName: "core-action-user-ws-merge" */        '#/main/core/user/actions/merge') }
+      'merge'          : () => { return import(/* webpackChunkName: "core-action-user-merge" */           '#/main/core/user/actions/merge') }
     }
   },
 
@@ -91,29 +91,29 @@ registry.add('ClarolineCoreBundle', {
    * Provides Desktop and/or Workspace tools.
    */
   tools: {
-    'dashboard'       : () => { return import(/* webpackChunkName: "core-tool-dashboard" */  '#/main/core/tools/dashboard') },
-    'home'            : () => { return import(/* webpackChunkName: "core-tool-home" */       '#/main/core/tools/home') },
-    'workspaces'      : () => { return import(/* webpackChunkName: "core-tool-workspaces" */ '#/main/core/tools/workspaces') },
-    'resource_manager': () => { return import(/* webpackChunkName: "core-tool-resources" */  '#/main/core/tools/resources') },
-    'parameters'      : () => { return import(/* webpackChunkName: "core-tool-parameters" */ '#/main/core/tools/parameters') },
-    'users'           : () => { return import(/* webpackChunkName: "core-tool-users" */      '#/main/core/tools/users') },
-    'data_transfer'   : () => { return import(/* webpackChunkName: "core-tool-transfer" */   '#/main/core/tools/transfer') },
-    'resource_trash'  : () => { return import(/* webpackChunkName: "core-tool-trash" */      '#/main/core/tools/trash') }
+    'dashboard'      : () => { return import(/* webpackChunkName: "core-tool-dashboard" */  '#/main/core/tools/dashboard') },
+    'home'           : () => { return import(/* webpackChunkName: "core-tool-home" */       '#/main/core/tools/home') },
+    'workspaces'     : () => { return import(/* webpackChunkName: "core-tool-workspaces" */ '#/main/core/tools/workspaces') },
+    'resources'      : () => { return import(/* webpackChunkName: "core-tool-resources" */  '#/main/core/tools/resources') },
+    'parameters'     : () => { return import(/* webpackChunkName: "core-tool-parameters" */ '#/main/core/tools/parameters') },
+    'community'      : () => { return import(/* webpackChunkName: "core-tool-users" */      '#/main/core/tools/community') },
+    'transfer'       : () => { return import(/* webpackChunkName: "core-tool-transfer" */   '#/main/core/tools/transfer') },
+    'resource_trash' : () => { return import(/* webpackChunkName: "core-tool-trash" */      '#/main/core/tools/trash') }
   },
 
   /**
    * Provides Administration tools.
    */
   administration: {
-    'user_management'      : () => { return import(/* webpackChunkName: "core-admin-users" */          '#/main/core/administration/users') },
+    'community'            : () => { return import(/* webpackChunkName: "core-admin-users" */          '#/main/core/administration/community') },
     'main_settings'        : () => { return import(/* webpackChunkName: "core-admin-parameters" */     '#/main/core/administration/parameters/main') },
     'technical_settings'   : () => { return import(/* webpackChunkName: "core-admin-technical" */      '#/main/core/administration/parameters/technical') },
     'appearance_settings'  : () => { return import(/* webpackChunkName: "core-admin-appearance" */     '#/main/core/administration/parameters/appearance') },
     'templates_management' : () => { return import(/* webpackChunkName: "core-admin-template" */       '#/main/core/administration/template') },
     'tasks_scheduling'     : () => { return import(/* webpackChunkName: "core-admin-scheduled-task" */ '#/main/core/administration/scheduled-task') },
-    'platform_dashboard'   : () => { return import(/* webpackChunkName: "core-admin-dashboard" */      '#/main/core/administration/dashboard') },
+    'dashboard'            : () => { return import(/* webpackChunkName: "core-admin-dashboard" */      '#/main/core/administration/dashboard') },
     'integration'          : () => { return import(/* webpackChunkName: "core-admin-integration" */    '#/main/core/administration/integration') },
-    'data_transfer'        : () => { return import(/* webpackChunkName: "core-tool-transfer" */        '#/main/core/tools/transfer') },
+    'transfer'             : () => { return import(/* webpackChunkName: "core-tool-transfer" */        '#/main/core/tools/transfer') },
     'home'                 : () => { return import(/* webpackChunkName: "core-tool-home" */            '#/main/core/tools/home') }
   },
 

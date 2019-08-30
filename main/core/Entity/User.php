@@ -371,11 +371,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\JoinTable(name="claro_scheduled_task_users")
      *
      * @var ArrayCollection
+     *
+     * @todo relation should not be declared here (only use Unidirectional)
      */
     private $scheduledTasks;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue", mappedBy="user")
+     *
+     * @todo relation should not be declared here (only use Unidirectional)
      */
     protected $wkUserQueues;
 
@@ -403,6 +407,36 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->scheduledTasks = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                'id' => $this->id,
+                'username' => $this->username,
+                'roles' => $this->getRoles(),
+            ]
+        );
+    }
+
+    /**
+     * @param string $serialized
+     *
+     * @deprecated should be removed but I don't know if it's used somewhere
+     */
+    public function unserialize($serialized)
+    {
+        $user = unserialize($serialized);
+
+        $this->id = $user['id'];
+        $this->username = $user['username'];
+        $this->rolesStringAsArray = $user['roles'];
+        $this->roles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     /**
@@ -714,7 +748,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param string $mail
+     * @param string $email
      *
      * @return User
      */
@@ -743,34 +777,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->administrativeCode = $administrativeCode;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function serialize()
-    {
-        return serialize(
-            [
-                'id' => $this->id,
-                'username' => $this->username,
-                'roles' => $this->getRoles(),
-            ]
-        );
-    }
-
-    /**
-     * @param string $serialized
-     *
-     * @deprecated should be removed but I don't know if it's used somewhere
-     */
-    public function unserialize($serialized)
-    {
-        $unserialized = unserialize($serialized);
-        $this->id = $unserialized['id'];
-        $this->username = $unserialized['username'];
-        $this->rolesStringAsArray = $unserialized['roles'];
-        $this->groups = new ArrayCollection();
     }
 
     /**

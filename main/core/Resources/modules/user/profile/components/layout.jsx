@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 const ProfileLayout = props =>
   <div className={classes('row user-profile', props.className)}>
-    <div className="user-profile-aside col-md-3">
+    <div className="user-profile-aside col-md-3" style={{marginTop: 20}}>
       {props.affix}
     </div>
 

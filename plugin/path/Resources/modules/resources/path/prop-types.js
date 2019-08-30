@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 const Step = {
   propTypes: {
     id: T.string.isRequired,
+    slug: T.string.isRequired,
     title: T.string,
     description: T.string,
     poster: T.shape({

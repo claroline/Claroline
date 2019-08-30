@@ -14,7 +14,8 @@ import {
   URL_BUTTON
 } from '#/main/app/buttons'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
-import {PageContent, PageContainer} from '#/main/core/layout/page'
+import {PageSimple} from '#/main/app/page/components/simple'
+import {PageContent} from '#/main/core/layout/page'
 
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {
@@ -56,9 +57,12 @@ UserPageHeader.propTypes = {
 }
 
 const UserPage = props =>
-  <PageContainer
-    {...props}
-    className="user-page"
+  <PageSimple
+    showBreadcrumb={props.showBreadcrumb}
+    path={props.breadcrumb.concat([{
+      label: props.user.name,
+      target: ''
+    }])}
   >
     <UserPageHeader
       picture={props.user.picture}
@@ -76,7 +80,7 @@ const UserPage = props =>
             type: LINK_BUTTON,
             icon: 'fa fa-pencil',
             label: trans('edit', {}, 'actions'),
-            target: '/edit',
+            target: props.path + '/edit',
             displayed: hasPermission('edit', props.user),
             primary: true
           }, {
@@ -85,19 +89,20 @@ const UserPage = props =>
             label: trans('send_message'),
             icon: 'fa fa-paper-plane-o',
             modal: [MODAL_USER_MESSAGE],
-            displayed: hasPermission('contact', props.user)
+            displayed: false && hasPermission('contact', props.user) // TODO : restore (to implement in message plugin)
           }, {
             name: 'add-contact',
             type: CALLBACK_BUTTON,
             label: trans('add_contact'),
             icon: 'fa fa-address-book-o',
-            callback: () => true
+            callback: () => true,
+            displayed: false  // TODO : restore
           }, {
             name: 'change-password',
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-lock',
             label: trans('change_password'),
-            group: trans('user_management'),
+            group: trans('management'),
             displayed: hasPermission('administrate', props.user) || props.user.id === get(props.currentUser, 'id'),
             modal: [MODAL_USER_PASSWORD, {
               changePassword: (password) => props.updatePassword(props.user, password)
@@ -107,7 +112,7 @@ const UserPage = props =>
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-link',
             label: trans('change_profile_public_url'),
-            group: trans('user_management'),
+            group: trans('management'),
             displayed: hasPermission('edit', props.user),
             disabled: props.user.meta.publicUrlTuned,
             modal: [MODAL_USER_PUBLIC_URL, {
@@ -120,14 +125,15 @@ const UserPage = props =>
             icon: 'fa fa-trophy',
             label: trans('user-badges'),
             group: trans('badges'),
-            target: '#/badges/'+props.user.id
+            target: '#/badges/'+props.user.id,
+            displayed: false // TODO : restore
           }, {
             name: 'show-tracking',
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-line-chart',
             label: trans('show_tracking'),
-            group: trans('user_management'),
-            displayed: hasPermission('administrate', props.user),
+            group: trans('management'),
+            displayed: false && hasPermission('administrate', props.user), // TODO : restore
             target: ['claro_user_tracking', {publicUrl: props.user.meta.publicUrl}]
           }, {
             name: 'delete',
@@ -157,7 +163,7 @@ const UserPage = props =>
     <PageContent>
       {props.children}
     </PageContent>
-  </PageContainer>
+  </PageSimple>
 
 implementPropTypes(UserPage, PageTypes, {
   currentUser: T.object,
@@ -165,8 +171,13 @@ implementPropTypes(UserPage, PageTypes, {
     name: T.string.isRequired
   }).isRequired,
   children: T.node.isRequired,
+  path: T.string.isRequired,
+  showBreadcrumb: T.bool.isRequired,
+  breadcrumb: T.array, // TODO : correct prop type
   updatePassword: T.func.isRequired,
-  updatePublicUrl: T.func.isRequired,
+  updatePublicUrl: T.func.isRequired
+}, {
+  breadcrumb: []
 })
 
 export {

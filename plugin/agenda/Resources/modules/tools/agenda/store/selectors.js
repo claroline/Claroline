@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect'
 import moment from 'moment'
 
-const STORE_NAME = 'agenda_'
+const STORE_NAME = 'agenda'
 
 const store = (state) => state[STORE_NAME]
 

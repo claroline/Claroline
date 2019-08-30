@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 const DashboardCard = (props) =>
-  <div className={'dashboard-card data-card data-card-col'}>
+  <div className={'dashboard-card data-card data-card-col'} style={props.style}>
     <div className={'data-card-header'}>
       <div className={'data-card-title text-left'}>
         {props.icon && <i className={`fa ${props.icon}`}/>}
@@ -15,6 +15,7 @@ const DashboardCard = (props) =>
   </div>
 
 DashboardCard.propTypes = {
+  style: T.object,
   title: T.string.isRequired,
   icon: T.string,
   children: T.node.isRequired

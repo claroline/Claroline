@@ -6,7 +6,7 @@ import {selectors as formSelectors} from '#/main/app/content/form/store/selector
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {UserList} from '#/main/core/administration/users/user/components/user-list'
+import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
 import {actions, selectors} from '#/plugin/team/tools/team/store'
 import {TeamForm as TeamFormComponent} from '#/plugin/team/tools/team/components/team-form'

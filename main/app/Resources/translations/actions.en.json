@@ -42,6 +42,7 @@
   "move_top": "Move to top",
   "open": "Open",
   "open-summary": "Open summary",
+  "open-tool": "Open tool %tool%",
   "paste": "Paste",
   "post": "Post",
   "preview": "Preview",

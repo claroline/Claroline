@@ -27,11 +27,11 @@ const WorkspacesTool = (props) =>
       <Routes
         path={props.path}
         routes={[
-          {path: '/new',        render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.creatable},
-          {path: '/registered', render: () => trans('my_workspaces', {}, 'workspace')},
-          {path: '/public',     render: () => trans('public_workspaces', {}, 'workspace')},
-          {path: '/managed',    render: () => trans('managed_workspaces', {}, 'workspace')},
-          {path: '/model',      render: () => trans('workspace_models', {}, 'workspace'), disabled: !props.creatable}
+          {path: '/new',            render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.creatable},
+          {path: '/registered',     render: () => trans('my_workspaces', {}, 'workspace')},
+          {path: '/public',         render: () => trans('public_workspaces', {}, 'workspace')},
+          {path: '/managed',        render: () => trans('managed_workspaces', {}, 'workspace')},
+          {path: '/model',          render: () => trans('workspace_models', {}, 'workspace'), disabled: !props.creatable}
         ]}
       />
     }

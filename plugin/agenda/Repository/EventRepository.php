@@ -54,7 +54,7 @@ class EventRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('isTask', $isTask);
-        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('agenda', 'agenda');
         $query->setParameter('open', 'open');
 
         return $query->getResult();
@@ -97,7 +97,7 @@ class EventRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('agenda', 'agenda');
         $query->setParameter('open', 'open');
 
         return $query->getResult();
@@ -133,7 +133,7 @@ class EventRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('agenda', 'agenda');
         $query->setParameter('edit', 'edit');
 
         return $query->getResult();
@@ -152,10 +152,12 @@ class EventRepository extends EntityRepository
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.workspace is NULL
             AND e.user =:userId
+            AND e.isTask = :isTask
             ORDER BY e.start DESC
-            ';
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+        $query->setParameter('isTask', $isTask);
 
         return $query->getResult();
     }
@@ -167,7 +169,7 @@ class EventRepository extends EntityRepository
             ->where('e.workspace = :workspaceId')
             ->orderBy('e.end', 'DESC');
 
-        if ($isTask !== null) {
+        if (null !== $isTask) {
             $qb->andWhere('e.isTask = :isTask');
             $qb->setParameter('isTask', $isTask);
         }

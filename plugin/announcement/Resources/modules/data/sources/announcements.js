@@ -1,6 +1,7 @@
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
+import {route} from '#/main/core/resource/routing'
 
 import {AnnouncementCard} from '#/plugin/announcement/data/components/announcement-card'
 
@@ -9,7 +10,7 @@ export default {
   parameters: {
     primaryAction: (announcement) => ({
       type: LINK_BUTTON,
-      target: `/desktop/resource_manager/${announcement.meta.resource.id}/${announcement.id}`
+      target: `${route(announcement.meta.resource)}/${announcement.id}`
     }),
     definition: [
       {

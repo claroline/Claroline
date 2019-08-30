@@ -127,7 +127,7 @@ class EventFinder extends AbstractFinder
                     $qb->andWhere('w.displayable = true');
                     $qb->andWhere('w.model = false');
                     $qb->andWhere('w.personal = false');
-                    $qb->andWhere("ott.name = 'agenda_'");
+                    $qb->andWhere("ott.name = 'agenda'");
                     $qb->andWhere("otrr.name = 'ROLE_ANONYMOUS'");
                     $qb->andWhere('BIT_AND(otr.mask, 1) = 1');
                     break;

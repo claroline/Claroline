@@ -17,12 +17,6 @@ claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
     type: annotation
 
-# new
-claro_user_profile:
-    resource: "@ClarolineCoreBundle/Controller/User/ProfileController.php"
-    type: annotation
-    options: { expose: true }
-
 claro_user_registration:
     resource: "@ClarolineCoreBundle/Controller/User/RegistrationController.php"
     type: annotation

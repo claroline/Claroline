@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
@@ -39,7 +38,7 @@ class PublicUrlModal extends Component {
                 hideLabel: true,
                 render: () =>
                   <HtmlText className="read-only">
-                    {url(['claro_user_profile', {user: this.state.url}, true]).replace(this.state.url, `<b>${this.state.url}</b>`)}
+                    {'#/desktop/community/profile/'+ this.state.url}
                   </HtmlText>
               }, {
                 name: 'url',

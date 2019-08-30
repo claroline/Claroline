@@ -3,10 +3,11 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
+import {route} from '#/main/core/user/routing'
 import {ContactCard} from '#/plugin/message/data/components/contact-card'
 import {ToolParameters as ToolParametersTypes} from '#/plugin/message/tools/messaging/prop-types'
 import {selectors} from '#/plugin/message/tools/messaging/store'
@@ -23,8 +24,8 @@ const ContactsComponent = props =>
       autoload: true
     }}
     primaryAction={(row) => ({
-      type: URL_BUTTON,
-      target: ['claro_user_profile', {user: row.data.meta.publicUrl}]
+      type: LINK_BUTTON,
+      target: route(row.data)
     })}
     delete={{
       url: ['apiv2_contact_delete_bulk']
