@@ -27,7 +27,7 @@ const CurrentDirectory = (props) =>
             return {
               label: trans('open', {}, 'actions'),
               type: LINK_BUTTON,
-              target: `${props.basePath}/${resourceNode.slug}`
+              target: `${props.basePath}/${resourceNode.id}`
             }
           }
         },

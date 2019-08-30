@@ -12,12 +12,12 @@ const ResourceExplorer = props => {
     <Routes
       path={props.basePath}
       redirect={props.root ? [
-        {from: '/', exact: true, to: `/${props.root.slug}`}
+        {from: '/', exact: true, to: `/${props.root.id}`}
       ] : undefined}
       routes={[
         {
-          path: props.root ? '/:slug' : '/:slug?',
-          onEnter: (params = {}) => props.changeDirectory(params.slug),
+          path: props.root ? '/:id' : '/:id?',
+          onEnter: (params = {}) => props.changeDirectory(params.id),
           render: () => {
             const Current =
               <CurrentDirectory
