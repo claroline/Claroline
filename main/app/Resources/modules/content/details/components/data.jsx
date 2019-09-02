@@ -1,9 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
 
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Heading} from '#/main/core/layout/components/heading'
+import {ContentMeta} from '#/main/app/content/meta/components/meta'
 import {Sections, Section} from '#/main/app/content/components/sections'
 
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/app/content/details/prop-types'
@@ -32,6 +34,14 @@ const DetailsData = props => {
         <Heading level={props.level} displayLevel={props.displayLevel}>
           {props.title}
         </Heading>
+      }
+
+      {props.meta &&
+        <ContentMeta
+          creator={get(props.data, 'meta.creator')}
+          created={get(props.data, 'meta.created')}
+          updated={get(props.data, 'meta.updated')}
+        />
       }
 
       {primarySections.map(primarySection =>
@@ -87,6 +97,7 @@ DetailsData.propTypes = {
   displayLevel: T.number,
   title: T.string,
   data: T.object,
+  meta: T.bool,
   sections: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
   )).isRequired,
@@ -95,7 +106,8 @@ DetailsData.propTypes = {
 
 DetailsData.defaultProps = {
   level: 2,
-  data: {}
+  data: {},
+  meta: false
 }
 
 export {

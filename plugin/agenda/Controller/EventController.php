@@ -9,23 +9,50 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AgendaBundle\Controller\API;
+namespace Claroline\AgendaBundle\Controller;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/event")
+ * @EXT\Route("/event")
  */
 class EventController extends AbstractCrudController
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /**
+     * EventController constructor.
+     *
+     * @DI\InjectParams({
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage")
+     * })
+     *
+     * @param AuthorizationCheckerInterface $authorization
+     * @param TokenStorageInterface         $tokenStorage
+     */
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
+    }
+
     public function getClass()
     {
         return Event::class;
@@ -37,9 +64,6 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * tweaked for fullcalendar.
-     *
-     *
      * @param Request $request
      * @param string  $class
      *
@@ -53,14 +77,7 @@ class EventController extends AbstractCrudController
 
         //get start & end date and add them to the hidden filters list
         $query['hiddenFilters']['createdAfter'] = $query['start'];
-
-        //we want to be able to fetch events that start a months before and ends a month after
-        $date = new \DateTime($query['end']);
-        $interval = new \DateInterval('P2M');
-        $date->add($interval);
-        $end = $date->format('Y-m-d');
-
-        $query['hiddenFilters']['endBefore'] = $end;
+        $query['hiddenFilters']['endBefore'] = $query['end'];
 
         $data = $this->finder->search(
             $class,
@@ -72,10 +89,63 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
-     *     "/download",
-     *     name="apiv2_download_agenda"
-     * )
+     * Marks a list of tasks as done.
+     *
+     * @EXT\Route("/done", name="apiv2_task_mark_done")
+     * @EXT\Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function markDoneAction(Request $request)
+    {
+        /** @var Event[] $tasks */
+        $tasks = $this->decodeIdsString($request, Event::class);
+        foreach ($tasks as $task) {
+            if ($this->checkPermission($task) && $task->isTask() && !$task->isTaskDone()) {
+                $task->setIsTaskDone(true);
+                $this->om->persist($task);
+            }
+        }
+
+        $this->om->flush();
+
+        return new JsonResponse(array_map(function (Event $task) {
+            return $this->serializer->serialize($task);
+        }, $tasks));
+    }
+
+    /**
+     * Marks a list of tasks as to do.
+     *
+     * @EXT\Route("/todo", name="apiv2_task_mark_todo")
+     * @EXT\Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function markTodoAction(Request $request)
+    {
+        /** @var Event[] $tasks */
+        $tasks = $this->decodeIdsString($request, Event::class);
+        foreach ($tasks as $task) {
+            if ($this->checkPermission($task) && $task->isTask() && $task->isTaskDone()) {
+                $task->setIsTaskDone(false);
+                $this->om->persist($task);
+            }
+        }
+
+        $this->om->flush();
+
+        return new JsonResponse(array_map(function (Event $task) {
+            return $this->serializer->serialize($task);
+        }, $tasks));
+    }
+
+    /**
+     * @EXT\Route("/download", name="apiv2_download_agenda")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -107,10 +177,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
-     *     "/import",
-     *     name="apiv2_event_import"
-     * )
+     * @EXT\Route("/import", name="apiv2_event_import")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -131,5 +198,26 @@ class EventController extends AbstractCrudController
         return new JsonResponse(array_map(function (Event $event) {
             return $this->serializer->serialize($event);
         }, $events));
+    }
+
+    private function checkPermission(Event $event)
+    {
+        if (false === $event->isEditable()) {
+            return false;
+        }
+
+        if ($event->getWorkspace()) {
+            if (!$this->authorization->isGranted(['agenda', 'edit'], $event->getWorkspace())) {
+                return false;
+            }
+
+            return true;
+        }
+
+        if ($this->tokenStorage->getToken()->getUser() !== $event->getUser()) {
+            return false;
+        }
+
+        return true;
     }
 }

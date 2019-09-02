@@ -7,7 +7,7 @@ import times from 'lodash/times'
 import {LinkButton} from '#/main/app/buttons/link'
 import {now} from '#/main/app/intl/date'
 
-import {calendarUrl} from '#/plugin/agenda/tools/agenda/utils'
+import {route} from '#/plugin/agenda/tools/agenda/routing'
 
 const Day = props =>
   <div className={classes('calendar-col day', props.className)}>
@@ -16,7 +16,7 @@ const Day = props =>
 
       <LinkButton
         className="day-number"
-        target={calendarUrl(props.path, 'day', props.current)}
+        target={route(props.path, 'day', props.current)}
       >
         {props.current.format('D')}
       </LinkButton>

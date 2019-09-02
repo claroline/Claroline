@@ -1,4 +1,5 @@
 import {connect} from 'react-redux'
+import merge from 'lodash/merge'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
 
@@ -7,10 +8,11 @@ import {
   selectors as formSelect
 } from '#/main/app/content/form/store'
 
-import {EventModal as EventModalComponent} from '#/plugin/agenda/tools/agenda/modals/event/components/modal'
-import {reducer, selectors} from '#/plugin/agenda/tools/agenda/modals/event/store'
+import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {ParametersModal as ParametersModalComponent} from '#/plugin/agenda/event/modals/parameters/components/modal'
+import {reducer, selectors} from '#/plugin/agenda/event/modals/parameters/store'
 
-const EventModal = withReducer(selectors.STORE_NAME, reducer)(
+const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME))
@@ -19,22 +21,21 @@ const EventModal = withReducer(selectors.STORE_NAME, reducer)(
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       },
-      save(event, isNew = false) {
-        if (isNew) {
+      save(event) {
+        if (event.id) {
           dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_event_update', {id: event.id}]))
         } else {
           dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_event_create']))
         }
 
-      }
-      /*loadWorkspace(workspace) {
-        dispatch(formActions.resetForm(selectors.STORE_NAME, workspace))
       },
-      */
+      loadEvent(event) {
+        dispatch(formActions.resetForm(selectors.STORE_NAME, merge({}, event, EventTypes.defaultProps), !event.id))
+      }
     })
-  )(EventModalComponent)
+  )(ParametersModalComponent)
 )
 
 export {
-  EventModal
+  ParametersModal
 }

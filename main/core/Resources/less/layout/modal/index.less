@@ -45,6 +45,30 @@
     }
 }
 
+.modal-poster {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 100px; // TODO : adapt height according to modal size
+    align-items: flex-end;
+
+    .close {
+        opacity: .5;
+        align-self: flex-start;
+        .text-movie-subtitles();
+
+        &:hover,
+        &:focus {
+            opacity: .75;
+        }
+    }
+    // use movie subtitles styles to make title always readable
+    .modal-title,
+    .modal-title > small {
+        .text-movie-subtitles();
+    }
+}
+
 .modal-icon {
     width: 20px !important; // removes .fa-fw form HTML to avoid the !important
     margin-right: 10px;

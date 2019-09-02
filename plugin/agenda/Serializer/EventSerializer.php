@@ -6,8 +6,11 @@ use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -21,26 +24,48 @@ class EventSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
+
+    /** @var WorkspaceSerializer */
+    private $workspaceSerializer;
+
     /** @var SerializerProvider */
-    private $serializer;
+    private $userSerializer;
 
     /**
      * RoleSerializer constructor.
      *
      * @DI\InjectParams({
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "fileSerializer"      = @DI\Inject("claroline.serializer.public_file"),
      *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
-     *     "userSerializer"      = @DI\Inject("claroline.serializer.user"),
-     *     "authorization"       = @DI\Inject("security.authorization_checker")
+     *     "userSerializer"      = @DI\Inject("claroline.serializer.user")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ObjectManager                 $om
+     * @param PublicFileSerializer          $fileSerializer
+     * @param WorkspaceSerializer           $workspaceSerializer
+     * @param UserSerializer                $userSerializer
      */
     public function __construct(
-      AuthorizationCheckerInterface $authorization,
-      WorkspaceSerializer $workspaceSerializer,
-      UserSerializer $userSerializer
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
+        PublicFileSerializer $fileSerializer,
+        WorkspaceSerializer $workspaceSerializer,
+        UserSerializer $userSerializer
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
+        $this->fileSerializer = $fileSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
     }
@@ -57,28 +82,54 @@ class EventSerializer
             false !== $event->isEditable();
 
         return [
-            'id' => $event->getId(),
+            'id' => $event->getUuid(),
             'title' => $event->getTitle(),
             'start' => $event->getStart() ? DateNormalizer::normalize($event->getStart()) : null,
             'end' => $event->getEnd() ? DateNormalizer::normalize($event->getEnd()) : null,
-            'color' => $event->getPriority(),
             'allDay' => $event->isAllDay(),
-            'durationEditable' => !$event->isTask() && false !== $event->isEditable(),
-            'owner' => $this->userSerializer->serialize($event->getUser()),
+            'thumbnail' => $this->serializeThumbnail($event),
             'description' => $event->getDescription(),
             'workspace' => $event->getWorkspace() ? $this->workspaceSerializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
-            'className' => 'event_'.$event->getId(),
-            'editable' => $editable,
             'meta' => $this->serializeMeta($event),
+            'display' => [
+                'color' => $event->getPriority(),
+            ],
+            'permissions' => [
+                'edit' => $editable,
+            ],
         ];
     }
 
     public function serializeMeta(Event $event)
     {
         return [
-          'task' => $event->isTask(),
-          'isTaskDone' => $event->isTaskDone(),
+            'type' => $event->isTask() ? 'task' : 'event',
+            'creator' => $this->userSerializer->serialize($event->getUser()),
+            'isTaskDone' => $event->isTaskDone(),
         ];
+    }
+
+    /**
+     * Serialize the event thumbnail.
+     *
+     * @param Event $event
+     *
+     * @return array|null
+     */
+    private function serializeThumbnail(Event $event)
+    {
+        if (!empty($event->getThumbnail())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $event->getThumbnail()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -90,15 +141,24 @@ class EventSerializer
     public function deserialize(array $data, Event $event = null)
     {
         $this->sipe('title', 'setTitle', $data, $event);
-        $this->sipe('color', 'setPriority', $data, $event);
+        $this->sipe('display.color', 'setPriority', $data, $event);
         $this->sipe('allDay', 'setAllDay', $data, $event);
         $this->sipe('description', 'setDescription', $data, $event);
-        $this->sipe('meta.task', 'setIsTask', $data, $event);
-        $this->sipe('isTaskDone', 'setIsTaskDone', $data, $event);
+        $this->sipe('meta.isTaskDone', 'setIsTaskDone', $data, $event);
         $this->sipe('isEditable', 'setIsEditable', $data, $event);
 
+        if (isset($data['meta'])) {
+            if (isset($data['meta']['type'])) {
+                $event->setIsTask('task' === $data['meta']['type']);
+            }
+        }
+
+        if (isset($data['thumbnail']) && isset($data['thumbnail']['url'])) {
+            $event->setThumbnail($data['thumbnail']['url']);
+        }
+
         if (isset($data['workspace'])) {
-            $workspace = $this->_om->getObject($data['workspace'], Workspace::class);
+            $workspace = $this->om->getObject($data['workspace'], Workspace::class);
             if ($workspace->getId()) {
                 $event->setWorkspace($workspace);
             }

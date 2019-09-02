@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-import {calendarUrl} from '#/plugin/agenda/tools/agenda/utils'
+import {route} from '#/plugin/agenda/tools/agenda/routing'
 
 const AgendaMenu = props =>
   <MenuSection
@@ -20,7 +20,7 @@ const AgendaMenu = props =>
       light={true}
       selected={props.selected}
       onChange={(selected) => props.history.push(
-        calendarUrl(props.path, props.view, selected)
+        route(props.path, props.view, selected)
       )}
       time={false}
       showCurrent={false}

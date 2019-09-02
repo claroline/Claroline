@@ -6,6 +6,7 @@
     max-height: 100%;
 
     background: @agenda-bg;
+    border-top: 1px solid @agenda-grid-border;
 
     // rows
     .calendar-row {
@@ -25,16 +26,15 @@
         flex: 1;
         border-bottom: 1px solid @agenda-grid-border;
 
-        &:last-child {
+        /*&:last-child {
             border-bottom: none;
-        }
+        }*/
     }
 
     // cells
     .calendar-cell {
         flex: 1;
         text-align: center;
-        padding: 5px;
 
         border-right: 1px solid @agenda-grid-border;
 
@@ -44,16 +44,22 @@
     }
 
     .day-name {
+        padding: 5px;
         text-transform: uppercase; // todo : use a var
     }
 
     .day {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
         .day-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 26px;
             height: 26px;
+            margin: 5px auto;
             border-radius: 50%;
 
             color: @agenda-color;

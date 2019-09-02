@@ -5,7 +5,8 @@ import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {
   AGENDA_CHANGE_VIEW,
-  AGENDA_CHANGE_REFERENCE
+  AGENDA_CHANGE_REFERENCE,
+  AGENDA_LOAD_EVENTS
 } from '#/plugin/agenda/tools/agenda/store/actions'
 
 const reducer = combineReducers({
@@ -15,6 +16,16 @@ const reducer = combineReducers({
 
   referenceDate: makeReducer(now(), {
     [AGENDA_CHANGE_REFERENCE]: (state, action) => moment(action.referenceDate).format(getApiFormat())
+  }),
+
+  loaded: makeReducer(false, {
+    [AGENDA_CHANGE_VIEW]: () => false,
+    [AGENDA_CHANGE_REFERENCE]: () => false,
+    [AGENDA_LOAD_EVENTS]: () => true
+  }),
+
+  events: makeReducer([], {
+    [AGENDA_LOAD_EVENTS]: (state, action) => action.events
   })
 })
 

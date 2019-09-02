@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Manages announces of an announcement resource.
  *
- * @EXT\Route("/{aggregateId}", options={"expose"=true})
+ * @EXT\Route("/announcement/{aggregateId}", options={"expose"=true})
  * @EXT\ParamConverter(
  *      "aggregate",
  *      class="ClarolineAnnouncementBundle:AnnouncementAggregate",

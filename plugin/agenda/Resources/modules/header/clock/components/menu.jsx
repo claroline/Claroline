@@ -48,7 +48,7 @@ class ClockMenu extends Component {
         className="app-header-btn app-header-item app-header-clock"
         icon={
           <Fragment>
-            <h1 className="h4">{date.format('ll')}</h1>
+            <h1 className="h5">{date.format('ll')}</h1>
             {date.format('LT')}
 
             <link rel="stylesheet" type="text/css" href={theme('claroline-distribution-plugin-agenda-clock')} />

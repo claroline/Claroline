@@ -1,9 +1,5 @@
-claro_agenda:
-    resource: "@ClarolineAgendaBundle/Controller/AgendaController.php"
-    type: annotation
-
 claro_event:
-    resource: "@ClarolineAgendaBundle/Controller/API/"
+    resource: "@ClarolineAgendaBundle/Controller/"
     prefix: apiv2
     type: api
     options:

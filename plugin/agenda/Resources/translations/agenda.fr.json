@@ -10,5 +10,6 @@
     "send_message_object": "Invitation à un évènement: %EventName%",
     "task": "Tâche",
     "tasks": "Tâches",
-    "display_modes": "Modes de vue"
+    "display_modes": "Modes de vue",
+    "new_event": "Nouvel évènement"
 }

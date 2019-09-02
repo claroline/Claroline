@@ -12,6 +12,9 @@
 namespace Claroline\AgendaBundle\Entity;
 
 use Claroline\AgendaBundle\Validator\Constraints\DateRange;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,12 +27,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Event
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Id;
+    use Uuid;
+
+    use Thumbnail;
 
     /**
      * @ORM\Column(length=50)
@@ -53,16 +54,13 @@ class Event
     private $description;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     cascade={"persist"}
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $workspace;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
@@ -101,12 +99,9 @@ class Event
 
     public function __construct()
     {
-        $this->eventInvitations = new ArrayCollection();
-    }
+        $this->refreshUuid();
 
-    public function getId()
-    {
-        return $this->id;
+        $this->eventInvitations = new ArrayCollection();
     }
 
     public function getTitle()
@@ -119,7 +114,6 @@ class Event
         $this->title = $title;
     }
 
-    //Returns a String for the DateTimePicker of the AgendaType
     public function getStart()
     {
         return $this->start;

@@ -35,16 +35,13 @@ export default {
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'notDoneYet',
-        type: 'boolean',
-        label: trans('not_done_yet'),
-        displayed: false,
-        displayable: false,
-        filterable: true,
-        sortable: false
+        name: 'end',
+        type: 'date',
+        label: trans('end_date'),
+        displayed: true
       }, {
-        name: 'workspace.code',
-        type: 'string',
+        name: 'workspace',
+        type: 'workspace',
         label: trans('workspace'),
         displayed: true,
         filterable: false,

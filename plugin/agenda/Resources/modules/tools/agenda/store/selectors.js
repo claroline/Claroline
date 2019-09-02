@@ -20,10 +20,23 @@ const referenceDate = createSelector(
   (referenceDateStr) => moment(referenceDateStr)
 )
 
+const loaded = createSelector(
+  [store],
+  (store) => store.loaded
+)
+
+const events = createSelector(
+  [store],
+  (store) => store.events
+)
+
 export const selectors = {
   STORE_NAME,
 
   view,
   referenceDateStr,
-  referenceDate
+  referenceDate,
+
+  loaded,
+  events
 }

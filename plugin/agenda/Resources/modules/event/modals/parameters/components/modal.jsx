@@ -1,21 +1,23 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, now} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {selectors} from '#/plugin/agenda/tools/agenda/modals/event/store/selectors'
+import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
+import {selectors} from '#/plugin/agenda/event/modals/parameters/store/selectors'
 
-const EventModal = props =>
+const ParametersModal = props =>
   <Modal
-    {...omit(props, 'event', 'saveEnabled', 'update', 'save')}
-    icon="fa fa-fw fa-info"
-    title={trans('event', {}, 'agenda')}
+    {...omit(props, 'event', 'saveEnabled', 'loadEvent', 'update', 'save')}
+    icon="fa fa-fw fa-cog"
+    title={props.event.id ? props.event.title : trans('new_event', {}, 'agenda')}
+    subtitle={trans('parameters')}
+    onEntering={() => props.loadEvent(props.event)}
   >
     <FormData
       name={selectors.STORE_NAME}
@@ -26,7 +28,7 @@ const EventModal = props =>
           primary: true,
           fields: [
             {
-              name: '_type',
+              name: 'meta.type',
               label: trans('type'),
               type: 'choice',
               hideLabel: true,
@@ -38,9 +40,7 @@ const EventModal = props =>
                   event: trans('event'),
                   task: trans('task')
                 }
-              },
-              calculated: (event) => get(event, 'meta.task') ? 'task' : 'event',
-              onChange: (value) => props.update('meta.task', 'task' === value)
+              }
             }, {
               name: 'title',
               type: 'string',
@@ -51,6 +51,11 @@ const EventModal = props =>
               type: 'date-range',
               label: trans('date'),
               required: true,
+              calculated: (event) => [event.start || null, event.end || null],
+              onChange: (datesRange) => {
+                props.update('start', datesRange[0])
+                props.update('end', datesRange[1])
+              },
               options: {
                 time: true
               }
@@ -71,7 +76,7 @@ const EventModal = props =>
             }, {
               name: 'guests',
               type: 'users',
-              label: trans('guests', {}, 'agenda')
+              label: trans('guests')
             }
           ]
         }, {
@@ -83,7 +88,7 @@ const EventModal = props =>
               type: 'image',
               label: trans('thumbnail')
             }, {
-              name: 'color',
+              name: 'display.color',
               type: 'color',
               label: trans('color')
             }
@@ -105,16 +110,19 @@ const EventModal = props =>
     />
   </Modal>
 
-EventModal.propTypes = {
+ParametersModal.propTypes = {
+  event: T.shape(
+    EventTypes.propTypes
+  ),
+  // from store
   saveEnabled: T.bool.isRequired,
-  event: T.shape({
-
-  }),
+  loadEvent: T.func.isRequired,
   update: T.func.isRequired,
   save: T.func.isRequired,
+  // from modal
   fadeModal: T.func.isRequired
 }
 
 export {
-  EventModal
+  ParametersModal
 }

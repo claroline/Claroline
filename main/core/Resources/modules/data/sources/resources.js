@@ -53,6 +53,11 @@ export default {
         alias: 'modificationDate',
         displayed: true
       }, {
+        name: 'meta.creator',
+        type: 'user',
+        label: trans('creator'),
+        displayed: true
+      }, {
         name: 'tags',
         type: 'tag',
         label: trans('tags'),

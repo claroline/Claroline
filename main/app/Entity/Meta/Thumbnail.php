@@ -22,7 +22,7 @@ trait Thumbnail
     }
 
     /**
-     * @param string $poster
+     * @param string $thumbnail
      */
     public function setThumbnail($thumbnail)
     {

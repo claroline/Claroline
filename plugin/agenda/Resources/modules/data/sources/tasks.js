@@ -25,25 +25,15 @@ export default {
         label: trans('description'),
         displayed: true
       }, {
-        name: 'meta.isTaskDone',
-        alias: 'isTaskDone',
-        type: 'boolean',
-        label: trans('task_done', {}, 'agenda'),
-        displayed: true
-      }, {
-        name: 'allDay',
-        type: 'boolean',
-        label: trans('all_day', {}, 'agenda'),
-        displayed: true
-      }, {
         name: 'start',
         type: 'date',
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'end',
-        type: 'date',
-        label: trans('end_date'),
+        name: 'meta.isTaskDone',
+        alias: 'isTaskDone',
+        type: 'boolean',
+        label: trans('task_done', {}, 'agenda'),
         displayed: true
       }, {
         name: 'notDoneYet',
@@ -54,8 +44,8 @@ export default {
         filterable: true,
         sortable: false
       }, {
-        name: 'workspace.code',
-        type: 'string',
+        name: 'workspace',
+        type: 'workspace',
         label: trans('workspace'),
         displayed: true,
         filterable: false,
