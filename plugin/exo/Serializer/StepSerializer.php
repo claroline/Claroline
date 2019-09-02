@@ -51,6 +51,7 @@ class StepSerializer
     {
         $serialized = [
             'id' => $step->getUuid(),
+            'slug' => $step->getSlug(),
             'parameters' => $this->serializeParameters($step),
             'picking' => $this->serializePicking($step),
             'items' => $this->serializeItems($step, $options),
@@ -82,6 +83,14 @@ class StepSerializer
         $this->sipe('id', 'setUuid', $data, $step);
         $this->sipe('title', 'setTitle', $data, $step);
         $this->sipe('description', 'setDescription', $data, $step);
+
+        if (!$step->getTitle()) {
+            if ($step->getExercise()) {
+                $step->setSlug('step-'.$step->getOrder().'-'.$step->getExercise()->getId());
+            } else {
+                $step->setSlug($step->getId());
+            }
+        }
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $step->refreshUuid();

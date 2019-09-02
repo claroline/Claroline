@@ -12,10 +12,10 @@ const PlayerMain = (props) =>
     path={props.path}
     routes={[
       {
-        path: '/:id',
+        path: '/:slug',
         component: PlayerStep,
         render: (routeProps) => {
-          const stepIndex = props.steps.findIndex(step => routeProps.match.params.id === step.id)
+          const stepIndex = props.steps.findIndex(step => routeProps.match.params.slug === step.slug)
           if (-1 !== stepIndex) {
             const currentStep = props.steps[stepIndex]
 

@@ -108,6 +108,7 @@ class EditorMain extends Component {
           errors={this.props.errors}
           steps={this.props.steps.map((step, stepIndex) => ({
             id: step.id,
+            slug: step.slug,
             title: step.title,
             actions: this.getStepActions(step, stepIndex)
           }))}
@@ -135,9 +136,9 @@ class EditorMain extends Component {
                   />
                 )
               }, {
-                path: '/edit/:id',
+                path: '/edit/:slug',
                 render: (routeProps) => {
-                  const stepIndex = this.props.steps.findIndex(step => routeProps.match.params.id === step.id)
+                  const stepIndex = this.props.steps.findIndex(step => routeProps.match.params.slug === step.slug)
                   if (-1 !== stepIndex) {
                     const currentStep = this.props.steps[stepIndex]
 

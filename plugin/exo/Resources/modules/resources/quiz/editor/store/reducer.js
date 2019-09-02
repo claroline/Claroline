@@ -33,7 +33,8 @@ function setDefaults(quiz) {
 }
 
 function createStep(stepData = {}) {
-  return merge({id: makeId()}, Step.defaultProps, stepData)
+  const newId = makeId()
+  return merge({id: newId, slug: newId}, Step.defaultProps, stepData)
 }
 
 function pushStep(step, steps, position) {
@@ -159,7 +160,9 @@ export const reducer = makeFormReducer(quizSelectors.STORE_NAME + '.editor', {},
       if (original) {
         // create a copy of the step
         const copy = cloneDeep(original)
-        copy.id = makeId()
+        const newId = makeId()
+        copy.id = newId
+        copy.slug = newId
 
         // TODO : replace items ids
 

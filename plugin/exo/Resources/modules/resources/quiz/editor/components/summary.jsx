@@ -34,7 +34,7 @@ const StepLink = props =>
     }
 
     <LinkButton
-      target={`${props.path}/edit/${props.id}`}
+      target={`${props.path}/edit/${props.slug}`}
     >
       {props.title ? props.title.substr(0, 30) : trans('step', {number: props.number}, 'quiz')}
     </LinkButton>
@@ -43,6 +43,7 @@ const StepLink = props =>
 StepLink.propTypes = {
   path: T.string.isRequired,
   id: T.string.isRequired,
+  slug: T.string.isRequired,
   number: T.number.isRequired,
   title: T.string,
   errors: T.bool.isRequired,
@@ -89,6 +90,7 @@ class EditorSummary extends Component {
           <StepLink
             key={step.id}
             id={step.id}
+            slug={step.slug}
             number={index + 1}
             title={step.title}
             actions={step.actions}

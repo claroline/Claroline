@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
@@ -60,6 +61,12 @@ class Step
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $stepQuestions;
+
+    /**
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(length=128)
+     */
+    private $slug;
 
     /**
      * Step constructor.
@@ -219,5 +226,15 @@ class Step
         $stepQuestion->setQuestion($question);
 
         return $stepQuestion;
+    }
+
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }
