@@ -176,6 +176,14 @@ class WorkspaceFinder extends AbstractFinder
                         $qb->setParameter('ROLE_WS_MANAGER', 'ROLE_WS_MANAGER%');
                     }
                     break;
+                case 'archived':
+                    if (false === $filterValue) {
+                        $qb->andWhere($qb->expr()->orX(
+                            $qb->expr()->isNull('obj.archived'),
+                            $qb->expr()->eq('obj.archived', 0)
+                        ));
+                    }
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }

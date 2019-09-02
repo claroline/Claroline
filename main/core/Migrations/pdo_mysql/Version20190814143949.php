@@ -18,6 +18,10 @@ class Version20190814143949 extends AbstractMigration
             ALTER TABLE claro_workspace
             ADD archived TINYINT(1) DEFAULT NULL
         ');
+
+        $this->addSql('
+            UPDATE claro_workspace SET archived = false
+        ');
     }
 
     public function down(Schema $schema)
