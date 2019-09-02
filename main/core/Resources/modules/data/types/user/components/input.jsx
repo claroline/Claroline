@@ -18,7 +18,7 @@ const UserButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-user"
-    label={trans('select_a_user')}
+    label={trans('add_user')}
     primary={true}
     disabled={props.disabled}
     modal={[MODAL_USERS, {

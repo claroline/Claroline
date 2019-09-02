@@ -1,5 +1,6 @@
 
 import {OpenBadgeTool} from '#/plugin/open-badge/tools/badges/containers/tool'
+import {BadgeMenu} from '#/plugin/open-badge/tools/badges/containers/menu'
 
 import {reducer} from '#/plugin/open-badge/tools/badges/store/reducer'
 
@@ -8,5 +9,6 @@ import {reducer} from '#/plugin/open-badge/tools/badges/store/reducer'
  */
 export default {
   component: OpenBadgeTool,
+  menu: BadgeMenu,
   store: reducer
 }

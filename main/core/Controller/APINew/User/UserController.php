@@ -38,6 +38,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserController extends AbstractCrudController
 {
+    use HasRolesTrait;
+    use HasOrganizationsTrait;
+    use HasGroupsTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
 
@@ -161,10 +165,6 @@ class UserController extends AbstractCrudController
 
         return new JsonResponse($this->serializer->serialize($user));
     }
-
-    use HasRolesTrait;
-    use HasOrganizationsTrait;
-    use HasGroupsTrait;
 
     /**
      * @ApiDoc(

@@ -8,7 +8,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {Badge as BadgeType} from '#/plugin/open-badge/tools/badges/prop-types'
-import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/badge-card'
+import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 
 //todo: implement badge picker
 const BadgeButton = () =>
@@ -17,7 +17,7 @@ const BadgeButton = () =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-trophy"
-    label={trans('select_a_badge')}
+    label={trans('select_a_badge', {}, 'openbadge')}
     primary={true}
   />
 
@@ -61,7 +61,7 @@ const BadgeInput = props => {
       <EmptyPlaceholder
         size="lg"
         icon="fa fa-book"
-        title={trans('no_badge')}
+        title={trans('no_badge', {}, 'openbadge')}
       >
         {!props.disabled &&
           <BadgeButton
@@ -82,7 +82,7 @@ implementPropTypes(BadgeInput, FormFieldTypes, {
 }, {
   value: null,
   picker: {
-    title: trans('badge_selector')
+    title: trans('badge_selector', {}, 'openbadge')
   }
 })
 

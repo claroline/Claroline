@@ -1,0 +1,20 @@
+{
+    "assertion_id_desc": "L'identifiant d'attribution du badge",
+    "badge_awarded_to": "Ce badge a été attribué à",
+    "badge_certificate": "Certificat d'un badge",
+    "badge_certificate_desc": "Template utilisé pour le certificat d'un badge",
+    "badge_description_desc": "La description du badge",
+    "badge_duration_desc": "La durée de validité du badge",
+    "badge_image_desc": "L'icône du badge",
+    "badge_name_desc": "Le nom du badge",
+    "issued_on_desc": "La date d'attribution du badge",
+    "issuer_box_number_desc": "Le numéro de boîte de l'organisme ayant attribué le badge",
+    "issuer_country_desc": "Le pays de l'organisme ayant attribué le badge",
+    "issuer_email_desc": "L'adresse mail de l'organisme ayant attribué le badge",
+    "issuer_name_desc": "L'organisme ayant attribué le badge",
+    "issuer_pc_desc": "Le code postal de l'organisme ayant attribué le badge",
+    "issuer_phone_desc": "Le numéro de téléphone de l'organisme ayant attribué le badge",
+    "issuer_street_desc": "La rue de l'organisme ayant attribué le badge",
+    "issuer_street_number_desc": "Le numéro de rue de l'organisme ayant attribué le badge",
+    "issuer_town_desc": "La ville de l'organisme ayant attribué le badge"
+}

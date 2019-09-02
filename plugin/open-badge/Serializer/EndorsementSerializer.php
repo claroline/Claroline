@@ -4,24 +4,15 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\OpenBadgeBundle\Entity\Endorsement;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.serializer")
- */
 class EndorsementSerializer
 {
     use SerializerTrait;
 
     /**
-     * @DI\InjectParams({
-     *     "router" = @DI\Inject("router")
-     * })
-     *
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {

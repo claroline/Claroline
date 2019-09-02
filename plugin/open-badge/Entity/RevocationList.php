@@ -11,6 +11,7 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,12 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RevocationList
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")

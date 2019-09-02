@@ -257,13 +257,13 @@ class Crud
         $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
         //we'll need to pass the $action and $data here aswell later
 
-        if ($this->dispatch('patch', 'pre', [$object, $options, $property, $elements, $action])) {
-            foreach ($elements as $element) {
+        foreach ($elements as $element) {
+            if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
                 $object->$methodName($element);
-            }
 
-            $this->om->save($object);
-            $this->dispatch('patch', 'post', [$object, $options, $property, $elements, $action]);
+                $this->om->save($object);
+                $this->dispatch('patch', 'post', [$object, $options, $property, $element, $action]);
+            }
         }
     }
 

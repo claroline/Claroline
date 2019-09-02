@@ -14,14 +14,18 @@ namespace Claroline\OpenBadgeBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.api.finder.openbadge.badgeclass")
- * @DI\Tag("claroline.finder")
- */
 class BadgeClassFinder extends AbstractFinder
 {
+    /**
+     * @param TokenStorageInterface $tokenStorage
+     */
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
     public function getClass()
     {
         return BadgeClass::class;
@@ -29,6 +33,8 @@ class BadgeClassFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
               case 'recipient':
@@ -41,6 +47,26 @@ class BadgeClassFinder extends AbstractFinder
                   $qb->join('obj.workspace', 'w');
                   $qb->andWhere('w.uuid like :workspace');
                   $qb->setParameter('workspace', $filterValue);
+                  break;
+              case 'assignable':
+                  $qb->leftJoin('obj.allowedIssuers', 'user');
+                  $qb->leftJoin('obj.allowedIssuersGroups', 'group');
+                  $qb->leftJoin('group.users', 'groupUser');
+                  $qb->leftJoin('obj.assertions', 'assertion');
+                  $qb->leftJoin('assertion.recipient', 'recipient');
+
+                  $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('user.id', $user->getId()),
+                    $qb->expr()->eq('groupUser.id', $user->getId()),
+                    $qb->expr()->orX(
+                      $qb->expr()->andX(
+                          $qb->expr()->eq('recipient.id', $user->getId()),
+                          $qb->expr()->like('obj.issuingMode', '%'.BadgeClass::ISSUING_MODE_PEER.'%')
+                      )
+                    )
+                  ));
+                  //also from those who already have the badge
+
                   break;
               case 'meta.enabled':
                   $qb->andWhere('obj.enabled = :enabled');

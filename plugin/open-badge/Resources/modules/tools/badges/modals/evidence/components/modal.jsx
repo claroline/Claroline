@@ -6,6 +6,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
+import {ResourceCard} from '#/main/core/resource/components/card'
 
 import {selectors} from '#/plugin/open-badge/tools/badges/modals/evidence/store/selectors'
 
@@ -13,7 +14,7 @@ const EvidenceModal = props =>
   <Modal
     {...props}
     icon="fa fa-fw fa-cog"
-    title={trans('evidence')}
+    title={trans('evidence', {}, 'openbadge')}
     subtitle={props.assertion.badge.name}
     onEntering={() => props.initForm(props.evidence)}
   >
@@ -25,7 +26,7 @@ const EvidenceModal = props =>
       target={['apiv2_evidence_create']}
       sections={[
         {
-          title: trans('evidence'),
+          title: trans('evidence', {}, 'openbadge'),
           primary: true,
           fields: [
             {
@@ -37,19 +38,10 @@ const EvidenceModal = props =>
             {
               name: 'narrative',
               type: 'html',
-              label: trans('narrative'),
+              label: trans('narrative', {}, 'openbadge'),
               required: true,
               options: {
                 long: true
-              }
-            }, {
-              name: 'resources',
-              label: trans('resources'),
-              type: 'collection',
-              options: {
-                type: 'resource',
-                placeholder: trans('no_resource'),
-                button: trans('add_resource')
               }
             }
           ]
@@ -57,6 +49,9 @@ const EvidenceModal = props =>
       ]}
     >
     </FormData>
+    {props.evidence.resource &&
+      <ResourceCard data={props.evidence.resource}/> 
+    }
     <Button
       className="btn"
       style={{marginTop: 10}}

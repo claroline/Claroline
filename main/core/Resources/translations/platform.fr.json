@@ -1797,5 +1797,6 @@
     "current_of_total": "%current% sur %total%",
     "do_not_display_anymore": "Ne plus afficher",
     "back_to": "Retour à %target%",
+    "select_an_organization": "Sélectionner une organisation",
     "advanced_tools": "Outils avancés"
 }

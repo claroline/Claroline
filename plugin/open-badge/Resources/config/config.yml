@@ -1,10 +1,6 @@
 plugin:
     has_options: false
 
-    admin_tools:
-      - name: open-badge
-        class: trophy
-
     tools:
         - name: open-badge
           class: trophy
@@ -18,3 +14,7 @@ plugin:
           is_anonymous_excluded: true
           is_locked_for_admin: false
           desktop_category: user
+
+    templates:
+        - name: badge_certificate
+          placeholders: [badge_name, badge_description, badge_image, badge_duration, assertion_id, issued_on, issuer_name, issuer_email, issuer_phone, issuer_street, issuer_street_number, issuer_box_number, issuer_pc, issuer_town, issuer_country]

@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
@@ -26,6 +27,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -82,21 +84,25 @@ class ResourceController
     /** @var EventManager */
     private $eventManager;
 
+    /** @var ResourceEvaluationManager */
+    private $resourceEvaluationManager;
+
     /**
      * ResourceController constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "templating"          = @DI\Inject("templating"),
-     *     "finder"              = @DI\Inject("claroline.api.finder"),
-     *     "security"            = @DI\Inject("claroline.security.utilities"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer"),
-     *     "manager"             = @DI\Inject("claroline.manager.resource_manager"),
-     *     "actionManager"       = @DI\Inject("claroline.manager.resource_action"),
-     *     "restrictionsManager" = @DI\Inject("claroline.manager.resource_restrictions"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "eventManager"        = @DI\Inject("claroline.event.manager")
+     *     "tokenStorage"              = @DI\Inject("security.token_storage"),
+     *     "templating"                = @DI\Inject("templating"),
+     *     "finder"                    = @DI\Inject("claroline.api.finder"),
+     *     "security"                  = @DI\Inject("claroline.security.utilities"),
+     *     "serializer"                = @DI\Inject("claroline.api.serializer"),
+     *     "manager"                   = @DI\Inject("claroline.manager.resource_manager"),
+     *     "actionManager"             = @DI\Inject("claroline.manager.resource_action"),
+     *     "restrictionsManager"       = @DI\Inject("claroline.manager.resource_restrictions"),
+     *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "authorization"             = @DI\Inject("security.authorization_checker"),
+     *     "eventManager"              = @DI\Inject("claroline.event.manager"),
+     *     "resourceEvaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
@@ -109,6 +115,7 @@ class ResourceController
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param EventManager                  $eventManager
+     * @param ResourceEvaluationManager     $resourceEvaluationManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -118,6 +125,7 @@ class ResourceController
         SerializerProvider $serializer,
         ResourceManager $manager,
         ResourceActionManager $actionManager,
+        ResourceEvaluationManager $resourceEvaluationManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
         EventManager $eventManager,
@@ -135,6 +143,7 @@ class ResourceController
         $this->authorization = $authorization;
         $this->eventManager = $eventManager;
         $this->finder = $finder;
+        $this->resourceEvaluationManager = $resourceEvaluationManager;
     }
 
     /**
@@ -211,6 +220,12 @@ class ResourceController
         if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
             try {
                 $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
+                //I have no idea if it is correct to do this
+                if ($this->tokenStorage->getToken()->getUser()) {
+                    $this->resourceEvaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
+                      'status' => ResourceEvaluation::STATUS_PARTICIPATED,
+                    ]);
+                }
             } catch (ResourceNotFoundException $e) {
                 return new JsonResponse(['resource_not_found'], 500);
             }

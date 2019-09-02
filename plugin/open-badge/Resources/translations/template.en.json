@@ -1,0 +1,20 @@
+{
+    "assertion_id_desc": "The id of the issued badge",
+    "badge_awarded_to": "This badge has been awarded to",
+    "badge_certificate": "Badge certificate",
+    "badge_certificate_desc": "Template used for badge certificate",
+    "badge_description_desc": "Description of the badge",
+    "badge_duration_desc": "Validity duration of the badge",
+    "badge_image_desc": "The image of the badge",
+    "badge_name_desc": "The name of the badge",
+    "issued_on_desc": "The date when the badge has been issued",
+    "issuer_box_number_desc": "The box number of the organization that has issued the badge",
+    "issuer_country_desc": "The country of the organization that has issued the badge",
+    "issuer_email_desc": "The email of the organization that has issued the badge",
+    "issuer_name_desc": "The name of the organization that has issued the badge",
+    "issuer_pc_desc": "The zip code of the organization that has issued the badge",
+    "issuer_phone_desc": "The phone of the organization that has issued the badge",
+    "issuer_street_desc": "The street of the organization that has issued the badge",
+    "issuer_street_number_desc": "The street number of the organization that has issued the badge",
+    "issuer_town_desc": "The town of the organization that has issued the badge"
+}

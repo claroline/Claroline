@@ -17,44 +17,24 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
+use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.serializer.open_badge.badge")
- * @DI\Tag("claroline.serializer")
- */
 class BadgeClassSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @DI\InjectParams({
-     *     "fileUt"                 = @DI\Inject("claroline.utilities.file"),
-     *     "router"                 = @DI\Inject("router"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "criteriaSerializer"     = @DI\Inject("claroline.serializer.open_badge.criteria"),
-     *     "imageSerializer"        = @DI\Inject("claroline.serializer.open_badge.image"),
-     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
-     *     "profileSerializer"      = @DI\Inject("claroline.serializer.open_badge.profile"),
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "workspaceSerializer"    = @DI\Inject("claroline.serializer.workspace"),
-     *     "userSerializer"         = @DI\Inject("claroline.serializer.user"),
-     *     "groupSerializer"        = @DI\Inject("claroline.serializer.group"),
-     *     "organizationSerializer" = @DI\Inject("claroline.serializer.organization"),
-     *     "publicFileSerializer"   = @DI\Inject("claroline.serializer.public_file")
-     * })
-     *
-     * @param Router $router
-     */
     public function __construct(
         FileUtilities $fileUt,
         RouterInterface $router,
         ObjectManager $om,
+        OrganizationManager $organizationManager,
         CriteriaSerializer $criteriaSerializer,
         ProfileSerializer $profileSerializer,
         EventDispatcherInterface $eventDispatcher,
@@ -64,7 +44,8 @@ class BadgeClassSerializer
         ImageSerializer $imageSerializer,
         TokenStorageInterface $tokenStorage,
         OrganizationSerializer $organizationSerializer,
-        PublicFileSerializer $publicFileSerializer
+        PublicFileSerializer $publicFileSerializer,
+        RuleSerializer $ruleSerializer
     ) {
         $this->router = $router;
         $this->fileUt = $fileUt;
@@ -72,6 +53,7 @@ class BadgeClassSerializer
         $this->userSerializer = $userSerializer;
         $this->groupSerializer = $groupSerializer;
         $this->om = $om;
+        $this->organizationManager = $organizationManager;
         $this->criteriaSerializer = $criteriaSerializer;
         $this->profileSerializer = $profileSerializer;
         $this->imageSerializer = $imageSerializer;
@@ -79,6 +61,7 @@ class BadgeClassSerializer
         $this->tokenStorage = $tokenStorage;
         $this->publicFileSerializer = $publicFileSerializer;
         $this->organizationSerializer = $organizationSerializer;
+        $this->ruleSerializer = $ruleSerializer;
     }
 
     /**
@@ -103,14 +86,10 @@ class BadgeClassSerializer
                   'url' => $badge->getImage(),
               ])
             ) : null,
-            'issuer' => $this->organizationSerializer->serialize($badge->getIssuer()),
+            'issuer' => $this->organizationSerializer->serialize($badge->getIssuer() ? $badge->getIssuer() : $this->organizationManager->getDefault(true)),
             //only in non list mode I guess
             'tags' => $this->serializeTags($badge),
         ];
-
-        if (!in_array(APIOptions::SERIALIZE_LIST, $options)) {
-            $data['assignable'] = $this->isAssignable($badge);
-        }
 
         if (in_array(Options::ENFORCE_OPEN_BADGE_JSON, $options)) {
             $data['id'] = $this->router->generate('apiv2_open_badge__badge_class', ['badge' => $badge->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -123,7 +102,7 @@ class BadgeClassSerializer
                 $data['image'] = $this->imageSerializer->serialize($image)['id'];
             }
 
-            $data['issuer'] = $this->profileSerializer->serialize($badge->getIssuer());
+            $data['issuer'] = $badge->getIssuer() ? $this->profileSerializer->serialize($badge->getIssuer()) : null;
         } else {
             $data['issuingMode'] = $badge->getIssuingMode();
             $data['meta'] = [
@@ -131,12 +110,17 @@ class BadgeClassSerializer
                'updated' => $badge->getUpdated()->format('Y-m-d\TH:i:s'),
                'enabled' => $badge->getEnabled(),
             ];
+            $data['permissions'] = $this->serializePermissions($badge);
+            $data['assignable'] = $data['permissions']['assign'];
+            $data['rules'] = array_map(function (Rule $rule) {
+                return $this->ruleSerializer->serialize($rule);
+            }, $badge->getRules()->toArray());
             $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
             $data['allowedUsers'] = array_map(function (User $user) {
-                return $this->userSerializer->serialize($user);
+                return $this->userSerializer->serialize($user, [APIOptions::SERIALIZE_MINIMAL]);
             }, $badge->getAllowedIssuers()->toArray());
             $data['allowedGroups'] = array_map(function (Group $group) {
-                return $this->groupSerializer->serialize($group);
+                return $this->groupSerializer->serialize($group, [APIOptions::SERIALIZE_MINIMAL]);
             }, $badge->getAllowedIssuersGroups()->toArray());
         }
 
@@ -178,7 +162,9 @@ class BadgeClassSerializer
             $workspace = $this->om->getRepository(Workspace::class)->find($data['workspace']['id']);
             $badge->setWorkspace($workspace);
             //main orga maybe instead ? this is fishy
-            $badge->setIssuer($workspace->getOrganizations()[0]);
+            if (count($workspace->getOrganizations()) > 1) {
+                $badge->setIssuer($workspace->getOrganizations()[0]);
+            }
         }
 
         if (isset($data['tags'])) {
@@ -205,7 +191,26 @@ class BadgeClassSerializer
             $badge->setAllowedIssuersGroups($allowed);
         }
 
+        if (isset($data['rules'])) {
+            $this->deserializeRules($data['rules'], $badge);
+        }
+
         return $badge;
+    }
+
+    private function deserializeRules(array $rules, BadgeClass $badge)
+    {
+        foreach ($rules as $rule) {
+            if (!isset($rule['id'])) {
+                $entity = $this->ruleSerializer->deserialize($rule, new Rule());
+            } else {
+                $entity = $this->om->getObject($rule, Rule::class);
+                $entity = $this->ruleSerializer->deserialize($rule, $entity);
+            }
+
+            $entity->setBadge($badge);
+            $this->om->persist($entity);
+        }
     }
 
     private function deserializeTags(BadgeClass $badge, array $tags = [], array $options = [])
@@ -225,70 +230,6 @@ class BadgeClassSerializer
         $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
     }
 
-    private function isAssignable(BadgeClass $badge)
-    {
-        $issuingModes = $badge->getIssuingMode();
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-
-        if (!$currentUser instanceof User) {
-            return false;
-        }
-
-        $roles = array_map(function ($role) {
-            return $role->getRole();
-        }, $this->tokenStorage->getToken()->getRoles());
-
-        if (in_array('ROLE_ADMIN', $roles)) {
-            return true;
-        }
-
-        foreach ($issuingModes as $mode) {
-            switch ($mode) {
-                case BadgeClass::ISSUING_MODE_ORGANIZATION:
-                    $organization = $badge->getIssuer();
-                    $userOrganizations = $currentUser->getAdministratedOrganizations();
-                    foreach ($userOrganizations as $userOrga) {
-                        if ($userOrga->getId() === $organization->getId()) {
-                            return true;
-                        }
-                    }
-                    break;
-                case BadgeClass::ISSUING_MODE_USER:
-                    $allowedIssuers = $badge->getAllowedIssuers();
-                    foreach ($allowedIssuers as $allowed) {
-                        if ($allowed->getId() === $currentUser->getId()) {
-                            return true;
-                        }
-                    }
-                    break;
-                case BadgeClass::ISSUING_MODE_GROUP:
-                    $allowedIssuers = $badge->getAllowedIssuersGroups();
-                    foreach ($allowedIssuers as $allowed) {
-                        foreach ($currentUser->getGroups() as $group) {
-                            if ($group->getId() === $allowed->getId()) {
-                                return true;
-                            }
-                        }
-                    }
-                    break;
-                case BadgeClass::ISSaUING_MODE_PEER:
-                    break;
-                case BadgeClass::ISSUING_MODE_WORKSPACE:
-                    $workspace = $badge->getWorkspace();
-                    $managerRole = $workspace->getManagerRole();
-
-                    if (in_array($managerRole, $roles)) {
-                        return true;
-                    }
-                    break;
-                case BadgeClass::ISSUING_MODE_AUTO:
-                  break;
-            }
-        }
-
-        return false;
-    }
-
     private function serializeTags(BadgeClass $badge)
     {
         $event = new GenericDataEvent([
@@ -297,7 +238,92 @@ class BadgeClassSerializer
         ]);
         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
 
-        return $event->getResponse();
+        $tags = $event->getResponse();
+
+        return implode(',', $tags);
+    }
+
+    private function serializePermissions(BadgeClass $badge)
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $issuingModes = $badge->getIssuingMode();
+
+        //we might want to move this logic somewhere else
+        $assign = false;
+        $isOrganizationManager = false;
+        $allowedUserIds = [];
+
+        $roles = array_map(function ($role) {
+            return $role->getRole();
+        }, $this->tokenStorage->getToken()->getRoles());
+
+        //check if user manager of badge organization (issuer)
+        $administratedOrganizationsIds = array_map(function (Organization $organization) {
+            return $organization->getId();
+        }, $currentUser->getAdministratedOrganizations()->toArray());
+
+        if ($badge->getIssuer() && in_array($badge->getIssuer()->getId(), $administratedOrganizationsIds)) {
+            $isOrganizationManager = true;
+        }
+        //check if user in allowed users or groups
+
+        foreach ($issuingModes as $mode) {
+            switch ($mode) {
+                case BadgeClass::ISSUING_MODE_USER:
+                    $allowedUserIds = array_merge(array_map(function (User $user) {
+                        return $user->getId();
+                    }, $badge->getAllowedIssuers()->toArray(), $allowedUserIds));
+                    break;
+                case BadgeClass::ISSUING_MODE_GROUP:
+                    $users = [];
+
+                    foreach ($this->getAllowedIssuersGroups() as $group) {
+                        foreach ($group->getUsers() as $user) {
+                            $users[$user->getId()] = $user;
+                        }
+                    }
+
+                    $allowedUserIds = array_merge(array_map(function (User $user) {
+                        return $user->getId();
+                    }, $users, $allowedUserIds));
+                    break;
+                case BadgeClass::ISSUING_MODE_PEER:
+                    //check if current user already has the badge
+                    $assertion = $this->om->getRepository(Assertion::class)->findOneBy(['badge' => $badge, 'recipient' => $currentUser]);
+
+                    if ($assertion) {
+                        $assign = true;
+                    }
+                    break;
+                case BadgeClass::ISSUING_MODE_WORKSPACE:
+                    $workspace = $badge->getWorkspace();
+                    $managerRole = $workspace->getManagerRole();
+                    if (in_array($managerRole, $roles)) {
+                        $assign = true;
+                    }
+                    break;
+            }
+        }
+
+        if (in_array($currentUser->getId(), $allowedUserIds)) {
+            $assign = true;
+        }
+
+        $assign = $assign | $isOrganizationManager;
+        $isAdmin = false;
+        //check administrator status here
+
+        foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
+            if ('ROLE_ADMIN' === $role->getRole()) {
+                $isAdmin = true;
+            }
+        }
+
+        return [
+          'assign' => (bool) ($assign | $isAdmin),
+          'edit' => (bool) ($isOrganizationManager | $isAdmin),
+          'delete' => (bool) ($isOrganizationManager | $isAdmin),
+        ];
     }
 
     public function getClass()

@@ -4,6 +4,9 @@ import {url} from '#/main/app/api/router'
 
 /* global OpenBadges */
 
+//need to load OpenBadges
+
+
 /**
  * Displays a general information about a resource node.
  *
@@ -12,7 +15,7 @@ import {url} from '#/main/app/api/router'
 export default (rows) => ({
   type: CALLBACK_BUTTON,
   icon: 'fa fa-fw fa-save',
-  label: trans('push-to-backpack'),
+  label: trans('push_to_backpack', {}, 'openbadge'),
   scope: ['object'],
   displayed: true,
   callback: () => {

@@ -11,7 +11,8 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -21,13 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Assertion
 {
-    use UuidTrait;
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Uuid;
+    use Id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -81,30 +77,6 @@ class Assertion
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    /**
-     * Get the value of Id.
-     *
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of Id.
-     *
-     * @param mixed id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**

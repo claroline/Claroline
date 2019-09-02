@@ -5,11 +5,11 @@ namespace Claroline\AppBundle\Controller;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\Routing\Documentator;
-use Claroline\AppBundle\API\Routing\Finder;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Routing\Documentator;
+use Claroline\AppBundle\Routing\Finder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,6 +48,10 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     abstract public function getName();
 
+    /**
+     * @deprecated
+     * user setter injection instead
+     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -59,6 +63,39 @@ abstract class AbstractCrudController extends AbstractApiController
         $this->routerDocumentator = $container->get('claroline.api.routing.documentator');
         $this->options = $this->mergeOptions();
     }
+
+    //these are the injectors you whould use
+    public function setFinder(FinderProvider $finder)
+    {
+        $this->finder = $finder;
+    }
+
+    public function setSerializer(SerializerProvider $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    public function setCrud(Crud $crud)
+    {
+        $this->crud = $crud;
+    }
+
+    public function setObjectManager(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
+
+    public function setRouterFinder(Finder $routerFinder)
+    {
+        $this->routerFinder = $routerFinder;
+    }
+
+    public function setRouterDocumentator(Documentator $routerDocumentator)
+    {
+        $this->routerDocumentator = $routerDocumentator;
+    }
+
+    //end
 
     /**
      * @ApiDoc(
@@ -511,9 +548,11 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @return array
      */
-    private function mergeOptions()
+    public function mergeOptions()
     {
-        return array_merge_recursive($this->getDefaultOptions(), $this->getOptions());
+        $this->options = array_merge_recursive($this->getDefaultOptions(), $this->getOptions());
+
+        return $this->options;
     }
 
     /**

@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {Badge as BadgeType} from '#/plugin/open-badge/tools/badges/prop-types'
-import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/badge-card'
+import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 
 const BadgeDisplay = (props) => props.data ?
   <BadgeCard
@@ -16,7 +16,7 @@ const BadgeDisplay = (props) => props.data ?
   <EmptyPlaceholder
     size="lg"
     icon="fa fa-books"
-    title={trans('no_badge')}
+    title={trans('no_badge', {}, 'openbadge')}
   />
 
 BadgeDisplay.propTypes = {

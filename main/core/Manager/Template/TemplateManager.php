@@ -88,7 +88,7 @@ class TemplateManager
             }
             // If no template is found for the given locale or locale is null, uses default locale
             if (!$locale || !$template) {
-                $defaultLocale = isset($parameters['locale']['default']) ? $parameters['locales']['default'] : null;
+                $defaultLocale = isset($parameters['locales']['default']) ? $parameters['locales']['default'] : null;
 
                 if ($defaultLocale && $defaultLocale !== $locale) {
                     $template = $this->templateRepo->findOneBy([

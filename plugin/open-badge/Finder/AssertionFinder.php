@@ -14,12 +14,7 @@ namespace Claroline\OpenBadgeBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.open_badge.finder.assertion")
- * @DI\Tag("claroline.finder")
- */
 class AssertionFinder extends AbstractFinder
 {
     public function getClass()

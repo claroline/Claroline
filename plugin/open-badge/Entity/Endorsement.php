@@ -11,7 +11,8 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,13 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Endorsement
 {
-    use UuidTrait;
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Uuid;
+    use Id;
 
     /**
      * @ORM\Column(type="json_array")

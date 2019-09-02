@@ -138,7 +138,8 @@ registry.add('ClarolineCoreBundle', {
       'group'        : () => { return import(/* webpackChunkName: "core-data-type-group" */         '#/main/core/data/types/group') },
       'location'     : () => { return import(/* webpackChunkName: "core-data-type-location" */      '#/main/core/data/types/location') },
       'template_type': () => { return import(/* webpackChunkName: "core-data-type-template-type" */ '#/main/core/data/types/template-type') },
-      'roles'        : () => { return import(/* webpackChunkName: "core-data-type-roles" */         '#/main/core/data/types/roles') }
+      'roles'        : () => { return import(/* webpackChunkName: "core-data-type-roles" */         '#/main/core/data/types/roles') },
+      'role'         : () => { return import(/* webpackChunkName: "core-data-type-roles" */         '#/main/core/data/types/role') }
     },
     sources: {
       'resources'         : () => { return import(/* webpackChunkName: "core-data-source-resources" */  '#/main/core/data/sources/resources') },

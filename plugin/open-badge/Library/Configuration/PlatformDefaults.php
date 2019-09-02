@@ -12,12 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Library\Configuration;
 
 use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.configuration")
- */
 class PlatformDefaults implements ParameterProviderInterface
 {
     public function getDefaultParameters()

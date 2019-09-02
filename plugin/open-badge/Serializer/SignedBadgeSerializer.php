@@ -4,12 +4,7 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\OpenBadgeBundle\Entity\SignedBadge;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.serializer")
- */
 class SignedBadgeSerializer
 {
     use SerializerTrait;

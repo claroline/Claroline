@@ -4,26 +4,13 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.serializer")
- */
 class CryptographicKeySerializer
 {
     use SerializerTrait;
 
-    /**
-     * @DI\InjectParams({
-     *     "router"             = @DI\Inject("router"),
-     *     "profileSerializer"  = @DI\Inject("claroline.serializer.open_badge.profile")
-     * })
-     *
-     * @param Router $router
-     */
     public function __construct(RouterInterface $router, ProfileSerializer $profileSerializer)
     {
         $this->router = $router;

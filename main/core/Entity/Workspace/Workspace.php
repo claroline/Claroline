@@ -698,6 +698,8 @@ class Workspace
                     return $role;
                 }
             }
+
+            return $this->roles[0];
         }
 
         return $this->defaultRole;

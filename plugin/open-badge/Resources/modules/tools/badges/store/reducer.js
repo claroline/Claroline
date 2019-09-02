@@ -3,27 +3,21 @@ import {Badge as BadgeType} from '#/plugin/open-badge/tools/badges/prop-types'
 import {combineReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
-import {makeInstanceAction} from '#/main/app/store/actions'
-import {makeReducer} from '#/main/app/store/reducer'
-
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {selectors} from '#/plugin/open-badge/tools/badges/store/selectors'
 
 import {reducer as parametersReducer} from '#/plugin/open-badge/tools/badges/parameters/store/reducer'
 
 const reducer = combineReducers({
-  workspace: makeReducer(null, {
-    [makeInstanceAction(TOOL_LOAD, 'open-badge')]: (state, action) => action.toolData.workspace || state
-  }),
   badges: combineReducers({
-    list: makeListReducer('badges.list', {}),
-    mine: makeListReducer('badges.mine', {}),
-    current: makeFormReducer('badges.current', {
+    list: makeListReducer(selectors.STORE_NAME + '.badges.list', {}),
+    mine: makeListReducer(selectors.STORE_NAME + '.badges.mine', {}),
+    current: makeFormReducer(selectors.STORE_NAME + '.badges.current', {
       data: BadgeType.defaultProps
     }, {
-      assertions: makeListReducer('badges.current.assertions')
+      assertions: makeListReducer(selectors.STORE_NAME + '.badges.current.assertions')
     }),
-    assertion: makeFormReducer('badges.assertion', {}, {
-      evidences: makeListReducer('badges.assertion.evidences')
+    assertion: makeFormReducer(selectors.STORE_NAME + '.badges.assertion', {}, {
+      evidences: makeListReducer(selectors.STORE_NAME + '.badges.assertion.evidences')
     })
   }),
   parameters: parametersReducer

@@ -3,11 +3,7 @@
 namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- */
 class HostedBadgeSerializer
 {
     use SerializerTrait;

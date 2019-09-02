@@ -14,19 +14,9 @@ namespace Claroline\OpenBadgeBundle\Security\Voter;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class EvidenceVoter extends AbstractVoter
 {
-    /**
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.open_badge_manager")
-     * })
-     */
     public function setManager(OpenBadgeManager $manager)
     {
         $this->manager = $manager;

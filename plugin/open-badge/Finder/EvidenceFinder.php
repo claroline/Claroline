@@ -14,12 +14,7 @@ namespace Claroline\OpenBadgeBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.openbadge.evidence")
- * @DI\Tag("claroline.finder")
- */
 class EvidenceFinder extends AbstractFinder
 {
     public function getClass()

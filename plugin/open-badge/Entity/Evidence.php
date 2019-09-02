@@ -11,8 +11,11 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,14 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Evidence
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use Uuid;
+    use Id;
 
     /**
      * @ORM\Column(type="text")
@@ -62,40 +59,29 @@ class Evidence
     private $assertion;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation")
      *
-     * @var ResourceNode
+     * @var ResourceUserEvaluation
      */
-    private $resourceEvidences;
+    private $resourceEvidence;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule")
+     *
+     * @var Rule
+     */
+    private $rule;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
+     * @var User
+     */
+    private $user;
 
     public function __construct()
     {
         $this->refreshUuid();
-        $this->resourceEvidences = new ArrayCollection();
-    }
-
-    /**
-     * Get the value of Id.
-     *
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of Id.
-     *
-     * @param mixed id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -242,14 +228,33 @@ class Evidence
         return $this;
     }
 
-    public function setResourceEvidences(array $nodes)
+    public function setResourceEvidence($resourceEvidence)
     {
-        $this->resourceEvidences->clear();
-        $this->resourceEvidences = $nodes;
+        $this->resourceEvidence = $resourceEvidence;
     }
 
-    public function getResourceEvidences()
+    public function getResourceEvidence()
     {
-        return $this->resourceEvidences;
+        return $this->resourceEvidence;
+    }
+
+    public function setRule(Rule $rule)
+    {
+        $this->rule = $rule;
+    }
+
+    public function getRule()
+    {
+        return $this->rule;
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 }

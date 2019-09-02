@@ -11,7 +11,8 @@
 
 namespace Claroline\OpenBadgeBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,23 +25,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class BadgeClass
 {
-    use UuidTrait;
+    use Uuid;
+    use Id;
 
     const ISSUING_MODE_ORGANIZATION = 'organization';
     const ISSUING_MODE_USER = 'user';
     const ISSUING_MODE_GROUP = 'group';
     const ISSUING_MODE_PEER = 'peer';
     const ISSUING_MODE_WORKSPACE = 'workspace';
-    const ISSUING_MODE_AUTO = 'auto';
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
 
     /**
      * @ORM\Column()
@@ -71,6 +63,11 @@ class BadgeClass
     private $criteria;
 
     /**
+     * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule", mappedBy="badge")
+     */
+    private $rules;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
      *
      * @var Organization
@@ -79,8 +76,6 @@ class BadgeClass
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     *
-     * @var Organization
      */
     private $workspace;
 
@@ -117,15 +112,11 @@ class BadgeClass
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
-     *
-     * @var Organization
      */
     private $allowedIssuers;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group")
-     *
-     * @var Organization
      */
     private $allowedIssuersGroups;
 
@@ -140,31 +131,8 @@ class BadgeClass
     {
         $this->refreshUuid();
         $this->allowedIssuers = new ArrayCollection();
+        $this->rules = new ArrayCollection();
         $this->allowedIssuersGroups = new ArrayCollection();
-    }
-
-    /**
-     * Get the value of Id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set the value of Id.
-     *
-     * @param int id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -344,8 +312,24 @@ class BadgeClass
         $this->allowedIssuersGroups = $groups;
     }
 
-    public function getAllowedIssuers()
+    public function getAllowedIssuers($includeGroups = false)
     {
+        if ($includeGroups) {
+            $users = [];
+
+            foreach ($this->getAllowedIssuersGroups() as $group) {
+                foreach ($group->getUsers() as $user) {
+                    $users[$user->getId()] = $user;
+                }
+            }
+
+            foreach ($this->allowedIssuers as $user) {
+                $users[$user->getId()] = $user;
+            }
+
+            return $users;
+        }
+
         return $this->allowedIssuers;
     }
 
@@ -362,5 +346,10 @@ class BadgeClass
     public function getIssuingMode()
     {
         return $this->issuingMode;
+    }
+
+    public function getRules()
+    {
+        return $this->rules;
     }
 }

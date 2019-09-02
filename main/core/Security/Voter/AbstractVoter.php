@@ -46,13 +46,23 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     protected $container;
 
     /**
+     * Should use setter instead.
+     *
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
      * })
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
     }

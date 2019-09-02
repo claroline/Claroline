@@ -3,6 +3,7 @@ import {url} from '#/main/app/api'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
+import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
 export const actions = {}
 
@@ -49,8 +50,8 @@ actions.addUsers = (id, users) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('badges.list'))
-      dispatch(listActions.invalidateData('badges.current.assertions'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.badges.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.badges.current.assertions'))
     }
   }
 })

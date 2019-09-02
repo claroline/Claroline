@@ -40,7 +40,7 @@ class RegistrationController extends AbstractApiController
     private $authorization;
 
     /** @var ObjectManager */
-    private $om;
+    protected $om;
 
     /** @var SerializerProvider */
     private $serializer;

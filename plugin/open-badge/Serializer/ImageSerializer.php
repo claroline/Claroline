@@ -3,20 +3,12 @@
 namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @DI\Service("claroline.serializer.open_badge.image")
- */
 class ImageSerializer
 {
     /**
-     * @DI\InjectParams({
-     *     "router" = @DI\Inject("router")
-     * })
-     *
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {

@@ -13,32 +13,27 @@ namespace Claroline\OpenBadgeBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 /**
  * Badge tool.
- *
- * @DI\Service()
  */
 class ToolListener
 {
     /**
      * BadgeListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer"        = @DI\Inject("claroline.api.serializer")
-     * })
      */
     public function __construct(
-        SerializerProvider $serializer
+        SerializerProvider $serializer,
+        EngineInterface $templating
     ) {
+        $this->templating = $templating;
         $this->serializer = $serializer;
     }
 
     /**
      * Displays home on Desktop.
-     *
-     * @DI\Observe("open_tool_desktop_open-badge")
      *
      * @param DisplayToolEvent $event
      */
@@ -50,14 +45,24 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_open-badge")
-     *
      * @param DisplayToolEvent $event
      */
     public function onDisplayWorkspace(DisplayToolEvent $event)
     {
-        $workspace = $event->getWorkspace();
+        $event->setData([]);
 
-        $event->setData(['workspace' => $this->serializer->serialize($workspace)]);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @param InjectJavascriptEvent $event
+     *
+     * @return string
+     */
+    public function onInjectJs(InjectJavascriptEvent $event)
+    {
+        $event->addContent(
+            $this->templating->render('ClarolineOpenBadgeBundle::javascripts.html.twig')
+        );
     }
 }

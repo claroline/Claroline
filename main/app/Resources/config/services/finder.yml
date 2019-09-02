@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+        public: true #because lazy
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            autowire: false
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                    - '@claroline.persistence.object_manager'
+                    - '@doctrine.orm.entity_manager'
+                    - '@claroline.event.event_dispatcher'

@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\OpenBadgeBundle\Listener\RuleListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@translator'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: listenUserPatch }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_role, method: listenRolePatch }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_group, method: listenGroupPatch }
+            - { name: kernel.event_listener, event: workspace_evaluation, method: onWorkspaceEvaluation }
+
+    Claroline\OpenBadgeBundle\Listener\ToolListener:
+        arguments:
+            - '@claroline.api.serializer'
+            - '@templating'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_open-badge, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: open_tool_workspace_open-badge, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: layout.inject.javascript, method: onInjectJs }

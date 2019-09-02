@@ -78,12 +78,10 @@ class RoleCrud
     {
         /** @var Role $role */
         $role = $event->getObject();
-        $users = $event->getValue();
+        $user = $event->getValue();
 
-        foreach ($users as $user) {
-            if (!$user->hasRole($role->getName())) {
-                $this->dispatcher->dispatch('log', 'Log\LogRoleSubscribe', [$role, $user]);
-            }
+        if (!$user->hasRole($role->getName())) {
+            $this->dispatcher->dispatch('log', 'Log\LogRoleSubscribe', [$role, $user]);
         }
     }
 }

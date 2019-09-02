@@ -5,22 +5,13 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @DI\Service("claroline.serializer.open_badge.profile")
- */
 class ProfileSerializer
 {
     /**
-     * @DI\InjectParams({
-     *     "router" = @DI\Inject("router"),
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router, ObjectManager $om)
     {

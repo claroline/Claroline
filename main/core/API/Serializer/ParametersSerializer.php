@@ -184,9 +184,11 @@ class ParametersSerializer
     {
         $uploadedFiles = [];
 
-        foreach ($data['javascripts'] as $url) {
-            $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $url]);
-            $uploadedFiles[] = $this->serializer->serialize($file);
+        if (isset($data['javascripts'])) {
+            foreach ($data['javascripts'] as $url) {
+                $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $url]);
+                $uploadedFiles[] = $this->serializer->serialize($file);
+            }
         }
 
         return $uploadedFiles;

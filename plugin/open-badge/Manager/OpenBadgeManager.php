@@ -4,31 +4,44 @@ namespace Claroline\OpenBadgeBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-/**
- * @DI\Service("claroline.manager.open_badge_manager")
- */
 class OpenBadgeManager
 {
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var TemplateManager */
+    private $templateManager;
+
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+
+    /** @var string */
+    private $webDir;
+
     /**
-     * Crud constructor.
+     * OpenBadgeManager constructor.
      *
-     * @DI\InjectParams({
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
-     *
-     * @param ObjectManager $om
+     * @param ObjectManager    $om
+     * @param TemplateManager  $templateManager
+     * @param WorkspaceManager $workspaceManager
+     * @param string           $webDir
      */
-    public function __construct(ObjectManager $om, WorkspaceManager $workspaceManager)
-    {
+    public function __construct(
+        ObjectManager $om,
+        TemplateManager $templateManager,
+        WorkspaceManager $workspaceManager,
+        $webDir
+    ) {
         $this->om = $om;
+        $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
+        $this->webDir = $webDir;
     }
 
     public function addAssertion(BadgeClass $badge, User $user)
@@ -92,11 +105,40 @@ class OpenBadgeManager
                 if ($workspace) {
                 }
                 break;
-              case BadgeClass::ISSUING_MODE_AUTO:
-                break;
             }
         }
 
         return false;
+    }
+
+    public function generateCertificate(Assertion $assertion)
+    {
+        $user = $assertion->getRecipient();
+        $badge = $assertion->getBadge();
+        $organization = $badge->getIssuer();
+        $location = 0 < count($organization->getLocations()) ? $organization->getLocations()->toArray()[0] : null;
+
+        $placeholders = [
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            'badge_name' => $badge->getName(),
+            'badge_description' => $badge->getDescription(),
+            'badge_image' => '<img src="'.$this->webDir.DIRECTORY_SEPARATOR.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_duration' => $badge->getDurationValidation(),
+            'assertion_id' => $assertion->getUuid(),
+            'issued_on' => $assertion->getIssuedOn()->format('d-m-Y H:i'),
+            'issuer_name' => $organization->getName(),
+            'issuer_email' => $organization->getEmail(),
+            'issuer_phone' => $location ? $location->getPhone() : null,
+            'issuer_street' => $location ? $location->getStreet() : null,
+            'issuer_street_number' => $location ? $location->getStreetNumber() : null,
+            'issuer_box_number' => $location ? $location->getBoxNumber() : null,
+            'issuer_pc' => $location ? $location->getPc() : null,
+            'issuer_town' => $location ? $location->getTown() : null,
+            'issuer_country' => $location ? $location->getCountry() : null,
+        ];
+
+        return $this->templateManager->getTemplate('badge_certificate', $placeholders);
     }
 }

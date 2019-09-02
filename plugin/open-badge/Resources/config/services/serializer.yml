@@ -1,0 +1,84 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because lazy
+
+    Claroline\OpenBadgeBundle\Serializer\AlignementObjectSerializer:
+
+    Claroline\OpenBadgeBundle\Serializer\AssertionSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.user'
+            - '@Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer'
+            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
+            - '@router'
+            - '@Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer'
+            - '@Claroline\OpenBadgeBundle\Serializer\IdentityObjectSerializer'
+
+    Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.utilities.file'
+            - '@router'
+            - '@claroline.persistence.object_manager'
+            - '@claroline.manager.organization.organization_manager'
+            - '@Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer'
+            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
+            - '@event_dispatcher'
+            - '@claroline.serializer.workspace'
+            - '@claroline.serializer.user'
+            - '@claroline.serializer.group'
+            - '@Claroline\OpenBadgeBundle\Serializer\ImageSerializer'
+            - '@security.token_storage'
+            - '@claroline.serializer.organization'
+            - '@claroline.serializer.public_file'
+            - '@Claroline\OpenBadgeBundle\Serializer\RuleSerializer'
+
+    Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer:
+        arguments:
+            - '@router'
+
+    Claroline\OpenBadgeBundle\Serializer\CryptographicKeySerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@router'
+            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
+
+    Claroline\OpenBadgeBundle\Serializer\EndorsementSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@router'
+
+    Claroline\OpenBadgeBundle\Serializer\EvidenceSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@router'
+            - '@claroline.serializer.resource_node'
+
+    Claroline\OpenBadgeBundle\Serializer\HostedBadgeSerializer: ~
+
+    Claroline\OpenBadgeBundle\Serializer\IdentityObjectSerializer: ~
+
+    Claroline\OpenBadgeBundle\Serializer\ImageSerializer:
+        arguments:
+            - '@router'
+
+    Claroline\OpenBadgeBundle\Serializer\ProfileSerializer:
+        arguments:
+            - '@router'
+            - '@claroline.persistence.object_manager'
+
+    Claroline\OpenBadgeBundle\Serializer\RevocationListSerializer: ~
+
+    Claroline\OpenBadgeBundle\Serializer\RuleSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.persistence.object_manager'
+
+    Claroline\OpenBadgeBundle\Serializer\SignedBadgeSerializer:
+        tags: [claroline.serializer]
+
+    Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer:
+        arguments:
+            - '@router'

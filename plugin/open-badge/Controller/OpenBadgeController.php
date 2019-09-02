@@ -20,7 +20,6 @@ use Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer;
 use Claroline\OpenBadgeBundle\Serializer\ImageSerializer;
 use Claroline\OpenBadgeBundle\Serializer\Options;
 use Claroline\OpenBadgeBundle\Serializer\ProfileSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,14 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OpenBadgeController
 {
-    /**
-     * @DI\InjectParams({
-     *     "serializer"         = @DI\Inject("claroline.api.serializer"),
-     *     "criteriaSerializer" = @DI\Inject("claroline.serializer.open_badge.criteria"),
-     *     "imageSerializer"    = @DI\Inject("claroline.serializer.open_badge.image"),
-     *     "profileSerializer"  = @DI\Inject("claroline.serializer.open_badge.profile")
-     * })
-     */
     public function _construct(
         SerializerProvider $serializer,
         CriteriaSerializer $criteriaSerializer,

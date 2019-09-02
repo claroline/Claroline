@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        autoconfigure: false
+        public: true #because lazy
+        autowire: false
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            autowire: false
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                    - '@claroline.persistence.object_manager'
+                    - '@doctrine.orm.entity_manager'
+                    - '@claroline.event.event_dispatcher'
+
+    Claroline\OpenBadgeBundle\Finder\AssertionFinder: ~
+
+    Claroline\OpenBadgeBundle\Finder\EvidenceFinder: ~
+
+    Claroline\OpenBadgeBundle\Finder\BadgeClassFinder:
+      arguments:
+        - '@security.token_storage'
