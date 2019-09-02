@@ -290,6 +290,7 @@ class FacetManager
                 } else {
                     return $ffv->getStringValue();
                 }
+                // no break
             case FieldFacet::CASCADE_TYPE:
                 return $ffv->getArrayValue();
             default:

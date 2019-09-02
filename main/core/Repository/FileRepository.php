@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\ORM\EntityRepository;
 
 class FileRepository extends EntityRepository
 {

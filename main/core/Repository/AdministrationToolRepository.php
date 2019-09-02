@@ -11,19 +11,18 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Manager\PluginManager;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class AdministrationToolRepository extends EntityRepository implements ContainerAwareInterface
+class AdministrationToolRepository extends ServiceEntityRepository
 {
-    private $bundles = [];
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(RegistryInterface $registry, PluginManager $manager)
     {
-        $this->container = $container;
-        $this->bundles = $this->container->get('claroline.manager.plugin_manager')->getEnabled(true);
+        $this->bundles = $manager->getEnabled(true);
+
+        parent::__construct($registry, AdminTool::class);
     }
 
     public function findAll()
@@ -47,7 +46,7 @@ class AdministrationToolRepository extends EntityRepository implements Container
         foreach ($roles as $role) {
             $rolesNames[] = $role->getRole();
 
-            if ($role->getRole() === 'ROLE_ADMIN') {
+            if ('ROLE_ADMIN' === $role->getRole()) {
                 $isAdmin = true;
             }
         }

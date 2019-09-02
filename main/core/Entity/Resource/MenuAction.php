@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceActionRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceActionRepository")
  * @ORM\Table(name="claro_menu_action")
  */
 class MenuAction

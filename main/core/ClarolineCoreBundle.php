@@ -17,7 +17,6 @@ use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RouterPass;
-use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
@@ -36,7 +35,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $container->addCompilerPass(new PlatformConfigPass());
         $container->addCompilerPass(new DynamicConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
-        $container->addCompilerPass(new RuleConstraintsConfigPass());
         $container->addCompilerPass(new RouterPass());
         $container->addCompilerPass(new MailingConfigPass());
     }

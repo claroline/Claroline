@@ -97,11 +97,11 @@ class IconItemRepository extends EntityRepository
     public function findMimeTypesForCalibration()
     {
         $dql = '
-            SELECT icon.mimeType FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon icon 
-            WHERE icon.mimeType != :mimeType 
-            AND icon.mimeType IS NOT NULL 
-            AND icon.isShortcut = false 
-            GROUP BY icon.mimeType 
+            SELECT icon.mimeType FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon icon
+            WHERE icon.mimeType != :mimeType
+            AND icon.mimeType IS NOT NULL
+            AND icon.isShortcut = false
+            GROUP BY icon.mimeType
             HAVING COUNT(icon.id) > 1
         ';
 
@@ -118,10 +118,10 @@ class IconItemRepository extends EntityRepository
 
         $sql = '
             UPDATE claro_icon_item ii, (
-                SELECT MIN(id) AS id, mimeType AS mimeType 
-                FROM claro_resource_icon 
+                SELECT MIN(id) AS id, mimeType AS mimeType
+                FROM claro_resource_icon
                 WHERE mimeType IN ('.implode(', ', $expr->getArguments()).')
-                AND is_shortcut = :shortcut 
+                AND is_shortcut = :shortcut
                 GROUP BY mimeType) ri
             SET ii.resource_icon_id = ri.id
             WHERE ii.mime_type = ri.mimeType
@@ -147,12 +147,12 @@ class IconItemRepository extends EntityRepository
             AND (
                 ri.id IN (
                   SELECT DISTINCT resource_icon_id FROM claro_icon_item
-                  WHERE mime_type IN (' .implode(', ', $expr->getArguments()).')
-                ) 
+                  WHERE mime_type IN ('.implode(', ', $expr->getArguments()).')
+                )
                 OR ri.id IN (
-                    SELECT DISTINCT ri2.shortcut_id FROM claro_icon_item ii2 
+                    SELECT DISTINCT ri2.shortcut_id FROM claro_icon_item ii2
                     INNER JOIN claro_resource_icon ri2 ON ii2.resource_icon_id = ri2.id
-                    WHERE ii2.mime_type IN (' .implode(', ', $expr->getArguments()).')
+                    WHERE ii2.mime_type IN ('.implode(', ', $expr->getArguments()).')
                 )
             )
         ';
@@ -165,7 +165,7 @@ class IconItemRepository extends EntityRepository
         $qb = $this->createQueryBuilder('i');
         $expr = $qb->expr()->in('i.mimeType', $mimeTypes);
 
-        $sql = 'SELECT DISTINCT ri2.shortcut_id AS id FROM claro_icon_item ii2 
+        $sql = 'SELECT DISTINCT ri2.shortcut_id AS id FROM claro_icon_item ii2
                 INNER JOIN claro_resource_icon ri2 ON ii2.resource_icon_id = ri2.id';
 
         $rsm = new ResultSetMapping();
@@ -173,12 +173,12 @@ class IconItemRepository extends EntityRepository
         $ids = array_column($this->getEntityManager()->createNativeQuery($sql, $rsm)->getScalarResult(), 'id');
         $sql = '
             DELETE FROM claro_resource_icon
-            WHERE mimeType IN (' .implode(', ', $expr->getArguments()).')
+            WHERE mimeType IN ('.implode(', ', $expr->getArguments()).')
             AND id NOT IN (
                 SELECT DISTINCT resource_icon_id FROM claro_icon_item
             )
             AND id NOT IN (
-                ' .implode(', ', $ids).'
+                '.implode(', ', $ids).'
             )
         ';
 

@@ -14,19 +14,17 @@ namespace Claroline\CoreBundle\Repository;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Manager\PluginManager;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class ToolRepository extends EntityRepository implements ContainerAwareInterface
+class ToolRepository extends ServiceEntityRepository
 {
-    private $bundles = [];
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(RegistryInterface $registry, PluginManager $manager)
     {
-        $this->container = $container;
-        $this->bundles = $this->container->get('claroline.manager.plugin_manager')->getEnabled(true);
+        $this->bundles = $manager->getEnabled(true);
+
+        parent::__construct($registry, Tool::class);
     }
 
     /**

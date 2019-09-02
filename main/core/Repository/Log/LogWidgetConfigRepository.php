@@ -17,7 +17,7 @@ class LogWidgetConfigRepository extends EntityRepository
 {
     public function findByWorkspaces(array $workspaces)
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($workspaces as $workspace) {
             $ids[] = $workspace->getId();

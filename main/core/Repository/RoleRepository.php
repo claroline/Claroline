@@ -203,7 +203,7 @@ class RoleRepository extends EntityRepository
      * @param User      $user      The subject of the role
      * @param Workspace $workspace The workspace the role should be bound to
      *
-     * @return null|Role
+     * @return Role|null
      */
     public function findWorkspaceRolesForUser(User $user, Workspace $workspace)
     {

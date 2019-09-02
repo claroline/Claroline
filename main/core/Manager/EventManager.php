@@ -276,7 +276,7 @@ class EventManager
             $eventNameChunks = explode('-', $eventName);
             $eventKey = "log_${eventName}_filter";
 
-            if ($eventNameChunks[0] !== 'clacoformbundle' && !isset($sortedEvents[$eventNameChunks[0]])) {
+            if ('clacoformbundle' !== $eventNameChunks[0] && !isset($sortedEvents[$eventNameChunks[0]])) {
                 $sortedEvents[$eventNameChunks[0]] = ['all' => "${eventNameChunks[0]}::all"];
             }
 
@@ -286,7 +286,7 @@ class EventManager
                 } else {
                     $genericResourceEvents[$eventKey] = $eventName;
                 }
-            } elseif ($eventNameChunks[0] === 'clacoformbundle') {
+            } elseif ('clacoformbundle' === $eventNameChunks[0]) {
                 $tempResourceEvents[$eventNameChunks[0]][$eventKey] = $eventName;
             } else {
                 $sortedEvents[$eventNameChunks[0]][$eventKey] = $eventName;
@@ -304,7 +304,7 @@ class EventManager
         }
 
         foreach (array_keys($tempResourceEvents) as $resourceType) {
-            if ($resourceType === 'resource_shortcut') {
+            if ('resource_shortcut' === $resourceType) {
                 continue;
             }
 

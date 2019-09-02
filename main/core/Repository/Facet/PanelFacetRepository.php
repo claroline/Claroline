@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Repository\Facet;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\EntityRepository;
 
 class PanelFacetRepository extends EntityRepository
 {

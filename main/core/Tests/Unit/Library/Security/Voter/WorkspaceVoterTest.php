@@ -37,7 +37,7 @@ class WorkspaceVoterTest extends MockeryTestCase
         $voter = $this->getVoter();
         $workspace = new Workspace();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $repo = $this->mock('Claroline\CoreBundle\Repository\ToolRepository');
+        $repo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Tool\Tool')->andReturn($repo);
         $repo->shouldReceive('findDisplayedByRolesAndWorkspace')->andReturn($openableTools);
         $this->ut->shouldReceive('getRoles')->andReturn(array());

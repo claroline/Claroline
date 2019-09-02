@@ -1,0 +1,50 @@
+services:
+    _defaults:
+        autowire: true #change to true
+        autoconfigure: true #change to true
+        public: false #default should be false now
+
+
+    #         tags: [doctrine.repository_service]
+
+        # Register all classes in these directories as services
+
+    _instanceof:
+        Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository:
+            autowire: false
+            tags: [doctrine.repository_service]
+
+    Claroline\CoreBundle\Repository\AdministrationToolRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\Repository\OrderedToolRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\Repository\ResourceActionRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\Repository\ResourceTypeRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\Repository\ToolRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\Repository\UserRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.config.platform_config_handler'
+
+    Claroline\CoreBundle\Repository\Log\LogRepository:
+        arguments:
+          - '@Symfony\Bridge\Doctrine\RegistryInterface'
+          - '@claroline.api.finder.log'
