@@ -92,7 +92,7 @@ class ExternalAuthenticationListener
     {
         if ($event instanceof LogUserDeleteEvent) {
             $receiver = $event->getReceiver();
-            if ($receiver !== null) {
+            if (null !== $receiver) {
                 $this->oauthManager->unlinkAccount($receiver->getId());
             }
         }

@@ -115,19 +115,21 @@ const getSimpleAccessRule = (perms, workspace = null) => {
   const anonymous = findRolePermissions(roleAnonymous(), perms)
   if (anonymous.open) {
     return 'all'
-  } else {
-    const users = findRolePermissions(roleUser(), perms)
-    if (users.open) {
-      return 'user'
-    } else {
-      const wsUsers = findRolePermissions(roleWorkspace(workspace), perms)
-      if (wsUsers.open) {
-        return 'workspace'
-      } else {
-        return 'admin'
-      }
+  }
+
+  const users = findRolePermissions(roleUser(), perms)
+  if (users.open) {
+    return 'user'
+  }
+
+  if (workspace) {
+    const wsUsers = findRolePermissions(roleWorkspace(workspace), perms)
+    if (wsUsers.open) {
+      return 'workspace'
     }
   }
+
+  return 'admin'
 }
 
 const setSimpleAccessRule = (perms, rule, workspace = null) => {
