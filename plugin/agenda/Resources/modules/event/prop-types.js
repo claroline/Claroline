@@ -1,5 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
+import {constants} from '#/plugin/agenda/event/constants'
+
 const Event = {
   propTypes: {
     id: T.string.isRequired,
@@ -11,7 +13,10 @@ const Event = {
       url: T.string
     }),
     meta: T.shape({
-      type: T.oneOf(['event', 'task']).isRequired
+      done: T.bool,
+      type: T.oneOf(
+        Object.keys(constants.EVENT_TYPES)
+      ).isRequired
     }),
     display: T.shape({
       color: T.string
@@ -22,7 +27,8 @@ const Event = {
   },
   defaultProps: {
     meta: {
-      type: 'event'
+      done: false,
+      type: constants.EVENT_TYPE_EVENT
     },
     permissions: {}
   }

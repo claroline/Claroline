@@ -30,7 +30,7 @@ export default {
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'meta.isTaskDone',
+        name: 'meta.done',
         alias: 'isTaskDone',
         type: 'boolean',
         label: trans('task_done', {}, 'agenda'),

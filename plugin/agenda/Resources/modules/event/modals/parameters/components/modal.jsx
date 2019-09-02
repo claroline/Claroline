@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {trans, now} from '#/main/app/intl'
+import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
@@ -104,7 +104,7 @@ const ParametersModal = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.event)
+        props.save(props.event, props.onCreate)
         props.fadeModal()
       }}
     />
@@ -114,6 +114,7 @@ ParametersModal.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ),
+  onCreate: T.func,
   // from store
   saveEnabled: T.bool.isRequired,
   loadEvent: T.func.isRequired,

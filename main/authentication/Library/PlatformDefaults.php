@@ -29,8 +29,8 @@ class PlatformDefaults implements ParameterProviderInterface
             $resourceOwnerStr = str_replace(' ', '_', strtolower($resourceOwner));
             $parameters['external_authentication'][$resourceOwnerStr]['client_id'] = null;
             $parameters['external_authentication'][$resourceOwnerStr]['client_secret'] = null;
-            $parameters['external_authentication'][$resourceOwnerStr]['client_active'] = null;
-            $parameters['external_authentication'][$resourceOwnerStr]['client_force_reauthenticate'] = null;
+            $parameters['external_authentication'][$resourceOwnerStr]['client_active'] = false;
+            $parameters['external_authentication'][$resourceOwnerStr]['client_force_reauthenticate'] = false;
         }
 
         return $parameters;

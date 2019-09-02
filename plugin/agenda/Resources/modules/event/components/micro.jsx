@@ -6,6 +6,7 @@ import get from 'lodash/get'
 
 import {ModalButton} from '#/main/app/buttons'
 
+import {constants} from '#/plugin/agenda/event/constants'
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
 import {MODAL_EVENT_ABOUT} from '#/plugin/agenda/event/modals/about'
 
@@ -19,7 +20,8 @@ const EventMicro = props => {
     <ModalButton
       className={classes('agenda-event-micro', props.className, {
         'text-light': color && color.isDark(),
-        'text-dark': color && color.isLight()
+        'text-dark': color && color.isLight(),
+        'done': props.event.meta.done
       })}
       style={color ? {
         backgroundColor: color.toRgbString()
@@ -28,6 +30,10 @@ const EventMicro = props => {
         event: props.event
       }]}
     >
+      {constants.EVENT_TYPE_TASK === props.event.meta.type &&
+        <span className="fa fa-fw fa-tasks icon-with-text-right" />
+      }
+
       {props.event.title}
     </ModalButton>
   )

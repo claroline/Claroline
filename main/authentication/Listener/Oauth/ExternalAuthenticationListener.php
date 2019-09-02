@@ -2,6 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Listener\Oauth;
 
+use Claroline\AuthenticationBundle\Manager\Oauth\OauthManager;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\LoginTargetUrlEvent;
@@ -15,6 +16,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ExternalAuthenticationListener
 {
     private $templating;
+    /** @var OauthManager */
     private $oauthManager;
     private $router;
     /** @var TranslatorInterface */

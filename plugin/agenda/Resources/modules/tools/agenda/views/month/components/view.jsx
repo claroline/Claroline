@@ -97,6 +97,9 @@ class AgendaViewMonthComponent extends Component {
   render() {
     const nowDate = moment(now())
 
+    const monthStart = moment(this.props.range[0])
+    const monthEnd = moment(this.props.range[1])
+
     return (
       <div className="agenda-month" onWheel={this.onWheel}>
         <div className="calendar-row day-names">
@@ -107,7 +110,7 @@ class AgendaViewMonthComponent extends Component {
           )}
         </div>
 
-        {times(5, (weekNum) =>
+        {times(monthEnd.get('week') - monthStart.get('week') + 1, (weekNum) =>
           <div key={`week-${weekNum}`} className="calendar-row week">
             {times(7, (dayNum) => {
               const current = moment(this.props.range[0])
