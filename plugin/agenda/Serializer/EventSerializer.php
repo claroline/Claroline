@@ -105,7 +105,7 @@ class EventSerializer
         return [
             'type' => $event->isTask() ? 'task' : 'event',
             'creator' => $this->userSerializer->serialize($event->getUser()),
-            'isTaskDone' => $event->isTaskDone(),
+            'done' => $event->isTaskDone(),
         ];
     }
 
@@ -144,7 +144,7 @@ class EventSerializer
         $this->sipe('display.color', 'setPriority', $data, $event);
         $this->sipe('allDay', 'setAllDay', $data, $event);
         $this->sipe('description', 'setDescription', $data, $event);
-        $this->sipe('meta.isTaskDone', 'setIsTaskDone', $data, $event);
+        $this->sipe('meta.done', 'setIsTaskDone', $data, $event);
         $this->sipe('isEditable', 'setIsEditable', $data, $event);
 
         if (isset($data['meta'])) {

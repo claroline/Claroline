@@ -16,6 +16,7 @@ actions.loadEvents = makeActionCreator(AGENDA_LOAD_EVENTS, 'events')
 actions.fetchEvents = (rangeDates) => ({
   [API_REQUEST]: {
     url: url(['apiv2_event_list'], {
+      types: ['task', 'event'],
       start: rangeDates[0].format(getApiFormat()),
       end: rangeDates[1].format(getApiFormat())
     }),
@@ -39,34 +40,6 @@ export const AGENDA_UPDATE_FILTER_WORKSPACE = 'AGENDA_UPDATE_FILTER_WORKSPACE'
 
 actions.updateFilterType = makeActionCreator(AGENDA_UPDATE_FILTER_TYPE, 'filters')
 actions.updateFilterWorkspace = makeActionCreator(AGENDA_UPDATE_FILTER_WORKSPACE, 'filters')
-
-//calendarElement is required to refresh the calendar since it's outside react
-actions.create = (event, workspace, calendarRef) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_event_create'],
-    request: {
-      body: JSON.stringify(Object.assign({}, event, {workspace})),
-      method: 'POST'
-    },
-    success: (data) => {
-      calendarRef.fullCalendar('renderEvent', data)
-    }
-  }
-})
-
-actions.update = (event, calendarRef) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_event_update', {id: event.id}],
-    request: {
-      body: JSON.stringify(event),
-      method: 'PUT'
-    },
-    success: (data) => {
-      calendarRef.fullCalendar('removeEvents', data.id)
-      calendarRef.fullCalendar('renderEvent', data)
-    }
-  }
-})
 
 actions.delete = (event, calendarRef) => ({
   [API_REQUEST]: {

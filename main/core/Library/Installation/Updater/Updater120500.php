@@ -130,10 +130,21 @@ class Updater120500 extends Updater
             $this->om->remove($tool);
             $this->om->flush();
         }
+
+        if (!$admin) {
+            $conn = $this->container->get('doctrine.dbal.default_connection');
+            $sql = "DELETE FROM claro_ordered_tool WHERE name = '${toolName}'";
+
+            $this->log($sql);
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+        }
     }
 
     private function renameTool($oldName, $newName, $admin = false)
     {
+        $this->log(sprintf('Renaming `%s` tool into `%s`...', $oldName, $newName));
+
         $tool = $this->om->getRepository($admin ? 'ClarolineCoreBundle:Tool\AdminTool' : 'ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $oldName]);
         if (!empty($tool)) {
             $tool->setName($newName);
