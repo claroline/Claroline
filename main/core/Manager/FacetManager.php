@@ -22,17 +22,11 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @Service("claroline.manager.facet_manager")
- */
 class FacetManager
 {
     private $om;
@@ -43,15 +37,6 @@ class FacetManager
     private $fieldRepo;
     private $container;
 
-    /**
-     * @InjectParams({
-     *     "om"              = @Inject("claroline.persistence.object_manager"),
-     *     "translator"      = @Inject("translator"),
-     *     "authorization"   = @Inject("security.authorization_checker"),
-     *     "tokenStorage"    = @Inject("security.token_storage"),
-     *     "container"       = @Inject("service_container")
-     * })
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,

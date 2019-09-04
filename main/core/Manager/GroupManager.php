@@ -16,11 +16,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\GroupRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.group_manager")
- */
 class GroupManager
 {
     /** @var ObjectManager */
@@ -34,12 +30,6 @@ class GroupManager
 
     /**
      * GroupManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager")
-     * })
      *
      * @param ObjectManager    $om
      * @param StrictDispatcher $eventDispatcher

@@ -18,12 +18,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Repository\DataSourceRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.manager.data_source")
- */
 class DataSourceManager
 {
     /** @var TokenStorageInterface */
@@ -43,13 +39,6 @@ class DataSourceManager
 
     /**
      * WidgetManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "pluginManager"   = @DI\Inject("claroline.manager.plugin_manager")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager         $om

@@ -15,15 +15,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.manager.home_tab_manager")
- */
 class HomeTabManager
 {
     use LoggableTrait;
@@ -34,14 +29,6 @@ class HomeTabManager
     private $om;
     private $container;
 
-    /**
-     * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container" =  @DI\Inject("service_container")
-     * })
-     */
     public function __construct(ContainerInterface $container, ObjectManager $om)
     {
         $this->homeTabRepo = $om->getRepository('ClarolineCoreBundle:Tab\HomeTab');

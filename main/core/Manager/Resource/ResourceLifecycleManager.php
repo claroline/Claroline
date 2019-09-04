@@ -15,12 +15,9 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\PublicationChangeEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Centralizes events dispatched for resources integration.
- *
- * @DI\Service("claroline.manager.resource_lifecycle")
  *
  * @todo finish me
  */
@@ -34,11 +31,6 @@ class ResourceLifecycleManager
 
     /**
      * ResourceLifecycleManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param StrictDispatcher $eventDispatcher
      * @param ObjectManager    $om

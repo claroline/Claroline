@@ -27,15 +27,12 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
- * @DI\Service("claroline.manager.rights_manager")
- *
  * @deprecated use OptimizedRightsManager instead
  */
 class RightsManager
@@ -66,15 +63,6 @@ class RightsManager
 
     /**
      * RightsManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "dispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
-     *     "maskManager"  = @DI\Inject("claroline.manager.mask_manager"),
-     *     "container"    = @DI\Inject("service_container")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager         $om

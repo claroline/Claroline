@@ -13,14 +13,10 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.manager.locale_manager")
- */
 class LocaleManager
 {
     private $defaultLocale;
@@ -32,12 +28,6 @@ class LocaleManager
 
     /**
      * LocaleManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage")
-     * })
      *
      * @param PlatformConfigurationHandler $configHandler
      * @param UserManager                  $userManager

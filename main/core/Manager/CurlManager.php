@@ -11,11 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-
-/**
- * @DI\Service("claroline.manager.curl_manager")
- */
 class CurlManager
 {
     public function exec($url, $payload = null, $type = 'GET', $options = [], $autoClose = true, &$ch = null)

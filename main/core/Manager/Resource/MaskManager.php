@@ -18,11 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\ResourceMaskDecoderRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.mask_manager")
- */
 class MaskManager
 {
     use LoggableTrait;
@@ -45,10 +41,6 @@ class MaskManager
 
     /**
      * MaskManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

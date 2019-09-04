@@ -23,16 +23,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
-use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.manager.tool_manager")
- */
 class ToolManager
 {
     use LoggableTrait;
@@ -67,15 +63,6 @@ class ToolManager
 
     /**
      * ToolManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "utilities"         = @DI\Inject("claroline.utilities.misc"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
-     *     "toolMaskManager"   = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
-     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
-     *     "container"         = @DI\Inject("service_container")
-     * })
      *
      * @param ClaroUtilities         $utilities
      * @param ObjectManager          $om

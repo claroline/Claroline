@@ -12,12 +12,10 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @DI\Service("claroline.transfer.ordered_tool")
- * Not a true Serializer I guess, need to see where it is used. Could be extended after a refactoring
+ * Not a true Serializer I guess, need to see where it is used. Could be extended after a refactoring.
  */
 class OrderedToolTransfer
 {
@@ -27,12 +25,6 @@ class OrderedToolTransfer
     private $toolSerializer;
 
     /**
-     * @DI\InjectParams({
-     *     "toolSerializer" = @DI\Inject("claroline.serializer.tool"),
-     *     "roleSerializer" = @DI\Inject("claroline.serializer.role"),
-     *     "container"      = @DI\Inject("service_container")
-     * })
-     *
      * @param ToolSerializer $toolSerializer
      */
     public function __construct(ToolSerializer $toolSerializer, RoleSerializer $roleSerializer, ContainerInterface $container)

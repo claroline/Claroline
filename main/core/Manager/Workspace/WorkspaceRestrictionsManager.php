@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Manager\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -13,8 +12,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * WorkspaceRestrictionsManager.
  *
  * It validates access restrictions on Workspaces.
- *
- * @DI\Service("claroline.manager.workspace_restrictions")
  *
  * @todo merge restrictions checks with ResourceRestrictionsManager.
  */
@@ -31,12 +28,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * ResourceRestrictionsManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "session"          = @DI\Inject("session"),
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
      *
      * @param SessionInterface              $session
      * @param AuthorizationCheckerInterface $authorization

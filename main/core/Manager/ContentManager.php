@@ -15,14 +15,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\ContentTranslation;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @Service("claroline.manager.content_manager")
- */
 class ContentManager
 {
     /**
@@ -49,12 +43,6 @@ class ContentManager
      * @param Registry      $manager,
      * @param RequestStack  $requestStack,
      * @param ObjectManager $persistence
-     *
-     * @InjectParams({
-     *     "manager"        = @Inject("doctrine"),
-     *     "requestStack"   = @Inject("request_stack"),
-     *     "persistence"    = @Inject("claroline.persistence.object_manager")
-     * })
      */
     public function __construct(
         Registry $manager,

@@ -26,15 +26,11 @@ use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Claroline\CoreBundle\Repository\Icon\IconItemRepository;
 use Claroline\CoreBundle\Repository\Icon\IconSetRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-/**
- * @DI\Service("claroline.manager.icon_set_manager")
- */
 class IconSetManager
 {
     use LoggableTrait;
@@ -57,15 +53,6 @@ class IconSetManager
     private $thumbnailCreator;
 
     /**
-     * @DI\InjectParams({
-     *     "webDir"             = @DI\Inject("%claroline.param.web_dir%"),
-     *     "iconSetsWebDir"     = @DI\Inject("%claroline.param.icon_sets_web_dir%"),
-     *     "iconSetsDir"        = @DI\Inject("%claroline.param.icon_sets_directory%"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "thumbnailCreator"   = @DI\Inject("claroline.utilities.thumbnail_creator"),
-     *     "ch"                 = @DI\Inject("claroline.config.platform_config_handler")
-     * })
-     *
      * @param $webDir
      * @param $iconSetsWebDir
      * @param $iconSetsDir

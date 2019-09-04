@@ -20,13 +20,9 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.log.manager")
- */
 class LogManager
 {
     const CSV_LOG_BATCH = 1000;
@@ -51,14 +47,6 @@ class LogManager
     private $ut;
 
     /**
-     * @DI\InjectParams({
-     *     "container"          = @DI\Inject("service_container"),
-     *     "objectManager"      = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder"             = @DI\Inject("claroline.api.finder"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "ut"                 = @DI\Inject("claroline.utilities.misc")
-     * })
-     *
      * @param $container
      * @param ObjectManager       $objectManager
      * @param FinderProvider      $finder
@@ -91,7 +79,7 @@ class LogManager
      *
      * @param $id
      *
-     * @return null|object
+     * @return object|null
      */
     public function getLog($id)
     {

@@ -34,16 +34,12 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
-/**
- * @DI\Service("claroline.manager.workspace_manager")
- */
 class WorkspaceManager
 {
     use LoggableTrait;
@@ -75,16 +71,6 @@ class WorkspaceManager
 
     /**
      * WorkspaceManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
-     *     "dispatcher"            = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
-     *     "sut"                   = @DI\Inject("claroline.security.utilities"),
-     *     "container"             = @DI\Inject("service_container")
-     * })
      *
      * @param RoleManager        $roleManager
      * @param ResourceManager    $resourceManager

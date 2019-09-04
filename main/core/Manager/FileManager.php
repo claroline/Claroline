@@ -18,14 +18,10 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.manager.file_manager")
- */
 class FileManager
 {
     private $om;
@@ -35,18 +31,6 @@ class FileManager
     private $dispatcher;
     private $tokenStorage;
 
-    /**
-     * @DI\InjectParams({
-     *      "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *      "fileDir"          = @DI\Inject("%claroline.param.files_directory%"),
-     *      "uploadDir"        = @DI\Inject("%claroline.param.uploads_directory%"),
-     *      "ut"               = @DI\Inject("claroline.utilities.misc"),
-     *      "rm"               = @DI\Inject("claroline.manager.resource_manager"),
-     *      "dispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
-     *      "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *      "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         $fileDir,

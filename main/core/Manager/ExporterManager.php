@@ -12,23 +12,13 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.manager.exporter_manager")
- */
 class ExporterManager
 {
     private $om;
     private $trans;
 
-    /**
-     * @DI\InjectParams({
-     *     "trans" = @DI\Inject("translator"),
-     *     "om"    = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         TranslatorInterface $trans

@@ -12,21 +12,16 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Event\App\RefreshCacheEvent;
 use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @DI\Service("claroline.manager.mail_manager")
- */
 class MailManager
 {
     /** @var CacheManager */
@@ -50,16 +45,6 @@ class MailManager
     private $parameters;
 
     /**
-     * @DI\InjectParams({
-     *     "cacheManager"         = @DI\Inject("claroline.manager.cache_manager"),
-     *     "container"            = @DI\Inject("service_container"),
-     *     "mailer"               = @DI\Inject("claroline.library.mailing.mailer"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
-     *     "router"               = @DI\Inject("router"),
-     *     "templateManager"      = @DI\Inject("claroline.manager.template_manager"),
-     *     "templating"           = @DI\Inject("templating")
-     * })
-     *
      * @param CacheManager          $cacheManager
      * @param ContainerInterface    $container
      * @param Mailer                $mailer
@@ -292,35 +277,6 @@ class MailManager
         }
 
         return false;
-    }
-
-    /**
-     * @DI\Observe("refresh_cache")
-     */
-    public function refreshCache(RefreshCacheEvent $event)
-    {
-        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
-        $data = [
-          'transport' => $parameters['mailer']['transport'],
-          'host' => $parameters['mailer']['host'],
-          'username' => $parameters['mailer']['username'],
-          'password' => $parameters['mailer']['password'],
-          'auth_mode' => $parameters['mailer']['auth_mode'],
-          'encryption' => $parameters['mailer']['encryption'],
-          'port' => $parameters['mailer']['port'],
-          'api_key' => $parameters['mailer']['api_key'],
-        ];
-
-        if (is_array($this->mailer->test($data))) {
-            $test = 0 === count($this->mailer->test($data)) ? true : false;
-        } else {
-            $test = is_null($test);
-        }
-
-        $event->addCacheParameter(
-          'is_mailer_available',
-          $test
-        );
     }
 
     public function getMailerFrom()

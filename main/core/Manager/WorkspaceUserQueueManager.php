@@ -14,11 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.workspace_user_queue_manager")
- */
 class WorkspaceUserQueueManager
 {
     /** @var StrictDispatcher */
@@ -30,12 +26,6 @@ class WorkspaceUserQueueManager
 
     /**
      * WorkspaceUserQueueManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "dispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
-     * })
      *
      * @param StrictDispatcher $dispatcher
      * @param ObjectManager    $om

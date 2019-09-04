@@ -13,11 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\SecurityToken;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.security_token_manager")
- */
 class SecurityTokenManager
 {
     private $om;
@@ -25,10 +21,6 @@ class SecurityTokenManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      */
     public function __construct(ObjectManager $om)
     {

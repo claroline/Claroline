@@ -15,11 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\CurlManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.organization.location_manager")
- */
 class LocationManager
 {
     private $countries = [
@@ -273,13 +269,6 @@ class LocationManager
     private $ch;
     private $cm;
 
-    /**
-     * @DI\InjectParams({
-     *       "om" = @DI\Inject("claroline.persistence.object_manager"),
-     *       "ch" = @DI\Inject("claroline.config.platform_config_handler"),
-     *       "cm" = @DI\Inject("claroline.manager.curl_manager")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $ch,

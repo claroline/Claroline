@@ -19,13 +19,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Repository\Theme\ThemeRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.manager.theme_manager")
- */
 class ThemeManager
 {
     /** @var ObjectManager */
@@ -47,15 +43,6 @@ class ThemeManager
 
     /**
      * ThemeManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "config"        = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "kernelDir"     = @DI\Inject("%kernel.root_dir%"),
-     *     "serializer"    = @DI\Inject("claroline.serializer.theme"),
-     *     "pm"            = @DI\Inject("claroline.manager.plugin_manager")
-     * })
      *
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization

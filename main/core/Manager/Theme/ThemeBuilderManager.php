@@ -12,13 +12,10 @@
 namespace Claroline\CoreBundle\Manager\Theme;
 
 use Claroline\CoreBundle\Entity\Theme\Theme;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Manages compilation of the platform's themes.
- *
- * @DI\Service("claroline.manager.theme_builder")
  */
 class ThemeBuilderManager
 {
@@ -57,12 +54,6 @@ class ThemeBuilderManager
 
     /**
      * BuildManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "kernel"    = @DI\Inject("kernel"),
-     *     "filesDir"  = @DI\Inject("%claroline.param.files_directory%"),
-     *     "kernelDir" = @DI\Inject("%kernel.root_dir%")
-     * })
      *
      * @param KernelInterface $kernel
      * @param string          $filesDir

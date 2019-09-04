@@ -14,12 +14,8 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.common.terms_of_service_manager")
- */
 class TermsOfServiceManager
 {
     private $configHandler;
@@ -29,15 +25,6 @@ class TermsOfServiceManager
     private $userManager;
     private $workspaceManager;
 
-    /**
-     * @DI\InjectParams({
-     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "container"        = @DI\Inject("service_container"),
-     *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
-     */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
         ContainerInterface $container,

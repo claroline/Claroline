@@ -26,7 +26,6 @@ use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,9 +35,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * @DI\Service("claroline.manager.user_manager")
- */
 class UserManager
 {
     use LoggableTrait;
@@ -63,21 +59,6 @@ class UserManager
 
     /**
      * UserManager Constructor.
-     *
-     * @DI\InjectParams({
-     *     "container"              = @DI\Inject("service_container"),
-     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
-     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
-     *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager"),
-     *     "platformConfigHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "strictEventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "translator"             = @DI\Inject("translator"),
-     *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
-     * })
      *
      * @param ContainerInterface           $container
      * @param GroupManager                 $groupManager

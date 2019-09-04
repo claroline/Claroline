@@ -17,12 +17,8 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\KernelBundle\Manager\BundleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * @DI\Service("claroline.manager.plugin_manager")
- */
 class PluginManager
 {
     /** @var string */
@@ -45,12 +41,6 @@ class PluginManager
 
     /**
      * PluginManager constructor.
-     *
-     * @DI\InjectParams({
-     *      "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
-     *      "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *      "kernel"        = @DI\Inject("kernel")
-     * })
      *
      * @param string          $kernelRootDir
      * @param ObjectManager   $om

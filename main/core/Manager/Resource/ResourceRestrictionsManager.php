@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Manager\Resource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -13,8 +12,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * ResourceRestrictionsManager.
  *
  * It validates access restrictions on ResourceNodes.
- *
- * @DI\Service("claroline.manager.resource_restrictions")
  */
 class ResourceRestrictionsManager
 {
@@ -29,12 +26,6 @@ class ResourceRestrictionsManager
 
     /**
      * ResourceRestrictionsManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "session"       = @DI\Inject("session"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "authorization" = @DI\Inject("security.authorization_checker")
-     * })
      *
      * @param SessionInterface              $session
      * @param RightsManager                 $rightsManager

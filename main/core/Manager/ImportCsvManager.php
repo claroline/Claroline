@@ -16,12 +16,8 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.manager.import_csv_manager")
- */
 class ImportCsvManager
 {
     private $om;
@@ -34,16 +30,6 @@ class ImportCsvManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "ut"               = @DI\Inject("claroline.utilities.misc")
-     * })
      */
     public function __construct(
         ObjectManager $om,

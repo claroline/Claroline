@@ -17,11 +17,7 @@ use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException;
 use Claroline\CoreBundle\Repository\Task\ScheduledTaskRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.scheduled_task_manager")
- */
 class ScheduledTaskManager
 {
     /** @var ObjectManager */
@@ -38,12 +34,6 @@ class ScheduledTaskManager
 
     /**
      * ScheduledTaskManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "serializer"    = @DI\Inject("claroline.serializer.scheduled_task")
-     * })
      *
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $configHandler

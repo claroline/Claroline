@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
 use Claroline\CoreBundle\Repository\WidgetInstanceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -47,8 +46,8 @@ class WidgetManager
      */
     public function __construct(
         ObjectManager $om,
-        PluginManager $pluginManager)
-    {
+        PluginManager $pluginManager
+    ) {
         $this->om = $om;
         $this->pluginManager = $pluginManager;
         $this->widgetRepository = $om->getRepository('ClarolineCoreBundle:Widget\Widget');

@@ -14,22 +14,13 @@ namespace Claroline\CoreBundle\Manager\Organization;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.organization.organization_manager")
- */
 class OrganizationManager
 {
     use LoggableTrait;
 
     private $om;
 
-    /**
-     * @DI\InjectParams({
-     *       "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;

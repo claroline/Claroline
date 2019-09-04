@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,8 +25,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class RegistrationManager.
- *
- * @DI\Service("claroline.manager.registration_manager")
  */
 class RegistrationManager
 {
@@ -65,20 +62,6 @@ class RegistrationManager
     private $authenticationHandler;
 
     /**
-     * @DI\InjectParams({
-     *      "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *      "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "localeManager"         = @DI\Inject("claroline.manager.locale_manager"),
-     *      "translator"            = @DI\Inject("translator"),
-     *      "termsManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *      "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
-     *      "formFactory"           = @DI\Inject("form.factory"),
-     *      "tokenStorage"          = @DI\Inject("security.token_storage"),
-     *      "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *      "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *      "authenticationHandler" = @DI\Inject("claroline.security.authentication.success_handler")
-     * })
-     *
      * @param ObjectManager                 $om
      * @param PlatformConfigurationHandler  $platformConfigHandler
      * @param LocaleManager                 $localeManager

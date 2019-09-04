@@ -13,19 +13,11 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.cryptography_manager")
- */
 class CryptographyManager
 {
     /**
      * @param ObjectManager $persistence
-     *
-     * @DI\InjectParams({
-     *     "persistence"    = @DI\Inject("claroline.persistence.object_manager")
-     * })
      */
     public function __construct(
         ObjectManager $persistence

@@ -13,22 +13,11 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\ObjectLock;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.manager.lock_manager")
- */
 class LockManager
 {
-    /**
-     * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
-     * })
-     */
     public function __construct(ObjectManager $om, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage)
     {
         $this->om = $om;

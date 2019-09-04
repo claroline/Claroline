@@ -21,14 +21,10 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * @DI\Service("claroline.manager.icon_manager")
- */
 class IconManager
 {
     use LoggableTrait;
@@ -54,20 +50,6 @@ class IconManager
     /** @var FileUtilities */
     private $fu;
 
-    /**
-     * @DI\InjectParams({
-     *     "creator"  = @DI\Inject("claroline.utilities.thumbnail_creator"),
-     *     "fileDir"  = @DI\Inject("%claroline.param.files_directory%"),
-     *     "thumbDir" = @DI\Inject("%claroline.param.thumbnails_directory%"),
-     *     "rootDir"  = @DI\Inject("%kernel.root_dir%"),
-     *     "ut"       = @DI\Inject("claroline.utilities.misc"),
-     *     "om"       = @DI\Inject("claroline.persistence.object_manager"),
-     *     "basepath" = @DI\Inject("%claroline.param.relative_thumbnail_base_path%"),
-     *     "fu"       = @DI\Inject("claroline.utilities.file"),
-     *     "pdir"     = @DI\Inject("%claroline.param.public_files_directory%"),
-     *     "webdir"   = @DI\Inject("%claroline.param.web_directory%"),
-     * })
-     */
     public function __construct(
         ThumbnailCreator $creator,
         $fileDir,

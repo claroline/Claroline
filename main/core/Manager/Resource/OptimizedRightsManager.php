@@ -11,29 +11,18 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Connection;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Right manager optimizations.
- *
- * @DI\Service("claroline.manager.optimized_rights_manager")
  */
 class OptimizedRightsManager
 {
     use LoggableTrait;
 
-    /**
-     * @DI\InjectParams({
-     *     "conn" = @DI\Inject("doctrine.dbal.default_connection")
-     * })
-     *
-     * @param StrictDispatcher $dispatcher
-     */
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;

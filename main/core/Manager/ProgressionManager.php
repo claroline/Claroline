@@ -18,11 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.progression_manager")
- */
 class ProgressionManager
 {
     /** @var FinderProvider */
@@ -35,12 +31,6 @@ class ProgressionManager
     private $serializer;
 
     /**
-     * @DI\InjectParams({
-     *     "finder"              = @DI\Inject("claroline.api.finder"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer")
-     * })
-     *
      * @param FinderProvider            $finder
      * @param ResourceEvaluationManager $resourceEvalManager
      * @param SerializerProvider        $serializer

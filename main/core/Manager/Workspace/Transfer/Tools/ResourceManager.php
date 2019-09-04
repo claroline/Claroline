@@ -20,9 +20,6 @@ use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-/**
- * @DI\Service("claroline.transfer.resources")
- */
 class ResourceManager implements ToolImporterInterface
 {
     use LoggableTrait;
@@ -30,18 +27,6 @@ class ResourceManager implements ToolImporterInterface
     /**
      * WorkspaceSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "finder"           = @DI\Inject("claroline.api.finder"),
-     *     "crud"             = @DI\Inject("claroline.api.crud"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager")
-     * })
-     *
-
      * @param SerializerProvider $serializer
      */
     public function __construct(

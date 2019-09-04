@@ -29,12 +29,8 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.manager.log_connect")
- */
 class LogConnectManager
 {
     /** @var FinderProvider */
@@ -59,12 +55,6 @@ class LogConnectManager
     private $logAdminToolRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "finder"     = @DI\Inject("claroline.api.finder"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "translator" = @DI\Inject("translator")
-     * })
-     *
      * @param FinderProvider      $finder
      * @param ObjectManager       $om
      * @param TranslatorInterface $translator

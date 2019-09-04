@@ -11,26 +11,15 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 
-/**
- * @Service("claroline.common.authentication_manager")
- */
 class AuthenticationManager
 {
     private $container;
     private $driverPath;
     private $finder;
 
-    /**
-     * @InjectParams({
-     *     "container" = @Inject("service_container")
-     * })
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;

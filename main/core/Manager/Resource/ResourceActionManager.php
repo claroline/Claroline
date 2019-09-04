@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceActionRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -29,8 +28,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * Manages and executes implemented actions on resources.
  *
  * NB. Resource actions can be defined through plugins config.yml.
- *
- * @DI\Service("claroline.manager.resource_action")
  */
 class ResourceActionManager
 {
@@ -56,13 +53,6 @@ class ResourceActionManager
 
     /**
      * ResourceMenuManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
-     * })
      *
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization

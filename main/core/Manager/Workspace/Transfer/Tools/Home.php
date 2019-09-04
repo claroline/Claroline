@@ -9,11 +9,7 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.transfer.home")
- */
 class Home implements ToolImporterInterface
 {
     use LoggableTrait;
@@ -21,13 +17,6 @@ class Home implements ToolImporterInterface
     /**
      * WorkspaceSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "serializer"   = @DI\Inject("claroline.api.serializer"),
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "crud"         = @DI\Inject("claroline.api.crud")
-     * })
-     *
-
      * @param SerializerProvider $serializer
      */
     public function __construct(

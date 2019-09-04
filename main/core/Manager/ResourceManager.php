@@ -36,11 +36,10 @@ use Claroline\CoreBundle\Manager\Exception\WrongClassException;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
@@ -49,8 +48,6 @@ use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service("claroline.manager.resource_manager")
- *
  * @todo clean me
  */
 class ResourceManager
@@ -92,20 +89,6 @@ class ResourceManager
 
     /**
      * ResourceManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "container"             = @DI\Inject("service_container"),
-     *     "rightsManager"         = @DI\Inject("claroline.manager.rights_manager"),
-     *     "dispatcher"            = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
-     *     "secut"                 = @DI\Inject("claroline.security.utilities"),
-     *     "translator"            = @DI\Inject("translator"),
-     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "lifeCycleManager"      = @DI\Inject("claroline.manager.resource_lifecycle")
-     * })
      *
      * @param RoleManager                  $roleManager
      * @param ContainerInterface           $container

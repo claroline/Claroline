@@ -29,16 +29,12 @@ use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.manager.role_manager")
- */
 class RoleManager
 {
     const EMPTY_USERS = 1;
@@ -64,15 +60,6 @@ class RoleManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "container"       = @DI\Inject("service_container"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "configHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "templateManager" = @DI\Inject("claroline.manager.template_manager")
-     * })
      *
      * @param ObjectManager                $om
      * @param StrictDispatcher             $dispatcher

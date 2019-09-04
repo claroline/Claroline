@@ -23,11 +23,7 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.analytics_manager")
- */
 class AnalyticsManager
 {
     /** @var ResourceNodeRepository */
@@ -55,15 +51,6 @@ class AnalyticsManager
     private $dispatcher;
 
     /**
-     * @DI\InjectParams({
-     *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "logManager"             = @DI\Inject("claroline.log.manager"),
-     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "widgetManager"          = @DI\Inject("claroline.manager.widget_manager"),
-     *     "dispatcher"             = @DI\Inject("claroline.event.event_dispatcher")
-     * })
-     *
      * @param ObjectManager    $objectManager
      * @param LogManager       $logManager
      * @param UserManager      $userManager

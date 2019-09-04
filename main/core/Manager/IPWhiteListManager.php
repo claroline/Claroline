@@ -11,25 +11,13 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @Service("claroline.manager.ip_white_list_manager")
- */
 class IPWhiteListManager
 {
     private $ipFile;
     private $rangeFile;
 
-    /**
-     * @InjectParams({
-     *      "rangeFile" = @Inject("%claroline.ip_range_white_list_file%"),
-     *      "ipFile"    = @Inject("%claroline.ip_white_list_file%")
-     * })
-     */
     public function __construct($ipFile, $rangeFile)
     {
         $this->ipFile = $ipFile;
