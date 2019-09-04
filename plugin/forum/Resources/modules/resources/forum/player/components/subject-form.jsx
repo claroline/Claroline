@@ -106,7 +106,7 @@ const SubjectFormComponent = (props) => {
       })
       props.createModeratedSubject(forumId, subjectId, props.forum.moderation)
     } else {
-      props.createSubject(forumId, subjectId)
+      props.createSubject(forumId, subjectId, props.path)
     }
   }
 
@@ -205,9 +205,9 @@ const SubjectForm = withRouter(withModal(connect(
         ownProps.history.push(`${ownProps.path}/subjects`)
       })
     },
-    createSubject(forumId, subjectId) {
+    createSubject(forumId, subjectId, path) {
       dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
-        ownProps.history.push(`${ownProps.path}/subjects/show/${subjectId}`)
+        ownProps.history.push(`${path}/subjects/show/${subjectId}`)
       })
     }
   })

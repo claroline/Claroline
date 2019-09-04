@@ -8,5 +8,6 @@ import {reducer} from '#/plugin/exo/tools/bank/store'
 export default {
   component: BankTool,
   // menu: ResourcesMenu,
-  store: reducer
+  store: reducer,
+  styles: ['claroline-distribution-plugin-exo-question-bank-tool']
 }

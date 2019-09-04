@@ -2,6 +2,7 @@
 
 imports:
     - { resource: services/repository.yml }
+    - { resource: services/serializer.yml }
 
 services:
 
@@ -39,5 +40,3 @@ services:
             - { name: kernel.event_listener, event: create_notification_item_role-subscribe-queue, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_resource-text-update, method: onCreateNotificationItem }
 
-imports:
-    - { resource: services/serializer.yml }

@@ -35,7 +35,7 @@ const UserMessage = props => {
       'user-message-left': 'left' === props.position,
       'user-message-right': 'right' === props.position
     })}>
-      {'left' === props.position &&
+      {'left' === props.position && props.user &&
         <LinkButton target={route(props.user)}>
           <UserAvatar picture={props.user && props.user.picture} alt={false} />
         </LinkButton>
@@ -75,7 +75,7 @@ const UserMessage = props => {
         )}
       </div>
 
-      {'right' === props.position &&
+      {'right' === props.position && props.user &&
         <LinkButton target={route(props.user)}>
           <UserAvatar picture={props.user && props.user.picture} alt={false} />
         </LinkButton>

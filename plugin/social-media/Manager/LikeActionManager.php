@@ -93,10 +93,12 @@ class LikeActionManager
 
     public function createLike(Request $request, LikeAction $like)
     {
-        $resourceId = $request->get('resourceId');
+        $decodedRequest = json_decode($request->getContent(), true);
+        $resourceId = isset($decodedRequest['resourceId']) ? $decodedRequest['resourceId'] : null;
+
         if (null === $resourceId) {
-            $url = $request->get('url');
-            $title = $request->get('title');
+            $url = isset($decodedRequest['url']) ? $decodedRequest['url'] : null;
+            $title = isset($decodedRequest['title']) ? $decodedRequest['title'] : null;
             $like->setUrl($url);
             $like->setTitle($title);
         } else {
@@ -124,14 +126,16 @@ class LikeActionManager
         }
 
         if (null !== $request) {
-            $resourceId = $request->get('resourceId');
+            $decodedRequest = json_decode($request->getContent(), true);
+            $resourceId = isset($decodedRequest['resourceId']) ? $decodedRequest['resourceId'] : null;
+
             if (empty($resourceId)) {
-                $resourceId = $request->get('resource');
+                $resourceId = isset($decodedRequest['resource']) ? $decodedRequest['resource'] : null;
             }
             if (null !== $resourceId) {
                 $criteria['resource'] = $resourceId;
             } else {
-                $url = $request->get('url');
+                $url = isset($decodedRequest['url']) ? $decodedRequest['url'] : null;
                 $criteria['url'] = $url;
             }
         }
