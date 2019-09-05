@@ -16,13 +16,13 @@ class Version20190829112632 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE ujm_step
-            ADD slug VARCHAR(128) NOT NULL
+            ADD slug VARCHAR(128)
         ');
         $this->addSql("
-             UPDATE ujm_step step SET slug = CONCAT(SUBSTR(step.title,1,100) , '-', step.id) WHERE step.title IS NOT NULL
+            UPDATE ujm_step step SET slug = REGEXP_REPLACE(SUBSTR(step.title,1,100), '[^A-Za-z0-9]+', '-') WHERE step.title IS NOT NULL
         ");
         $this->addSql("
-             UPDATE ujm_step step SET slug = CONCAT('step' , '-', step.entity_order, '-', step.id) WHERE step.title IS NULL
+             UPDATE ujm_step step SET slug = CONCAT('step' , '-', step.entity_order) WHERE step.title IS NULL
         ");
     }
 

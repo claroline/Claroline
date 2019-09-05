@@ -10,6 +10,7 @@ addons:
 
 env:
   global:
+    # - DB: mariadb
     # REMOTE_HOST
     - secure: "X6CEFn8DREjkXknQMV0tw7tTdMI5XowOx+u8EaUH6ctDuKmdIRFx0+y3Y45TPir1DKC26vImdF7w/CrLtDWXav6KzcUTs6RjMuS1WCVJTl0DxkrzxgnXIUTsNYPc7l47OaFjKxiYhpCEmfo8Wnwi0V+OEL8xl6QSDfz7ir39RA7JS52K1ZTqA9Mo2gGneXqnNza5MIAKTngsRJg1KSrxUgrIKfWjGO8SUoJAGkDfIdCfSl4qAWEM2zZHqzFbzHTsMomiKbGhebBFGWfrUhVo/M9KOaFqnFm7eGdEJfPeJf183hHKM2nvFQ7fjXuKi45ki3OOFqnc0BrFTc0J3VOCjYZ7sqr/hHfu1vZy9qp2HXfY416juV3Pn91QmRkSeLU5aTfOd95zQWI2QYDSbf8k3hMhoktvw3LdWGn13GrQfqnLmfdS4J26rGspmERRj4yZhQTFVpOEqPmFVexGtO9P+OYo+ZSDcLFPLMNKGByjxDaeHyOm30qLpHpsM2Vyw5KSqujdgkvJ4jGKYZHdMGzWXYH45ZUZBDMex5xwal+Qfn1ZAMsAn4BHW0N2I+WJHAPtHzyA1wVg2xOOJkPLZeW7VF4IOIgrGsjO3ML5EdALXYN7YlXZpeyN6PbIbQEM1IQKJWid8E0J4F0/muAoIeC/tNzqepgdOyT6u1HBjdXR5Qs="
     # REMOTE_USER
@@ -20,10 +21,10 @@ env:
     - secure: "bsc8nVTOGaRtuukf3wfWfpRft+BnNeFyiVn+c37P5hgsv5fwygp7lzFDJeCXlCd5sevp7at1Y7CHW09Y+YeJx0nmgE0saSPQjcpem+NkMMpfo1ucivNGLQjZ3ltID0uX3j6RqpqU1Ok+MvfAXnevEXbALqRsBKA8AL+OhdCFStoH3YxEkxx6FR7NIrU0/v+cu+6OgHcYSFnI0KPVII+NULUC8X+ES6lfDTWZBm6a3HVMOtVw4Ey2pt7Lhel1WZfS/zAZ+5I8k9GKvY+I8GS/+jez4SBh3e1PVejjZVl72OQQHdMDsqUF8vteV/MZVizU/gjvrCMPBZOzKGKbkMs/v/Gj1e+OYyTl4jq4BBdNvxbzq4Z8AgUg8enTuQ/1a1A2hbLPmoIBoStZ13Q8mQymSXHd2vxiUtMHC4Fhq5WZsrn3ORpnhylzS7wyDpzJ4pcyVADQN/6wdFL+i+upvrKjSrmY1aE5UtRw7uHFSm4DHp676+3s2LE3ltpfH9SUW0hEAY4gU2VnTOZ3TQLOyXj8ZLfGpz/MO5A6riOfpIz8D+Op3u/jkpzpgWWxjBL/onzrcqMqqQABlIn7YXwCAB085VPIbJ25xw9iVsIdDAv+Jt254t47qVpUhtiPMAnI/t1hQknDs+dm700++btTSuRtPKLH46wW1dcgFZo6S4sI4WY="
     # PREVIEW_PATH
     - secure: "R3yYS0dAT+XLp20qSaq392cUJYfCp63yUypOdFEiisbY+hSkr1m4d5yg5+IOzx0N5hIyft2QRIVHEuXnCKTZgbJ1ykzIyxxtlePFP1vW5zAwZSF8YVBKGMqjDn3osxRKGonNm+yaiMWjJM1TQhrsEXwFVH7XMoK6H6U/KwuncBJ/kLbnEjMYFSLkjPN0YMmPUOg4waaUaNdWQuQO1dj0G4+5CQLcxpxC6rp92I1jamhAAfGnmTfLviSRLEkbF9tmyG7sgfB1sS5OREWQFEAYECSw0CD4oM6aL6FbvX96M/ELUjXN3Nq19U0a5m0tRvPB52nrhTfsjx1tN7Z8+6zABg00rVNAuSMUXoojc86AXR8W4OVFrxsYkRJkJxx/YlUlEDZNWd9SHlq0qmg22Bru/i2eNdDqxeSmqr7C1LmaacHRsgF5OfIeG2U4FYWP6aPeUyHM8erpF24thLGGqKFExsIcIUA1aEM44HiRrcHmVhkawRX6BUHNcWFuiJH036nu9YF/ZdwW5LDFSBO8yUYwQEkoReC67C9qDrRVDx4HwYlFCA+XTdaKPmig6vn+Z3RyylmhyRomP1GK3eCwpt15qVfTCdLLnB5ty7eb1vcDPovvEO+hYXk0CAMIYjiIonOfn2nFPM/ydvmipIvDDATjvNXxTuOnunp5F6w6HCmKJQw="
-  matrix:
-    - DB=mysql
 
-
+#addons:
+#  mariadb: '10.4'
+  
 services:
   - xvfb
   - mysql
@@ -35,6 +36,7 @@ mysql:
   encoding: utf8
 
 before_install:
+  - mysql --version
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
@@ -55,6 +57,14 @@ before_install:
   - nvm install 6.12
 
 before_script:
+  - wget https://repo.mysql.com//mysql-apt-config_0.8.10-1_all.deb
+  - sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
+  - sudo apt-get update -q
+  - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
+  - sudo systemctl restart mysql
+  - sudo mysql_upgrade
+  - mysql --version
+
   # add swap for composer
   - sudo swapon -s
   - sudo fallocate -l 8G /swapfile

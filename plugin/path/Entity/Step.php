@@ -159,7 +159,7 @@ class Step
 
     /**
      * @Gedmo\Slug(fields={"title"})
-     * @ORM\Column(length=128, unique=true)
+     * @ORM\Column(length=128)
      */
     private $slug;
 

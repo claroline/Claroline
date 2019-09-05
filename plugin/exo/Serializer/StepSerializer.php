@@ -85,11 +85,7 @@ class StepSerializer
         $this->sipe('description', 'setDescription', $data, $step);
 
         if (!$step->getTitle()) {
-            if ($step->getExercise()) {
-                $step->setSlug('step-'.$step->getOrder().'-'.$step->getExercise()->getId());
-            } else {
-                $step->setSlug($step->getId());
-            }
+            $step->setSlug('step-'.$step->getOrder());
         }
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {

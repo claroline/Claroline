@@ -82,12 +82,14 @@ class FinderProviderTest extends TransactionalTestCase
         }
 
         $value = 'abcdef';
+        $aDate = new \DateTime();
 
         switch ($type) {
           case 'bool': $value = true; break;
           case 'boolean': $value = true; break;
           case 'integer': $value = 123; break;
-          case 'datetime': $value = 'unevraidate'; break;
+          case 'datetime': $value = $aDate; break;
+          case 'date': $value = $aDate; break;
         }
 
         return [$filterName => $value];
