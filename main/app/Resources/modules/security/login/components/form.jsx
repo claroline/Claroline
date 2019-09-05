@@ -25,6 +25,7 @@ const LoginForm = props =>
 
         <FormData
           name={selectors.FORM_NAME}
+          alertExit={false}
           sections={[
             {
               title: trans('general'),

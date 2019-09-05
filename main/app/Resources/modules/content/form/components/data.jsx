@@ -63,6 +63,7 @@ const FormData = (props) => {
       errors={!isEmpty(props.errors)}
       validating={props.validating}
       pendingChanges={props.pendingChanges}
+      alertExit={props.alertExit}
       save={props.save}
       cancel={props.cancel}
       lock={props.lock}
@@ -162,6 +163,10 @@ FormData.propTypes = {
   errors: T.object,
   validating: T.bool,
   pendingChanges: T.bool,
+  /**
+   * Alerts the user when leaving the form with unsaved changes
+   */
+  alertExit: T.bool,
 
   meta: T.bool,
   data: T.object,

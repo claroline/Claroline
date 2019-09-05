@@ -41,7 +41,7 @@ class Form extends Component {
   }
 
   warnPendingChanges(e) {
-    if (this.props.pendingChanges) {
+    if (this.props.alertExit && this.props.pendingChanges) {
       // note: this is supposed to be the text displayed in the browser built-in
       // popup (see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload#Example)
       // but it doesn't seem to be actually used in modern browsers. We use it
@@ -115,12 +115,16 @@ Form.propTypes = {
   errors: T.bool,
   validating: T.bool,
   pendingChanges: T.bool,
+  /**
+   * Alerts the user when leaving the form with unsaved changes
+   */
+  alertExit: T.bool,
   children: T.node.isRequired,
+
   lock: T.shape({
     id: T.string.isRequired,
     className: T.string.isRequired
   }),
-
   getLock: T.func,
   unlock: T.func,
 
@@ -148,7 +152,8 @@ Form.defaultProps = {
   level: 2,
   errors: false,
   validating: false,
-  pendingChanges: false
+  pendingChanges: false,
+  alertExit: true
 }
 
 export {
