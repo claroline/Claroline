@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {User as UserType} from '#/main/core/user/prop-types'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
@@ -18,13 +19,13 @@ class PublicUrlModal extends Component {
   render() {
     return (
       <FormDataModal
-        {...omit(this.props, 'url', 'changeUrl')}
+        {...omit(this.props, 'user', 'url', 'redirect', 'changeUrl', 'onSave')}
         icon="fa fa-fw fa-link"
         title={trans('change_profile_public_url')}
         data={{
           url: this.state.url
         }}
-        save={(data) => this.props.changeUrl(data.url)}
+        save={(data) => this.props.changeUrl(this.props.user, data.url, this.props.redirect, this.props.onSave)}
         sections={[
           {
             id: 'general',
@@ -64,8 +65,16 @@ class PublicUrlModal extends Component {
 }
 
 PublicUrlModal.propTypes = {
+  user: T.shape(UserType.propTypes),
   url: T.string,
-  changeUrl: T.func.isRequired
+  redirect: T.bool,
+  changeUrl: T.func.isRequired,
+  onSave: T.func
+}
+
+PublicUrlModal.defaultProps = {
+  redirect: false,
+  onSave: () => false
 }
 
 export {

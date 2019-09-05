@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {PublicUrlModal} from '#/main/core/user/modals/public-url/components/public-url'
+import {PublicUrlModal} from '#/main/core/user/modals/public-url/containers/public-url'
 
 const MODAL_USER_PUBLIC_URL = 'MODAL_USER_PUBLIC_URL'
 

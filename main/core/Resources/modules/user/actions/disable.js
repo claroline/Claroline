@@ -1,4 +1,5 @@
 import {url} from '#/main/app/api'
+import {hasPermission} from '#/main/app/security'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
@@ -7,7 +8,8 @@ export default (users, refresher) => ({
   icon: 'fa fa-fw fa-times-circle',
   label: trans('disable_user'),
   scope: ['object', 'collection'],
-  displayed: 0 < users.filter(u => !u.restrictions.disabled).length,
+  displayed: users.length === users.filter(u => hasPermission('administrate', u)).length &&
+    0 < users.filter(u => !u.restrictions.disabled).length,
   dangerous: true,
   confirm: {
     title: transChoice('disable_users', users.length, {count: users.length}),
@@ -18,6 +20,6 @@ export default (users, refresher) => ({
     request: {
       method: 'PUT'
     },
-    success: () => refresher.update()
+    success: (users) => refresher.update(users)
   }
 })

@@ -1,28 +1,18 @@
 import React from 'react'
 import classes from 'classnames'
-import get from 'lodash/get'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {
-  ASYNC_BUTTON,
-  CALLBACK_BUTTON,
-  LINK_BUTTON,
-  MODAL_BUTTON,
-  URL_BUTTON
-} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
+
+import {getActions} from '#/main/core/user/utils'
+import {route} from '#/main/core/user/routing'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 import {PageSimple} from '#/main/app/page/components/simple'
 import {PageContent} from '#/main/core/layout/page'
-
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {
-  MODAL_USER_PASSWORD,
-  MODAL_USER_PUBLIC_URL,
-  MODAL_USER_MESSAGE
-} from '#/main/core/user/modals'
 
 // TODO : use dynamic actions list
 
@@ -74,88 +64,55 @@ const UserPage = props =>
         className="page-actions"
         tooltip="bottom"
         toolbar="edit | send-message add-contact | more"
-        actions={[
-          {
-            name: 'edit',
-            type: LINK_BUTTON,
-            icon: 'fa fa-pencil',
-            label: trans('edit', {}, 'actions'),
-            target: props.path + '/edit',
-            displayed: hasPermission('edit', props.user),
-            primary: true
-          }, {
-            name: 'send-message',
-            type: MODAL_BUTTON,
-            label: trans('send_message'),
-            icon: 'fa fa-paper-plane-o',
-            modal: [MODAL_USER_MESSAGE],
-            displayed: false && hasPermission('contact', props.user) // TODO : restore (to implement in message plugin)
-          }, {
-            name: 'add-contact',
-            type: CALLBACK_BUTTON,
-            label: trans('add_contact'),
-            icon: 'fa fa-address-book-o',
-            callback: () => true,
-            displayed: false  // TODO : restore
-          }, {
-            name: 'change-password',
-            type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-lock',
-            label: trans('change_password'),
-            group: trans('management'),
-            displayed: hasPermission('administrate', props.user) || props.user.id === get(props.currentUser, 'id'),
-            modal: [MODAL_USER_PASSWORD, {
-              user: props.user
-            }]
-          }, {
-            name: 'change-url',
-            type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-link',
-            label: trans('change_profile_public_url'),
-            group: trans('management'),
-            displayed: hasPermission('edit', props.user),
-            disabled: props.user.meta.publicUrlTuned,
-            modal: [MODAL_USER_PUBLIC_URL, {
-              url: props.user.meta.publicUrl,
-              changeUrl: (publicUrl) => props.updatePublicUrl(props.user, publicUrl)
-            }]
-          }, {
-            name: 'show-badges',
-            type: URL_BUTTON,
-            icon: 'fa fa-trophy',
-            label: trans('user-badges'),
-            group: trans('badges'),
-            target: '#/badges/'+props.user.id,
-            displayed: false // TODO : restore
-          }, {
-            name: 'show-tracking',
-            type: URL_BUTTON,
-            icon: 'fa fa-fw fa-line-chart',
-            label: trans('show_tracking'),
-            group: trans('management'),
-            displayed: false && hasPermission('administrate', props.user), // TODO : restore
-            target: ['claro_user_tracking', {publicUrl: props.user.meta.publicUrl}]
-          }, {
-            name: 'delete',
-            type: ASYNC_BUTTON,
-            icon: 'fa fa-fw fa-trash-o',
-            label: trans('delete', {}, 'actions'),
-            displayed: hasPermission('delete', props.user),
-            request: {
-              type: 'delete',
-              url: ['apiv2_user_delete_bulk', {ids: [props.user.id]}],
-              request: {
-                method: 'DELETE'
+        actions={
+          getActions([props.user], {
+            add: () => false,
+            update: (users) => props.history.push(route(users[0])),
+            delete: () => false
+          }, props.path, props.currentUser)
+            .then(actions => [
+              {
+                name: 'edit',
+                type: LINK_BUTTON,
+                icon: 'fa fa-pencil',
+                label: trans('edit', {}, 'actions'),
+                target: props.path + '/edit',
+                displayed: hasPermission('edit', props.user),
+                primary: true
+              }/*, {
+                name: 'add-contact',
+                type: CALLBACK_BUTTON,
+                label: trans('add_contact'),
+                icon: 'fa fa-address-book-o',
+                callback: () => true,
+                displayed: false  // TODO : restore
+              }, {
+                name: 'show-badges',
+                type: URL_BUTTON,
+                icon: 'fa fa-trophy',
+                label: trans('user-badges'),
+                group: trans('badges'),
+                target: '#/badges/'+props.user.id,
+                displayed: false // TODO : restore
+              }*/
+            ].concat(actions.map((action, index) => {
+              return {
+                name: `action-${index}`,
+                type: action.type,
+                icon: action.icon,
+                label: action.label,
+                displayed: action.displayed,
+                disabled: action.disabled,
+                dangerous: action.dangerous,
+                primary: action.primary,
+                target: action.target,
+                modal: action.modal,
+                callback: action.callback,
+                request: action.request,
+                confirm: action.confirm
               }
-              //success: () => window.location = url(['claro_desktop_open']) todo redirect
-            },
-            dangerous: true,
-            confirm: {
-              title: trans('user_delete_confirm_title'),
-              message: trans('user_delete_confirm_message')
-            }
-          }
-        ]}
+            })))
+        }
         scope="object"
       />
     </UserPageHeader>
@@ -166,6 +123,9 @@ const UserPage = props =>
   </PageSimple>
 
 implementPropTypes(UserPage, PageTypes, {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   currentUser: T.object,
   user: T.shape({
     name: T.string.isRequired
@@ -173,8 +133,7 @@ implementPropTypes(UserPage, PageTypes, {
   children: T.node.isRequired,
   path: T.string.isRequired,
   showBreadcrumb: T.bool.isRequired,
-  breadcrumb: T.array, // TODO : correct prop type
-  updatePublicUrl: T.func.isRequired
+  breadcrumb: T.array // TODO : correct prop type
 }, {
   breadcrumb: []
 })

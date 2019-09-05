@@ -14,7 +14,7 @@ actions.updatePassword = (user, plainPassword) => ({
   }
 })
 
-actions.updatePublicUrl = (user, publicUrl, redirect = false) => ({
+actions.updatePublicUrl = (user, publicUrl, redirect = false, callback = () => false) => ({
   [API_REQUEST]: {
     url: ['apiv2_user_update', {id: user.id}],
     request: {
@@ -22,6 +22,8 @@ actions.updatePublicUrl = (user, publicUrl, redirect = false) => ({
       body: JSON.stringify(Object.assign({}, user, {meta: {publicUrl: publicUrl, publicUrlTuned: true}}))
     },
     success: (response) => {
+      callback(response)
+
       if (redirect) {
         window.location = '#' + route(response)
       }
