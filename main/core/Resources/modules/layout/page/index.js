@@ -11,7 +11,6 @@ export {
 
 export {
   PageAction,
-  FullScreenAction,
   MoreAction,
   PageGroupActions,
   PageActions

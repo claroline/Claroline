@@ -55,9 +55,9 @@ hwi_oauth:
     # [target_path_parameter for form login](http://symfony.com/doc/2.0/cookbook/security/form_login.html).
     # target_path_parameter: _destination
 
-services:
-    hwi_oauth.user.provider:
-        class: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
+#services:
+#    hwi_oauth.user.provider:
+#        class: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
 
 security:
     firewalls:
@@ -73,7 +73,7 @@ security:
                     windows_live: /login/check-windows
                     office_365:   /login/check-o365
                     generic:      /login/check-generic
-                success_handler:    claroline.security.authentication.success_handler
+                #success_handler:    claroline.security.authentication.success_handler
                 failure_handler:    claroline.oauth.failure_handler
                 login_path: /login
                 failure_path: /login

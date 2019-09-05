@@ -47,6 +47,7 @@
         }
 
         a {
+            white-space: nowrap;
             font-weight: bold;
         }
 
@@ -63,7 +64,11 @@
         justify-content: center;
 
         .locale-icon {
-            margin: 0 @icon-text-spacer 0 0;
+            margin: 0;
+        }
+
+        span {
+            margin-left: @icon-text-spacer;
         }
     }
 

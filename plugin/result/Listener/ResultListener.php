@@ -13,7 +13,6 @@ namespace Claroline\ResultBundle\Listener;
 
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +28,6 @@ class ResultListener
     private $request;
     private $kernel;
     private $manager;
-    private $formHandler;
     private $tokenStorage;
 
     /**
@@ -37,27 +35,23 @@ class ResultListener
      *     "stack"        = @DI\Inject("request_stack"),
      *     "kernel"       = @DI\Inject("http_kernel"),
      *     "manager"      = @DI\Inject("claroline.result.result_manager"),
-     *     "handler"      = @DI\Inject("claroline.form_handler"),
      *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param RequestStack          $stack
      * @param HttpKernelInterface   $kernel
      * @param ResultManager         $manager
-     * @param FormHandler           $handler
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         RequestStack $stack,
         HttpKernelInterface $kernel,
         ResultManager $manager,
-        FormHandler $handler,
         TokenStorageInterface $tokenStorage
     ) {
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
         $this->manager = $manager;
-        $this->formHandler = $handler;
         $this->tokenStorage = $tokenStorage;
     }
 

@@ -3,20 +3,12 @@
 namespace Icap\BibliographyBundle\Controller\API;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Request\ParamFetcher;
 use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
 use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-/**
- * @NamePrefix("icap_bibliography_api_")
- */
-class ApiController extends FOSRestController
+class ApiController
 {
     /** @var BookReferenceConfigurationRepository */
     private $configRepository;
@@ -38,18 +30,12 @@ class ApiController extends FOSRestController
     /**
      * Search in ISBNDB.
      *
-     * @Get("books/search", options = { "expose" = true })
-     *
-     * @QueryParam(name="query", description="Searched query")
-     * @QueryParam(name="index", description="Index of the database used to search for the query", default="title")
-     * @QueryParam(name="page", description="Page of returned results", requirements="\d+", default="1")
-     *
      * @return array
      *
      * @throws HttpException
      * @throws \Exception
      */
-    public function bookSearchAction(ParamFetcher $paramFetcher)
+    public function bookSearchAction($paramFetcher)
     {
         $api_key = $this->getApiKey();
 
@@ -71,13 +57,9 @@ class ApiController extends FOSRestController
     /**
      * Get book details from ISBNDB.
      *
-     * @param ParamFetcher $paramFetcher
-     *
-     * @Get("book/details", options = { "expose" = true })
-     *
-     * @QueryParam(name="bookId", description="ISBN, Title or ISBNDB Id of the book")
+     * @param $paramFetcher
      */
-    public function bookDetailsAction(ParamFetcher $paramFetcher)
+    public function bookDetailsAction($paramFetcher)
     {
         $api_key = $this->getApiKey();
 

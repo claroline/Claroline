@@ -47,9 +47,12 @@ class DirectoryMenu extends Component {
             {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-share fa-flip-horizontal',
-              label: trans('back_to', {target: get(this.props.currentNode, 'parent.name')}),
+              label: get(this.props.currentNode, 'parent') ?
+                trans('back_to', {target: get(this.props.currentNode, 'parent.name')}) :
+                trans('back'),
               displayed: !!get(this.props.currentNode, 'parent'),
-              target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug')}`
+              target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug', '')}`,
+              exact: true
             }, {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-list-ul',
@@ -57,9 +60,7 @@ class DirectoryMenu extends Component {
               active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.slug}/all`}),
               target: `${this.props.basePath}/${this.props.currentNode.slug}/all`
             }
-          ].concat(this.props.directories.map(this.getDirectorySummary), [
-
-          ])}
+          ].concat(this.props.directories.map(this.getDirectorySummary))}
         />
       </MenuSection>
     )

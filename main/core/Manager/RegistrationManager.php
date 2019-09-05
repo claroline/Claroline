@@ -14,14 +14,12 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class RegistrationManager.
@@ -37,17 +35,11 @@ class RegistrationManager
     /** @var LocaleManager */
     private $localeManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     /** @var TermsOfServiceManager */
     private $termsManager;
 
     /** @var FacetManager */
     private $facetManager;
-
-    /** @var FormFactoryInterface */
-    private $formFactory;
 
     /** @var TokenStorage */
     private $tokenStorage;
@@ -65,10 +57,8 @@ class RegistrationManager
      * @param ObjectManager                 $om
      * @param PlatformConfigurationHandler  $platformConfigHandler
      * @param LocaleManager                 $localeManager
-     * @param TranslatorInterface           $translator
      * @param TermsOfServiceManager         $termsManager
      * @param FacetManager                  $facetManager
-     * @param FormFactoryInterface          $formFactory
      * @param TokenStorageInterface         $tokenStorage
      * @param UserManager                   $userManager
      * @param RoleManager                   $roleManager
@@ -78,10 +68,8 @@ class RegistrationManager
         ObjectManager $om,
         PlatformConfigurationHandler $platformConfigHandler,
         LocaleManager $localeManager,
-        TranslatorInterface $translator,
         TermsOfServiceManager $termsManager,
         FacetManager $facetManager,
-        FormFactoryInterface $formFactory,
         TokenStorageInterface $tokenStorage,
         UserManager $userManager,
         RoleManager $roleManager,
@@ -92,23 +80,10 @@ class RegistrationManager
         $this->localeManager = $localeManager;
         $this->termsManager = $termsManager;
         $this->facetManager = $facetManager;
-        $this->formFactory = $formFactory;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
         $this->authenticationHandler = $authenticationHandler;
-        $this->translator = $translator;
-    }
-
-    public function getRegistrationForm($user)
-    {
-        $facets = $this->facetManager->findForcedRegistrationFacet();
-        $form = $this->formFactory->create(
-            new BaseProfileType($this->localeManager, $this->termsManager, $this->translator, $facets),
-            $user
-        );
-
-        return $form;
     }
 
     public function registerNewUser($user, $form)

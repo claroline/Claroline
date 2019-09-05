@@ -21,7 +21,7 @@ const FooterMain = (props) =>
       <div className="app-footer-brand">
         <img src={asset('bundles/clarolinecore/images/logos/logo-sm.svg')} alt="logo" />
         <div role="presentation">
-          <a href="http://www.claroline.net">Claroline Connect</a>
+          <a href="https://www.claroline.net">Claroline Connect</a>
           <small>{param('version')}</small>
         </div>
       </div>
@@ -32,7 +32,7 @@ const FooterMain = (props) =>
           type={MODAL_BUTTON}
           modal={[MODAL_LOCALE, props.locale]}
           icon={<LocaleFlag locale={props.locale.current} />}
-          label={trans(props.locale.current)}
+          label={<span key="locale" className="hidden-xs">{trans(props.locale.current)}</span>}
         />
       }
     </div>

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\Platform;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Manager\OauthManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
@@ -63,6 +64,9 @@ class ClientSerializer
     /** @var ResourceTypeSerializer */
     private $resourceTypeSerializer;
 
+    /** @var OauthManager */
+    private $oauthManager;
+
     /**
      * ClientSerializer constructor.
      *
@@ -79,7 +83,8 @@ class ClientSerializer
      *     "versionManager"         = @DI\Inject("claroline.manager.version_manager"),
      *     "pluginManager"          = @DI\Inject("claroline.manager.plugin_manager"),
      *     "iconManager"            = @DI\Inject("claroline.manager.icon_set_manager"),
-     *     "resourceTypeSerializer" = @DI\Inject("claroline.serializer.resource_type")
+     *     "resourceTypeSerializer" = @DI\Inject("claroline.serializer.resource_type"),
+     *     "oauthManager"           = @DI\Inject("claroline.oauth.manager"),
      * })
      *
      * @param string                       $env
@@ -95,6 +100,7 @@ class ClientSerializer
      * @param IconSetManager               $iconManager
      * @param ResourceTypeSerializer       $resourceTypeSerializer
      * @param EventDispatcherInterface     $eventDispatcher
+     * @param OauthManager                 $oauthManager
      */
     public function __construct(
         $env,
@@ -109,7 +115,8 @@ class ClientSerializer
         PluginManager $pluginManager,
         IconSetManager $iconManager,
         ResourceTypeSerializer $resourceTypeSerializer,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        OauthManager $oauthManager
     ) {
         $this->env = $env;
         $this->assets = $assets;
@@ -124,6 +131,7 @@ class ClientSerializer
         $this->iconManager = $iconManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
         $this->eventDispatcher = $eventDispatcher;
+        $this->oauthManager = $oauthManager;
     }
 
     /**
@@ -158,14 +166,14 @@ class ClientSerializer
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],
             'home' => $this->config->getParameter('home'),
-            'resources' => [
+            'resources' => [ // TODO : maybe no longer needed here
                 'types' => array_map(function (ResourceType $resourceType) {
                     return $this->resourceTypeSerializer->serialize($resourceType);
                 }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
                 'softDelete' => $this->config->getParameter('resource.soft_delete'),
             ],
             'swagger' => [
-              'base' => $this->config->getParameter('swagger.base'),
+                'base' => $this->config->getParameter('swagger.base'),
             ],
             'desktop' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('desktop.default_tool'),
@@ -174,6 +182,7 @@ class ClientSerializer
             'admin' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
             ],
+            'sso' => $this->oauthManager->getActiveServices(),
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),
             'stylesheets' => $this->config->getParameter('stylesheets'),

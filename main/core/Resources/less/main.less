@@ -7,15 +7,17 @@
 //                                                                       //
 ///////////////////////////////////////////////////////////////////////////
 
+@vendor-path: "../../../../../../../node_modules";
+
 // Import Bootstrap
-@import "../../../../../../../node_modules/bootstrap/less/bootstrap";
+@import "bootstrap";
 
 // Import FontAwesome
-@import "../../../../../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
-@import "../../../../../../../node_modules/@fortawesome/fontawesome-free/less/solid";
-@import "../../../../../../../node_modules/@fortawesome/fontawesome-free/less/regular";
-@import "../../../../../../../node_modules/@fortawesome/fontawesome-free/less/brands";
-@import "../../../../../../../node_modules/@fortawesome/fontawesome-free/less/v4-shims";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/fontawesome";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/solid";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/regular";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/brands";
+@import "@{vendor-path}/@fortawesome/fontawesome-free/less/v4-shims";
 
 @fa-font-path: "../../packages/@fortawesome/fontawesome-free/webfonts";
 

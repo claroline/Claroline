@@ -13,7 +13,7 @@ const RootMenu = props =>
     {...omit(props, 'path')}
     title={trans('resources', {}, 'tools')}
   >
-    root menu
+
   </MenuSection>
 
 RootMenu.propTypes = {
@@ -32,16 +32,20 @@ const ResourcesMenu = (props) =>
         path: '/',
         exact: true,
         render: () => {
-          return (
+          const Menu = (
             <RootMenu {...props} />
           )
+
+          return Menu
         }
       }, {
         path: '/:id',
         render: () => {
-          return (
+          const Menu = (
             <ResourceMenu {...omit(props, 'path')} />
           )
+
+          return Menu
         }
       }
     ]}

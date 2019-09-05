@@ -16,7 +16,7 @@ ToolCard.propTypes = {
   data: T.shape({
     id: T.string.isRequired,
     name: T.string.isRequired,
-    icon: T.string
+    icon: T.string.isRequired
   }).isRequired
 }
 

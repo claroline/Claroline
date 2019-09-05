@@ -83,7 +83,7 @@ DataGridItem.defaultProps = {
 
 const DataGridSort = props =>
   <div className="data-grid-sort">
-    {trans('list_sort_by')}
+    <span className="hidden-xs">{trans('list_sort_by')}</span>
 
     <Button
       id="data-grid-sort-menu"
@@ -141,8 +141,8 @@ const DataGrid = props =>
         {props.selection &&
           <Checkbox
             id="data-grid-select"
-            label={trans('list_select_all')}
-            labelChecked={trans('list_deselect_all')}
+            label={<span className="hidden-xs">{trans('list_select_all')}</span>}
+            labelChecked={<span className="hidden-xs">{trans('list_deselect_all')}</span>}
             checked={0 < props.selection.current.length}
             onChange={() => {
               if (0 === props.selection.current.length) {

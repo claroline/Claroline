@@ -12,7 +12,6 @@
 namespace Claroline\ResultBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
@@ -31,26 +30,21 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ResultController
 {
     private $manager;
-    private $formHandler;
 
     /**
      * @DI\InjectParams({
      *     "manager" = @DI\Inject("claroline.result.result_manager"),
-     *     "handler" = @DI\Inject("claroline.form_handler"),
      *     "checker" = @DI\Inject("security.authorization_checker")
      * })
      *
      * @param ResultManager                 $manager
-     * @param FormHandler                   $handler
      * @param AuthorizationCheckerInterface $checker
      */
     public function __construct(
         ResultManager $manager,
-        FormHandler $handler,
         AuthorizationCheckerInterface $checker
     ) {
         $this->manager = $manager;
-        $this->formHandler = $handler;
         $this->checker = $checker;
     }
 
@@ -96,7 +90,7 @@ class ResultController
         $mark = $request->request->get('mark', false);
         $response = new JsonResponse();
 
-        if ($mark !== false) {
+        if (false !== $mark) {
             if (!$this->manager->isValidMark($result, $mark)) {
                 $response->setData('Mark is not valid');
                 $response->setStatusCode(422);
@@ -143,7 +137,7 @@ class ResultController
         $newValue = $request->request->get('value', false);
         $response = new JsonResponse();
 
-        if ($newValue !== false) {
+        if (false !== $newValue) {
             if (!$this->manager->isValidMark($mark->getResult(), $newValue)) {
                 $response->setData('Mark is not valid');
                 $response->setStatusCode(422);
@@ -178,7 +172,7 @@ class ResultController
         $file = $request->files->get('file', false);
         $response = new JsonResponse();
 
-        if ($file === false) {
+        if (false === $file) {
             $response->setData('Field "file" is missing');
             $response->setStatusCode(422);
         } else {

@@ -3,14 +3,14 @@
  */
 
 .sso-connect-btn(@icon, @primary-color, @secondary-color) {
-    background-color: @primary-color;
+    background-color: @primary-color !important;
 
-    &::before{
-        content: @icon;
+    &:before{
+        //content: @icon;
     }
 
     &:hover,
     &:focus {
-        background-color: @secondary-color;
+        background-color: @secondary-color !important;
     }
 }

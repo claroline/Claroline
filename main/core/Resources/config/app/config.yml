@@ -2,22 +2,6 @@
 
 parameters:
     security.exception_listener.class: Claroline\CoreBundle\Library\Security\Firewall\ExceptionListener
-    templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
-
-services:
-    templating.locator:
-        class: '%templating.locator.class%'
-        arguments:
-            - "@file_locator"
-            - "@claroline.manager.theme_manager"
-            - "%kernel.root_dir%/Resources"
-
-    claroline.honeypot_extension:
-        arguments:
-            - "@service_container"
-        class: Claroline\CoreBundle\Form\Extension\HoneypotExtension
-        tags:
-            - { name: form.type_extension, alias: form, extended_type: Symfony\Component\Form\Extension\Core\Type\StringType }
 
 framework:
     test: true

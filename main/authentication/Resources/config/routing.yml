@@ -1,41 +1,16 @@
-claro_authentication_api:
-    resource: "@ClarolineAuthenticationBundle/Controller/API"
-    prefix: apiv2
-    type: api
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
     options:
         expose: true
-
-claro_cas_admin:
-    resource: "@ClarolineAuthenticationBundle/Controller/Administration/Cas/CasConfigurationController.php"
-    type: annotation
-    prefix: /
-
-claro_cas_connection:
-    resource: "@ClarolineAuthenticationBundle/Controller/Cas/CasConnectionController.php"
-    type: annotation
-    prefix: /cas
-
-claro_oauth_controller:
-    resource: "@ClarolineAuthenticationBundle/Controller/Administration/Oauth/OauthConfigurationController.php"
-    type: annotation
-    prefix: /
-
-claro_oauth_connection:
-    resource: "@ClarolineAuthenticationBundle/Controller/Oauth/OauthConnectionController.php"
-    type: annotation
-    prefix: /oauth
-
-hwi_oauth_login:
-    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix: /login
 
 hwi_oauth_connect:
     resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
     prefix:   /connect
 
-hwi_oauth_redirect:
-    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    prefix: /connect
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix:   /login
 
 facebook_login:
     path: /login/check-facebook
@@ -58,12 +33,10 @@ office_365_login:
 oauth2_generic_login:
     path: /login/check-generic
 
-claro_ldap:
-    resource: "@ClarolineAuthenticationBundle/Controller/Ldap/LdapController.php"
-    type: annotation
-    prefix: /admin/ldap
 
-claro_ldap_connection:
-    resource: "@ClarolineAuthenticationBundle/Controller/Ldap/LdapConnectionController.php"
-    type: annotation
-    prefix: /ldap
+claro_authentication_api:
+    resource: "@ClarolineAuthenticationBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

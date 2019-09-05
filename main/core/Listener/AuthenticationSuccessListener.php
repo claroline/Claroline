@@ -11,228 +11,151 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\TermsOfServiceType;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Logger\FileLogger;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
+use Claroline\CoreBundle\Manager\ConnectionMessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
-use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @DI\Service("claroline.security.authentication.success_handler")
  */
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
-    use LoggableTrait;
-    /** @var Kernel */
-    private $kernel;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
+
+    /** @var PlatformConfigurationHandler */
+    private $config;
+
     /** @var StrictDispatcher */
     private $eventDispatcher;
-    /** @var PlatformConfigurationHandler */
-    private $configurationHandler;
-    /** @var EngineInterface */
-    private $templating;
-    /** @var FormFactory */
-    private $formFactory;
-    /** @var TermsOfServiceManager */
-    private $termsOfService;
-    /** @var ObjectManager */
-    private $manager;
-    /** @var Router */
-    private $router;
+
+    /** @var SerializerProvider */
+    private $serializer;
+
     /** @var UserManager */
     private $userManager;
-    /** @var RequestStack */
-    private $requestStack;
+
+    /** @var ConnectionMessageManager */
+    private $messageManager;
 
     /**
-     * AuthenticationSuccessListener constructor.
+     * SecurityController constructor.
      *
      * @DI\InjectParams({
-     *     "kernel"               = @DI\Inject("kernel"),
-     *     "authorization"        = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
-     *     "eventDispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "configurationHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "templating"           = @DI\Inject("templating"),
-     *     "formFactory"          = @DI\Inject("form.factory"),
-     *     "termsOfService"       = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "manager"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router"               = @DI\Inject("router"),
-     *     "userManager"          = @DI\Inject("claroline.manager.user_manager"),
-     *     "requestStack"         = @DI\Inject("request_stack"),
-     *     "kernelRootDir"        = @DI\Inject("%kernel.root_dir%")
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "config"          = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
+     *     "messageManager"  = @DI\Inject("claroline.manager.connection_message_manager")
      * })
      *
-     * @param Kernel                        $kernel
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authorization
-     * @param StrictDispatcher              $eventDispatcher
-     * @param PlatformConfigurationHandler  $configurationHandler
-     * @param EngineInterface               $templating
-     * @param FormFactory                   $formFactory
-     * @param TermsOfServiceManager         $termsOfService
-     * @param ObjectManager                 $manager
-     * @param Router                        $router
-     * @param UserManager                   $userManager
-     * @param RequestStack                  $requestStack
-     * @param string                        $kernelRootDir
+     * @param TokenStorageInterface        $tokenStorage
+     * @param PlatformConfigurationHandler $config
+     * @param StrictDispatcher             $eventDispatcher
+     * @param SerializerProvider           $serializer
+     * @param UserManager                  $userManager
+     * @param ConnectionMessageManager     $messageManager
      */
     public function __construct(
-        Kernel $kernel,
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
+        PlatformConfigurationHandler $config,
         StrictDispatcher $eventDispatcher,
-        PlatformConfigurationHandler $configurationHandler,
-        EngineInterface $templating,
-        FormFactory $formFactory,
-        TermsOfServiceManager $termsOfService,
-        ObjectManager $manager,
-        Router $router,
+        SerializerProvider $serializer,
         UserManager $userManager,
-        RequestStack $requestStack,
-        $kernelRootDir
+        ConnectionMessageManager $messageManager
     ) {
-        $this->kernel = $kernel;
         $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
+        $this->config = $config;
         $this->eventDispatcher = $eventDispatcher;
-        $this->configurationHandler = $configurationHandler;
-        $this->templating = $templating;
-        $this->formFactory = $formFactory;
-        $this->termsOfService = $termsOfService;
-        $this->manager = $manager;
-        $this->router = $router;
+        $this->serializer = $serializer;
         $this->userManager = $userManager;
-        $this->requestStack = $requestStack;
-        $this->logger = FileLogger::get($kernelRootDir.'/logs/login.log', 'claroline.login.logger');
-    }
-
-    /**
-     * @DI\Observe("security.interactive_login")
-     */
-    public function onLoginSuccess()
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' === $user) {
-            return;
-        }
-
-        $this->userManager->logUser($user);
+        $this->messageManager = $messageManager;
     }
 
     /**
      * @param Request        $request
      * @param TokenInterface $token
      *
-     * @deprecated
-     *
-     * @todo remove me
+     * @return JsonResponse
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        return null;
-    }
+        /** @var User $user */
+        $user = $token->getUser();
 
-    /**
-     * Checks the current user has accepted term of services if any before displaying platform.
-     *
-     * @DI\Observe("kernel.request")
-     *
-     * @param GetResponseEvent $event
-     */
-    public function checkTermOfServices(GetResponseEvent $event)
-    {
-        if ('prod' === $this->kernel->getEnvironment() && $event->isMasterRequest()) {
-            $user = !empty($this->tokenStorage->getToken()) ? $this->tokenStorage->getToken()->getUser() : null;
-            if ($user instanceof User && $this->configurationHandler->getParameter('terms_of_service')) {
-                $this->showTermOfServices($event);
-            }
+        $this->userManager->logUser($user);
+
+        if ($user->getLocale()) {
+            $request->setLocale($user->getLocale());
         }
+
+        return new JsonResponse([
+            'user' => $this->serializer->serialize($user),
+            'redirect' => $this->getRedirection(),
+            'messages' => $this->messageManager->getConnectionMessagesByUser($user),
+        ]);
     }
 
-    private function showTermOfServices(GetResponseEvent $event)
+    private function getRedirection()
     {
-        if ($event->isMasterRequest()
-            && ($user = $this->getUser($event->getRequest()))
-            && !$user->hasAcceptedTerms()
-            && !$this->isImpersonated()
-            && ($content = $this->termsOfService->getTermsOfService(true))
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($this->config->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['LAST'])) {
+            return [
+                'type' => 'last',
+            ];
+        } elseif (
+            $this->config->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['WORKSPACE_TAG'])
+            && null !== $defaultWorkspaceTag = $this->config->getParameter('workspace.default_tag')
         ) {
-            $content = isset($content['fr']) ? $content['fr'] : null;
+            /** @var GenericDataEvent $event */
+            $event = $this->eventDispatcher->dispatch(
+                'claroline_retrieve_user_workspaces_by_tag',
+                GenericDataEvent::class,
+                [
+                    [
+                        'tag' => $defaultWorkspaceTag,
+                        'user' => $user,
+                        'ordered_by' => 'id',
+                        'order' => 'ASC',
+                        'type' => Role::WS_ROLE,
+                    ],
+                ]
+            );
+            $workspaces = $event->getResponse();
 
-            if (($termsOfService = $event->getRequest()->get('terms_of_service'))
-                && isset($termsOfService['terms_of_service'])
-            ) {
-                $user->setAcceptedTerms(true);
-                $this->manager->persist($user);
-                $this->manager->flush();
-            } else {
-                $form = $this->formFactory->create(TermsOfServiceType::class, $content);
-                $response = $this->templating->render(
-                    'ClarolineCoreBundle:authentication:terms_of_service.html.twig',
-                    ['form' => $form->createView()]
-                );
-
-                $event->setResponse(new Response($response));
+            if (is_array($workspaces) && count($workspaces) > 0) {
+                return [
+                    'type' => 'workspace',
+                    'data' => $this->serializer->serialize($workspaces[0], Options::SERIALIZE_MINIMAL),
+                ];
             }
-        }
-    }
-
-    /**
-     * Return a user if need to accept the terms of service.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return User
-     */
-    private function getUser(Request $request)
-    {
-        if ($this->configurationHandler->getParameter('terms_of_service')
-            && 'claroline_locale_change' !== $request->get('_route')
-            && 'bazinga_exposetranslation_js' !== $request->get('_route')
-            && ($token = $this->tokenStorage->getToken())
-            && ($user = $token->getUser())
-            && $user instanceof User
+        } elseif (
+            $this->config->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['URL'])
+            && null !== $url = $this->config->getParameter('redirect_after_login_url')
         ) {
-            return $user;
+            return [
+                'type' => 'url',
+                'data' => $url,
+            ];
         }
 
-        return null;
-    }
-
-    public function isImpersonated()
-    {
-        if ($this->authorization->isGranted('ROLE_PREVIOUS_ADMIN')) {
-            foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
-                if ($role instanceof SwitchUserRole) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return [
+            'type' => 'desktop',
+        ];
     }
 }

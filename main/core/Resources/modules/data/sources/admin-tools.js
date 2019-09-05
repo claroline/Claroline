@@ -2,7 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
 import {route} from '#/main/core/administration/routing'
-import {AdminToolCard} from '#/main/core/administration/tool/components/card'
+import {ToolCard} from '#/main/core/tool/components/card'
 
 export default {
   name: 'admin_tools',
@@ -20,6 +20,6 @@ export default {
         primary: true
       }
     ],
-    card: AdminToolCard
+    card: ToolCard
   }
 }

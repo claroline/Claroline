@@ -1,20 +1,20 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {CallbackButton} from '#/main/app/buttons/callback'
 
 const MessagesSort = props =>
-  <div>
+  <Fragment>
     <div className="messages-sort">
       {trans('list_sort_by')}
-      <button
-        type="button"
+      <CallbackButton
         className="btn btn-link"
         disabled={0 === props.totalResults}
-        onClick={props.toggleSort}
+        callback={props.toggleSort}
       >
         {trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'forum')}
-      </button>
+      </CallbackButton>
     </div>
 
     {props.children}
@@ -22,31 +22,29 @@ const MessagesSort = props =>
     {1 < props.pages &&
       <nav className="text-right">
         <div className="pagination-condensed btn-group">
-          <button
-            type="button"
+          <CallbackButton
             className="btn btn-pagination btn-previous"
             disabled={0 === props.currentPage}
-            onClick={props.changePagePrev}
+            callback={props.changePagePrev}
           >
             <span className="fa fa-angle-double-left" aria-hidden="true" />
             <span className="sr-only">
               {trans(1 === props.sortOrder ? 'older':'newer', {}, 'forum')}
             </span>
-          </button>
+          </CallbackButton>
 
-          <button
-            type="button"
+          <CallbackButton
             className="btn btn-pagination btn-next"
             disabled={(props.pages - 1) === props.currentPage}
-            onClick={props.changePage}
+            callback={props.changePage}
           >
             {trans(1 === props.sortOrder ? 'newer':'older', {}, 'forum')}
             <span className="fa fa-angle-double-right" aria-hidden="true" />
-          </button>
+          </CallbackButton>
         </div>
       </nav>
     }
-  </div>
+  </Fragment>
 
 MessagesSort.propTypes = {
   sortOrder: T.number.isRequired,

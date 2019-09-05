@@ -21,10 +21,6 @@
         text-overflow: ellipsis;
     }
 
-    .pagination-container {
-        margin-left: auto;
-    }
-
     .content-loader {
         margin-top: @component-margin-bottom;
         margin-bottom: @component-margin-bottom;
@@ -90,6 +86,7 @@ button.list-primary-action {
 .list-footer {
     margin-top: auto;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     width: 100%;
@@ -101,6 +98,10 @@ button.list-primary-action {
         border: 1px solid transparent;
         font-weight: bold;
         border-radius: @border-radius-base;
+    }
+
+    .pagination-container {
+        margin-left: auto;
     }
 }
 
@@ -159,11 +160,26 @@ button.list-primary-action {
     }
 }
 
-@media (max-width: @screen-sm-min) {
+@media (max-width: @screen-xs-max) {
     .list-empty {
         .list-empty-info {
             text-align: center;
             flex-direction: column;
+        }
+    }
+
+    .list-footer {
+        flex-direction: column;
+        align-items: stretch;
+
+        .count {
+            + .pagination-container {
+                margin-top: floor(@component-margin-bottom / 2);
+            }
+        }
+
+        .pagination-container {
+            margin-left: 0;
         }
     }
 }

@@ -25,9 +25,4 @@ class ClarolineMessageBundle extends DistributionPluginBundle
     {
         return true;
     }
-
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures';
-    }
 }

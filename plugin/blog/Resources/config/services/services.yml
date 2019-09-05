@@ -17,8 +17,8 @@ parameters:
     icap.blog.widgetblog.class:                   Icap\BlogBundle\Entity\WidgetBlog
     icap.blog.widgettaglistblog_repository.class: Icap\BlogBundle\Repository\WidgetTagListBlogRepository
     icap.blog.widgettaglistblog.class:            Icap\BlogBundle\Entity\WidgetTagListBlog
-    icap.blog.banner_upload_directory:      "uploads/blogs"
-    icap.blog.banner_directory:             "%claroline.param.web_directory%/%icap.blog.banner_upload_directory%"
+    icap.blog.banner_upload_directory:            "uploads/blogs"
+    icap.blog.banner_directory:                   "%claroline.param.web_directory%/%icap.blog.banner_upload_directory%"
 
 services:
     icap.blog.tag_repository:
@@ -40,16 +40,16 @@ services:
             - "%icap.blog.blog.class%"
 
     icap.blog.comment_repository:
-            class: "%icap.blog.comment_repository.class%"
-            factory: ["@doctrine.orm.entity_manager", getRepository]
-            arguments:
-                - "%icap.blog.comment.class%"
+        class: "%icap.blog.comment_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap.blog.comment.class%"
 
     icap.blog.member_repository:
-            class: "%icap.blog.member_repository.class%"
-            factory: ["@doctrine.orm.entity_manager", getRepository]
-            arguments:
-                - "%icap.blog.member.class%"
+        class: "%icap.blog.member_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap.blog.member.class%"
 
     icap.blog.manager.post:
         class: "%icap.blog.manager.post.class%"
@@ -72,13 +72,13 @@ services:
             - { name: form.type, alias: listWidgetBlog }
 
     icap.blog.widgetblog_repository:
-            class: "%icap.blog.widgetblog_repository.class%"
-            factory: ["@doctrine.orm.entity_manager", getRepository]
-            arguments:
-                - "%icap.blog.widgetblog.class%"
+        class: "%icap.blog.widgetblog_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap.blog.widgetblog.class%"
 
     icap.blog.widgettaglistblog_repository:
-                class: "%icap.blog.widgettaglistblog_repository.class%"
-                factory: ["@doctrine.orm.entity_manager", getRepository]
-                arguments:
-                    - "%icap.blog.widgettaglistblog.class%"
+        class: "%icap.blog.widgettaglistblog_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap.blog.widgettaglistblog.class%"

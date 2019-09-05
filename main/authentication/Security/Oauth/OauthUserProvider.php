@@ -2,10 +2,10 @@
 
 namespace Claroline\AuthenticationBundle\Security\Oauth;
 
+use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Claroline\AuthenticationBundle\Entity\Oauth\OauthUser;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -55,7 +55,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
 
     public function loadUserByServiceAndId($service, $id, $email = null)
     {
-        $oauthUser = $this->em->getRepository('ClarolineAuthenticationBundle:Oauth\OauthUser')->findOneBy(
+        $oauthUser = $this->em->getRepository(OauthUser::class)->findOneBy(
             ['service' => $service, 'oauthId' => $id]
         );
 
@@ -162,7 +162,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         $username = preg_replace('/\s/', '.', strtolower(trim($username)));
         $user = $this->em->getRepository('ClarolineCoreBundle:User')->findByName($username);
 
-        if (count($user) === 0) {
+        if (0 === count($user)) {
             return $username;
         } else {
             return $username.count($user);

@@ -1,14 +1,11 @@
 import {createSelector} from 'reselect'
 
+import {selectors as configSelectors} from '#/main/app/config/store/selectors'
+
 const STORE_NAME = 'login'
-const FORM_NAME = `${STORE_NAME}.form`
+const FORM_NAME = `${STORE_NAME}`
 
-const store = (state) => state[STORE_NAME]
-
-const sso = createSelector(
-  [store],
-  (store) => store.sso
-)
+const sso = (state) => configSelectors.param(state, 'sso')
 
 const primarySso = createSelector(
   [sso],

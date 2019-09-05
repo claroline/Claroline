@@ -21,7 +21,7 @@ const LoginForm = props =>
           </div>
         }
 
-        <p className="authentication-help">{trans('login_auth_claro_account') }</p>
+        <p className="authentication-help">{trans('login_auth_claro_account')}</p>
 
         <FormData
           name={selectors.FORM_NAME}
@@ -44,10 +44,6 @@ const LoginForm = props =>
                   hideLabel: true,
                   type: 'password',
                   required: true
-                }, {
-                  name: 'remember_me',
-                  label: trans('keep_me_logged_in'),
-                  type: 'boolean'
                 }
               ]
             }
@@ -81,7 +77,16 @@ const LoginForm = props =>
         <div className="authentication-column external-authentication-column">
           <p className="authentication-help">{trans('login_auth_sso')}</p>
 
-          PLACEHOLDER FOR ALL ENABLED SSO
+          {props.sso.map(sso =>
+            <Button
+              key={sso.service}
+              className={`btn-link btn-block btn-emphasis ${sso.service}-connect btn-third-party-login`}
+              type={URL_BUTTON}
+              label={sso.display_name || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')})}
+
+              target={['hwi_oauth_service_redirect', {service: sso.service}]}
+            />
+          )}
         </div>
       }
     </div>

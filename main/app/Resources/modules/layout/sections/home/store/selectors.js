@@ -11,7 +11,7 @@ const home = createSelector(
 
 const homeType = createSelector(
   [home],
-  (home) => home.type
+  (home) => home.type || constants.HOME_TYPE_NONE
 )
 
 const hasHome = createSelector(

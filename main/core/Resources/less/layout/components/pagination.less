@@ -1,12 +1,12 @@
 .pagination-container {
-    .pagination + .results-per-page,
+    display: flex;
+
     .pagination-condensed + .results-per-page {
         margin-left: 10px;
     }
 }
 
 .results-per-page {
-    //display: inline-block;
     .btn {
         .pagination-btn-variant();
     }
@@ -17,14 +17,20 @@
     }
 }
 
-// new widget
 .pagination-condensed {
+    flex: 1;
+    display: flex;
+
     .btn {
         .pagination-btn-variant();
 
         &.btn-next {
             font-weight: bold;
         }
+    }
+
+    .dropup {
+        flex: 1;
     }
 
     // customize page selector dropdown
@@ -34,13 +40,5 @@
         // fix height if there is lots of pages
         max-height: 220px;
         overflow: auto;
-    }
-}
-
-.pagination {
-    margin: 0;
-
-    ul {
-        .pagination;
     }
 }

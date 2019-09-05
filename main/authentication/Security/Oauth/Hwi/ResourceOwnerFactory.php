@@ -12,10 +12,10 @@
 namespace Claroline\AuthenticationBundle\Security\Oauth\Hwi;
 
 use Buzz\Client\Curl;
+use Claroline\AuthenticationBundle\Manager\OauthManager;
 use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorage\SessionStorage;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GoogleResourceOwner;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\LinkedinResourceOwner;
-use Claroline\AuthenticationBundle\Manager\Oauth\OauthManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\BrowserKit\Client;
 
@@ -17,12 +16,13 @@ trait RequestTrait
             );
         }
 
-        if ($user) {
-            $om = $this->client->getContainer()->get('claroline.persistence.object_manager');
-            $token = $om->getRepository(ApiToken::class)->findOneByUser($user);
-            $uri = strpos($uri, '?') ? $uri.'&apitoken='.$token->getToken() : $uri.'?apitoken='.$token->getToken();
-        }
+        $server = $user ?
+            [
+                'PHP_AUTH_USER' => $user->getUsername(),
+                'PHP_AUTH_PW' => $user->getPlainPassword(),
+            ] :
+            [];
 
-        return $this->client->request($method, $uri, $parameters, [], [], $content);
+        return $this->client->request($method, $uri, $parameters, [], $server, $content);
     }
 }

@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
+import {MENU_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 /**
@@ -27,34 +27,6 @@ implementPropTypes(PageAction, ActionTypes, {
   className: T.string,
   children: T.any
 })
-
-/**
- * Toggles fullscreen mode.
- *
- * @param props
- * @constructor
- */
-const FullScreenAction = props =>
-  <PageAction
-    id={props.id}
-    type={CALLBACK_BUTTON}
-    label={trans(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on')}
-    icon={classes('fa', {
-      'fa-expand': !props.fullscreen,
-      'fa-compress': props.fullscreen
-    })}
-    callback={props.toggleFullscreen}
-  />
-
-FullScreenAction.propTypes = {
-  id: T.string,
-  fullscreen: T.bool.isRequired,
-  toggleFullscreen: T.func.isRequired
-}
-
-FullScreenAction.defaultProps = {
-  id: 'page-fullscreen-action'
-}
 
 const MoreAction = props =>
   <PageAction
@@ -116,7 +88,6 @@ PageActions.propTypes = {
 
 export {
   PageAction,
-  FullScreenAction,
   MoreAction,
   PageGroupActions,
   PageActions

@@ -48,10 +48,7 @@ class LtiApp
     private $description;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     inversedBy="LtiApp"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinTable(name="ujm_ltiapp_workspace")
      */
     private $workspaces;

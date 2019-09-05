@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Loads the core services configuration files.
@@ -30,6 +30,5 @@ class ClarolineCoreExtension extends Extension
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('parameters.yml');
         $loader->load('services.yml');
-        $loader->load('twig.yml');
     }
 }

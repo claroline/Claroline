@@ -216,11 +216,9 @@
 }
 
 .btn-third-party-login {
-    width: 100%;
     text-align: left;
-    padding: @padding-large-vertical @padding-large-horizontal;
     border-radius: @sso-btn-border-radius;
-    color: @sso-btn-color;
+    color: @sso-btn-color !important;
     font-size: @sso-btn-font-size;
 
     + .btn-third-party-login {
@@ -229,10 +227,12 @@
 
     &:hover,
     &:focus {
-        color: @sso-btn-color;
+        color: @sso-btn-color !important;
     }
 
-    &::before {
+    &:before {
+        .fa-icon();
+        font-weight: 900;
         width: @sso-btn-icon-width;
         text-align: center;
         display: inline-block;
