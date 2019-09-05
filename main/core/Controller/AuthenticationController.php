@@ -14,27 +14,18 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\EmailType;
-use Claroline\CoreBundle\Form\ResetPasswordType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -98,12 +89,12 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/reset",
      *     name="claro_security_forgot_password",
      *     options={"expose"=true}
      * )
-     * @Template("ClarolineCoreBundle:authentication:forgot_password.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:authentication:forgot_password.html.twig")
      */
     public function forgotPasswordAction()
     {
@@ -121,13 +112,13 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/sendmail",
      *     name="claro_security_send_token",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
-     * @Template("ClarolineCoreBundle:authentication:forgot_password.html.twig")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:authentication:forgot_password.html.twig")
      */
     public function sendEmailAction()
     {
@@ -171,13 +162,13 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/newpassword/{hash}/",
      *     name="claro_security_reset_password",
      *     options={"expose"=true}
      * )
      *
-     * @Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function resetPasswordAction($hash)
     {
@@ -204,14 +195,14 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/validatepassword/{hash}",
      *     name="claro_security_new_password",
      *     options={"expose"=true}
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
-     * @Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function newPasswordAction($hash)
     {
@@ -240,14 +231,14 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/validate/email/{hash}",
      *     name="claro_security_validate_email",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function validateEmailAction($hash)
     {
@@ -261,7 +252,7 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/send/email/validation/{hash}",
      *     name="claro_security_validate_email_send",
      *     options={"expose"=true}
@@ -279,7 +270,7 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/hide/email/validation",
      *     name="claro_security_validate_email_hide",
      *     options={"expose"=true}
@@ -291,33 +282,5 @@ class AuthenticationController
         $this->userManager->hideEmailValidation($user);
 
         return new JsonResponse('success');
-    }
-
-    /**
-     * @Route("/authenticate.{format}")
-     * @Method("POST")
-     */
-    public function postAuthenticationAction($format)
-    {
-        $formats = ['json', 'xml'];
-
-        if (!in_array($format, $formats)) {
-            return new Response(
-                "The format {$format} is not supported (supported formats are 'json', 'xml'",
-                400
-            );
-        }
-
-        $request = $this->request;
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
-        $status = $this->authenticator->authenticate($username, $password) ? 200 : 403;
-        $content = (403 === $status) ?
-            ['message' => $this->translator->trans('login_failure', [], 'platform')] :
-            [];
-
-        return 'json' === $format ?
-            new JsonResponse($content, $status) :
-            new XmlResponse($content, $status);
     }
 }

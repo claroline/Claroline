@@ -30,18 +30,6 @@ const AdministrationMenu = props =>
         icon: 'fa fa-fw fa-street-view',
         label: trans('show-walkthrough', {}, 'actions'),
         callback: () => true
-      }, {
-        name: 'parameters',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-cog',
-        label: trans('configure', {}, 'actions'),
-        modal: []
-      }, {
-        name: 'impersonation',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-mask',
-        label: trans('view-as', {}, 'actions'),
-        modal: []
       }
     ]}
   >

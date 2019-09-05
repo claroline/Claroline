@@ -2,6 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,22 +14,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OauthUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(type="string", nullable=false)
      */
-    protected $oauthId;
+    private $oauthId;
 
     /**
      * @ORM\Column(type="string")
      */
-    protected $service;
+    private $service;
 
     /**
      * @var User
@@ -36,7 +32,7 @@ class OauthUser
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $user;
+    private $user;
 
     public function __construct($service = null, $oauthId = null, User $user = null)
     {

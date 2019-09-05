@@ -65,6 +65,8 @@ security:
             logout:
                 success_handler: claroline.oauth.logout_success_handler
             oauth:
+                oauth_user_provider:
+                    service: claroline.oauth.user_provider
                 resource_owners:
                     facebook:     /login/check-facebook
                     twitter:      /login/check-twitter
@@ -78,5 +80,4 @@ security:
                 login_path: /login
                 failure_path: /login
                 use_forward: false
-                oauth_user_provider:
-                    service: claroline.oauth.user_provider
+

@@ -3,11 +3,6 @@ claro_app:
     type: annotation
     options: { expose: true }
 
-claro_security:
-    resource: "@ClarolineAppBundle/Controller/Platform/SecurityController.php"
-    type: annotation
-    options: { expose: true }
-
 claro_locale:
     resource: "@ClarolineAppBundle/Controller/Platform/LocaleController.php"
     type: annotation

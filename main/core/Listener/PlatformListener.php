@@ -142,7 +142,7 @@ class PlatformListener
 
             if (!$isAdmin &&
                 !in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES) &&
-                ($minDate->getTimeStamp() > $now || $now > $expirationDate->getTimeStamp())
+                ($minDate->getTimeStamp() > $now || $now > $expirationDate->getTimeStamp() || $this->config->getParameter('maintenance.enable'))
             ) {
                 throw new HttpException(503, 'Platform is not available.');
             }

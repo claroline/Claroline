@@ -186,32 +186,22 @@ class OauthManager
         return $services;
     }
 
-    public function getRegistrationForm($user)
-    {
-        return $this->registrationManager->getRegistrationForm($user);
-    }
-
     public function createNewAccount(Request $request, TranslatorInterface $translator, $service)
     {
         $user = new User();
-        $form = $this->registrationManager->getRegistrationForm($user);
-        $form->handleRequest($request);
         $session = $request->getSession();
         if ($form->isValid()) {
             $this->registrationManager->registerNewUser($user, $form);
 
             $oauthUser = new OauthUser($service['name'], $service['id'], $user);
+            $oauthUser->setUser($user);
+            $oauthUser->setService($service['name']);
+            $oauthUser->setOauthId($service['id']);
+
             $this->em->persist($oauthUser);
             $this->em->flush();
             $session->remove('claroline.oauth.resource_owner');
 
-            $msg = $translator->trans('account_created', [], 'platform');
-            $session->getFlashBag()->add('success', $msg);
-
-            if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
-                $msg = $translator->trans('please_validate_your_account', [], 'platform');
-                $session->getFlashBag()->add('success', $msg);
-            }
 
             return $this->registrationManager->loginUser($user, $request);
         }
