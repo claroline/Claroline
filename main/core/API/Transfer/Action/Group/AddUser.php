@@ -33,10 +33,18 @@ class AddUser extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $user = $this->om->getObject($data['user'][0], User::class);
-        $group = $this->om->getObject($data['group'][0], Group::class);
+        $user = $this->om->getRepository(User::class)->findOneBy($data['user']);
+        $group = $this->om->getRepository(Group::class)->findOneBy($data['group']);
 
-        $this->crud->patch($user, 'group', 'add', [$group]);
+	if (!$user) { 
+	    throw new \Exception('User does not exists');
+        }
+
+	if (!$group) {
+	    throw new \Exception('Group does not exists');
+	}
+
+        $this->crud->patch($group, 'user', 'add', [$user]);
     }
 
     public function getSchema(array $options = [], array $extra = [])

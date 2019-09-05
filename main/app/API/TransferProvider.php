@@ -228,6 +228,7 @@ class TransferProvider
             }
         }
 
+
         foreach ($data as $el) {
             ++$i;
             $this->log("{$i}/{$total}: ".$this->getActionName($executor));
