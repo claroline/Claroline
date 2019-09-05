@@ -105,7 +105,7 @@ const UserPage = props =>
             group: trans('management'),
             displayed: hasPermission('administrate', props.user) || props.user.id === get(props.currentUser, 'id'),
             modal: [MODAL_USER_PASSWORD, {
-              changePassword: (password) => props.updatePassword(props.user, password)
+              user: props.user
             }]
           }, {
             name: 'change-url',
@@ -174,7 +174,6 @@ implementPropTypes(UserPage, PageTypes, {
   path: T.string.isRequired,
   showBreadcrumb: T.bool.isRequired,
   breadcrumb: T.array, // TODO : correct prop type
-  updatePassword: T.func.isRequired,
   updatePublicUrl: T.func.isRequired
 }, {
   breadcrumb: []

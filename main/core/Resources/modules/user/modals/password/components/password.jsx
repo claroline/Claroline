@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {User as UserType} from '#/main/core/user/prop-types'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
 const PasswordModal = props =>
@@ -9,7 +10,7 @@ const PasswordModal = props =>
     {...props}
     icon="fa fa-fw fa-lock"
     title={trans('change_password')}
-    save={(data) => props.changePassword(data.plainPassword)}
+    save={(data) => props.changePassword(props.user, data.plainPassword)}
     sections={[
       {
         id: 'general',
@@ -28,6 +29,7 @@ const PasswordModal = props =>
   />
 
 PasswordModal.propTypes = {
+  user: T.shape(UserType.propTypes),
   changePassword: T.func.isRequired
 }
 

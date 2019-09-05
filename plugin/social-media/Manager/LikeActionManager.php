@@ -62,7 +62,7 @@ class LikeActionManager
      * @param Request $request
      * @param array   $criteria
      *
-     * @return null|LikeAction
+     * @return LikeAction|null
      */
     public function getLikeBy(User $user, Request $request = null, $criteria = [])
     {

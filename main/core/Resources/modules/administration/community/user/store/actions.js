@@ -85,59 +85,6 @@ actions.addOrganizations = (id, organizations) => ({
   }
 })
 
-actions.enable = (users) => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_users_enable'], {ids: users.map(u => u.id)}),
-    request: {
-      method: 'PUT'
-    },
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
-    }
-  }
-})
-
-actions.disable = (users) => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_users_disable'], {ids: users.map(u => u.id)}),
-    request: {
-      method: 'PUT'
-    },
-    success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
-    }
-  }
-})
-
-actions.createWorkspace = (users) => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_users_pws_create'], {ids: users.map(u => u.id)}),
-    request: {
-      method: 'POST'
-    },
-    success: (data, dispatch) => dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
-  }
-})
-
-actions.deleteWorkspace = (users) => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_users_pws_delete'], {ids: users.map(u => u.id)}),
-    request: {
-      method: 'DELETE'
-    },
-    success: (data, dispatch) => dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
-  }
-})
-
-actions.resetPassword = (users) => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_users_password_reset'], {ids: users.map(u => u.id)}),
-    request: {
-      method: 'PUT'
-    }
-  }
-})
-
 actions.merge = (id1, id2) => ({
   [API_REQUEST]: {
     url: ['apiv2_user_merge', {keep: id1, remove: id2}],
@@ -145,7 +92,6 @@ actions.merge = (id1, id2) => ({
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.users.list'))
       dispatch(listActions.resetSelect(baseSelectors.STORE_NAME+'.users.list'))
-      //navigate('/users')
     }
   }
 })

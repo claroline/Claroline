@@ -267,8 +267,7 @@ class Workspace
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Shortcuts",
-     *     mappedBy="workspace",
-     *     cascade={"persist", "merge"}
+     *     mappedBy="workspace"
      * )
      *
      * @var Shortcuts[]|ArrayCollection

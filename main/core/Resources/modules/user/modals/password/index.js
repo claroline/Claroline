@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {PasswordModal} from '#/main/core/user/modals/password/components/password'
+import {PasswordModal} from '#/main/core/user/modals/password/containers/password'
 
 const MODAL_USER_PASSWORD = 'MODAL_USER_PASSWORD'
 

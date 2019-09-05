@@ -785,6 +785,41 @@ class WorkspaceManager
             $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
             $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
 
+            if (0 === count($this->shortcutsRepo->findBy(['workspace' => $workspace]))) {
+                $this->log('Generating default shortcuts...');
+                $managerRole = $this->roleManager->getManagerRole($workspace);
+                $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
+
+                if ($managerRole) {
+                    $shortcuts = new Shortcuts();
+                    $shortcuts->setWorkspace($workspace);
+                    $shortcuts->setRole($managerRole);
+                    $shortcuts->setData([
+                        ['type' => 'tool', 'name' => 'home'],
+                        ['type' => 'tool', 'name' => 'resources'],
+                        ['type' => 'tool', 'name' => 'agenda'],
+                        ['type' => 'tool', 'name' => 'community'],
+                        ['type' => 'tool', 'name' => 'dashboard'],
+                        ['type' => 'action', 'name' => 'favourite'],
+                        ['type' => 'action', 'name' => 'configure'],
+                        ['type' => 'action', 'name' => 'impersonation'],
+                    ]);
+                    $this->om->persist($shortcuts);
+                }
+                if ($collaboratorRole) {
+                    $shortcuts = new Shortcuts();
+                    $shortcuts->setWorkspace($workspace);
+                    $shortcuts->setRole($collaboratorRole);
+                    $shortcuts->setData([
+                        ['type' => 'tool', 'name' => 'home'],
+                        ['type' => 'tool', 'name' => 'resources'],
+                        ['type' => 'tool', 'name' => 'agenda'],
+                        ['type' => 'action', 'name' => 'favourite'],
+                    ]);
+                    $this->om->persist($shortcuts);
+                }
+            }
+
             if ($restore) {
                 $this->om->persist($workspace);
                 $this->om->flush();

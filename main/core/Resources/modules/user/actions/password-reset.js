@@ -1,10 +1,16 @@
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON} from '#/main/app/buttons'
 
-export default (rows, refresher) => ({
-  type: CALLBACK_BUTTON,
+export default (users) => ({
+  type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-user-lock',
   label: trans('reset_password'),
   scope: ['object', 'collection'],
-  callback: () => refresher.resetPassword(rows)
+  request: {
+    url: url(['apiv2_users_password_reset'], {ids: users.map(u => u.id)}),
+    request: {
+      method: 'PUT'
+    }
+  }
 })
