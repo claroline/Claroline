@@ -21,7 +21,7 @@ actions.open = (formName, id = null, defaultProps) => {
 
 actions.addUsersToRole = (role, users)  => ({
   [API_REQUEST]: {
-    url: url(['apiv2_role_add_users', {id: role}], {ids: users}),
+    url: url(['apiv2_role_add_users', {id: role.id}], {ids: users.map(user => user.id)}),
     request: {
       method: 'PATCH'
     },
