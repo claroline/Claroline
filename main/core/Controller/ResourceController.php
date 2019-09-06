@@ -221,7 +221,7 @@ class ResourceController
             try {
                 $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
                 //I have no idea if it is correct to do this
-                if ($this->tokenStorage->getToken()->getUser()) {
+                if ('anon.' !== $this->tokenStorage->getToken()->getUser()) {
                     $this->resourceEvaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
                       'status' => ResourceEvaluation::STATUS_PARTICIPATED,
                     ]);
