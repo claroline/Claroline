@@ -155,25 +155,27 @@ class Update1205Command extends ContainerAwareCommand
         //if (count($matches)) {
         foreach ($replacement[1] as $pos => $class) {
             if ($class) {
-                $this->log('Finding resource of class '.$class.' with identifier '.$matches[$pos][0]);
-                $object = $om->getRepository($class)->find($matches[$pos][0]);
+                if (isset($matches[$pos][0])) {
+                    $this->log('Finding resource of class '.$class.' with identifier '.$matches[$pos][0]);
+                    $object = $om->getRepository($class)->find($matches[$pos][0]);
 
-                if ($object) {
-                    $regexError = false;
-                    if (Workspace::class === $class) {
-                        $replacement[0] = str_replace(':wslug', $object->getSlug(), $replacement[0]);
-                    }
-
-                    if (ResourceNode::class === $class) {
-                        if ($object->getWorkspace()) {
-                            $replacement[0] = str_replace(':nslug', $object->getSlug(), $replacement[0]);
-                            $replacement[0] = str_replace(':wslug', $object->getWorkspace()->getSlug(), $replacement[0]);
-                        } else {
-                            $this->error('Resource '.$matches[$pos][0].' has no workspace');
+                    if ($object) {
+                        $regexError = false;
+                        if (Workspace::class === $class) {
+                            $replacement[0] = str_replace(':wslug', $object->getSlug(), $replacement[0]);
                         }
+
+                        if (ResourceNode::class === $class) {
+                            if ($object->getWorkspace()) {
+                                $replacement[0] = str_replace(':nslug', $object->getSlug(), $replacement[0]);
+                                $replacement[0] = str_replace(':wslug', $object->getWorkspace()->getSlug(), $replacement[0]);
+                            } else {
+                                $this->error('Resource '.$matches[$pos][0].' has no workspace');
+                            }
+                        }
+                    } else {
+                        $this->error('Could not find object... skipping');
                     }
-                } else {
-                    $this->error('Could not find object... skipping');
                 }
             }
         }
