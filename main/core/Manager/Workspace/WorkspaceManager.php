@@ -679,29 +679,47 @@ class WorkspaceManager
         // gets entity from raw data.
 
         /** @var Workspace $workspace */
-        $workspace = $transferManager->deserialize($data, $newWorkspace, $options, $fileBag);
+        $workspaceCopy = $transferManager->deserialize($data, $newWorkspace, $options, $fileBag);
 
-        $workspace->setModel($model);
+        $workspaceCopy->setModel($model);
 
         //set the manager
-        $managerRole = $this->roleManager->getManagerRole($workspace);
+        $managerRole = $this->roleManager->getManagerRole($workspaceCopy);
 
-        if ($managerRole && $workspace->getCreator()) {
-            $user = $workspace->getCreator();
+        if ($managerRole && $workspaceCopy->getCreator()) {
+            $user = $workspaceCopy->getCreator();
             $user->addRole($managerRole);
             $this->om->persist($user);
         }
 
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);
 
         if ($root) {
             $this->resourceManager->createRights($root);
         }
 
-        $this->om->persist($workspace);
+        // Copy workspace shortcuts
+        $workspaceShortcuts = $this->shortcutsRepo->findBy(['workspace' => $workspace]);
+
+        foreach ($workspaceShortcuts as $shortcuts) {
+            $role = $shortcuts->getRole();
+
+            $roleName = preg_replace('/'.$workspace->getUuid().'$/', '', $role->getName()).$workspaceCopy->getUuid();
+            $roleCopy = $this->roleManager->getRoleByName($roleName);
+
+            if ($roleCopy) {
+                $shortcutsCopy = new Shortcuts();
+                $shortcutsCopy->setWorkspace($workspaceCopy);
+                $shortcutsCopy->setRole($roleCopy);
+                $shortcutsCopy->setData($shortcuts->getData());
+                $this->om->persist($shortcutsCopy);
+            }
+        }
+
+        $this->om->persist($workspaceCopy);
         $this->om->flush();
 
-        return $workspace;
+        return $workspaceCopy;
     }
 
     /**
