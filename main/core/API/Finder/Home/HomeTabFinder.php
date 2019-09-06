@@ -67,44 +67,26 @@ class HomeTabFinder extends AbstractFinder
                     $expr = [];
 
                     if (!in_array('ROLE_ADMIN', $roles)) {
-                        //those whose rights are enabled
                         $subQuery =
                           "
-                            SELECT DISTINCT tab from Claroline\CoreBundle\Entity\Tab\HomeTab tab
+                            SELECT tab from Claroline\CoreBundle\Entity\Tab\HomeTab tab
                             JOIN tab.homeTabConfigs htc
                             JOIN htc.roles role
                             JOIN role.users user
-                            JOIN role.groups group
-                            JOIN group.users gusers
-                            WHERE (
-                              (user.uuid = :userId)
-                              AND tab.type = :adminDesktop
-                              AND htc.locked = true
-                            ) OR (
-                              (gusers.uuid = :userId)
-                              AND tab.type = :adminDesktop
-                              AND htc.locked = true
-                            )
+                            WHERE (user.uuid = :userId OR user.id = :userId)
+                            AND tab.type = :adminDesktop
+                            AND htc.locked = true
                           ";
-
-                        //this subquery is awfull, same issue as ResourceRightsIntegrityCommand::43
-                        //we want to do the same thing, so I copied it
-
-                        //This query is real bad
-                        //those admin tabs who have no role set
                         $subQuery2 =
                           "
                             SELECT tab2 from Claroline\CoreBundle\Entity\Tab\HomeTab tab2
                             JOIN tab2.homeTabConfigs htc2
-                            WHERE tab2 NOT IN (
-                              SELECT DISTINCT tab3 FROM Claroline\CoreBundle\Entity\Tab\HomeTab tab3
-                              JOIN tab3.homeTabConfigs htc3
-                              JOIN htc3.roles role2
-                            )
-                            AND tab2.type = :adminDesktop
+                            LEFT JOIN htc2.roles role2
+                            WHERE tab2.type = :adminDesktop
                             AND htc2.locked = true
+                            GROUP BY tab2.id
+                            HAVING COUNT(role2.id) = 0
                           ";
-
                         $expr[] = $qb->expr()->orX(
                             $qb->expr()->in('obj', $subQuery),
                             $qb->expr()->in('obj', $subQuery2)
@@ -112,8 +94,8 @@ class HomeTabFinder extends AbstractFinder
                         $qb->setParameter('adminDesktop', HomeTab::TYPE_ADMIN_DESKTOP);
                     } else {
                         $expr[] = $qb->expr()->andX(
-                          $qb->expr()->eq('obj.type', ':adminDesktop')
-                        );
+                            $qb->expr()->eq('obj.type', ':adminDesktop')
+                          );
                         $qb->setParameter('adminDesktop', HomeTab::TYPE_ADMIN_DESKTOP);
                     }
 
