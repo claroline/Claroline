@@ -29,6 +29,11 @@ const tools = createSelector(
   (store) => store.tools
 )
 
+const root = createSelector(
+  [store],
+  (store) => store.root
+)
+
 // all the shortcuts defined in the workspace
 const shortcuts = createSelector(
   [store],
@@ -86,7 +91,7 @@ const serverErrors = createSelector(
 
 export const selectors = {
   STORE_NAME,
-
+  root,
   loaded,
   workspace,
   managed,

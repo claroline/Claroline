@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
@@ -176,6 +178,7 @@ class WorkspaceController
                 }, $orderedTools)),
                 //'shortcuts' => $this->manager->getShortcuts($workspace, $user),
 
+                'root' => $this->serializer->serialize($this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]), [Options::SERIALIZE_MINIMAL]),
                 // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
                 'shortcuts' => array_values(array_map(function (Shortcuts $shortcuts) {
                     return $this->serializer->serialize($shortcuts);

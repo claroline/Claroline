@@ -8,6 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {selectors as workspaceSelectors} from '#/main/core/workspace/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
   actions as formActions,
@@ -152,6 +153,12 @@ const WorkspaceFormComponent = (props) =>
                 type: 'resource',
                 help: trans ('opening_target_resource_help'),
                 label: trans('resource'),
+                options: {
+                  picker: {
+                    current: props.root,
+                    root: props.root
+                  }
+                },
                 required: true,
                 displayed: (workspace) => workspace.opening && 'resource' === workspace.opening.type,
                 onChange: (selected) => {
@@ -389,8 +396,10 @@ const WorkspaceFormComponent = (props) =>
     {props.children}
   </FormData>
 
+
 WorkspaceFormComponent.propTypes = {
   tools: T.array,
+  root: T.object,
   children: T.any,
   // from redux
   isAdmin: T.bool.isRequired,
@@ -401,8 +410,9 @@ WorkspaceFormComponent.propTypes = {
 const WorkspaceForm = connect(
   (state, ownProps) => ({
     isAdmin: securitySelectors.isAdmin(state),
-    new: formSelect.isNew(formSelect.form(state, ownProps.name))/*,
-    tools: workspaceSelect.tools(state)*/
+    new: formSelect.isNew(formSelect.form(state, ownProps.name)),
+    tools: workspaceSelectors.tools(state),
+    root: workspaceSelectors.root(state)
   }),
   (dispatch, ownProps) =>({
     updateProp(propName, propValue) {

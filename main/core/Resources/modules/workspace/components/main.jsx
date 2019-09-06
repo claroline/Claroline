@@ -48,7 +48,9 @@ const WorkspaceMain = (props) => {
               } else {
                 // tool is disabled (or does not exist) for the desktop
                 // let's go to the default opening of the desktop
-                props.history.replace('/desktop/workspaces/' + props.workspace.id)
+                if (props.workspace.opening.type === 'tool') {
+                  props.openTool(props.workspace.opening.target)
+                }
               }
             },
             component: ToolMain

@@ -1422,7 +1422,7 @@
     "delete_all": "delete all",
     "ip_input_help": "Each address part must be a number between 0 and 255 or *.",
     "manage_ws_managers": "Manage managers",
-
+    "opening_parameters": "Opening parameters",
     "list_columns": "Available columns",
     "list_columns_title": "Available columns (click to display/hide columns)",
     "list_display_modes": "View modes",

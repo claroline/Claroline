@@ -30,6 +30,9 @@ const reducer = combineReducers({
   tools: makeReducer([], {
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.tools || state
   }),
+  root: makeReducer([], {
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.root || state
+  }),
   shortcuts: makeReducer([], {
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.shortcuts || state,
     [SHORTCUTS_LOAD]: (state, action) => action.shortcuts || state
