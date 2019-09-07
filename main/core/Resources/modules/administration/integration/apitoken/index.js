@@ -2,6 +2,6 @@ import {ApiToken} from '#/main/core/administration/integration/apitoken/containe
 
 export default {
   component: ApiToken,
-  icon: 'fa fa-wrench',
+  icon: 'fa fa-fw fa-coins',
   name: 'tokens'
 }

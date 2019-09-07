@@ -9,7 +9,7 @@ import {Await} from '#/main/app/components/await'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 function getIntegrationApps() {
-  const apps = getApps('integration', false)
+  const apps = getApps('integration')
 
   return Promise.all(Object.keys(apps).map(type => apps[type]()))
 }

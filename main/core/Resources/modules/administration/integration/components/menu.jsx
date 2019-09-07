@@ -10,7 +10,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
 function getIntegrationApps() {
-  const apps = getApps('integration', false)
+  const apps = getApps('integration')
 
   return Promise.all(Object.keys(apps).map(type => apps[type]()))
 }

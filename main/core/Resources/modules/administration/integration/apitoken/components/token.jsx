@@ -27,7 +27,10 @@ const Token = (props) =>
           {
             name: 'description',
             type: 'string',
-            label: trans('description')
+            label: trans('description'),
+            options: {
+              long: true
+            }
           }, {
             name: 'user',
             type: 'user',

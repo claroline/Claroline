@@ -1,7 +1,7 @@
-import {DocumentationComponent} from '#/main/core/documentation/components/documentation'
+import {Documentation} from '#/main/core/administration/integration/documentation/components/documentation'
 
 export default {
-  component: DocumentationComponent,
-  icon: 'fa fa-book',
+  component: Documentation,
+  icon: 'fa fa-fw fa-info',
   name: 'documentation'
 }

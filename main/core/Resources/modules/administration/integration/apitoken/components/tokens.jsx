@@ -11,15 +11,16 @@ const Tokens = () =>
       url: ['apiv2_apitoken_list'],
       autoload: true
     }}
-    /*primaryAction={(row) => ({
-      type: LINK_BUTTON,
-      target: `/token/form/${row.id}`
-    })}*/
     delete={{
       url: ['apiv2_apitoken_delete_bulk']
     }}
     definition={[
       {
+        name: 'user',
+        label: trans('user'),
+        type: 'user',
+        displayed: true
+      }, {
         name: 'token',
         label: trans('token', {}, 'claroline'),
         type: 'string',
@@ -28,13 +29,11 @@ const Tokens = () =>
       }, {
         name: 'description',
         label: trans('description'),
-        type: 'html',
-        displayed: true
-      }, {
-        name: 'user.username',
-        label: trans('user'),
         type: 'string',
-        displayed: true
+        displayed: true,
+        options: {
+          long: true
+        }
       }
     ]}
   />
