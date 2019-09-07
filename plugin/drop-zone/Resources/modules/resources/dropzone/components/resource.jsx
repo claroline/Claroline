@@ -3,9 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
@@ -58,138 +57,134 @@ const DropzoneResource = props =>
         exact: true
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          render: () => {
-            const component = <Overview path={props.path} />
+    routes={[
+      {
+        path: '/',
+        render: () => {
+          const component = <Overview path={props.path} />
 
-            return component
-          },
-          exact: true
-        }, {
-          path: '/edit',
-          render: () => {
-            const component = <Editor path={props.path} />
+          return component
+        },
+        exact: true
+      }, {
+        path: '/edit',
+        render: () => {
+          const component = <Editor path={props.path} />
 
-            return component
-          },
-          disabled: !props.canEdit,
-          onLeave: () => props.resetForm(),
-          onEnter: () => props.resetForm(props.dropzone)
-        }, {
-          path: '/my/drop',
-          render: () => {
-            const component = <MyDrop path={props.path} />
+          return component
+        },
+        disabled: !props.canEdit,
+        onLeave: () => props.resetForm(),
+        onEnter: () => props.resetForm(props.dropzone)
+      }, {
+        path: '/my/drop',
+        render: () => {
+          const component = <MyDrop path={props.path} />
 
-            return component
-          },
-          exact: true,
-          onEnter: () => {
-            if (props.currentRevisionId) {
-              props.fetchRevision(props.currentRevisionId)
-            }
-          },
-          onLeave: () => props.resetRevision()
-        }, {
-          path: '/drops',
-          render: () => {
-            const component = <Drops path={props.path} />
-
-            return component
+          return component
+        },
+        exact: true,
+        onEnter: () => {
+          if (props.currentRevisionId) {
+            props.fetchRevision(props.currentRevisionId)
           }
-        }, {
-          path: '/drop/:id',
-          render: () => {
-            const component = <Drop path={props.path} />
+        },
+        onLeave: () => props.resetRevision()
+      }, {
+        path: '/drops',
+        render: () => {
+          const component = <Drops path={props.path} />
 
-            return component
-          },
-          onEnter: (params) => props.fetchDrop(params.id, 'current'),
-          onLeave: () => props.resetCurrentDrop()
-        }, {
-          path: '/peer/drop',
-          render: () => {
-            const component = <PeerDrop path={props.path} />
-
-            return component
-          },
-          onEnter: () => props.fetchPeerDrop()
-        }, {
-          path: '/correctors',
-          render: () => {
-            const component = <Correctors path={props.path} />
-
-            return component
-          },
-          onEnter: () => {
-            props.fetchCorrections(props.dropzone.id)
-          }
-        }, {
-          path: '/corrector/:id',
-          component: Corrector,
-          onEnter: (params) => {
-            props.fetchDrop(params.id, 'corrector')
-            props.fetchCorrections(props.dropzone.id)
-          },
-          onLeave: () => props.resetCorrectorDrop()
-        }, {
-          path: '/my/drop/revisions',
-          render: () => {
-            const component = <MyRevisions path={props.path} />
-
-            return component
-          },
-          disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
-          exact: true
-        }, {
-          path: '/my/drop/revisions/:id',
-          render: () => {
-            const component = <Revision path={props.path} />
-
-            return component
-          },
-          disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
-          onEnter: (params) => {
-            props.fetchRevision(params.id)
-            props.fetchDropFromRevision(params.id)
-          },
-          onLeave: () => {
-            props.resetRevision()
-            props.resetCurrentDrop()
-          }
-        }, {
-          path: '/revisions',
-          render: () => {
-            const component = <Revisions path={props.path} />
-
-            return component
-          },
-          disabled: !props.canEdit,
-          exact: true
-        }, {
-          path: '/revisions/:id',
-          render: () => {
-            const component = <Revision path={props.path} />
-
-            return component
-          },
-          disabled: !props.canEdit,
-          onEnter: (params) => {
-            props.fetchRevision(params.id)
-            props.fetchDropFromRevision(params.id)
-          },
-          onLeave: () => {
-            props.resetRevision()
-            props.resetCurrentDrop()
-          }
+          return component
         }
-      ]}
-    />
-  </ResourcePage>
+      }, {
+        path: '/drop/:id',
+        render: () => {
+          const component = <Drop path={props.path} />
+
+          return component
+        },
+        onEnter: (params) => props.fetchDrop(params.id, 'current'),
+        onLeave: () => props.resetCurrentDrop()
+      }, {
+        path: '/peer/drop',
+        render: () => {
+          const component = <PeerDrop path={props.path} />
+
+          return component
+        },
+        onEnter: () => props.fetchPeerDrop()
+      }, {
+        path: '/correctors',
+        render: () => {
+          const component = <Correctors path={props.path} />
+
+          return component
+        },
+        onEnter: () => {
+          props.fetchCorrections(props.dropzone.id)
+        }
+      }, {
+        path: '/corrector/:id',
+        component: Corrector,
+        onEnter: (params) => {
+          props.fetchDrop(params.id, 'corrector')
+          props.fetchCorrections(props.dropzone.id)
+        },
+        onLeave: () => props.resetCorrectorDrop()
+      }, {
+        path: '/my/drop/revisions',
+        render: () => {
+          const component = <MyRevisions path={props.path} />
+
+          return component
+        },
+        disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
+        exact: true
+      }, {
+        path: '/my/drop/revisions/:id',
+        render: () => {
+          const component = <Revision path={props.path} />
+
+          return component
+        },
+        disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
+        onEnter: (params) => {
+          props.fetchRevision(params.id)
+          props.fetchDropFromRevision(params.id)
+        },
+        onLeave: () => {
+          props.resetRevision()
+          props.resetCurrentDrop()
+        }
+      }, {
+        path: '/revisions',
+        render: () => {
+          const component = <Revisions path={props.path} />
+
+          return component
+        },
+        disabled: !props.canEdit,
+        exact: true
+      }, {
+        path: '/revisions/:id',
+        render: () => {
+          const component = <Revision path={props.path} />
+
+          return component
+        },
+        disabled: !props.canEdit,
+        onEnter: (params) => {
+          props.fetchRevision(params.id)
+          props.fetchDropFromRevision(params.id)
+        },
+        onLeave: () => {
+          props.resetRevision()
+          props.resetCurrentDrop()
+        }
+      }
+    ]}
+  />
 
 DropzoneResource.propTypes = {
   path: T.string.isRequired,

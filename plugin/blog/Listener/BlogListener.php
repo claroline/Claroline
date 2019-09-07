@@ -143,6 +143,7 @@ class BlogListener
         $om = $this->container->get('claroline.persistence.object_manager');
 
         foreach ($data['_data']['posts'] as $postData) {
+            /** @var Post $post */
             $post = $this->container->get('claroline.serializer.blog.post')->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
 
             if (isset($postData['creationDate'])) {
@@ -154,13 +155,14 @@ class BlogListener
             }
 
             if (isset($commentData['updateDate'])) {
-                $post->setUpdateDate(DateNormalizer::denormalize($postData['updateDate']));
+                $post->setModificationDate(DateNormalizer::denormalize($postData['updateDate']));
             }
 
             $post->setBlog($blog)
               ->setAuthor($this->container->get('security.token_storage')->getToken()->getUser());
 
             foreach ($postData['comments'] as $commentData) {
+                /** @var Comment $comment */
                 $comment = $this->container->get('claroline.serializer.blog.comment')->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
 
                 $this->container->get('icap.blog.manager.comment')
@@ -203,7 +205,7 @@ class BlogListener
         $this->container->get('icap_blog.manager.blog')->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
 
         foreach ($blog->getPosts() as $post) {
-            /** @var \Icap\BlogBundle\Entity\Post $newPost */
+            /** @var Post $newPost */
             $newPost = new Post();
             $newPost
                 ->setTitle($post->getTitle())
@@ -213,7 +215,7 @@ class BlogListener
                 ->setPinned($post->isPinned())
                 ->setCreationDate($post->getCreationDate())
                 ->setPublicationDate($post->getPublicationDate())
-                ->setUpdateDate($post->getUpdateDate())
+                ->setModificationDate($post->getModificationDate())
                 ->setBlog($newBlog)
             ;
 

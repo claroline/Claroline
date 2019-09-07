@@ -10,8 +10,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
-
+import {ResourceExplorer} from '#/main/core/modals/resources/containers/explorer'
 import {selectors} from '#/main/core/modals/resources/store'
 
 const ExplorerBreadcrumb = props => {

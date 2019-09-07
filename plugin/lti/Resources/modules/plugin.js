@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('lti', {
+registry.add('UJMLtiBundle', {
   resources: {
     'ujm_lti_resource': () => { return import(/* webpackChunkName: "plugin-lti-resource" */ '#/plugin/lti/resources/lti') }
   },

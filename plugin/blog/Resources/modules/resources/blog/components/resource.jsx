@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {DOWNLOAD_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {Routes} from '#/main/app/router'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
@@ -42,20 +41,16 @@ const BlogResource = props =>
         target: url(['icap_blog_rss', {blogId: props.blogId}])
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/moderation',
-          component: Moderation
-        }, {
-          path: '/',
-          component: Player
-        }
-      ]}
-    />
-  </ResourcePage>
+    routes={[
+      {
+        path: '/moderation',
+        component: Moderation
+      }, {
+        path: '/',
+        component: Player
+      }
+    ]}
+  />
 
 BlogResource.propTypes = {
   path: T.string.isRequired,

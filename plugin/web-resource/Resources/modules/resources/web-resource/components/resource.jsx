@@ -1,10 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {LINK_BUTTON} from '#/main/app/buttons'
-
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Player} from '#/plugin/web-resource/resources/web-resource/player/components/player'
@@ -21,21 +19,17 @@ const WebResource = (props) =>
         exact: true
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          component: Player
-        }, {
-          path: '/edit',
-          component: Editor
-        }
-      ]}
-    />
-  </ResourcePage>
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        component: Player
+      }, {
+        path: '/edit',
+        component: Editor
+      }
+    ]}
+  />
 
 WebResource.propTypes = {
   path: T.string.isRequired

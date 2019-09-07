@@ -3,9 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 
@@ -57,81 +56,77 @@ const ClacoFormResource = props =>
         group: trans('transfer')
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          component: getHome(props.defaultHome),
-          exact: true,
-          onEnter: () => {
-            switch (props.defaultHome) {
-              case 'search':
-                props.loadAllUsedCountries(props.clacoForm.id)
-                break
-              case 'add':
-                props.openEntryForm(null, props.clacoForm.id, [], props.currentUser)
-                break
-              case 'random':
-                fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
-                  method: 'GET' ,
-                  credentials: 'include'
+    routes={[
+      {
+        path: '/',
+        component: getHome(props.defaultHome),
+        exact: true,
+        onEnter: () => {
+          switch (props.defaultHome) {
+            case 'search':
+              props.loadAllUsedCountries(props.clacoForm.id)
+              break
+            case 'add':
+              props.openEntryForm(null, props.clacoForm.id, [], props.currentUser)
+              break
+            case 'random':
+              fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
+                method: 'GET' ,
+                credentials: 'include'
+              })
+                .then(response => response.json())
+                .then(entryId => {
+                  if (entryId) {
+                    props.openEntryForm(entryId, props.clacoForm.id, [], props.currentUser)
+                    props.loadEntryUser(entryId, props.currentUser)
+                  }
                 })
-                  .then(response => response.json())
-                  .then(entryId => {
-                    if (entryId) {
-                      props.openEntryForm(entryId, props.clacoForm.id, [], props.currentUser)
-                      props.loadEntryUser(entryId, props.currentUser)
-                    }
-                  })
-                break
-            }
-          }
-        }, {
-          path: '/menu',
-          component: Overview
-        }, {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.canEdit,
-          onLeave: () => props.resetForm(),
-          onEnter: () => props.resetForm(props.clacoForm)
-        }, {
-          path: '/entries',
-          component: Entries,
-          exact: true,
-          disabled: !props.canSearchEntry,
-          onEnter: () => props.loadAllUsedCountries(props.clacoForm.id)
-        }, {
-          path: '/entries/:id',
-          component: Entry,
-          onEnter: (params) => {
-            props.openEntryForm(params.id, props.clacoForm.id, [], props.currentUser)
-            props.loadEntryUser(params.id, props.currentUser)
-          },
-          onLeave: () => {
-            props.resetEntryForm()
-            props.resetEntryUser()
-          }
-        }, {
-          path: '/entry/form/:id?',
-          component: EntryForm,
-          onEnter: (params) => {
-            props.openEntryForm(params.id, props.clacoForm.id, props.clacoForm.fields, props.currentUser)
-
-            if (params.id) {
-              props.loadEntryUser(params.id, props.currentUser)
-            }
-          },
-          onLeave: () => {
-            props.resetEntryForm()
-            props.resetEntryUser()
+              break
           }
         }
-      ]}
-    />
-  </ResourcePage>
+      }, {
+        path: '/menu',
+        component: Overview
+      }, {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.canEdit,
+        onLeave: () => props.resetForm(),
+        onEnter: () => props.resetForm(props.clacoForm)
+      }, {
+        path: '/entries',
+        component: Entries,
+        exact: true,
+        disabled: !props.canSearchEntry,
+        onEnter: () => props.loadAllUsedCountries(props.clacoForm.id)
+      }, {
+        path: '/entries/:id',
+        component: Entry,
+        onEnter: (params) => {
+          props.openEntryForm(params.id, props.clacoForm.id, [], props.currentUser)
+          props.loadEntryUser(params.id, props.currentUser)
+        },
+        onLeave: () => {
+          props.resetEntryForm()
+          props.resetEntryUser()
+        }
+      }, {
+        path: '/entry/form/:id?',
+        component: EntryForm,
+        onEnter: (params) => {
+          props.openEntryForm(params.id, props.clacoForm.id, props.clacoForm.fields, props.currentUser)
+
+          if (params.id) {
+            props.loadEntryUser(params.id, props.currentUser)
+          }
+        },
+        onLeave: () => {
+          props.resetEntryForm()
+          props.resetEntryUser()
+        }
+      }
+    ]}
+  />
 
 ClacoFormResource.propTypes = {
   path: T.string.isRequired,

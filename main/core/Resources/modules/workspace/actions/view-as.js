@@ -5,6 +5,7 @@ import {URL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
 
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
+import {route} from '#/main/core/workspace/routing'
 import {MODAL_WORKSPACE_ROLES} from '#/main/core/workspace/modals/roles'
 
 export default (workspaces) => ({
@@ -26,8 +27,7 @@ export default (workspaces) => ({
       selectAction: (role) => ({
         type: URL_BUTTON,
         label: trans('view-as', {}, 'actions'),
-        //TODO: WORKSPACE OPEN URL CHANGE
-        target: url(['claro_workspace_open', {workspaceId: workspaces[0].id}], {view_as: role.name})
+        target: url(['claro_index', {}], {view_as: role.name}) + '#/' + route(workspaces[0])
       })
     }))
   },

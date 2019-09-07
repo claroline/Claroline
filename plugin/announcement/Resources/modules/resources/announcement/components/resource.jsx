@@ -7,7 +7,6 @@ import {makeId} from '#/main/core/scaffolding/id'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Routes} from '#/main/app/router'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
@@ -28,42 +27,38 @@ const AnnouncementResource = props =>
         exact: true
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          component: Announces
-        }, {
-          path: '/add',
-          exact: true,
-          component: AnnounceForm,
-          onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
-            id: makeId()
-          }), true)
-        }, {
-          path: '/:id',
-          component: Announce,
-          exact: true,
-          onEnter: (params) => props.openDetail(params.id),
-          onLeave: props.resetDetail
-        }, {
-          path: '/:id/edit',
-          component: AnnounceForm,
-          onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
-        }, {
-          path: '/:id/send',
-          component: AnnounceSend,
-          onEnter: (params) => {
-            props.resetForm(props.posts.find(post => post.id === params.id))
-            props.initFormDefaultRoles(props.roles.map(r => r.id))
-          }
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        component: Announces
+      }, {
+        path: '/add',
+        exact: true,
+        component: AnnounceForm,
+        onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
+          id: makeId()
+        }), true)
+      }, {
+        path: '/:id',
+        component: Announce,
+        exact: true,
+        onEnter: (params) => props.openDetail(params.id),
+        onLeave: props.resetDetail
+      }, {
+        path: '/:id/edit',
+        component: AnnounceForm,
+        onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
+      }, {
+        path: '/:id/send',
+        component: AnnounceSend,
+        onEnter: (params) => {
+          props.resetForm(props.posts.find(post => post.id === params.id))
+          props.initFormDefaultRoles(props.roles.map(r => r.id))
         }
-      ]}
-    />
-  </ResourcePage>
+      }
+    ]}
+  />
 
 AnnouncementResource.propTypes = {
   path: T.string.isRequired,

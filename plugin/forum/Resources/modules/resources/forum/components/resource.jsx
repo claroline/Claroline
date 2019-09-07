@@ -3,9 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Overview} from '#/plugin/forum/resources/forum/overview/components/overview'
 import {Moderation} from '#/plugin/forum/resources/forum/moderation/components/moderation'
@@ -60,42 +59,33 @@ const ForumResource = props =>
         exact: true
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.editable
-        }, {
-          path: '/',
-          exact: true,
-          component: Overview,
-          onEnter: () => props.loadLastMessages(props.forum),
-          disabled: !get(props.forum, 'display.showOverview')
-        }, {
-          path: '/subjects',
-          component: Player
-        },  {
-          path: '/moderation',
-          render: () => {
-            const component = <Moderation path={props.path} />
+    routes={[
+      {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.editable
+      }, {
+        path: '/',
+        exact: true,
+        component: Overview,
+        onEnter: () => props.loadLastMessages(props.forum),
+        disabled: !get(props.forum, 'display.showOverview')
+      }, {
+        path: '/subjects',
+        component: Player
+      },  {
+        path: '/moderation',
+        render: () => {
+          const component = <Moderation path={props.path} />
 
-            return component
-          }
+          return component
         }
-      ]}
-      redirect={[
-        {
-          disabled: !!get(props.forum, 'display.showOverview'),
-          from: '/',
-          to: '/subjects',
-          exact: true
-        }
-      ]}
-    />
-  </ResourcePage>
+      }
+    ]}
+    redirect={[
+      {from: '/', to: '/subjects', exact: true, disabled: !!get(props.forum, 'display.showOverview')}
+    ]}
+  />
 
 ForumResource.propTypes = {
   path: T.string.isRequired,

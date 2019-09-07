@@ -5,6 +5,8 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {Routes} from '#/main/app/router/components/routes'
+import {Route as RouteTypes} from '#/main/app/router/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -152,6 +154,14 @@ class ResourcePage extends Component {
           <ServerErrors errors={this.props.serverErrors}/>
         }
 
+        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) && !isEmpty(this.props.routes) &&
+          <Routes
+            path={`${this.props.basePath}/${this.props.resourceNode.slug}`}
+            routes={this.props.routes}
+            redirect={this.props.redirect}
+          />
+        }
+
         {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) &&
           this.props.children
         }
@@ -207,11 +217,23 @@ ResourcePage.propTypes = {
     ActionTypes.propTypes
   )),
   styles: T.arrayOf(T.string),
-  children: T.node.isRequired
+
+  // resource content
+  routes: T.arrayOf(
+    T.shape(RouteTypes.propTypes).isRequired
+  ),
+  redirect: T.arrayOf(T.shape({
+    disabled: T.bool,
+    from: T.string.isRequired,
+    to: T.string.isRequired,
+    exact: T.bool
+  })),
+  children: T.node
 }
 
 ResourcePage.defaultProps = {
-  path: []
+  path: [],
+  routes: []
 }
 
 export {

@@ -6,7 +6,7 @@ import {URL_BUTTON} from '#/main/app/buttons'
 export default (users) => ({
   type: URL_BUTTON,
   icon: 'fa fa-fw fa-mask',
-  label: trans('show_as'),
+  label: trans('view-as', {}, 'actions'),
   scope: ['object'],
   displayed: hasPermission('administrate', users[0]),
   target: url(['claro_index', {_switch: users[0].username}])+'#/desktop'

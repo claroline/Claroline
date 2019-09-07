@@ -3,10 +3,9 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
-import {Routes} from '#/main/app/router'
-import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Editor} from '#/plugin/wiki/resources/wiki/editor/components/editor'
 import {Player} from '#/plugin/wiki/resources/wiki/player/components/player'
@@ -41,45 +40,41 @@ const WikiResource = props =>
         target: `${props.path}/section/deleted`
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          component: Player
-        }, {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.canEdit
-        }, {
-          path: '/history/:id',
-          exact: true,
-          component: History,
-          onLeave: () => props.setCurrentHistorySection(),
-          onEnter: params => props.setCurrentHistorySection(params.id)
-        }, {
-          path: '/contribution/:sectionId/:id',
-          exact: true,
-          component: VersionDetail,
-          onLeave: () => props.setCurrentHistoryVersion(),
-          onEnter: params => props.setCurrentHistoryVersion(params.sectionId, params.id)
-        }, {
-          path: '/contribution/compare/:sectionId/:id1/:id2',
-          exact: true,
-          component: VersionCompare,
-          onLeave: () => props.setCurrentHistoryCompareSet(),
-          onEnter: params => props.setCurrentHistoryCompareSet(params.sectionId, params.id1, params.id2)
-        }, {
-          path: '/section/deleted',
-          component: DeletedSections,
-          exact: true,
-          disabled: !props.canEdit
-        }
-      ]}
-    />
-  </ResourcePage>
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        component: Player
+      }, {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.canEdit
+      }, {
+        path: '/history/:id',
+        exact: true,
+        component: History,
+        onLeave: () => props.setCurrentHistorySection(),
+        onEnter: params => props.setCurrentHistorySection(params.id)
+      }, {
+        path: '/contribution/:sectionId/:id',
+        exact: true,
+        component: VersionDetail,
+        onLeave: () => props.setCurrentHistoryVersion(),
+        onEnter: params => props.setCurrentHistoryVersion(params.sectionId, params.id)
+      }, {
+        path: '/contribution/compare/:sectionId/:id1/:id2',
+        exact: true,
+        component: VersionCompare,
+        onLeave: () => props.setCurrentHistoryCompareSet(),
+        onEnter: params => props.setCurrentHistoryCompareSet(params.sectionId, params.id1, params.id2)
+      }, {
+        path: '/section/deleted',
+        component: DeletedSections,
+        exact: true,
+        disabled: !props.canEdit
+      }
+    ]}
+  />
 
 WikiResource.propTypes = {
   path: T.string.isRequired,

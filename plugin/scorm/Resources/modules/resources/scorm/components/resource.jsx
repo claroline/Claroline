@@ -2,9 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
 import {Player} from '#/plugin/scorm/resources/scorm/player/containers/player'
@@ -30,31 +29,26 @@ const ScormResource = props =>
         exact: true
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      key="resource-content"
-      redirect={[
-        {from: '/', exact: true, to: '/play'}
-      ]}
-      routes={[
-        {
-          path: '/play',
-          component: Player
-        }, {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.editable,
-          onLeave: () => props.resetForm(),
-          onEnter: () => props.resetForm(props.scorm)
-        }, {
-          path: '/results',
-          component: Results,
-          disabled: !props.editable
-        }
-      ]}
-    />
-  </ResourcePage>
+    redirect={[
+      {from: '/', exact: true, to: '/play'}
+    ]}
+    routes={[
+      {
+        path: '/play',
+        component: Player
+      }, {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.editable,
+        onLeave: () => props.resetForm(),
+        onEnter: () => props.resetForm(props.scorm)
+      }, {
+        path: '/results',
+        component: Results,
+        disabled: !props.editable
+      }
+    ]}
+  />
 
 ScormResource.propTypes = {
   path: T.string.isRequired,

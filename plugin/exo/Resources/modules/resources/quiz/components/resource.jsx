@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
@@ -90,62 +89,49 @@ const QuizResource = props =>
         target: ['exercise_docimology', {id: props.quizId}]
       }
     ]}
-  >
-    <Routes
-      key="resource-content"
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          component: OverviewMain,
-          disabled: !props.hasOverview
-        }, {
-          path: '/edit',
-          component: EditorMain,
-          disabled: !props.editable
-        }, {
-          path: '/test',
-          component: Player,
-          disabled: !props.editable,
-          onEnter: () => props.testMode(true)
-        }, {
-          path: '/play',
-          exact: true,
-          component: Player,
-          onEnter: () => props.testMode(false)
-        }, {
-          path: '/play/end', // todo : declare inside player module
-          component: AttemptEnd
-        }, {
-          path: '/papers',
-          component: PapersMain
-        }, {
-          path: '/correction',
-          component: CorrectionMain,
-          disabled: !props.papersAdmin
-        }, {
-          path: '/statistics',
-          component: Statistics,
-          disabled: !props.papersAdmin && !props.showStatistics,
-          onEnter: () => props.statistics(props.quizId)
-        }
-      ]}
-      redirect={[
-        {
-          from: '/',
-          exact: true,
-          to: '/play',
-          disabled: props.hasOverview || props.editable
-        }, {
-          from: '/',
-          exact: true,
-          to: '/test',
-          disabled: props.hasOverview || !props.editable
-        }
-      ]}
-    />
 
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        component: OverviewMain,
+        disabled: !props.hasOverview
+      }, {
+        path: '/edit',
+        component: EditorMain,
+        disabled: !props.editable
+      }, {
+        path: '/test',
+        component: Player,
+        disabled: !props.editable,
+        onEnter: () => props.testMode(true)
+      }, {
+        path: '/play',
+        exact: true,
+        component: Player,
+        onEnter: () => props.testMode(false)
+      }, {
+        path: '/play/end', // todo : declare inside player module
+        component: AttemptEnd
+      }, {
+        path: '/papers',
+        component: PapersMain
+      }, {
+        path: '/correction',
+        component: CorrectionMain,
+        disabled: !props.papersAdmin
+      }, {
+        path: '/statistics',
+        component: Statistics,
+        disabled: !props.papersAdmin && !props.showStatistics,
+        onEnter: () => props.statistics(props.quizId)
+      }
+    ]}
+    redirect={[
+      {from: '/', exact: true, to: '/play', disabled: props.hasOverview || props.editable},
+      {from: '/', exact: true, to: '/test', disabled: props.hasOverview || !props.editable}
+    ]}
+  >
     <CustomDragLayer key="drag-layer" />
   </ResourcePage>
 

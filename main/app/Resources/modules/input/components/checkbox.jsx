@@ -23,8 +23,8 @@ const Checkbox = props =>
 Checkbox.propTypes = {
   id: T.string.isRequired,
   className: T.string,
-  label: T.string.isRequired,
-  labelChecked: T.string,
+  label: T.node.isRequired,
+  labelChecked: T.node,
   checked: T.bool.isRequired,
   disabled: T.bool,
   inline: T.bool,

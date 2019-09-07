@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -38,13 +39,13 @@ use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -61,6 +62,8 @@ class ResourceManager
     /** @var ResourceNodeRepository */
     private $resourceNodeRepo;
 
+    /** @var UserRepository */
+    private $userRepo;
     /** @var RoleRepository */
     private $roleRepo;
     /** @var RoleManager */
@@ -131,7 +134,8 @@ class ResourceManager
 
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->resourceNodeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->userRepo = $om->getRepository(User::class);
+        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function getLogger()
@@ -222,7 +226,7 @@ class ResourceManager
         $node->setPathForCreationLog($parentPath.$node->getName());
 
         $usersToNotify = $workspace && $workspace->getId() ?
-            $this->container->get('claroline.manager.user_manager')->findUsersByWorkspaces([$workspace]) :
+            $this->userRepo->findUsersByWorkspaces([$workspace]) :
             [];
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', [$node, $usersToNotify]);
@@ -600,7 +604,7 @@ class ResourceManager
             );
 
             $usersToNotify = $node->getWorkspace() && !$node->getWorkspace()->isDisabledNotifications() ?
-                $this->container->get('claroline.manager.user_manager')->findUsersByWorkspaces([$node->getWorkspace()]) :
+                $this->userRepo->findUsersByWorkspaces([$node->getWorkspace()]) :
                 [];
 
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);

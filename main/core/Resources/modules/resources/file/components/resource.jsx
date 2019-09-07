@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {copy} from '#/main/app/clipboard'
-import {Routes} from '#/main/app/router'
 
 import {File as FileType} from '#/main/core/files/prop-types'
 import {ResourcePage} from '#/main/core/resource/containers/page'
@@ -23,22 +22,18 @@ const FileResource = props =>
         callback: () => copy(props.url)
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          component: PlayerMain
-        }, {
-          path: '/edit',
-          component: EditorMain,
-          onEnter: () => props.resetForm(props.file)
-        }
-      ]}
-    />
-  </ResourcePage>
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        component: PlayerMain
+      }, {
+        path: '/edit',
+        component: EditorMain,
+        onEnter: () => props.resetForm(props.file)
+      }
+    ]}
+  />
 
 FileResource.propTypes = {
   path: T.string.isRequired,

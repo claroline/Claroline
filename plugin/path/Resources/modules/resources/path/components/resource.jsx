@@ -2,9 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {OverviewMain} from '#/plugin/path/resources/path/overview/containers/main'
 import {EditorMain} from '#/plugin/path/resources/path/editor/containers/main'
@@ -34,38 +33,30 @@ const PathResource = props =>
         target: `${props.path}/dashboard`
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/edit',
-          component: EditorMain,
-          disabled: !props.editable
-        }, {
-          path: '/play',
-          component: PlayerMain
-        }, {
-          path: '/',
-          exact: true,
-          component: OverviewMain,
-          disabled: !props.overview
-        }, {
-          path: '/dashboard',
-          component: DashboardMain,
-          disabled: !props.editable
-        }
-      ]}
-      redirect={[
-        { // redirect to player when no overview
-          disabled: props.overview,
-          from: '/',
-          to: '/play',
-          exact: true
-        }
-      ]}
-    />
-  </ResourcePage>
+    routes={[
+      {
+        path: '/edit',
+        component: EditorMain,
+        disabled: !props.editable
+      }, {
+        path: '/play',
+        component: PlayerMain
+      }, {
+        path: '/',
+        exact: true,
+        component: OverviewMain,
+        disabled: !props.overview
+      }, {
+        path: '/dashboard',
+        component: DashboardMain,
+        disabled: !props.editable
+      }
+    ]}
+    redirect={[
+      // redirect to player when no overview
+      {from: '/', exact: true, to: '/play', disabled: props.overview}
+    ]}
+  />
 
 PathResource.propTypes = {
   path: T.string.isRequired,

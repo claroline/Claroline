@@ -2,9 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Editor} from '#/plugin/slideshow/resources/slideshow/editor/components/editor'
 import {Overview} from '#/plugin/slideshow/resources/slideshow/player/components/overview'
@@ -27,38 +26,33 @@ const SlideshowResource = props =>
         target: `${props.path}/play`
       }
     ]}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          disabled: !props.showOverview,
-          component: Overview
-        }, {
-          path: '/play/:id?',
-          render: (routeProps) => {
-            const SlideshowPlayer = (
-              <Player
-                activeSlide={routeProps.match.params.id}
-              />
-            )
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        disabled: !props.showOverview,
+        component: Overview
+      }, {
+        path: '/play/:id?',
+        render: (routeProps) => {
+          const SlideshowPlayer = (
+            <Player
+              activeSlide={routeProps.match.params.id}
+            />
+          )
 
-            return SlideshowPlayer
-          }
-        }, {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.editable
+          return SlideshowPlayer
         }
-      ]}
-
-      redirect={[
-        {from: '/', exact: true, to: '/play', disabled: props.showOverview}
-      ]}
-    />
-  </ResourcePage>
+      }, {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.editable
+      }
+    ]}
+    redirect={[
+      {from: '/', exact: true, to: '/play', disabled: props.showOverview}
+    ]}
+  />
 
 SlideshowResource.propTypes = {
   path: T.string.isRequired,
