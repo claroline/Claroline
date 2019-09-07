@@ -100,6 +100,12 @@ plugin:
           scope: [object]
           api: [GET, POST, PUT, DELETE]
 
+        # Displays the dashboard of the resource
+        - name: dashboard
+          decoder: administrate
+          scope: [object]
+          api: [GET]
+
     resources:
         - name: file
           class: Claroline\CoreBundle\Entity\Resource\File

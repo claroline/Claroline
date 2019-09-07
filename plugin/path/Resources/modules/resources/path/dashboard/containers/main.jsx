@@ -1,11 +1,18 @@
 import {connect} from 'react-redux'
 
-import {selectors as pathSelectors} from '#/plugin/path/resources/path/store'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {actions as logActions} from  '#/main/core/layout/logs/actions'
+
 import {DashboardMain as DashboardMainComponent} from '#/plugin/path/resources/path/dashboard/components/main'
 
 const DashboardMain = connect(
   (state) => ({
-    path: pathSelectors.path(state)
+    resourceId: resourceSelectors.resourceNode(state).autoId
+  }),
+  dispatch => ({
+    openLog(id, resourceId) {
+      dispatch(logActions.openLog('apiv2_resource_logs_get', {id, resourceId}))
+    }
   })
 )(DashboardMainComponent)
 

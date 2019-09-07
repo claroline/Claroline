@@ -111,6 +111,7 @@ class LogList extends Component {
 
 LogList.propTypes = {
   id: T.oneOfType([T.number, T.string]),
+  name: T.string,
   listUrl: T.oneOfType([T.string, T.array]).isRequired,
   actions: T.array.isRequired,
   chart: T.object.isRequired,

@@ -37,8 +37,12 @@ const UserLogList = props =>
   />
 
 UserLogList.propTypes = {
-  name: T.string.isRequired,
-  listUrl: T.oneOfType([T.string, T.array]).isRequired
+  listUrl: T.oneOfType([T.string, T.array]).isRequired,
+  name: T.string
+}
+
+UserLogList.defaultProps = {
+  name: 'userActions'
 }
 
 UserLogList.defaultProps = {

@@ -31,13 +31,13 @@ const defaultState = {
  *
  * @returns {function}
  */
-const makeLogReducer = (initialState = {}, customReducer = {}) => {
+const makeLogReducer = (initialState = {}, customReducer = {}, prefix = '') => {
   const listState = merge({}, defaultState, initialState)
   const reducer = {
-    logs: makeListReducer('logs', {
+    logs: makeListReducer(prefix+'logs', {
       sortBy: { property: 'dateLog', direction: -1 }
     }),
-    userActions: makeListReducer('userActions', {
+    userActions: makeListReducer(prefix+'userActions', {
       sortBy: { property: 'doer.name', direction: 1 }
     }),
     log: makeReducer(listState.log, {
