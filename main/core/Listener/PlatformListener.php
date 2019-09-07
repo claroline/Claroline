@@ -49,7 +49,6 @@ class PlatformListener
     const PUBLIC_ROUTES = [
         'claro_index',
         'claro_security_login',
-        'claro_security_login_check',
     ];
 
     /**
@@ -134,8 +133,8 @@ class PlatformListener
             }
 
             if (is_int($this->config->getParameter('platform_limit_date'))) {
-                $minDate = new \DateTime();
-                $minDate->setTimestamp($this->config->getParameter('platform_limit_date'));
+                $expirationDate = new \DateTime();
+                $expirationDate->setTimestamp($this->config->getParameter('platform_limit_date'));
             } else {
                 $expirationDate = new \DateTime($this->config->getParameter('platform_limit_date'));
             }
