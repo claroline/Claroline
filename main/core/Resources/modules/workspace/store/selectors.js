@@ -62,7 +62,7 @@ const defaultOpening = createSelector(
     let defaultTool = null
     if (workspace) {
       if ('resource' === workspace.opening.type) {
-        defaultTool = `resources/${workspace.opening.target.id || ''}`
+        defaultTool = `resources/${workspace.opening.target.slug || ''}`
       } else if ('tool' === workspace.opening.type) {
         defaultTool = workspace.opening.target
       }

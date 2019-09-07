@@ -10,6 +10,7 @@ use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -278,12 +279,13 @@ class WorkspaceSerializer
             $openingData['target'] = $details['opening_target'];
         }
         if ('resource' === $openingData['type'] && isset($details['workspace_opening_resource']) && $details['workspace_opening_resource']) {
+            /** @var ResourceNode $resource */
             $resource = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode')
+                ->getRepository(ResourceNode::class)
                 ->findOneBy(['id' => $details['workspace_opening_resource']]);
 
             if (!empty($resource)) {
-                $openingData['target'] = $this->resNodeSerializer->serialize($resource);
+                $openingData['target'] = $this->resNodeSerializer->serialize($resource, [Options::SERIALIZE_MINIMAL]);
             }
         }
 
