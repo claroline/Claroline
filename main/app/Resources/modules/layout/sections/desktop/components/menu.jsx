@@ -2,12 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
+import {url} from '#/main/app/api'
 import {trans, number} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {route as toolRoute} from '#/main/core/tool/routing'
 
+import {MODAL_USERS} from '#/main/core/modals/users'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 
@@ -18,13 +20,23 @@ const DesktopMenu = props => {
       type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-street-view',
       label: trans('show-walkthrough', {}, 'actions'),
-      callback: () => true
+      callback: () => true,
+      subscript: {
+        type: 'label',
+        status: 'primary',
+        value: 'coming soon'
+      }
     }, {
       name: 'impersonation',
       type: MODAL_BUTTON,
       icon: 'fa fa-fw fa-mask',
       label: trans('view-as', {}, 'actions'),
-      modal: []
+      modal: [MODAL_USERS, {
+        selectAction: (users) => ({
+          type: URL_BUTTON,
+          target: !isEmpty(users) ? url(['claro_index', {_switch: users[0].username}])+'#/desktop' : ''
+        })
+      }]
     }
   ]
 

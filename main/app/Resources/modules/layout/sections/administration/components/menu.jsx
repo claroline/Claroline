@@ -29,7 +29,12 @@ const AdministrationMenu = props =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-street-view',
         label: trans('show-walkthrough', {}, 'actions'),
-        callback: () => true
+        callback: () => true,
+        subscript: {
+          type: 'label',
+          status: 'primary',
+          value: 'coming soon'
+        }
       }
     ]}
   >
