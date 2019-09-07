@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {
   actions as dashboardActions,
   selectors as dashboardSelectors
-} from '#/plugin/path/resources/path/dashboard/store'
+} from '#/main/core/resource/dashboard/store'
 import {UserProgressionModal as UserProgressionModalComponent} from '#/plugin/path/resources/path/modals/user-progression/components/modal'
 
 const UserProgressionModal = connect(

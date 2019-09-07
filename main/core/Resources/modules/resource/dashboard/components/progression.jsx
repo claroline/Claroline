@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {selectors} from '#/plugin/path/resources/path/dashboard/store'
+import {selectors} from '#/main/core/resource/dashboard/store'
 import {Path as PathType} from '#/plugin/path/resources/path/prop-types'
 import {MODAL_USER_PROGRESSION} from '#/plugin/path/resources/path/modals/user-progression'
 

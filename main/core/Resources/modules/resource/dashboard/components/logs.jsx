@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {LogList} from '#/main/core/layout/logs'
 
-import {selectors as dashboardSelectors} from '#/plugin/path/resources/path/dashboard/store'
+import {selectors as dashboardSelectors} from '#/main/core/resource/dashboard/store'
 
 const Logs = (props) =>
   <LogList

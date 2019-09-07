@@ -6,8 +6,8 @@ import {select as listSelect} from '#/main/app/content/list/store'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
 
-import {selectors as dashboardSelectors} from '#/plugin/path/resources/path/dashboard/store'
-import {Logs as LogsComponent} from '#/plugin/path/resources/path/dashboard/components/logs'
+import {selectors as dashboardSelectors} from '#/main/core/resource/dashboard/store'
+import {Logs as LogsComponent} from '#/main/core/resource/dashboard/components/logs'
 
 const Logs = connect(
   state => ({

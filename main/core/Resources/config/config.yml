@@ -89,12 +89,6 @@ plugin:
           api: [PUT]
           recursive: true
 
-        # Displays tracking info about the resource
-        - name: logs
-          decoder: administrate # todo : adds it's own right
-          scope: [object]
-          api: [GET]
-
         - name: notes
           decoder: open
           scope: [object]

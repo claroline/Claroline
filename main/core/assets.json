@@ -1,11 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "user-tracking": "user/tracking",
-      "resource-logs": "resource/logs"
-    }
-  },
-
   "styles": {
     "entry": {
       "administration-parameters": "administration/parameters.less",

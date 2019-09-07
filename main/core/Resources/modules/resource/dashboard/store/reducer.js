@@ -3,8 +3,8 @@ import {makeListReducer} from '#/main/app/content/list/store'
 
 import {makeLogReducer} from '#/main/core/layout/logs/reducer'
 
-import {selectors} from '#/plugin/path/resources/path/dashboard/store/selectors'
-import {USER_STEPS_PROGRESSION_LOAD} from '#/plugin/path/resources/path/dashboard/store/actions'
+import {selectors} from '#/main/core/resource/dashboard/store/selectors'
+import {USER_STEPS_PROGRESSION_LOAD} from '#/main/core/resource/dashboard/store/actions'
 
 const reducer = combineReducers(makeLogReducer({}, {
   evaluations: makeListReducer(selectors.STORE_NAME + '.evaluations'),

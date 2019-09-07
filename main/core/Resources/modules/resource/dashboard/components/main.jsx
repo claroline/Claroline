@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
@@ -7,19 +7,20 @@ import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {LogDetails} from '#/main/core/layout/logs'
 
-import {Progression} from '#/plugin/path/resources/path/dashboard/containers/progression'
-import {Connections} from '#/plugin/path/resources/path/dashboard/containers/connections'
-import {Logs} from '#/plugin/path/resources/path/dashboard/containers/logs'
-import {UserLogs} from '#/plugin/path/resources/path/dashboard/containers/logs-user'
+import {Progression} from '#/main/core/resource/dashboard/containers/progression'
+import {Connections} from '#/main/core/resource/dashboard/containers/connections'
+import {Logs} from '#/main/core/resource/dashboard/containers/logs'
+import {UserLogs} from '#/main/core/resource/dashboard/containers/logs-user'
 
 const DashboardMain = (props) =>
-  <div>
+  <Fragment>
     <div className="row">
       <div className="col-md-3">
         <Vertical
           style={{
             marginTop: '20px'
           }}
+          basePath={props.path}
           tabs={[
             {
               icon: 'fa fa-fw fa-tasks',
@@ -46,12 +47,13 @@ const DashboardMain = (props) =>
 
       <div className="dashboard-content col-md-9">
         <Routes
+          path={props.path}
           routes={[
-            {
+            /*{
               path: '/dashboard',
               component: Progression,
               exact: true
-            }, {
+            },*/ {
               path: '/dashboard/connections',
               component: Connections,
               exact: true
@@ -72,9 +74,10 @@ const DashboardMain = (props) =>
         />
       </div>
     </div>
-  </div>
+  </Fragment>
 
 DashboardMain.propTypes = {
+  path: T.string.isRequired,
   resourceId: T.number.isRequired,
   openLog: T.func.isRequired
 }

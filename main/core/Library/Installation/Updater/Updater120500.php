@@ -186,7 +186,7 @@ class Updater120500 extends Updater
         $this->log('Generating slugs for workspaces without slugs...');
         $conn = $this->container->get('doctrine.dbal.default_connection');
         $sql = "
-             UPDATE claro_workspace SET slug = CONCAT(SUBSTR(workspace.code,1,100) , '-', id) WHERE slug IS NULL
+             UPDATE claro_workspace SET slug = CONCAT(SUBSTR(code,1,100) , '-', id) WHERE slug IS NULL
         ";
 
         $this->log($sql);

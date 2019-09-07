@@ -26,6 +26,8 @@ import {ResourceRestrictions} from '#/main/core/resource/components/restrictions
 import {ServerErrors} from '#/main/core/resource/components/errors'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
+import {DashboardMain} from '#/main/core/resource/dashboard/containers/main'
+
 class ResourcePage extends Component {
   constructor(props) {
     super(props)
@@ -70,6 +72,13 @@ class ResourcePage extends Component {
     } else {
       ancestors = this.props.resourceNode.path.slice(0)
     }
+
+    const routes = [
+      {
+        path: '/dashboard',
+        component: DashboardMain
+      }
+    ].concat(this.props.routes)
 
     return (
       <ToolPage
@@ -154,10 +163,10 @@ class ResourcePage extends Component {
           <ServerErrors errors={this.props.serverErrors}/>
         }
 
-        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) && !isEmpty(this.props.routes) &&
+        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) && !isEmpty(routes) &&
           <Routes
             path={`${this.props.basePath}/${this.props.resourceNode.slug}`}
-            routes={this.props.routes}
+            routes={routes}
             redirect={this.props.redirect}
           />
         }

@@ -1,25 +1,20 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {UserLogList} from '#/main/core/layout/logs'
 
-const List = props =>
+import {selectors as dashboardSelectors} from '#/main/core/resource/dashboard/store'
+
+const UserLogs = props =>
   <UserLogList
+    name={dashboardSelectors.STORE_NAME + '.userActions'}
     listUrl={['apiv2_resource_logs_list_users', {resourceId: props.resourceId}]}
   />
 
-List.propTypes = {
+UserLogs.propTypes = {
   resourceId: T.number.isRequired
 }
 
-const ListContainer = connect(
-  state => ({
-    resourceId: state.resourceId
-  }),
-  null
-)(List)
-
 export {
-  ListContainer as UserLogs
+  UserLogs
 }

@@ -1,11 +1,11 @@
 import {createSelector} from 'reselect'
 
-import {selectors as pathSelectors} from '#/plugin/path/resources/path/store/selectors'
+const STORE_NAME = 'resourceDashboard'
 
-const STORE_NAME = pathSelectors.STORE_NAME+'.dashboard'
+const store = (state) => state[STORE_NAME]
 
 const dashboard = createSelector(
-  [pathSelectors.resource],
+  [store],
   (resource) => resource.dashboard
 )
 
@@ -16,6 +16,7 @@ const stepsProgression = createSelector(
 
 export const selectors = {
   STORE_NAME,
+
   dashboard,
   stepsProgression
 }

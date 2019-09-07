@@ -2,12 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {convertTimestampToString} from '#/main/app/intl/date'
+
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {convertTimestampToString} from '#/main/core/logs/utils'
-import {LogConnectResourceCard} from '#/main/core/logs/data/components/log-connect-resource-card'
+import {LogConnectCard} from '#/main/core/layout/logs/components/connect-card'
 
-import {selectors} from '#/plugin/path/resources/path/dashboard/store/selectors'
+import {selectors} from '#/main/core/resource/dashboard/store/selectors'
 
 const Connections = (props) =>
   <ListData
@@ -43,7 +44,7 @@ const Connections = (props) =>
         calculated: (rowData) => rowData.duration !== null ? convertTimestampToString(rowData.duration) : null
       }
     ]}
-    card={LogConnectResourceCard}
+    card={LogConnectCard}
   />
 
 Connections.propTypes = {
