@@ -64,7 +64,7 @@ class OauthController extends AbstractCrudController
         $session = $request->getSession();
         $service = $session->get('claroline.oauth.resource_owner');
         $user = $session->get('claroline.oauth.user');
-        if ($service !== null && $user !== null) {
+        if (null !== $service && null !== $user) {
             return [
                 'service' => $service['name'],
                 'oauthUser' => $user,
@@ -94,7 +94,7 @@ class OauthController extends AbstractCrudController
         $session = $request->getSession();
         $service = $session->get('claroline.oauth.resource_owner');
         $user = $session->get('claroline.oauth.user');
-        if ($service !== null && $user !== null && $selfRegistration === true) {
+        if (null !== $service && null !== $user && $selfRegistration) {
             $form = $this->get('claroline.oauth.manager')->getRegistrationForm($user);
 
             return ['form' => $form->createView()];

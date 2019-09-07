@@ -1,12 +1,11 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {PlayerMain} from '#/main/core/resources/directory/player/containers/main'
 import {EditorMain} from '#/main/core/resources/directory/editor/containers/main'
 
-const DirectoryResource = (props) =>
+const DirectoryResource = () =>
   <ResourcePage
     primaryAction="add"
     routes={[
@@ -26,10 +25,6 @@ const DirectoryResource = (props) =>
       }
     ]}
   />
-
-DirectoryResource.propTypes = {
-  path: T.string
-}
 
 export {
   DirectoryResource

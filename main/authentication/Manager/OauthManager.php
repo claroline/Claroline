@@ -202,7 +202,6 @@ class OauthManager
             $this->em->flush();
             $session->remove('claroline.oauth.resource_owner');
 
-
             return $this->registrationManager->loginUser($user, $request);
         }
 

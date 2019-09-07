@@ -1,0 +1,30 @@
+plugin:
+    resource_actions:
+        # Displays the dashboard of the resource
+        - name: dashboard
+          decoder: administrate
+          scope: [object]
+          api: [GET]
+
+    admin_tools:
+        - name: dashboard
+          class: tachometer
+
+    tools:
+        - name: dashboard
+          class: tachometer
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+
+    widgets:
+        - name: progression
+          class: Claroline\AnalyticsBundle\Entity\Widget\Type\ProgressionWidget
+          context: [workspace]
+          tags: [resources]

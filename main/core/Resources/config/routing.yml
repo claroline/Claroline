@@ -18,11 +18,6 @@ claro_user_registration:
     type: annotation
     options: { expose: true }
 
-claro_user_tracking:
-    resource: "@ClarolineCoreBundle/Controller/User/TrackingController.php"
-    type: annotation
-    options: { expose: true }
-
 claro_desktop:
     resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
     type: annotation

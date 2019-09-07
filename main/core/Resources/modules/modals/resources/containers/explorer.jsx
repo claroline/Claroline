@@ -12,7 +12,7 @@ const ResourceExplorer = withRouter(
       currentId: selectors.currentId(state),
       listConfiguration: selectors.listConfiguration(state)
     }),
-    (dispatch, ownProps) => ({
+    (dispatch) => ({
       changeDirectory(directoryId = null) {
         dispatch(actions.changeDirectory(directoryId))
       }

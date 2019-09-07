@@ -1,12 +1,11 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Player} from '#/main/core/resources/text/player/components/player'
 import {Editor} from '#/main/core/resources/text/editor/components/editor'
 
-const TextResource = (props) =>
+const TextResource = () =>
   <ResourcePage
     routes={[
       {
@@ -19,10 +18,6 @@ const TextResource = (props) =>
       }
     ]}
   />
-
-TextResource.propTypes = {
-  path: T.string.isRequired
-}
 
 export {
   TextResource

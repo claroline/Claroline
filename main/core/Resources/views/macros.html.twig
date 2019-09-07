@@ -110,7 +110,7 @@
 {% macro displayUser(user) %}
     {% if user %}
         {% if not user.isRemoved %}
-            <a href="{{path('claro_user_profile', {'user': user.getPublicUrl()})}}">
+            <a href="#/desktop/community/{{ user.getPublicUrl() }}">
                 {{ user.getUsername() }}
             </a>
         {% else %}

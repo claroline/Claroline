@@ -94,12 +94,6 @@ plugin:
           scope: [object]
           api: [GET, POST, PUT, DELETE]
 
-        # Displays the dashboard of the resource
-        - name: dashboard
-          decoder: administrate
-          scope: [object]
-          api: [GET]
-
     resources:
         - name: file
           class: Claroline\CoreBundle\Entity\Resource\File
@@ -173,9 +167,6 @@ plugin:
         - name: integration
           class: plug
 
-        - name: dashboard
-          class: tachometer
-
     widgets:
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
@@ -194,11 +185,6 @@ plugin:
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
           context: [workspace, desktop, home, administration]
-          tags: [resources]
-
-        - name: progression
-          class: Claroline\CoreBundle\Entity\Widget\Type\ProgressionWidget
-          context: [workspace]
           tags: [resources]
 
     data_sources:
@@ -323,18 +309,6 @@ plugin:
 
         - name: transfer
           class: exchange
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: true
-
-        - name: dashboard
-          class: tachometer
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
           is_configurable_in_workspace: false

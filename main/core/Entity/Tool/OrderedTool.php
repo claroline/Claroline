@@ -67,7 +67,7 @@ class OrderedTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist", "merge"},
+     *     cascade={"persist", "merge", "remove"},
      *     inversedBy="orderedTools"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")

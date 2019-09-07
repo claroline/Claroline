@@ -26,7 +26,8 @@ import {ResourceRestrictions} from '#/main/core/resource/components/restrictions
 import {ServerErrors} from '#/main/core/resource/components/errors'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
-import {DashboardMain} from '#/main/core/resource/dashboard/containers/main'
+// FIXME
+import {DashboardMain} from '#/plugin/analytics/resource/dashboard/containers/main'
 
 class ResourcePage extends Component {
   constructor(props) {

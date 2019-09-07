@@ -1,0 +1,122 @@
+import React, {Component, Fragment} from 'react'
+import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
+
+import {schemeCategory20c} from 'd3-scale'
+import {Row, Col} from 'react-bootstrap'
+
+import {trans} from '#/main/app/intl/translation'
+
+import {actions, selectors} from '#/plugin/analytics/administration/dashboard/store'
+import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
+import {DashboardTable, DashboardCard} from '#/main/core/layout/dashboard'
+
+class ResourcesComponent extends Component {
+  constructor(props) {
+    super(props)
+    
+    if (!props.resources.loaded) {
+      props.getResourcesData()
+    }
+  }
+  
+  render() {
+    return(
+      <Fragment>
+        {this.props.resources.data.workspaces &&
+          <Row>
+            <Col xs={12}>
+              <div className={'dashboard-standout'}>
+                <span className={'dashboard-standout-text-lg'}>
+                  {this.props.resources.data.workspaces}
+                </span>
+                <span className={'dashboard-standout-text-sm'}>
+                  <i className={'fa fa-book'}/>
+                  <span>{trans('workspaces')}</span>
+                </span>
+              </div>
+            </Col>
+          </Row>
+        }
+        <Row>
+          <Col xs={12} md={6}>
+            <DashboardCard title={trans('resources_usage_ratio')} icon={'fa-pie-chart'}>
+              <PieChart
+                style={{
+                  margin: 'auto',
+                  maxHeight: 400
+                }}
+                data={this.props.resources.data.resources || {}}
+                width={400}
+                margin={{
+                  top: 25
+                }}
+                colors={schemeCategory20c}
+                showPercentage={true}
+                responsive={true}
+              />
+            </DashboardCard>
+          </Col>
+          <Col xs={12} md={6}>
+            <DashboardCard title={trans('resources_usage_list')} icon={'fa-list'}>
+              {this.props.resources.data.resources && Object.keys(this.props.resources.data.resources).length > 0 &&
+                <DashboardTable
+                  definition={[
+                    {
+                      name: 'xData',
+                      label: trans('name'),
+                      transDomain: 'resource',
+                      colorLegend: true
+                    }, {
+                      name: 'yData',
+                      label: '#'
+                    }
+                  ]}
+                  data={Object.keys(this.props.resources.data.resources).map(v => this.props.resources.data.resources[v])}
+                  colors={schemeCategory20c}
+                />
+              }
+              {this.props.resources.data.other && Object.keys(this.props.resources.data.other).length > 0 &&
+                <DashboardTable
+                  definition={[
+                    {
+                      name: 'xData',
+                      label: trans('others')
+                    }, {
+                      name: 'yData',
+                      label: '#'
+                    }
+                  ]}
+                  data={Object.keys(this.props.resources.data.other).map(v => this.props.resources.data.other[v])}
+                />
+              }
+            </DashboardCard>
+          </Col>
+        </Row>
+      </Fragment>
+    )
+  }
+}
+
+ResourcesComponent.propTypes = {
+  resources: T.shape({
+    loaded: T.bool.isRequired,
+    data: T.object
+  }).isRequired,
+  getResourcesData: T.func.isRequired
+}
+
+const Resources = connect(
+  state => ({
+    resources: selectors.resources(state)
+  }),
+  dispatch => ({
+    getResourcesData() {
+      dispatch(actions.getResourcesData())
+    }
+  })
+)(ResourcesComponent)
+
+export {
+  Resources
+}

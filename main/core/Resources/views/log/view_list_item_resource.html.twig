@@ -1,11 +1,7 @@
 {% if log.details.resource is defined%}
     <strong>
         {% if log.resourceNode != null %}
-            {% if log.resourceType.name == 'directory' %}
-                <a href="{{ path('claro_workspace_open_tool', {'id': log.workspace.id, 'toolName': 'resources'})}}#resources/{{ log.resourceNode.id }}">{{ log.details.resource.path }}</a>
-            {% else %}
-                <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">{{ log.details.resource.path }}</a>
-            {% endif %}
+            <a href="#/desktop/resources/{{ log.resourceNode.slug }}">{{ log.details.resource.path }}</a>
         {% else %}
             <em>{{ log.details.resource.path }}</em>
         {% endif %}

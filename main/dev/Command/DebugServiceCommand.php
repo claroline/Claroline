@@ -14,7 +14,7 @@ namespace Claroline\DevBundle\Command;
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Claroline\CoreBundle\Listener\DoctrineDebug;
+use Claroline\CoreBundle\Listener\Doctrine\DebugListener;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -64,7 +64,7 @@ class DebugServiceCommand extends ContainerAwareCommand implements AdminCliComma
             $om->setLogger($consoleLogger);
             $om->activateLog();
             $om->showFlushLevel();
-            $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DoctrineDebug::DEBUG_ALL)->setVendor('Claroline');
+            $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DebugListener::DEBUG_ALL)->setVendor('Claroline');
         }
 
         $this->getContainer()->get('claroline.authenticator')->authenticate($input->getArgument('owner'), null, false);

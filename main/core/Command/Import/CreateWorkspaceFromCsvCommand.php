@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Command\Import;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Claroline\CoreBundle\Listener\DoctrineDebug;
+use Claroline\CoreBundle\Listener\Doctrine\DebugListener;
 use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -57,7 +57,7 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
         $om->setLogger($consoleLogger)->activateLog();
         $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
             ->activateLog()
-            ->setDebugLevel(DoctrineDebug::DEBUG_ALL)
+            ->setDebugLevel(DebugListener::DEBUG_ALL)
             ->setVendor('Claroline');
         $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());

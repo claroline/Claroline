@@ -8,6 +8,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {constants} from '#/main/core/administration/community/parameters/constants'
@@ -229,6 +230,7 @@ const Parameters = (props) => {
 }
 
 Parameters.propTypes = {
+  path: T.string.isRequired,
   platformRoles: T.array.isRequired,
   parameters: T.shape({
     registration: T.shape({
@@ -242,6 +244,7 @@ Parameters.propTypes = {
 
 const ParametersTab = connect(
   (state) => ({
+    path: toolSelectors.path(state),
     parameters: formSelect.data(formSelect.form(state, baseSelectors.STORE_NAME+'.parameters')),
     platformRoles: baseSelectors.platformRoles(state)
   })

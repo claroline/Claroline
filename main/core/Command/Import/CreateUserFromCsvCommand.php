@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Command\Import;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Claroline\CoreBundle\Listener\DoctrineDebug;
+use Claroline\CoreBundle\Listener\Doctrine\DebugListener;
 use Claroline\CoreBundle\Validator\Constraints\CsvUser;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -62,7 +62,7 @@ class CreateUserFromCsvCommand extends ContainerAwareCommand
             $om->setLogger($consoleLogger)->activateLog();
             $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
             ->activateLog()
-            ->setDebugLevel(DoctrineDebug::DEBUG_ALL)
+            ->setDebugLevel(DebugListener::DEBUG_ALL)
             ->setVendor('Claroline');
         }
 
