@@ -2,80 +2,57 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {TabbedPageContainer} from '#/main/core/layout/tabs'
+import {Routes} from '#/main/app/router'
 
 // app sections
 import {ParametersTab} from '#/main/core/administration/community/parameters/components/parameters-tab'
-import {UserTab, UserTabActions} from '#/main/core/administration/community/user/components/user-tab'
-import {GroupTab, GroupTabActions} from '#/main/core/administration/community/group/components/group-tab'
-import {RoleTab, RoleTabActions} from '#/main/core/administration/community/role/components/role-tab'
-import {OrganizationTab, OrganizationTabActions} from '#/main/core/administration/community/organization/components/organization-tab'
+import {UserTab} from '#/main/core/administration/community/user/components/user-tab'
+import {GroupTab} from '#/main/core/administration/community/group/components/group-tab'
+import {RoleTab} from '#/main/core/administration/community/role/components/role-tab'
+import {OrganizationTab} from '#/main/core/administration/community/organization/components/organization-tab'
 import {ProfileTab} from '#/main/core/administration/community/profile/components/profile-tab'
-import {LocationTab, LocationTabActions} from '#/main/core/administration/community/location/components/location-tab'
+import {LocationTab} from '#/main/core/administration/community/location/components/location-tab'
 
-const UsersTool = (props) =>
-  <TabbedPageContainer
-    title={trans('community', {}, 'tools')}
-
+const CommunityTool = (props) =>
+  <Routes
     path={props.path}
     redirect={[
       {from: '/', exact: true, to: '/users'}
     ]}
-
-    tabs={[
+    routes={[
       {
-        icon: 'fa fa-user',
-        title: trans('users'),
         path: '/users',
-        actions: UserTabActions,
-        content: UserTab
+        component: UserTab
       }, {
-        icon: 'fa fa-users',
-        title: trans('groups'),
         path: '/groups',
-        actions: GroupTabActions,
-        content: GroupTab
+        component: GroupTab
       }, {
-        icon: 'fa fa-building',
-        title: trans('organizations'),
         path: '/organizations',
-        actions: OrganizationTabActions,
-        content: OrganizationTab
+        component: OrganizationTab
       }, {
-        icon: 'fa fa-location-arrow',
-        title: trans('locations'),
         path: '/locations',
-        actions: LocationTabActions,
-        content: LocationTab
+        component: LocationTab
       }, {
-        icon: 'fa fa-id-badge',
-        title: trans('roles'),
         path: '/roles',
-        displayed: props.isAdmin,
-        actions: RoleTabActions,
-        content: RoleTab
+        component: RoleTab,
+        displayed: props.isAdmin
       }, {
-        icon: 'fa fa-id-card',
-        title: trans('user_profile'),
         path: '/profile',
-        displayed: props.isAdmin,
-        content: ProfileTab
+        component: ProfileTab,
+        displayed: props.isAdmin
       }, {
-        icon: 'fa fa-cog',
-        title: trans('parameters'),
         path: '/parameters',
-        onlyIcon: true,
-        displayed: props.isAdmin,
-        content: ParametersTab
+        component: ParametersTab,
+        disabled: !props.isAdmin
       }
     ]}
   />
 
-UsersTool.propTypes = {
+CommunityTool.propTypes = {
   path: T.string.isRequired,
   isAdmin: T.bool.isRequired
 }
 
 export {
-  UsersTool
+  CommunityTool
 }

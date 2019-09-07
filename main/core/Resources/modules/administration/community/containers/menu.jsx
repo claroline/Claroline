@@ -2,14 +2,14 @@ import {connect} from 'react-redux'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
-import {CommunityTool as CommunityToolComponent} from '#/main/core/administration/community/components/tool'
+import {CommunityMenu as CommunityMenuComponent} from '#/main/core/administration/community/components/menu'
 
-const CommunityTool = connect(
+const CommunityMenu = connect(
   (state) => ({
     isAdmin: securitySelectors.isAdmin(state)
   })
-)(CommunityToolComponent)
+)(CommunityMenuComponent)
 
 export {
-  CommunityTool
+  CommunityMenu
 }

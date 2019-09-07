@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
@@ -29,20 +30,39 @@ RoleTabActionsComponent.propTypes = {
 }
 
 const RoleTabComponent = props =>
-  <Routes
-    path={props.path}
-    routes={[
+  <ToolPage
+    path={[{
+      type: LINK_BUTTON,
+      label: trans('roles'),
+      target: `${props.path}/roles`
+    }]}
+    subtitle={trans('roles')}
+    actions={[
       {
-        path: '/roles',
-        exact: true,
-        component: Roles
-      }, {
-        path: '/roles/form/:id?',
-        component: Role,
-        onEnter: (params) => props.openForm(params.id || null)
+        name: 'add',
+        type: LINK_BUTTON,
+        icon: 'fa fa-plus',
+        label: trans('add_role'),
+        target: `${props.path}/roles/form`,
+        primary: true
       }
     ]}
-  />
+  >
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/roles',
+          exact: true,
+          component: Roles
+        }, {
+          path: '/roles/form/:id?',
+          component: Role,
+          onEnter: (params) => props.openForm(params.id || null)
+        }
+      ]}
+    />
+  </ToolPage>
 
 RoleTabComponent.propTypes = {
   path: T.string.isRequired,

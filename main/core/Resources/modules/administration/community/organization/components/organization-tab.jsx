@@ -7,6 +7,7 @@ import {Routes} from '#/main/app/router'
 
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {Organization}  from '#/main/core/administration/community/organization/components/organization'
@@ -29,28 +30,47 @@ OrganizationTabActionsComponent.propTypes = {
 }
 
 const OrganizationTabComponent = props =>
-  <Routes
-    path={props.path}
-    routes={[
+  <ToolPage
+    path={[{
+      type: LINK_BUTTON,
+      label: trans('organizations'),
+      target: `${props.path}/organizations`
+    }]}
+    subtitle={trans('organizations')}
+    actions={[
       {
-        path: '/organizations',
-        exact: true,
-        component: Organizations
-      }, {
-        path: '/organizations/form/:id?',
-        onEnter: (params) => props.openForm(params.id),
-        exact: true,
-        component: Organization
-      }, {
-        path: '/organizations/form/parent/:parent',
-        onEnter: (params) => {
-          const parent = props.organizations.find(organization => organization.id === params.parent)
-          props.openForm(null, parent)
-        },
-        component: Organization
+        name: 'add',
+        type: LINK_BUTTON,
+        icon: 'fa fa-plus',
+        label: trans('add_organization'),
+        target: `${props.path}/organizations/form`,
+        primary: true
       }
     ]}
-  />
+  >
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/organizations',
+          exact: true,
+          component: Organizations
+        }, {
+          path: '/organizations/form/:id?',
+          onEnter: (params) => props.openForm(params.id),
+          exact: true,
+          component: Organization
+        }, {
+          path: '/organizations/form/parent/:parent',
+          onEnter: (params) => {
+            const parent = props.organizations.find(organization => organization.id === params.parent)
+            props.openForm(null, parent)
+          },
+          component: Organization
+        }
+      ]}
+    />
+  </ToolPage>
 
 OrganizationTabComponent.propTypes = {
   path: T.string,

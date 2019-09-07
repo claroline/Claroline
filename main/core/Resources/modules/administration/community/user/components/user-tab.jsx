@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
@@ -30,25 +31,44 @@ UserTabActionsComponent.propTypes = {
 }
 
 const UserTabComponent = props =>
-  <Routes
-    path={props.path}
-    routes={[
+  <ToolPage
+    path={[{
+      type: LINK_BUTTON,
+      label: trans('users'),
+      target: `${props.path}/users`
+    }]}
+    subtitle={trans('users')}
+    actions={[
       {
-        path: '/users',
-        exact: true,
-        component: Users
-      }, {
-        path: '/users/form/:id?',
-        component: User,
-        onEnter: (params) => props.openForm(params.id || null),
-        onLeave: props.closeForm
-      }, {
-        path: '/users/merge/:id1/:id2',
-        component: UsersMerge,
-        onEnter: (params) => props.compare([params.id1, params.id2])
+        name: 'add',
+        type: LINK_BUTTON,
+        icon: 'fa fa-plus',
+        label: trans('add_user'),
+        target: `${props.path}/users/form`,
+        primary: true
       }
     ]}
-  />
+  >
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/users',
+          exact: true,
+          component: Users
+        }, {
+          path: '/users/form/:id?',
+          component: User,
+          onEnter: (params) => props.openForm(params.id || null),
+          onLeave: props.closeForm
+        }, {
+          path: '/users/merge/:id1/:id2',
+          component: UsersMerge,
+          onEnter: (params) => props.compare([params.id1, params.id2])
+        }
+      ]}
+    />
+  </ToolPage>
 
 UserTabComponent.propTypes = {
   path: T.string.isRequired,
