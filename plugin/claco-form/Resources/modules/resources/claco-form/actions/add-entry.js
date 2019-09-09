@@ -7,5 +7,5 @@ export default (resourceNodes, nodesRefresher, path) => ({
   label: trans('add-entry', {}, 'actions'),
   icon: 'fa fa-fw fa-plus',
   primary: true,
-  target: `${path}/${resourceNodes[0].id}/entry/form`
+  target: `${path}/${resourceNodes[0].slug}/entry/form`
 })

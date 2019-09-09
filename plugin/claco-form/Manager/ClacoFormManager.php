@@ -512,8 +512,8 @@ class ClacoFormManager
         $addedCategories = [];
         $node = $entry->getClacoForm()->getResourceNode();
         $clacoFormName = $node->getName();
-        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL).
-            '#/entries/'.$entry->getUuid();
+        $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
+            '#/desktop/resources/'.$node->getSlug().'/entries/'.$entry->getUuid();
 
         foreach ($oldCategories as $category) {
             if (in_array($category, $currentCategories)) {
@@ -595,8 +595,8 @@ class ClacoFormManager
         $node = $clacoForm->getResourceNode();
 
         if ($clacoForm->getDisplayComments()) {
-            $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL).
-                '#/entries/'.$entry->getUuid();
+            $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
+                '#/desktop/resources/'.$node->getSlug().'/entries/'.$entry->getUuid();
             $receivers = [];
             $categories = $entry->getCategories();
 
@@ -798,8 +798,8 @@ class ClacoFormManager
         $receivers = [];
         $clacoForm = $entry->getClacoForm();
         $node = $clacoForm->getResourceNode();
-        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL).
-            '#/entries/'.$entry->getUuid();
+        $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
+            '#desktop/resources/'.$node->getSlug().'/entries/'.$entry->getUuid();
 
         switch ($type) {
             case 'edition':

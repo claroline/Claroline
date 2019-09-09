@@ -151,6 +151,8 @@ class EntrySerializer
      */
     public function deserialize($data, Entry $entry, array $options = [])
     {
+        $currentDate = new \DateTime();
+
         $this->sipe('title', 'setTitle', $data, $entry);
         $this->sipe('status', 'setStatus', $data, $entry);
 
@@ -167,8 +169,12 @@ class EntrySerializer
         }
 
         /* TODO: checks rights */
-        $this->deserializeCategories($entry, $data['categories']);
-        $this->deserializeKeywords($entry, $data['keywords']);
+        if (isset($data['categories'])) {
+            $this->deserializeCategories($entry, $data['categories']);
+        }
+        if (isset($data['keywords'])) {
+            $this->deserializeKeywords($entry, $data['keywords']);
+        }
 
         if ($entry->getClacoForm()) {
             $clacoForm = $entry->getClacoForm();
@@ -177,6 +183,10 @@ class EntrySerializer
             if (empty($entry->getStatus())) {
                 $status = $clacoForm->isModerated() ? Entry::PENDING : Entry::PUBLISHED;
                 $entry->setStatus($status);
+
+                if (Entry::PUBLISHED === $status) {
+                    $entry->setPublicationDate($currentDate);
+                }
             }
 
             // Sets values for fields
@@ -222,7 +232,6 @@ class EntrySerializer
                 }
             }
         }
-        $currentDate = new \DateTime();
 
         if (empty($entry->getCreationDate())) {
             $entry->setCreationDate($currentDate);

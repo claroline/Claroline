@@ -27,6 +27,7 @@ import {
   EntryUser as EntryUserType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {generateFromTemplate} from '#/plugin/claco-form/resources/claco-form/template'
+import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions, selectors as playerSelectors} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
@@ -295,10 +296,12 @@ class EntryComponent extends Component {
 
                       <div className="date">
                         {this.props.entry.publicationDate ?
-                          trans('published_at', {date: displayDate(this.props.entry.publicationDate, false, true)}) : trans('not_published')
+                          trans('published_at', {date: displayDate(this.props.entry.publicationDate, false, true)}) + ', ' :
+                          constants.ENTRY_STATUS_PUBLISHED !== this.props.entry.status ?
+                            trans('not_published') + ', ' :
+                            ''
                         }
-
-                        , {trans('last_modified_at', {date: displayDate(this.props.entry.editionDate || this.props.entry.creationDate, false, true)})}
+                        {trans('last_modified_at', {date: displayDate(this.props.entry.editionDate || this.props.entry.creationDate, false, true)})}
                       </div>
                     </div>
                   }
