@@ -6,7 +6,7 @@ import {ApiAdministration as ApiAdministrationComponent}  from '#/main/core/inte
 const ApiAdministration = connect(
   (state) => ({
     path: toolSelectors.path(state)
-  }),
+  })
 )(ApiAdministrationComponent)
 
 export {

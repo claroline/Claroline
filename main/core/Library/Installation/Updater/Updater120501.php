@@ -109,7 +109,7 @@ class Updater120501 extends Updater
                         'enableDisplays' => false,
                         'availableDisplays' => [],
                         'card' => [
-                            'display' => ['icon', 'flags', 'subtitle']
+                            'display' => ['icon', 'flags', 'subtitle'],
                         ],
                         'paginated' => false,
                         'count' => false,

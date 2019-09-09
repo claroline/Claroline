@@ -95,7 +95,7 @@ class ExplorerModalContent extends Component {
 
           this.setState({initialized: true})
         }}
-        className="resources-picker"
+        className="data-picker-modal"
         bsSize="lg"
       >
         {this.state.initialized &&

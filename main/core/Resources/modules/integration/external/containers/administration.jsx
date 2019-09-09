@@ -6,7 +6,7 @@ import {ExternalAdministration as ExternalAdministrationComponent} from '#/main/
 const ExternalAdministration = connect(
   (state) => ({
     path: toolSelectors.path(state)
-  }),
+  })
 )(ExternalAdministrationComponent)
 
 export {

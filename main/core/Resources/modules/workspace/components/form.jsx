@@ -15,6 +15,8 @@ import {
   selectors as formSelect
 } from '#/main/app/content/form/store'
 
+import {route} from '#/main/core/workspace/routing'
+
 // todo : fix tool selection for opening
 
 // easy selection for restrictions
@@ -206,7 +208,7 @@ const WorkspaceFormComponent = (props) =>
             name: 'registration.url',
             type: 'url',
             label: trans('registration_url'),
-            calculated: (workspace) => url(['claro_workspace_subscription_url_generate', {slug: workspace.meta ? workspace.meta.slug : ''}, true]),
+            calculated: (workspace) => url(['claro_index', {}, true])+`#/${route(workspace)}`,
             required: true,
             disabled: true,
             displayed: !props.new
