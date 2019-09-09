@@ -36,13 +36,16 @@ class Version20190909093340 extends AbstractMigration
             DROP FOREIGN KEY FK_3B06DD75B628319
         ');
         $this->addSql('
+            ALTER TABLE claro_widget_container DROP INDEX idx_3b06dd75b628319
+        ');
+        $this->addSql('
             ALTER TABLE claro_widget_container 
             ADD CONSTRAINT FK_3B06DD75CCE862F FOREIGN KEY (hometab_id) 
             REFERENCES claro_home_tab (id) 
             ON DELETE CASCADE
         ');
         $this->addSql('
-            ALTER TABLE claro_widget_container RENAME INDEX idx_3b06dd75b628319 TO IDX_3B06DD75CCE862F
+            CREATE INDEX IDX_3B06DD75CCE862F ON claro_widget_container (hometab_id)
         ');
     }
 
@@ -66,13 +69,16 @@ class Version20190909093340 extends AbstractMigration
             DROP FOREIGN KEY FK_3B06DD75CCE862F
         ');
         $this->addSql('
-            ALTER TABLE claro_widget_container RENAME INDEX IDX_3B06DD75CCE862F TO idx_3b06dd75b628319;
+            ALTER TABLE claro_widget_container DROP INDEX IDX_3B06DD75CCE862F
         ');
         $this->addSql('
             ALTER TABLE claro_widget_container 
             ADD CONSTRAINT FK_3B06DD75CCE862F FOREIGN KEY (hometab_id) 
             REFERENCES claro_home_tab (id) 
             ON DELETE CASCADE
+        ');
+        $this->addSql('
+            CREATE INDEX idx_3b06dd75b628319 ON claro_widget_container (hometab_id)
         ');
     }
 }
