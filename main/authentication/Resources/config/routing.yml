@@ -12,11 +12,14 @@ hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
     prefix:   /login
 
+dropbox_login:
+    path: /login/check-dropbox
+
 facebook_login:
     path: /login/check-facebook
 
-twitter_login:
-    path: /login/check-twitter
+github_login:
+    path: /login/check-github
 
 google_login:
     path: /login/check-google
@@ -24,15 +27,17 @@ google_login:
 linkedin_login:
     path: /login/check-linkedin
 
-windows_live_login:
-    path: /login/check-windows
-
 office_365_login:
     path: /login/check-o365
 
+twitter_login:
+    path: /login/check-twitter
+
+windows_live_login:
+    path: /login/check-windows
+
 oauth2_generic_login:
     path: /login/check-generic
-
 
 claro_authentication_api:
     resource: "@ClarolineAuthenticationBundle/Controller/"

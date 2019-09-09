@@ -2,16 +2,20 @@ hwi_oauth:
     # name of the firewall in which this bundle is active, this setting MUST be set
     firewall_names: [main]
     resource_owners:
+        dropbox:
+            type:           dropbox
+            client_id:      <client_id>
+            client_secret:  <client_secret>
         facebook:
             type:           facebook
             client_id:      <client_id>
             client_secret:  <client_secret>
             scope:          "email"
-        twitter:
-            type:           twitter
+        github:
+            type:           github
             client_id:      <client_id>
             client_secret:  <client_secret>
-            scope:          "email"
+            scope:          "user:email,public_repo"
         google:
             type:           google
             client_id:      <client_id>
@@ -22,14 +26,20 @@ hwi_oauth:
             client_id:      <client_id>
             client_secret:  <client_secret>
             scope:          "r_emailaddress r_basicprofile"
-        windows_live:
-            type:           windows_live
-            client_id:      <client_id>
-            client_secret:  <client_secret>
         office_365:
             type:           office365
             client_id:      <client_id>
             client_secret:  <client_secret>
+        twitter:
+            type:           twitter
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            scope:          "email"
+        windows_live:
+            type:           windows_live
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+
         generic:
             type:           oauth2
             client_id:      <client_id>
@@ -68,12 +78,14 @@ security:
                 oauth_user_provider:
                     service: claroline.oauth.user_provider
                 resource_owners:
+                    dropbox:      /login/check-dropbox
                     facebook:     /login/check-facebook
-                    twitter:      /login/check-twitter
+                    github:       /login/check-github
                     google:       /login/check-google
                     linkedin:     /login/check-linkedin
-                    windows_live: /login/check-windows
                     office_365:   /login/check-o365
+                    twitter:      /login/check-twitter
+                    windows_live: /login/check-windows
                     generic:      /login/check-generic
                 #success_handler:    claroline.security.authentication.success_handler
                 failure_handler:    claroline.oauth.failure_handler

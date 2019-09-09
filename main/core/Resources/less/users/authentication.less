@@ -230,42 +230,102 @@
         color: @sso-btn-color !important;
     }
 
-    &:before {
-        .fa-icon();
-        font-weight: 900;
-        width: @sso-btn-icon-width;
-        text-align: center;
-        display: inline-block;
-        font-family: @sso-btn-font-family, sans-serif;
-        font-size: @sso-btn-font-size;
-        margin-right: @padding-large-horizontal;
-        line-height: 1;
-    }
+    .sso-connect-btn(@sso-default-primary, @sso-default-secondary);
 
-    .sso-connect-btn(@sso-default-icon, @sso-default-primary, @sso-default-secondary);
-
-    &.cas-connect          { .sso-connect-btn(@sso-cas-icon,        @sso-cas-primary,        @sso-cas-secondary); }
-    &.facebook-connect     { .sso-connect-btn(@sso-facebook-icon,   @sso-facebook-primary,   @sso-facebook-secondary); }
-    &.google-connect       { .sso-connect-btn(@sso-google-icon,     @sso-google-primary,     @sso-google-secondary); }
-    &.ldap-connect         { .sso-connect-btn(@sso-ldap-icon,       @sso-ldap-primary,       @sso-ldap-secondary); }
-    &.linkedin-connect     { .sso-connect-btn(@sso-linkedin-icon,   @sso-linkedin-primary,   @sso-linkedin-secondary); }
-    &.office_365-connect   { .sso-connect-btn(@sso-office_365-icon, @sso-office_365-primary, @sso-office_365-secondary); }
-    &.twitter-connect      { .sso-connect-btn(@sso-twitter-icon,    @sso-twitter-primary,    @sso-twitter-secondary); }
-    &.windows_live-connect { .sso-connect-btn(@sso-office_365-icon, @sso-office_365-primary, @sso-office_365-secondary); }
+    &.dropbox      { .sso-connect-btn(@sso-dropbox-primary,    @sso-dropbox-primary); }
+    &.facebook     { .sso-connect-btn(@sso-facebook-primary,   @sso-facebook-secondary); }
+    &.github       { .sso-connect-btn(@sso-github-primary,     @sso-github-primary); }
+    &.google       { .sso-connect-btn(@sso-google-primary,     @sso-google-secondary); }
+    &.linkedin     { .sso-connect-btn(@sso-linkedin-primary,   @sso-linkedin-secondary); }
+    &.office_365   { .sso-connect-btn(@sso-office_365-primary, @sso-office_365-secondary); }
+    &.twitter      { .sso-connect-btn(@sso-twitter-primary,    @sso-twitter-secondary); }
+    &.windows_live { .sso-connect-btn(@sso-office_365-primary, @sso-office_365-secondary); }
 }
 
+// TODO : move elsewhere
+.external-apps-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: @component-margin-bottom;
+
+    .btn-link {
+        font-weight: bold;
+    }
+}
+
+.external-app {
+    display: flex;
+    align-items: flex-start;
+
+    padding: @panel-body-padding;
+    border: 1px solid @panel-default-border;
+    background: @panel-bg;
+    margin-bottom: floor(@component-margin-bottom / 2);
+    .box-shadow(@panel-box-shadow);
+
+    &:last-child {
+        margin-bottom: @component-margin-bottom;
+    }
+
+    .external-app-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 40px;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+    }
+
+    .external-app-title {
+        flex: 1;
+        margin: 0 @panel-body-padding;
+        font-weight: 900;
+
+        small {
+            font-weight: normal;
+            display: block;
+            margin-top: 5px;
+            font-family: @font-family-monospace;
+        }
+
+        b {
+            display: inline-block;
+            min-width: 60px;
+            font-family: @font-family-base;
+        }
+    }
+
+
+    &.enabled {
+        border-color: @brand-primary;
+    }
+
+    &.disabled {
+
+    }
+
+    &.dropbox      { .external-app-variant(@sso-dropbox-primary,    @sso-dropbox-primary); }
+    &.facebook     { .external-app-variant(@sso-facebook-primary,   @sso-facebook-secondary); }
+    &.github       { .external-app-variant(@sso-github-primary,     @sso-github-primary); }
+    &.google       { .external-app-variant(@sso-google-primary,     @sso-google-secondary); }
+    &.linkedin     { .external-app-variant(@sso-linkedin-primary,   @sso-linkedin-secondary); }
+    &.office_365   { .external-app-variant(@sso-office_365-primary, @sso-office_365-secondary); }
+    &.twitter      { .external-app-variant(@sso-twitter-primary,    @sso-twitter-secondary); }
+    &.windows_live { .external-app-variant(@sso-office_365-primary, @sso-office_365-secondary); }
+}
+
+.external-app-variant(@color, @secondary-color) {
+    .external-app-icon {
+        background-color: @color;
+    }
+}
 
 /**
  * Password recovery page
  */
-
-/*
-.password-recovery-container {
-    width: 100%;
-    margin: 0 auto @component-margin-bottom;
-    max-width: floor(@login-max-width / 2);
-}
-*/
 
 .password-recovery-form {
     padding: 30px 45px;

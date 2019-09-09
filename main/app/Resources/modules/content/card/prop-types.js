@@ -19,7 +19,7 @@ const DataCard = {
     className: T.string,
     poster: T.string,
     color: T.string,
-    icon: T.oneOfType([T.string, T.element]).isRequired,
+    icon: T.oneOfType([T.string, T.element]),
     title: T.string.isRequired,
     subtitle: T.string,
     contentText: T.string,

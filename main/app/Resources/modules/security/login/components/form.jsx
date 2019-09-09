@@ -81,7 +81,7 @@ const LoginForm = props =>
           {props.sso.map(sso =>
             <Button
               key={sso.service}
-              className={`btn-link btn-block btn-emphasis ${sso.service}-connect btn-third-party-login`}
+              className={`btn-link btn-block btn-emphasis ${sso.service} btn-third-party-login`}
               type={URL_BUTTON}
               label={sso.display_name || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')})}
 

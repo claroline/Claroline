@@ -22,5 +22,7 @@
     "office_365": "Office 365",
     "twitter": "Twitter",
     "windows_live": "Windows Live",
-    "generic": "OAuth2 Générique"
+    "generic": "OAuth2 Générique",
+    "dropbox": "Dropbox",
+    "github": "GitHub"
 }

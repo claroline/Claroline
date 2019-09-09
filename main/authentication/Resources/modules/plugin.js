@@ -6,6 +6,10 @@ import {registry} from '#/main/app/plugins/registry'
  * Declares applications provided by the Authentication plugin.
  */
 registry.add('ClarolineAuthenticationBundle', {
+  integration: {
+    'tokens' : () => { return import(/* webpackChunkName: "authentication-integration-tokens" */ '#/main/authentication/integration/tokens')}
+  },
+
   /**
    * Provides Single Sign-On.
    */

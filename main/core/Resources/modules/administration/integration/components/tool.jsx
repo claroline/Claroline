@@ -1,53 +1,33 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
-import {getApps} from '#/main/app/plugins'
 import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
-import {ToolPage} from '#/main/core/tool/containers/page'
-
-function getIntegrationApps() {
-  const apps = getApps('integration')
-
-  return Promise.all(Object.keys(apps).map(type => apps[type]()))
-}
+import {getIntegrations} from '#/main/core/integration'
 
 const IntegrationTool = props =>
   <Await
-    for={getIntegrationApps()}
-    then={(apps) => {
-      const routes = []
-      const subtitlesRoutes = []
-
-      apps.map(app => {
-        routes.push({
+    for={getIntegrations()}
+    placeholder={
+      <ContentLoader
+        size="lg"
+        description="Nous chargeons votre outil"
+      />
+    }
+    then={(apps) => (
+      <Routes
+        path={props.path}
+        redirect={[
+          {from: '/', exact: true, to: `/${apps[0].default.name}`}
+        ]}
+        routes={apps.map(app => ({
           path: `/${app.default.name}`,
           component: app.default.component
-        })
-        subtitlesRoutes.push({
-          path: `/${app.default.name}`,
-          render: () => trans(app.default.name, {}, 'tools')
-        })
-      })
-
-      return (
-        <ToolPage
-          subtitle={
-            <Routes
-              path={props.path}
-              routes={subtitlesRoutes}
-            />
-          }
-        >
-          <Routes
-            path={props.path}
-            routes={routes}
-          />
-        </ToolPage>
-      )
-    }}
+        }))}
+      />
+    )}
   />
 
 IntegrationTool.propTypes = {
