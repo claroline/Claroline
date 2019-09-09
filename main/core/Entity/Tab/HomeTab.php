@@ -70,6 +70,8 @@ class HomeTab
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
      *     mappedBy="homeTab"
      * )
+     *
+     * @var WidgetContainer[]
      */
     private $widgetContainers;
 
@@ -114,6 +116,9 @@ class HomeTab
         $this->workspace = $workspace;
     }
 
+    /**
+     * @return WidgetContainer[]|ArrayCollection
+     */
     public function getWidgetContainers()
     {
         return $this->widgetContainers;

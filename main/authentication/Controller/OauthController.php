@@ -142,7 +142,7 @@ class OauthController extends AbstractCrudController
         $session = $request->getSession();
         $service = $session->get('claroline.oauth.resource_owner');
         $user = $session->get('claroline.oauth.user');
-        if ($service !== null && $user !== null) {
+        if (null !== $service && null !== $user) {
             $this->get('translator')->setLocale($request->getLocale());
 
             return [];

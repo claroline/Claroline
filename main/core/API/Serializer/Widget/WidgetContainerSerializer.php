@@ -153,7 +153,7 @@ class WidgetContainerSerializer
             foreach ($data['contents'] as $index => $content) {
                 if ($content) {
                     /* @var WidgetInstance $widgetInstance */
-                    if (!in_array(Options::REFRESH_UUID, $options)) {
+                    if (isset($content['id']) && !in_array(Options::REFRESH_UUID, $options)) {
                         $widgetInstance = $this->findInCollection(
                       $widgetContainer,
                       'getInstances',

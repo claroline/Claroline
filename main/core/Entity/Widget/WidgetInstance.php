@@ -41,8 +41,8 @@ class WidgetInstance
     /**
      * The parent container.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances")
-     * @ORM\JoinColumn(name="container_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances", cascade={"persist", "remove", "refresh"})
+     * @ORM\JoinColumn(name="container_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var WidgetContainer
      */
@@ -53,6 +53,8 @@ class WidgetInstance
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig",
      *     mappedBy="widgetInstance"
      * )
+     *
+     * @var WidgetInstanceConfig[]
      */
     private $widgetInstanceConfigs;
 

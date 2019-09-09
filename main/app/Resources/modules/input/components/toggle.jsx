@@ -12,7 +12,7 @@ const Toggle = props =>
     })}
     disabled={props.disabled}
     onClick={(e) => {
-      props.onChange(!props.value)
+      props.onChange(!props.active)
 
       e.preventDefault()
       e.stopPropagation()

@@ -2,12 +2,12 @@ import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {matchPath, Routes} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {LogDetails} from '#/main/core/layout/logs'
 
-import {Progression} from '#/plugin/analytics/resource/dashboard/containers/progression'
+//import {Progression} from '#/plugin/analytics/resource/dashboard/containers/progression'
 import {Connections} from '#/plugin/analytics/resource/dashboard/containers/connections'
 import {Logs} from '#/plugin/analytics/resource/dashboard/containers/logs'
 import {UserLogs} from '#/plugin/analytics/resource/dashboard/containers/logs-user'

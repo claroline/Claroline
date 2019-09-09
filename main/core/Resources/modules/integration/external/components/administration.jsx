@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {Toggle} from '#/main/app/input/components/toggle'
 import {Button} from '#/main/app/action/components/button'
-import {Toolbar} from '#/main/app/action/components/toolbar'
+//import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -77,7 +77,7 @@ ExternalApp.propTypes = {
   icon: T.string.isRequired,
   alt: T.string.isRequired,
   name: T.string.isRequired,
-  active: T.bool.isRequired,
+  active: T.bool.isRequired
 }
 
 class ExternalAdministration extends Component {

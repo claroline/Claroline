@@ -39,6 +39,7 @@ class WidgetContainer
      *    targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTab",
      *    inversedBy="widgetContainers"
      * )
+     * @ORM\JoinColumn(name="hometab_id", onDelete="CASCADE", nullable=true)
      * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var HomeTab
@@ -48,8 +49,11 @@ class WidgetContainer
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig",
-     *     mappedBy="widgetContainer"
+     *     mappedBy="widgetContainer",
+     *     cascade={"persist"}
      * )
+     *
+     * @var WidgetContainerConfig[]
      */
     protected $widgetContainerConfigs;
 
@@ -99,14 +103,16 @@ class WidgetContainer
         }
     }
 
-    public function setHomeTab(HomeTab $homeTab)
+    public function setHomeTab(HomeTab $homeTab = null)
     {
         if ($this->homeTab) {
             $this->homeTab->removeWidgetContainer($this);
         }
 
-        $this->homeTab = $homeTab;
-        $this->homeTab->addWidgetContainer($this);
+        if ($homeTab) {
+            $this->homeTab = $homeTab;
+            $this->homeTab->addWidgetContainer($this);
+        }
     }
 
     public function getHomeTab()

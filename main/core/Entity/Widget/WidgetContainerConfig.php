@@ -103,9 +103,12 @@ class WidgetContainerConfig
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
-     *     inversedBy="widgetContainerConfigs"
+     *     inversedBy="widgetContainerConfigs",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="widget_container_id", onDelete="CASCADE", nullable=true)
+     *
+     * @var WidgetContainer
      */
     protected $widgetContainer;
 
