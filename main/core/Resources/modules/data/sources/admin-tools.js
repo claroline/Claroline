@@ -10,7 +10,7 @@ export default {
   parameters: {
     primaryAction: (tool) => ({
       type: URL_BUTTON,
-      target: `#${route(tool)}`
+      target: `#${route(tool.name)}`
     }),
     definition: [
       {
