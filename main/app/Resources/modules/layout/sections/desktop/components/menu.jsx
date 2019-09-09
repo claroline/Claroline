@@ -31,6 +31,7 @@ const DesktopMenu = props => {
       type: MODAL_BUTTON,
       icon: 'fa fa-fw fa-mask',
       label: trans('view-as', {}, 'actions'),
+      displayed: props.isAdmin,
       modal: [MODAL_USERS, {
         selectAction: (users) => ({
           type: URL_BUTTON,
@@ -116,6 +117,7 @@ const DesktopMenu = props => {
 }
 
 DesktopMenu.propTypes = {
+  isAdmin: T.bool.isRequired,
   showProgression: T.bool.isRequired,
   section: T.string,
   shortcuts: T.arrayOf(T.shape({
