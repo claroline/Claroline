@@ -92,6 +92,11 @@ class UserCrud
         }
 
         $user->addRole($roleUser);
+
+        //create default desktop tools
+        $toolsRolesConfig = $this->toolManager->getDesktopToolsConfiguration([$roleUser]);
+        $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig);
+
         $this->roleManager->createUserRole($user);
 
         $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));
