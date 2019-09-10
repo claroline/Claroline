@@ -26,9 +26,8 @@ class Competency implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\Column(length=500)
+     * @ORM\Column()
      * @Assert\NotBlank
-     * @Assert\Length(max="500")
      */
     private $name;
 
@@ -211,7 +210,7 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @return null|Competency
+     * @return Competency|null
      */
     public function getParent()
     {

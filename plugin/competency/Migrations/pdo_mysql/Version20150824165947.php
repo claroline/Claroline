@@ -15,16 +15,16 @@ class Version20150824165947 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE hevinci_competency CHANGE name name VARCHAR(500) NOT NULL
+            ALTER TABLE hevinci_competency CHANGE name name VARCHAR(255) NOT NULL
         ');
         $this->addSql('
-            ALTER TABLE hevinci_competency_progress_log CHANGE competency_name competency_name VARCHAR(500) NOT NULL
+            ALTER TABLE hevinci_competency_progress_log CHANGE competency_name competency_name VARCHAR(255) NOT NULL
         ');
         $this->addSql('
-            ALTER TABLE hevinci_ability_progress CHANGE ability_name ability_name VARCHAR(500) NOT NULL
+            ALTER TABLE hevinci_ability_progress CHANGE ability_name ability_name VARCHAR(255) NOT NULL
         ');
         $this->addSql('
-            ALTER TABLE hevinci_competency_progress CHANGE competency_name competency_name VARCHAR(500) NOT NULL
+            ALTER TABLE hevinci_competency_progress CHANGE competency_name competency_name VARCHAR(255) NOT NULL
         ');
 
         // The next two statements were added to circumvent a 1071 mysql error
@@ -41,7 +41,7 @@ class Version20150824165947 extends AbstractMigration
         ');
 
         $this->addSql('
-            ALTER TABLE hevinci_ability CHANGE name name VARCHAR(500) NOT NULL
+            ALTER TABLE hevinci_ability CHANGE name name VARCHAR(255) NOT NULL
         ');
     }
 
