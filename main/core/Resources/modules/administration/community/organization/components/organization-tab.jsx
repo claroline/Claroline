@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
@@ -13,21 +12,6 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {Organization}  from '#/main/core/administration/community/organization/components/organization'
 import {Organizations} from '#/main/core/administration/community/organization/components/organizations'
 import {actions, selectors} from '#/main/core/administration/community/organization/store'
-
-const OrganizationTabActionsComponent = (props) =>
-  <PageActions>
-    <PageAction
-      type={LINK_BUTTON}
-      icon="fa fa-plus"
-      label={trans('add_organization')}
-      target={`${props.path}/organizations/form`}
-      primary={true}
-    />
-  </PageActions>
-
-OrganizationTabActionsComponent.propTypes = {
-  path: T.string.isRequired
-}
 
 const OrganizationTabComponent = props =>
   <ToolPage
@@ -78,12 +62,6 @@ OrganizationTabComponent.propTypes = {
   organizations: T.array.isRequired
 }
 
-const OrganizationTabActions = connect(
-  state => ({
-    path: toolSelectors.path(state)
-  })
-)(OrganizationTabActionsComponent)
-
 const OrganizationTab = connect(
   state => ({
     path: toolSelectors.path(state),
@@ -95,12 +73,11 @@ const OrganizationTab = connect(
       if (parent) {
         defaultProps.parent = parent
       }
-      dispatch(actions.open('organizations.current', id, defaultProps))
+      dispatch(actions.open(selectors.FORM_NAME, id, defaultProps))
     }
   })
 )(OrganizationTabComponent)
 
 export {
-  OrganizationTabActions,
   OrganizationTab
 }

@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
@@ -13,21 +12,6 @@ import {selectors as baseSelectors} from '#/main/core/administration/community/s
 import {Location}  from '#/main/core/administration/community/location/components/location'
 import {Locations} from '#/main/core/administration/community/location/components/locations'
 import {actions}   from '#/main/core/administration/community/location/store'
-
-const LocationTabActionsComponent = (props) =>
-  <PageActions>
-    <PageAction
-      type={LINK_BUTTON}
-      icon="fa fa-plus"
-      label={trans('add_location')}
-      target={`${props.path}/locations/form`}
-      primary={true}
-    />
-  </PageActions>
-
-LocationTabActionsComponent.propTypes = {
-  path: T.string.isRequired
-}
 
 const LocationTabComponent = props =>
   <ToolPage
@@ -69,12 +53,6 @@ LocationTabComponent.propTypes = {
   openForm: T.func.isRequired
 }
 
-const LocationTabActions = connect(
-  (state) => ({
-    path: toolSelectors.path(state)
-  })
-)(LocationTabActionsComponent)
-
 const LocationTab = connect(
   (state) => ({
     path: toolSelectors.path(state)
@@ -87,6 +65,5 @@ const LocationTab = connect(
 )(LocationTabComponent)
 
 export {
-  LocationTabActions,
   LocationTab
 }

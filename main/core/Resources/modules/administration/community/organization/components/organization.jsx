@@ -15,7 +15,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {actions} from '#/main/core/administration/community/organization/store'
+import {actions, selectors} from '#/main/core/administration/community/organization/store'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
 import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
@@ -23,7 +23,7 @@ import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-lis
 const OrganizationForm = props =>
   <FormData
     level={3}
-    name={`${baseSelectors.STORE_NAME}.organizations.current`}
+    name={selectors.FORM_NAME}
     buttons={true}
     target={(organization, isNew) => isNew ?
       ['apiv2_organization_create'] :

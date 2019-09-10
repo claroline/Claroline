@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -13,21 +12,6 @@ import {selectors as baseSelectors} from '#/main/core/administration/community/s
 import {Role}    from '#/main/core/administration/community/role/components/role'
 import {Roles}   from '#/main/core/administration/community/role/components/roles'
 import {actions} from '#/main/core/administration/community/role/store'
-
-const RoleTabActionsComponent = (props) =>
-  <PageActions>
-    <PageAction
-      type={LINK_BUTTON}
-      icon="fa fa-plus"
-      label={trans('add_role')}
-      target={`${props.path}/roles/form`}
-      primary={true}
-    />
-  </PageActions>
-
-RoleTabActionsComponent.propTypes = {
-  path: T.string.isRequired
-}
 
 const RoleTabComponent = props =>
   <ToolPage
@@ -69,12 +53,6 @@ RoleTabComponent.propTypes = {
   openForm: T.func.isRequired
 }
 
-const RoleTabActions = connect(
-  (state) => ({
-    path: toolSelectors.path(state)
-  })
-)(RoleTabActionsComponent)
-
 const RoleTab = connect(
   (state) => ({
     path: toolSelectors.path(state)
@@ -87,6 +65,5 @@ const RoleTab = connect(
 )(RoleTabComponent)
 
 export {
-  RoleTabActions,
   RoleTab
 }
