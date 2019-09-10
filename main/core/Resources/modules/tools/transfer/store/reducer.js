@@ -15,6 +15,10 @@ const reducer = combineReducers({
   export: makeFormReducer(selectors.STORE_NAME + '.export'),
   history: makeListReducer(selectors.STORE_NAME + '.history', {
     sortBy: {property: 'uploadDate', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   log: logReducer
 })

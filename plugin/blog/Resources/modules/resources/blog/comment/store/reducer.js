@@ -1,7 +1,11 @@
-import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/app/content/list/store'
 import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {makeReducer} from '#/main/app/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
+import {makeInstanceAction} from '#/main/app/store/actions'
+
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {
@@ -62,7 +66,8 @@ const reducer = {
     invalidated: makeReducer(false, {
       [POST_LOAD]: () => true,
       [POST_RESET]: () => true,
-      [CREATE_POST_COMMENT]: () => true
+      [CREATE_POST_COMMENT]: () => true,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
     })
   })
 }

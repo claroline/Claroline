@@ -10,7 +10,8 @@ import {selectors} from '#/main/core/administration/template/store/selectors'
 const reducer = combineReducers({
   templates: makeListReducer(selectors.STORE_NAME + '.templates', {}, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.template']: () => true
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.template']: () => true,
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),
   template: makeFormReducer(selectors.STORE_NAME + '.template'),

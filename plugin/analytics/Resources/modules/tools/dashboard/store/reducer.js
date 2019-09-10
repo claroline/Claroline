@@ -12,9 +12,17 @@ import {reducer as pathReducer} from '#/plugin/analytics/tools/dashboard/path/st
 const reducer = combineReducers({
   logs: makeListReducer(selectors.STORE_NAME + '.logs', {
     sortBy: { property: 'dateLog', direction: -1 }
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   userActions: makeListReducer(selectors.STORE_NAME + '.userActions', {
     sortBy: { property: 'doer.name', direction: 1 }
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   log: makeReducer({}, {
     [RESET_LOG]: (state, action) => action.log,
@@ -44,6 +52,10 @@ const reducer = combineReducers({
   connections: combineReducers({
     list: makeListReducer(selectors.STORE_NAME + '.connections.list', {
       sortBy: {property: 'connectionDate', direction: -1}
+    }, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      })
     })
   }),
   items: makeReducer([], {

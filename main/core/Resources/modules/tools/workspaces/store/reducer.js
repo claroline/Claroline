@@ -45,6 +45,10 @@ export const reducer = combineReducers({
    */
   registered: makeListReducer('workspaces.registered', {
     sortBy: {property: 'created', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+    })
   }),
 
   /**
@@ -52,6 +56,10 @@ export const reducer = combineReducers({
    */
   public: makeListReducer('workspaces.public', {
     sortBy: {property: 'created', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+    })
   }),
 
   /**
@@ -63,6 +71,10 @@ export const reducer = combineReducers({
       {property: 'meta.model', value: false}
     ],
     sortBy: {property: 'created', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+    })
   }),
 
   /**
@@ -70,5 +82,9 @@ export const reducer = combineReducers({
    */
   models: makeListReducer('workspaces.models', {
     sortBy: {property: 'created', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+    })
   })
 })

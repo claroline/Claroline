@@ -17,7 +17,7 @@ const reducer = combineReducers({
     [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.scormForm']: (state, action) => action.updatedData
   }),
   trackings: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, 'claroline_scorm')]: (state, action) => action.resourceData.trackings || state,
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.trackings || state,
     [TRACKING_UPDATE]: (state, action) => {
       const newState = cloneDeep(state)
       const scoId = action.tracking['sco']['id']
@@ -26,7 +26,11 @@ const reducer = combineReducers({
       return newState
     }
   }),
-  results: makeListReducer(selectors.STORE_NAME+'.results'),
+  results: makeListReducer(selectors.STORE_NAME+'.results', {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  }),
   scormForm: makeFormReducer(selectors.STORE_NAME+'.scormForm')
 })
 

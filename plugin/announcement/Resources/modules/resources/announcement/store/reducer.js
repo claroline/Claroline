@@ -87,7 +87,8 @@ const reducer = combineReducers({
   selected: combineReducers({
     list: makeListReducer(selectors.STORE_NAME+'.selected.list', {}, {
       invalidated: makeReducer(false, {
-        ['MODAL_HIDE']: () => true // todo : find better
+        ['MODAL_HIDE']: () => true, // todo : find better
+        [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
       })
     })
   }),

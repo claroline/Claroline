@@ -10,12 +10,24 @@ const reducer = combineReducers({
   isCronConfigured: makeReducer(false, {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.isCronConfigured || false
   }),
-  picker: makeListReducer(selectors.STORE_NAME + '.picker'),
+  picker: makeListReducer(selectors.STORE_NAME + '.picker', {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  }),
   tasks: makeListReducer(selectors.STORE_NAME + '.tasks', {
     sortBy: {property: 'scheduledDate', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   task: makeFormReducer(selectors.STORE_NAME + '.task', {}, {
-    users: makeListReducer(selectors.STORE_NAME + '.task.users')
+    users: makeListReducer(selectors.STORE_NAME + '.task.users', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      })
+    })
   })
 })
 

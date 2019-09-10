@@ -11,7 +11,11 @@ const reducer = combineReducers({
   }),
   // the resources with no parents (aka WS roots)
   // for other resources, they are mounted inside the parent directory store
-  resources: makeListReducer(selectors.LIST_ROOT_NAME)
+  resources: makeListReducer(selectors.LIST_ROOT_NAME, {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, 'resources')]: () => true
+    })
+  })
 })
 
 export {

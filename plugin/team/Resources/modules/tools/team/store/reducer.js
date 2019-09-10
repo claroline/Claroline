@@ -24,21 +24,28 @@ const reducer = combineReducers({
     }, {
       invalidated: makeReducer(false, {
         [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.teams.current']: () => true,
-        [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.teams.multiple']: () => true
+        [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.teams.multiple']: () => true,
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
       })
     }),
     current: makeFormReducer(selectors.STORE_NAME + '.teams.current', {}, {
       users: makeListReducer(selectors.STORE_NAME + '.teams.current.users', {}, {
         invalidated: makeReducer(false, {
-          [FORM_RESET + '/' + selectors.STORE_NAME + '.teams.current']: () => true
+          [FORM_RESET + '/' + selectors.STORE_NAME + '.teams.current']: () => true,
+          [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
         })
       }),
       managers: makeListReducer(selectors.STORE_NAME + '.teams.current.managers', {}, {
         invalidated: makeReducer(false, {
-          [FORM_RESET + '/' + selectors.STORE_NAME + '.teams.current']: () => true
+          [FORM_RESET + '/' + selectors.STORE_NAME + '.teams.current']: () => true,
+          [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
         })
       }),
-      usersPicker: makeListReducer(selectors.STORE_NAME + '.teams.current.usersPicker')
+      usersPicker: makeListReducer(selectors.STORE_NAME + '.teams.current.usersPicker', {}, {
+        invalidated: makeReducer(false, {
+          [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        })
+      })
     }),
     multiple: makeFormReducer(selectors.STORE_NAME + '.teams.multiple')
   }),

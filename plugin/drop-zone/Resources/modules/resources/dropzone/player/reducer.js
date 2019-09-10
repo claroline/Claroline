@@ -176,8 +176,16 @@ const reducer = {
   myDrop: myDropReducer,
   nbCorrections: nbCorrectionsReducer,
   peerDrop: peerDropReducer,
-  myRevisions: makeListReducer(selectors.STORE_NAME+'.myRevisions'),
-  revisions: makeListReducer(selectors.STORE_NAME+'.revisions'),
+  myRevisions: makeListReducer(selectors.STORE_NAME+'.myRevisions', {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  }),
+  revisions: makeListReducer(selectors.STORE_NAME+'.revisions', {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  }),
   revision: revisionReducer,
   currentRevisionId: currentRevisionIdReducer
 }

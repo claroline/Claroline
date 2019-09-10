@@ -47,7 +47,8 @@ const reducer = combineReducers({
       }
     }),
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.entries.current']: () => true
+      [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.entries.current']: () => true,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),
   current: makeFormReducer(selectors.STORE_NAME+'.entries.current', {}, {

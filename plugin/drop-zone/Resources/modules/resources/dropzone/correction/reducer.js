@@ -1,7 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 
@@ -109,7 +112,12 @@ const correctionsReducer = makeReducer(null, {
 })
 
 const reducer = {
-  drops: makeListReducer(selectors.STORE_NAME+'.drops', {}, {data: dropsReducer}),
+  drops: makeListReducer(selectors.STORE_NAME+'.drops', {}, {
+    data: dropsReducer,
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  }),
   currentDrop: currentDropReducer,
   correctorDrop: correctorDropReducer,
   corrections: correctionsReducer

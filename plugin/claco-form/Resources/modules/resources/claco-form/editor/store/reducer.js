@@ -1,8 +1,11 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeReducer} from '#/main/app/store/reducer'
+
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store/selectors'
 import {
@@ -61,7 +64,8 @@ const reducer = makeFormReducer(selectors.STORE_NAME+'.clacoFormForm', {}, {
       }
     }),
     invalidated: makeReducer(false, {
-      [CATEGORY_ADD]: () => true
+      [CATEGORY_ADD]: () => true,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),
   keywords: makeListReducer(selectors.STORE_NAME+'.clacoFormForm.keywords', {}, {
@@ -78,7 +82,8 @@ const reducer = makeFormReducer(selectors.STORE_NAME+'.clacoFormForm', {}, {
       }
     }),
     invalidated: makeReducer(false, {
-      [KEYWORD_ADD]: () => true
+      [KEYWORD_ADD]: () => true,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
     })
   })
 })

@@ -1,7 +1,10 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
-import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+import {makeInstanceAction} from '#/main/app/store/actions'
 
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 import {
   UPDATE_CURRENT_HISTORY_SECTION,
   UPDATE_CURRENT_HISTORY_VERSION,
@@ -12,7 +15,8 @@ import {
 const reducer = combineReducers({
   contributions: makeListReducer(selectors.STORE_NAME + '.history.contributions', {sortBy: { property: 'creationDate', direction: -1 }}, {
     invalidated: makeReducer(false, {
-      [UPDATE_CURRENT_HISTORY_SECTION]: () => true
+      [UPDATE_CURRENT_HISTORY_SECTION]: () => true,
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),
   currentSection: makeReducer({}, {

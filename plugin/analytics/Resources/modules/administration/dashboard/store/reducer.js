@@ -16,9 +16,17 @@ import {selectors} from '#/plugin/analytics/administration/dashboard/store/selec
 const reducer = combineReducers({
   logs: makeListReducer(selectors.STORE_NAME + '.logs', {
     sortBy: { property: 'dateLog', direction: -1 }
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   userActions: makeListReducer(selectors.STORE_NAME + '.userActions', {
     sortBy: { property: 'doer.name', direction: 1 }
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   log: makeReducer({}, {
     [RESET_LOG]: (state, action) => action.log,
@@ -71,10 +79,18 @@ const reducer = combineReducers({
   }),
   topActions: makeListReducer(selectors.STORE_NAME + '.topActions', {
     filters: [{property: 'type', value: 'top_users_connections'}]
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
   }),
   connections: combineReducers({
     list: makeListReducer(selectors.STORE_NAME + '.connections.list', {
       sortBy: {property: 'connectionDate', direction: -1}
+    }, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      })
     })
   })
 })
