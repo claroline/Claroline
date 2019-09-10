@@ -34,6 +34,7 @@ class CleanResourceTypeDatabaseCommand extends ContainerAwareCommand
           'innova_audio_recorder',
           'innova_video_recorder',
           'innova_media_resource',
+          'innova_collecticiel',
         ];
 
         $databaseManager = $this->getContainer()->get('claroline.manager.database_manager');
@@ -75,6 +76,26 @@ class CleanResourceTypeDatabaseCommand extends ContainerAwareCommand
              //video_recorder
              'innova_video_recorder_configuration',
          ], true);
+
+        $databaseManager->dropTables([
+              //collecticiel
+              'innova_collecticielbundle_choice_criteria',
+              'innova_collecticielbundle_choice_notation',
+              'innova_collecticielbundle_comment',
+              'innova_collecticielbundle_comment_read',
+              'innova_collecticielbundle_correction',
+              'innova_collecticielbundle_criterion',
+              'innova_collecticielbundle_document',
+              'innova_collecticielbundle_drop',
+              'innova_collecticielbundle_dropzone',
+              'innova_collecticielbundle_grade',
+              'innova_collecticielbundle_grading_criteria',
+              'innova_collecticielbundle_grading_notation',
+              'innova_collecticielbundle_grading_scale',
+              'innova_collecticielbundle_notation',
+              'innova_collecticielbundle_return_receipt',
+              'innova_collecticielbundle_return_receipt_type',
+          ], true);
     }
 
     public function removeResources(array $types, $consoleLogger)
