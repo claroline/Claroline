@@ -37,7 +37,7 @@ const HeaderMain = props =>
         <Await
           key={menu}
           for={getMenu(menu)}
-          then={(menuApp) => createElement(menuApp.default, {
+          then={(menuApp) => createElement(menuApp.default.component, {
             authenticated: props.authenticated,
             user: props.currentUser
           })}

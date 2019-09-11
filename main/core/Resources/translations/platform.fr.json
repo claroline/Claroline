@@ -1150,7 +1150,7 @@
     "show_help_button": "Afficher le bouton d'aide",
     "show_mail": "Afficher le courriel",
     "show_more_actions": "Afficher plus d'actions",
-    "show_name_in_top_bar": "Afficher le nom de la plateforme dans la barre supérieure",
+    "show_name_in_top_bar": "Afficher le nom de la plateforme",
     "show_phone": "Afficher le numéro de téléphone",
     "show_picture": "Afficher la photo",
     "show_profile": "Voir le profil",
@@ -1782,5 +1782,10 @@
     "do_not_display_anymore": "Ne plus afficher",
     "back_to": "Retour à %target%",
     "select_an_organization": "Sélectionner une organisation",
-    "advanced_tools": "Outils avancés"
+    "advanced_tools": "Outils avancés",
+    "logo": "Logo",
+    "header": "Entête",
+    "header_widgets": "Widgets",
+    "search": "Recherche",
+    "user_interface": "Interface utilisateur"
 }

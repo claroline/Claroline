@@ -201,7 +201,7 @@ class PlatformDefaults implements ParameterProviderInterface
               'message' => null,
             ],
 
-            'header_menu' => [
+            'header' => [
                 'search',
                 'history',
                 'favourites',

@@ -1125,7 +1125,7 @@
     "show_help_button": "Show help button",
     "show_mail": "Show email",
     "show_more_actions": "Show more actions",
-    "show_name_in_top_bar": "Show platform name in the top bar",
+    "show_name_in_top_bar": "Show platform name",
     "show_phone": "Show phone",
     "show_picture": "Show picture",
     "show_profile": "Show profile",
@@ -1749,5 +1749,10 @@
     "do_not_display_anymore": "Do not display anymore",
     "back_to": "Back to %target%",
     "select_an_organization": "Select an organization",
-    "advanced_tools": "Advanced tools"
+    "advanced_tools": "Advanced tools",
+    "logo": "Logo",
+    "header": "Header",
+    "header_widgets": "Widgets",
+    "search": "Search",
+    "user_interface": "User interface"
 }

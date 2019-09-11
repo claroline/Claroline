@@ -7,7 +7,7 @@ registry.add('ClarolineAgendaBundle', {
    * Provides menu which can be used in the main header menu.
    */
   header: {
-    'clock': () => { return import(/* webpackChunkName: "agenda-header-clock" */ '#/plugin/agenda/header/clock') }
+    //'clock': () => { return import(/* webpackChunkName: "agenda-header-clock" */ '#/plugin/agenda/header/clock') }
   },
 
   data: {

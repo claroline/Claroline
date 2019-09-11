@@ -19,8 +19,8 @@ const AppearanceMenu = (props) =>
         {
           name: 'layout',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-layer-group',
-          label: trans('layout'),
+          icon: 'fa fa-fw fa-desktop',
+          label: trans('user_interface'),
           target: props.path+'/layout',
           exact: true
         }, {

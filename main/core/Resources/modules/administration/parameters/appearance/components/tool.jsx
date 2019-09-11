@@ -14,7 +14,7 @@ const AppearanceTool = (props) =>
       <Routes
         path={props.path}
         routes={[
-          {path: '/layout', render: () => trans('layout')},
+          {path: '/layout', render: () => trans('user_interface')},
           {path: '/icons',  render: () => trans('icons')}
         ]}
       />

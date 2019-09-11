@@ -32,7 +32,7 @@ class Updater120502 extends Updater
         $this->fixesDirectoriesPageSizes();
     }
 
-    public function fixesDirectoriesPageSizes()
+    private function fixesDirectoriesPageSizes()
     {
         // 50 and 100 are old values from incorrect migration.
         // it blocks the directory validation

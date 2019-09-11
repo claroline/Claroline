@@ -11,8 +11,8 @@ const ResourcesTool = props =>
   <Routes
     path={props.path}
     redirect={props.root ? [
-        {from: '/', exact: true, to: `/${props.root.slug}`}
-      ] : undefined}
+      {from: '/', exact: true, to: `/${props.root.slug}`}
+    ] : undefined}
     routes={[
       {
         path: '/',
