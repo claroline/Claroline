@@ -7,7 +7,7 @@ import {WorkspaceCard} from '#/main/core/workspace/components/card'
 const WorkspaceList = {
   open: (row) => ({
     type: LINK_BUTTON,
-    target: route(row[0])
+    target: route(row)
   }),
   definition: [
     {

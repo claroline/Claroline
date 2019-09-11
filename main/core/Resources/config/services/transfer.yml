@@ -80,7 +80,10 @@ services:
           - '@claroline.api.crud'
           - '@claroline.persistence.object_manager'
 
-    Claroline\CoreBundle\API\Transfer\Action\User\Create: ~
+    Claroline\CoreBundle\API\Transfer\Action\User\Create:
+        arguments:
+          - '@claroline.api.crud'
+          - '@claroline.persistence.object_manager'
 
     Claroline\CoreBundle\API\Transfer\Action\User\CreateOrUpdate: ~
 
