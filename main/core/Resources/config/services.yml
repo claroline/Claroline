@@ -4,6 +4,12 @@ imports:
     - { resource: services/repository.yml }
     - { resource: services/serializer.yml }
     - { resource: services/manager.yml }
+    - { resource: services/transfer.yml }
+    - { resource: services/finder.yml }
+    - { resource: services/validator.yml }
+    - { resource: services/crud.yml }
+    - { resource: services/twig.yml }
+    - { resource: services/voter.yml }
 
 services:
 
@@ -40,4 +46,3 @@ services:
             - { name: kernel.event_listener, event: create_notification_item_resource-publish, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_role-subscribe-queue, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_resource-text-update, method: onCreateNotificationItem }
-

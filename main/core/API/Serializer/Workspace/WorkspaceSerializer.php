@@ -20,14 +20,9 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.serializer.workspace")
- * @DI\Tag("claroline.serializer")
- */
 class WorkspaceSerializer
 {
     use SerializerTrait;
@@ -67,20 +62,6 @@ class WorkspaceSerializer
 
     /**
      * WorkspaceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"        = @DI\Inject("security.authorization_checker"),
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "workspaceManager"     = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
-     *     "utilities"            = @DI\Inject("claroline.utilities.misc"),
-     *     "fileUt"               = @DI\Inject("claroline.utilities.file"),
-     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
-     *     "finder"               = @DI\Inject("claroline.api.finder"),
-     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
-     *     "publicFileSerializer" = @DI\Inject("claroline.serializer.public_file"),
-     *     "resNodeSerializer"    = @DI\Inject("claroline.serializer.resource_node")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param TokenStorageInterface         $tokenStorage

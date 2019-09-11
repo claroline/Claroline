@@ -11,12 +11,7 @@ use Claroline\CoreBundle\Entity\Widget\Type\AbstractWidget;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.widget_instance")
- * @DI\Tag("claroline.serializer")
- */
 class WidgetInstanceSerializer
 {
     use SerializerTrait;
@@ -29,11 +24,6 @@ class WidgetInstanceSerializer
 
     /**
      * WidgetInstanceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer

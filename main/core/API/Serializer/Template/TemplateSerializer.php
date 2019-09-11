@@ -18,12 +18,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.template")
- * @DI\Tag("claroline.serializer")
- */
 class TemplateSerializer
 {
     use SerializerTrait;
@@ -42,12 +37,6 @@ class TemplateSerializer
 
     /**
      * TemplateSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
-     *     "serializer"           = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager        $om
      * @param ParametersSerializer $parametersSerializer

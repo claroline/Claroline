@@ -11,13 +11,8 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 
-/**
- * @DI\Service("claroline.extension.webpack")
- * @DI\Tag("twig.extension")
- */
 class WebpackExtension extends \Twig_Extension
 {
     private $assetExtension;
@@ -27,12 +22,6 @@ class WebpackExtension extends \Twig_Extension
 
     /**
      * WebpackExtension constructor.
-     *
-     * @DI\InjectParams({
-     *     "extension"      = @DI\Inject("twig.extension.assets"),
-     *     "environment"    = @DI\Inject("%kernel.environment%"),
-     *     "rootDir"        = @DI\Inject("%kernel.root_dir%")
-     * })
      *
      * @param AssetExtension $extension
      * @param string         $environment

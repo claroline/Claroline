@@ -12,12 +12,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.transfer.action")
- */
 class Create extends AbstractAction
 {
     /** @var Crud */
@@ -25,12 +20,6 @@ class Create extends AbstractAction
 
     /**
      * Action constructor.
-     *
-     * @DI\InjectParams({
-     *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param Crud $crud
      */

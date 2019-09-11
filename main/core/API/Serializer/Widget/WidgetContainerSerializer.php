@@ -11,12 +11,7 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.widget_container")
- * @DI\Tag("claroline.serializer")
- */
 class WidgetContainerSerializer
 {
     use SerializerTrait;
@@ -32,13 +27,6 @@ class WidgetContainerSerializer
 
     /**
      * WidgetContainerSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                       = @DI\Inject("claroline.persistence.object_manager"),
-     *     "widgetInstanceFinder"     = @DI\Inject("claroline.api.finder.widget_instance"),
-     *     "widgetInstanceSerializer" = @DI\Inject("claroline.serializer.widget_instance"),
-     *     "publicFileSerializer"     = @DI\Inject("claroline.serializer.public_file")
-     * })
      *
      * @param ObjectManager            $om
      * @param WidgetInstanceSerializer $widgetInstanceSerializer

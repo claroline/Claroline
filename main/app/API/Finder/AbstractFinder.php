@@ -46,13 +46,28 @@ abstract class AbstractFinder implements FinderInterface
      * @param EntityManager    $em
      * @param StrictDispatcher $eventDispatcher
      */
-    public function setObjectManager(
+    public function setDependencies(
         ObjectManager $om,
         EntityManager $em,
         StrictDispatcher $eventDispatcher
     ) {
         $this->om = $om;
         $this->_em = $em;
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function setObjectManager(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
+
+    public function setEntityManager(EntityManager $em)
+    {
+        $this->_em = $em;
+    }
+
+    public function setEventDispatcher(StrictDispatcher $eventDispatcher)
+    {
         $this->eventDispatcher = $eventDispatcher;
     }
 

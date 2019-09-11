@@ -5,12 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Facet;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.field_facet_choice")
- * @DI\Tag("claroline.serializer")
- */
 class FieldFacetChoiceSerializer
 {
     use SerializerTrait;

@@ -4,12 +4,7 @@ namespace Claroline\AnalyticsBundle\Serializer\Widget\Type;
 
 use Claroline\AnalyticsBundle\Entity\Widget\Type\ProgressionWidget;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.widget_progression")
- * @DI\Tag("claroline.serializer")
- */
 class ProgressionWidgetSerializer
 {
     use SerializerTrait;

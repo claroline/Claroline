@@ -4,20 +4,11 @@ namespace Claroline\CoreBundle\API\Validator;
 
 use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.validator")
- */
 class GroupValidator implements ValidatorInterface
 {
     /**
      * GroupValidator constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

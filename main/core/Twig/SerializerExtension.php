@@ -12,12 +12,7 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- * @DI\Tag("twig.extension")
- */
 class SerializerExtension extends \Twig_Extension
 {
     /** @var SerializerProvider */
@@ -25,10 +20,6 @@ class SerializerExtension extends \Twig_Extension
 
     /**
      * SerializerExtension constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializerProvider" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param SerializerProvider $serializerProvider
      */

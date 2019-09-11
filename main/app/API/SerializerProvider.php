@@ -79,6 +79,10 @@ class SerializerProvider
             //    so for this case the `getClass` method is required
             $p = new \ReflectionParameter([get_class($serializer), 'serialize'], 0);
 
+            if (!$p->getClass()) {
+                throw new \Exception(get_class($serializer).' is missing type hinting or getClass method');
+            }
+
             return $p->getClass()->getName();
         }
     }

@@ -8,24 +8,13 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.group")
- * @DI\Tag("claroline.serializer")
- */
 class GroupSerializer
 {
     use SerializerTrait;
 
     /**
      * GroupSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "organizationSerializer" = @DI\Inject("claroline.serializer.organization"),
-     *     "roleSerializer"         = @DI\Inject("claroline.serializer.role"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param SerializerProvider $serializer
      */

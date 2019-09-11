@@ -3,12 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\CoreBundle\Entity\DataSource;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.data_source")
- * @DI\Tag("claroline.serializer")
- */
 class DataSourceSerializer
 {
     public function getClass()

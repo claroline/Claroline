@@ -10,22 +10,11 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.transfer.action")
- */
 class AddUser extends AbstractAction
 {
     /**
      * Action constructor.
-     *
-     * @DI\InjectParams({
-     *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param Crud $crud
      */

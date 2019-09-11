@@ -8,22 +8,11 @@ use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.panel_facet")
- * @DI\Tag("claroline.serializer")
- */
 class PanelFacetSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @DI\InjectParams({
-     *     "roleSerializer" = @DI\Inject("claroline.serializer.role"),
-     *     "ffSerializer"   = @DI\Inject("claroline.serializer.field_facet")
-     * })
-     */
     public function __construct(RoleSerializer $roleSerializer, FieldFacetSerializer $ffSerializer)
     {
         $this->roleSerializer = $roleSerializer;

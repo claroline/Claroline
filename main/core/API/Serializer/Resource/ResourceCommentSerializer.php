@@ -11,12 +11,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.resource_node.comment")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceCommentSerializer
 {
     use SerializerTrait;
@@ -26,11 +21,6 @@ class ResourceCommentSerializer
 
     /**
      * ResourceCommentSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer

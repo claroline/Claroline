@@ -5,23 +5,14 @@ namespace Claroline\CoreBundle\API\Serializer\Log\Connection;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.log.connect.resource")
- * @DI\Tag("claroline.serializer")
- */
 class LogConnectResourceSerializer
 {
     /** @var SerializerProvider */
     private $serializer;
 
     /**
-     * LogConnectResourceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
+     * LogConnectResourceSerializer constructor.s.
      *
      * @param SerializerProvider $serializer
      */

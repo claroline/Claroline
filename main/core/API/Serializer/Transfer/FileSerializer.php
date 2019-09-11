@@ -7,12 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Import\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.import_file")
- * @DI\Tag("claroline.serializer")
- */
 class FileSerializer
 {
     use SerializerTrait;
@@ -21,13 +16,6 @@ class FileSerializer
     private $fileSerializer;
 
     /**
-     * ScheduledTaskSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
      * @param PublicFileSerializer $fileSerializer
      */
     public function __construct(PublicFileSerializer $fileSerializer, ObjectManager $om)

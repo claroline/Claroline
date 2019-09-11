@@ -4,14 +4,9 @@ namespace Claroline\CoreBundle\API\Serializer\Log;
 
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.serializer.log")
- * @DI\Tag("claroline.serializer")
- */
 class LogSerializer
 {
     /** @var TranslatorInterface */
@@ -21,13 +16,6 @@ class LogSerializer
     private $dispatcher;
 
     /**
-     * RoleSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "dispatcher" = @DI\Inject("event_dispatcher")
-     * })
-     *
      * @param TranslatorInterface      $translator
      * @param EventDispatcherInterface $dispatcher
      */

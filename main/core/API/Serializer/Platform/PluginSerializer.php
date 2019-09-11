@@ -4,12 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Platform;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Plugin;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.plugin")
- * @DI\Tag("claroline.serializer")
- */
 class PluginSerializer
 {
     use SerializerTrait;

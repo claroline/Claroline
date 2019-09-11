@@ -12,21 +12,11 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- * @DI\Tag("twig.extension")
- */
 class SendDatasConfirmExtension extends \Twig_Extension
 {
     protected $platformConfigHandler;
 
-    /**
-     * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
-     * })
-     */
     public function __construct(PlatformConfigurationHandler $configHandler)
     {
         $this->platformConfigHandler = $configHandler;

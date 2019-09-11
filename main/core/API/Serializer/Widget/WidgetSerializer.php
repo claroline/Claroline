@@ -3,12 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\Widget;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.widget")
- * @DI\Tag("claroline.serializer")
- */
 class WidgetSerializer
 {
     public function getClass()

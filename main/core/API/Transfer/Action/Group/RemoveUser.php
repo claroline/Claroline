@@ -7,21 +7,11 @@ use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.transfer.action")
- */
 class RemoveUser extends AbstractAction
 {
     /**
      * Action constructor.
-     *
-     * @DI\InjectParams({
-     *     "crud" = @DI\Inject("claroline.api.crud"),
-     *     "om"   = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param Crud $crud
      */

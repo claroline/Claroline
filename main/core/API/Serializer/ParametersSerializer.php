@@ -10,12 +10,9 @@ use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\IconSetManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Serializes platform parameters.
- *
- * @DI\Service("claroline.serializer.parameters")
  */
 class ParametersSerializer
 {
@@ -36,16 +33,6 @@ class ParametersSerializer
 
     /**
      * ParametersSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "filePath"      = @DI\Inject("%claroline.param.platform_options%"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "ism"           = @DI\Inject("claroline.manager.icon_set_manager"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "archivePath"   = @DI\Inject("%claroline.param.archive_directory%")
-     * })
      *
      * @param SerializerProvider           $serializer
      * @param FinderProvider               $finder

@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Import\File;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.theme")
- * @DI\Tag("claroline.finder")
- */
 class TransferFinder extends AbstractFinder
 {
     public function getClass()

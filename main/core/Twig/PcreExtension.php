@@ -12,15 +12,10 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation as DI;
-
 /**
  * Class PcreTwigExtension
  * Preg filters for twig, for handling regular expressions.
  * Filters includes: preg_filter, preg_grep, preg_match, preg_quote, preg_replace, preg_split.
- *
- * @DI\Service
- * @DI\Tag("twig.extension")
  */
 class PcreExtension extends \Twig_Extension
 {

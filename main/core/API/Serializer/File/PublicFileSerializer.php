@@ -3,23 +3,14 @@
 namespace Claroline\CoreBundle\API\Serializer\File;
 
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.serializer.public_file")
- * @DI\Tag("claroline.serializer")
- *
  * @todo move me in AppBundle
  */
 class PublicFileSerializer
 {
     private $utilities;
 
-    /**
-     * @DI\InjectParams({
-     *     "utilities" = @DI\Inject("claroline.utilities.file")
-     * })
-     */
     public function __construct($utilities)
     {
         $this->utilities = $utilities;

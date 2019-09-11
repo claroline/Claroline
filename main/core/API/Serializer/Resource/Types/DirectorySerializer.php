@@ -4,12 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.resource_directory")
- * @DI\Tag("claroline.serializer")
- */
 class DirectorySerializer
 {
     use SerializerTrait;

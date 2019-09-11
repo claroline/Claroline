@@ -5,20 +5,11 @@ namespace Claroline\CoreBundle\API\Crud\User;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.crud.group")
- * @DI\Tag("claroline.crud")
- */
 class GroupCrud
 {
     /**
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
-     *
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
@@ -27,8 +18,6 @@ class GroupCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_group")
-     *
      * @param CreateEvent $event
      */
     public function preCreate(CreateEvent $event)

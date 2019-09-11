@@ -14,14 +14,10 @@ namespace Claroline\CoreBundle\Validator\Constraints;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * @DI\Validator("user_administrative_code_validator")
- */
 class UserAdministrativeCodeValidator extends ConstraintValidator
 {
     /**
@@ -41,12 +37,6 @@ class UserAdministrativeCodeValidator extends ConstraintValidator
      * @param PlatformConfigurationHandler $platformConfigHandler
      * @param ObjectManager                $om
      * @param TranslatorInterface          $translator
-     *
-     * @DI\InjectParams({
-     *      "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "om"    = @DI\Inject("claroline.persistence.object_manager"),
-     *      "translator" = @DI\Inject("translator")
-     * })
      */
     public function setServices(
         PlatformConfigurationHandler $platformConfigHandler,

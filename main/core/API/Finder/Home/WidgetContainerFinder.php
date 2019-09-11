@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder\Home;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.widget_container")
- * @DI\Tag("claroline.finder")
- */
 class WidgetContainerFinder extends AbstractFinder
 {
     public function getClass()

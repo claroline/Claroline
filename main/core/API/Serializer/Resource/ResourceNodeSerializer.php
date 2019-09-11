@@ -21,12 +21,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.resource_node")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceNodeSerializer
 {
     use SerializerTrait;
@@ -57,17 +52,6 @@ class ResourceNodeSerializer
 
     /**
      * ResourceNodeManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "fileSerializer"   = @DI\Inject("claroline.serializer.public_file"),
-     *     "userSerializer"   = @DI\Inject("claroline.serializer.user"),
-     *     "maskManager"      = @DI\Inject("claroline.manager.mask_manager"),
-     *     "newRightsManager" = @DI\Inject("claroline.manager.optimized_rights_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager          $om
      * @param StrictDispatcher       $eventDispatcher

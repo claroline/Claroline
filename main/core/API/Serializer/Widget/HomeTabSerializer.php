@@ -16,13 +16,8 @@ use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\LockManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.serializer.home_tab")
- * @DI\Tag("claroline.serializer")
- *
  * @todo simplify relationships (there are lots of duplicates)
  * @todo simplify serialized structure
  */
@@ -34,41 +29,16 @@ class HomeTabSerializer
     private $om;
     /** @var WidgetContainerFinder */
     private $widgetContainerFinder;
-    /** @var LockManager */
-    private $lockManager;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var PublicFileSerializer */
-    private $publicFileSerializer;
-    /** @var WidgetContainerSerializer */
-    private $widgetContainerSerializer;
 
     /**
      * HomeTabSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "lockManager"               = @DI\Inject("claroline.manager.lock_manager"),
-     *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
-     *     "widgetContainerFinder"     = @DI\Inject("claroline.api.finder.widget_container"),
-     *     "widgetContainerSerializer" = @DI\Inject("claroline.serializer.widget_container"),
-     *     "workspaceSerializer"       = @DI\Inject("claroline.serializer.workspace"),
-     *     "userSerializer"            = @DI\Inject("claroline.serializer.user"),
-     *     "publicFileSerializer"      = @DI\Inject("claroline.serializer.public_file")
-     * })
-     *
-     * @param ObjectManager             $om
-     * @param LockManager               $lockManager
-     * @param WidgetContainerFinder     $widgetContainerFinder
-     * @param WidgetContainerSerializer $widgetContainerSerializer
-     * @param WorkspaceSerializer       $workspaceSerializer
-     * @param UserSerializer            $userSerializer
-     * @param PublicFileSerializer      $publicFileSerializer
+     * @param SerializerProvider    $serializer
+     * @param ObjectManager         $om
+     * @param WidgetContainerFinder $widgetContainerFinder
      */
     public function __construct(
         ObjectManager $om,
-        LockManager $lockManager,
         WidgetContainerFinder $widgetContainerFinder,
         WidgetContainerSerializer $widgetContainerSerializer,
         WorkspaceSerializer $workspaceSerializer,
@@ -76,7 +46,6 @@ class HomeTabSerializer
         PublicFileSerializer $publicFileSerializer
     ) {
         $this->om = $om;
-        $this->lockManager = $lockManager;
         $this->widgetContainerFinder = $widgetContainerFinder;
         $this->widgetContainerSerializer = $widgetContainerSerializer;
         $this->workspaceSerializer = $workspaceSerializer;

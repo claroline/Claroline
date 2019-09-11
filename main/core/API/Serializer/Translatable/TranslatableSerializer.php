@@ -6,25 +6,14 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.serializer.translatable")
- * @DI\Tag("claroline.serializer")
- */
 class TranslatableSerializer
 {
     use SerializerTrait;
 
     /**
      * GroupSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
-     *     "container"     = @DI\Inject("service_container")
-     * })
      *
      * @param ObjectManager      $om
      * @param LocaleManager      $localeManager

@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder\Log\Connection;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.log.connection.resource")
- * @DI\Tag("claroline.finder")
- */
 class LogConnectResourceFinder extends AbstractFinder
 {
     public function getClass()

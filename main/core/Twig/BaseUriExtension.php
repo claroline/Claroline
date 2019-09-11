@@ -11,22 +11,12 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Asset\Packages;
 
-/**
- * @DI\Service
- * @DI\Tag("twig.extension")
- */
 class BaseUriExtension extends \Twig_Extension
 {
     private $assetsHelper;
 
-    /**
-     * @DI\InjectParams({
-     *     "helper" = @DI\Inject("assets.packages")
-     * })
-     */
     public function __construct(Packages $helper)
     {
         $this->assetsHelper = $helper;

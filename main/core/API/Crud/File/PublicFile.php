@@ -5,15 +5,10 @@ namespace Claroline\CoreBundle\API\Crud\File;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.crud.publicfile")
- * @DI\Tag("claroline.crud")
- */
 class PublicFile
 {
     /** @var ObjectManager */
@@ -22,16 +17,6 @@ class PublicFile
     /** @var FileUtilities */
     private $utils;
 
-    /**
-     * @DI\InjectParams({
-     *     "filesDir"       = @DI\Inject("%claroline.param.files_directory%"),
-     *     "fileSystem"     = @DI\Inject("filesystem"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "publicFilesDir" = @DI\Inject("%claroline.param.public_files_directory%"),
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "fileUtils"      = @DI\Inject("claroline.utilities.file")
-     * })
-     */
     public function __construct(
         $filesDir,
         SymfonyFileSystem $fileSystem,
@@ -49,8 +34,6 @@ class PublicFile
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_file_publicfile")
-     *
      * @param CreateEvent $event
      */
     public function preCreate(CreateEvent $event)

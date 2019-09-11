@@ -5,12 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Platform;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.theme")
- * @DI\Tag("claroline.serializer")
- */
 class ThemeSerializer
 {
     /** @var PlatformConfigurationHandler */
@@ -21,11 +16,6 @@ class ThemeSerializer
 
     /**
      * ThemeSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "config"         = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param PlatformConfigurationHandler $config
      * @param UserSerializer               $userSerializer

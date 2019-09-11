@@ -12,16 +12,9 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- * @DI\Tag("twig.extension")
- */
 class MaintenanceExtension extends \Twig_Extension
 {
-    private $container;
-
     /**
      * {@inheritdoc}
      */

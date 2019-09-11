@@ -5,12 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Log\Connection;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectAdminTool;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.log.connect.admin_tool")
- * @DI\Tag("claroline.serializer")
- */
 class LogConnectAdminToolSerializer
 {
     /** @var SerializerProvider */
@@ -18,10 +13,6 @@ class LogConnectAdminToolSerializer
 
     /**
      * LogConnectAdminToolSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param SerializerProvider $serializer
      */

@@ -11,21 +11,12 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
-/**
- * @DI\Service
- * @DI\Tag("twig.extension")
- */
 class HasRoleExtension extends \Twig_Extension
 {
     private $securityContext;
 
-    /**
-     * @DI\InjectParams({
-     *     "tokenStorage"    = @DI\Inject("security.token_storage")
-     * })
-     */
     public function __construct($tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
@@ -59,7 +50,7 @@ class HasRoleExtension extends \Twig_Extension
     {
         if ($token = $this->tokenStorage->getToken()) {
             foreach ($token->getRoles() as $role) {
-                if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                if ($role instanceof SwitchUserRole) {
                     return true;
                 }
             }

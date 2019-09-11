@@ -12,12 +12,7 @@
 namespace Claroline\CoreBundle\API\Serializer\Template;
 
 use Claroline\CoreBundle\Entity\Template\TemplateType;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.template.type")
- * @DI\Tag("claroline.serializer")
- */
 class TemplateTypeSerializer
 {
     /**

@@ -4,12 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Organization\Location;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.location")
- * @DI\Tag("claroline.serializer")
- */
 class LocationSerializer
 {
     use SerializerTrait;

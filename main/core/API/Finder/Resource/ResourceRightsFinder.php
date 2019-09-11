@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder\Resource;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.resource_rights")
- * @DI\Tag("claroline.finder")
- */
 class ResourceRightsFinder extends AbstractFinder
 {
     public function getClass()

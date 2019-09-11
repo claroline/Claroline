@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder\Workspace;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.ordered_tool")
- * @DI\Tag("claroline.finder")
- */
 class OrderedToolFinder extends AbstractFinder
 {
     public function getClass()

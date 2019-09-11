@@ -1,0 +1,105 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: [claroline.transfer.action]
+
+    _instanceof:
+
+        Claroline\AppBundle\API\Transfer\Action\AbstractCreateAction:
+            tags: [claroline.transfer.action]
+            calls:
+                - method: setCrud
+                  arguments:
+                     - '@claroline.api.crud'
+
+        Claroline\AppBundle\API\Transfer\Action\AbstractCreateOrUpdateAction:
+            tags: [claroline.transfer.action]
+            calls:
+                - method: setCrud
+                  arguments:
+                     - '@claroline.api.crud'
+                - method: setSerializer
+                  arguments:
+                     - '@claroline.api.serializer'
+                - method: setTransfer
+                  arguments:
+                     - '@claroline.api.transfer'
+                - method: setObjectManager
+                  arguments:
+                     - '@claroline.persistence.object_manager'
+
+        Claroline\AppBundle\API\Transfer\Action\AbstractDeleteAction:
+            tags: [claroline.transfer.action]
+            calls:
+                - method: setCrud
+                  arguments:
+                     - '@claroline.api.crud'
+                - method: setSerializer
+                  arguments:
+                     - '@claroline.api.serializer'
+                - method: setObjectManager
+                  arguments:
+                     - '@claroline.persistence.object_manager'
+
+        Claroline\AppBundle\API\Transfer\Action\AbstractUpdateAction:
+            tags: [claroline.transfer.action]
+            calls:
+                - method: setCrud
+                  arguments:
+                     - '@claroline.api.crud'
+
+    Claroline\CoreBundle\API\Transfer\Action\Directory\Create:
+        arguments:
+          - '@claroline.api.crud'
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.serializer'
+
+    Claroline\CoreBundle\API\Transfer\Action\Directory\CreateOrUpdate:
+        arguments:
+          - '@claroline.api.crud'
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.serializer'
+
+    Claroline\CoreBundle\API\Transfer\Action\Facet\Create:
+        arguments:
+          - '@claroline.api.crud'
+
+    Claroline\CoreBundle\API\Transfer\Action\Group\AddUser:
+        arguments:
+          - '@claroline.api.crud'
+          - '@claroline.persistence.object_manager'
+
+    Claroline\CoreBundle\API\Transfer\Action\Group\Create: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\Group\Delete: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\Group\RemoveUser:
+        arguments:
+          - '@claroline.api.crud'
+          - '@claroline.persistence.object_manager'
+
+    Claroline\CoreBundle\API\Transfer\Action\User\Create: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\User\CreateOrUpdate: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\User\Delete: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\User\Update: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\AddUser:
+        arguments:
+            - '@claroline.api.crud'
+            - '@claroline.api.serializer'
+            - '@claroline.persistence.object_manager'
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\Create: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\Delete: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\RemoveUser:
+        arguments:
+            - '@claroline.api.crud'
+            - '@claroline.api.serializer'
+            - '@claroline.persistence.object_manager'

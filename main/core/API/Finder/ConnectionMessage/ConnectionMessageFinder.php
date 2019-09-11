@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder\ConnectionMessage;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.connection.message")
- * @DI\Tag("claroline.finder")
- */
 class ConnectionMessageFinder extends AbstractFinder
 {
     public function getClass()

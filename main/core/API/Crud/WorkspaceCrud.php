@@ -15,27 +15,12 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.crud.workspace")
- * @DI\Tag("claroline.crud")
- */
 class WorkspaceCrud
 {
     /**
      * WorkspaceCrud constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager"         = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "orgaManager"     = @DI\Inject("claroline.manager.organization.organization_manager"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param WorkspaceManager $manager
      */
@@ -58,8 +43,6 @@ class WorkspaceCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace")
-     *
      * @param DeleteEvent $event
      */
     public function preDelete(DeleteEvent $event)
@@ -68,8 +51,6 @@ class WorkspaceCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_workspace_workspace")
-     *
      * @param CreateEvent $event
      */
     public function preCreate(CreateEvent $event)
@@ -110,8 +91,6 @@ class WorkspaceCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_copy_object_claroline_corebundle_entity_workspace_workspace")
-     *
      * @param CopyEvent $event
      */
     public function preCopy(CopyEvent $event)
@@ -126,8 +105,6 @@ class WorkspaceCrud
     }
 
     /**
-     * @DI\Observe("crud_post_update_object_claroline_corebundle_entity_workspace_workspace")
-     *
      * @param CopyEvent $event
      */
     public function postUpdate(UpdateEvent $event)

@@ -19,12 +19,7 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.role")
- * @DI\Tag("claroline.serializer")
- */
 class RoleSerializer
 {
     use SerializerTrait;
@@ -43,13 +38,6 @@ class RoleSerializer
 
     /**
      * RoleSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "orderedToolFinder"   = @DI\Inject("claroline.api.finder.ordered_tool"),
-     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
-     *     "userSerializer"      = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param SerializerProvider $serializer
      * @param ObjectManager      $om

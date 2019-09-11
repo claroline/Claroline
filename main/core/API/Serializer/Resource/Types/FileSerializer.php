@@ -7,14 +7,9 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @DI\Service("claroline.serializer.resource_file")
- * @DI\Tag("claroline.serializer")
- */
 class FileSerializer
 {
     use SerializerTrait;
@@ -29,12 +24,6 @@ class FileSerializer
 
     /**
      * ResourceNodeManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "router"          = @DI\Inject("router"),
-     *     "filesDir"        = @DI\Inject("%claroline.param.files_directory%"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
-     * })
      *
      * @param RouterInterface          $router
      * @param string                   $filesDir

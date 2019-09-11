@@ -7,20 +7,10 @@ use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Driver\Connection;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.crud.role")
- * @DI\Tag("claroline.crud")
- */
 class RoleCrud
 {
     /**
-     * @DI\InjectParams({
-     *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "conn"       = @DI\Inject("doctrine.dbal.default_connection")
-     * })
-     *
      * @param StrictDispatcher $dispatcher
      */
     public function __construct(
@@ -33,8 +23,6 @@ class RoleCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_role")
-     *
      * @param CreateEvent $event
      */
     public function preCreate(CreateEvent $event)
@@ -48,8 +36,6 @@ class RoleCrud
     }
 
     /**
-     * @DI\Observe("crud_post_create_object_claroline_corebundle_entity_role")
-     *
      * @param CreateEvent $event
      */
     public function postCreate(CreateEvent $event)
@@ -70,8 +56,6 @@ class RoleCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_patch_object_claroline_corebundle_entity_role")
-     *
      * @param PatchEvent $event
      */
     public function prePatch(PatchEvent $event)

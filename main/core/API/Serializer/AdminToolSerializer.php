@@ -3,12 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.admin_tool")
- * @DI\Tag("claroline.serializer")
- */
 class AdminToolSerializer
 {
     public function getClass()

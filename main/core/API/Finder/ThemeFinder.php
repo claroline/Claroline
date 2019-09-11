@@ -14,12 +14,7 @@ namespace Claroline\CoreBundle\API\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.theme")
- * @DI\Tag("claroline.finder")
- */
 class ThemeFinder extends AbstractFinder
 {
     public function getClass()

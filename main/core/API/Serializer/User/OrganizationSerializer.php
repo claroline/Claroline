@@ -8,12 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.organization")
- * @DI\Tag("claroline.serializer")
- */
 class OrganizationSerializer
 {
     use SerializerTrait;
@@ -23,10 +18,6 @@ class OrganizationSerializer
 
     /**
      * OrganizationSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *      "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

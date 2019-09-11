@@ -15,13 +15,8 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.api.finder.home_tab")
- * @DI\Tag("claroline.finder")
- */
 class HomeTabFinder extends AbstractFinder
 {
     /** @var TokenStorageInterface */
@@ -29,10 +24,6 @@ class HomeTabFinder extends AbstractFinder
 
     /**
      * WorkspaceFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      */

@@ -1,0 +1,59 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: [twig.extension]
+
+    Claroline\CoreBundle\Twig\WebpackExtension:
+       arguments:
+           - '@twig.extension.assets'
+           - '%kernel.environment%'
+           - '%kernel.root_dir%'
+
+    Claroline\CoreBundle\Twig\ThemeExtension:
+       arguments:
+           - '@twig.extension.assets'
+           - '@claroline.manager.theme_manager'
+           - '@claroline.config.platform_config_handler'
+           - '%kernel.root_dir%'
+
+    Claroline\CoreBundle\Twig\SerializerExtension:
+       arguments:
+          - '@claroline.api.serializer'
+
+    Claroline\CoreBundle\Twig\SendDatasConfirmExtension:
+       arguments:
+          - '@claroline.config.platform_config_handler'
+
+    Claroline\CoreBundle\Twig\RouterExtension:
+       arguments:
+          - '@service_container'
+
+    Claroline\CoreBundle\Twig\PlatformConfigurationExtension:
+       arguments:
+          - '@claroline.serializer.platform_client'
+
+    Claroline\CoreBundle\Twig\PcreExtension: ~
+
+    Claroline\CoreBundle\Twig\MaintenanceExtension: ~
+
+    Claroline\CoreBundle\Twig\MailerExtension:
+       arguments:
+          - '@service_container'
+
+    Claroline\CoreBundle\Twig\HomeExtension:
+       arguments:
+           - '@service_container'
+
+    Claroline\CoreBundle\Twig\HasRoleExtension:
+       arguments:
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\Twig\ContentExtension:
+       arguments:
+          - '@claroline.manager.content_manager'
+
+    Claroline\CoreBundle\Twig\BaseUriExtension:
+       arguments:
+          - '@assets.packages'

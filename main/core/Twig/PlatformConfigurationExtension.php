@@ -12,14 +12,10 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Twig_Extension;
 
 /**
  * Exposes Platform configuration to Twig templates.
- *
- * @DI\Service
- * @DI\Tag("twig.extension")
  */
 class PlatformConfigurationExtension extends Twig_Extension
 {
@@ -28,10 +24,6 @@ class PlatformConfigurationExtension extends Twig_Extension
 
     /**
      * PlatformConfigurationExtension constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.serializer.platform_client")
-     * })
      *
      * @param ClientSerializer $serializer
      */

@@ -8,12 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.widget_resource")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceWidgetSerializer
 {
     use SerializerTrait;
@@ -26,11 +21,6 @@ class ResourceWidgetSerializer
 
     /**
      * WidgetInstanceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "nodeSerializer" = @DI\Inject("claroline.serializer.resource_node")
-     * })
      *
      * @param ObjectManager          $om
      * @param ResourceNodeSerializer $nodeSerializer

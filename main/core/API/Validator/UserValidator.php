@@ -10,12 +10,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Repository\UserRepository;
 use  Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.validator")
- */
 class UserValidator implements ValidatorInterface
 {
     /** @var ObjectManager */
@@ -25,11 +20,6 @@ class UserValidator implements ValidatorInterface
 
     /**
      * UserValidator constructor.
-     *
-     * @DI\InjectParams({
-     *     "profileSerializer" = @DI\Inject("claroline.serializer.profile"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

@@ -16,16 +16,10 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.api.finder.user")
- * @DI\Tag("claroline.finder")
- */
 class UserFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
@@ -40,28 +34,18 @@ class UserFinder extends AbstractFinder
     /**
      * UserFinder constructor.
      *
-     * @DI\InjectParams({
-     *     "authChecker"      = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "em"               = @DI\Inject("doctrine.orm.entity_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage
      * @param WorkspaceManager              $workspaceManager
-     * @param EntityManager                 $em
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage,
-        WorkspaceManager $workspaceManager,
-        EntityManager $em
+        WorkspaceManager $workspaceManager
     ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
-        $this->_em = $em;
     }
 
     public function getClass()

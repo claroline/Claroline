@@ -4,15 +4,12 @@ namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\AbstractMessage;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.message")
- */
 class MessageSerializer
 {
     use SerializerTrait;
@@ -21,15 +18,12 @@ class MessageSerializer
     private $userSerializer;
 
     /**
-     * @DI\InjectParams({
-     *      "userSerializer" = @DI\Inject("claroline.serializer.user")
-     * })
-     *
      * @param UserSerializer $userSerializer
      */
-    public function __construct(UserSerializer $userSerializer)
+    public function __construct(UserSerializer $userSerializer, ObjectManager $om)
     {
         $this->userSerializer = $userSerializer;
+        $this->om = $om;
     }
 
     public function getClass()
@@ -120,7 +114,7 @@ class MessageSerializer
             if (isset($data['meta']['creator'])) {
                 $message->setAuthor($data['meta']['creator']['name']);
                 //_om is set by the trait
-                $creator = $this->_om->getObject($data['meta']['creator'], User::class);
+                $creator = $this->om->getObject($data['meta']['creator'], User::class);
 
                 if ($creator) {
                     $message->setCreator($creator);

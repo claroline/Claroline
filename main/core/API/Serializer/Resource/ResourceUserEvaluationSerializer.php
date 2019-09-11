@@ -4,12 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource;
 
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.resource_user_evaluation")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceUserEvaluationSerializer
 {
     private $resourceNodeSerializer;
@@ -17,11 +12,6 @@ class ResourceUserEvaluationSerializer
 
     /**
      * ResourceUserEvaluationSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "resourceNodeSerializer" = @DI\Inject("claroline.serializer.resource_node"),
-     *     "userSerializer"         = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ResourceNodeSerializer $resourceNodeSerializer
      * @param UserSerializer         $userSerializer

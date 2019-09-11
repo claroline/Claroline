@@ -11,20 +11,11 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\UserCreatedEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.crud.user")
- * @DI\Tag("claroline.crud")
- */
 class UserCrud
 {
     /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
-     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -43,8 +34,6 @@ class UserCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_user")
-     *
      * @param CreateEvent $event
      */
     public function preCreate(CreateEvent $event)
@@ -162,8 +151,6 @@ class UserCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_delete_object_claroline_corebundle_entity_user")
-     *
      * @param DeleteEvent $event
      */
     public function preDelete(DeleteEvent $event)
@@ -208,8 +195,6 @@ class UserCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_update_object_claroline_corebundle_entity_user")
-     *
      * @param UpdateEvent $event
      */
     public function preUpdate(UpdateEvent $event)

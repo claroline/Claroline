@@ -11,24 +11,10 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Tag;
-
-/**
- * @Service
- * @Tag("twig.extension")
- */
 class RouterExtension extends \Twig_Extension
 {
     protected $container;
 
-    /**
-     * @InjectParams({
-     *     "container" = @Inject("service_container")
-     * })
-     */
     public function __construct($container)
     {
         $this->container = $container;

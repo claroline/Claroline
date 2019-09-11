@@ -10,12 +10,7 @@ use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\ConnectionMessage\Slide;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.connection.message")
- * @DI\Tag("claroline.serializer")
- */
 class ConnectionMessageSerializer
 {
     use SerializerTrait;
@@ -31,11 +26,6 @@ class ConnectionMessageSerializer
 
     /**
      * ConnectionMessageSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleSerializer" = @DI\Inject("claroline.serializer.role")
-     * })
      *
      * @param ObjectManager  $om
      * @param RoleSerializer $roleSerializer

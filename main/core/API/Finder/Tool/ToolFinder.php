@@ -15,12 +15,7 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.tool")
- * @DI\Tag("claroline.finder")
- */
 class ToolFinder extends AbstractFinder
 {
     /** @var PluginManager */
@@ -28,10 +23,6 @@ class ToolFinder extends AbstractFinder
 
     /**
      * ToolFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager")
-     * })
      *
      * @param PluginManager $pluginManager
      */

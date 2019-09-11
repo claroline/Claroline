@@ -7,12 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.api_token_serializer")
- * @DI\Tag("claroline.serializer")
- */
 class ApiTokenSerializer
 {
     use SerializerTrait;
@@ -21,11 +16,6 @@ class ApiTokenSerializer
 
     /**
      * OptionsSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param UserSerializer $userSerializer
      */

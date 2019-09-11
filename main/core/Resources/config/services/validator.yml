@@ -1,0 +1,56 @@
+services:
+  _defaults:
+      autowire: false
+      autoconfigure: false
+      public: true
+
+  _instanceof:
+      Claroline\AppBundle\API\ValidatorInterface:
+          tags: [claroline.validator]
+
+  Claroline\CoreBundle\API\Validator\WorkspaceValidator:
+      arguments:
+        - '@claroline.persistence.object_manager'
+
+  Claroline\CoreBundle\API\Validator\UserValidator:
+      arguments:
+        - '@claroline.persistence.object_manager'
+        - '@claroline.serializer.profile'
+
+  Claroline\CoreBundle\API\Validator\GroupValidator:
+      arguments:
+        - '@claroline.persistence.object_manager'
+
+  Claroline\CoreBundle\API\Validator\Resource\ResourceNodeValidator:
+      arguments:
+          - '@claroline.persistence.object_manager'
+
+  Claroline\CoreBundle\Validator\Constraints\UsernameValidator:
+      arguments:
+          - '@claroline.config.platform_config_handler'
+          - '@claroline.persistence.object_manager'
+          - '@translator'
+
+  username_validator:
+      alias: Claroline\CoreBundle\Validator\Constraints\UsernameValidator
+      public: true
+
+  Claroline\CoreBundle\Validator\Constraints\UsernameValidator:
+      arguments:
+          - '@claroline.config.platform_config_handler'
+          - '@claroline.persistence.object_manager'
+          - '@translator'
+
+  username_validator:
+      alias: Claroline\CoreBundle\Validator\Constraints\UsernameValidator
+      public: true
+
+  Claroline\CoreBundle\Validator\Constraints\UserAdministrativeCodeValidator:
+      arguments:
+          - '@claroline.config.platform_config_handler'
+          - '@claroline.persistence.object_manager'
+          - '@translator'
+
+  user_administrative_code_validator:
+      alias: Claroline\CoreBundle\Validator\Constraints\UserAdministrativeCodeValidator
+      public: true

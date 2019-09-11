@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+        public: false
+
+    Claroline\AnalyticsBundle\Serializer\Widget\Type\ProgressionWidgetSerializer:
+        tags: [claroline.serializer]
+
+    claroline.serializer.widget_progression:
+        alias: Claroline\AnalyticsBundle\Serializer\Widget\Type\ProgressionWidgetSerializer
+        public: true

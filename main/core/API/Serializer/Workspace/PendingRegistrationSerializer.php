@@ -4,12 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.pending")
- * @DI\Tag("claroline.serializer")
- */
 class PendingRegistrationSerializer
 {
     /** @var UserSerializer */
@@ -17,10 +12,6 @@ class PendingRegistrationSerializer
 
     /**
      * PendingRegistrationSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param UserSerializer $serializer
      */

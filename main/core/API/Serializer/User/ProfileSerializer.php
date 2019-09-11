@@ -7,12 +7,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Repository\Facet\FacetRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.serializer.profile")
- */
 class ProfileSerializer
 {
     /** @var TokenStorageInterface */
@@ -26,12 +22,6 @@ class ProfileSerializer
 
     /**
      * ProfileSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "facetSerializer" = @DI\Inject("claroline.serializer.facet")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager         $om

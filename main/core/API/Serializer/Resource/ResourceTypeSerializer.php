@@ -5,12 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.resource_type")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceTypeSerializer
 {
     /** @var ResourceActionManager */
@@ -18,10 +13,6 @@ class ResourceTypeSerializer
 
     /**
      * ResourceTypeSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "actionManager" = @DI\Inject("claroline.manager.resource_action")
-     * })
      *
      * @param ResourceActionManager $actionManager
      */

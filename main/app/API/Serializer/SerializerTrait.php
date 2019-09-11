@@ -59,7 +59,7 @@ trait SerializerTrait
      */
     public function setObjectManager(ObjectManager $om)
     {
-        $this->_om = $om;
+        $this->om = $om;
     }
 
     /**
@@ -74,7 +74,7 @@ trait SerializerTrait
         }
 
         if ($class) {
-            return $this->_om->getObject(['id' => $id], $class);
+            return $this->om->getObject(['id' => $id], $class);
         }
     }
 }

@@ -13,13 +13,8 @@ namespace Claroline\CoreBundle\Twig;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 
-/**
- * @DI\Service
- * @DI\Tag("twig.extension")
- */
 class ThemeExtension extends \Twig_Extension
 {
     /** @var AssetExtension */
@@ -35,13 +30,6 @@ class ThemeExtension extends \Twig_Extension
 
     /**
      * ThemeExtension constructor.
-     *
-     * @DI\InjectParams({
-     *     "extension" = @DI\Inject("twig.extension.assets"),
-     *     "themeManager" = @DI\Inject("claroline.manager.theme_manager"),
-     *     "config"    = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "rootDir"   = @DI\Inject("%kernel.root_dir%")
-     * })
      *
      * @param AssetExtension               $extension
      * @param ThemeManager                 $themeManager

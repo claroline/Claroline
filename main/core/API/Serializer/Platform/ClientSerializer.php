@@ -14,7 +14,6 @@ use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,8 +22,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Serializes platform parameters used for client rendering.
- *
- * @DI\Service("claroline.serializer.platform_client")
  */
 class ClientSerializer
 {
@@ -69,42 +66,12 @@ class ClientSerializer
 
     /**
      * ClientSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "env"                    = @DI\Inject("%kernel.environment%"),
-     *     "assets"                 = @DI\Inject("assets.packages"),
-     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "requestStack"           = @DI\Inject("request_stack"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router"                 = @DI\Inject("router"),
-     *     "config"                 = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "fileUtilities"          = @DI\Inject("claroline.utilities.file"),
-     *     "versionManager"         = @DI\Inject("claroline.manager.version_manager"),
-     *     "pluginManager"          = @DI\Inject("claroline.manager.plugin_manager"),
-     *     "iconManager"            = @DI\Inject("claroline.manager.icon_set_manager"),
-     *     "resourceTypeSerializer" = @DI\Inject("claroline.serializer.resource_type"),
-     *     "oauthManager"           = @DI\Inject("claroline.oauth.manager"),
-     * })
-     *
-     * @param string                       $env
-     * @param Packages                     $assets
-     * @param TokenStorageInterface        $tokenStorage
-     * @param RequestStack                 $requestStack
-     * @param ObjectManager                $om
-     * @param RouterInterface              $router
-     * @param PlatformConfigurationHandler $config
-     * @param FileUtilities                $fileUtilities
-     * @param VersionManager               $versionManager
-     * @param PluginManager                $pluginManager
-     * @param IconSetManager               $iconManager
-     * @param ResourceTypeSerializer       $resourceTypeSerializer
-     * @param EventDispatcherInterface     $eventDispatcher
-     * @param OauthManager                 $oauthManager
      */
     public function __construct(
         $env,
         Packages $assets,
+
+        EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
         ObjectManager $om,
@@ -115,7 +82,6 @@ class ClientSerializer
         PluginManager $pluginManager,
         IconSetManager $iconManager,
         ResourceTypeSerializer $resourceTypeSerializer,
-        EventDispatcherInterface $eventDispatcher,
         OauthManager $oauthManager
     ) {
         $this->env = $env;

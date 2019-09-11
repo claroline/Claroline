@@ -8,12 +8,7 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.scheduled_task")
- * @DI\Tag("claroline.serializer")
- */
 class ScheduledTaskSerializer
 {
     /** @var ObjectManager */
@@ -24,12 +19,6 @@ class ScheduledTaskSerializer
 
     /**
      * ScheduledTaskSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
-     *     "userSerializer"      = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer

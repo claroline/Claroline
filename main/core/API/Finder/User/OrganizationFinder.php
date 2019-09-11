@@ -15,14 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.api.finder.organization")
- * @DI\Tag("claroline.finder")
- */
 class OrganizationFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
@@ -33,11 +28,6 @@ class OrganizationFinder extends AbstractFinder
 
     /**
      * OrganizationFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage

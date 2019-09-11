@@ -6,13 +6,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.serializer.field_facet_value")
- * @DI\Tag("claroline.serializer")
- */
 class FieldFacetValueSerializer
 {
     const OPTION_MINIMAL = 'minimal';
@@ -28,11 +23,6 @@ class FieldFacetValueSerializer
 
     /**
      * FieldFacetValueSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "fieldFacetSerializer" = @DI\Inject("claroline.serializer.field_facet"),
-     *     "container"            = @DI\Inject("service_container")
-     * })
      *
      * @param FieldFacetSerializer $fieldFacetSerializer
      * @param UserSerializer       $userSerializer

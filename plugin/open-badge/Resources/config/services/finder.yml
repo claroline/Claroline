@@ -9,7 +9,7 @@ services:
             autowire: false
             tags: [claroline.finder]
             calls:
-                - method: setObjectManager
+                - method: setDependencies
                   arguments:
                     - '@claroline.persistence.object_manager'
                     - '@doctrine.orm.entity_manager'
