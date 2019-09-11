@@ -94,7 +94,12 @@ services:
             - '@claroline.api.serializer'
             - '@claroline.persistence.object_manager'
 
-    Claroline\CoreBundle\API\Transfer\Action\Workspace\Create: ~
+    Claroline\CoreBundle\API\Transfer\Action\Workspace\Create:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.crud'
+            - '@claroline.manager.workspace_manager'
+            - '@claroline.serializer.workspace'
 
     Claroline\CoreBundle\API\Transfer\Action\Workspace\Delete: ~
 

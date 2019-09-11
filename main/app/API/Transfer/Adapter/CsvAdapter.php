@@ -70,7 +70,7 @@ class CsvAdapter implements AdapterInterface
 
         foreach ($headers as $index => $property) {
             //idiot condition proof in case something is wrong with the csv (like more lines or columns)
-            if ($properties[$index]) {
+            if (isset($properties[$index]) && $properties[$index]) {
                 $explainedProperty = $explanation->getProperty($property);
 
                 if ($explainedProperty) {

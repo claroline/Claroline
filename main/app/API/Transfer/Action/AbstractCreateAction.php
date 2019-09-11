@@ -15,11 +15,13 @@ abstract class AbstractCreateAction extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $this->crud->create($this->getClass(), $data);
+        $object = $this->crud->create($this->getClass(), $data);
         $successData['create'][] = [
           'data' => $data,
           'log' => $this->getAction()[0].' created.',
         ];
+
+        return $object;
     }
 
     public function getSchema(array $options = [], array $extra = [])
