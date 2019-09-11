@@ -338,6 +338,12 @@ const ListForm = props => {
               name: 'paginated',
               label: trans('list_enable_pagination'),
               type: 'boolean',
+              onChange: (enabled) => {
+                if (!enabled) {
+                  props.updateProp('pageSize', -1)
+                  props.updateProp('availablePageSizes', [-1])
+                }
+              },
               linked: [
                 {
                   name: 'pageSize',

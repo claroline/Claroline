@@ -41,7 +41,7 @@ class Updater120100 extends Updater
                     availableDisplays = "[\"table\",\"table-sm\",\"tiles\",\"tiles-sm\",\"list\",\"list-sm\"]",
                     availableColumns = "[\"name\",\"meta.type\",\"parent\",\"meta.published\", \"meta.updated\",\"meta.created\"]",
                     displayedColumns = "[\"name\",\"meta.type\",\"parent\",\"meta.published\"]",
-                    availablePageSizes = "[15,30,50,100,-1]",
+                    availablePageSizes = "[15,30,60,120,-1]",
                     availableFilters = "[\"name\",\"meta.type\",\"parent\",\"meta.published\"]",
                     columnsFilterable = 1,
                     count = 1,

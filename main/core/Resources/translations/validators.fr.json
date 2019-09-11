@@ -13,6 +13,7 @@
     "This value should be lower than {{ limit }}.": "Cette valeur doit être plus petite que {{ limit }}.",
     "This value should be a valid email.": "Cette valeur doit être un courriel valide.",
     "This value should be a valid color.": "Cette valeur doit être une couleur valide.",
+    "This value is invalid.": "Cette valeur est incorrecte.",
     "This email already exists.": "Ce courriel est déjà utilisé.",
     "This username already exists.": "Ce nom d'utilisateur est déjà utilisé.",
     "email_not_valid": "Cette adresse email n'est pas valide.",

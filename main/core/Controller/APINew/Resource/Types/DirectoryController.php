@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Directory;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**

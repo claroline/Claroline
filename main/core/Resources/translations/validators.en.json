@@ -13,6 +13,7 @@
     "This value should be a valid color.": "This value should be a valid color.",
     "This email already exists.": "This email already exists.",
     "This username already exists.": "This username already exists.",
+    "This value is invalid.": "This value is invalid.",
     "email_not_valid": "This email address is not valid.",
     "google_meta_tag_error": "The field must be a meta tag. Example: <meta name=\"google-site-verification\" content=\"XXX\" />",
     "invalid_date_range": "The end date may not precede the start date",
