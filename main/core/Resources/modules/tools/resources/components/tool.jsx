@@ -7,24 +7,25 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 import {ResourceMain} from '#/main/core/resource/containers/main'
 import {ResourcesRoot} from '#/main/core/tools/resources/containers/root'
 
-const ResourcesTool = props => <Routes
-  path={props.path}
-  redirect={props.root ? [
-    {from: '/', exact: true, to: `/${props.root.slug}`}
-  ] : undefined}
-  routes={[
-    {
-      path: '/',
-      exact: true,
-      disabled: !!props.root,
-      component: ResourcesRoot
-    }, {
-      path: '/:slug',
-      onEnter: (params = {}) => props.openResource(params.slug),
-      component: ResourceMain
-    }
-  ]}
-/>
+const ResourcesTool = props =>
+  <Routes
+    path={props.path}
+    redirect={props.root ? [
+        {from: '/', exact: true, to: `/${props.root.slug}`}
+      ] : undefined}
+    routes={[
+      {
+        path: '/',
+        exact: true,
+        disabled: !!props.root,
+        component: ResourcesRoot
+      }, {
+        path: '/:slug',
+        onEnter: (params = {}) => props.openResource(params.slug),
+        component: ResourceMain
+      }
+    ]}
+  />
 
 ResourcesTool.propTypes = {
   path: T.string.isRequired,
