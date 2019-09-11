@@ -127,12 +127,12 @@ class WidgetContainerSerializer
         $this->sipe('display.borderColor', 'setBorderColor', $data, $widgetContainerConfig);
         $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainerConfig);
 
-        $display = $data['display'];
-
-        if (isset($display['background']) && isset($display['background']['url'])) {
-            $this->sipe('display.background.url', 'setBackground', $data, $widgetContainerConfig);
-        } else {
-            $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
+        if (isset($data['display'])) {
+            if (isset($data['display']['background']) && isset($data['display']['background']['url'])) {
+                $this->sipe('display.background.url', 'setBackground', $data, $widgetContainerConfig);
+            } else {
+                $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
+            }
         }
 
         $instanceIds = [];

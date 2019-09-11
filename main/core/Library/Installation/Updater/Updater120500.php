@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -71,7 +69,6 @@ class Updater120500 extends Updater
         $this->removeTool('inwicast_portal');
         $this->removeTool('inwicast_configuration', true);
 
-        $this->createDefaultAdminHomeTab();
         $this->updateSlugs();
         $this->createDefaultWorkspaceShortcuts();
     }
@@ -154,31 +151,6 @@ class Updater120500 extends Updater
             $this->log($sql);
             $stmt = $conn->prepare($sql);
             $stmt->execute();
-        }
-    }
-
-    private function createDefaultAdminHomeTab()
-    {
-        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['type' => HomeTab::TYPE_ADMIN]);
-
-        if (0 === count($tabs)) {
-            $this->log('Creating default admin home tab...');
-
-            $homeTab = new HomeTab();
-            $homeTab->setType(HomeTab::TYPE_ADMIN);
-            $this->om->persist($homeTab);
-
-            $homeTabConfig = new HomeTabConfig();
-            $homeTabConfig->setHomeTab($homeTab);
-            $homeTabConfig->setLocked(true);
-            $homeTabConfig->setTabOrder(1);
-            $name = $this->translator->trans('informations', [], 'platform');
-            $homeTabConfig->setName($name);
-            $homeTabConfig->setLongTitle($name);
-            $this->om->persist($homeTabConfig);
-            $this->om->flush();
-
-            $this->log('Default admin home tab created.');
         }
     }
 

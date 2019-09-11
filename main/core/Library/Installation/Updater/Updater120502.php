@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\DataFixtures\PostInstall\Data\LoadAdminHomeData;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,17 +22,21 @@ class Updater120502 extends Updater
     /** @var ContainerInterface */
     private $container;
     private $conn;
+    /** @var ObjectManager */
+    private $om;
 
     public function __construct(ContainerInterface $container, $logger = null)
     {
         $this->logger = $logger;
         $this->container = $container;
         $this->conn = $container->get('doctrine.dbal.default_connection');
+        $this->om = $this->container->get('claroline.persistence.object_manager');
     }
 
     public function postUpdate()
     {
         $this->fixesDirectoriesPageSizes();
+        $this->addDefaultAdminHome();
     }
 
     private function fixesDirectoriesPageSizes()
@@ -42,5 +49,18 @@ class Updater120502 extends Updater
             WHERE availablePageSizes LIKE "%50%" OR availablePageSizes LIKE "%100%"
         ');
         $stmt->execute();
+    }
+
+    private function addDefaultAdminHome()
+    {
+        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['type' => HomeTab::TYPE_ADMIN]);
+
+        if (0 === count($tabs)) {
+            $this->log('Creating default admin home tab...');
+
+            $fixtures = new LoadAdminHomeData();
+            $fixtures->setContainer($this->container);
+            $fixtures->load($this->om);
+        }
     }
 }

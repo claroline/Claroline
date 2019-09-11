@@ -18,7 +18,6 @@ class Layout extends Component {
 
   componentDidMount() {
     getMenus().then(menus => {
-      console.log(menus)
       this.setState({headerWidgets: menus.reduce((acc, current) => Object.assign(acc, {
         [current.default.name]: current.default.label
       }), {})})
@@ -26,8 +25,6 @@ class Layout extends Component {
   }
 
   render() {
-    console.log(this.state.headerWidgets)
-
     return (
       <FormData
         name={selectors.FORM_NAME}
