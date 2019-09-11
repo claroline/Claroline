@@ -482,6 +482,10 @@ services:
           - '@claroline.persistence.object_manager'
           - '@claroline.event.event_dispatcher'
 
+        tags:
+            - { name: kernel.event_listener, event: export_tool_resources, method: onExport }
+            - { name: kernel.event_listener, event: import_tool_resources, method: onImport }
+
     claroline.transfer.resources:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager
         public: true

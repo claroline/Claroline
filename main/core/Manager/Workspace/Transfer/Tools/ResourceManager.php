@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Manager\ResourceManager as ResManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class ResourceManager implements ToolImporterInterface
@@ -167,9 +166,6 @@ class ResourceManager implements ToolImporterInterface
         $this->om->endFlushSuite();
     }
 
-    /**
-     * @DI\Observe("export_tool_resources")
-     */
     public function onExport(ExportObjectEvent $event)
     {
         $data = $event->getData();
@@ -189,9 +185,6 @@ class ResourceManager implements ToolImporterInterface
         }
     }
 
-    /**
-     * @DI\Observe("import_tool_resources")
-     */
     public function onImport(ImportObjectEvent $event)
     {
         $this->log('Importing resource files...');
