@@ -45,7 +45,8 @@ class Crud
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "validator"  = @DI\Inject("claroline.api.validator")
+     *     "validator"  = @DI\Inject("claroline.api.validator"),
+     *     "schema"     = @DI\Inject("claroline.api.schema")
      * })
      *
      * @param ObjectManager      $om
@@ -57,12 +58,14 @@ class Crud
       ObjectManager $om,
       StrictDispatcher $dispatcher,
       SerializerProvider $serializer,
-      ValidatorProvider $validator
+      ValidatorProvider $validator,
+      SchemaProvider $schema
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->serializer = $serializer;
         $this->validator = $validator;
+        $this->schema = $schema;
     }
 
     /**
@@ -122,7 +125,7 @@ class Crud
             }
         }
 
-        $oldObject = $this->om->getObject($data, $class) ?? new $class();
+        $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class)) ?? new $class();
         $this->checkPermission('EDIT', $oldObject, [], true);
         $oldData = $this->serializer->serialize($oldObject);
 

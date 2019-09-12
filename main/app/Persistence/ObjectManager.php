@@ -417,6 +417,10 @@ class ObjectManager extends ObjectManagerDecorator
         foreach (array_keys($data) as $property) {
             if (in_array($property, $identifiers) && !$object) {
                 $object = $this->getRepository($class)->findOneBy([$property => $data[$property]]);
+
+                if ($object) {
+                    return $object;
+                }
             }
         }
 

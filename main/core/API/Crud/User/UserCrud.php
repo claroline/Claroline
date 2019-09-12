@@ -204,8 +204,11 @@ class UserCrud
 
         if (!empty($oldData) && $oldData['username'] !== $user->getUsername()) {
             $userRole = $this->roleManager->getUserRole($oldData['username']);
-            $this->roleManager->renameUserRole($userRole, $user->getUsername());
-            // TODO : rename personal WS if user is renamed
+            if ($userRole) {
+                $this->roleManager->renameUserRole($userRole, $user->getUsername());
+                // TODO : rename personal WS if user is renamed
+            }
+            //TODO: create if not exist
         }
     }
 }

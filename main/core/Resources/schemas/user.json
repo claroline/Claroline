@@ -26,6 +26,11 @@
       "description": "The user username",
       "minLength": 1
     },
+    "administrativeCode": {
+      "type": ["string", "null"],
+      "description": "The user administrativeCode",
+      "minLength": 1
+    },
     "plainPassword": {
       "type": "string",
       "description": "The plain login password",
@@ -37,6 +42,10 @@
         "personalWorkspace": {
           "type": "boolean",
           "description": "If the user has a personal workspace"
+        },
+        "description": {
+          "type": ["string", "null"],
+          "description": "The user description"
         }
       }
     },

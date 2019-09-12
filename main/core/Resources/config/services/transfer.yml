@@ -29,6 +29,10 @@ services:
                 - method: setObjectManager
                   arguments:
                      - '@claroline.persistence.object_manager'
+                - method: setSchema
+                  arguments:
+                     - '@claroline.api.schema'
+
 
         Claroline\AppBundle\API\Transfer\Action\AbstractDeleteAction:
             tags: [claroline.transfer.action]
