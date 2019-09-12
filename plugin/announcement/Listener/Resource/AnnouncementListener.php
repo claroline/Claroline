@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle\Listener\Resource;
 
+use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer;
@@ -19,6 +20,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -157,6 +160,40 @@ class AnnouncementListener
 
         $event->setCopy($copy);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_announcement_aggregate.export")
+     */
+    public function onExport(ExportObjectEvent $exportEvent)
+    {
+        $announcements = $exportEvent->getObject();
+        $announcePosts = $announcements->getAnnouncements()->toArray();
+
+        $data = [
+          'posts' => array_map(function (Announcement $announcement) {
+              return $this->serializer->serialize($announcement);
+          }, $announcePosts),
+        ];
+
+        $exportEvent->overwrite('_data', $data);
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_announcement_aggregate.import.after")
+     */
+    public function onImport(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $announcement = $event->getObject();
+
+        foreach ($data['posts'] as $post) {
+            $announce = $this->serializer->deserialize($post, new Announcement(), [Options::REFRESH_UUID]);
+            $this->om->persist($announce);
+            $announce->setAggregate($announcement);
+        }
+
+        $this->om->persist($announcement);
     }
 
     /**
