@@ -70,7 +70,7 @@ class NotificationsViewerController
     }
 
     /**
-     * @EXT\Route("/", name="apiv2_user_notifications_list")
+     * @EXT\Route("", name="apiv2_user_notifications_list")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Method("GET")
      *

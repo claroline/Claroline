@@ -31,7 +31,8 @@ const NotificationTool = (props) =>
           name: 'notification.meta.creator',
           type: 'user',
           label: trans('user'),
-          displayed: true
+          displayed: true,
+          filterable: false
         }, {
           name: 'text',
           type: 'string',

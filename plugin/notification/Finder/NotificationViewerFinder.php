@@ -37,7 +37,7 @@ class NotificationViewerFinder extends AbstractFinder
                     $qb->andWhere('obj.status = :filter');
                     $qb->setParameter('filter', $filterValue);
                     break;
-              case 'notification.meta.creator':
+              case 'user':
                 $qb->andWhere('obj.viewerId = :viewerId');
                 $qb->setParameter('viewerId', $filterValue);
                 break;
