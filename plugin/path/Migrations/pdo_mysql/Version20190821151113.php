@@ -19,11 +19,8 @@ class Version20190821151113 extends AbstractMigration
             ADD slug VARCHAR(128)
         ');
         $this->addSql("
-             UPDATE innova_step step SET slug = REGEXP_REPLACE(SUBSTR(step.title,1,100), '[^A-Za-z0-9]+', '-')
+            UPDATE innova_step step SET slug = REGEXP_REPLACE(SUBSTR(step.title,1,100), '[^A-Za-z0-9]+', '-')
         ");
-        $this->addSql('
-            CREATE UNIQUE INDEX UNIQ_86F48567989D9B62 ON innova_step (slug)
-        ');
     }
 
     public function down(Schema $schema)

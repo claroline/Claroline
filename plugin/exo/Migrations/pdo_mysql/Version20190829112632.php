@@ -22,7 +22,7 @@ class Version20190829112632 extends AbstractMigration
             UPDATE ujm_step step SET slug = REGEXP_REPLACE(SUBSTR(step.title,1,100), '[^A-Za-z0-9]+', '-') WHERE step.title IS NOT NULL
         ");
         $this->addSql("
-             UPDATE ujm_step step SET slug = CONCAT('step' , '-', step.entity_order) WHERE step.title IS NULL
+            UPDATE ujm_step step SET slug = CONCAT('step' , '-', step.entity_order) WHERE step.title IS NULL
         ");
     }
 
