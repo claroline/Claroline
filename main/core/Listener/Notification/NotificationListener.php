@@ -77,7 +77,7 @@ class NotificationListener
                 'notification'
               );
             }
-            $this->setText($text);
+            $event->setText($text);
 
             break;
           case LogRoleSubscribeEvent::ACTION_WORKSPACE_GROUP:
@@ -96,7 +96,7 @@ class NotificationListener
               'notification'
             );
 
-            $this->setText($text);
+            $event->setText($text);
             break;
           case LogRoleSubscribeEvent::ACTION_GROUP:
             $text = $translator->trans(
@@ -218,7 +218,7 @@ class NotificationListener
               'notification'
             );
 
-            $this->setText($text);
+            $event->setText($text);
             break;
       }
 
