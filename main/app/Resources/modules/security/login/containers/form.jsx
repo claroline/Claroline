@@ -16,8 +16,7 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       registration: configSelectors.param(state, 'selfRegistration'),
-      sso: selectors.sso(state),
-      primarySso: selectors.primarySso(state)
+      sso: selectors.sso(state)
     }),
     (dispatch) => ({
       login(callback) {

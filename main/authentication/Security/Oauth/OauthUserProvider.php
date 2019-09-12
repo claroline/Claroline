@@ -63,7 +63,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
             return $oauthUser->getUser();
         }
 
-        if ($this->platformConfigHandler->getParameter('direct_third_party_authentication')) {
+        if ($this->platformConfigHandler->getParameter('authentication.direct_third_party')) {
             $username = !empty($email) ? $email : $id;
             $user = $this->loadUserByUsername($username);
             $oauthUser = new OauthUser();
@@ -115,6 +115,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
             $user['lastName'] = $lastName;
             $user['username'] = $this->createUsername($response->getNickname());
             $user['email'] = $response->getEmail();
+
             // Check if an account with the same email already exists
             try {
                 $this->loadUserByUsername($user['email']);

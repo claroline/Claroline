@@ -9,7 +9,6 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -105,7 +104,7 @@ class WorkspaceCrud
     }
 
     /**
-     * @param CopyEvent $event
+     * @param UpdateEvent $event
      */
     public function postUpdate(UpdateEvent $event)
     {

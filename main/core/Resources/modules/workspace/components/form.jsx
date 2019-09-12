@@ -208,7 +208,7 @@ const WorkspaceFormComponent = (props) =>
             name: 'registration.url',
             type: 'url',
             label: trans('registration_url'),
-            calculated: (workspace) => url(['claro_index', {}, true])+`#/${route(workspace)}`,
+            calculated: (workspace) => url(['claro_index', {}, true])+`#${route(workspace)}`,
             required: true,
             disabled: true,
             displayed: !props.new

@@ -14,5 +14,8 @@ export const Creation = () => ({
  */
 export default {
   component: FileResource,
-  store: reducer
+  store: reducer,
+  analytics: {
+
+  }
 }

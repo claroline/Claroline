@@ -22,9 +22,9 @@ const LoginModal = props =>
     }}
   >
     <LoginForm
-      onLogin={() => {
+      onLogin={(response) => {
         if (props.onLogin) {
-          props.onLogin()
+          props.onLogin(response)
         }
 
         props.fadeModal()

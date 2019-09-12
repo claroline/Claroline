@@ -16,16 +16,15 @@ use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
 use Claroline\AuthenticationBundle\Repository\OauthUserRepository;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.oauth.manager")
@@ -186,28 +185,6 @@ class OauthManager
         return $services;
     }
 
-    public function createNewAccount(Request $request, TranslatorInterface $translator, $service)
-    {
-        $user = new User();
-        $session = $request->getSession();
-        if ($form->isValid()) {
-            $this->registrationManager->registerNewUser($user, $form);
-
-            $oauthUser = new OauthUser($service['name'], $service['id'], $user);
-            $oauthUser->setUser($user);
-            $oauthUser->setService($service['name']);
-            $oauthUser->setOauthId($service['id']);
-
-            $this->em->persist($oauthUser);
-            $this->em->flush();
-            $session->remove('claroline.oauth.resource_owner');
-
-            return $this->registrationManager->loginUser($user, $request);
-        }
-
-        return ['form' => $form->createView()];
-    }
-
     public function linkAccount(Request $request, $service, $username = null)
     {
         $verifyPassword = false;
@@ -227,7 +204,7 @@ class OauthManager
 
             return $this->registrationManager->loginUser($user, $request);
         } else {
-            return ['error' => 'login_error'];
+            return new JsonResponse(['error' => 'login_error'], 400);
         }
     }
 

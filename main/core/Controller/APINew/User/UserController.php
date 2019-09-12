@@ -308,7 +308,7 @@ class UserController extends AbstractCrudController
         }
 
         if ($selfLog && 'anon.' === $this->container->get('security.token_storage')->getToken()->getUser()) {
-            $this->manager->logUser($user, $request);
+            $this->manager->logUser($user);
         }
 
         return new JsonResponse(

@@ -47,7 +47,8 @@
         "symfony/swiftmailer-bundle": "3.2.2",
         "twig/twig": "2.11.2",
         "u01jmg3/ics-parser": "2.1.3",
-        "willdurand/js-translation-bundle": "2.6.6"
+        "willdurand/js-translation-bundle": "2.6.6",
+        "kriswallsmith/buzz": "^0.13"
     },
     "replace": {
         "claroline/distribution-bundle": "*",

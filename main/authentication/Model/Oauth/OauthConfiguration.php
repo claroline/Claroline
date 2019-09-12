@@ -34,7 +34,7 @@ class OauthConfiguration
         $this->clientActive = $active;
         $this->clientTenantDomain = $domain;
         $this->clientVersion = $version;
-        $this->clientForceReauthenticate = $forceReauthenticate === true;
+        $this->clientForceReauthenticate = true === $forceReauthenticate;
     }
 
     /**
@@ -127,7 +127,7 @@ class OauthConfiguration
      */
     public function isClientForceReauthenticate()
     {
-        return $this->clientForceReauthenticate === true;
+        return true === $this->clientForceReauthenticate;
     }
 
     /**
@@ -284,7 +284,7 @@ class OauthConfiguration
 
     public static function resourceOwners()
     {
-        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live', 'Office 365', 'Generic'];
+        $resourceOwners = ['Dropbox', 'Facebook', 'Twitter', 'Github', 'Google', 'Linkedin', 'Windows Live', 'Office 365', 'Generic'];
 
         return $resourceOwners;
     }

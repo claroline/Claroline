@@ -84,6 +84,7 @@ const WorkspaceMenu = (props) => {
                   const tool = props.tools.find(tool => tool.name === shortcut.name)
                   if (tool) {
                     return {
+                      name: tool.name,
                       type: LINK_BUTTON,
                       icon: `fa fa-fw fa-${tool.icon}`,
                       label: trans('open-tool', {tool: trans(tool.name, {}, 'tools')}, 'actions'),

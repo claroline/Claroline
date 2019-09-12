@@ -7,6 +7,9 @@ import {HomeContent} from '#/main/app/layout/sections/home/components/content'
 import {HomeMaintenance} from '#/main/app/layout/sections/home/components/maintenance'
 import {HomeLogin} from '#/main/app/layout/sections/home/components/login'
 import {HomeRegistration} from '#/main/app/layout/sections/home/components/registration'
+import {HomeExternalAccount} from '#/main/app/layout/sections/home/components/external-account'
+
+// TODO : move all security sections in main/authentication
 
 const HomeMain = (props) =>
   <Routes
@@ -27,8 +30,22 @@ const HomeMain = (props) =>
         component: HomeLogin
       }, {
         path: '/registration',
-        disabled: props.isAuthenticated,
+        disabled: !props.selfRegistration ||props.isAuthenticated,
         component: HomeRegistration
+      }, { // TODO : disable if no sso
+        path: '/external/:app',
+        render: (routeProps) => {
+          const LinkAccount = (
+            <HomeExternalAccount
+              isAuthenticated={props.isAuthenticated}
+              selfRegistration={props.selfRegistration}
+              serviceName={routeProps.match.params.app}
+              linkExternalAccount={props.linkExternalAccount}
+            />
+          )
+
+          return LinkAccount
+        }
       }, {
         path: '/home',
         disabled: !props.hasHome,
@@ -50,10 +67,12 @@ const HomeMain = (props) =>
 HomeMain.propTypes = {
   maintenance: T.bool.isRequired,
   isAuthenticated: T.bool.isRequired,
+  selfRegistration: T.bool.isRequired,
   hasHome: T.bool.isRequired,
   homeType: T.string.isRequired,
   homeData: T.string,
-  openHome: T.func.isRequired
+  openHome: T.func.isRequired,
+  linkExternalAccount: T.func.isRequired
 }
 
 export {

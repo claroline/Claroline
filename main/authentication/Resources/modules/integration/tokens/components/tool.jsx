@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
@@ -24,8 +24,7 @@ const ApiToken = props =>
         icon: 'fa fa-plus',
         label: trans('add_token', {}, 'security'),
         target: `${props.path}/tokens/form`,
-        primary: true,
-        hideLabel: true
+        primary: true
       }
     ]}
   >

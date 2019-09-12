@@ -2,6 +2,17 @@
  * Authentication styles.
  */
 
+// adds a bg on login, reset-password, registration
+.authentication-page {
+    background-color: @body-bg; // fallback to body color if theme has no image
+
+    // styles for bg image
+    background-image: url(@login-bg-image);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
 
 /**
  * Login modal
@@ -29,26 +40,9 @@
  */
 
 .login-page {
-    background-color: @body-bg; // fallback to body color if theme has no image
-
-    // styles for bg image
-    background-image: url(@login-bg-image);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-
     // vertically center the login form in the page
     // if there is lots of space
     justify-content: center;
-    //margin: 0 auto;
-    
-    // makes logo, title, info text the same width as login form
-    //max-width: floor(@login-max-width / 2);
-
-    /*&.login-with-sso {
-        max-width: @login-max-width;
-    }*/
 
     .login-logo {
         align-self: center; // avoid image to be stretched
@@ -143,6 +137,7 @@
     }
 
     .external-authentication-column {
+        background-color: @panel-footer-bg;
         &::before {
             position: absolute;
             content: " ";
@@ -154,16 +149,6 @@
             width: floor(@auth-or-size / 2);
             border: 1px solid @panel-default-border;
             border-radius: 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2) 0;
-        }
-
-        background-color: @panel-footer-bg;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-
-        .external_authentication {
-            flex: 1;
         }
     }
 }
@@ -221,10 +206,6 @@
     color: @sso-btn-color !important;
     font-size: @sso-btn-font-size;
 
-    + .btn-third-party-login {
-        margin-top: @sso-btn-spacer-v;
-    }
-
     &:hover,
     &:focus {
         color: @sso-btn-color !important;
@@ -255,17 +236,15 @@
 }
 
 .external-app {
-    display: flex;
-    align-items: flex-start;
-
-    padding: @panel-body-padding;
-    border: 1px solid @panel-default-border;
-    background: @panel-bg;
     margin-bottom: floor(@component-margin-bottom / 2);
-    .box-shadow(@panel-box-shadow);
 
     &:last-child {
         margin-bottom: @component-margin-bottom;
+    }
+
+    .panel-body {
+        display: flex;
+        align-items: flex-start;
     }
 
     .external-app-icon {
@@ -298,15 +277,6 @@
         }
     }
 
-
-    &.enabled {
-        border-color: @brand-primary;
-    }
-
-    &.disabled {
-
-    }
-
     &.dropbox      { .external-app-variant(@sso-dropbox-primary,    @sso-dropbox-primary); }
     &.facebook     { .external-app-variant(@sso-facebook-primary,   @sso-facebook-secondary); }
     &.github       { .external-app-variant(@sso-github-primary,     @sso-github-primary); }
@@ -322,6 +292,65 @@
         background-color: @color;
     }
 }
+
+
+/**
+ * Link external app page
+ */
+
+.external-link-container {
+    text-align: center;
+    max-width: floor(@login-max-width / 2);
+    width: 100%;
+    margin: 0 auto @component-margin-bottom;
+
+    .img-thumbnail {
+        border-radius: 50%;
+    }
+
+    .external-app-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 72px;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+    }
+
+    .external-link-title {
+        margin-top: 0;
+        font-weight: 900;
+
+        > small {
+            display: block;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+    }
+
+    .external-link-panel {
+        margin-top: -55px;
+        border: 1px solid @panel-default-border;
+        border-radius: @panel-border-radius;
+        background: @panel-bg;
+        padding: 30px 45px;
+        padding-top: 55px + 15px; // half-size of the app icon (4px comes from img-thumbnail) + standard padding
+
+        .box-shadow(@panel-box-shadow);
+    }
+
+    &.dropbox      { .external-app-variant(@sso-dropbox-primary,    @sso-dropbox-primary); }
+    &.facebook     { .external-app-variant(@sso-facebook-primary,   @sso-facebook-secondary); }
+    &.github       { .external-app-variant(@sso-github-primary,     @sso-github-primary); }
+    &.google       { .external-app-variant(@sso-google-primary,     @sso-google-secondary); }
+    &.linkedin     { .external-app-variant(@sso-linkedin-primary,   @sso-linkedin-secondary); }
+    &.office_365   { .external-app-variant(@sso-office_365-primary, @sso-office_365-secondary); }
+    &.twitter      { .external-app-variant(@sso-twitter-primary,    @sso-twitter-secondary); }
+    &.windows_live { .external-app-variant(@sso-office_365-primary, @sso-office_365-secondary); }
+}
+
 
 /**
  * Password recovery page

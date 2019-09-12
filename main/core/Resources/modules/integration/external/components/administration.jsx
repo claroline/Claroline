@@ -49,28 +49,29 @@ const apps = [
 ]
 
 const ExternalApp = props =>
-  <article className={classes('external-app', props.name, {
-    enabled: props.active,
-    disabled: !props.active
+  <article className={classes('external-app panel', props.name, {
+    'panel-primary': props.active,
+    'panel-default': !props.active
   })}>
-    <span className={classes('external-app-icon', props.alt)} />
+    <div className="panel-body">
+      <span className={classes('external-app-icon', props.alt)} />
 
-    <h2 className="h3 external-app-title">
-      {trans(props.name, {}, 'oauth')}
+      <h2 className="h3 external-app-title">
+        {trans(props.name, {}, 'oauth')}
 
-      <small>
-        <b>ID:</b> 1_i84c8dzlc9skw48w444gg4csokcsoo4g8wk48c80csoss440o
-      </small>
-      <small>
-        <b>Secret:</b> w2umhdg83ms4o8ggs4c8ggc04wk08wkc8ssg888sg08kkggo0
-      </small>
-    </h2>
+        <small>
+          <b>ID:</b> 1_i84c8dzlc9skw48w444gg4csokcsoo4g8wk48c80csoss440o
+        </small>
+        <small>
+          <b>Secret:</b> w2umhdg83ms4o8ggs4c8ggc04wk08wkc8ssg888sg08kkggo0
+        </small>
+      </h2>
 
-    <Toggle
-      active={props.active}
-      onChange={() => true}
-    />
-
+      <Toggle
+        active={props.active}
+        onChange={() => true}
+      />
+    </div>
   </article>
 
 ExternalApp.propTypes = {

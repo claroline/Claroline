@@ -17,10 +17,25 @@ const ParametersMenu = (props) =>
       buttonName="list-group-item"
       actions={[
         {
-          name: 'parameters',
+          name: 'tools',
           type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-tools',
           label: trans('tools'),
-          target: props.path
+          target: props.path,
+          exact: true
+        }, {
+          name: 'external',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-globe',
+          label: trans('external', {}, 'integration'),
+          target: props.path + '/external',
+          displayed: false
+        }, {
+          name: 'tokens',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-coins',
+          label: trans('tokens', {}, 'integration'),
+          target: props.path + '/tokens'
         }
       ]}
     />

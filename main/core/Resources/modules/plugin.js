@@ -149,5 +149,11 @@ registry.add('ClarolineCoreBundle', {
       'admin_tools'       : () => { return import(/* webpackChunkName: "core-data-source-admin-tools" */ '#/main/core/data/sources/admin-tools') },
       'tools'             : () => { return import(/* webpackChunkName: "core-data-source-tools" */       '#/main/core/data/sources/tools') }
     }
+  },
+  analytics: {
+
+    resource: {
+
+    }
   }
 })

@@ -148,7 +148,13 @@ class ClientSerializer
             'admin' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
             ],
-            'sso' => $this->oauthManager->getActiveServices(),
+            'sso' => array_map(function (array $sso) { // TODO : do it elsewhere
+                return [
+                    'service' => $sso['service'],
+                    'label' => isset($sso['display_name']) ? $sso['display_name'] : null,
+                    'primary' => isset($sso['client_primary']) ? $sso['client_primary'] : false,
+                ];
+            }, $this->oauthManager->getActiveServices()),
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),
             'stylesheets' => $this->config->getParameter('stylesheets'),

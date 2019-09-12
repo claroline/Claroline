@@ -13,7 +13,7 @@ import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 const LoginPage = (props) =>
   <PageSimple
-    className="login-page"
+    className="authentication-page login-page"
   >
     <LoginForm
       onLogin={(response) => {

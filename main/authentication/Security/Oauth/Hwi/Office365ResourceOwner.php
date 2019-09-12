@@ -26,7 +26,7 @@ class Office365ResourceOwner extends GenericOAuth2ResourceOwner
      */
     protected $paths = [
         'identifier' => 'id',
-        'email' => 'email',
+        'email' => 'mail',
         'realname' => 'displayName',
         'nickname' => 'userPrincipalName',
         'firstname' => 'givenName',
@@ -118,7 +118,7 @@ class Office365ResourceOwner extends GenericOAuth2ResourceOwner
      */
     public function logout($redirectUrl)
     {
-        if (!empty($this->options['revoke_token_url']) && $this->options['force_login'] === true) {
+        if (!empty($this->options['revoke_token_url']) && true === $this->options['force_login']) {
             $redirectUrl = $this->normalizeUrl(
                 $this->options['revoke_token_url'],
                 ['post_logout_redirect_uri' => $redirectUrl]
