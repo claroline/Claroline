@@ -43,6 +43,8 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         return $this->createQueryBuilder('n')
             ->where('UPPER(n.name) LIKE :search')
             ->andWhere('n.active = true')
+            ->andWhere('n.published = true')
+            ->andWhere('n.hidden = false')
             ->setFirstResult(0)
             ->setMaxResults($nbResults)
             ->setParameter('search', '%'.strtoupper($search).'%')

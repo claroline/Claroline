@@ -27,13 +27,11 @@ class SchemaProvider
     private $baseUri;
 
     /**
-     * Injects Serializer service.
-     *
      * @DI\InjectParams({
      *      "rootDir" = @DI\Inject("%kernel.root_dir%")
      * })
      *
-     * @param string        $rootDir
+     * @param string $rootDir
      */
     public function setRootDir($rootDir)
     {

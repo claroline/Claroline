@@ -119,7 +119,7 @@ class ClientSerializer
             'version' => $this->versionManager->getDistributionVersion(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
-            'selfRegistration' => $this->config->getParameter('allow_self_registration'),
+            'selfRegistration' => $this->config->getParameter('registration.self'),
             'asset' => $this->assets->getUrl(''),
             'server' => [
                 'protocol' => $request->isSecure() || $this->config->getParameter('ssl_enabled') ? 'https' : 'http',
