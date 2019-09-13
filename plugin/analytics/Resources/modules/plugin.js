@@ -35,5 +35,11 @@ registry.add('ClarolineAnalyticsBundle', {
 
   widgets: {
     'progression': () => { return import(/* webpackChunkName: "analytics-widget-progression" */ '#/plugin/analytics/widget/types/progression') }
+  },
+
+  analytics: {
+    resource: {
+      'connections': () => { return import(/* webpackChunkName: "analytics-resource-connections" */ '#/plugin/analytics/analytics/resource/connections') }
+    }
   }
 })

@@ -11,7 +11,7 @@ const DashboardMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
-      resourceId: resourceSelectors.resourceNode(state).autoId
+      resourceNode: resourceSelectors.resourceNode(state)
     }),
     dispatch => ({
       openLog(id, resourceId) {

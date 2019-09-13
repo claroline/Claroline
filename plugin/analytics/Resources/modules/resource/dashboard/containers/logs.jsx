@@ -11,7 +11,7 @@ import {Logs as LogsComponent} from '#/plugin/analytics/resource/dashboard/compo
 const Logs = connect(
   state => ({
     resourceId: resourceSelectors.resourceNode(state).autoId,
-    chart: dashboardSelectors.dashboard(state).chart,
+    chart: dashboardSelectors.chart(state),
     // actions: state.actions,
     queryString: listSelect.queryString(listSelect.list(state, dashboardSelectors.STORE_NAME + '.logs'))
   }),

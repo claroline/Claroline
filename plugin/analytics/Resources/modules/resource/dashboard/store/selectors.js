@@ -6,11 +6,17 @@ const store = (state) => state[STORE_NAME]
 
 const dashboard = createSelector(
   [store],
-  (resource) => resource.dashboard
+  (store) => store.dashboard
+)
+
+const chart = createSelector(
+  [store],
+  (store) => store.chart
 )
 
 export const selectors = {
   STORE_NAME,
 
-  dashboard
+  dashboard,
+  chart
 }

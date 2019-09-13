@@ -15,6 +15,7 @@ import {
 } from '#/plugin/path/resources/path/store/actions'
 
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/store/reducer'
+import {reducer as analyticsReducer} from '#/plugin/path/analytics/resource/progression/store/reducer'
 import {selectors as editorSelectors} from '#/plugin/path/resources/path/editor/store/selectors'
 import {getStepPath} from '#/plugin/path/resources/path/editor/utils'
 
@@ -51,7 +52,8 @@ const reducer = combineReducers({
 
       return newState
     }
-  })
+  }),
+  analytics: analyticsReducer
 })
 
 export {

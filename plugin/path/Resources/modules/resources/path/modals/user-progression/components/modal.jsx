@@ -17,7 +17,7 @@ const ProgressionStep = props =>
     <span className="summary-link">
       {props.step.title}
 
-      {props.stepsProgression[props.step.id] && constants.STATUS_UNSEEN !== props.stepsProgression[props.step.id] &&
+      {props.stepsProgression && props.stepsProgression[props.step.id] && constants.STATUS_UNSEEN !== props.stepsProgression[props.step.id] &&
         <span className="fa fa-fw fa-check pull-right" />
       }
     </span>
