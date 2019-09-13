@@ -14,12 +14,7 @@ namespace Claroline\MessageBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\MessageBundle\Entity\Contact\Contact;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.contact")
- * @DI\Tag("claroline.finder")
- */
 class ContactFinder extends AbstractFinder
 {
     public function getClass()

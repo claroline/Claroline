@@ -14,14 +14,10 @@ namespace UJM\ExoBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Quiz questions finder (used by the Question bank).
- *
- * @DI\Service("ujm_exo.api.finder.question")
- * @DI\Tag("claroline.finder")
  */
 class QuestionFinder extends AbstractFinder
 {
@@ -30,10 +26,6 @@ class QuestionFinder extends AbstractFinder
 
     /**
      * QuestionFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      */

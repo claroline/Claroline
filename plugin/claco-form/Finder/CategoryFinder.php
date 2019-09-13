@@ -13,12 +13,7 @@ namespace Claroline\ClacoFormBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.clacoform.category")
- * @DI\Tag("claroline.finder")
- */
 class CategoryFinder extends AbstractFinder
 {
     public function getClass()

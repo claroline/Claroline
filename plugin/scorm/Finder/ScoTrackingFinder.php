@@ -13,14 +13,7 @@ namespace Claroline\ScormBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * Quiz papers finder.
- *
- * @DI\Service("claroline.api.finder.scorm.sco.tracking")
- * @DI\Tag("claroline.finder")
- */
 class ScoTrackingFinder extends AbstractFinder
 {
     public function getClass()

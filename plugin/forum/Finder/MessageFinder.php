@@ -14,12 +14,7 @@ namespace Claroline\ForumBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\ForumBundle\Entity\Forum;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.forum_message")
- * @DI\Tag("claroline.finder")
- */
 class MessageFinder extends AbstractFinder
 {
     public function getClass()

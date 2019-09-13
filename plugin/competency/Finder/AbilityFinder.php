@@ -14,12 +14,7 @@ namespace HeVinci\CompetencyBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use HeVinci\CompetencyBundle\Entity\Ability;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.ability")
- * @DI\Tag("claroline.finder")
- */
 class AbilityFinder extends AbstractFinder
 {
     public function getClass()

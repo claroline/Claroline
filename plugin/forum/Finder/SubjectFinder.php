@@ -15,12 +15,7 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.forum_subject")
- * @DI\Tag("claroline.finder")
- */
 class SubjectFinder extends AbstractFinder
 {
     public function getClass()

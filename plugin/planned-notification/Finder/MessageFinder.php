@@ -14,12 +14,7 @@ namespace Claroline\PlannedNotificationBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.planned_notification.message")
- * @DI\Tag("claroline.finder")
- */
 class MessageFinder extends AbstractFinder
 {
     public function getClass()

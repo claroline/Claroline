@@ -14,13 +14,8 @@ namespace Claroline\MessageBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\MessageBundle\Entity\Message;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.api.finder.messaging.message")
- * @DI\Tag("claroline.finder")
- */
 class MessageFinder extends AbstractFinder
 {
     /** @var TokenStorageInterface */
@@ -28,10 +23,6 @@ class MessageFinder extends AbstractFinder
 
     /**
      * MessageFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      */

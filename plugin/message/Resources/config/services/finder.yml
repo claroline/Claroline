@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                     - '@claroline.persistence.object_manager'
+                - method: setEntityManager
+                  arguments:
+                     - '@doctrine.orm.entity_manager'
+                - method: setEventDispatcher
+                  arguments:
+                     - '@claroline.event.event_dispatcher'
+
+    Claroline\MessageBundle\Finder\ContactFinder: ~
+
+    Claroline\MessageBundle\Finder\MessageFinder:
+        arguments:
+           - '@security.token_storage'

@@ -14,12 +14,7 @@ namespace Innova\PathBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use Innova\PathBundle\Entity\Path\Path;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.path")
- * @DI\Tag("claroline.finder")
- */
 class PathFinder extends AbstractFinder
 {
     public function getClass()

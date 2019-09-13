@@ -13,13 +13,9 @@ namespace UJM\ExoBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Quiz papers finder.
- *
- * @DI\Service("ujm_exo.api.finder.paper")
- * @DI\Tag("claroline.finder")
  */
 class PaperFinder extends AbstractFinder
 {

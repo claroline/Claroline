@@ -14,12 +14,7 @@ namespace Claroline\TeamBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\TeamBundle\Entity\Team;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.team")
- * @DI\Tag("claroline.finder")
- */
 class TeamFinder extends AbstractFinder
 {
     public function getClass()

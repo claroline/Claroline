@@ -14,12 +14,7 @@ namespace Claroline\AudioPlayerBundle\Finder\Resource;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.audio.resource_section")
- * @DI\Tag("claroline.finder")
- */
 class SectionFinder extends AbstractFinder
 {
     public function getClass()

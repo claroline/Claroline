@@ -14,12 +14,7 @@ namespace Claroline\TagBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\TagBundle\Entity\Tag;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.tag")
- * @DI\Tag("claroline.finder")
- */
 class TagFinder extends AbstractFinder
 {
     public function getClass()

@@ -15,14 +15,9 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.api.finder.resource_node")
- * @DI\Tag("claroline.finder")
- */
 class ResourceNodeFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
@@ -35,11 +30,6 @@ class ResourceNodeFinder extends AbstractFinder
 
     /**
      * ResourceNodeFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage

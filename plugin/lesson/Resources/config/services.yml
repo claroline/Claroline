@@ -1,3 +1,7 @@
+imports:
+    - { resource: services/finder.yml }
+
+
 parameters:
 #    lesson.example.class: Icap\LessonBundle\Example
 

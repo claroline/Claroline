@@ -22,7 +22,6 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
 abstract class AbstractFinder implements FinderInterface
 {
@@ -35,12 +34,6 @@ abstract class AbstractFinder implements FinderInterface
 
     /**
      * AbstractFinder constructor.
-     *
-     * @DI\InjectParams({
-     *      "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *      "em"              = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
-     * })
      *
      * @param ObjectManager    $om
      * @param EntityManager    $em

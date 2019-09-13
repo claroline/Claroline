@@ -1,3 +1,6 @@
+imports:
+    - { resource: services/finder.yml }
+
 parameters:
     icap.blog.manager.tag.class:                  Icap\BlogBundle\Manager\TagManager
     icap.blog.type.tags.class:                    Icap\BlogBundle\Form\TagsType
@@ -32,7 +35,7 @@ services:
         factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - "%icap.blog.post.class%"
-            
+
     icap.blog.blog_repository:
         class: "%icap.blog.blog_repository.class%"
         factory: ["@doctrine.orm.entity_manager", getRepository]

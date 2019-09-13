@@ -6,12 +6,7 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Doctrine\ORM\QueryBuilder;
 use Icap\BlogBundle\Entity\Post;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.blog.post")
- * @DI\Tag("claroline.finder")
- */
 class PostFinder extends AbstractFinder
 {
     public function getClass()

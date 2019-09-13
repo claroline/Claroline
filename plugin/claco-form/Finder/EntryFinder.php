@@ -19,15 +19,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.api.finder.clacoform.entry")
- * @DI\Tag("claroline.finder")
- */
 class EntryFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
@@ -46,13 +41,6 @@ class EntryFinder extends AbstractFinder
 
     /**
      * EntryFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param LocationManager               $locationManager

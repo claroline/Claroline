@@ -14,14 +14,9 @@ namespace FormaLibre\ReservationBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.api.finder.reservation.resource")
- * @DI\Tag("claroline.finder")
- */
 class ResourceFinder extends AbstractFinder
 {
     private $authChecker;
@@ -29,11 +24,6 @@ class ResourceFinder extends AbstractFinder
 
     /**
      * ResourceFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage

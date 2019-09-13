@@ -14,12 +14,7 @@ namespace Claroline\AnnouncementBundle\Finder;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.announcement")
- * @DI\Tag("claroline.finder")
- */
 class AnnouncementFinder extends AbstractFinder
 {
     public function getClass()

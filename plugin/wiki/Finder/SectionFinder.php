@@ -4,12 +4,7 @@ namespace Icap\WikiBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder.wiki.section")
- * @DI\Tag("claroline.finder")
- */
 class SectionFinder extends AbstractFinder
 {
     /**
