@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\API;
 
+use Claroline\AppBundle\Event\Crud\CrudEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
@@ -38,6 +39,9 @@ class Crud
     /** @var ValidatorProvider */
     private $validator;
 
+    /** @var SchemaProvider */
+    private $schema;
+
     /**
      * Crud constructor.
      *
@@ -53,6 +57,7 @@ class Crud
      * @param StrictDispatcher   $dispatcher
      * @param SerializerProvider $serializer
      * @param ValidatorProvider  $validator
+     * @param SchemaProvider     $schema
      */
     public function __construct(
       ObjectManager $om,
@@ -332,9 +337,12 @@ class Crud
     {
         $name = 'crud_'.$when.'_'.$action.'_object';
         $eventClass = ucfirst($action);
+        /** @var CrudEvent $generic */
         $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+
         $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($args[0]))->getName();
         $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
+        /** @var CrudEvent $specific */
         $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
 
         return $generic->isAllowed() && $specific->isAllowed();
