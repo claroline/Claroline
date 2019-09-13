@@ -79,8 +79,8 @@ const UserMenu = props =>
       </div>
     }
 
-    <div className="app-current-user-tools list-group">
-      {props.authenticated &&
+    {props.authenticated &&
+      <div className="app-current-user-tools list-group">
         <Button
           type={LINK_BUTTON}
           className="list-group-item"
@@ -90,9 +90,7 @@ const UserMenu = props =>
           exact={true}
           onClick={props.closeMenu}
         />
-      }
 
-      {props.authenticated &&
         <Button
           type={LINK_BUTTON}
           className="list-group-item"
@@ -101,9 +99,7 @@ const UserMenu = props =>
           target={route(props.currentUser)}
           onClick={props.closeMenu}
         />
-      }
 
-      {props.authenticated &&
         <Button
           type={LINK_BUTTON}
           className="list-group-item"
@@ -112,31 +108,19 @@ const UserMenu = props =>
           target="/desktop/parameters"
           onClick={props.closeMenu}
         />
-      }
 
-      {props.authenticated && props.isAdmin &&
-        <Button
-          type={LINK_BUTTON}
-          className="list-group-item"
-          icon="fa fa-fw fa-cogs"
-          label={trans('administration')}
-          target="/admin"
-          onClick={props.closeMenu}
-        />
-      }
-
-      {props.tools.map((tool) =>
-        <Button
-          key={tool.name}
-          type={LINK_BUTTON}
-          className="list-group-item"
-          icon={`fa fa-fw fa-${tool.icon}`}
-          label={trans(tool.name, {}, 'tools')}
-          target={`/desktop/${tool.name}`}
-          onClick={props.closeMenu}
-        />
-      )}
-    </div>
+        {props.isAdmin &&
+          <Button
+            type={LINK_BUTTON}
+            className="list-group-item"
+            icon="fa fa-fw fa-cogs"
+            label={trans('administration')}
+            target="/admin"
+            onClick={props.closeMenu}
+          />
+        }
+      </div>
+    }
 
     <div className="app-current-user-footer">
       <Button
@@ -166,7 +150,6 @@ UserMenu.propTypes = {
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
   isAdmin: T.bool.isRequired,
-  tools: T.array.isRequired,
   actions: T.array.isRequired,
   registration: T.bool,
   currentUser: T.shape({
@@ -227,7 +210,6 @@ class HeaderUser extends Component {
             isAdmin={this.props.isAdmin}
             currentUser={this.props.currentUser}
             registration={this.props.registration}
-            tools={this.props.tools}
             locale={this.props.locale}
             actions={this.props.actions.filter(action => undefined === action.displayed || action.displayed)}
             closeMenu={() => this.setOpened(false)}
@@ -239,7 +221,6 @@ class HeaderUser extends Component {
 }
 
 HeaderUser.propTypes = {
-  tools: T.array,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),

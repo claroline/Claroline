@@ -51,14 +51,14 @@ const HeaderMain = props =>
         impersonated={props.impersonated}
         isAdmin={props.isAdmin}
         registration={props.registration}
-        tools={props.tools}
         locale={props.locale}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-street-view',
             label: trans('walkthroughs'),
-            callback: () => props.startWalkthrough(getWalkthrough(props.tools, props.authenticated, props.display))
+            callback: () => props.startWalkthrough(getWalkthrough([], props.authenticated, props.display)),
+            displayed: false
           }, {
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-question',
@@ -116,7 +116,6 @@ HeaderMain.propTypes = {
   impersonated: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   isAdmin: T.bool.isRequired,
-  tools: T.array,
   helpUrl: T.string,
   registration: T.bool,
   startWalkthrough: T.func.isRequired,
@@ -128,7 +127,6 @@ HeaderMain.defaultProps = {
   impersonated: true,
   isAdmin: false,
   currentUser: null,
-  tools: [],
   notificationTools: [],
   registration: false
 }

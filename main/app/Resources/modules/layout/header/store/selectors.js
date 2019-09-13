@@ -11,11 +11,6 @@ const menus = createSelector(
   (store) => store.menus
 )
 
-const tools = createSelector(
-  [store],
-  (store) => store.tools
-)
-
 const display = createSelector(
   [store],
   (store) => store.display
@@ -40,7 +35,6 @@ export const selectors = {
   STORE_NAME,
 
   menus,
-  tools,
   logo,
   title,
   subtitle,

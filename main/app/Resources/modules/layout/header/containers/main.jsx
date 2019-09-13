@@ -26,8 +26,7 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
       authenticated: securitySelectors.isAuthenticated(state),
       impersonated: securitySelectors.isImpersonated(state),
       isAdmin: securitySelectors.isAdmin(state),
-      locale: selectors.locale(state),
-      tools: selectors.tools(state)
+      locale: selectors.locale(state)
     }),
     (dispatch) => ({
       startWalkthrough(steps, additional, documentation) {
