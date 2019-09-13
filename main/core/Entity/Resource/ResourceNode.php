@@ -913,11 +913,13 @@ class ResourceNode
         $ancestors = [];
         $countAncestors = count($parts);
         for ($i = 0; $i < $countAncestors; $i += 2) {
-            $ancestors[] = [
-                'id' => $parts[$i + 1], // retro-compatibility
-                'slug' => $parts[$i + 1],
-                'name' => $parts[$i],
-            ];
+            if (array_key_exists($i + 1, $parts)) {
+                $ancestors[] = [
+                  'id' => $parts[$i + 1], // retro-compatibility
+                  'slug' => $parts[$i + 1],
+                  'name' => $parts[$i],
+              ];
+            }
         }
 
         return $ancestors;

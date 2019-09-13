@@ -62,6 +62,11 @@ abstract class AbstractAction
         return self::MODE_DEFAULT;
     }
 
+    public function getOptions()
+    {
+        return [];
+    }
+
     public function getExtraDefinition(array $options = [], array $extra = [])
     {
         return [];

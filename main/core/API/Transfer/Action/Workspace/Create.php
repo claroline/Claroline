@@ -43,7 +43,6 @@ class Create extends AbstractAction
         }
 
         $workspace = $this->workspaceManager->copy($model, $workspace, false);
-        $workspace = $this->serializer->deserialize($data, $workspace);
 
         //add organizations here
         if (isset($data['organizations'])) {
@@ -87,6 +86,12 @@ class Create extends AbstractAction
     public function getSchema(array $options = [], array $extra = [])
     {
         return ['$root' => $this->getClass()];
+    }
+
+    public function getOptions()
+    {
+        //in an ideal world this should be removedn but for now it's an easy fix
+        return [Options::FORCE_FLUSH];
     }
 
     public function getMode()

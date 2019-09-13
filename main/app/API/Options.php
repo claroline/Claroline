@@ -56,6 +56,7 @@ final class Options
     const NO_VALIDATE = 'no_validate'; //if validation is too long for huge csv
     const NO_PERMISSION_CHECK = 'no_permission_check';
     const GENERATE_UUID = 'generate_uuid';
+    const FORCE_FLUSH = 'force_flush';
 
     const FORCE_RANDOM_PUBLIC_URL = 'force_random_public_url';
     const ADD_PERSONAL_WORKSPACE = 'add_personal_workspace';

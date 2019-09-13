@@ -170,7 +170,11 @@ class TransferProvider
         }, $data);
 
         $i = 0;
-        $this->om->startFlushSuite();
+
+        if (!in_array(Options::FORCE_FLUSH, $executor->getOptions())) {
+            $this->om->startFlushSuite();
+        }
+
         $total = count($data);
         $jsonLogger->info('Executing operations...');
 
@@ -228,7 +232,6 @@ class TransferProvider
             }
         }
 
-
         foreach ($data as $el) {
             ++$i;
             $this->log("{$i}/{$total}: ".$this->getActionName($executor));
@@ -283,7 +286,9 @@ class TransferProvider
             $jsonLogger->increment('processed');
         }
 
-        $this->om->endFlushSuite();
+        if (!in_array(Options::FORCE_FLUSH, $executor->getOptions())) {
+            $this->om->endFlushSuite();
+        }
 
         return $jsonLogger->get();
     }
