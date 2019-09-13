@@ -50,7 +50,7 @@ class UrlListener
     }
 
     /**
-     * @DI\Observe("delete_hevinci_url")
+     * @DI\Observe("resource.hevinci_url.delete")
      *
      * @param DeleteResourceEvent $event
      */

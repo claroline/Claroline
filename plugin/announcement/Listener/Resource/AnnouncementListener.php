@@ -197,7 +197,7 @@ class AnnouncementListener
     }
 
     /**
-     * @DI\Observe("delete_claroline_announcement_aggregate")
+     * @DI\Observe("resource.claroline_announcement_aggregate.delete")
      *
      * @param DeleteResourceEvent $event
      */

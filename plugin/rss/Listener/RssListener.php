@@ -48,7 +48,7 @@ class RssListener
     }
 
     /**
-     * @DI\Observe("delete_rss_feed")
+     * @DI\Observe("resource.rss_feed.delete")
      *
      * @param DeleteResourceEvent $event
      */

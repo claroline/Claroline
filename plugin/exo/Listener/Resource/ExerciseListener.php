@@ -149,7 +149,7 @@ class ExerciseListener
     /**
      * Deletes an Exercise resource.
      *
-     * @DI\Observe("delete_ujm_exercise")
+     * @DI\Observe("resource.ujm_exercise.delete")
      *
      * @param DeleteResourceEvent $event
      */

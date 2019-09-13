@@ -103,7 +103,7 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("delete_icap_blog")
+     * @DI\Observe("resource.icap_blog.delete")
      *
      * @param DeleteResourceEvent $event
      */

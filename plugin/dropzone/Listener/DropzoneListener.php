@@ -154,7 +154,7 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("delete_icap_dropzone")
+     * @DI\Observe("resource.icap_dropzone.delete")
      *
      * @param DeleteResourceEvent $event
      */

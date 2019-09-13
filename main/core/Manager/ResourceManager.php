@@ -651,11 +651,7 @@ class ResourceManager
 
             if (null !== $resource) {
                 if (!$softDelete && !in_array($node->getResourceType()->getName(), $ignore)) {
-                    $event = $this->dispatcher->dispatch(
-                        "delete_{$node->getResourceType()->getName()}",
-                        'Resource\DeleteResource',
-                        [$resource, $softDelete]
-                    );
+                    $event = $this->lifeCycleManager->delete($node);
                     $eventSoftDelete = $event->isSoftDelete();
 
                     foreach ($event->getFiles() as $file) {

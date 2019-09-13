@@ -95,7 +95,7 @@ class TextListener
     }
 
     /**
-     * @DI\Observe("delete_text")
+     * @DI\Observe("resource.text.delete")
      *
      * @param DeleteResourceEvent $event
      */

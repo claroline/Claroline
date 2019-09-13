@@ -114,7 +114,7 @@ from the FileListener. We are going to analyze it.
 
 ```php
 /**
- * @DI\Observe("delete_file")
+ * @DI\Observe("resource.file.delete")
  *
  * @param DeleteResourceEvent $event
  */

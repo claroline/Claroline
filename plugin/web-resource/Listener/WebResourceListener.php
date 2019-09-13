@@ -161,7 +161,7 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("delete_claroline_web_resource")
+     * @DI\Observe("resource.claroline_web_resource.delete")
      *
      * @param DeleteResourceEvent $event
      */

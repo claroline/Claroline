@@ -111,7 +111,7 @@ class PathListener
     /**
      * Fired when a ResourceNode of type Path is deleted.
      *
-     * @DI\Observe("delete_innova_path")
+     * @DI\Observe("resource.innova_path.delete")
      *
      * @param DeleteResourceEvent $event
      */

@@ -124,7 +124,7 @@ class ScormListener
     }
 
     /**
-     * @DI\Observe("delete_claroline_scorm")
+     * @DI\Observe("resource.claroline_scorm.delete")
      *
      * @param DeleteResourceEvent $event
      */

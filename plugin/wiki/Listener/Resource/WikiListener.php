@@ -114,7 +114,7 @@ class WikiListener
     }
 
     /**
-     * @DI\Observe("delete_icap_wiki")
+     * @DI\Observe("resource.icap_wiki.delete")
      *
      * @param DeleteResourceEvent $event
      */

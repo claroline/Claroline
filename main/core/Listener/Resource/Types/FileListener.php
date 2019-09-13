@@ -199,7 +199,7 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("delete_file")
+     * @DI\Observe("resource.file.delete")
      *
      * @param DeleteResourceEvent $event
      */

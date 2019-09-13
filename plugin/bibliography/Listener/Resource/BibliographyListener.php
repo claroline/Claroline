@@ -55,7 +55,7 @@ class BibliographyListener
     }
 
     /**
-     * @DI\Observe("delete_icap_bibliography")
+     * @DI\Observe("resource.icap_bibliography.delete")
      *
      * @param DeleteResourceEvent $event
      */

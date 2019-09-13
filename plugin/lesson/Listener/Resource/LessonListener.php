@@ -206,7 +206,7 @@ class LessonListener
     }
 
     /**
-     * @DI\Observe("delete_icap_lesson")
+     * @DI\Observe("resource.icap_lesson.delete")
      *
      * @param DeleteResourceEvent $event
      */

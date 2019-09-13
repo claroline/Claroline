@@ -232,7 +232,7 @@ class ClacoFormListener
     }
 
     /**
-     * @DI\Observe("delete_claroline_claco_form")
+     * @DI\Observe("resource.claroline_claco_form.delete")
      *
      * @param DeleteResourceEvent $event
      */

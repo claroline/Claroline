@@ -53,7 +53,7 @@ class SlideshowListener
     /**
      * Fired when a ResourceNode of type Slideshow is deleted.
      *
-     * @DI\Observe("delete_claro_slideshow")
+     * @DI\Observe("resource.claro_slideshow.delete")
      *
      * @param DeleteResourceEvent $event
      */

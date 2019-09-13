@@ -114,7 +114,7 @@ class ForumListener
     /**
      * Deletes a forum resource.
      *
-     * @DI\Observe("delete_claroline_forum")
+     * @DI\Observe("resource.claroline_forum.delete")
      *
      * @param DeleteResourceEvent $event
      */

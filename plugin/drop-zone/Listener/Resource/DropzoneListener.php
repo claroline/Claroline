@@ -153,7 +153,7 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("delete_claroline_dropzone")
+     * @DI\Observe("resource.claroline_dropzone.delete")
      *
      * @param DeleteResourceEvent $event
      */
