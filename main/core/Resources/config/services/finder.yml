@@ -114,6 +114,7 @@ services:
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
         arguments:
           - '@claroline.manager.plugin_manager'
+          - '@claroline.config.platform_config_handler'
 
     claroline.api.finder.admin_tool:
         alias: Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder
