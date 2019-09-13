@@ -55,7 +55,7 @@ class CommunityListener
     public function onDisplayWorkspace(DisplayToolEvent $event)
     {
         $event->setData([
-            'facets' => $this->profileSerializer->serialize(),
+            'profile' => $this->profileSerializer->serialize(),
             'parameters' => $this->parametersSerializer->serialize()['profile'],
             'restrictions' => [
                 // TODO: computes rights more accurately
@@ -75,7 +75,7 @@ class CommunityListener
     {
         $event->setData([
             'restrictions' => [],
-            'facets' => $this->profileSerializer->serialize(),
+            'profile' => $this->profileSerializer->serialize(),
             'parameters' => $this->parametersSerializer->serialize()['profile'],
         ]);
 
