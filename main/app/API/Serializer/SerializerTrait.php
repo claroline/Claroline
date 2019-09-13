@@ -13,8 +13,6 @@ namespace Claroline\AppBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 trait SerializerTrait
 {
@@ -48,18 +46,6 @@ trait SerializerTrait
         return in_array(Options::REFRESH_UUID, $options) ?
             $object->generateUuid() :
             $object->getUuid();
-    }
-
-    /**
-     * @DI\InjectParams({
-     *      "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
-     * @param ObjectManager $om
-     */
-    public function setObjectManager(ObjectManager $om)
-    {
-        $this->om = $om;
     }
 
     /**

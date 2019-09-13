@@ -6,12 +6,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\ManyToOne;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This class is useful for quick dev/prototype/simple objects but you shouldn't use it too much.
- *
- * @DI\Service("claroline.generic_serializer")
  */
 class GenericSerializer
 {
@@ -25,10 +22,6 @@ class GenericSerializer
     protected $reader;
 
     /**
-     * @DI\InjectParams({
-     *      "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
      * @param ObjectManager $om
      */
     public function setObjectManager(ObjectManager $om)
@@ -37,10 +30,6 @@ class GenericSerializer
     }
 
     /**
-     * @DI\InjectParams({
-     *      "reader" = @DI\Inject("annotation_reader")
-     * })
-     *
      * @param Reader $reader
      */
     public function setAnnotationReader(Reader $reader)

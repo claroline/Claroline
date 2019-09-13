@@ -10,6 +10,9 @@ services:
                 - method: setAnnotationReader
                   arguments:
                      - '@annotation_reader'
+                - method: setObjectManager
+                  arguments:
+                     - '@claroline.persistence.object_manager'
 
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:
         arguments:

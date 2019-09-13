@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\AppBundle\API\Serializer\GenericSerializer:
+            tags: [claroline.serializer]
+            calls:
+                - method: setAnnotationReader
+                  arguments:
+                     - '@annotation_reader'
+                - method: setObjectManager
+                  arguments:
+                     - '@claroline.persistence.object_manager'
+
+
+    Claroline\AuthenticationBundle\Serializer\OauthUserSerializer: ~
