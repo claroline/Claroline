@@ -13,13 +13,8 @@ namespace UJM\LtiBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\LtiBundle\Entity\LtiApp;
 
-/**
- * @DI\Service("claroline.api.finder.lti.app")
- * @DI\Tag("claroline.finder")
- */
 class LtiAppFinder extends AbstractFinder
 {
     public function getClass()
