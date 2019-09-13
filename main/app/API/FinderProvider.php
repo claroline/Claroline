@@ -13,11 +13,7 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.finder")
- */
 class FinderProvider
 {
     /** @var ObjectManager */
@@ -34,11 +30,6 @@ class FinderProvider
 
     /**
      * Finder constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
