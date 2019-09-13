@@ -113,7 +113,7 @@ function getActions(resourceNodes, nodesRefresher, path, currentUser = null, wit
  * @param {string} path           - the UI path where the resource is opened
  * @param {object} currentUser    - the authenticated user
  *
- * @return {Promise.<Array>}
+ * @return {Promise.<object>}
  */
 function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null) {
   const type = getType(resourceNode)
@@ -129,7 +129,7 @@ function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null
     }
   }
 
-  return null
+  return Promise.resolve(null)
 }
 
 /**
