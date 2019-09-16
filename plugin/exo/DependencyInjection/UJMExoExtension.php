@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 /**
  * Loads the core services configuration files.
  */
-class UJMExoBundleExtension extends Extension
+class UJMExoExtension extends Extension
 {
     /**
      * {@inheritdoc}
