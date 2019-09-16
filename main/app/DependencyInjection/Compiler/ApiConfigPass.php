@@ -11,6 +11,7 @@
 
 namespace Claroline\AppBundle\DependencyInjection\Compiler;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -19,7 +20,7 @@ class ApiConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $this->register($container, 'claroline.api.finder', 'claroline.finder');
+        $this->register($container, FinderProvider::class, 'claroline.finder');
         $this->register($container, 'claroline.api.serializer', 'claroline.serializer');
         $this->register($container, 'claroline.api.validator', 'claroline.validator');
         $this->register($container, 'claroline.api.transfer', 'claroline.transfer.adapter');
