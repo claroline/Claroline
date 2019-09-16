@@ -47,4 +47,4 @@ services:
     Claroline\CoreBundle\Repository\Log\LogRepository:
         arguments:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
-          - '@claroline.api.finder.log'
+          - '@Claroline\CoreBundle\API\Finder\Log\LogFinder'

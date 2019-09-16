@@ -17,3 +17,15 @@ services:
     claroline.api.finder:
         alias: Claroline\AppBundle\API\FinderProvider
         public: true
+
+    Claroline\AppBundle\API\Crud:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.event.event_dispatcher'
+            - '@claroline.api.serializer'
+            - '@claroline.api.validator'
+            - '@claroline.api.schema'
+
+    claroline.api.crud:
+        alias: Claroline\AppBundle\API\Crud
+        public: true

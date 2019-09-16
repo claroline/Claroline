@@ -121,7 +121,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.api.finder.widget_instance'
+            - '@Claroline\CoreBundle\API\Finder\Home\WidgetInstanceFinder'
             - '@claroline.serializer.widget_instance'
             - '@claroline.serializer.public_file'
 
@@ -133,7 +133,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.api.finder.widget_container'
+            - '@Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder'
             - '@claroline.serializer.widget_container'
             - '@claroline.serializer.workspace'
             - '@claroline.serializer.user'

@@ -7,12 +7,9 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Provides common CRUD operations.
- *
- * @DI\Service("claroline.api.crud")
  */
 class Crud
 {
@@ -44,14 +41,6 @@ class Crud
 
     /**
      * Crud constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "validator"  = @DI\Inject("claroline.api.validator"),
-     *     "schema"     = @DI\Inject("claroline.api.schema")
-     * })
      *
      * @param ObjectManager      $om
      * @param StrictDispatcher   $dispatcher
