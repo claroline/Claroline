@@ -11,14 +11,10 @@ namespace Claroline\CoreBundle\Routing;
  * file that was distributed with this source code.
  */
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RequestContext;
 
-/**
- * @DI\Service("claroline.router", parent="router.default")
- */
 class ClaroRouter extends Router
 {
     private $host;

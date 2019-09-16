@@ -13,6 +13,9 @@ imports:
 
 services:
 
+    Claroline\CoreBundle\Routing\ClaroRouter:
+        parent: router.default
+
     # array injection with annotations is not supported
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
