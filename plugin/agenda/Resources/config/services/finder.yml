@@ -18,4 +18,4 @@ services:
                   arguments:
                      - '@claroline.event.event_dispatcher'
 
-    Claroline\AgendaBundle\Finder\EvenFinder: ~
+    Claroline\AgendaBundle\Finder\EventFinder: ~

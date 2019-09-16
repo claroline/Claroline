@@ -21,11 +21,11 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRole;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Repository\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\ToolRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,8 +48,6 @@ class ToolManager
     /** @var AdministrationToolRepository */
     private $adminToolRepo;
     private $pwsToolConfigRepo;
-    /** @var ClaroUtilities */
-    private $utilities;
     /** @var ObjectManager */
     private $om;
     /** @var RoleManager */
@@ -64,7 +62,6 @@ class ToolManager
     /**
      * ToolManager constructor.
      *
-     * @param ClaroUtilities         $utilities
      * @param ObjectManager          $om
      * @param RoleManager            $roleManager
      * @param ToolMaskDecoderManager $toolMaskManager
@@ -72,25 +69,25 @@ class ToolManager
      * @param ContainerInterface     $container
      */
     public function __construct(
-        ClaroUtilities $utilities,
         ObjectManager $om,
         RoleManager $roleManager,
         ToolMaskDecoderManager $toolMaskManager,
         ToolRightsManager $toolRightsManager,
         ContainerInterface $container
     ) {
+        $this->om = $om;
+        $this->roleManager = $roleManager;
+        $this->toolMaskManager = $toolMaskManager;
+        $this->toolRightsManager = $toolRightsManager;
+
         $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
         $this->toolRepo = $om->getRepository(Tool::class);
         $this->roleRepo = $om->getRepository(Role::class);
         $this->toolRoleRepo = $om->getRepository(ToolRole::class);
         $this->adminToolRepo = $om->getRepository(AdminTool::class);
         $this->pwsToolConfigRepo = $om->getRepository(PwsToolConfig::class);
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->utilities = $utilities;
-        $this->om = $om;
-        $this->roleManager = $roleManager;
-        $this->toolMaskManager = $toolMaskManager;
-        $this->toolRightsManager = $toolRightsManager;
+        $this->userRepo = $om->getRepository(User::class);
+
         $this->container = $container;
     }
 
@@ -191,65 +188,14 @@ class ToolManager
     }
 
     /**
-     * @param User  $user
-     * @param int   $type
-     * @param array $excludedTools
-     *
-     * @return Tool[]
-     */
-    public function getDisplayedDesktopOrderedTools(
-        User $user,
-        $type = 0,
-        array $excludedTools = []
-    ) {
-        if (0 === count($excludedTools)) {
-            return $this->toolRepo->findDesktopDisplayedToolsByUser($user, $type);
-        }
-
-        return $this->toolRepo->findDesktopDisplayedToolsWithExclusionByUser(
-            $user,
-            $excludedTools,
-            $type
-        );
-    }
-
-    /**
-     * Returns the sorted list of OrderedTools for a user.
-     *
      * @param User $user
      * @param int  $type
      *
-     * @return OrderedTool[]
+     * @return Tool[]
      */
-    public function getDesktopToolsConfigurationArray(User $user, $type = 0)
+    public function getDisplayedDesktopOrderedTools(User $user, $type = 0)
     {
-        $orderedToolList = [];
-        $desktopTools = $this->orderedToolRepo->findDisplayableDesktopOrderedToolsByUser(
-            $user,
-            $type
-        );
-
-        foreach ($desktopTools as $desktopTool) {
-            //this field isn't mapped
-            $desktopTool->getTool()->setVisible($desktopTool->isVisibleInDesktop());
-            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
-        }
-
-        $undisplayedTools = $this->toolRepo->findDesktopUndisplayedToolsByUser($user, $type);
-
-        foreach ($undisplayedTools as $tool) {
-            //this field isn't mapped
-            $tool->setVisible(false);
-        }
-
-        $this->addMissingDesktopTools(
-            $user,
-            $undisplayedTools,
-            count($desktopTools) + 1,
-            $type
-        );
-
-        return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
+        return $this->toolRepo->findDesktopDisplayedToolsByUser($user, $type);
     }
 
     /**
@@ -356,72 +302,6 @@ class ToolManager
     }
 
     /**
-     * Sets a tool position.
-     *
-     * @param Tool      $tool
-     * @param           $position
-     * @param User      $user
-     * @param Workspace $workspace
-     */
-    public function setToolPosition(
-        Tool $tool,
-        $position,
-        User $user = null,
-        Workspace $workspace = null,
-        $type = 0
-    ) {
-        $movingTool = $this->orderedToolRepo->findOneBy(
-            ['user' => $user, 'tool' => $tool, 'workspace' => $workspace, 'type' => $type]
-        );
-        $movingTool->setOrder($position);
-        $this->om->persist($movingTool);
-        $this->om->flush();
-    }
-
-    /**
-     * Resets the tool visibility.
-     *
-     * @param User      $user
-     * @param Workspace $workspace
-     * @param int       $type
-     */
-    public function resetToolsVisibility(
-        User $user = null,
-        Workspace $workspace = null,
-        $type = 0
-    ) {
-        $orderedTools = $this->orderedToolRepo->findBy(
-            ['user' => $user, 'workspace' => $workspace, 'type' => $type]
-        );
-
-        foreach ($orderedTools as $orderedTool) {
-            if ($user) {
-                $orderedTool->setVisibleInDesktop(false);
-            }
-
-            $this->om->persist($orderedTool);
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * Sets a tool visible for a user in the desktop.
-     *
-     * @param Tool $tool
-     * @param User $user
-     */
-    public function setDesktopToolVisible(Tool $tool, User $user, $type = 0)
-    {
-        $orderedTool = $this->orderedToolRepo->findOneBy(
-            ['user' => $user, 'tool' => $tool, 'type' => $type]
-        );
-        $orderedTool->setVisibleInDesktop(true);
-        $this->om->persist($orderedTool);
-        $this->om->flush();
-    }
-
-    /**
      * Adds the mandatory tools at the user creation.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
@@ -453,6 +333,8 @@ class ToolManager
 
         $this->om->persist($user);
         $this->om->endFlushSuite();
+
+        return $requiredTools;
     }
 
     /**
@@ -514,10 +396,11 @@ class ToolManager
     }
 
     /**
-     * @param string[]                                         $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param string[]  $roles
+     * @param Workspace $workspace
+     * @param int       $type
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @return Tool
      */
     public function getDisplayedByRolesAndWorkspace(
         array $roles,
@@ -529,11 +412,6 @@ class ToolManager
             $workspace,
             $type
         );
-    }
-
-    public function getAdminTools()
-    {
-        return $this->adminToolRepo->findAll();
     }
 
     public function getAdminToolByName($name)
@@ -562,14 +440,9 @@ class ToolManager
         return $allowed;
     }
 
-    public function getToolById($id)
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->find($id);
-    }
-
     public function getToolByName($name)
     {
-        return $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $name]);
+        return $this->toolRepo->findOneBy(['name' => $name]);
     }
 
     /**
@@ -586,147 +459,38 @@ class ToolManager
         );
     }
 
-    private function addMissingDesktopTools(
-        User $user,
-        array $missingTools,
-        $startPosition,
-        $type = 0
-    ) {
-        foreach ($missingTools as $tool) {
-            $wot = $this->orderedToolRepo->findOneBy(
-                ['user' => $user, 'tool' => $tool, 'type' => $type]
-            );
-
-            if (!$wot) {
-                $orderedTool = new OrderedTool();
-                $orderedTool->setUser($user);
-                $orderedTool->setName($tool->getName());
-                $orderedTool->setOrder($startPosition);
-                $orderedTool->setTool($tool);
-                $orderedTool->setVisibleInDesktop(false);
-                $orderedTool->setType($type);
-                $this->om->persist($orderedTool);
-            }
-
-            ++$startPosition;
-        }
-
-        $this->om->flush();
-    }
-
-    public function reorderDesktopOrderedTool(
-        User $user,
-        OrderedTool $orderedTool,
-        $nextOrderedToolId,
-        $type = 0
-    ) {
-        $orderedTools = $this->getConfigurableDesktopOrderedToolsByUser(
-            $user,
-            [],
-            $type
-        );
-        $nextId = intval($nextOrderedToolId);
-        $order = 1;
-        $updated = false;
-
-        foreach ($orderedTools as $ot) {
-            if ($ot === $orderedTool) {
-                continue;
-            } elseif ($ot->getId() === $nextId) {
-                $orderedTool->setOrder($order);
-                $updated = true;
-                $this->om->persist($orderedTool);
-                ++$order;
-                $ot->setOrder($order);
-                $this->om->persist($ot);
-                ++$order;
-            } else {
-                $ot->setOrder($order);
-                $this->om->persist($ot);
-                ++$order;
-            }
-        }
-
-        if (!$updated) {
-            $orderedTool->setOrder($order);
-            $this->om->persist($orderedTool);
-        }
-        $this->om->flush();
-    }
-
     public function getPersonalWorkspaceToolConfigs()
     {
         return $this->pwsToolConfigRepo->findAll();
     }
 
-    public function getAvailableWorkspaceTools()
-    {
-        return $this->toolRepo->findBy(['isDisplayableInWorkspace' => true]);
-    }
-
-    public function getPersonalWorkspaceToolConfig(Tool $tool, Role $role)
-    {
-        $toolConfig = $this->pwsToolConfigRepo->findBy(['tool' => $tool, 'role' => $role]);
-
-        if ($toolConfig) {
-            return $toolConfig[0];
-        }
-
-        $toolConfig = new PwsToolConfig();
-        $toolConfig->setTool($tool);
-        $toolConfig->setRole($role);
-        $toolConfig->setMask(0);
-
-        $this->om->persist($toolConfig);
-        $this->om->flush();
-
-        return $toolConfig;
-    }
-
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
+     * @param int  $type
+     * @param bool $executeQuery
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
+     * @return OrderedTool[]
      */
-    public function getConfigurableDesktopOrderedToolsByUser(
-        User $user,
-        array $excludedToolNames,
-        $type = 0,
-        $executeQuery = true
-    ) {
-        $excludedToolNames[] = 'home'; // maybe not
-
+    public function getConfigurableDesktopOrderedToolsByUser(User $user, $type = 0, $executeQuery = true)
+    {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
-            $excludedToolNames,
             $type,
             $executeQuery
         );
     }
 
-    public function getConfigurableDesktopOrderedToolsByTypeForAdmin(
-        $type = 0,
-        array $excludedToolNames = [],
-        $executeQuery = true
-    ) {
-        $excludedToolNames[] = 'home'; // maybe not
-
+    public function getConfigurableDesktopOrderedToolsByTypeForAdmin($type = 0, $executeQuery = true)
+    {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
-            $excludedToolNames,
             $type,
             $executeQuery
         );
     }
 
-    public function getLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
-        $type = 0,
-        array $excludedToolNames = [],
-        $executeQuery = true
-    ) {
-        $excludedToolNames[] = 'home'; // maybe not
-
+    public function getLockedConfigurableDesktopOrderedToolsByTypeForAdmin($type = 0, $executeQuery = true)
+    {
         return $this->orderedToolRepo->findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
-            $excludedToolNames,
             $type,
             $executeQuery
         );
@@ -741,7 +505,7 @@ class ToolManager
         return $this->getDesktopToolsConfiguration($roles);
     }
 
-    public function getDesktopToolsConfiguration(array $roles)
+    private function getDesktopToolsConfiguration(array $roles)
     {
         $config = [];
 
@@ -761,41 +525,48 @@ class ToolManager
         return $config;
     }
 
-    public function computeUserOrderedTools(User $user, array $config)
+    public function computeUserOrderedTools(User $user, array $config, array $excludedTools = [])
     {
         $orderedTools = [];
         $desktopTools = $this->toolRepo->findBy(['isDisplayableInDesktop' => true]);
+        $excludedToolNames = array_map(function (Tool $tool) {
+            return $tool->getName();
+        }, $excludedTools);
 
         foreach ($desktopTools as $tool) {
             $toolName = $tool->getName();
-            $orderedTool = $this->orderedToolRepo->findOneBy(['user' => $user, 'tool' => $tool, 'type' => 0]);
 
-            if (is_null($orderedTool)) {
-                $orderedTool = new OrderedTool();
-                $orderedTool->setTool($tool);
-                $orderedTool->setUser($user);
-                $orderedTool->setType(0);
-                $orderedTool->setOrder(1);
-                $orderedTool->setName($toolName);
-            }
-            if (isset($config[$toolName])) {
-                switch ($config[$toolName]) {
-                    case ToolRole::FORCED:
-                        $orderedTool->setVisibleInDesktop(true);
-                        $orderedTool->setLocked(true);
-                        break;
-                    case ToolRole::HIDDEN:
-                        $orderedTool->setVisibleInDesktop(false);
-                        $orderedTool->setLocked(true);
-                        break;
-                    default:
-                        $orderedTool->setLocked(false);
+            if (!in_array($toolName, $excludedToolNames)) {
+                $orderedTool = $this->orderedToolRepo->findOneBy(['user' => $user, 'tool' => $tool, 'type' => 0]);
+
+                if (empty($orderedTool)) {
+                    $orderedTool = new OrderedTool();
+                    $orderedTool->setTool($tool);
+                    $orderedTool->setUser($user);
+                    $orderedTool->setType(0);
+                    $orderedTool->setOrder(1);
+                    $orderedTool->setName($toolName);
                 }
-            } else {
-                $orderedTool->setLocked(false);
+
+                if (isset($config[$toolName])) {
+                    switch ($config[$toolName]) {
+                        case ToolRole::FORCED:
+                            $orderedTool->setVisibleInDesktop(true);
+                            $orderedTool->setLocked(true);
+                            break;
+                        case ToolRole::HIDDEN:
+                            $orderedTool->setVisibleInDesktop(false);
+                            $orderedTool->setLocked(true);
+                            break;
+                        default:
+                            $orderedTool->setLocked(false);
+                    }
+                } else {
+                    $orderedTool->setLocked(false);
+                }
+                $this->om->persist($orderedTool);
+                $orderedTools[] = $orderedTool;
             }
-            $this->om->persist($orderedTool);
-            $orderedTools[] = $orderedTool;
         }
         $this->om->flush();
 

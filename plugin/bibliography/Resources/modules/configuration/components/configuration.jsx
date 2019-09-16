@@ -1,16 +1,16 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {
-  RoutedPageContent
-} from '#/main/core/layout/router'
-import {PageContainer, PageHeader} from '#/main/core/layout/page'
+import {Routes} from '#/main/app/router'
+import {PageFull} from '#/main/app/page/components/full'
+
 import {ConfigurationForm} from '#/plugin/bibliography/configuration/components/form'
 
 const BookReferenceConfiguration = () =>
-  <PageContainer>
-    <PageHeader title={trans('icap_book_reference_config', {}, 'icap_bibliography')}/>
-    <RoutedPageContent
+  <PageFull
+    title={trans('icap_book_reference_config', {}, 'icap_bibliography')}
+  >
+    <Routes
       routes={[
         {
           path: '/',
@@ -19,7 +19,7 @@ const BookReferenceConfiguration = () =>
         }
       ]}
     />
-  </PageContainer>
+  </PageFull>
 
 export {
   BookReferenceConfiguration

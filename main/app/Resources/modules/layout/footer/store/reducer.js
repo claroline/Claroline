@@ -1,7 +1,7 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 const reducer = combineReducers({
-  show_locale: makeReducer(false),
+  display: makeReducer({}),
   content: makeReducer(null)
 })
 

@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use  Doctrine\ORM\QueryBuilder;
 
@@ -15,18 +16,21 @@ class UserValidator implements ValidatorInterface
 {
     /** @var ObjectManager */
     private $om;
+    /** @var ProfileSerializer */
+    private $profileSerializer;
     /** @var UserRepository */
     private $repo;
 
     /**
      * UserValidator constructor.
      *
-     * @param ObjectManager $om
+     * @param ObjectManager     $om
+     * @param ProfileSerializer $profileSerializer
      */
     public function __construct(ObjectManager $om, ProfileSerializer $profileSerializer)
     {
         $this->om = $om;
-        $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->repo = $this->om->getRepository(User::class);
         $this->profileSerializer = $profileSerializer;
     }
 
@@ -84,9 +88,9 @@ class UserValidator implements ValidatorInterface
             foreach ($required as $field) {
                 if (!$utils->has($data, 'profile.'.$field['id'])) {
                     $errors[] = [
-                 'path' => 'profile/'.$field['id'],
-                 'message' => 'The field '.$field['label'].' is required',
-               ];
+                        'path' => 'profile/'.$field['id'],
+                        'message' => 'The field '.$field['label'].' is required',
+                    ];
                 }
             }
         }
@@ -95,11 +99,13 @@ class UserValidator implements ValidatorInterface
     }
 
     /**
+     * Check if a user exists with the given data.
+     *
      * @param string      $propName
      * @param string      $propValue
      * @param string|null $userId
      *
-     * Check if a user exists with the given data
+     * @return bool
      */
     private function exists($propName, $propValue, $userId = null)
     {

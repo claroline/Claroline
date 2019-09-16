@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Logger;
+namespace Claroline\AppBundle\Logger;
 
 use Symfony\Component\Console\Logger\ConsoleLogger as SfLogger;
 use Psr\Log\LogLevel;

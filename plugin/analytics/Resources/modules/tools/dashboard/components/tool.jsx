@@ -7,7 +7,7 @@ import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {matchPath, Routes} from '#/main/app/router'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {Analytics} from '#/plugin/analytics/tools/dashboard/components/analytics'
+import {Overview} from '#/plugin/analytics/tools/dashboard/components/overview'
 import {Connections} from '#/plugin/analytics/tools/dashboard/components/connections'
 import {Logs} from '#/plugin/analytics/tools/dashboard/components/logs'
 import {UserLogs} from '#/plugin/analytics/tools/dashboard/components/logs-user'
@@ -53,7 +53,7 @@ const DashboardTool = (props) =>
         routes={[
           {
             path: '/',
-            render: () => trans('analytics_home'),
+            render: () => trans('overview', {}, 'analytics'),
             exact: true
           }, {
             path: '/connections',
@@ -80,12 +80,11 @@ const DashboardTool = (props) =>
       routes={[
         {
           path: '/',
-          component: Analytics,
+          component: Overview,
           exact: true
         }, {
           path: '/connections',
-          component: Connections,
-          exact: true
+          component: Connections
         }, {
           path: '/log',
           component: Logs,
@@ -96,8 +95,7 @@ const DashboardTool = (props) =>
           onEnter: (params) => props.openLog(params.id, props.workspaceId)
         }, {
           path: '/logs/users',
-          component: UserLogs,
-          exact: true
+          component: UserLogs
         }, {
           path: '/progression',
           component: Progression

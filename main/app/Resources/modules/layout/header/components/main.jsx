@@ -64,7 +64,7 @@ const HeaderMain = props =>
             icon: 'fa fa-fw fa-question',
             label: trans('help'),
             target: props.helpUrl,
-            displayed: !!props.helpUrl
+            displayed: props.display.help && !!props.helpUrl
           }, {
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-power-off',
@@ -97,7 +97,9 @@ HeaderMain.propTypes = {
   title: T.string,
   subtitle: T.string,
   display: T.shape({
-    name: T.bool.isRequired
+    name: T.bool.isRequired,
+    about: T.bool.isRequired,
+    help: T.bool.isRequired
   }).isRequired,
 
   /**

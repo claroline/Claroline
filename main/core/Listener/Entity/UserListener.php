@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
  *
  * @DI\Service()
  * @DI\Tag("doctrine.entity_listener")
+ *
+ * @todo : maybe move in UserCrud. For now there are too many places where users are not created by Crud (eg. Tests).
  */
 class UserListener
 {

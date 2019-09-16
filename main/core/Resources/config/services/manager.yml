@@ -69,7 +69,6 @@ services:
 
     Claroline\CoreBundle\Manager\ToolManager:
         arguments:
-          - '@claroline.utilities.misc'
           - '@claroline.persistence.object_manager'
           - '@claroline.manager.role_manager'
           - '@claroline.manager.tool_mask_decoder_manager'

@@ -1,52 +1,31 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
-import {withRouter} from '#/main/app/router'
-import {trans} from '#/main/app/intl/translation'
-import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
-import {
-  NotificationTab,
-  NotificationTabActions
-} from '#/plugin/planned-notification/tools/planned-notification/notification/components/notification-tab'
-import {
-  MessageTab,
-  MessageTabActions
-} from '#/plugin/planned-notification/tools/planned-notification/message/components/message-tab'
+import {Routes} from '#/main/app/router'
 
-const Tool = props =>
-  <TabbedPageContainer
-    title={trans('claroline_planned_notification_tool', {}, 'tools')}
+import {MessageTab} from '#/plugin/planned-notification/tools/planned-notification/message/components/message-tab'
+import {NotificationTab} from '#/plugin/planned-notification/tools/planned-notification/notification/components/notification-tab'
+
+const PlannedNotificationTool = props =>
+  <Routes
+    path={props.path}
     redirect={[
       {from: '/', exact: true, to: '/notifications'}
     ]}
-    tabs={[
+    routes={[
       {
-        icon: 'fa fa-bell',
-        title: trans('notifications'),
         path: '/notifications',
-        content: NotificationTab,
-        actions: props.canEdit ? NotificationTabActions : undefined
+        component: NotificationTab
       }, {
-        icon: 'fa fa-envelope',
-        title: trans('messages'),
         path: '/messages',
-        content: MessageTab,
-        actions: props.canEdit ? MessageTabActions : undefined
+        component: MessageTab
       }
     ]}
   />
 
-Tool.propTypes = {
-  canEdit: T.bool.isRequired
+PlannedNotificationTool.propTypes = {
+  path: T.string.isRequired
 }
-
-const PlannedNotificationTool = withRouter(connect(
-  state => ({
-    canEdit: select.canEdit(state)
-  })
-)(Tool))
 
 export {
   PlannedNotificationTool

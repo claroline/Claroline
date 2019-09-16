@@ -27,7 +27,7 @@ const IconsComponent = (props) =>
             name: 'display.resource_icon_set',
             type: 'choice',
             label: trans('icons'),
-            required: false,
+            required: true,
             options: {
               multiple: false,
               condensed: true,

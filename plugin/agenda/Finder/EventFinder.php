@@ -11,6 +11,7 @@
 
 namespace Claroline\AgendaBundle\Finder;
 
+use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 
@@ -18,7 +19,7 @@ class EventFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return 'Claroline\AgendaBundle\Entity\Event';
+        return Event::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])

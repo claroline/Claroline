@@ -5,50 +5,58 @@ import {connect} from 'react-redux'
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {withRouter} from '#/main/app/router'
+import {ToolPage} from '#/main/core/tool/containers/page'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/message/actions'
 import {Messages} from '#/plugin/planned-notification/tools/planned-notification/message/components/messages'
 import {Message} from '#/plugin/planned-notification/tools/planned-notification/message/components/message'
 
-const MessageTabActions = () =>
-  <PageActions>
-    <PageAction
-      type={LINK_BUTTON}
-      icon="fa fa-plus"
-      label={trans('create_new_message', {}, 'planned_notification')}
-      target="/messages/form"
-      primary={true}
-    />
-  </PageActions>
-
 const MessageTabComponent = props =>
-  <Routes
-    routes={[
+  <ToolPage
+    subtitle={trans('messages')}
+    actions={[
       {
-        path: '/messages',
-        exact: true,
-        component: Messages
-      }, {
-        path: '/messages/form/:id?',
-        component: Message,
-        onEnter: (params) => props.openForm(params.id, props.workspace),
-        onLeave: () => props.openForm(null, props.workspace)
+        type: LINK_BUTTON,
+        icon: 'fa fa-plus',
+        label: trans('create_new_message', {}, 'planned_notification'),
+        target: props.path+'/messages/form',
+        displayed: props.canEdit,
+        primary: true
       }
     ]}
-  />
+  >
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/messages',
+          exact: true,
+          component: Messages
+        }, {
+          path: '/messages/form/:id?',
+          component: Message,
+          onEnter: (params) => props.openForm(params.id, props.workspace),
+          onLeave: () => props.openForm(null, props.workspace)
+        }
+      ]}
+    />
+  </ToolPage>
 
 MessageTabComponent.propTypes = {
+  path: T.string.isRequired,
+  canEdit: T.bool.isRequired,
   workspace: T.object.isRequired,
   openForm: T.func.isRequired
 }
 
-const MessageTab = withRouter(connect(
+const MessageTab = connect(
   state => ({
-    workspace: select.workspace(state)
+    path: toolSelectors.path(state),
+    canEdit: selectors.canEdit(state),
+    workspace: selectors.workspace(state)
   }),
   dispatch => ({
     openForm(id, workspace) {
@@ -57,12 +65,11 @@ const MessageTab = withRouter(connect(
         workspace: workspace
       }
 
-      dispatch(actions.open('messages.current', id, defaultValue))
+      dispatch(actions.open(selectors.STORE_NAME+'.messages.current', id, defaultValue))
     }
   })
-)(MessageTabComponent))
+)(MessageTabComponent)
 
 export {
-  MessageTabActions,
   MessageTab
 }

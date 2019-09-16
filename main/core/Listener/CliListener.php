@@ -29,11 +29,17 @@ class CliListener
     private $em;
 
     /**
+     * CliListener constructor.
+     *
      * @DI\InjectParams({
      *     "tokenStorage"  = @DI\Inject("security.token_storage"),
      *     "em"            = @DI\Inject("doctrine.orm.entity_manager"),
      *     "userManager"   = @DI\Inject("claroline.manager.user_manager")
      * })
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param EntityManager         $em
+     * @param UserManager           $userManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -50,7 +56,7 @@ class CliListener
      *
      * @DI\Observe("console.command", priority = 17)
      *
-     * @param GetResponseEvent $event
+     * @param ConsoleCommandEvent $event
      */
     public function setDefaultUser(ConsoleCommandEvent $event)
     {

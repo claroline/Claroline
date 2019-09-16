@@ -17,10 +17,10 @@ const DashboardMenu = (props) =>
       buttonName="list-group-item"
       actions={[
         {
-          name: 'analytics',
+          name: 'overview',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pie-chart',
-          label: trans('analytics_home'),
+          label: trans('overview', {}, 'analytics'),
           target: props.path,
           exact: true
         }, {

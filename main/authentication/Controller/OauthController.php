@@ -89,7 +89,7 @@ class OauthController extends AbstractCrudController
         $session->remove('claroline.oauth.resource_owner');
         $session->remove('claroline.oauth.user');
 
-        return new RedirectResponse($this->router->generate('claro_index'));
+        return new RedirectResponse($this->router->generate('claro_index').'#/desktop');
     }
 
     /**

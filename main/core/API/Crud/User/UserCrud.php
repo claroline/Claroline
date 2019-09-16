@@ -65,7 +65,7 @@ class UserCrud
             $user->setPublicUrl($this->userManager->generatePublicUrl($user));
         }
 
-        $this->toolManager->addRequiredToolsToUser($user, 0);
+        $addedTools = $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
         $groupUser = $this->om->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
@@ -83,8 +83,8 @@ class UserCrud
         $user->addRole($roleUser);
 
         //create default desktop tools
-        $toolsRolesConfig = $this->toolManager->getDesktopToolsConfiguration([$roleUser]);
-        $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig);
+        $toolsRolesConfig = $this->toolManager->getUserDesktopToolsConfiguration($user);
+        $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig, $addedTools);
 
         $this->roleManager->createUserRole($user);
 
@@ -208,7 +208,7 @@ class UserCrud
                 $this->roleManager->renameUserRole($userRole, $user->getUsername());
                 // TODO : rename personal WS if user is renamed
             }
-            //TODO: create if not exist
+            // TODO: create if not exist
         }
     }
 }

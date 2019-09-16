@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Migration;
+namespace Claroline\MigrationBundle\Migrations;
 
 use Doctrine\DBAL\Connection;
 

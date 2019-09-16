@@ -16,7 +16,6 @@
     }
 
     .day-names {
-        flex: 0;
         font-family: @headings-font-family;
         color: @brand-primary;
         font-size: @font-size-small;
@@ -25,10 +24,6 @@
     .week {
         flex: 1;
         border-bottom: 1px solid @agenda-grid-border;
-
-        /*&:last-child {
-            border-bottom: none;
-        }*/
     }
 
     // cells
@@ -80,12 +75,11 @@
         }
 
         &.fill {
+            background: @body-bg; // TODO : use its own var
+
             .day-number {
                 color: @gray-light;
             }
-
-
-            background: @body-bg; // TODO : use its own var
         }
     }
 }

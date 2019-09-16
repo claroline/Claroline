@@ -9,7 +9,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {Role as RoleType} from '#/plugin/planned-notification/data/types/roles/prop-types'
 
 const Role = props =>
@@ -88,7 +88,7 @@ implementPropTypes(RolesInputComponent, FormFieldTypes, {
 
 const RolesInput = connect(
   state => ({
-    workspace: select.workspace(state)
+    workspace: selectors.workspace(state)
   }),
   dispatch => ({
     pickRoles(workspaceUuid, props) {
@@ -96,7 +96,7 @@ const RolesInput = connect(
         icon: 'fa fa-fw fa-id-badge',
         title: trans('select_roles', {}, 'planned_notification'),
         confirmText: trans('select', {}, 'planned_notification'),
-        name: 'notifications.rolesPicker',
+        name: selectors.STORE_NAME+'.notifications.rolesPicker',
         onlyId: false,
         definition: [
           {

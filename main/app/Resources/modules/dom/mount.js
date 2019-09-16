@@ -38,7 +38,7 @@ function mount(container, rootComponent, reducers = {}, initialData = {}, embedd
   // append base app reducers
   reducers[configSelectors.STORE_NAME] = configReducer
   reducers[securitySelectors.STORE_NAME] = securityReducer
-  reducers[toolSelectors.STORE_NAME] = toolReducer // maybe not declare here
+  reducers[toolSelectors.STORE_NAME] = toolReducer // TODO : do not declare here
 
   // create store
   // we initialize a new store even if the mounted app does not declare reducers

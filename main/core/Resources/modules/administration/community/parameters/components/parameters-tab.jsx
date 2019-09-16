@@ -126,7 +126,8 @@ const Parameters = (props) => {
               }, {
                 name: 'registration.auto_logging',
                 type: 'boolean',
-                label: trans('auto_logging_after_registration')
+                label: trans('auto_logging_after_registration'),
+                displayed: false // FIXME
               }
             ]
           }, {
@@ -192,6 +193,7 @@ const Parameters = (props) => {
             id: 'anonymous',
             icon: 'fa fa-fw fa-user-secret',
             title: trans('anonymous_users'),
+            displayed: false, // FIXME
             fields: [
               {
                 name: 'security.form_captcha',
@@ -217,6 +219,7 @@ const Parameters = (props) => {
                     name: 'tos.text',
                     type: 'translated',
                     label: trans('term_of_service'),
+                    required: true,
                     displayed: props.parameters.tos.enabled
                   }
                 ]

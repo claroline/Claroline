@@ -8,7 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {Message as MessageType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 
 // todo : maybe move it in core
@@ -37,7 +37,7 @@ const MessageInputComponent = props =>
             className="btn btn-default"
             onClick={() => props.pickMessage(props.workspace.uuid, props)}
           >
-            <span className="fa fa-fw fa-envelope"></span>
+            <span className="fa fa-fw fa-envelope" />
           </button>
         </span>
       </div>
@@ -55,7 +55,7 @@ implementPropTypes(MessageInputComponent, FormFieldTypes, {
 
 const MessageInput = connect(
   state => ({
-    workspace: select.workspace(state)
+    workspace: selectors.workspace(state)
   }),
   dispatch => ({
     pickMessage(worskpaceUuid, props) {
@@ -63,7 +63,7 @@ const MessageInput = connect(
         icon: 'fa fa-fw fa-envelope',
         title: trans('select_message', {}, 'planned_notification'),
         confirmText: trans('select', {}, 'planned_notification'),
-        name: 'messages.picker',
+        name: selectors.STORE_NAME+'.messages.picker',
         onlyId: false,
         definition: [
           {

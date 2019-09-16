@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 
+import {param} from '#/main/app/config'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
@@ -98,11 +99,15 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
 }
 
 function showToolBreadcrumb(contextType, contextData) {
-  if (constants.TOOL_WORKSPACE === contextType) {
-    return !!get(contextData, 'breadcrumb.displayed')
+  if (param('display.breadcrumb')) {
+    if (constants.TOOL_WORKSPACE === contextType) {
+      return !!get(contextData, 'breadcrumb.displayed')
+    }
+
+    return true
   }
 
-  return true
+  return false
 }
 
 export {

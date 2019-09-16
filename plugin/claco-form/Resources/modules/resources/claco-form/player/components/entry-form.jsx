@@ -1,17 +1,19 @@
-import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import parse from 'html-react-parser'
 import cloneDeep from 'lodash/cloneDeep'
+import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
-import {mount} from '#/main/app/dom/mount'
 import {withRouter} from '#/main/app/router'
+import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {Form} from '#/main/app/content/form/components/form'
 import {DataInput} from '#/main/app/data/components/input'
 
 import {trans} from '#/main/app/intl/translation'
@@ -19,7 +21,6 @@ import {hasPermission} from '#/main/app/security'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {
@@ -29,6 +30,8 @@ import {
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryFormData} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form-data'
+
+// TODO : split template form and standard form in 2 different components
 
 class EntryFormComponent extends Component {
   constructor(props) {
@@ -45,13 +48,7 @@ class EntryFormComponent extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.entry.id !== prevProps.entry.id ||
-      (this.props.entry.id === prevProps.entry.id && this.props.entry.values !== prevProps.entry.values)) {
-      this.renderTemplateFields()
-    }
-  }
-
+  // for standard form
   getSections() {
     const isShared = this.props.entryUser && this.props.entryUser.id ? this.props.entryUser.shared : false
 
@@ -98,7 +95,8 @@ class EntryFormComponent extends Component {
       }
       sectionFields.push(params)
     })
-    const sections = [
+
+    return [
       {
         id: 'general',
         title: trans('general'),
@@ -106,101 +104,124 @@ class EntryFormComponent extends Component {
         fields: sectionFields
       }
     ]
-
-    return sections
-  }
-
-  // TODO: unmount component
-  renderTemplateFields() {
-    if (this.props.useTemplate && this.props.template) {
-      const titleComponent =
-        <DataInput
-          id="field-title"
-          type="string"
-          label={trans('title')}
-          required={true}
-          hideLabel={true}
-          value={this.props.entry.title}
-          error={this.props.errors.title}
-          onChange={(value) => this.props.updateFormProp('title', value)}
-          setError={(errors) => {
-            const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
-            set(newErrors, 'title', errors)
-
-            this.props.setErrors(newErrors)
-          }}
-        />
-      const element = document.getElementById('clacoform-entry-title')
-
-      if (element) {
-        ReactDOM.render(titleComponent, element)
-      }
-      this.props.fields.forEach(f => {
-        const fieldEl = document.getElementById(`clacoform-field-${f.autoId}`)
-        let options = f.options ? Object.assign({}, f.options) : {}
-
-        if (fieldEl) {
-          if (f.type === 'choice') {
-            const choices = f.options && f.options.choices ?
-              f.options.choices.reduce((acc, choice) => {
-                acc[choice.value] = choice.value
-
-                return acc
-              }, {}) :
-              {}
-            options = Object.assign({}, options, {choices: choices})
-          }
-
-          if (f.type === 'file') {
-            options['uploadUrl'] = ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]
-          }
-
-          const fieldComponent = () =>
-            <DataInput
-              key={`field-${f.id}`}
-              id={`field-${f.id}`}
-              type={f.type}
-              label={f.name}
-              required={f.required}
-              disabled={!this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked))}
-              help={f.help}
-              hideLabel={true}
-              value={this.props.entry.values ? this.props.entry.values[f.id] : undefined}
-              error={this.props.errors[f.id]}
-              options={f.options ? options : {}}
-              onChange={(value) => this.props.updateFormProp(`values.${f.id}`, value)}
-              onError={(errors) => {
-                const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
-                set(newErrors, `values.${f.id}`, errors)
-
-                this.props.setErrors(newErrors)
-              }}
-            />
-
-          mount(fieldEl, fieldComponent, {}, {}, true)
-        }
-      })
-    }
   }
 
   generateTemplate() {
     let template = this.props.template
-    template = template.replace('%clacoform_entry_title%', '<span id="clacoform-entry-title"></span>')
+    template = template.replace('%clacoform_entry_title%', '<span class="clacoform-field" id="clacoform-field-title"></span>')
     this.props.fields.forEach(f => {
-      template = template.replace(`%field_${f.autoId}%`, `<span id="clacoform-field-${f.autoId}"></span>`)
+      template = template.replace(`%field_${f.autoId}%`, `<span class="clacoform-field" id="clacoform-field-${f.id}"></span>`)
     })
 
-    this.setState({template: template}, () => this.renderTemplateFields())
+    this.setState({template: template})
+  }
+
+  // for template
+  getFields() {
+    // generate field list for template
+    return [
+      // title field
+      {
+        id: 'title',
+        type: 'string',
+        label: trans('title'),
+        required: true,
+        hideLabel: true,
+        value: this.props.entry.title,
+        error: this.props.errors.title,
+        onChange: (value) => this.props.updateFormProp('title', value),
+        onError: (errors) => {
+          const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
+          set(newErrors, 'title', errors)
+
+          this.props.setErrors(newErrors)
+        }
+      }
+    ].concat(this.props.fields.map(field => {
+      // remap some options to make it work with forms
+      let options = field.options ? Object.assign({}, field.options) : {}
+
+      if (field.type === 'choice') {
+        const choices = options.choices ?
+          options.choices.reduce((acc, choice) => Object.assign(acc, {
+            [choice.value]: choice.value
+          }), {}) : {}
+
+        options = Object.assign({}, options, {choices: choices})
+      }
+
+      if (field.type === 'file') {
+        options.uploadUrl = ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]
+      }
+
+      return {
+        id: field.id,
+        type: field.type,
+        label: field.name,
+        required: field.required,
+        disabled: !this.props.isManager && ((this.props.isNew && field.restrictions.locked && !field.restrictions.lockedEditionOnly) || (!this.props.isNew && field.restrictions.locked)),
+        help: field.help,
+        hideLabel: true,
+        value: this.props.entry.values ? this.props.entry.values[field.id] : undefined,
+        error: this.props.errors[field.id],
+        options: options,
+        onChange: (value) => this.props.updateFormProp(`values.${field.id}`, value),
+        onError: (errors) => {
+          const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
+          set(newErrors, `values.${field.id}`, errors)
+
+          this.props.setErrors(newErrors)
+        }
+      }
+    }))
   }
 
   render() {
+    const fields = this.getFields()
+
     return (
-      <div>
+      <Fragment>
         {this.props.entry && (this.props.useTemplate && this.props.template) &&
-          <HtmlText>
-            {this.state.template}
-          </HtmlText>
+          <Form
+            className="panel panel-default"
+            pendingChanges={this.props.pendingChanges}
+            errors={!isEmpty(this.props.errors)}
+            validating={this.props.validating}
+            save={{
+              type: CALLBACK_BUTTON,
+              callback: () => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push, this.props.path)
+            }}
+            cancel={{
+              type: LINK_BUTTON,
+              target: this.props.entry.id ? `${this.props.path}/entries/${this.props.entry.id}` : this.props.path,
+              exact: true
+            }}
+          >
+            <div className="panel-body">
+              {parse(this.state.template, {
+                replace: (element) => {
+                  if (element.attribs && element.attribs.class === 'clacoform-field' && element.attribs.id) {
+                    // this is a field, replace it with a form input
+                    // get the field ID and retrieve it
+                    const id = element.attribs.id.replace('clacoform-field-', '')
+                    const field = fields.find(f => f.id === id)
+                    if (field) {
+                      return (
+                        <DataInput
+                          id={`field-${field.id}`}
+                          {...field}
+                        />
+                      )
+                    }
+                  }
+
+                  return element
+                }
+              })}
+            </div>
+          </Form>
         }
+
         {this.props.entry && (!this.props.useTemplate || !this.props.template) &&
           <FormData
             level={3}
@@ -218,6 +239,7 @@ class EntryFormComponent extends Component {
             }}
           />
         }
+
         {(this.props.canEdit || this.props.isManager || this.props.isKeywordsEnabled) &&
           <FormSections level={3}>
             {(this.props.canEdit || this.props.isManager) &&
@@ -253,7 +275,7 @@ class EntryFormComponent extends Component {
             }
           </FormSections>
         }
-      </div>
+      </Fragment>
     )
   }
 }
@@ -262,6 +284,8 @@ class EntryFormComponent extends Component {
 EntryFormComponent.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
+  impersonated: T.bool.isRequired,
+  config: T.object,
   canEdit: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
   fields: T.arrayOf(T.shape(FieldType.propTypes)).isRequired,
@@ -285,13 +309,18 @@ EntryFormComponent.propTypes = {
   removeCategory: T.func.isRequired,
   addKeyword: T.func.isRequired,
   removeKeyword: T.func.isRequired,
-  history: T.object.isRequired
+  history: T.object.isRequired,
+  pendingChanges: T.bool.isRequired,
+  validating: T.bool.isRequired
 }
 
 const EntryForm = withRouter(connect(
   state => ({
-    path: resourceSelectors.path(state),
     currentUser: securitySelectors.currentUser(state),
+    impersonated: securitySelectors.isImpersonated(state),
+    config: configSelectors.config(state),
+    path: resourceSelectors.path(state),
+
     canEdit: hasPermission('edit', resourceSelectors.resourceNode(state)),
     clacoFormId: selectors.clacoForm(state).id,
     fields: selectors.visibleFields(state),
@@ -305,6 +334,8 @@ const EntryForm = withRouter(connect(
     isNew: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     errors: formSelect.errors(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
+    pendingChanges: formSelect.pendingChanges(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
+    validating: formSelect.validating(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entryUser: selectors.entryUser(state),
     categories: selectors.categories(state),
     keywords: selectors.keywords(state)

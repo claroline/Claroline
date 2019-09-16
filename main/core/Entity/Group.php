@@ -122,9 +122,9 @@ class Group extends AbstractRoleSubject
 
     public function addUser(User $user)
     {
-	if (!$user->getGroups()->contains($this)) {
+        if (!$user->getGroups()->contains($this)) {
             $user->getGroups()->add($this);
-	}
+        }
     }
 
     public function removeUser(User $user)
@@ -148,15 +148,7 @@ class Group extends AbstractRoleSubject
         return $userIds;
     }
 
-    /**
-     * alias for getPlateformeRole.
-     */
     public function getPlatformRoles()
-    {
-        return $this->getPlatformRole();
-    }
-
-    public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();
         $return = [];

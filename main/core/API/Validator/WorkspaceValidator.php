@@ -48,10 +48,13 @@ class WorkspaceValidator implements ValidatorInterface
     }
 
     /**
+     * Check if a workspace exists with the given data.
+     *
      * @param string      $propName
      * @param string      $propValue
      * @param string|null $workspaceId
-     *                                 Check if a workspace exists with the given data
+     *
+     * @return bool
      */
     private function exists($propName, $propValue, $workspaceId = null)
     {

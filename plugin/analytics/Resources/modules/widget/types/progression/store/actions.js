@@ -10,12 +10,6 @@ actions.loadWidgetProgressionItems = makeActionCreator(WIDGET_PROGRESSION_LOAD_I
 actions.loadProgressionItems = (workspaceId, levelMax = null) => ({
   [API_REQUEST]: {
     url: ['apiv2_progression_items_list', {workspace: workspaceId, levelMax: levelMax}],
-    request: {
-      method: 'GET'
-    },
-    success: (response, dispatch) => {
-      dispatch(actions.loadWidgetProgressionItems(response))
-    }
+    success: (response, dispatch) => dispatch(actions.loadWidgetProgressionItems(response))
   }
 })
-

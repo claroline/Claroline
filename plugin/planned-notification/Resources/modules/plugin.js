@@ -12,5 +12,8 @@ registry.add('ClarolinePlannedNotificationBundle', {
       'message'               : () => { return import(/* webpackChunkName: "planned-notification-data-message" */         '#/plugin/planned-notification/data/types/message') },
       'planned_notifications' : () => { return import(/* webpackChunkName: "planned-notification-data-notifications" */   '#/plugin/planned-notification/data/types/notifications') }
     }
+  },
+  tools: {
+    'claroline_planned_notification_tool': () => { return import(/* webpackChunkName: "planned-notification-tool-notification" */ '#/plugin/planned-notification/tools/planned-notification') }
   }
 })

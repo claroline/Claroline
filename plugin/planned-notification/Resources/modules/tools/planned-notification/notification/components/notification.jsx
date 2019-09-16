@@ -4,21 +4,22 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {selectors as formSelect} from '#/main/app/content/form/store'
+import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {
   TRIGGERING_ACTIONS,
   WORKSPACE_REGISTRATION_USER,
   WORKSPACE_REGISTRATION_GROUP
 } from '#/plugin/planned-notification/tools/planned-notification/constants'
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {Notification as NotificationType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 
 const NotificationForm = props =>
   <FormData
     level={3}
-    name="notifications.current"
+    name={selectors.STORE_NAME+'.notifications.current'}
     disabled={!props.canEdit}
     buttons={true}
     target={(notification, isNew) => isNew ?
@@ -27,7 +28,7 @@ const NotificationForm = props =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: '/notifications',
+      target: props.path+'/notifications',
       exact: true
     }}
     sections={[
@@ -89,6 +90,7 @@ const NotificationForm = props =>
   />
 
 NotificationForm.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   new: T.bool.isRequired,
   notification: T.shape(NotificationType.propTypes).isRequired
@@ -96,10 +98,11 @@ NotificationForm.propTypes = {
 
 const Notification = connect(
   state => ({
-    canEdit: select.canEdit(state),
-    roles: select.workspaceRolesChoices(state),
-    new: formSelect.isNew(formSelect.form(state, 'notifications.current')),
-    notification: formSelect.data(formSelect.form(state, 'notifications.current'))
+    path: toolSelectors.path(state),
+    canEdit: selectors.canEdit(state),
+    roles: selectors.workspaceRolesChoices(state),
+    new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME+'.notifications.current')),
+    notification: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.notifications.current'))
   })
 )(NotificationForm)
 

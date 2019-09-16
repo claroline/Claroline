@@ -186,36 +186,6 @@ class ToolManagerTest extends MockeryTestCase
         $this->getManager()->getDisplayedDesktopOrderedTools($user);
     }
 
-    public function testGetDesktopToolsConfigurationArray()
-    {
-        $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $desktopToolA = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $desktopToolB = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $undisplayedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $toolA = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
-        $toolB = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
-
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->orderedToolRepo->shouldReceive('findByUser')->once()->with($user)
-            ->andReturn([$desktopToolA, $desktopToolB]);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-        //unmapped field
-        $desktopToolA->shouldReceive('getOrder')->once()->andReturn(1);
-        $desktopToolA->shouldReceive('getTool')->times(2)->andReturn($toolA);
-        $desktopToolB->shouldReceive('getOrder')->once()->andReturn(3);
-        $desktopToolB->shouldReceive('getTool')->times(2)->andReturn($toolB);
-        $toolA->shouldReceive('setVisible')->once()->with(true);
-        $toolB->shouldReceive('setVisible')->once()->with(true);
-
-        $this->toolRepo->shouldReceive('findDesktopUndisplayedToolsByUser')
-            ->once()->with($user)->andReturn([$undisplayedTool]);
-        $undisplayedTool->shouldReceive('setVisible')->once()->with(false);
-        $this->utilities->shouldReceive('arrayFill')
-            ->with(['1' => $toolA, '3' => $toolB], [$undisplayedTool])->once();
-
-        $this->getManager()->getDesktopToolsConfigurationArray($user);
-    }
-
     /**
      * @dataProvider addDesktopToolProvider
      */

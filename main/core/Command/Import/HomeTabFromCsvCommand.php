@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Command\Import;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Validator\Constraints\CsvHomeTab;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

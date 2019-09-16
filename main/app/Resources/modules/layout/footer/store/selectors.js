@@ -11,9 +11,9 @@ const content = createSelector(
   (store) => store.content
 )
 
-const showLocale = createSelector(
+const display = createSelector(
   [store],
-  (store) => store.show_locale
+  (store) => store.display
 )
 
 const locale = (state) => configSelectors.param(state, 'locale')
@@ -22,6 +22,6 @@ export const selectors = {
   STORE_NAME,
 
   content,
-  showLocale,
+  display,
   locale
 }

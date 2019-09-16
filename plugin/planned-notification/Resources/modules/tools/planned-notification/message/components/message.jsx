@@ -4,16 +4,17 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {selectors as formSelect} from '#/main/app/content/form/store'
+import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {Message as MessageType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 
 const MessageForm = props =>
   <FormData
     level={3}
-    name="messages.current"
+    name={selectors.STORE_NAME+'.messages.current'}
     disabled={!props.canEdit}
     buttons={true}
     target={(message, isNew) => isNew ?
@@ -22,7 +23,7 @@ const MessageForm = props =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: '/messages',
+      target: props.path+'/messages',
       exact: true
     }}
     sections={[
@@ -48,6 +49,7 @@ const MessageForm = props =>
   />
 
 MessageForm.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   new: T.bool.isRequired,
   message: T.shape(MessageType.propTypes).isRequired
@@ -55,9 +57,10 @@ MessageForm.propTypes = {
 
 const Message = connect(
   state => ({
-    canEdit: select.canEdit(state),
-    new: formSelect.isNew(formSelect.form(state, 'messages.current')),
-    message: formSelect.data(formSelect.form(state, 'messages.current'))
+    path: toolSelectors.path(state),
+    canEdit: selectors.canEdit(state),
+    new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME+'.messages.current')),
+    message: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.messages.current'))
   })
 )(MessageForm)
 

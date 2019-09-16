@@ -217,7 +217,6 @@ class OrderedToolRepository extends ServiceEntityRepository
 
     public function findConfigurableDesktopOrderedToolsByUser(
         User $user,
-        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     ) {
@@ -229,7 +228,6 @@ class OrderedToolRepository extends ServiceEntityRepository
             WHERE ot.workspace IS NULL
             AND ot.type = :type
             AND ot.user = :user
-            AND t.name NOT IN (:excludedToolNames)
             AND t.isDisplayableInDesktop = true
             AND (
                 CONCAT(p.vendorName, p.bundleName) IN (:bundles)
@@ -240,7 +238,6 @@ class OrderedToolRepository extends ServiceEntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
-        $query->setParameter('excludedToolNames', $excludedToolNames);
         $query->setParameter('type', $type);
         $query->setParameter('bundles', $this->bundles);
 
@@ -281,7 +278,6 @@ class OrderedToolRepository extends ServiceEntityRepository
     }
 
     public function findConfigurableDesktopOrderedToolsByTypeForAdmin(
-        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     ) {
@@ -293,7 +289,6 @@ class OrderedToolRepository extends ServiceEntityRepository
             WHERE ot.workspace IS NULL
             AND ot.user IS NULL
             AND ot.type = :type
-            AND t.name NOT IN (:excludedToolNames)
             AND t.isDisplayableInDesktop = true
             AND (
                 CONCAT(p.vendorName, p.bundleName) IN (:bundles)
@@ -304,14 +299,12 @@ class OrderedToolRepository extends ServiceEntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('type', $type);
-        $query->setParameter('excludedToolNames', $excludedToolNames);
         $query->setParameter('bundles', $this->bundles);
 
         return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
-        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     ) {
@@ -324,7 +317,6 @@ class OrderedToolRepository extends ServiceEntityRepository
             AND ot.user IS NULL
             AND ot.type = :type
             AND ot.locked = true
-            AND t.name NOT IN (:excludedToolNames)
             AND t.isDisplayableInDesktop = true
             AND (
                 CONCAT(p.vendorName, p.bundleName) IN (:bundles)
@@ -334,7 +326,6 @@ class OrderedToolRepository extends ServiceEntityRepository
         ';
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('excludedToolNames', $excludedToolNames);
         $query->setParameter('type', $type);
         $query->setParameter('bundles', $this->bundles);
 

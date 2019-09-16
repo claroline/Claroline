@@ -2,7 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Migrations\pdo_mysql;
 
-use Claroline\CoreBundle\Library\Migration\ConditionalMigrationTrait;
+use Claroline\MigrationBundle\Migrations\ConditionalMigrationTrait;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 

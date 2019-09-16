@@ -1,16 +1,9 @@
-import {bootstrap} from '#/main/app/dom/bootstrap'
-
-import {reducer} from '#/plugin/planned-notification/tools/planned-notification/reducer'
+import {reducer} from '#/plugin/planned-notification/tools/planned-notification/store/reducer'
 import {PlannedNotificationTool} from '#/plugin/planned-notification/tools/planned-notification/components/tool'
+import {PlannedNotificationMenu} from '#/plugin/planned-notification/tools/planned-notification/components/menu'
 
-// mount the react application
-bootstrap(
-  // app DOM container (also holds initial app data as data attributes)
-  '.planned-notification-tool-container',
-
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
-  PlannedNotificationTool,
-
-  // app store configuration
-  reducer
-)
+export default {
+  component: PlannedNotificationTool,
+  menu: PlannedNotificationMenu,
+  store: reducer
+}

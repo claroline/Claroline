@@ -409,7 +409,6 @@ services:
             - '@claroline.persistence.object_manager'
             - '@router'
             - '@claroline.config.platform_config_handler'
-            - '@claroline.utilities.file'
             - '@claroline.manager.version_manager'
             - '@claroline.manager.plugin_manager'
             - '@claroline.manager.icon_set_manager'

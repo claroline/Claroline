@@ -66,6 +66,8 @@ class GroupManager
      * Removes a group.
      *
      * @param Group $group
+     *
+     * @todo should use Crud
      */
     public function deleteGroup(Group $group)
     {

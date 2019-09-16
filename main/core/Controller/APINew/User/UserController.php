@@ -617,36 +617,6 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @ApiDoc(
-     *     description="This is the route used by the user picker.",
-     * )
-     * @Route(
-     *    "/picker",
-     *    name="apiv2_users_picker_list"
-     * )
-     * @Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function usersPickerListAction(Request $request)
-    {
-        return new JsonResponse($this->finder->search(
-            User::class,
-            array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'isEnabled' => true,
-                    'isRemoved' => false,
-                    'contactable' => true,
-                ]]
-            ),
-            [Options::SERIALIZE_MINIMAL]
-        ));
-    }
-
-    /**
      * @return array
      */
     public function getDefaultRequirements()

@@ -75,7 +75,7 @@ class EventController extends AbstractCrudController
         $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
         $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
 
-        //get start & end date and add them to the hidden filters list
+        // get start & end date and add them to the hidden filters list
         $query['hiddenFilters']['createdAfter'] = $query['start'];
         $query['hiddenFilters']['endBefore'] = $query['end'];
 

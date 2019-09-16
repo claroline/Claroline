@@ -63,7 +63,7 @@ class ClientController
         return [
             'meta' => [],
             'maintenance' => [
-                'enabled' => MaintenanceHandler::isMaintenanceEnabled(),
+                'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),
                 'message' => $this->configHandler->getParameter('maintenance.message'),
             ],
             'impersonated' => $this->isImpersonated(),
@@ -76,7 +76,14 @@ class ClientController
                     'help' => $this->configHandler->getParameter('show_help_button'),
                 ],
             ],
-            'footer' => $this->configHandler->getParameter('footer'),
+            'footer' => [
+                'content' => $this->configHandler->getParameter('footer.content'),
+                'display' => [
+                    'locale' => $this->configHandler->getParameter('footer.show_locale'),
+                    'help' => $this->configHandler->getParameter('footer.show_help'),
+                    'termsOfService' => $this->configHandler->getParameter('footer.show_terms_of_service'),
+                ],
+            ],
 
             'injectedJavascripts' => $this->injectJavascript(),
             'injectedStylesheets' => $this->injectStylesheet(),

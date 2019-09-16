@@ -2,7 +2,7 @@
 
 namespace Claroline\HistoryBundle\Command;
 
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\HistoryBundle\Manager\HistoryManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

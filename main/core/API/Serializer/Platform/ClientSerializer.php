@@ -5,12 +5,12 @@ namespace Claroline\CoreBundle\API\Serializer\Platform;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Manager\OauthManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilename;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
@@ -46,9 +46,6 @@ class ClientSerializer
     /** @var PlatformConfigurationHandler */
     private $config;
 
-    /** @var FileUtilities */
-    private $fileUtilities;
-
     /** @var VersionManager */
     private $versionManager;
 
@@ -66,6 +63,20 @@ class ClientSerializer
 
     /**
      * ClientSerializer constructor.
+     *
+     * @param string                       $env
+     * @param Packages                     $assets
+     * @param EventDispatcherInterface     $eventDispatcher
+     * @param TokenStorageInterface        $tokenStorage
+     * @param RequestStack                 $requestStack
+     * @param ObjectManager                $om
+     * @param RouterInterface              $router
+     * @param PlatformConfigurationHandler $config
+     * @param VersionManager               $versionManager
+     * @param PluginManager                $pluginManager
+     * @param IconSetManager               $iconManager
+     * @param ResourceTypeSerializer       $resourceTypeSerializer
+     * @param OauthManager                 $oauthManager
      */
     public function __construct(
         $env,
@@ -77,7 +88,6 @@ class ClientSerializer
         ObjectManager $om,
         RouterInterface $router,
         PlatformConfigurationHandler $config,
-        FileUtilities $fileUtilities,
         VersionManager $versionManager,
         PluginManager $pluginManager,
         IconSetManager $iconManager,
@@ -91,7 +101,6 @@ class ClientSerializer
         $this->om = $om;
         $this->router = $router;
         $this->config = $config;
-        $this->fileUtilities = $fileUtilities;
         $this->versionManager = $versionManager;
         $this->pluginManager = $pluginManager;
         $this->iconManager = $iconManager;
@@ -107,9 +116,12 @@ class ClientSerializer
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        $logo = $this->fileUtilities->getOneBy([
-            'url' => $this->config->getParameter('logo'),
-        ]);
+        $logo = null;
+        if ($this->config->getParameter('logo')) {
+            $logo = $this->om->getRepository(PublicFile::class)->findOneBy([
+                'url' => $this->config->getParameter('logo'),
+            ]);
+        }
 
         $data = [
             'logo' => $logo ? $logo->getUrl() : null,
@@ -128,6 +140,9 @@ class ClientSerializer
             ],
             'theme' => $this->serializeTheme(),
             'locale' => $this->serializeLocale(),
+            'display' => [
+                'breadcrumb' => $this->config->getParameter('display.breadcrumb'),
+            ],
             'openGraph' => [
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],

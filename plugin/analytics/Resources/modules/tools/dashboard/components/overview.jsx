@@ -9,7 +9,7 @@ import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
 import {DailyActivity} from '#/plugin/analytics/tools/dashboard/components/daily-activity'
 import {Resources} from '#/plugin/analytics/tools/dashboard/components/resources'
 
-class AnalyticsComponent extends Component {
+class OverviewComponent extends Component {
   constructor(props) {
     super(props)
 
@@ -41,7 +41,7 @@ class AnalyticsComponent extends Component {
   }
 }
 
-AnalyticsComponent.propTypes = {
+OverviewComponent.propTypes = {
   analytics: T.shape({
     loaded: T.bool.isRequired,
     data: T.object
@@ -53,7 +53,7 @@ AnalyticsComponent.propTypes = {
   getAnalytics: T.func.isRequired
 }
 
-const Analytics = connect(
+const Overview = connect(
   state => ({
     analytics: selectors.analytics(state),
     nbConnections: selectors.nbConnections(state),
@@ -64,8 +64,8 @@ const Analytics = connect(
       dispatch(actions.getAnalyticsData('apiv2_workspace_tool_dashboard', {workspaceId}))
     }
   })
-)(AnalyticsComponent)
+)(OverviewComponent)
 
 export {
-  Analytics
+  Overview
 }

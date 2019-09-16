@@ -23,7 +23,6 @@ class ClaroUtilities
 {
     private $container;
     private $hasIntl;
-    private $formatter;
 
     /**
      * @DI\InjectParams({
@@ -37,55 +36,6 @@ class ClaroUtilities
     }
 
     /**
-     * Fill the empty value on $fillable with $array and sort it.
-     *
-     * Ie:
-     * $fillable[4] = value4
-     * $fillable[1] = value1
-     * $fillable[2] = value2
-     *
-     * $array[] = value3
-     *
-     * Once the function is fired the results is
-     * $fillable[1] = value1
-     * $fillable[2] = value2
-     * $fillable[3] = value3
-     * $fillable[4] = value4
-     *
-     * @param array $fillable
-     * @param array $array
-     *
-     * @return array
-     */
-    public function arrayFill(array $fillable, array $array)
-    {
-        ksort($fillable);
-        $saveKey = 1;
-        $filledArray = [];
-
-        foreach ($fillable as $key => $value) {
-            if ($key - $saveKey !== 0) {
-                while ($key - $saveKey >= 1) {
-                    $filledArray[$saveKey] = array_shift($array);
-                    ++$saveKey;
-                }
-                $filledArray[$key] = $value;
-            } else {
-                $filledArray[$key] = $value;
-            }
-            ++$saveKey;
-        }
-
-        if (count($array) > 0) {
-            foreach ($array as $item) {
-                $filledArray[] = $item;
-            }
-        }
-
-        return $filledArray;
-    }
-
-    /**
      * Generates a globally unique identifier.
      *
      * @return string
@@ -95,53 +45,6 @@ class ClaroUtilities
     public function generateGuid()
     {
         return Uuid::uuid4()->toString();
-    }
-
-    public function getDefaultEncoding()
-    {
-        $headers = $this->container->get('request_stack')->getMasterRequest()->server->getHeaders();
-        $userAgent = $headers['USER_AGENT'];
-
-        if (strpos($userAgent, 'Linux') !== false) {
-            return 'ISO-8859-1';
-        }
-
-        if (strpos($userAgent, 'Windows') !== false) {
-            return 'CP437';
-        }
-
-        //default
-        return 'ISO-8859-1';
-    }
-
-    /*
-     * Format the date according to the locale.
-     */
-    public function intlDateFormat($date)
-    {
-        if (($formatter = $this->getFormatter()) instanceof \IntlDateFormatter) {
-            return $formatter->format($date);
-        } elseif ($date instanceof \DateTime) {
-            return $date->format('d-m-Y');
-        }
-
-        return date('d-m-Y', $date);
-    }
-
-    private function getFormatter()
-    {
-        if (!$this->formatter && $this->hasIntl) {
-            $request = $this->container->get('request_stack')->getMasterRequest();
-            $this->formatter = new \IntlDateFormatter(
-                $this->container->get('claroline.manager.locale_manager')->getUserLocale($request),
-                \IntlDateFormatter::SHORT,
-                \IntlDateFormatter::SHORT,
-                date_default_timezone_get(),
-                \IntlDateFormatter::GREGORIAN
-            );
-        }
-
-        return $this->formatter;
     }
 
     /**
@@ -254,7 +157,7 @@ class ClaroUtilities
     {
         // If encoding not UTF-8 then convert it to UTF-8
         $encoding = $this->detectEncoding($string);
-        if ($encoding && $encoding !== 'UTF-8') {
+        if ($encoding && 'UTF-8' !== $encoding) {
             $string = iconv($encoding, 'UTF-8', $string);
         }
 

@@ -65,6 +65,7 @@ class Persister
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPlainPassword($username);
+        $user->setPassword($username);
         $user->setEmail($username.'@email.com');
         $user->setIsMailValidated(true);
         $user->addRole($roleUser);

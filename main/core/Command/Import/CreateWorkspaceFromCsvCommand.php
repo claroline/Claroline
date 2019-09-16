@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Command\Import;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Listener\Doctrine\DebugListener;
 use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
 use Psr\Log\LogLevel;

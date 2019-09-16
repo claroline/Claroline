@@ -5,16 +5,17 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data.jsx'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {NotificationCard} from '#/plugin/planned-notification/tools/planned-notification/notification/data/components/notification-card'
 
 const NotificationsList = props =>
   <ListData
-    name="notifications.list"
+    name={selectors.STORE_NAME+'.notifications.list'}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `/notifications/form/${row.id}`
+      target: props.path+`/notifications/form/${row.id}`
     })}
     fetch={{
       url: ['apiv2_plannednotification_workspace_list', {workspace: props.workspace.uuid}],
@@ -30,7 +31,7 @@ const NotificationsList = props =>
         icon: 'fa fa-fw fa-edit',
         label: trans('edit'),
         scope: ['object'],
-        target: `/notifications/form/${rows[0].id}`
+        target: `${props.path}/notifications/form/${rows[0].id}`
       }
     ]}
     definition={[
@@ -76,6 +77,7 @@ const NotificationsList = props =>
   />
 
 NotificationsList.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   workspace: T.shape({
     uuid: T.string.isRequired
@@ -84,8 +86,9 @@ NotificationsList.propTypes = {
 
 const Notifications = connect(
   state => ({
-    canEdit: select.canEdit(state),
-    workspace: select.workspace(state)
+    path: toolSelectors.path(state),
+    canEdit: selectors.canEdit(state),
+    workspace: selectors.workspace(state)
   })
 )(NotificationsList)
 

@@ -20,5 +20,5 @@ services:
     Claroline\OpenBadgeBundle\Finder\EvidenceFinder: ~
 
     Claroline\OpenBadgeBundle\Finder\BadgeClassFinder:
-      arguments:
-        - '@security.token_storage'
+        arguments:
+          - '@security.token_storage'

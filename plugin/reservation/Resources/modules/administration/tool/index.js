@@ -1,16 +1,7 @@
 import {bootstrap} from '#/main/app/dom/bootstrap'
-import {registerModals} from '#/main/core/layout/modal'
 
 import {reducer} from '#/plugin/reservation/administration/tool/reducer'
 import {ReservationTool} from '#/plugin/reservation/administration/tool/components/tool.jsx'
-import {
-  MODAL_RESOURCE_TYPES,
-  ResourceTypesModal
-} from '#/plugin/reservation/administration/resource-type/components/modal/resource-types-modal.jsx'
-
-registerModals([
-  [MODAL_RESOURCE_TYPES, ResourceTypesModal]
-])
 
 // mount the react application
 bootstrap(

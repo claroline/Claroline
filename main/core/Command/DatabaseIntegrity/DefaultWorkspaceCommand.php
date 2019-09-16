@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: panos
- * Date: 17/10/17
- * Time: 14:10.
- */
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
+use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

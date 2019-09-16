@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 import isEmpty from 'lodash/isEmpty'
-import uniqWith from 'lodash/uniq'
+import uniqWith from 'lodash/uniqWith'
 
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {hasRole} from '#/main/app/security/permissions'
@@ -67,10 +67,12 @@ const defaultOpening = createSelector(
         defaultTool = workspace.opening.target
       }
 
-      // no default configured (or not properly)
-      if (!defaultTool && tools[0]) {
-        // open the first available tool
-        defaultTool = tools[0].name
+      if (!isEmpty(tools)) {
+        if (!defaultTool || -1 === tools.findIndex(tool => defaultTool === tool.name)) {
+          // no default set or the default tool is not available for the user
+          // open the first available tool
+          defaultTool = tools[0].name
+        }
       }
     }
 

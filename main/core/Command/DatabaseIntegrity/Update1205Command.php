@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
+use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

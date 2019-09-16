@@ -11,6 +11,10 @@ services:
             calls:
                 - method: setObjectManager
                   arguments:
-                    - '@claroline.persistence.object_manager'
-                    - '@doctrine.orm.entity_manager'
-                    - '@claroline.event.event_dispatcher'
+                     - '@claroline.persistence.object_manager'
+                - method: setEntityManager
+                  arguments:
+                     - '@doctrine.orm.entity_manager'
+                - method: setEventDispatcher
+                  arguments:
+                     - '@claroline.event.event_dispatcher'

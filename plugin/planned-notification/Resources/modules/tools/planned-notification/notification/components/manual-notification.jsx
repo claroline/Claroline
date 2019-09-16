@@ -5,19 +5,20 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 
 const ManualNotificationForm = props =>
   <FormData
     level={3}
-    name="notifications.manual"
+    name={selectors.STORE_NAME+'.notifications.manual'}
     disabled={!props.canEdit}
     buttons={true}
     target={() => ['apiv2_plannednotification_manual_notifications_trigger']}
     cancel={{
       type: LINK_BUTTON,
-      target: '/notifications',
+      target: props.path+'/notifications',
       exact: true
     }}
     sections={[
@@ -52,12 +53,14 @@ const ManualNotificationForm = props =>
   />
 
 ManualNotificationForm.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired
 }
 
 const ManualNotification = connect(
   state => ({
-    canEdit: select.canEdit(state)
+    path: toolSelectors.path(state),
+    canEdit: selectors.canEdit(state)
   })
 )(ManualNotificationForm)
 

@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Cocur\Slugify\Slugify;
 use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
@@ -69,13 +68,10 @@ class DocumentController extends DropzoneBaseController
 
         if (null === $hiddenDropDirectory) {
             $hiddenDropDirectory = new Directory();
-            // slugify user name
-            $slugify = new Slugify();
 
             $user = $drop->getUser();
             $username = $user->getUsername();
             $directoryName = $user->getLastName().' '.$user->getFirstName();
-            $directoryName = $slugify->slugify($directoryName, ' ');
 
             // Add username to ensure directory name is unique even if some users share the same name
             $directoryName .= ' - '.$username;

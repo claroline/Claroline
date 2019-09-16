@@ -20,9 +20,27 @@ const DashboardMenu = (props) =>
           name: 'analytics',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pie-chart',
-          label: trans('analytics_home'),
+          label: trans('overview', {}, 'analytics'),
           target: props.path,
           exact: true
+        }, {
+          name: 'connections',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-clock',
+          label: trans('connection_time'),
+          target: props.path + '/connections'
+        }, {
+          name: 'log',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-users',
+          label: trans('users_actions'),
+          target: props.path + '/log'
+        }, {
+          name: 'logs_users',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-user',
+          label: trans('user_actions'),
+          target: props.path + '/logs/users'
         }, {
           name: 'audience',
           type: LINK_BUTTON,
@@ -36,36 +54,11 @@ const DashboardMenu = (props) =>
           label: trans('analytics_resources'),
           target: props.path + '/resources'
         }, {
-          name: 'widgets',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-list-alt',
-          label: trans('widgets'),
-          target: props.path + '/widgets',
-          displayed: false // TODO : fix app and restore
-        }, {
           name: 'top',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-sort-amount-desc',
           label: trans('analytics_top'),
           target: props.path + '/top'
-        }, {
-          name: 'connections',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-clock',
-          label: trans('connection_time'),
-          target: props.path + '/connections'
-        }, {
-          name: 'log',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-users',
-          label: trans('users_tracking'),
-          target: props.path + '/log'
-        }, {
-          name: 'logs_users',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-user',
-          label: trans('user_tracking', {}, 'log'),
-          target: props.path + '/logs/users'
         }
       ]}
     />

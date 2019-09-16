@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Logger;
+namespace Claroline\AppBundle\Logger;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;

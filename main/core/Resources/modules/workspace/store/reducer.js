@@ -28,14 +28,14 @@ const reducer = combineReducers({
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.workspace
   }),
   tools: makeReducer([], {
-    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.tools || state
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.tools || []
   }),
-  root: makeReducer([], {
-    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.root || state
+  root: makeReducer({}, {
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.root || {}
   }),
   shortcuts: makeReducer([], {
-    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.shortcuts || state,
-    [SHORTCUTS_LOAD]: (state, action) => action.shortcuts || state
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.shortcuts || [],
+    [SHORTCUTS_LOAD]: (state, action) => action.shortcuts || []
   }),
   userProgression: makeReducer(null, {
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userProgression || state

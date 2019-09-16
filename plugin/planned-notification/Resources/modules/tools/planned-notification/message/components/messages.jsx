@@ -3,23 +3,21 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {ListData} from '#/main/app/content/list/containers/data.jsx'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {UserList} from '#/main/core/administration/community/user/components/user-list.jsx'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {MODAL_USERS} from '#/main/core/modals/users'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {selectors} from '#/plugin/planned-notification/tools/planned-notification/store'
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/message/actions'
 
 const MessagesList = props =>
   <ListData
-    name="messages.list"
+    name={selectors.STORE_NAME+'.messages.list'}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
       label: trans('open'),
-      target: `/messages/form/${row.id}`
+      target: `${props.path}/messages/form/${row.id}`
     })}
     fetch={{
       url: ['apiv2_plannednotificationmessage_workspace_list', {workspace: props.workspace.uuid}],
@@ -38,56 +36,44 @@ const MessagesList = props =>
       }, {
         name: 'content',
         label: trans('content'),
-        type: 'string',
-        displayed: true,
-        render: (row) => {
-          let contentRow =
-            <HtmlText>
-              {row.content}
-            </HtmlText>
-
-          return contentRow
-        }
+        type: 'html',
+        displayed: true
       }
     ]}
     actions={(rows) => [
       {
-        type: CALLBACK_BUTTON,
+        name: 'send',
+        type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-envelope-o',
         label: trans('send'),
-        callback: () => props.pickUsers(rows)
+        modal: [MODAL_USERS, {
+          selectAction: (selected) => ({
+            type: CALLBACK_BUTTON,
+            callback: () => props.sendMessages(rows, selected)
+          })
+        }]
       }
     ]}
   />
 
 MessagesList.propTypes = {
+  path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   workspace: T.shape({
     uuid: T.string.isRequired
   }).isRequired,
-  pickUsers: T.func.isRequired
+  sendMessages: T.func.isRequired
 }
 
 const Messages = connect(
   state => ({
-    canEdit: select.canEdit(state),
-    workspace: select.workspace(state)
+    path: toolSelectors.path(state),
+    canEdit: selectors.canEdit(state),
+    workspace: selectors.workspace(state)
   }),
   dispatch => ({
-    pickUsers(messages) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_users'),
-        confirmText: trans('add'),
-        name: 'messages.userspicker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list_registerable'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.sendMessages(messages, selected))
-      }))
+    sendMessages(messages, users) {
+      dispatch(actions.sendMessages(messages, users))
     }
   })
 )(MessagesList)

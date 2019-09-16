@@ -94,6 +94,7 @@ class ParametersListener
             throw new AccessDeniedException();
         }
         $toolsRolesConfig = $this->toolManager->getUserDesktopToolsConfiguration($user);
+        /** @var Tool[] $desktopTools */
         $desktopTools = $this->finder->get(Tool::class)->find(
             ['isDisplayableInDesktop' => true],
             ['property' => 'name', 'direction' => 1]
@@ -118,13 +119,11 @@ class ParametersListener
             ];
         }
 
-        $event->setData(
-          [
-              'tools' => array_map(function (Tool $tool) {
-                  return $this->serializer->serialize($tool);
-              }, $tools),
-              'toolsConfig' => 0 < count($toolsConfig) ? $toolsConfig : new \stdClass(),
-          ]
-        );
+        $event->setData([
+            'tools' => array_map(function (Tool $tool) {
+                return $this->serializer->serialize($tool);
+            }, $tools),
+            'toolsConfig' => 0 < count($toolsConfig) ? $toolsConfig : new \stdClass(),
+        ]);
     }
 }

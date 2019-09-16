@@ -10,6 +10,7 @@
     "codemirror": "^5.34.0",
     "core-js": "^3.0.1",
     "d3": "^4.4.0",
+    "html-react-parser": "^0.9.1",
     "invariant": "^2.2.4",
     "@fortawesome/fontawesome-free": "^5",
     "jquery": "2.2.4",

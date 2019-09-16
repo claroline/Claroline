@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Mailing;
 
+use Claroline\AppBundle\Logger\FileLogger;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Logger\FileLogger;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
