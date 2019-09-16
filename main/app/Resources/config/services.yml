@@ -25,6 +25,7 @@ services:
             - '@claroline.api.serializer'
             - '@claroline.api.validator'
             - '@claroline.api.schema'
+            - '@security.authorization_checker'
 
     claroline.api.crud:
         alias: Claroline\AppBundle\API\Crud

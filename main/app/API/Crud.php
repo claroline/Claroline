@@ -7,6 +7,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Provides common CRUD operations.
@@ -53,13 +54,15 @@ class Crud
       StrictDispatcher $dispatcher,
       SerializerProvider $serializer,
       ValidatorProvider $validator,
-      SchemaProvider $schema
+      SchemaProvider $schema,
+      AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->serializer = $serializer;
         $this->validator = $validator;
         $this->schema = $schema;
+        $this->authorization = $authorization;
     }
 
     /**
