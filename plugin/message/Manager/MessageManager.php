@@ -99,7 +99,9 @@ class MessageManager
         $setAsSent = true,
         $sendMail = true
     ) {
-        if (';' === substr($receiversString = $message->getTo(), -1, 1)) {
+        $receiversString = $message->getTo();
+
+        if (';' === substr($receiversString, -1, 1)) {
             $receiversString = substr_replace($receiversString, '', -1);
         }
 
