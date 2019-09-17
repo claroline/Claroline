@@ -298,7 +298,7 @@ class TeamController extends AbstractCrudController
     public function multipleTeamsCreateAction(Workspace $workspace, User $user, Request $request)
     {
         $this->checkToolAccess($workspace, 'edit');
-        $data = $request->request->all();
+        $data = $this->decodeRequest($request);
         $this->teamManager->createMultipleTeams($workspace, $user, $data);
 
         return new JsonResponse(null, 200);
