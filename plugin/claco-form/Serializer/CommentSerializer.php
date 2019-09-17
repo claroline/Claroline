@@ -5,12 +5,7 @@ namespace Claroline\ClacoFormBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.comment")
- * @DI\Tag("claroline.serializer")
- */
 class CommentSerializer
 {
     /** @var UserSerializer */
@@ -18,10 +13,6 @@ class CommentSerializer
 
     /**
      * CommentSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param UserSerializer $userSerializer
      */

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
@@ -17,9 +16,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ClozeQuestionValidator;
 
 /**
  * Cloze question definition.
- *
- * @DI\Service("ujm_exo.definition.question_cloze")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class ClozeDefinition extends AbstractDefinition
 {
@@ -44,12 +40,6 @@ class ClozeDefinition extends AbstractDefinition
      * @param ClozeQuestionValidator  $validator
      * @param ClozeAnswerValidator    $answerValidator
      * @param ClozeQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_cloze"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_cloze"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_cloze")
-     * })
      */
     public function __construct(
         ClozeQuestionValidator $validator,

@@ -1,0 +1,45 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Icap\BlogBundle\Serializer\PostSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.user'
+            - '@claroline.serializer.blog.comment'
+            - '@claroline.persistence.object_manager'
+            - '@event_dispatcher'
+
+    claroline.serializer.blog.post:
+         alias: Icap\BlogBundle\Serializer\PostSerializer
+         public: true
+
+    Icap\BlogBundle\Serializer\CommentSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.user'
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.blog.comment:
+         alias: Icap\BlogBundle\Serializer\CommentSerializer
+         public: true
+
+    Icap\BlogBundle\Serializer\BlogSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.blog.options'
+
+    claroline.serializer.blog:
+         alias: Icap\BlogBundle\Serializer\BlogSerializer
+         public: true
+
+    Icap\BlogBundle\Serializer\BlogOptionsSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@icap_blog.manager.blog'
+
+    claroline.serializer.blog.options:
+         alias: Icap\BlogBundle\Serializer\BlogOptionsSerializer
+         public: true

@@ -5,12 +5,7 @@ namespace Claroline\ClacoFormBundle\Serializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Keyword;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.keyword")
- * @DI\Tag("claroline.serializer")
- */
 class KeywordSerializer
 {
     use SerializerTrait;
@@ -19,10 +14,6 @@ class KeywordSerializer
 
     /**
      * KeywordSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

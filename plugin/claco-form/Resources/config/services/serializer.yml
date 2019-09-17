@@ -1,0 +1,100 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ClacoFormBundle\Serializer\KeywordSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.clacoform.keyword:
+         alias: Claroline\ClacoFormBundle\Serializer\KeywordSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\FieldValueSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.clacoform.field'
+            - '@claroline.serializer.field_facet_value'
+
+    claroline.serializer.clacoform.field_value:
+         alias: Claroline\ClacoFormBundle\Serializer\FieldValueSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\FieldSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.field_facet'
+            - '@claroline.serializer.field_facet_choice'
+            - '@claroline.manager.facet_manager'
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.clacoform.field:
+         alias: Claroline\ClacoFormBundle\Serializer\FieldSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.clacoform.field'
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.clacoform.field_choice_category:
+         alias: Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\EntryUserSerializer:
+        tags: [claroline.serializer]
+
+    claroline.serializer.clacoform.entry.user:
+         alias: Claroline\ClacoFormBundle\Serializer\EntryUserSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\EntrySerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.manager.claco_form_manager'
+            - '@claroline.serializer.clacoform.category'
+            - '@claroline.serializer.clacoform.comment'
+            - '@claroline.serializer.clacoform.field_value'
+            - '@claroline.serializer.clacoform.keyword'
+            - '@claroline.serializer.user'
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.clacoform.entry:
+         alias: Claroline\ClacoFormBundle\Serializer\EntryUserSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\CommentSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.user'
+
+    claroline.serializer.clacoform.comment:
+         alias: Claroline\ClacoFormBundle\Serializer\CommentSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\ClacoFormSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.clacoform.category'
+            - '@claroline.serializer.clacoform.field'
+            - '@claroline.serializer.clacoform.keyword'
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.clacoform:
+         alias: Claroline\ClacoFormBundle\Serializer\ClacoFormSerializer
+         public: true
+
+    Claroline\ClacoFormBundle\Serializer\CategorySerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@claroline.serializer.clacoform.field_choice_category'
+            - '@claroline.serializer.user'
+            - '@claroline.persistence.object_manager'
+
+    claroline.serializer.clacoform.category:
+         alias: Claroline\ClacoFormBundle\Serializer\CategorySerializer
+         public: true

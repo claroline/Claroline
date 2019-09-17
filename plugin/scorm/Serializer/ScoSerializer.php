@@ -13,12 +13,7 @@ namespace Claroline\ScormBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\ScormBundle\Entity\Sco;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.scorm.sco")
- * @DI\Tag("claroline.serializer")
- */
 class ScoSerializer
 {
     use SerializerTrait;

@@ -18,12 +18,7 @@ use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.competency_ability")
- * @DI\Tag("claroline.serializer")
- */
 class CompetencyAbilitySerializer
 {
     use SerializerTrait;
@@ -36,12 +31,6 @@ class CompetencyAbilitySerializer
 
     /**
      * CompetencyAbilitySerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "abilitySerializer" = @DI\Inject("claroline.serializer.ability"),
-     *     "levelSerializer"   = @DI\Inject("claroline.serializer.competency.scale.level")
-     * })
      *
      * @param ObjectManager $om
      */

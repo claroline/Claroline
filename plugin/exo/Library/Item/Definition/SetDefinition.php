@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
@@ -20,9 +19,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\SetQuestionValidator;
 
 /**
  * Set question definition.
- *
- * @DI\Service("ujm_exo.definition.question_set")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class SetDefinition extends AbstractDefinition
 {
@@ -47,12 +43,6 @@ class SetDefinition extends AbstractDefinition
      * @param SetQuestionValidator  $validator
      * @param SetAnswerValidator    $answerValidator
      * @param SetQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_set"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_set"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_set")
-     * })
      */
     public function __construct(
         SetQuestionValidator $validator,

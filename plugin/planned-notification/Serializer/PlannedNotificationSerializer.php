@@ -9,12 +9,7 @@ use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.planned_notification")
- * @DI\Tag("claroline.serializer")
- */
 class PlannedNotificationSerializer
 {
     use SerializerTrait;
@@ -25,13 +20,6 @@ class PlannedNotificationSerializer
 
     /**
      * PlannedNotificationSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
-     *     "roleSerializer"      = @DI\Inject("claroline.serializer.role"),
-     *     "messageSerializer"   = @DI\Inject("claroline.serializer.planned_notification.message")
-     * })
      *
      * @param ObjectManager $om
      */

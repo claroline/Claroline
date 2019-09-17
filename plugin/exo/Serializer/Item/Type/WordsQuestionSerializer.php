@@ -3,16 +3,11 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Entity\Misc\Keyword;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\Misc\KeywordSerializer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_words")
- * @DI\Tag("claroline.serializer")
- */
 class WordsQuestionSerializer
 {
     use SerializerTrait;
@@ -26,10 +21,6 @@ class WordsQuestionSerializer
      * WordsQuestionSerializer constructor.
      *
      * @param KeywordSerializer $keywordSerializer
-     *
-     * @DI\InjectParams({
-     *     "keywordSerializer" = @DI\Inject("ujm_exo.serializer.keyword")
-     * })
      */
     public function __construct(KeywordSerializer $keywordSerializer)
     {

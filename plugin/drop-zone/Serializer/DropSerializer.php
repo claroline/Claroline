@@ -7,12 +7,7 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\DropComment;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.dropzone.drop")
- * @DI\Tag("claroline.serializer")
- */
 class DropSerializer
 {
     private $correctionSerializer;
@@ -26,14 +21,6 @@ class DropSerializer
 
     /**
      * DropSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "correctionSerializer"  = @DI\Inject("claroline.serializer.dropzone.correction"),
-     *     "documentSerializer"    = @DI\Inject("claroline.serializer.dropzone.document"),
-     *     "dropCommentSerializer" = @DI\Inject("claroline.serializer.dropzone.drop.comment"),
-     *     "userSerializer"        = @DI\Inject("claroline.serializer.user"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param CorrectionSerializer  $correctionSerializer
      * @param DocumentSerializer    $documentSerializer

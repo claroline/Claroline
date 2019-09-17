@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Innova\PathBundle\Serializer\PathSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@claroline.serializer.public_file'
+           - '@claroline.serializer.resource_node'
+           - '@security.token_storage'

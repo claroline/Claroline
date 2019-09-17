@@ -8,12 +8,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.dropzone")
- * @DI\Tag("claroline.serializer")
- */
 class DropzoneSerializer
 {
     use SerializerTrait;
@@ -29,12 +24,6 @@ class DropzoneSerializer
 
     /**
      * DropzoneSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "criterionSerializer" = @DI\Inject("claroline.serializer.dropzone.criterion"),
-     *     "dropzoneManager"     = @DI\Inject("claroline.manager.dropzone_manager"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param CriterionSerializer $criterionSerializer
      * @param DropzoneManager     $dropzoneManager

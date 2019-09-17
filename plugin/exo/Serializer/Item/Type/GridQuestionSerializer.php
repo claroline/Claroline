@@ -3,17 +3,12 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
 use UJM\ExoBundle\Entity\Misc\Cell;
 use UJM\ExoBundle\Entity\Misc\CellChoice;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\Misc\CellChoiceSerializer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_grid")
- * @DI\Tag("claroline.serializer")
- */
 class GridQuestionSerializer
 {
     use SerializerTrait;
@@ -27,10 +22,6 @@ class GridQuestionSerializer
      * GridQuestionSerializer constructor.
      *
      * @param CellChoiceSerializer $cellChoiceSerializer
-     *
-     * @DI\InjectParams({
-     *     "cellChoiceSerializer" = @DI\Inject("ujm_exo.serializer.cell_choice")
-     * })
      */
     public function __construct(CellChoiceSerializer $cellChoiceSerializer)
     {

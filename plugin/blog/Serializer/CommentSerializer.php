@@ -9,12 +9,7 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Icap\BlogBundle\Entity\Comment;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.blog.comment")
- * @DI\Tag("claroline.serializer")
- */
 class CommentSerializer
 {
     use SerializerTrait;
@@ -39,11 +34,6 @@ class CommentSerializer
 
     /**
      * PostSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param UserSerializer $userSerializer
      * @param ObjectManager  $om

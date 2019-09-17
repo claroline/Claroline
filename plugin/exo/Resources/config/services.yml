@@ -1,2 +1,4 @@
 imports:
     - { resource: services/finder.yml }
+    - { resource: services/serializer.yml }
+    - { resource: services/library.yml }

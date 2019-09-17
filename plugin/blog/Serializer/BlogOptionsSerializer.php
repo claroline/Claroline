@@ -7,12 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Manager\BlogManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.blog.options")
- * @DI\Tag("claroline.serializer")
- */
 class BlogOptionsSerializer
 {
     use SerializerTrait;
@@ -21,10 +16,6 @@ class BlogOptionsSerializer
 
     /**
      * BlogOptions serializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "blogManager" = @DI\Inject("icap_blog.manager.blog")
-     * })
      */
     public function __construct(BlogManager $blogManager)
     {

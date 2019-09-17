@@ -1,5 +1,6 @@
 imports:
     - { resource: services/finder.yml }
+    - { resource: services/serializer.yml }
 
 parameters:
     icap.blog.manager.tag.class:                  Icap\BlogBundle\Manager\TagManager

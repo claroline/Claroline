@@ -3,16 +3,12 @@
 namespace UJM\ExoBundle\Serializer\Attempt;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Library\Options\Score;
 use UJM\ExoBundle\Library\Options\Transfer;
 
 /**
  * Serializer for answer data.
- *
- * @DI\Service("ujm_exo.serializer.answer")
- * @DI\Tag("claroline.serializer")
  */
 class AnswerSerializer
 {

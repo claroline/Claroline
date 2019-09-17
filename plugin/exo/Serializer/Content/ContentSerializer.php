@@ -3,12 +3,9 @@
 namespace UJM\ExoBundle\Serializer\Content;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Serializer for contents.
- *
- * @DI\Service("ujm_exo.serializer.content")
  */
 class ContentSerializer
 {
@@ -21,10 +18,6 @@ class ContentSerializer
 
     /**
      * ContentSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "resourceContentSerializer" = @DI\Inject("ujm_exo.serializer.resource_content")
-     * })
      *
      * @param ResourceContentSerializer $resourceContentSerializer
      */

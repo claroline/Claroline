@@ -7,12 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.audio.resource_section")
- * @DI\Tag("claroline.serializer")
- */
 class SectionSerializer
 {
     use SerializerTrait;
@@ -24,10 +19,6 @@ class SectionSerializer
     private $userRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
      * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)

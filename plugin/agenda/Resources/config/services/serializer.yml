@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\AgendaBundle\Serializer\EventSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@security.authorization_checker'
+            - '@claroline.persistence.object_manager'
+            - '@claroline.serializer.public_file'
+            - '@claroline.serializer.workspace'
+            - '@claroline.serializer.user'
+
+    claroline.serializer.event:
+         alias: Claroline\AgendaBundle\Serializer\EventSerializer
+         public: true

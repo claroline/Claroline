@@ -4,12 +4,7 @@ namespace Icap\BibliographyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.book_reference_configuration")
- * @DI\Tag("claroline.serializer")
- */
 class BookReferenceConfigurationSerializer
 {
     use SerializerTrait;

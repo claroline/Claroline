@@ -16,12 +16,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\VideoPlayerBundle\Entity\Track;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.video.track")
- * @DI\Tag("claroline.serializer")
- */
 class TrackSerializer
 {
     use SerializerTrait;
@@ -37,11 +32,6 @@ class TrackSerializer
 
     /**
      * PathSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileManager" = @DI\Inject("claroline.manager.file_manager")
-     * })
      *
      * @param ObjectManager $om
      * @param FileManager   $fileManager

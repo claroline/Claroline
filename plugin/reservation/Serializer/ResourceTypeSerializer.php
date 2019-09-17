@@ -3,12 +3,7 @@
 namespace FormaLibre\ReservationBundle\Serializer;
 
 use FormaLibre\ReservationBundle\Entity\ResourceType;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.reservation.resource_type")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceTypeSerializer
 {
     /**

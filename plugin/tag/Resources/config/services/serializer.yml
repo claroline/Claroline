@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\TagBundle\Serializer\TaggedObjectSerializer:
+        tags: [claroline.serializer]
+
+    Claroline\TagBundle\Serializer\TagSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@claroline.serializer.user'

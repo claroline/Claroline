@@ -5,12 +5,7 @@ namespace Icap\WikiBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\WikiBundle\Entity\Wiki;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.wiki")
- * @DI\Tag("claroline.serializer")
- */
 class WikiSerializer
 {
     use SerializerTrait;

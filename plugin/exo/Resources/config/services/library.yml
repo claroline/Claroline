@@ -1,0 +1,157 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    UJM\ExoBundle\Library\Attempt\PaperGenerator:
+        arguments:
+           - '@ujm_exo.serializer.exercise'
+           - '@ujm_exo.serializer.step'
+           - '@ujm_exo.serializer.item'
+
+    ujm_exo.generator.paper:
+         alias: UJM\ExoBundle\Library\Attempt\PaperGenerator
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\WordsDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_words'
+           - '@ujm_exo.validator.answer_words'
+           - '@ujm_exo.serializer.question_words'
+
+    ujm_exo.definition.question_words:
+         alias: UJM\ExoBundle\Library\Item\Definition\WordsDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\SetDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_set'
+           - '@ujm_exo.validator.answer_set'
+           - '@ujm_exo.serializer.question_set'
+
+    ujm_exo.definition.question_set:
+         alias: UJM\ExoBundle\Library\Item\Definition\SetDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\SelectionDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_selection'
+           - '@ujm_exo.validator.answer_selection'
+           - '@ujm_exo.serializer.question_selection'
+
+    ujm_exo.definition.question_selection:
+         alias: UJM\ExoBundle\Library\Item\Definition\SelectionDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\PairDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_pair'
+           - '@ujm_exo.validator.answer_pair'
+           - '@ujm_exo.serializer.question_pair'
+
+    ujm_exo.definition.question_pair:
+         alias: UJM\ExoBundle\Library\Item\Definition\PairDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\OrderingDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_ordering'
+           - '@ujm_exo.validator.answer_ordering'
+           - '@ujm_exo.serializer.question_ordering'
+
+    ujm_exo.definition.question_ordering:
+         alias: UJM\ExoBundle\Library\Item\Definition\OrderingDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\OpenDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_open'
+           - '@ujm_exo.validator.answer_open'
+           - '@ujm_exo.serializer.question_open'
+
+    ujm_exo.definition.question_open:
+         alias: UJM\ExoBundle\Library\Item\Definition\OpenDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\MatchDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_match'
+           - '@ujm_exo.validator.answer_match'
+           - '@ujm_exo.serializer.question_match'
+
+    ujm_exo.definition.question_match:
+         alias: UJM\ExoBundle\Library\Item\Definition\MatchDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\GridDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_grid'
+           - '@ujm_exo.validator.answer_grid'
+           - '@ujm_exo.serializer.question_grid'
+
+    ujm_exo.definition.question_grid:
+         alias: UJM\ExoBundle\Library\Item\Definition\GridDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\GraphicDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_graphic'
+           - '@ujm_exo.validator.answer_graphic'
+           - '@ujm_exo.serializer.question_graphic'
+
+    ujm_exo.definition.question_graphic:
+         alias: UJM\ExoBundle\Library\Item\Definition\GraphicDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\ContentItemDefinition:
+        tags: [ujm_exo.definition.content_item]
+        arguments:
+           - '@ujm_exo.validator.item_content'
+           - '@ujm_exo.serializer.item_content'
+
+    ujm_exo.definition.item_content:
+         alias: UJM\ExoBundle\Library\Item\Definition\ContentItemDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\ClozeDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_cloze'
+           - '@ujm_exo.validator.answer_cloze'
+           - '@ujm_exo.serializer.question_cloze'
+
+    ujm_exo.definition.question_cloze:
+         alias: UJM\ExoBundle\Library\Item\Definition\ClozeDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\ChoiceDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_choice'
+           - '@ujm_exo.validator.answer_choice'
+           - '@ujm_exo.serializer.question_choice'
+
+    ujm_exo.definition.question_choice:
+         alias: UJM\ExoBundle\Library\Item\Definition\ChoiceDefinition
+         public: true
+
+    UJM\ExoBundle\Library\Item\Definition\BooleanDefinition:
+        tags: [ujm_exo.definition.item]
+        arguments:
+           - '@ujm_exo.validator.question_boolean'
+           - '@ujm_exo.validator.answer_boolean'
+           - '@ujm_exo.serializer.question_boolean'
+
+    ujm_exo.definition.question_boolean:
+         alias: UJM\ExoBundle\Library\Item\Definition\BooleanDefinition
+         public: true

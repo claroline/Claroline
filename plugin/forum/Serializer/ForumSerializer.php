@@ -12,14 +12,10 @@ use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User;
 use Claroline\ForumBundle\Manager\Manager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.serializer.forum")
- * @DI\Tag("claroline.serializer")
- */
 class ForumSerializer
 {
     use PermissionCheckerTrait;
@@ -29,25 +25,20 @@ class ForumSerializer
     /**
      * ForumSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "finder"          = @DI\Inject("claroline.api.finder"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "manager"         = @DI\Inject("claroline.manager.forum_manager")
-     * })
-     *
      * @param FinderProvider $finder
      */
     public function __construct(
         FinderProvider $finder,
         TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher,
         Manager $manager,
-        EventDispatcherInterface $eventDispatcher
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->manager = $manager;
+        $this->authorization = $authorization;
     }
 
     use SerializerTrait;

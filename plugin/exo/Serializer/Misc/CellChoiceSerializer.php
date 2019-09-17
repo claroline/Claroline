@@ -3,14 +3,10 @@
 namespace UJM\ExoBundle\Serializer\Misc;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Misc\CellChoice;
 
 /**
  * Serializer for CellChoice data.
- *
- * @DI\Service("ujm_exo.serializer.cell_choice")
- * @DI\Tag("claroline.serializer")
  */
 class CellChoiceSerializer
 {

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
@@ -19,9 +18,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\PairQuestionValidator;
 
 /**
  * Pair question definition.
- *
- * @DI\Service("ujm_exo.definition.question_pair")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class PairDefinition extends AbstractDefinition
 {
@@ -46,12 +42,6 @@ class PairDefinition extends AbstractDefinition
      * @param PairQuestionValidator  $validator
      * @param PairAnswerValidator    $answerValidator
      * @param PairQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_pair"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_pair"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_pair")
-     * })
      */
     public function __construct(
         PairQuestionValidator $validator,

@@ -15,12 +15,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\ScormBundle\Entity\ScoTracking;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.scorm.sco.tracking")
- * @DI\Tag("claroline.serializer")
- */
 class ScoTrackingSerializer
 {
     use SerializerTrait;
@@ -32,11 +27,6 @@ class ScoTrackingSerializer
 
     /**
      * ScoTrackingSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "scoSerializer"  = @DI\Inject("claroline.serializer.scorm.sco"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ScoSerializer  $scoSerializer
      * @param UserSerializer $userSerializer

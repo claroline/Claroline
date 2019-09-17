@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
 use UJM\ExoBundle\Entity\Misc\Label;
@@ -11,10 +10,6 @@ use UJM\ExoBundle\Entity\Misc\Proposal;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_set")
- * @DI\Tag("claroline.serializer")
- */
 class SetQuestionSerializer
 {
     use SerializerTrait;
@@ -26,10 +21,6 @@ class SetQuestionSerializer
 
     /**
      * SetQuestionSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *      "contentSerializer" = @DI\Inject("ujm_exo.serializer.content")
-     * })
      *
      * @param ContentSerializer $contentSerializer
      */

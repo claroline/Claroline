@@ -14,12 +14,7 @@ use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.entry")
- * @DI\Tag("claroline.serializer")
- */
 class EntrySerializer
 {
     use SerializerTrait;
@@ -55,16 +50,6 @@ class EntrySerializer
 
     /**
      * EntrySerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "clacoFormManager"     = @DI\Inject("claroline.manager.claco_form_manager"),
-     *     "categorySerializer"   = @DI\Inject("claroline.serializer.clacoform.category"),
-     *     "commentSerializer"    = @DI\Inject("claroline.serializer.clacoform.comment"),
-     *     "fieldValueSerializer" = @DI\Inject("claroline.serializer.clacoform.field_value"),
-     *     "keywordSerializer"    = @DI\Inject("claroline.serializer.clacoform.keyword"),
-     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ClacoFormManager     $clacoFormManager
      * @param CategorySerializer   $categorySerializer

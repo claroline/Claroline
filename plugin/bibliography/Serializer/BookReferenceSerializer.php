@@ -10,12 +10,7 @@ namespace Icap\BibliographyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\BibliographyBundle\Entity\BookReference;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.book_reference")
- * @DI\Tag("claroline.serializer")
- */
 class BookReferenceSerializer
 {
     use SerializerTrait;

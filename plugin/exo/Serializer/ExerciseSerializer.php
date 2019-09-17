@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
@@ -16,9 +15,6 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
  * Serializer for exercise data.
- *
- * @DI\Service("ujm_exo.serializer.exercise")
- * @DI\Tag("claroline.serializer")
  */
 class ExerciseSerializer
 {
@@ -35,12 +31,6 @@ class ExerciseSerializer
 
     /**
      * ExerciseSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "stepSerializer" = @DI\Inject("ujm_exo.serializer.step"),
-     *     "itemManager"    = @DI\Inject("ujm_exo.manager.item")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param StepSerializer        $stepSerializer

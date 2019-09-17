@@ -10,12 +10,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.tag")
- * @DI\Tag("claroline.serializer")
- */
 class TagSerializer
 {
     use SerializerTrait;
@@ -31,11 +26,6 @@ class TagSerializer
 
     /**
      * TagSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ObjectManager  $om
      * @param UserSerializer $userSerializer

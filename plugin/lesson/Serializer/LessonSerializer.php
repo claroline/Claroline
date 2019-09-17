@@ -5,13 +5,8 @@ namespace Icap\LessonBundle\Serializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Icap\LessonBundle\Entity\Lesson;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("icap.serializer.lesson")
- * @DI\Tag("claroline.serializer")
- */
 class LessonSerializer
 {
     use SerializerTrait;
@@ -24,10 +19,6 @@ class LessonSerializer
 
     /**
      * LessonSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager      $om
      * @param ContainerInterface $container

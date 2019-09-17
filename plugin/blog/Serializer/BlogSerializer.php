@@ -5,12 +5,7 @@ namespace Icap\BlogBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\BlogBundle\Entity\Blog;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.blog")
- * @DI\Tag("claroline.serializer")
- */
 class BlogSerializer
 {
     use SerializerTrait;
@@ -19,10 +14,6 @@ class BlogSerializer
 
     /**
      * BlogSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "blogOptionsSerializer"  = @DI\Inject("claroline.serializer.blog.options"),
-     * })
      */
     public function __construct(BlogOptionsSerializer $blogOptionsSerializer)
     {

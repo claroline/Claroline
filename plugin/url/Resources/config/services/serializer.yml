@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    HeVinci\UrlBundle\Serializer\UrlSerializer:
+        tags: [claroline.serializer]
+
+    claroline.serializer.url:
+         alias: HeVinci\UrlBundle\Serializer\UrlSerializer
+         public: true

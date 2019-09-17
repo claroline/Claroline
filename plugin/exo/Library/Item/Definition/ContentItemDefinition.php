@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ContentItemSerializer;
@@ -10,9 +9,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ContentItemValidator;
 
 /**
  * Content item definition.
- *
- * @DI\Service("ujm_exo.definition.item_content")
- * @DI\Tag("ujm_exo.definition.content_item")
  */
 class ContentItemDefinition implements ItemDefinitionInterface
 {
@@ -31,11 +27,6 @@ class ContentItemDefinition implements ItemDefinitionInterface
      *
      * @param ContentItemValidator  $validator
      * @param ContentItemSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"  = @DI\Inject("ujm_exo.validator.item_content"),
-     *     "serializer" = @DI\Inject("ujm_exo.serializer.item_content")
-     * })
      */
     public function __construct(ContentItemValidator $validator, ContentItemSerializer $serializer)
     {

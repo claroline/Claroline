@@ -12,13 +12,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Revision;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.serializer.dropzone.document")
- * @DI\Tag("claroline.serializer")
- */
 class DocumentSerializer
 {
     use SerializerTrait;
@@ -36,15 +31,6 @@ class DocumentSerializer
 
     /**
      * DocumentSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "dropzoneToolDocumentSerializer" = @DI\Inject("claroline.serializer.dropzone.tool.document"),
-     *     "revisionSerializer"             = @DI\Inject("claroline.serializer.dropzone.revision"),
-     *     "resourceSerializer"             = @DI\Inject("claroline.serializer.resource_node"),
-     *     "userSerializer"                 = @DI\Inject("claroline.serializer.user"),
-     *     "tokenStorage"                   = @DI\Inject("security.token_storage"),
-     *     "om"                             = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param DropzoneToolDocumentSerializer $dropzoneToolDocumentSerializer
      * @param RevisionSerializer             $revisionSerializer

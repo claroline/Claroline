@@ -5,12 +5,7 @@ namespace FormaLibre\ReservationBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use FormaLibre\ReservationBundle\Entity\ResourceRights;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.reservation.resource_rights")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceRightsSerializer
 {
     private $roleSerializer;
@@ -20,11 +15,6 @@ class ResourceRightsSerializer
 
     /**
      * ResourceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleSerializer" = @DI\Inject("claroline.serializer.role")
-     * })
      *
      * @param ObjectManager  $om
      * @param RoleSerializer $roleSerializer

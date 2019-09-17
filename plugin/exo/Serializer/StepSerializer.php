@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\StepItem;
 use UJM\ExoBundle\Library\Options\Recurrence;
@@ -12,9 +11,6 @@ use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
 /**
  * Serializer for step data.
- *
- * @DI\Service("ujm_exo.serializer.step")
- * @DI\Tag("claroline.serializer")
  */
 class StepSerializer
 {
@@ -29,10 +25,6 @@ class StepSerializer
      * StepSerializer constructor.
      *
      * @param ItemSerializer $itemSerializer
-     *
-     * @DI\InjectParams({
-     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
-     * })
      */
     public function __construct(ItemSerializer $itemSerializer)
     {

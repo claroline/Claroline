@@ -8,12 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.team.parameters")
- * @DI\Tag("claroline.serializer")
- */
 class WorkspaceTeamParametersSerializer
 {
     use SerializerTrait;
@@ -23,10 +18,6 @@ class WorkspaceTeamParametersSerializer
 
     /**
      * TeamParamtersSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

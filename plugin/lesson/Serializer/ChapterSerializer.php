@@ -6,13 +6,8 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("icap.serializer.lesson.chapter")
- * @DI\Tag("claroline.serializer")
- */
 class ChapterSerializer
 {
     use SerializerTrait;
@@ -25,10 +20,6 @@ class ChapterSerializer
 
     /**
      * ChapterSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager      $om
      * @param ContainerInterface $container

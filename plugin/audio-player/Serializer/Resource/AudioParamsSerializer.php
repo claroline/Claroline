@@ -4,12 +4,7 @@ namespace Claroline\AudioPlayerBundle\Serializer\Resource;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AudioPlayerBundle\Entity\Resource\AudioParams;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.audio.params")
- * @DI\Tag("claroline.serializer")
- */
 class AudioParamsSerializer
 {
     use SerializerTrait;

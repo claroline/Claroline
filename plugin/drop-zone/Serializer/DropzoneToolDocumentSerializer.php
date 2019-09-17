@@ -4,12 +4,7 @@ namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\DropzoneToolDocument;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.dropzone.tool.document")
- * @DI\Tag("claroline.serializer")
- */
 class DropzoneToolDocumentSerializer
 {
     private $dropzoneToolDocumentRepo;
@@ -18,10 +13,6 @@ class DropzoneToolDocumentSerializer
 
     /**
      * DropzoneToolDocumentSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

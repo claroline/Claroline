@@ -6,12 +6,7 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.announcement_aggregate")
- * @DI\Tag("claroline.serializer")
- */
 class AnnouncementAggregateSerializer
 {
     const VISIBLE_POSTS_ONLY = 'visiblePostsOnly';
@@ -23,10 +18,6 @@ class AnnouncementAggregateSerializer
 
     /**
      * AnnouncementAggregateSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "announcementSerializer" = @DI\Inject("claroline.serializer.announcement")
-     * })
      *
      * @param AnnouncementSerializer $announcementSerializer
      */

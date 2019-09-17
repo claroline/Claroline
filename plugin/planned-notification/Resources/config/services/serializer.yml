@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\PlannedNotificationBundle\Serializer\MessageSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+
+    claroline.serializer.planned_notification.message:
+         alias: Claroline\PlannedNotificationBundle\Serializer\MessageSerializer
+         public: true
+
+    Claroline\PlannedNotificationBundle\Serializer\PlannedNotificationSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@claroline.serializer.workspace'
+           - '@claroline.serializer.role'
+           - '@claroline.serializer.planned_notification.message'
+
+    claroline.serializer.planned_notification:
+         alias: Claroline\PlannedNotificationBundle\Serializer\PlannedNotificationSerializer
+         public: true

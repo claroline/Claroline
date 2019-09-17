@@ -3,13 +3,8 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\ContentItem;
 
-/**
- * @DI\Service("ujm_exo.serializer.item_content")
- * @DI\Tag("claroline.serializer")
- */
 class ContentItemSerializer
 {
     use SerializerTrait;

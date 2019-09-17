@@ -12,13 +12,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.serializer.path")
- * @DI\Tag("claroline.serializer")
- */
 class PathSerializer
 {
     use SerializerTrait;
@@ -41,13 +36,6 @@ class PathSerializer
 
     /**
      * PathSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileSerializer"     = @DI\Inject("claroline.serializer.public_file"),
-     *     "resourceSerializer" = @DI\Inject("claroline.serializer.resource_node"),
-     *     "tokenStorage"       = @DI\Inject("security.token_storage")
-     * })
      *
      * @param ObjectManager          $om
      * @param PublicFileSerializer   $fileSerializer

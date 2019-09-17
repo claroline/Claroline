@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Icap\WikiBundle\Serializer\WikiSerializer:
+        tags: [claroline.serializer]
+
+    claroline.serializer.wiki:
+         alias: Icap\WikiBundle\Serializer\WikiSerializer
+         public: true
+
+    Icap\WikiBundle\Serializer\SectionSerializer:
+         tags: [claroline.serializer]
+         arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.serializer.wiki.section.contribution'
+            - '@claroline.serializer.user'
+
+    claroline.serializer.wiki.section:
+         alias: Icap\WikiBundle\Serializer\SectionSerializer
+         public: true
+
+    Icap\WikiBundle\Serializer\ContributionSerializer:
+         tags: [claroline.serializer]
+         arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.serializer.user'
+
+    claroline.serializer.wiki.section.contribution:
+         alias: Icap\WikiBundle\Serializer\ContributionSerializer
+         public: true

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
@@ -20,9 +19,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GridQuestionValidator;
 
 /**
  * Grid question definition.
- *
- * @DI\Service("ujm_exo.definition.question_grid")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class GridDefinition extends AbstractDefinition
 {
@@ -47,12 +43,6 @@ class GridDefinition extends AbstractDefinition
      * @param GridQuestionValidator  $validator
      * @param GridAnswerValidator    $answerValidator
      * @param GridQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_grid"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_grid"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_grid")
-     * })
      */
     public function __construct(
         GridQuestionValidator $validator,

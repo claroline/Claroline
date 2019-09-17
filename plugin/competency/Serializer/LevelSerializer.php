@@ -13,12 +13,7 @@ namespace HeVinci\CompetencyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use HeVinci\CompetencyBundle\Entity\Level;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.competency.scale.level")
- * @DI\Tag("claroline.serializer")
- */
 class LevelSerializer
 {
     use SerializerTrait;

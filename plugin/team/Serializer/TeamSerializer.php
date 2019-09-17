@@ -13,13 +13,8 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-/**
- * @DI\Service("claroline.serializer.team")
- * @DI\Tag("claroline.serializer")
- */
 class TeamSerializer
 {
     use SerializerTrait;
@@ -47,16 +42,6 @@ class TeamSerializer
 
     /**
      * TeamSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
-     *     "teamManager"            = @DI\Inject("claroline.manager.team_manager"),
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "resourceNodeSerializer" = @DI\Inject("claroline.serializer.resource_node"),
-     *     "roleSerializer"         = @DI\Inject("claroline.serializer.role"),
-     *     "workspaceSerializer"    = @DI\Inject("claroline.serializer.workspace")
-     * })
      *
      * @param ObjectManager          $om
      * @param ResourceManager        $resourceManager

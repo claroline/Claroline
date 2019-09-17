@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\MessageBundle\Serializer\MessageSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@security.token_storage'
+           - '@claroline.manager.message_manager'
+           - '@claroline.serializer.user'
+
+    Claroline\MessageBundle\Serializer\Contact\OptionsSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.serializer.user'
+           - '@claroline.persistence.object_manager'
+
+    Claroline\MessageBundle\Serializer\Contact\ContactSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@Claroline\MessageBundle\Serializer\Contact\CategorySerializer'
+           - '@claroline.serializer.user'
+           - '@claroline.persistence.object_manager'
+
+    claroline.serializer.contact:
+           alias: Claroline\MessageBundle\Serializer\Contact\ContactSerializer
+           public: true
+
+    Claroline\MessageBundle\Serializer\Contact\CategorySerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.serializer.user'
+           - '@claroline.persistence.object_manager'

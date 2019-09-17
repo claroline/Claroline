@@ -132,26 +132,6 @@ and reference them in [Show assert.js](https://github.com/json-quiz/json-quiz/as
 
 Create a question type entity in `/Distribution/plugin/exo/Entity/ItemType/`.
 
-### Create the Serializer
-
-Serializer makes the link between the question type in JSON Schema and the question type entity.
-
-Files are located in `/Distribution/plugin/exo/Serializer/ItemType`.
-
-The question type serializer must be tagged in order to be collected by the
-`QuestionSerializerCollector` during compiler pass.
-
-```php
-/**
- * @DI\Service("ujm_exo.serializer.question_choice")
- * @DI\Tag("ujm_exo.question.serializer")
- */
-class ChoiceSerializer implements QuestionHandlerInterface, SerializerInterface
-{
-    // ...
-}
-```
-
 The `ItemSerializer` is now able to forward the serialization to the correct
 question type serializer based on the question type.
 

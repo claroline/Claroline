@@ -8,13 +8,8 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Icap\NotificationBundle\Entity\Notification;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @DI\Service("claroline.serializer.notification")
- * @DI\Tag("claroline.serializer")
- */
 class NotificationSerializer
 {
     /** @var ObjectManager */
@@ -28,12 +23,6 @@ class NotificationSerializer
 
     /**
      * NotificationSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "userSerializer"  = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ObjectManager            $om
      * @param EventDispatcherInterface $eventDispatcher

@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,9 +25,6 @@ use UJM\ExoBundle\Serializer\UserSerializer;
 
 /**
  * Serializer for item data.
- *
- * @DI\Service("ujm_exo.serializer.item")
- * @DI\Tag("claroline.serializer")
  */
 class ItemSerializer
 {
@@ -74,18 +70,6 @@ class ItemSerializer
      * @param ItemObjectSerializer      $itemObjectSerializer
      * @param ContainerInterface        $container
      * @param EventDispatcherInterface  $eventDispatcher
-     *
-     * @DI\InjectParams({
-     *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
-     *     "tokenStorage"              = @DI\Inject("security.token_storage"),
-     *     "itemDefinitions"           = @DI\Inject("ujm_exo.collection.item_definitions"),
-     *     "userSerializer"            = @DI\Inject("ujm_exo.serializer.user"),
-     *     "hintSerializer"            = @DI\Inject("ujm_exo.serializer.hint"),
-     *     "resourceContentSerializer" = @DI\Inject("ujm_exo.serializer.resource_content"),
-     *     "itemObjectSerializer"      = @DI\Inject("ujm_exo.serializer.item_object"),
-     *     "container"                 = @DI\Inject("service_container"),
-     *     "eventDispatcher"           = @DI\Inject("event_dispatcher")
-     * })
      */
     public function __construct(
         ObjectManager $om,

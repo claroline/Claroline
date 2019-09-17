@@ -1,0 +1,34 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    FormaLibre\ReservationBundle\Serializer\ResourceRightsSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@claroline.serializer.role'
+
+    claroline.serializer.reservation.resource_rights:
+         alias: FormaLibre\ReservationBundle\Serializer\ResourceRightsSerializer
+         public: true
+
+    FormaLibre\ReservationBundle\Serializer\ResourceSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@claroline.serializer.organization'
+           - '@claroline.serializer.reservation.resource_type'
+           - '@claroline.serializer.reservation.resource_rights'
+
+    claroline.serializer.reservation.resource:
+         alias: FormaLibre\ReservationBundle\Serializer\ResourceSerializer
+         public: true
+
+    FormaLibre\ReservationBundle\Serializer\ResourceTypeSerializer:
+        tags: [claroline.serializer]
+
+    claroline.serializer.reservation.resource_type:
+         alias: FormaLibre\ReservationBundle\Serializer\ResourceTypeSerializer
+         public: true

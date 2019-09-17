@@ -8,12 +8,7 @@ use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\MessageSerializer as AbstractMessageSerializer;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.forum_message")
- * @DI\Tag("claroline.serializer")
- */
 class MessageSerializer
 {
     use SerializerTrait;
@@ -35,13 +30,6 @@ class MessageSerializer
 
     /**
      * MessageSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "messageSerializer" = @DI\Inject("claroline.serializer.message"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "subjectSerializer" = @DI\Inject("claroline.serializer.forum_subject"),
-     *     "fileSerializer"    = @DI\Inject("claroline.serializer.public_file")
-     * })
      *
      * @param AbstractMessageSerializer $messageSerializer
      * @param ObjectManager             $om

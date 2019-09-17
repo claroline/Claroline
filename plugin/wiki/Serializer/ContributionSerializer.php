@@ -11,13 +11,8 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Repository\SectionRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-/**
- * @DI\Service("claroline.serializer.wiki.section.contribution")
- * @DI\Tag("claroline.serializer")
- */
 class ContributionSerializer
 {
     use SerializerTrait;
@@ -33,11 +28,6 @@ class ContributionSerializer
 
     /**
      * ContributionSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userSerializer"     = @DI\Inject("claroline.serializer.user")
-     * })
      */
     public function __construct(
         ObjectManager $om,

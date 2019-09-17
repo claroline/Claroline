@@ -6,12 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Contact\Category;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.contact_category")
- * @DI\Tag("claroline.serializer")
- */
 class CategorySerializer
 {
     private $userSerializer;
@@ -21,11 +16,6 @@ class CategorySerializer
 
     /**
      * CategorySerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param UserSerializer $userSerializer
      * @param ObjectManager  $om

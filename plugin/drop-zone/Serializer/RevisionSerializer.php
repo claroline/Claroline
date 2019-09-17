@@ -19,12 +19,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.dropzone.revision")
- * @DI\Tag("claroline.serializer")
- */
 class RevisionSerializer
 {
     use SerializerTrait;
@@ -38,11 +33,6 @@ class RevisionSerializer
 
     /**
      * RevisionSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer

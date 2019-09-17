@@ -5,12 +5,7 @@ namespace FormaLibre\ReservationBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
 use FormaLibre\ReservationBundle\Entity\Resource;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.reservation.resource")
- * @DI\Tag("claroline.serializer")
- */
 class ResourceSerializer
 {
     private $organizationSerializer;
@@ -22,13 +17,6 @@ class ResourceSerializer
 
     /**
      * ResourceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                       = @DI\Inject("claroline.persistence.object_manager"),
-     *     "organizationSerializer"   = @DI\Inject("claroline.serializer.organization"),
-     *     "resourceTypeSerializer"   = @DI\Inject("claroline.serializer.reservation.resource_type"),
-     *     "resourceRightsSerializer" = @DI\Inject("claroline.serializer.reservation.resource_rights")
-     * })
      *
      * @param ObjectManager            $om
      * @param OrganizationSerializer   $organizationSerializer

@@ -13,13 +13,8 @@ namespace UJM\LtiBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\LtiBundle\Entity\LtiApp;
 
-/**
- * @DI\Service("claroline.serializer.lti.app")
- * @DI\Tag("claroline.serializer")
- */
 class LtiAppSerializer
 {
     use SerializerTrait;

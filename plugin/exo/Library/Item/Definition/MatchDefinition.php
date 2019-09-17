@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
@@ -20,9 +19,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\MatchQuestionValidator;
 
 /**
  * Match question definition.
- *
- * @DI\Service("ujm_exo.definition.question_match")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class MatchDefinition extends AbstractDefinition
 {
@@ -47,12 +43,6 @@ class MatchDefinition extends AbstractDefinition
      * @param MatchQuestionValidator  $validator
      * @param MatchAnswerValidator    $answerValidator
      * @param MatchQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_match"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_match"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_match")
-     * })
      */
     public function __construct(
         MatchQuestionValidator $validator,

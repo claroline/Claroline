@@ -13,13 +13,8 @@ use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.serializer.event")
- * @DI\Tag("claroline.serializer")
- */
 class EventSerializer
 {
     use SerializerTrait;
@@ -41,14 +36,6 @@ class EventSerializer
 
     /**
      * RoleSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileSerializer"      = @DI\Inject("claroline.serializer.public_file"),
-     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
-     *     "userSerializer"      = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om

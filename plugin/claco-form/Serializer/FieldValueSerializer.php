@@ -5,12 +5,7 @@ namespace Claroline\ClacoFormBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.field_value")
- * @DI\Tag("claroline.serializer")
- */
 class FieldValueSerializer
 {
     /** @var FieldSerializer */
@@ -21,11 +16,6 @@ class FieldValueSerializer
 
     /**
      * FieldValueSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "fieldSerializer"           = @DI\Inject("claroline.serializer.clacoform.field"),
-     *     "fieldFacetValueSerializer" = @DI\Inject("claroline.serializer.field_facet_value")
-     * })
      *
      * @param FieldSerializer           $fieldSerializer
      * @param FieldFacetValueSerializer $fieldFacetValueSerializer

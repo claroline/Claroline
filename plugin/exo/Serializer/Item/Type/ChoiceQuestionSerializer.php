@@ -3,16 +3,11 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_choice")
- * @DI\Tag("claroline.serializer")
- */
 class ChoiceQuestionSerializer
 {
     use SerializerTrait;
@@ -26,10 +21,6 @@ class ChoiceQuestionSerializer
      * ChoiceQuestionSerializer constructor.
      *
      * @param ContentSerializer $contentSerializer
-     *
-     * @DI\InjectParams({
-     *     "contentSerializer" = @DI\Inject("ujm_exo.serializer.content")
-     * })
      */
     public function __construct(ContentSerializer $contentSerializer)
     {

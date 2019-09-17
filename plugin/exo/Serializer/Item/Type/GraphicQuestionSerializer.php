@@ -4,16 +4,11 @@ namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Content\Image;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Entity\Misc\Area;
 use UJM\ExoBundle\Library\Options\Transfer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_graphic")
- * @DI\Tag("claroline.serializer")
- */
 class GraphicQuestionSerializer
 {
     use SerializerTrait;
@@ -25,10 +20,6 @@ class GraphicQuestionSerializer
 
     /**
      * GraphicQuestionSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "fileUtils" = @DI\Inject("claroline.utilities.file")
-     * })
      *
      * @param FileUtilities $fileUtils
      */

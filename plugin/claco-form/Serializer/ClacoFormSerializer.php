@@ -10,12 +10,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform")
- * @DI\Tag("claroline.serializer")
- */
 class ClacoFormSerializer
 {
     use SerializerTrait;
@@ -36,13 +31,6 @@ class ClacoFormSerializer
 
     /**
      * ClacoFormSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "categorySerializer" = @DI\Inject("claroline.serializer.clacoform.category"),
-     *     "fieldSerializer"    = @DI\Inject("claroline.serializer.clacoform.field"),
-     *     "keywordSerializer"  = @DI\Inject("claroline.serializer.clacoform.keyword"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param CategorySerializer $categorySerializer
      * @param FieldSerializer    $fieldSerializer

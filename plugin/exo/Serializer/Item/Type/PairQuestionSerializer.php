@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Entity\Misc\GridItem;
 use UJM\ExoBundle\Entity\Misc\GridOdd;
@@ -11,10 +10,6 @@ use UJM\ExoBundle\Entity\Misc\GridRow;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_pair")
- * @DI\Tag("claroline.serializer")
- */
 class PairQuestionSerializer
 {
     use SerializerTrait;
@@ -28,10 +23,6 @@ class PairQuestionSerializer
      * PairQuestionSerializer constructor.
      *
      * @param ContentSerializer $contentSerializer
-     *
-     * @DI\InjectParams({
-     *     "contentSerializer" = @DI\Inject("ujm_exo.serializer.content")
-     * })
      */
     public function __construct(ContentSerializer $contentSerializer)
     {

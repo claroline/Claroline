@@ -10,12 +10,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.wiki.section")
- * @DI\Tag("claroline.serializer")
- */
 class SectionSerializer
 {
     use SerializerTrait;
@@ -31,12 +26,6 @@ class SectionSerializer
 
     /**
      * SectionSerializer constructor.
-     *
-     * * @DI\InjectParams({
-     *     "om"                         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "contributionSerializer"     = @DI\Inject("claroline.serializer.wiki.section.contribution"),
-     *     "userSerializer"             = @DI\Inject("claroline.serializer.user")
-     * })
      *
      * @param ContributionSerializer $contributionSerializer
      */

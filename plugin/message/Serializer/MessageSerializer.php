@@ -11,13 +11,8 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Claroline\MessageBundle\Manager\MessageManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.serializer.messaging_message")
- * @DI\Tag("claroline.serializer")
- */
 class MessageSerializer
 {
     use SerializerTrait;
@@ -37,13 +32,6 @@ class MessageSerializer
     /**
      * ParametersSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "manager"        = @DI\Inject("claroline.manager.message_manager"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
-     * })
-     *
      * @param ObjectManager         $om
      * @param MessageManager        $manager
      * @param TokenStorageInterface $tokenStorage
@@ -51,8 +39,8 @@ class MessageSerializer
      */
     public function __construct(
         ObjectManager $om,
-        MessageManager $manager,
         TokenStorageInterface $tokenStorage,
+        MessageManager $manager,
         UserSerializer $userSerializer
     ) {
         $this->om = $om;

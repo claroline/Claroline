@@ -9,13 +9,8 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Icap\BlogBundle\Entity\Post;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @DI\Service("claroline.serializer.blog.post")
- * @DI\Tag("claroline.serializer")
- */
 class PostSerializer
 {
     use SerializerTrait;
@@ -28,13 +23,6 @@ class PostSerializer
 
     /**
      * PostSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "userSerializer"     = @DI\Inject("claroline.serializer.user"),
-     *    "commentSerializer"  = @DI\Inject("claroline.serializer.blog.comment"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher")
-     * })
      *
      * @param UserSerializer $userSerializer
      * @param ObjectManager  $om

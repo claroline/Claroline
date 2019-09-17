@@ -4,12 +4,7 @@ namespace Claroline\ClacoFormBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\ClacoFormBundle\Entity\EntryUser;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.entry.user")
- * @DI\Tag("claroline.serializer")
- */
 class EntryUserSerializer
 {
     use SerializerTrait;

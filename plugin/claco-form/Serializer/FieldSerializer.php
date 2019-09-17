@@ -11,12 +11,7 @@ use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Manager\FacetManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.field")
- * @DI\Tag("claroline.serializer")
- */
 class FieldSerializer
 {
     use SerializerTrait;
@@ -37,13 +32,6 @@ class FieldSerializer
 
     /**
      * FieldSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "fieldFacetSerializer"       = @DI\Inject("claroline.serializer.field_facet"),
-     *     "fieldFacetChoiceSerializer" = @DI\Inject("claroline.serializer.field_facet_choice"),
-     *     "facetManager"               = @DI\Inject("claroline.manager.facet_manager"),
-     *     "om"                         = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param FieldFacetSerializer       $fieldFacetSerializer
      * @param FieldFacetChoiceSerializer $fieldFacetChoiceSerializer

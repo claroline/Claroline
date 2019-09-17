@@ -6,12 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\PlannedNotificationBundle\Entity\Message;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.planned_notification.message")
- * @DI\Tag("claroline.serializer")
- */
 class MessageSerializer
 {
     use SerializerTrait;
@@ -20,10 +15,6 @@ class MessageSerializer
 
     /**
      * MessageSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

@@ -3,14 +3,9 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Library\Options\Transfer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_open")
- * @DI\Tag("claroline.serializer")
- */
 class OpenQuestionSerializer
 {
     use SerializerTrait;

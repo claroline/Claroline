@@ -3,15 +3,11 @@
 namespace UJM\ExoBundle\Serializer\Item;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Library\Options\Transfer;
 
 /**
  * Serializer for hint data.
- *
- * @DI\Service("ujm_exo.serializer.hint")
- * @DI\Tag("claroline.serializer")
  */
 class HintSerializer
 {

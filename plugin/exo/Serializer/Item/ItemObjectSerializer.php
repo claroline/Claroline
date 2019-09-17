@@ -3,15 +3,11 @@
 namespace UJM\ExoBundle\Serializer\Item;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\ItemObject;
 use UJM\ExoBundle\Library\Options\Transfer;
 
 /**
  * Serializer for item object data.
- *
- * @DI\Service("ujm_exo.serializer.item_object")
- * @DI\Tag("claroline.serializer")
  */
 class ItemObjectSerializer
 {

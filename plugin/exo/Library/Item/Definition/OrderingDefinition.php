@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
@@ -18,9 +17,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\OrderingQuestionValidator;
 
 /**
  * Ordering question definition.
- *
- * @DI\Service("ujm_exo.definition.question_ordering")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class OrderingDefinition extends AbstractDefinition
 {
@@ -45,12 +41,6 @@ class OrderingDefinition extends AbstractDefinition
      * @param OrderingQuestionValidator  $validator
      * @param OrderingAnswerValidator    $answerValidator
      * @param OrderingQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_ordering"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_ordering"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_ordering")
-     * })
      */
     public function __construct(
         OrderingQuestionValidator $validator,

@@ -7,14 +7,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Transfer;
 
 /**
  * Serializer for user data.
- *
- * @DI\Service("ujm_exo.serializer.user")
- * @DI\Tag("claroline.serializer")
  *
  * @todo : use standard core serializer
  */
@@ -30,11 +26,6 @@ class UserSerializer
 
     /**
      * UserSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file")
-     * })
      *
      * @param ObjectManager        $om
      * @param PublicFileSerializer $fileSerializer

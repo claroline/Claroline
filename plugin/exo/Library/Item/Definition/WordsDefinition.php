@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
@@ -16,9 +15,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\WordsQuestionValidator;
 
 /**
  * Words question definition.
- *
- * @DI\Service("ujm_exo.definition.question_words")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class WordsDefinition extends AbstractDefinition
 {
@@ -43,12 +39,6 @@ class WordsDefinition extends AbstractDefinition
      * @param WordsQuestionValidator  $validator
      * @param WordsAnswerValidator    $answerValidator
      * @param WordsQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_words"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_words"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_words")
-     * })
      */
     public function __construct(
         WordsQuestionValidator $validator,

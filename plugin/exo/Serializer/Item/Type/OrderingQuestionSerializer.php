@@ -3,16 +3,11 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
 use UJM\ExoBundle\Entity\Misc\OrderingItem;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_ordering")
- * @DI\Tag("claroline.serializer")
- */
 class OrderingQuestionSerializer
 {
     use SerializerTrait;
@@ -26,10 +21,6 @@ class OrderingQuestionSerializer
      * OrderingQuestionSerializer constructor.
      *
      * @param ContentSerializer $contentSerializer
-     *
-     * @DI\InjectParams({
-     *     "contentSerializer" = @DI\Inject("ujm_exo.serializer.content")
-     * })
      */
     public function __construct(ContentSerializer $contentSerializer)
     {

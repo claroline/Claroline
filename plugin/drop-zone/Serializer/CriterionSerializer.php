@@ -4,12 +4,7 @@ namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\Criterion;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.dropzone.criterion")
- * @DI\Tag("claroline.serializer")
- */
 class CriterionSerializer
 {
     private $criterionRepo;
@@ -17,10 +12,6 @@ class CriterionSerializer
 
     /**
      * CriterionSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */

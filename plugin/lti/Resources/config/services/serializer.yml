@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    UJM\LtiBundle\Serializer\LtiAppSerializer:
+        tags: [claroline.serializer]
+
+    UJM\LtiBundle\Serializer\LtiResourceSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+           - '@request_stack'
+           - '@UJM\LtiBundle\Serializer\LtiAppSerializer'
+           - '@security.token_storage'
+           - '@translator'
+           - '@claroline.manager.workspace_manager'

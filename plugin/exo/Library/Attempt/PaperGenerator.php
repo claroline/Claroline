@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Library\Attempt;
 
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -18,8 +17,6 @@ use UJM\ExoBundle\Serializer\StepSerializer;
 /**
  * PaperGenerator creates new paper instances for attempts to exercises.
  * It takes into account the exercise and steps configuration to create the correct attempt structure.
- *
- * @DI\Service("ujm_exo.generator.paper")
  */
 class PaperGenerator
 {
@@ -35,11 +32,6 @@ class PaperGenerator
     /**
      * PaperGenerator constructor.
      *
-     * @DI\InjectParams({
-     *     "exerciseSerializer" = @DI\Inject("ujm_exo.serializer.exercise"),
-     *     "stepSerializer"     = @DI\Inject("ujm_exo.serializer.step"),
-     *     "itemSerializer"     = @DI\Inject("ujm_exo.serializer.item"),
-     * })
      *
      * @param ExerciseSerializer $exerciseSerializer
      * @param StepSerializer     $stepSerializer

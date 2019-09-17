@@ -16,13 +16,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.serializer.announcement")
- * @DI\Tag("claroline.serializer")
- */
 class AnnouncementSerializer
 {
     use SerializerTrait;
@@ -51,15 +46,6 @@ class AnnouncementSerializer
 
     /**
      * AnnouncementSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
-     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "publicFileSerializer" = @DI\Inject("claroline.serializer.public_file"),
-     *     "fileUt"               = @DI\Inject("claroline.utilities.file"),
-     *     "wsSerializer"         = @DI\Inject("claroline.serializer.workspace")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param UserSerializer        $userSerializer

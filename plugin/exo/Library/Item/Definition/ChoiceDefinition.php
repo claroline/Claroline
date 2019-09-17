@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
@@ -17,9 +16,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ChoiceQuestionValidator;
 
 /**
  * Choice question definition.
- *
- * @DI\Service("ujm_exo.definition.question_choice")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class ChoiceDefinition extends AbstractDefinition
 {
@@ -44,12 +40,6 @@ class ChoiceDefinition extends AbstractDefinition
      * @param ChoiceQuestionValidator  $validator
      * @param ChoiceAnswerValidator    $answerValidator
      * @param ChoiceQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_choice"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_choice"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_choice")
-     * })
      */
     public function __construct(
         ChoiceQuestionValidator $validator,

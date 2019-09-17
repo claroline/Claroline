@@ -8,12 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.resource_shortcut")
- * @DI\Tag("claroline.serializer")
- */
 class ShortcutSerializer
 {
     use SerializerTrait;
@@ -26,11 +21,6 @@ class ShortcutSerializer
 
     /**
      * ShortcutSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "resourceNodeSerializer" = @DI\Inject("claroline.serializer.resource_node")
-     * })
      *
      * @param ObjectManager          $om
      * @param ResourceNodeSerializer $resourceNodeSerializer

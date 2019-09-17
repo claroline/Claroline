@@ -9,12 +9,7 @@ use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.clacoform.category")
- * @DI\Tag("claroline.serializer")
- */
 class CategorySerializer
 {
     use SerializerTrait;
@@ -34,12 +29,6 @@ class CategorySerializer
 
     /**
      * CategorySerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "fieldChoiceCategorySerializer" = @DI\Inject("claroline.serializer.clacoform.field_choice_category"),
-     *     "userSerializer"                = @DI\Inject("claroline.serializer.user"),
-     *     "om"                            = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param FieldChoiceCategorySerializer $fieldChoiceCategorySerializer
      * @param UserSerializer                $userSerializer

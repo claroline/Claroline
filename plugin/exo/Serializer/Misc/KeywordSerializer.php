@@ -3,14 +3,10 @@
 namespace UJM\ExoBundle\Serializer\Misc;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Misc\Keyword;
 
 /**
  * Serializer for keyword data.
- *
- * @DI\Service("ujm_exo.serializer.keyword")
- * @DI\Tag("claroline.serializer")
  */
 class KeywordSerializer
 {

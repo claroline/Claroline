@@ -18,13 +18,8 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\Manager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @DI\Service("claroline.serializer.forum_subject")
- * @DI\Tag("claroline.serializer")
- */
 class SubjectSerializer
 {
     use SerializerTrait;
@@ -57,16 +52,6 @@ class SubjectSerializer
     }
 
     /**
-     * @DI\InjectParams({
-     *     "finder"          = @DI\Inject("claroline.api.finder"),
-     *     "fileUt"          = @DI\Inject("claroline.utilities.file"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileSerializer"  = @DI\Inject("claroline.serializer.public_file"),
-     *     "manager"         = @DI\Inject("claroline.manager.forum_manager"),
-     *     "userSerializer"  = @DI\Inject("claroline.serializer.user")
-     * })
-     *
      * @param FileUtilities            $fileUt
      * @param EventDispatcherInterface $eventDispatcher
      * @param ObjectManager            $om
@@ -74,8 +59,8 @@ class SubjectSerializer
     public function __construct(
         FinderProvider $finder,
         FileUtilities $fileUt,
-        PublicFileSerializer $fileSerializer,
         EventDispatcherInterface $eventDispatcher,
+        PublicFileSerializer $fileSerializer,
         ObjectManager $om,
         UserSerializer $userSerializer,
         Manager $manager

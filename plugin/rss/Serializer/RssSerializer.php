@@ -5,12 +5,7 @@ namespace Claroline\RssBundle\Serializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\RssBundle\Entity\Resource\RssFeed;
 use Claroline\RssBundle\Library\ReaderProvider;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.rss")
- * @DI\Tag("claroline.serializer")
- */
 class RssSerializer
 {
     use SerializerTrait;
@@ -19,10 +14,6 @@ class RssSerializer
     private $rssReader;
 
     /**
-     * @DI\InjectParams({
-     *     "rssReader" = @DI\Inject("claroline.rss_reader.provider")
-     * })
-     *
      * @param ReaderProvider $rssReader
      */
     public function __construct(ReaderProvider $rssReader)

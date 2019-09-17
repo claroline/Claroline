@@ -9,12 +9,7 @@ use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\SlideshowBundle\Entity\Resource\Slide;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.slideshow")
- * @DI\Tag("claroline.serializer")
- */
 class SlideshowSerializer
 {
     use SerializerTrait;
@@ -27,11 +22,6 @@ class SlideshowSerializer
 
     /**
      * SlideshowSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file")
-     * })
      *
      * @param ObjectManager        $om
      * @param PublicFileSerializer $fileSerializer

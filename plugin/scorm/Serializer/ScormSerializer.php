@@ -15,12 +15,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.scorm")
- * @DI\Tag("claroline.serializer")
- */
 class ScormSerializer
 {
     use SerializerTrait;
@@ -34,11 +29,6 @@ class ScormSerializer
 
     /**
      * ScormSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "scoSerializer" = @DI\Inject("claroline.serializer.scorm.sco")
-     * })
      *
      * @param ObjectManager $om
      * @param ScoSerializer $scoSerializer

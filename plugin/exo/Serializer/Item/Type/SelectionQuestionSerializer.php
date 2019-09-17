@@ -3,17 +3,12 @@
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
 use UJM\ExoBundle\Entity\Misc\Color;
 use UJM\ExoBundle\Entity\Misc\ColorSelection;
 use UJM\ExoBundle\Entity\Misc\Selection;
 use UJM\ExoBundle\Library\Options\Transfer;
 
-/**
- * @DI\Service("ujm_exo.serializer.question_selection")
- * @DI\Tag("claroline.serializer")
- */
 class SelectionQuestionSerializer
 {
     use SerializerTrait;

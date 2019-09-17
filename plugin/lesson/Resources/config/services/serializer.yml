@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Icap\LessonBundle\Serializer\ChapterSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+
+    icap.serializer.lesson.chapter:
+         alias: Icap\LessonBundle\Serializer\ChapterSerializer
+         public: true
+
+    Icap\LessonBundle\Serializer\LessonSerializer:
+        tags: [claroline.serializer]
+        arguments:
+           - '@claroline.persistence.object_manager'
+
+    icap.serializer.lesson:
+         alias: Icap\LessonBundle\Serializer\LessonSerializer
+         public: true

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\BooleanQuestion;
@@ -16,9 +15,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\BooleanQuestionValidator;
 
 /**
  * Boolean choice question definition.
- *
- * @DI\Service("ujm_exo.definition.question_boolean")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class BooleanDefinition extends AbstractDefinition
 {
@@ -43,12 +39,6 @@ class BooleanDefinition extends AbstractDefinition
      * @param BooleanQuestionValidator  $validator
      * @param BooleanAnswerValidator    $answerValidator
      * @param BooleanQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_boolean"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_boolean"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_boolean")
-     * })
      */
     public function __construct(
         BooleanQuestionValidator $validator,

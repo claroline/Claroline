@@ -5,12 +5,7 @@ namespace Claroline\DropZoneBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\DropZoneBundle\Entity\Correction;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.dropzone.correction")
- * @DI\Tag("claroline.serializer")
- */
 class CorrectionSerializer
 {
     private $gradeSerializer;
@@ -22,12 +17,6 @@ class CorrectionSerializer
 
     /**
      * CorrectionSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "gradeSerializer" = @DI\Inject("claroline.serializer.dropzone.grade"),
-     *     "userSerializer"  = @DI\Inject("claroline.serializer.user"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param GradeSerializer $gradeSerializer
      * @param UserSerializer  $userSerializer

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
@@ -17,9 +16,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GraphicQuestionValidator;
 
 /**
  * Graphic question definition.
- *
- * @DI\Service("ujm_exo.definition.question_graphic")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class GraphicDefinition extends AbstractDefinition
 {
@@ -44,12 +40,6 @@ class GraphicDefinition extends AbstractDefinition
      * @param GraphicQuestionValidator  $validator
      * @param GraphicAnswerValidator    $answerValidator
      * @param GraphicQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_graphic"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_graphic"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_graphic")
-     * })
      */
     public function __construct(
         GraphicQuestionValidator $validator,

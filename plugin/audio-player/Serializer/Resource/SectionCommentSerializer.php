@@ -10,12 +10,7 @@ use Claroline\AudioPlayerBundle\Entity\Resource\SectionComment;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.audio.resource_section_comment")
- * @DI\Tag("claroline.serializer")
- */
 class SectionCommentSerializer
 {
     use SerializerTrait;
@@ -32,12 +27,6 @@ class SectionCommentSerializer
     private $userRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sectionSerializer" = @DI\Inject("claroline.serializer.audio.resource_section"),
-     *     "userSerializer"    = @DI\Inject("claroline.serializer.user")
-     * })
-     *
      * @param ObjectManager     $om
      * @param SectionSerializer $sectionSerializer
      * @param UserSerializer    $userSerializer

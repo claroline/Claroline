@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -13,9 +12,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\OpenQuestionValidator;
 
 /**
  * Open question definition.
- *
- * @DI\Service("ujm_exo.definition.question_open")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class OpenDefinition extends AbstractDefinition
 {
@@ -40,12 +36,6 @@ class OpenDefinition extends AbstractDefinition
      * @param OpenQuestionValidator  $validator
      * @param OpenAnswerValidator    $answerValidator
      * @param OpenQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("ujm_exo.validator.question_open"),
-     *     "answerValidator" = @DI\Inject("ujm_exo.validator.answer_open"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.question_open")
-     * })
      */
     public function __construct(
         OpenQuestionValidator $validator,

@@ -13,12 +13,7 @@ namespace HeVinci\CompetencyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use HeVinci\CompetencyBundle\Entity\Ability;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.ability")
- * @DI\Tag("claroline.serializer")
- */
 class AbilitySerializer
 {
     use SerializerTrait;

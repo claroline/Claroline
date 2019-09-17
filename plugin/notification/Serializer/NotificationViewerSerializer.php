@@ -7,13 +7,8 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @DI\Service("claroline.serializer.notification_viewer")
- * @DI\Tag("claroline.serializer")
- */
 class NotificationViewerSerializer
 {
     /** @var ObjectManager */
@@ -34,14 +29,6 @@ class NotificationViewerSerializer
     /**
      * NotificationViewerSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "notificationSerializer" = @DI\Inject("claroline.serializer.notification"),
-     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
-     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "userSerializer"         = @DI\Inject("claroline.serializer.user"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
      * @param NotificationSerializer       $notificationSerializer
      * @param PlatformConfigurationHandler $configHandler
      * @param EventDispatcherInterface     $eventDispatcher
@@ -50,8 +37,8 @@ class NotificationViewerSerializer
      */
     public function __construct(
         NotificationSerializer $notificationSerializer,
-        PlatformConfigurationHandler $configHandler,
         EventDispatcherInterface $eventDispatcher,
+        PlatformConfigurationHandler $configHandler,
         UserSerializer $userSerializer,
         ObjectManager $om
     ) {

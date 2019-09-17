@@ -5,13 +5,8 @@ namespace Claroline\AudioPlayerBundle\Serializer\Quiz;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AudioPlayerBundle\Entity\Quiz\ItemType\WaveformQuestion;
 use Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Transfer;
 
-/**
- * @DI\Service("claroline.serializer.audio.question_waveform")
- * @DI\Tag("claroline.serializer")
- */
 class WaveformQuestionSerializer
 {
     use SerializerTrait;

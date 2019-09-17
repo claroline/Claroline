@@ -15,17 +15,12 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use UJM\LtiBundle\Entity\LtiApp;
 use UJM\LtiBundle\Entity\LtiResource;
 
-/**
- * @DI\Service("claroline.serializer.lti.resource")
- * @DI\Tag("claroline.serializer")
- */
 class LtiResourceSerializer
 {
     use SerializerTrait;
@@ -43,15 +38,6 @@ class LtiResourceSerializer
 
     /**
      * LtiResourceSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"     = @DI\Inject("request_stack"),
-     *     "ltiAppSerializer" = @DI\Inject("claroline.serializer.lti.app"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
      *
      * @param ObjectManager         $om
      * @param RequestStack          $requestStack

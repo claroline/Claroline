@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Serializer\Attempt;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Library\Options\Score;
@@ -13,9 +12,6 @@ use UJM\ExoBundle\Serializer\UserSerializer;
 
 /**
  * Serializer for paper data.
- *
- * @DI\Service("ujm_exo.serializer.paper")
- * @DI\Tag("claroline.serializer")
  */
 class PaperSerializer
 {
@@ -33,11 +29,6 @@ class PaperSerializer
 
     /**
      * PaperSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "userSerializer"   = @DI\Inject("ujm_exo.serializer.user"),
-     *     "answerSerializer" = @DI\Inject("ujm_exo.serializer.answer")
-     * })
      *
      * @param UserSerializer   $userSerializer
      * @param AnswerSerializer $answerSerializer
