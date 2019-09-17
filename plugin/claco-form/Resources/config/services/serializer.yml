@@ -64,7 +64,7 @@ services:
             - '@claroline.persistence.object_manager'
 
     claroline.serializer.clacoform.entry:
-         alias: Claroline\ClacoFormBundle\Serializer\EntryUserSerializer
+         alias: Claroline\ClacoFormBundle\Serializer\EntrySerializer
          public: true
 
     Claroline\ClacoFormBundle\Serializer\CommentSerializer:
