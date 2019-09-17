@@ -20,7 +20,7 @@ class ArchiveWorkspaceCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:workspace:archive')
+        $this->setName('claroline:workspace:archive-export')
             ->setDescription('Archive workspace by request')
             ->setDefinition([
                 new InputArgument('dql', InputArgument::REQUIRED, 'The dql request - ie: "SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w WHERE w.name LIKE \'%fifi%\'"'

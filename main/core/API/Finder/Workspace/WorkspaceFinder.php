@@ -47,9 +47,7 @@ class WorkspaceFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        if (!isset($searches['archived'])) {
-            $searches['archived'] = false;
-        }
+        $searches['archived'] = false;
 
         foreach ($searches as $filterName => $filterValue) {
             //remap some filters...
