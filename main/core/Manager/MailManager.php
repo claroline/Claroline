@@ -76,7 +76,9 @@ class MailManager
      */
     public function isMailerAvailable()
     {
-        return $this->cacheManager->getParameter('is_mailer_available') && $this->getMailerFrom();
+        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
+
+        return $parameters['mailer']['enabled'];
     }
 
     /**
