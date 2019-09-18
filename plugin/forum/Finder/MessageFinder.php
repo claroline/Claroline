@@ -122,6 +122,9 @@ class MessageFinder extends AbstractFinder
                 case 'meta.created':
                     $qb->orderBy('obj.creationDate', $sortByDirection);
                     break;
+                case 'subject.title':
+                    $qb->orderBy('subject.title', $sortByDirection);
+                    break;
             }
         }
     }
