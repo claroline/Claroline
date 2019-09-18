@@ -49,22 +49,22 @@ class BadgeListener
             case LogPostReadEvent::ACTION:
             case LogPostUpdateEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
-                $parameters = [
-                    'id' => $event->getLog()->getResourceNode()->getUuid(),
-                ];
+                $node = $event->getLog()->getResourceNode();
 
-                $url = $this->router->generate('claro_resource_show_short', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH).'#/'.$logDetails['post']['title'];
+                $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_PATH).
+                    '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug().
+                    '/'.$logDetails['post']['title'];
                 $title = $logDetails['post']['title'];
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
                 break;
             case LogCommentCreateEvent::ACTION:
             case LogCommentDeleteEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
-                $parameters = [
-                    'id' => $event->getLog()->getResourceNode()->getUuid(),
-                ];
+                $node = $event->getLog()->getResourceNode();
 
-                $url = $this->router->generate('claro_resource_show_short', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH).'#/'.$logDetails['post']['title'];
+                $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_PATH).
+                    '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug().
+                    '/'.$logDetails['post']['title'];
                 $title = $logDetails['post']['title'];
                 $anchor = isset($logDetails['comment']['id']) ? '#comment-'.$logDetails['comment']['id'] : '';
                 $content = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $anchor, $title, $title);

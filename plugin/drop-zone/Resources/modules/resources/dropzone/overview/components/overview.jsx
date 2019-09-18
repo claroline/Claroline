@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
+import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
@@ -124,7 +125,7 @@ OverviewComponent.defaultProps = {
   myDrop: {}
 }
 
-const Overview = connect(
+const Overview = withRouter(connect(
   (state) => ({
     user: selectors.user(state),
     dropzone: selectors.dropzone(state),
@@ -166,7 +167,7 @@ const Overview = connect(
       }
     }
   })
-)(OverviewComponent)
+)(OverviewComponent))
 
 export {
   Overview

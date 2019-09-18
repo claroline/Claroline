@@ -87,7 +87,8 @@ class ShareActionManager
             $resourceNode = $this->resourceNodeRepository->find($resourceId);
             $share->setResource($resourceNode);
             $return['title'] = $resourceNode->getName();
-            $return['url'] = $this->router->generate('claro_resource_open_short', ['node' => $resourceNode->getId()], true);
+            $return['url'] = $this->router->generate('claro_index', [], true).
+                '#/desktop/workspaces/open/'.$resourceNode->getWorkspace()->getSlug().'/resources/'.$resourceNode->getSlug();
         }
         $network = $request->get('network');
         $share->setNetwork($network);

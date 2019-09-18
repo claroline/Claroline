@@ -1,1 +1,3 @@
-<a href="{{ url('claro_resource_show', {type: resource.resourceNode.resourceType.name, id: resource.resourceNode.uuid}) }}">{{ resource.resourceNode.name }}</a>
+<a href="{{ url('claro_index') }}#/desktop/workspaces/open/{{ resource.resourceNode.workspace.slug }}/resources/{{ resource.resourceNode.slug }}">
+    {{ resource.resourceNode.name }}
+</a>

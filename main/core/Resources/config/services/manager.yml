@@ -151,6 +151,7 @@ services:
         arguments:
           - '@claroline.api.finder'
           - '@claroline.manager.resource_evaluation_manager'
+          - '@router'
           - '@claroline.api.serializer'
 
     claroline.manager.progression_manager:

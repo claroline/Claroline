@@ -2,11 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {url} from '#/main/app/api'
-
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
+import {LinkButton} from '#/main/app/buttons/link/components/button'
+
+import {route as resourceRoute} from '#/main/core/resource/routing'
 import {constants} from '#/main/core/user/tracking/constants'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
@@ -32,7 +33,11 @@ const EventWrapper = props =>
 
       <div className="timeline-event-block">
         <div className="timeline-event-header">
-          <a href={url(['claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type}])}>
+          <LinkButton
+            className="btn-link"
+            primary={true}
+            target={resourceRoute(props.resource)}
+          >
             {props.resource.thumbnail ?
               <img
                 src={asset(props.resource.thumbnail)}
@@ -43,7 +48,7 @@ const EventWrapper = props =>
                 mimeType={props.resource.meta.mimeType}
               />
             }
-          </a>
+          </LinkButton>
         </div>
 
         <div className="timeline-event-content">

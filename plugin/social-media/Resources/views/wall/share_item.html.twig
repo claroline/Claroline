@@ -6,5 +6,7 @@
 {% if item.share.url is defined and item.share.url is not null %}
     <a href="{{ item.share.url }}">{{ item.share.url }}</a>
 {% elseif item.share.resource is defined and item.share.resource is not null %}
-    <a href="{{ path("claro_resource_open_short", {"node":item.share.resource.id}) }}">{{ item.share.resource.name }}</a>
+    <a href="{{ path("claro_index") }}#/desktop/workspaces/open/{{ item.share.resource.workspace.slug }}/resources/{{ item.share.resource.slug }}">
+        {{ item.share.resource.name }}
+    </a>
 {% endif %}

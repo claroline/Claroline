@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/22/15
  */
 
@@ -15,9 +15,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\ShareAction;
 use Icap\SocialmediaBundle\Library\SocialShare\SocialShare;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,16 +37,17 @@ class ShareActionController extends Controller
     public function formAction(ResourceNode $resourceNode, User $user)
     {
         $shareManager = $this->getShareActionManager();
-        $sharesCount = $shareManager->countShares(null, array('resource' => $resourceNode->getId()));
+        $sharesCount = $shareManager->countShares(null, ['resource' => $resourceNode->getId()]);
         $socialShare = new SocialShare();
-        $resourceUrl = $this->generateUrl('claro_resource_open_short', array('node' => $resourceNode->getId()), true);
+        $resourceUrl = $this->generateUrl('claro_index', [], true).
+            '#/desktop/workspaces/open/'.$resourceNode->getWorkspace()->getSlug().'/resources/'.$resourceNode->getSlug();
 
-        return array(
+        return [
             'resourceNode' => $resourceNode,
             'networks' => $socialShare->getNetworks(),
             'shares' => $sharesCount,
             'resourceUrl' => $resourceUrl,
-        );
+        ];
     }
 
     /**
@@ -67,10 +68,10 @@ class ShareActionController extends Controller
         $options = $this->getShareActionManager()->createShare($request, $share);
         $this->dispatchShareEvent($share);
 
-        $response = array();
-        if ($network !== null) {
+        $response = [];
+        if (null !== $network) {
             $socialShare = new SocialShare();
-            $shareLink = $socialShare->getNetwork($network)->getShareLink($options['url'], array($options['title']));
+            $shareLink = $socialShare->getNetwork($network)->getShareLink($options['url'], [$options['title']]);
             $response = new RedirectResponse($shareLink);
         }
 

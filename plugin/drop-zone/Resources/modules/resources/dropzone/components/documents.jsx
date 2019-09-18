@@ -5,7 +5,10 @@ import classes from 'classnames'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {LinkButton} from '#/main/app/buttons/link'
+
+import {route as resourceRoute} from '#/main/core/resource/routing'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getToolDocumentType} from '#/plugin/drop-zone/resources/dropzone/utils'
@@ -73,9 +76,13 @@ const DocumentRow = props =>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_RESOURCE &&
-        <a href={url(['claro_resource_show_short', {id: props.document.data.id}])}>
+        <LinkButton
+          className="btn-link"
+          primary={true}
+          target={resourceRoute(props.document.data)}
+        >
           {props.document.data.name}
-        </a>
+        </LinkButton>
       }
     </td>
     {(props.canEdit && !props.document.isManager) || (props.isManager && props.document.isManager) ?

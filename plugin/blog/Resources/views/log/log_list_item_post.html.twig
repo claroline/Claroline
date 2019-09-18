@@ -1,5 +1,5 @@
 {% if log.details.post is defined %}
-    <a href="{{ path('claro_resource_show_short', {'id': log.getResourceNode().getUuid()}) ~ '#/' ~ log.details.post.title }}">
+    <a href="{{ path('claro_index') }}#/desktop/workspaces/open/{{ log.resourceNode.workspace.slug }}/resources/{{ log.resourceNode.slug }}/{{  log.details.post.title }}">
       <strong>{{ log.details.post.title }}</strong>
     </a>
 {% endif %}

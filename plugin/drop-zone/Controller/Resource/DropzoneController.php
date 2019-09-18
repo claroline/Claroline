@@ -20,11 +20,11 @@ class DropzoneController extends Controller
      */
     public function openDropZoneAction(DropZone $dropzone)
     {
+        $node = $dropzone->getResourceNode();
+
         return $this->redirect(
-            $this->generateUrl('claro_resource_open', [
-                'node' => $dropzone->getResourceNode()->getId(),
-                'resourceType' => $dropzone->getResourceNode()->getResourceType()->getName(),
-            ])
+            $this->generateUrl('claro_index').
+            '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug()
         );
     }
 
@@ -37,11 +37,12 @@ class DropzoneController extends Controller
      */
     public function openDropAction(DropZone $dropzone, Drop $drop)
     {
+        $node = $dropzone->getResourceNode();
+
         return $this->redirect(
-            $this->generateUrl('claro_resource_open', [
-                'node' => $dropzone->getResourceNode()->getId(),
-                'resourceType' => $dropzone->getResourceNode()->getResourceType()->getName(),
-            ]).'#/drop/'.$drop->getUuid()
+            $this->generateUrl('claro_index').
+            '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug().
+            '/drop/'.$drop->getUuid()
         );
     }
 }

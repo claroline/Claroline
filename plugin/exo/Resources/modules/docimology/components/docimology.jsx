@@ -10,8 +10,9 @@ import {
   PageActions,
   PageAction
 } from '#/main/core/layout/page/index'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {route as resourceRoute} from '#/main/core/resource/routing'
 import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge'
@@ -271,10 +272,10 @@ const Docimology = props =>
       <PageActions>
         <PageAction
           id="back-to-exercise"
-          type={URL_BUTTON}
+          type={LINK_BUTTON}
           label={trans('back_to_the_quiz', {}, 'quiz')}
           icon="fa fa-fw fa-sign-out"
-          target={['claro_resource_show_short', {id: props.resourceNode.id}]}
+          target={resourceRoute(props.resourceNode)}
         />
       </PageActions>
     </PageHeader>

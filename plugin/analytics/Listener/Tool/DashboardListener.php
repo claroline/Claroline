@@ -79,7 +79,6 @@ class DashboardListener
         $user = 'anon.' !== $authenticatedUser ? $authenticatedUser : null;
         $items = $this->progressionManager->fetchItems($workspace, $user, $levelMax);
         $workspaceConnections = $this->logConnectWSRepo->findBy(['workspace' => $workspace]);
-
         $event->setData([
             'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
             'items' => $items,
