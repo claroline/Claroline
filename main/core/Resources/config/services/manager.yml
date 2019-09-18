@@ -68,6 +68,7 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\ToolManager:
+        public: true
         arguments:
           - '@claroline.persistence.object_manager'
           - '@claroline.manager.role_manager'

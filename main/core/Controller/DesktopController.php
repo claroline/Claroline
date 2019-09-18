@@ -97,11 +97,16 @@ class DesktopController
             throw new AccessDeniedException();
         }
 
+        //this will need to change, I hope it's only temporary but there are a lot of users with missing Tools
+        //on our prod environments
+        $this->toolManager->addMissingDesktopTools($currentUser);
+
         $tools = $this->toolManager->getDisplayedDesktopOrderedTools($currentUser);
 
         if (0 === count($tools)) {
             throw new AccessDeniedException('no tools');
         }
+
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
         return new JsonResponse([

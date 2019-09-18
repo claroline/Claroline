@@ -5,16 +5,6 @@ plugin:
         - name: competencies
           class: graduation-cap
 
-        - name: learning-objectives
-          class: arrow-up
-
-    tools:
-        - name: my-learning-objectives
-          class: arrow-up
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          desktop_category: user
-
     resource_actions:
         - name: manage_competencies
           group: management

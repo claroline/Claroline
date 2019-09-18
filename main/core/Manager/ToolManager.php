@@ -459,6 +459,38 @@ class ToolManager
         );
     }
 
+    public function addMissingDesktopTools(
+        User $user,
+        $startPosition = 0,
+        $type = 0
+    ) {
+        $missingTools = $this->toolRepo->findDesktopUndisplayedToolsByUser($user, $type);
+
+        foreach ($missingTools as $tool) {
+            //this field isn't mapped
+            $tool->setVisible(false);
+
+            $wot = $this->orderedToolRepo->findOneBy(
+                ['user' => $user, 'tool' => $tool, 'type' => $type]
+            );
+
+            if (!$wot) {
+                $orderedTool = new OrderedTool();
+                $orderedTool->setUser($user);
+                $orderedTool->setName($tool->getName());
+                $orderedTool->setOrder($startPosition);
+                $orderedTool->setTool($tool);
+                $orderedTool->setVisibleInDesktop(false);
+                $orderedTool->setType($type);
+                $this->om->persist($orderedTool);
+            }
+
+            ++$startPosition;
+        }
+
+        $this->om->flush();
+    }
+
     public function getPersonalWorkspaceToolConfigs()
     {
         return $this->pwsToolConfigRepo->findAll();
@@ -593,6 +625,35 @@ class ToolManager
                 }
             }
         }
+        $this->om->flush();
+    }
+
+    public function cleanOldTools()
+    {
+        $tools = [
+           'formalibre_reservation_agenda',
+           'formalibre_presence_tool',
+           'my-learning-objectives',
+           'my_portfolios',
+           'message',
+           'formalibre_bulletin_tool',
+           'innova_video_recorder_tool',
+           'innova_audio_recorder_tool',
+           'formalibre_pia_tool',
+           'badges',
+           'my_badges',
+           'all_my_badges',
+       ];
+
+        foreach ($tools as $tool) {
+            $tool = $this->om->getRepository(Tool::class)->findOneByName($tool);
+
+            if ($tool) {
+                $this->log('Removing tool '.$tool->getName());
+                $this->om->remove($tool);
+            }
+        }
+
         $this->om->flush();
     }
 }
