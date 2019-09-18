@@ -218,7 +218,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'show_progression' => true,
             ],
             'show_about_button' => true,
-            'notifications_refresh_delay' => 20000, // in ms
+            'notifications_refresh_delay' => 0, // in ms
             'is_cron_configured' => false,
             'javascripts' => [],
         ];

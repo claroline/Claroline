@@ -33,6 +33,7 @@ class Updater120503 extends Updater
     public function postUpdate()
     {
         $this->removeOldTools();
+        $this->updateNotificationsRefreshDelay();
     }
 
     private function removeOldTools()
@@ -40,5 +41,15 @@ class Updater120503 extends Updater
         $toolManager = $this->container->get(ToolManager::class);
         $toolManager->setLogger($this->logger);
         $toolManager->cleanOldTools();
+    }
+
+    private function updateNotificationsRefreshDelay()
+    {
+        $this->log('Updating notifications refresh delay...');
+
+        $configHandler = $this->container->get('claroline.config.platform_config_handler');
+        $configHandler->setParameter('notifications_refresh_delay', 0);
+
+        $this->log('Notifications refresh delay updated.');
     }
 }
