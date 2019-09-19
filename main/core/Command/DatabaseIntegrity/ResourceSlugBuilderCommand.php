@@ -26,7 +26,7 @@ class ResourceSlugBuilderCommand extends ContainerAwareCommand
         $conn = $this->getContainer()->get('doctrine.dbal.default_connection');
 
         $query = '
-            CREATE TABLE claro_resource_node_temp_'.uniqud()."
+            CREATE TABLE claro_resource_node_temp_'.uniqid()."
             AS (SELECT * FROM claro_resource_node WHERE slug LIKE '%?%')
         ";
         try {
