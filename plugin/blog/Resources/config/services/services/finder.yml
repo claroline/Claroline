@@ -18,6 +18,6 @@ services:
                   arguments:
                      - '@claroline.event.event_dispatcher'
 
-    Claroline\BlogBundle\Finder\CommentFinder: ~
+    Icap\BlogBundle\Finder\CommentFinder: ~
 
-    Claroline\BlogBundle\Finder\PostFinder: ~
+    Icap\BlogBundle\Finder\PostFinder: ~ 
