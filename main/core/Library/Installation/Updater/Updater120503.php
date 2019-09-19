@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\DataFixtures\PostInstall\Data\LoadAdminHomeData;
-use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;

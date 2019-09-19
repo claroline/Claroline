@@ -328,9 +328,11 @@
     .form-control {
         font-family: @headings-font-family;
         color: @top-bar-link-color;
-        background: #393939;
+        background: lighten(@top-bar-link-bg, 8%); // #393939 TODO : use a var (if the bg is light it will not work)
         border-color: transparent;
         box-shadow: none;
+
+        .placeholder(@top-bar-color);
     }
 
     .result-header {
