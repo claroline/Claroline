@@ -100,15 +100,6 @@ const UserMenu = props =>
           onClick={props.closeMenu}
         />
 
-        <Button
-          type={LINK_BUTTON}
-          className="list-group-item"
-          icon="fa fa-fw fa-cog"
-          label={trans('parameters', {}, 'tools')}
-          target="/desktop/parameters"
-          onClick={props.closeMenu}
-        />
-
         {props.isAdmin &&
           <Button
             type={LINK_BUTTON}
