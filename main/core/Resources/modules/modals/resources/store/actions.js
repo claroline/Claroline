@@ -42,7 +42,6 @@ actions.initialize = (root = null, filters = []) => (dispatch) => {
  * @param {string|null} directoryId
  */
 actions.changeDirectory = (directoryId = null) => (dispatch, getState) => {
-  const oldId = selectors.currentId(getState())
   // grab filters fixed by the explorer
   const filters = selectors.filters(getState())
 
@@ -50,11 +49,7 @@ actions.changeDirectory = (directoryId = null) => (dispatch, getState) => {
   dispatch(actions.setCurrentId(directoryId))
 
   if (directoryId) {
-    // check if the current directory as changed
-    if (oldId !== directoryId) {
-      // current directory as changed
-      dispatch(actions.fetchCurrentDirectory(directoryId, filters))
-    }
+    dispatch(actions.fetchCurrentDirectory(directoryId, filters))
   } else {
     dispatch(actions.setCurrentNode(null))
     dispatch(actions.setCurrentConfiguration(null, filters))
