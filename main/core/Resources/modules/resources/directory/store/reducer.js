@@ -93,7 +93,7 @@ const reducer = combineReducers({
     invalidated: makeReducer(false, {
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => true
     }),
-    selected: makeReducer(false, {
+    selected: makeReducer([], {
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => []
     }),
     filters: makeReducer([], {

@@ -1,4 +1,4 @@
-import React, {Component, createElement} from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
@@ -14,79 +14,65 @@ import {selectors} from '#/main/core/resources/file/editor/store/selectors'
 
 // TODO : find a way to reuse file creation form component
 
-class EditorMain extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      fileEditor: null,
-      fileStyles: null
-    }
-  }
-
-  render() {
-    //bad.
-    return (
-      <FormData
-        level={2}
-        title={trans('parameters')}
-        name={selectors.FORM_NAME}
-        buttons={true}
-        target={['apiv2_resource_file_update', {id: this.props.file.id}]}
-        cancel={{
-          type: LINK_BUTTON,
-          target: this.props.path,
-          exact: true
-        }}
-        sections={[
+const EditorMain = (props) =>
+  <FormData
+    level={2}
+    title={trans('parameters')}
+    name={selectors.FORM_NAME}
+    buttons={true}
+    target={['apiv2_resource_file_update', {id: props.file.id}]}
+    cancel={{
+      type: LINK_BUTTON,
+      target: props.path,
+      exact: true
+    }}
+    sections={[
+      {
+        title: trans('general'),
+        primary: true,
+        fields: [
           {
-            title: trans('general'),
-            primary: true,
-            fields: [
-              {
-                name: 'autoDownload',
-                label: trans('auto_download'),
-                type: 'boolean',
-                required: true
-              }, {
-                name: 'commentsActivated',
-                label: trans('activate_comments'),
-                type: 'boolean',
-                displayed: -1 < this.props.mimeType.indexOf('video')
-              }
-            ]
+            name: 'autoDownload',
+            label: trans('auto_download'),
+            type: 'boolean',
+            required: true
+          }, {
+            name: 'commentsActivated',
+            label: trans('activate_comments'),
+            type: 'boolean',
+            displayed: -1 < props.mimeType.indexOf('video')
           }
-        ]}
-      >
-        <Await
-          for={getFile(this.props.mimeType)}
-          then={module => {
-            if (get(module, 'fileType.components.editor')) {
-              return (
-                <FormSections level={3}>
-                  <FormSection
-                    className="embedded-list-section"
-                    title={trans(getTypeName(this.props.mimeType) + '_section')}
-                  >
-                    {createElement(get(module, 'fileType.components.editor'), {
-                      file: this.props.file,
-                      path: this.props.path
-                    })}
+        ]
+      }
+    ]}
+  >
+    <Await
+      for={getFile(props.mimeType)}
+      then={module => {
+        if (get(module, 'fileType.components.editor')) {
+          return (
+            <FormSections level={3}>
+              <FormSection
+                className="embedded-list-section"
+                title={trans(getTypeName(props.mimeType) + '_section')}
+              >
+                {createElement(get(module, 'fileType.components.editor'), {
+                  file: props.file,
+                  path: props.path
+                })}
 
-                    {get(module, 'fileType.styles') &&
-                      <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
-                    }
-                  </FormSection>
-                </FormSections>
-              )
-            }
-            return null
-          }}
-        />
-      </FormData>
-    )
-  }
-}
+                {get(module, 'fileType.styles') &&
+                  <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
+                }
+              </FormSection>
+            </FormSections>
+          )
+        }
+
+        return null
+      }}
+    />
+  </FormData>
 
 EditorMain.propTypes = {
   path: T.string.isRequired,

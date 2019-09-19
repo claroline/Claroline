@@ -3,11 +3,14 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {FormData} from '#/main/app/content/form/components/data'
+import {CallbackButton} from '#/main/app/buttons/callback'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {trans} from '#/main/app/intl/translation'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {selectors} from '#/main/core/resources/file/modals/form/store'
+
+// TODO : display old file
 
 class FileFormModal extends Component {
   componentDidMount() {
@@ -17,42 +20,39 @@ class FileFormModal extends Component {
   render() {
     return (
       <Modal
-        {...omit(this.props, 'resourceNode', 'saveEnabled', 'resetForm', 'updateProp', 'save')}
+        {...omit(this.props, 'resourceNode', 'data', 'saveEnabled', 'resetForm', 'save', 'onChange')}
         icon="fa fa-fw fa-exchange-alt"
         title={trans('change_file', {}, 'resource')}
       >
         <FormData
-          embedded={true}
           name={selectors.STORE_NAME}
-          updateProp={this.props.updateProp}
-          setErrors={() => {}}
           sections={[
             {
               title: trans('general'),
               primary: true,
-              fields: [{
-                name: 'file',
-                type: 'file',
-                label: trans('file'),
-                required: true,
-                options: {
-                  autoUpload: false
-                },
-                onChange: (file) => {this.props.updateProp('file', file)}
-              }]
+              fields: [
+                {
+                  name: 'file',
+                  type: 'file',
+                  label: trans('file'),
+                  required: true
+                }
+              ]
             }
           ]}
         />
-        <button
+
+        <CallbackButton
           className="modal-btn btn btn-primary"
           disabled={!this.props.saveEnabled || !this.props.data.file}
-          onClick={() => {
-            this.props.save(this.props.resourceNode, this.props.data.file)
+          callback={() => {
+            this.props.save(this.props.resourceNode, this.props.data.file, this.props.onChange)
             this.props.fadeModal()
           }}
+          primary={true}
         >
-          {trans('save')}
-        </button>
+          {trans('save', {}, 'actions')}
+        </CallbackButton>
       </Modal>
     )
   }
@@ -67,9 +67,9 @@ FileFormModal.propTypes = {
   }).isRequired,
   saveEnabled: T.bool.isRequired,
   resetForm: T.func.isRequired,
-  updateProp: T.func.isRequired,
   save: T.func.isRequired,
-  fadeModal: T.func.isRequired
+  fadeModal: T.func.isRequired,
+  onChange: T.func
 }
 
 export {

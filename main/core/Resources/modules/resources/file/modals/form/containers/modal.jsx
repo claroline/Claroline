@@ -20,11 +20,12 @@ const FileFormModal = withReducer(selectors.STORE_NAME, reducer)(
       resetForm() {
         dispatch(formActions.reset(selectors.STORE_NAME, {}))
       },
-      updateProp(prop, value) {
-        dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
-      },
-      save(node, file) {
-        dispatch(actions.changeFile(node, file))
+      save(node, file, onChange) {
+        dispatch(actions.changeFile(node, file)).then((response) => {
+          if (onChange) {
+            onChange(response)
+          }
+        })
       }
     })
   )(FileFormModalComponent)

@@ -177,25 +177,26 @@ class FileListener
      */
     public function onFileChange(ResourceActionEvent $event)
     {
-        $files = $event->getFiles();
+        /** @var File $file */
+        $file = $event->getResource();
         $node = $event->getResourceNode();
+        $data = $event->getData();
 
-        $file = isset($files['file']) ? $files['file'] : null;
+        if ($file && !empty($data) && !empty($data['file'])) {
+            $file->setHashName($data['file']['url']);
+            $file->setSize($data['file']['size']);
 
-        if ($file) {
-            $publicFile = $this->fileUtils->createFile($file, null, ResourceNode::class, $node->getUuid());
-            $resource = $this->resourceManager->getResourceFromNode($node);
+            $file->setMimeType($data['file']['mimeType']);
+            $node->setMimeType($data['file']['mimeType']);
 
-            if ($resource && $publicFile) {
-                $this->om->persist($publicFile);
-                $resource->setHashName($publicFile->getUrl());
-                $resource->setMimeType($publicFile->getMimeType());
-                $resource->setSize($publicFile->getSize());
-                $this->om->persist($resource);
-                $this->om->flush();
-            }
+            $this->om->persist($file);
+            $this->om->persist($node);
+            $this->om->flush();
         }
-        $event->setResponse(new JsonResponse($this->serializer->serialize($node)));
+
+        $event->setResponse(
+            new JsonResponse($this->serializer->serialize($node))
+        );
     }
 
     /**
