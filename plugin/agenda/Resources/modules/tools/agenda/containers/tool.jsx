@@ -36,7 +36,9 @@ const AgendaTool = connect(
           meta: {
             creator: user
           }
-        })
+        }),
+        // TODO : only reload if event is created in the current reange
+        onCreate: () => dispatch(actions.setLoaded(false))
       }))
     },
     importEvents(data, workspace = null) {

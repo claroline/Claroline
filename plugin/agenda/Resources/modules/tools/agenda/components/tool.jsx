@@ -71,21 +71,24 @@ const AgendaTool = (props) => {
           icon: 'fa fa-fw fa-cog',
           label: trans('configure', {}, 'actions'),
           modal: [MODAL_AGENDA_PARAMETERS],
-          group: trans('management')
+          group: trans('management'),
+          displayed: false // TODO : implement
         }, {
           name: 'import',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-upload',
           label: trans('import', {}, 'actions'),
           callback: () => props.importEvents(null, props.contextData),
-          group: trans('transfer')
+          group: trans('transfer'),
+          displayed: false // TODO : implement
         }, {
           name: 'export',
           type: URL_BUTTON,
           icon: 'fa fa-fw fa-download',
           label: trans('export', {}, 'actions'),
           target: ['apiv2_download_agenda', {workspace: get(props.contextData, 'id')}],
-          group: trans('transfer')
+          group: trans('transfer'),
+          displayed: false // TODO : implement
         }
       ]}
     >

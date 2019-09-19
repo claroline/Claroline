@@ -6,11 +6,13 @@ import {getApiFormat} from '#/main/app/intl/date'
 export const AGENDA_CHANGE_VIEW      = 'AGENDA_CHANGE_VIEW'
 export const AGENDA_CHANGE_REFERENCE = 'AGENDA_CHANGE_REFERENCE'
 export const AGENDA_LOAD_EVENTS      = 'AGENDA_LOAD_EVENTS'
+export const AGENDA_SET_LOADED       = 'AGENDA_SET_LOADED'
 
 export const actions = {}
 
 actions.changeView = makeActionCreator(AGENDA_CHANGE_VIEW, 'view')
 actions.changeReference = makeActionCreator(AGENDA_CHANGE_REFERENCE, 'referenceDate')
+actions.setLoaded = makeActionCreator(AGENDA_SET_LOADED, 'loaded')
 
 actions.loadEvents = makeActionCreator(AGENDA_LOAD_EVENTS, 'events')
 actions.fetchEvents = (rangeDates) => ({
