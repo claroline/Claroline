@@ -11,6 +11,7 @@ services:
             - '@claroline.serializer.user'
             - '@claroline.persistence.object_manager'
             - '@claroline.serializer.workspace'
+            - '@claroline.serializer.resource_node'
             - '@claroline.serializer.public_file'
             - '@claroline.utilities.file'
 

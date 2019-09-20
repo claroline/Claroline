@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
@@ -14,7 +14,7 @@ import {actions, selectors} from '#/plugin/announcement/resources/announcement/s
 import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post'
 
 const AnnouncesList = props =>
-  <div>
+  <Fragment>
     <div className="announces-sort">
       {trans('list_sort_by')}
       <button
@@ -74,7 +74,7 @@ const AnnouncesList = props =>
         </div>
       </nav>
     }
-  </div>
+  </Fragment>
 
 AnnouncesList.propTypes = {
   path: T.string.isRequired,

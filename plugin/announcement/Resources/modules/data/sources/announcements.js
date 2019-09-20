@@ -1,4 +1,4 @@
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
 import {route} from '#/main/core/resource/routing'
@@ -9,8 +9,8 @@ export default {
   name: 'announcements',
   parameters: {
     primaryAction: (announcement) => ({
-      type: LINK_BUTTON,
-      target: `${route(announcement.meta.resource)}/${announcement.id}`
+      type: URL_BUTTON,
+      target: `#${route(announcement.meta.resource)}/${announcement.id}`
     }),
     definition: [
       {
@@ -37,8 +37,8 @@ export default {
         label: trans('author'),
         displayed: true
       }, {
-        name: 'workspace.code',
-        type: 'string',
+        name: 'meta.resource.workspace',
+        type: 'workspace',
         label: trans('workspace'),
         displayed: true,
         filterable: false,
