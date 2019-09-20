@@ -110,12 +110,18 @@ class WorkspaceFinder extends AbstractFinder
                     }
                     break;
                 case 'createdAfter':
+                    if (is_string($filterValue)) {
+                        $filterValue = \DateTime::createFromFormat('Y-m-d\TH:i:s', $filterValue);
+                    }
                     $qb->andWhere("obj.created >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
+                    $qb->setParameter($filterName, $filterValue->getTimeStamp());
                     break;
                 case 'createdBefore':
+                    if (is_string($filterValue)) {
+                        $filterValue = \DateTime::createFromFormat('Y-m-d\TH:i:s', $filterValue);
+                    }
                     $qb->andWhere("obj.created <= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
+                    $qb->setParameter($filterName, $filterValue->getTimeStamp());
                     break;
                 case 'organization':
                     $qb->leftJoin('obj.organizations', 'o');

@@ -101,6 +101,7 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\RoleManager:
+        public: true
         arguments:
           - '@claroline.persistence.object_manager'
           - '@claroline.event.event_dispatcher'
