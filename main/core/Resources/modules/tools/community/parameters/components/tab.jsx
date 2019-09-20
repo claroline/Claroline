@@ -33,7 +33,6 @@ const ParametersTab = props => {
         name={selectors.FORM_NAME}
         buttons={true}
         target={['apiv2_workspace_update', {id: props.workspace.id}]}
-        // TODO: Fix Cancel button. It empties the form store if no change has been saved.
         cancel={{
           type: LINK_BUTTON,
           target: props.path,
@@ -49,7 +48,7 @@ const ParametersTab = props => {
                 name: 'registration.url',
                 type: 'url',
                 label: trans('registration_url'),
-                calculated: (workspace) => `${url(['claro_index', {}, true])}#${route(props.workspace)}`,
+                calculated: () => `${url(['claro_index', {}, true])}#${route(props.workspace)}`,
                 required: true,
                 disabled: true
               }, {

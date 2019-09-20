@@ -51,13 +51,13 @@ class AnnouncementSerializer
     /**
      * AnnouncementSerializer constructor.
      *
-     * @param TokenStorageInterface $tokenStorage
-     * @param UserSerializer        $userSerializer
-     * @param ObjectManager         $om
-     * @param WorkspaceSerializer   $wsSerializer
+     * @param TokenStorageInterface  $tokenStorage
+     * @param UserSerializer         $userSerializer
+     * @param ObjectManager          $om
+     * @param WorkspaceSerializer    $wsSerializer
      * @param ResourceNodeSerializer $nodeSerializer
-     * @param PublicFileSerializer  $publicFileSerializer
-     * @param FileUtilities         $fileUt
+     * @param PublicFileSerializer   $publicFileSerializer
+     * @param FileUtilities          $fileUt
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,

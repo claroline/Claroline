@@ -115,7 +115,7 @@ class Workspace
      *
      * @var bool
      */
-    protected $displayable = false;
+    protected $displayable = true;
 
     /**
      * @ORM\Column(name="isModel", type="boolean")

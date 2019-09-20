@@ -18,6 +18,9 @@ const reducer = combineReducers({
   roles: rolesReducer,
   pending: pendingReducer,
   parameters: makeFormReducer(selectors.STORE_NAME + '.parameters', {}, {
+    originalData: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.context.data
+    }),
     data: makeReducer({}, {
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.context.data
     }),
