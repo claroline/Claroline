@@ -76,9 +76,7 @@ class MailManager
      */
     public function isMailerAvailable()
     {
-        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
-
-        return $parameters['mailer']['enabled'];
+        return $this->container->get('claroline.config.platform_config_handler')->getParameter('mailer.enabled');
     }
 
     /**
