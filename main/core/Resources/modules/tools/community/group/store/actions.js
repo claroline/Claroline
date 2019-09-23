@@ -22,7 +22,7 @@ actions.open = (formName, id = null, defaultProps) => {
 
 actions.addGroupsToRole = (role, groups)  => ({
   [API_REQUEST]: {
-    url: url(['apiv2_role_add_groups', {id: role}], {ids: groups}),
+    url: url(['apiv2_role_add_groups', {id: role.id}], {ids: groups.map(group => group.id)}),
     request: {
       method: 'PATCH'
     },
