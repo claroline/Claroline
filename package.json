@@ -16,7 +16,7 @@
     "jquery": "2.2.4",
     "jsplumb": "^2.2.11",
     "lodash": "^4.17.11",
-    "mathjax": "^2.7.4",
+    "mathjax": "2.7.4",
     "moment": "^2.24.0",
     "pdfjs-dist": "1.4.133",
     "prop-types": "^15.7.2",

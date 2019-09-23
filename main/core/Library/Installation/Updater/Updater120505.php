@@ -38,7 +38,7 @@ class Updater120505 extends Updater
         $this->log("Removes backup slugs for table ${table}...");
 
         $charsToRemove = ['?', '#', '/', '(', ')'];
-        for ($i = 0; $i < count($charsToRemove); $i++) {
+        for ($i = 0; $i < count($charsToRemove); ++$i) {
             // create a backup
             try {
                 $this->conn->query("DROP TABLE IF EXISTS ${table}_slugs_${i}");
