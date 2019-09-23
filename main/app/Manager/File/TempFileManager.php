@@ -3,13 +3,9 @@
 namespace Claroline\AppBundle\Manager\File;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @DI\Service("claroline.manager.temp_file")
- */
 class TempFileManager
 {
     /** @var PlatformConfigurationHandler */
@@ -24,10 +20,6 @@ class TempFileManager
 
     /**
      * TempManager constructor.
-     *
-     * @DI\InjectParams({
-     *      "config" = @DI\Inject("claroline.config.platform_config_handler")
-     * })
      *
      * @param PlatformConfigurationHandler $config
      */

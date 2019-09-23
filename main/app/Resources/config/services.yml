@@ -1,7 +1,7 @@
-# imports:
-#   - { resource: services/controller.yml }
-#   - { resource: services/finder.yml }
-
+imports:
+  # - { resource: services/controller.yml }
+  # - { resource: services/finder.yml }
+    - { resource: services/manager.yml }
 
 services:
     _defaults:
@@ -29,4 +29,42 @@ services:
 
     claroline.api.crud:
         alias: Claroline\AppBundle\API\Crud
+        public: true
+
+    Claroline\AppBundle\API\SchemaProvider:
+        arguments:
+            - '%kernel.root_dir%'
+
+    claroline.api.schema:
+        alias: Claroline\AppBundle\API\SchemaProvider
+        public: true
+
+    Claroline\AppBundle\API\SerializerProvider:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '%kernel.root_dir%'
+
+    claroline.api.serializer:
+        alias: Claroline\AppBundle\API\SerializerProvider
+        public: true
+
+    Claroline\AppBundle\API\TransferProvider:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.serializer'
+            - '@claroline.api.schema'
+            - '%claroline.param.import_log_dir%'
+            - '@translator'
+
+    claroline.api.transfer:
+        alias: Claroline\AppBundle\API\TransferProvider
+        public: true
+
+    Claroline\AppBundle\API\ValidatorProvider:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.schema'
+
+    claroline.api.validator:
+        alias: Claroline\AppBundle\API\ValidatorProvider
         public: true

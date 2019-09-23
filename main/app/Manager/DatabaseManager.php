@@ -7,26 +7,14 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\DatabaseBackup;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LogLevel;
 
-/**
- * @DI\Service("claroline.manager.database_manager")
- */
 class DatabaseManager
 {
     use LoggableTrait;
 
     private $kernel;
 
-    /**
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "conn"       = @DI\Inject("doctrine.dbal.default_connection"),
-     *     "finder"     = @DI\Inject("claroline.api.finder"),
-     *     "archiveDir" = @DI\Inject("%claroline.param.archive_directory%")
-     * })
-     */
     public function __construct(ObjectManager $om, $conn, FinderProvider $finder, $archiveDir)
     {
         $this->om = $om;

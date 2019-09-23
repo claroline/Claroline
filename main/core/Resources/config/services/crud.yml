@@ -93,7 +93,7 @@ services:
         tags:
           - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_tab_hometab, method: preDelete }
 
-    claroline.crud.widget_container:
+    claroline.crud.widget_home_tab:
         alias: Claroline\CoreBundle\API\Crud\Home\HomeTabCrud
         public: true
 

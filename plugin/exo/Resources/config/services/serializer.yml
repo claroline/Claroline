@@ -190,15 +190,6 @@ services:
          alias: UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer
          public: true
 
-    UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@ujm_exo.serializer.content'
-
-    ujm_exo.serializer.question_boolean:
-         alias: UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer
-         public: true
-
     UJM\ExoBundle\Serializer\Content\ResourceContentSerializer:
         tags: [claroline.serializer]
         arguments:

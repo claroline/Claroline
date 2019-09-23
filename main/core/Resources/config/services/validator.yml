@@ -35,16 +35,6 @@ services:
       alias: Claroline\CoreBundle\Validator\Constraints\UsernameValidator
       public: true
 
-  Claroline\CoreBundle\Validator\Constraints\UsernameValidator:
-      arguments:
-          - '@claroline.config.platform_config_handler'
-          - '@claroline.persistence.object_manager'
-          - '@translator'
-
-  username_validator:
-      alias: Claroline\CoreBundle\Validator\Constraints\UsernameValidator
-      public: true
-
   Claroline\CoreBundle\Validator\Constraints\UserAdministrativeCodeValidator:
       arguments:
           - '@claroline.config.platform_config_handler'

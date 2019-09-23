@@ -2,7 +2,6 @@
 
 namespace Claroline\AppBundle\API;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JVal\Context;
 use JVal\Registry;
 use JVal\Resolver;
@@ -10,9 +9,6 @@ use JVal\Uri;
 use JVal\Utils;
 use JVal\Walker;
 
-/**
- * @DI\Service("claroline.api.schema")
- */
 class SchemaProvider
 {
     /**
@@ -27,13 +23,9 @@ class SchemaProvider
     private $baseUri;
 
     /**
-     * @DI\InjectParams({
-     *      "rootDir" = @DI\Inject("%kernel.root_dir%")
-     * })
-     *
      * @param string $rootDir
      */
-    public function setRootDir($rootDir)
+    public function __construct($rootDir)
     {
         $this->rootDir = $rootDir.'/..';
         $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';

@@ -71,10 +71,6 @@ services:
             - '@claroline.serializer.user'
             - '@claroline.persistence.object_manager'
 
-    claroline.serializer.dropzone:
-         alias: Claroline\DropZoneBundle\Serializer\DropSerializer
-         public: true
-
     Claroline\DropZoneBundle\Serializer\DropCommentSerializer:
         tags: [claroline.serializer]
         arguments:

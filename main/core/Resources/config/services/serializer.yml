@@ -100,13 +100,6 @@ services:
         alias: Claroline\CoreBundle\API\Serializer\Widget\WidgetSerializer
         public: true
 
-    Claroline\CoreBundle\API\Serializer\Widget\WidgetSerializer:
-        tags: [claroline.serializer]
-
-    claroline.serializer.widget:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\WidgetSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Widget\WidgetInstanceSerializer:
         tags: [claroline.serializer]
         arguments:
@@ -157,16 +150,6 @@ services:
             - '@claroline.serializer.resource_node'
 
     claroline.serializer.widget_resource:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer
-        public: true
-
-    Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@security.token_storage'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.widget_profile:
         alias: Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer
         public: true
 
@@ -260,10 +243,6 @@ services:
         arguments:
            - '@claroline.serializer.public_file'
            - '@claroline.persistence.object_manager'
-
-    claroline.serializer.translatable:
-        alias: Claroline\CoreBundle\API\Serializer\Transfer\FileSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer:
         tags: [claroline.serializer]
@@ -518,16 +497,6 @@ services:
 
     claroline.serializer.field_facet_choice:
         alias: Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer
-        public: true
-
-    Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@claroline.serializer.role'
-            - '@claroline.serializer.panel_facet'
-
-    claroline.serializer.facet:
-        alias: Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer
         public: true
 
     Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer:

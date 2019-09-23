@@ -14,12 +14,9 @@ namespace Claroline\AppBundle\Manager;
 use Claroline\AppBundle\Event\App\RefreshCacheEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Parser\IniParser;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Manages the application cache.
- *
- * @DI\Service("claroline.manager.cache_manager")
  */
 class CacheManager
 {
@@ -31,11 +28,6 @@ class CacheManager
 
     /**
      * CacheManager constructor.
-     *
-     * @DI\InjectParams({
-     *      "rootDir"         = @DI\Inject("%kernel.root_dir%"),
-     *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
-     * })
      *
      * @param StrictDispatcher $eventDispatcher
      * @param string           $rootDir

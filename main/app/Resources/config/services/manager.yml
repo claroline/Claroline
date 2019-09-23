@@ -1,0 +1,41 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+        public: true #because lazy
+
+    Claroline\AppBundle\Manager\DatabaseManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@claroline.api.finder'
+            - '%claroline.param.archive_directory%'
+
+    claroline.manager.database_manager:
+        alias: Claroline\AppBundle\Manager\DatabaseManager
+        public: true
+
+    Claroline\AppBundle\Manager\CommandManager:
+        arguments:
+            - '@kernel'
+
+    claroline.manager.command_manager:
+        alias: Claroline\AppBundle\Manager\CommandManager
+        public: true
+
+    Claroline\AppBundle\Manager\CacheManager:
+        arguments:
+            - '@claroline.event.event_dispatcher'
+            - '%kernel.root_dir%'
+
+    claroline.manager.cache_manager:
+        alias: Claroline\AppBundle\Manager\CacheManager
+        public: true
+
+    Claroline\AppBundle\Manager\File\TempFileManager:
+        arguments:
+            - '@claroline.config.platform_config_handler'
+
+    claroline.manager.temp_file:
+        alias: Claroline\AppBundle\Manager\File\TempFileManager
+        public: true

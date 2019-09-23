@@ -9,14 +9,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Filesystem\Filesystem;
 //should not be here because it's a corebundle dependency
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.api.transfer")
- */
 class TransferProvider
 {
     use LoggableTrait;
@@ -36,14 +32,6 @@ class TransferProvider
 
     /**
      * Crud constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "schema"     = @DI\Inject("claroline.api.schema"),
-     *     "logDir"     = @DI\Inject("%claroline.param.import_log_dir%"),
-     *     "translator" = @DI\Inject("translator")
-     * })
      *
      * @param ObjectManager       $om
      * @param SerializerProvider  $serializer

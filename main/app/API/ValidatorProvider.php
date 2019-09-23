@@ -5,11 +5,7 @@ namespace Claroline\AppBundle\API;
 use Claroline\AppBundle\JVal\Validator;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.api.validator")
- */
 class ValidatorProvider
 {
     /** @var string */
@@ -29,13 +25,6 @@ class ValidatorProvider
     private $validators = [];
 
     /**
-     * GroupValidator constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "schema" = @DI\Inject("claroline.api.schema")
-     * })
-     *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
