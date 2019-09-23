@@ -1785,5 +1785,12 @@
     "header": "Entête",
     "header_widgets": "Widgets",
     "search": "Recherche",
-    "user_interface": "Interface utilisateur"
+    "user_interface": "Interface utilisateur",
+    "password_reset_send": "Email de changement de mot de passe envoyé",
+    "mail_config_issue": "L'envoi d'email a échoué, veuillez vérifier la configuration du serveur mail",
+    "email_not_exist": "L'adresse email n'existe pas",
+    "hash_invalid": "Le hash de changement de mot de passe n'existe pas ou est expiré",
+    "password_invalid": "Ce mot de passe n'est pas valide",
+    "password_value_missmatch": "Les valeurs des champs mot de passe ne correspondent pas",
+    "password_changed": "Mot de passe modifié avec succès"
 }

@@ -87,6 +87,7 @@ class ParametersSerializer
         $this->deserializeTos($data);
         $data = $this->getJavascriptsData($data);
         $data = $this->getLogoData($data);
+        $data['mailer'] = $this->deserializeMailer($data['mailer']);
         unset($data['tos']['text']);
         //maybe move this somewhere else
         unset($data['archives']);
@@ -98,6 +99,18 @@ class ParametersSerializer
         file_put_contents($this->filePath, $data);
 
         return $original;
+    }
+
+    public function deserializeMailer($data)
+    {
+        if ('gmail' === $data['transport']) {
+            $data['host'] = 'smtp.gmail.com';
+            $data['auth_mode'] = 'login';
+            $data['encryption'] = 'ssl';
+            $data['port'] = '465';
+        }
+
+        return $data;
     }
 
     public function serializeTos()
