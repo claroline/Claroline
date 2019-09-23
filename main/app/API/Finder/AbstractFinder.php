@@ -76,6 +76,8 @@ abstract class AbstractFinder implements FinderInterface
 
     /**
      * Might not be fully functional with the unions.
+     *
+     * @param array $filters
      */
     public function delete(array $filters = [])
     {
@@ -218,7 +220,7 @@ abstract class AbstractFinder implements FinderInterface
         $firstQb->select('DISTINCT obj', ...$extraSelect)->from($this->getClass(), 'obj');
         /** @var SearchObjectsEvent $event */
         $build = $this->configureQueryBuilder($firstQb, $firstSearch);
-        $event = $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
+        $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
             'queryBuilder' => $firstQb,
             'objectClass' => $this->getClass(),
             'filters' => $firstSearch,
@@ -237,7 +239,7 @@ abstract class AbstractFinder implements FinderInterface
 
         $build = $this->configureQueryBuilder($secQb, $secondSearch);
 
-        $event = $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
+        $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
             'queryBuilder' => $secQb,
             'objectClass' => $this->getClass(),
             'filters' => $secondSearch,

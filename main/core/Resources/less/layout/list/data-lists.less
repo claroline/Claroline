@@ -30,6 +30,20 @@
 .list-header {
     display: flex;
     align-items: stretch;
+
+    .list-header-btn {
+        line-height: @line-height-large;
+        height: @input-height-large;
+        padding: @padding-large-vertical @padding-large-horizontal;
+    }
+
+    .open {
+        .list-header-btn {
+            box-shadow: none;
+            background: @list-controls-active-bg;
+            color: @list-controls-active-color;
+        }
+    }
 }
 
 .list-selected {
@@ -67,20 +81,12 @@ button.list-primary-action {
     display: flex;
     align-items: flex-end;
     margin-left: auto; // force right alignment if no search
+}
 
-    .btn {
-        line-height: @line-height-large;
-        height: @input-height-large;
-        padding: @padding-large-vertical @padding-large-horizontal;
-    }
-
-    .open {
-        .btn {
-            box-shadow: none;
-            background: @list-controls-active-bg;
-            color: @list-controls-active-color;
-        }
-    }
+.list-toolbar {
+    background: @list-controls-bg;
+    display: flex;
+    align-items: flex-end;
 }
 
 .list-footer {
@@ -173,12 +179,16 @@ button.list-primary-action {
         align-items: stretch;
 
         .count {
+            order: 2;
+            text-align: center;
+
             + .pagination-container {
-                margin-top: floor(@component-margin-bottom / 2);
+                margin-bottom: floor(@component-margin-bottom / 2);
             }
         }
 
         .pagination-container {
+            order: 1;
             margin-left: 0;
         }
     }

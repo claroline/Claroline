@@ -3,17 +3,11 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {makeId} from '#/main/core/scaffolding/id'
+import {PageFull} from '#/main/app/page/components/full'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
-import {
-  PageContainer,
-  PageHeader,
-  PageContent,
-  PageActions,
-  PageAction
-} from '#/main/core/layout/page'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {ListData} from '#/main/app/content/list/containers/data'
 
@@ -115,44 +109,40 @@ class Tools extends Component {
 
   render() {
     return (
-      <PageContainer id="tools-container">
-        <PageHeader
-          title={trans('tools_management', {}, 'dropzone')}
-        >
-          <PageActions>
-            <PageAction
-              type={CALLBACK_BUTTON}
-              label={trans('add_tool', {}, 'dropzone')}
-              icon="fa fa-plus"
-              primary={true}
-              action={() => this.showForm()}
-            />
-          </PageActions>
-        </PageHeader>
-
-        <PageContent>
-          <ListData
-            name="tools"
-            fetch={{
-              url: ['apiv2_dropzonetool_list'],
-              autoload: true
-            }}
-            delete={{
-              url: ['apiv2_dropzonetool_delete_bulk']
-            }}
-            definition={this.generateColumns()}
-            actions={(rows) => [
-              {
-                type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-pencil',
-                label: trans('edit_tool', {}, 'dropzone'),
-                callback: () => this.editTool(rows[0]),
-                scope: ['object']
-              }
-            ]}
-          />
-        </PageContent>
-      </PageContainer>
+      <PageFull
+        title={trans('tools_management', {}, 'dropzone')}
+        actions={[
+          {
+            name: 'add',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('add_tool', {}, 'dropzone'),
+            callback: () => this.showForm(),
+            primary: true
+          }
+        ]}
+      >
+        <ListData
+          name="tools"
+          fetch={{
+            url: ['apiv2_dropzonetool_list'],
+            autoload: true
+          }}
+          delete={{
+            url: ['apiv2_dropzonetool_delete_bulk']
+          }}
+          definition={this.generateColumns()}
+          actions={(rows) => [
+            {
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-pencil',
+              label: trans('edit_tool', {}, 'dropzone'),
+              callback: () => this.editTool(rows[0]),
+              scope: ['object']
+            }
+          ]}
+        />
+      </PageFull>
     )
   }
 }
@@ -164,20 +154,17 @@ Tools.propTypes = {
   fadeModal: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedTools = connect(
+  (state) => ({
     tools: state.tools
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+  }),
+  (dispatch) => ({
     loadToolForm: (tool) => dispatch(actions.loadToolForm(tool)),
     showModal: (type, props) => dispatch(modalActions.showModal(type, props)),
     fadeModal: () => dispatch(modalActions.fadeModal())
-  }
+  })
+)(Tools)
+
+export {
+  ConnectedTools as Tools
 }
-
-const ConnectedTools = connect(mapStateToProps, mapDispatchToProps)(Tools)
-
-export {ConnectedTools as Tools}

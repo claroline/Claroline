@@ -124,4 +124,25 @@ class AdministrationController
 
         return new JsonResponse($event->getData());
     }
+
+    /**
+     * Lists admin tools accessible by the current user.
+     *
+     * @EXT\Route("/tools", name="claro_admin_tools")
+     *
+     * @return JsonResponse
+     */
+    public function listToolsAction()
+    {
+        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
+
+        return new JsonResponse([
+            'tools' => array_values(array_map(function (AdminTool $orderedTool) {
+                return [
+                    'icon' => $orderedTool->getClass(),
+                    'name' => $orderedTool->getName(),
+                ];
+            }, $tools)),
+        ]);
+    }
 }

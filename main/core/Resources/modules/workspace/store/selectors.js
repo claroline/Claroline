@@ -14,6 +14,11 @@ const loaded = createSelector(
   (store) => store.loaded
 )
 
+const impersonated = createSelector(
+  [store],
+  (store) => store.impersonated
+)
+
 const workspace = createSelector(
   [store],
   (store) => store.workspace
@@ -65,13 +70,13 @@ const defaultOpening = createSelector(
         defaultTool = `resources/${workspace.opening.target.slug || ''}`
       } else if ('tool' === workspace.opening.type) {
         defaultTool = workspace.opening.target
-      }
 
-      if (!isEmpty(tools)) {
-        if (!defaultTool || -1 === tools.findIndex(tool => defaultTool === tool.name)) {
-          // no default set or the default tool is not available for the user
-          // open the first available tool
-          defaultTool = tools[0].name
+        if (!isEmpty(tools)) {
+          if (!defaultTool || -1 === tools.findIndex(tool => defaultTool === tool.name)) {
+            // no default set or the default tool is not available for the user
+            // open the first available tool
+            defaultTool = tools[0].name
+          }
         }
       }
     }
@@ -95,6 +100,7 @@ export const selectors = {
   STORE_NAME,
   root,
   loaded,
+  impersonated,
   workspace,
   managed,
   tools,

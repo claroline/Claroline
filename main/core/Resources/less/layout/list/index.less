@@ -24,28 +24,7 @@
 // ---
 
 .data-picker-modal {
-    .embedded-list-variant();
-
-    .list-header {
-        background: @modal-footer-bg;
-        border-bottom: 1px solid @modal-header-border-color;
-    }
-
-    .list-search,
-    .list-options {
-        background: @modal-footer-bg;
-    }
-
-    .list-selected {
-        border-top: 1px solid @modal-header-border-color; // force border top for table display
-        border-color: @modal-header-border-color;
-        background: @modal-footer-bg;
-    }
-
-    .list-footer {
-        background: @modal-footer-bg;
-        border-top-color: @modal-header-border-color;
-    }
+    .embedded-list-variant(@modal-footer-bg, @modal-footer-bg, @modal-header-border-color);
 }
 
 
@@ -54,30 +33,45 @@
 // ---
 
 .embedded-list-section {
-    .embedded-list-variant();
-
-    .list-header {
-        background: @panel-default-heading-bg;
-        border-bottom: 1px solid @panel-inner-border;
-    }
-
-    .list-selected {
-        border-top: 1px solid @panel-inner-border; // force border top for table display
-        border-color: @panel-inner-border;
-        background: @panel-default-heading-bg;
-    }
+    .embedded-list-variant(@panel-default-heading-bg, @panel-footer-bg, @panel-inner-border);
 
     .data-list {
         margin: -@panel-body-padding; // maybe not the best way to handle it
     }
-
-    .list-footer {
-        background: @panel-footer-bg;
-        border-top-color: @panel-inner-border;
-    }
 }
 
-.embedded-list-variant() {
+.embedded-list-variant(@header-bg, @footer-bg, @border-color) {
+    .list-header {
+        background: @header-bg;
+        border-bottom: 1px solid @border-color;
+    }
+
+    .list-toolbar,
+    .list-search,
+    .list-options {
+        background: @header-bg;
+    }
+
+    .list-selected {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid @border-color; // force border top for table display
+        border-color: @border-color;
+        background: @header-bg;
+    }
+
+    .list-footer {
+        padding: 5px;
+        background: @footer-bg;
+        border-top: 1px solid @border-color;
+    }
+
+    .content-loader {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    // customize view modes
     .data-table {
         margin-bottom: -1px; // merge last row and footer borders
     }
@@ -112,15 +106,5 @@
         td:last-child {
             border-right: none;
         }
-    }
-
-    .list-selected {
-        border-left: none;
-        border-right: none;
-    }
-
-    .list-footer {
-        border-top: 1px solid transparent;
-        padding: 5px;
     }
 }

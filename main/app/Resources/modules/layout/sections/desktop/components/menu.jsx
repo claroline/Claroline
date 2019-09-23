@@ -55,7 +55,7 @@ const DesktopMenu = props => {
       tools={props.tools.map(tool => ({
         name: tool.name,
         icon: tool.icon,
-        path: `/desktop/${tool.name}`
+        path: toolRoute(tool.name)
       }))}
       actions={actions}
     >

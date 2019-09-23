@@ -3,14 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {
-  Page,
-  PageHeader,
-  PageContent,
-  PageActions,
-  PageAction
-} from '#/main/core/layout/page/index'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {PageFull} from '#/main/app/page/components/full'
 
 import {route as resourceRoute} from '#/main/core/resource/routing'
 import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
@@ -264,46 +258,41 @@ DiscriminationIndex.propTypes = {
 }
 
 const Docimology = props =>
-  <Page id="quiz-docimology">
-    <PageHeader
-      title={props.quiz.title}
-      subtitle={trans('docimology', {}, 'quiz')}
-    >
-      <PageActions>
-        <PageAction
-          id="back-to-exercise"
-          type={LINK_BUTTON}
-          label={trans('back_to_the_quiz', {}, 'quiz')}
-          icon="fa fa-fw fa-sign-out"
-          target={resourceRoute(props.resourceNode)}
-        />
-      </PageActions>
-    </PageHeader>
+  <PageFull
+    title={props.quiz.title}
+    subtitle={trans('docimology', {}, 'quiz')}
+    actions={[
+      {
+        name: 'back',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-sign-out',
+        label: trans('back_to_the_quiz', {}, 'quiz'),
+        target: resourceRoute(props.resourceNode)
+      }
+    ]}
+  >
+    <GeneralStats
+      {...props}
+    />
 
-    <PageContent>
-      <GeneralStats
-        {...props}
-      />
+    <SuccessDistribution
+      {...props.statistics.paperSuccessDistribution}
+    />
 
-      <SuccessDistribution
-        {...props.statistics.paperSuccessDistribution}
-      />
+    <ScoreDistribution
+      maxScore={props.statistics.maxScore}
+      paperScoreDistribution={props.statistics.paperScoreDistribution}
+      minMaxAndAvgScores={props.statistics.minMaxAndAvgScores}
+    />
 
-      <ScoreDistribution
-        maxScore={props.statistics.maxScore}
-        paperScoreDistribution={props.statistics.paperScoreDistribution}
-        minMaxAndAvgScores={props.statistics.minMaxAndAvgScores}
-      />
+    <DifficultyIndex
+      questionsDifficultyIndex={props.statistics.questionsDifficultyIndex}
+    />
 
-      <DifficultyIndex
-        questionsDifficultyIndex={props.statistics.questionsDifficultyIndex}
-      />
-
-      <DiscriminationIndex
-        discriminationCoefficient={props.statistics.discriminationCoefficient}
-      />
-    </PageContent>
-  </Page>
+    <DiscriminationIndex
+      discriminationCoefficient={props.statistics.discriminationCoefficient}
+    />
+  </PageFull>
 
 Docimology.propTypes = {
   resourceNode: T.shape({
@@ -327,15 +316,14 @@ Docimology.propTypes = {
   }).isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedDocimology = connect(
+  (state) => ({
     resourceNode: select.resourceNode(state),
     quiz: select.quiz(state),
     statistics: select.statistics(state)
-  }
-}
-
-const ConnectedDocimology = connect(mapStateToProps, null)(Docimology)
+  }),
+  null
+)(Docimology)
 
 export {
   ConnectedDocimology as Docimology

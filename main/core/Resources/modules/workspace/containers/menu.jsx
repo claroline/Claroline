@@ -15,6 +15,7 @@ const WorkspaceMenu = withRouter(
     connect(
       (state) => ({
         currentUser: securitySelectors.currentUser(state),
+        impersonated: selectors.impersonated(state),
         workspace: selectors.workspace(state),
         section: menuSelectors.openedSection(state),
         tools: selectors.tools(state),

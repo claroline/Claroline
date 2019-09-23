@@ -10,7 +10,8 @@ registry.add('ClarolineCoreBundle', {
    * Provides menu which can be used in the main header menu.
    */
   header: {
-    'search': () => { return import(/* webpackChunkName: "core-header-search" */   '#/main/core/header/search') }
+    'search': () => { return import(/* webpackChunkName: "core-header-search" */ '#/main/core/header/search') }/*,
+    'tools' : () => { return import(/!* webpackChunkName: "core-header-tools" *!/  '#/main/core/header/tools') }*/
   },
 
   integration: {
@@ -115,10 +116,10 @@ registry.add('ClarolineCoreBundle', {
   },
 
   widgets: {
-    'list'       : () => { return import(/* webpackChunkName: "core-widget-list" */        '#/main/core/widget/types/list') },
-    'simple'     : () => { return import(/* webpackChunkName: "core-widget-simple" */      '#/main/core/widget/types/simple') },
-    'resource'   : () => { return import(/* webpackChunkName: "core-widget-resource" */    '#/main/core/widget/types/resource') },
-    'profile'    : () => { return import(/* webpackChunkName: "core-widget-profile" */     '#/main/core/widget/types/profile') }
+    'list'       : () => { return import(/* webpackChunkName: "core-widget-list" */     '#/main/core/widget/types/list') },
+    'simple'     : () => { return import(/* webpackChunkName: "core-widget-simple" */   '#/main/core/widget/types/simple') },
+    'resource'   : () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') },
+    'profile'    : () => { return import(/* webpackChunkName: "core-widget-profile" */  '#/main/core/widget/types/profile') }
   },
 
   data: {

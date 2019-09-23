@@ -27,7 +27,13 @@ const User = {
       edit: T.bool.isRequired,
       administrate: T.bool.isRequired,
       delete: T.bool.isRequired
-    })
+    }),
+    roles: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      name: T.string.isRequired,
+      translationKey: T.string.isRequired,
+      type: T.number.isRequired
+    }))
   },
   defaultProps: {
     meta: {
@@ -50,6 +56,8 @@ const Role = {
   propTypes: {
     id: T.string,
     name: T.string,
+    translationKey: T.string.isRequired,
+    type: T.number.isRequired,
     meta: T.shape({
       users: T.number,
       readOnly: T.bool
