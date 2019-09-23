@@ -2,6 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
+import {Toolbar} from '#/main/app/action/components/toolbar'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+
 import {ListColumns} from '#/main/app/content/list/components/columns'
 import {ListDisplay} from '#/main/app/content/list/components/display'
 import {Search} from '#/main/app/content/search/components/search'
@@ -16,6 +19,15 @@ import {DataListProperty} from '#/main/app/content/list/prop-types'
  */
 const ListHeader = props =>
   <div className="list-header">
+    {!isEmpty(props.customActions) &&
+      <Toolbar
+        className="list-toolbar"
+        buttonName="list-header-btn btn btn-link"
+        tooltip="bottom"
+        actions={props.customActions}
+      />
+    }
+
     {props.filters &&
       <Search
         {...props.filters}
@@ -72,7 +84,11 @@ ListHeader.propTypes = {
     readOnly: T.bool,
     addFilter: T.func.isRequired,
     removeFilter: T.func.isRequired
-  })
+  }),
+
+  customActions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  ))
 }
 
 ListHeader.defaultProps = {

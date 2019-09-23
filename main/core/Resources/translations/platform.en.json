@@ -1752,5 +1752,12 @@
     "header": "Header",
     "header_widgets": "Widgets",
     "search": "Search",
-    "user_interface": "User interface"
+    "user_interface": "User interface",
+    "password_reset_send": "The email for password reset has been sent",
+    "mail_config_issue": "The email could not be sent, please check your mailer configuration",
+    "email_not_exist": "The email adress does not exist",
+    "hash_invalid": "The update password hash does not exist or has expired",
+    "password_invalid": "This password is not valid",
+    "password_value_missmatch": "The password values does not match",
+    "password_changed": "Password successfully changed"
 }

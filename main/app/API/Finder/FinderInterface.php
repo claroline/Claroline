@@ -24,7 +24,16 @@ interface FinderInterface
      */
     public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false);
 
-    /** @return string */
+    /**
+     * @param array $filters
+     *
+     * @return object
+     */
+    public function findOneBy(array $filters = []);
+
+    /**
+     * @return string
+     */
     public function getClass();
 
     /**

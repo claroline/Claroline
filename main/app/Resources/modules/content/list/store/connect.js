@@ -165,6 +165,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     totalResults:  stateProps.totalResults
   }
 
+  props.customActions = ownProps.customActions
   // Data actions
   props.primaryAction = ownProps.primaryAction
 

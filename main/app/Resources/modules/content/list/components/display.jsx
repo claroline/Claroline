@@ -10,7 +10,7 @@ import {constants} from '#/main/app/content/list/constants'
 const ListDisplay = props =>
   <Button
     id="list-format-toggle"
-    className="btn btn-link"
+    className="list-header-btn btn btn-link"
     type={MENU_BUTTON}
     icon={constants.DISPLAY_MODES[props.current].icon}
     label={trans('list_display_modes_title')}

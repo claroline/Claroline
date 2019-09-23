@@ -37,7 +37,7 @@ const Parameters = (props) => {
           {
             icon: 'fa fa-fw fa-user-plus',
             title: trans('registration'),
-            defaultOpened: true,
+            primary: true,
             fields: [
               // todo auto_logging
               // todo self unregistration

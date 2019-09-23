@@ -94,7 +94,6 @@ class ResourceNodeSerializer
     {
         $serializedNode = [
             //also used for the export. It's not pretty.
-
             'autoId' => $resourceNode->getId(),
             'id' => $resourceNode->getUuid(),
             'slug' => $resourceNode->getSlug(),
@@ -116,22 +115,13 @@ class ResourceNodeSerializer
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
                 'slug' => $resourceNode->getWorkspace()->getSlug(),
-                'autoId' => $resourceNode->getWorkspace()->getId(), // because open url does not work with uuid
+                'autoId' => $resourceNode->getWorkspace()->getId(), // TODO : remove me
                 'name' => $resourceNode->getWorkspace()->getName(),
                 'code' => $resourceNode->getWorkspace()->getCode(),
             ];
         }
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serializedNode = array_merge($serializedNode, [
-                'display' => $this->serializeDisplay($resourceNode),
-                'restrictions' => $this->serializeRestrictions($resourceNode),
-            ]);
-        }
-
-        //maybe don't remove me, it's used by the export system
         $parent = $resourceNode->getParent();
-
         if (!empty($parent)) {
             $serializedNode['parent'] = [
                 'id' => $parent->getUuid(),
@@ -142,14 +132,16 @@ class ResourceNodeSerializer
         }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serializedNode['comments'] = array_map(function (ResourceComment $comment) {
-                return $this->serializer->serialize($comment);
-            }, $resourceNode->getComments()->toArray());
+            $serializedNode = array_merge($serializedNode, [
+                'display' => $this->serializeDisplay($resourceNode),
+                'restrictions' => $this->serializeRestrictions($resourceNode),
+                'comments' => array_map(function (ResourceComment $comment) {
+                    return $this->serializer->serialize($comment);
+                }, $resourceNode->getComments()->toArray()),
+            ]);
         }
 
-        $serializedNode = $this->decorate($resourceNode, $serializedNode, $options);
-
-        return $serializedNode;
+        return $this->decorate($resourceNode, $serializedNode, $options);
     }
 
     /**

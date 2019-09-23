@@ -27,7 +27,7 @@ export default (workspaces) => ({
       selectAction: (role) => ({
         type: URL_BUTTON,
         label: trans('view-as', {}, 'actions'),
-        target: url(['claro_index', {}], {view_as: role.name}) + '#/' + route(workspaces[0])
+        target: url(['claro_index', {}], {view_as: role.name}) + '#' + route(workspaces[0])
       })
     }))
   },

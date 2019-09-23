@@ -5,6 +5,7 @@ import isEqual from 'lodash/isEqual'
 
 import {Heading} from '#/main/core/layout/components/heading'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {
@@ -163,6 +164,7 @@ class ListData extends Component {
           display={displayTool}
           columns={columnsTool}
           filters={filtersTool}
+          customActions={this.props.customActions}
         />
 
         {this.props.loading &&
@@ -237,6 +239,13 @@ ListData.propTypes = {
    * Actions available for each data row and selected rows (if selection is enabled).
    */
   actions: T.func,
+
+  /**
+   * A list of actions to add to the list header.
+   */
+  customActions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
 
   /**
    * Display formats of the list.

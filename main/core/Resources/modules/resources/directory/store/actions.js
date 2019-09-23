@@ -17,6 +17,7 @@ actions.fetchDirectories = (parentId = null) => (dispatch, getState) => {
 
   return dispatch({
     [API_REQUEST]: {
+      silent: true,
       url: url(['apiv2_resource_list', {parent: parentId}], {
         filters: {
           resourceType: 'directory'

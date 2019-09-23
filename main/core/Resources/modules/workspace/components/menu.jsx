@@ -11,6 +11,7 @@ import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 import {route as toolRoute} from '#/main/core/tool/routing'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {getActions} from '#/main/core/workspace/utils'
@@ -20,7 +21,6 @@ const WorkspaceMenu = (props) => {
   let workspaceActions
   if (!isEmpty(props.workspace)) {
     workspaceActions = getActions([props.workspace], {
-      add() {},
       update(workspaces) {
         props.update(workspaces[0])
       },
@@ -28,6 +28,11 @@ const WorkspaceMenu = (props) => {
         props.history.push(toolRoute('workspaces'))
       }
     }, props.basePath, props.currentUser)
+  }
+
+  let workspaceRoles = []
+  if (!isEmpty(props.workspace) && props.currentUser) {
+    workspaceRoles = props.currentUser.roles.filter(role => -1 !== role.name.indexOf(props.workspace.uuid))
   }
 
   return (
@@ -51,7 +56,7 @@ const WorkspaceMenu = (props) => {
       {get(props.workspace, 'display.showProgression') &&
         <section className="app-menu-progression">
           <h2 className="sr-only">
-            Ma progression
+            {trans('my_progression')}
           </h2>
 
           <LiquidGauge
@@ -64,7 +69,13 @@ const WorkspaceMenu = (props) => {
           />
 
           <div className="app-menu-progression-info">
-            <h3 className="h4">Collaborateur</h3>
+            <h3 className="h4">
+              {!isEmpty(workspaceRoles) ?
+                workspaceRoles.map(role => trans(role.translationKey)).join(', ') :
+                trans('guest')
+              }
+            </h3>
+
             {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
           </div>
         </section>
@@ -118,9 +129,10 @@ WorkspaceMenu.propTypes = {
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ),
-  currentUser: T.shape({
-    // TODO
-  }),
+  impersonated: T.bool.isRequired,
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ),
   shortcuts: T.arrayOf(T.shape({
     type: T.oneOf(['tool', 'action']).isRequired,
     name: T.string.isRequired

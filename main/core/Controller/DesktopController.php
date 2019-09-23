@@ -149,4 +149,26 @@ class DesktopController
 
         return new JsonResponse($event->getData());
     }
+
+    /**
+     * Lists desktop tools accessible by the current user.
+     *
+     * @EXT\Route("/tools", name="claro_desktop_tools")
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
+     *
+     * @param User|null $currentUser
+     *
+     * @return JsonResponse
+     */
+    public function listToolsAction(User $currentUser = null)
+    {
+        $tools = $this->toolManager->getDisplayedDesktopOrderedTools($currentUser);
+
+        return new JsonResponse(array_values(array_map(function (Tool $orderedTool) {
+            return [
+                'icon' => $orderedTool->getClass(),
+                'name' => $orderedTool->getName(),
+            ];
+        }, $tools)));
+    }
 }

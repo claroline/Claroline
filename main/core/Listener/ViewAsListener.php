@@ -106,8 +106,8 @@ class ViewAsListener
                             throw new \Exception('No implementation yet');
                         } else {
                             $token = new ViewAsToken(
-                          ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
-                        );
+                              ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
+                            );
                             $token->setUser($this->userManager->getDefaultClarolineUser());
                             $token->setAttribute('user_uuid', $this->tokenStorage->getToken()->getUser()->getUuid());
                             $this->tokenStorage->setToken($token);

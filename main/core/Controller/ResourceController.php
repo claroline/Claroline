@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -40,7 +39,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -116,6 +114,7 @@ class ResourceController
      * @param AuthorizationCheckerInterface $authorization
      * @param EventManager                  $eventManager
      * @param ResourceEvaluationManager     $resourceEvaluationManager
+     * @param FinderProvider                $finder
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -147,70 +146,23 @@ class ResourceController
     }
 
     /**
-     * Renders a resource application.
-     *
-     * @EXT\Route("/show/{id}", name="claro_resource_show_short")
-     * @EXT\Route("/show/{type}/{id}", name="claro_resource_show")
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\Template()
-     *
-     * @param int|string $id          - the id of the target node (we don't use ParamConverter to support ID and UUID)
-     * @param User       $currentUser
-     *
-     * @return array
-     *
-     * @throws ResourceNotFoundException
-     *
-     * @deprecated
-     */
-    public function showAction($id, User $currentUser = null)
-    {
-        /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->om->find(ResourceNode::class, $id);
-        if (!$resourceNode) {
-            throw new NotFoundHttpException('Resource not found');
-        }
-
-        // TODO : not pretty, but might want on some case to download files instead ?
-        // TODO : find a way to do it in the link plugin
-        if ('shortcut' === $resourceNode->getResourceType()->getName()) {
-            $shortcut = $this->manager->getResourceFromNode($resourceNode);
-            $resourceNode = $shortcut->getTarget();
-        }
-
-        // do a minimal security check to redirect user which are not authenticated if needed.
-        if (empty($currentUser) && 0 >= $this->rightsRepo->findMaximumRights([], $resourceNode)) {
-            // user is not authenticated and the current node is not opened to anonymous
-            throw new AccessDeniedException();
-        }
-
-        return [
-            'resourceNode' => $resourceNode,
-        ];
-    }
-
-    /**
      * Opens a resource.
      *
-     * @EXT\Route("/load/{id}", name="claro_resource_load_short")
-     * @EXT\Route("/load/{type}/{id}", name="claro_resource_load")
-     * @EXT\Route("/load/{type}/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
+     * @EXT\Route("/load/{id}", name="claro_resource_load")
+     * @EXT\Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
      * @EXT\Method("GET")
      *
      * @param int|string $id       - the id of the target node (we don't use ParamConverter to support ID and UUID)
      * @param int        $embedded
      *
      * @return JsonResponse
-     *
-     * @throws ResourceNotFoundException
      */
     public function openAction($id, $embedded = 0)
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->find(ResourceNode::class, $id);
         if (!$resourceNode) {
-            throw new ResourceNotFoundException();
+            return new JsonResponse(['resource_not_found'], 404);
         }
 
         // gets the current user roles to check access restrictions
@@ -223,10 +175,11 @@ class ResourceController
                 //I have no idea if it is correct to do this
                 if ('anon.' !== $this->tokenStorage->getToken()->getUser()) {
                     $this->resourceEvaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
-                      'status' => ResourceEvaluation::STATUS_PARTICIPATED,
+                        'status' => ResourceEvaluation::STATUS_PARTICIPATED,
                     ]);
                 }
             } catch (ResourceNotFoundException $e) {
+                // Not a 404 because we should not have ResourceNode without a linked AbstractResource
                 return new JsonResponse(['resource_not_found'], 500);
             }
 
@@ -464,7 +417,7 @@ class ResourceController
      * @EXT\Route("/{slug}", name="claro_resource_get")
      * @EXT\Method("GET")
      *
-     * @param int|string $id - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     * @param string $slug - the slug or UUID of the target node (we don't use ParamConverter to support slug and UUID)
      *
      * @return JsonResponse
      *

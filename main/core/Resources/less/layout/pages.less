@@ -88,23 +88,11 @@
     padding: 0 floor(@grid-gutter-width / 2);
 
     > small {
-        display: block; // todo this may have broken some things
+        display: block;
         margin-top: 5px;
         font-size: 50%;
         font-style: italic;
     }
-}
-
-.page-title-center { // todo remove me
-  text-align: center;
-}
-
-.page-title-left { // todo remove me
-  text-align: left;
-}
-
-.page-title-right { // todo remove me
-  text-align: right;
 }
 
 .page-actions {
@@ -129,8 +117,7 @@
         margin-left: 0; // absorb first btn margin
     }
 
-    .page-actions-btn,
-    .dropdown {
+    .page-actions-btn {
         margin-left: .2em;
     }
 
@@ -196,75 +183,6 @@
     flex-direction: column;
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
     padding: 0 floor(@grid-gutter-width / 2);
-}
-
-.tabbed-page {
-    .page-header {
-        > div {
-            flex: 1;
-        }
-    }
-
-    .page-title {
-        margin-bottom: 5px;
-    }
-}
-
-.page-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: stretch;
-    align-items: stretch;
-    padding: 0 floor(@grid-gutter-width / 2);
-    font-family: @headings-font-family;
-
-    a {
-        flex: 1;
-        font-size: @font-size-small;
-        height: floor((@font-size-small * @line-height-small))*2 + 8px + 4px;
-        display: inline-flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 4px 12px;
-        color: #666666;
-        background: #EDEDED;
-        border: 2px solid #EDEDED;
-        border-right: 1px solid transparent;
-        border-left: 1px solid transparent;
-        background-clip: padding-box;
-
-        &.only-icon {
-            margin-left: auto;
-            flex: 0;
-        }
-
-        &:last-child {
-            margin-right: 0;
-        }
-
-        &:hover {
-            color: @brand-primary;
-        }
-
-        &.active {
-            color: @brand-primary;
-            background: white;
-            border-top: 2px solid white;
-            border-bottom-color: @brand-primary;
-        }
-    }
-
-    .page-tabs-icon {
-        font-size: 24px;
-    }
-
-    .page-tab-label {
-        margin-left: 10px;
-        overflow: hidden;
-        max-height: 100%;
-    }
 }
 
 @media (max-width: @screen-sm-min) {

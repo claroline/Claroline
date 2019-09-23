@@ -8,12 +8,12 @@ import {actions, reducer, selectors} from '#/main/core/modals/resources/store'
 const ResourcesModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      currentDirectory: selectors.currentNode(state),
+      currentDirectory: selectors.current(state),
       selected: selectors.selectedFull(state)
     }),
     (dispatch) => ({
-      initialize(root, current, filters) {
-        dispatch(actions.initialize(root, current, filters))
+      setCurrent(directoryNode = null, filters = []) {
+        dispatch(actions.setCurrent(directoryNode, filters))
       }
     })
   )(ResourcesModalComponent)

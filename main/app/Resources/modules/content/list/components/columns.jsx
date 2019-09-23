@@ -39,7 +39,7 @@ ColumnsMenu.propTypes = {
 const ListColumns = props =>
   <Button
     id="list-columns"
-    className="btn btn-link"
+    className="list-header-btn btn btn-link"
     type={MENU_BUTTON}
     icon="fa fa-fw fa-columns"
     label={trans('list_columns_title')}

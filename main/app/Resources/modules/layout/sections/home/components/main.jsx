@@ -6,6 +6,8 @@ import {Routes} from '#/main/app/router/components/routes'
 import {HomeContent} from '#/main/app/layout/sections/home/components/content'
 import {HomeMaintenance} from '#/main/app/layout/sections/home/components/maintenance'
 import {HomeLogin} from '#/main/app/layout/sections/home/components/login'
+import {SendPassword} from '#/main/app/layout/sections/home/components/send-password'
+import {NewPassword} from '#/main/app/layout/sections/home/components/new-password'
 import {HomeRegistration} from '#/main/app/layout/sections/home/components/registration'
 import {HomeExternalAccount} from '#/main/app/layout/sections/home/components/external-account'
 
@@ -24,6 +26,13 @@ const HomeMain = (props) =>
         path: '/maintenance',
         disabled: !props.maintenance || props.isAuthenticated,
         component: HomeMaintenance
+      }, {
+        path: '/reset_password',
+        component: SendPassword
+      },
+      {
+        path: '/newpassword/:hash',
+        component: NewPassword
       }, {
         path: '/login',
         disabled: props.isAuthenticated,
