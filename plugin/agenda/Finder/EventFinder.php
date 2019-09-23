@@ -28,26 +28,18 @@ class EventFinder extends AbstractFinder
             switch ($filterName) {
                 case 'workspaces':
                     $qb->leftJoin('obj.workspace', 'w');
-
-                    //if $filterValue = 0, it means desktop
-                    if (in_array(0, $filterValue)) {
-                        $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->in('w.uuid', ':'.$filterName),
-                            $qb->expr()->isNull('w')
-                        ));
-
-                        $qb->setParameter($filterName, $filterValue);
-                    } else {
-                        $qb->andWhere('w.uuid IN (:'.$filterName.')');
-                        $qb->setParameter($filterName, $filterValue);
-                    }
+                    $qb->andWhere('w.uuid IN (:'.$filterName.')');
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'types':
-                    if ($filterValue === ['task']) {
-                        $qb->andWhere('obj.isTask = true');
-                    } elseif ($filterValue === ['event']) {
-                        $qb->andWhere('obj.isTask = false');
+                    if (1 === count($filterValue)) {
+                        if ('task' === $filterValue[0]) {
+                            $qb->andWhere('obj.isTask = true');
+                        } elseif ('event' === $filterValue[0]) {
+                            $qb->andWhere('obj.isTask = false');
+                        }
                     }
+
                     break;
                 case 'createdBefore':
                     $qb->andWhere("obj.start <= :{$filterName}");

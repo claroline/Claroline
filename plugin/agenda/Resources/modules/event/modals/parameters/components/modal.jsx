@@ -104,7 +104,7 @@ const ParametersModal = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.event, props.onCreate)
+        props.save(props.event, props.onSave)
         props.fadeModal()
       }}
     />
@@ -114,7 +114,7 @@ ParametersModal.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ),
-  onCreate: T.func,
+  onSave: T.func,
   // from store
   saveEnabled: T.bool.isRequired,
   loadEvent: T.func.isRequired,

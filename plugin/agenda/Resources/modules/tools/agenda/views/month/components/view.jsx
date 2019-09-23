@@ -25,14 +25,14 @@ const Day = props => {
           return
         }
 
-        props.createEvent({
+        props.create({
           start: props.current.format(getApiFormat())
         })
       }}
     >
       <LinkButton
         className="day-number"
-        target={route(props.path, 'month', props.current)}
+        target={route(props.path, 'day', props.current)}
       >
         {props.current.format('D')}
       </LinkButton>
@@ -41,6 +41,7 @@ const Day = props => {
         <EventMicro
           key={event.id}
           event={event}
+          actions={props.eventActions(event)}
         />
       ))}
     </div>
@@ -54,7 +55,8 @@ Day.propTypes = {
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )),
-  createEvent: T.func.isRequired
+  create: T.func.isRequired,
+  eventActions: T.func.isRequired
 }
 
 Day.defaultProps = {
@@ -136,7 +138,8 @@ class AgendaViewMonthComponent extends Component {
                   })}
                   current={current}
                   events={events}
-                  createEvent={this.props.createEvent}
+                  create={this.props.create}
+                  eventActions={this.props.eventActions}
                 />
               )
             })}
@@ -162,7 +165,8 @@ AgendaViewMonthComponent.propTypes = {
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )).isRequired,
-  createEvent: T.func.isRequired
+  create: T.func.isRequired,
+  eventActions: T.func.isRequired
 }
 
 const AgendaViewMonth = withRouter(AgendaViewMonthComponent)

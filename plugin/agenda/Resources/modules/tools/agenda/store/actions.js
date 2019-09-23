@@ -3,55 +3,70 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 import {getApiFormat} from '#/main/app/intl/date'
 
-export const AGENDA_CHANGE_VIEW      = 'AGENDA_CHANGE_VIEW'
-export const AGENDA_CHANGE_REFERENCE = 'AGENDA_CHANGE_REFERENCE'
-export const AGENDA_LOAD_EVENTS      = 'AGENDA_LOAD_EVENTS'
-export const AGENDA_SET_LOADED       = 'AGENDA_SET_LOADED'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {selectors} from '#/plugin/agenda/tools/agenda/store/selectors'
+
+export const AGENDA_CHANGE_TYPES = 'AGENDA_CHANGE_TYPES'
+export const AGENDA_CHANGE_VIEW  = 'AGENDA_CHANGE_VIEW'
+export const AGENDA_LOAD_EVENTS  = 'AGENDA_LOAD_EVENTS'
+export const AGENDA_SET_LOADED   = 'AGENDA_SET_LOADED'
 
 export const actions = {}
 
-actions.changeView = makeActionCreator(AGENDA_CHANGE_VIEW, 'view')
-actions.changeReference = makeActionCreator(AGENDA_CHANGE_REFERENCE, 'referenceDate')
+actions.changeTypes = makeActionCreator(AGENDA_CHANGE_TYPES, 'types')
+actions.changeView = makeActionCreator(AGENDA_CHANGE_VIEW, 'view', 'referenceDate')
 actions.setLoaded = makeActionCreator(AGENDA_SET_LOADED, 'loaded')
 
-actions.loadEvents = makeActionCreator(AGENDA_LOAD_EVENTS, 'events')
-actions.fetchEvents = (rangeDates) => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_event_list'], {
-      types: ['task', 'event'],
-      start: rangeDates[0].format(getApiFormat()),
-      end: rangeDates[1].format(getApiFormat())
-    }),
-    success: (response, dispatch) => dispatch(actions.loadEvents(response))
+actions.load = makeActionCreator(AGENDA_LOAD_EVENTS, 'events')
+actions.fetch = (rangeDates) => (dispatch, getState) => {
+  const filters = {
+    types: selectors.types(getState())
   }
-})
 
+  const contextId = toolSelectors.contextId(getState())
+  if (contextId) {
+    filters.workspaces = [contextId]
+  }
 
+  return dispatch({
+    [API_REQUEST]: {
+      url: url(['apiv2_event_list'], {
+        start: rangeDates[0].format(getApiFormat()),
+        end: rangeDates[1].format(getApiFormat()),
+        filters: filters
+      }),
+      success: (response, dispatch) => dispatch(actions.load(response))
+    }
+  })
+}
 
-
-
-
-
-
-
-
-
-
-export const AGENDA_UPDATE_FILTER_TYPE = 'AGENDA_UPDATE_FILTER_TYPE'
-export const AGENDA_UPDATE_FILTER_WORKSPACE = 'AGENDA_UPDATE_FILTER_WORKSPACE'
-
-actions.updateFilterType = makeActionCreator(AGENDA_UPDATE_FILTER_TYPE, 'filters')
-actions.updateFilterWorkspace = makeActionCreator(AGENDA_UPDATE_FILTER_WORKSPACE, 'filters')
-
-actions.delete = (event, calendarRef) => ({
+actions.delete = (event) => ({
   [API_REQUEST]: {
     url: ['apiv2_event_delete_bulk', {ids: [event.id]}],
     request: {
       method: 'DELETE'
     },
-    success: () => {
-      calendarRef.fullCalendar('removeEvents', event.id)
-    }
+    success: (response, dispatch) => dispatch(actions.setLoaded(false))
+  }
+})
+
+actions.markDone = (event) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_task_mark_done', {ids: [event.id]}],
+    request: {
+      method: 'PUT'
+    },
+    success: (response, dispatch) => dispatch(actions.setLoaded(false))
+  }
+})
+
+actions.markTodo = (event) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_task_mark_todo', {ids: [event.id]}],
+    request: {
+      method: 'PUT'
+    },
+    success: (response, dispatch) => dispatch(actions.setLoaded(false))
   }
 })
 

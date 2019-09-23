@@ -27,7 +27,8 @@ const EventMicro = props => {
         backgroundColor: color.toRgbString()
       } : undefined}
       modal={[MODAL_EVENT_ABOUT, {
-        event: props.event
+        event: props.event,
+        actions: props.actions
       }]}
     >
       {constants.EVENT_TYPE_TASK === props.event.meta.type &&
@@ -43,7 +44,14 @@ EventMicro.propTypes = {
   className: T.string,
   event: T.shape(
     EventTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  actions: T.arrayOf(T.shape({
+    // TODO : action types
+  }))
+}
+
+EventMicro.defaultProps = {
+  actions: []
 }
 
 export {

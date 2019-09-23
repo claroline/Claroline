@@ -44,6 +44,11 @@ const contextData = createSelector(
   (context) => context.data
 )
 
+const contextId = createSelector(
+  [contextData],
+  (contextData) => contextData ? contextData.uuid : undefined
+)
+
 export const selectors = {
   STORE_NAME,
   store,
@@ -55,5 +60,6 @@ export const selectors = {
   icon,
   context,
   contextType,
-  contextData
+  contextData,
+  contextId
 }

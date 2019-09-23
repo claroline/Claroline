@@ -23,6 +23,46 @@ const AgendaMenu = props =>
       time={false}
       showCurrent={false}
     />
+
+    <div className="list-group">
+      <label className="list-group-item">
+        <input
+          type="checkbox"
+          checked={-1 !== props.types.indexOf('event')}
+          onChange={e => {
+            let newTypes = [].concat(props.types)
+            if (e.target.checked) {
+              newTypes.push('event')
+            } else {
+              newTypes.splice(newTypes.indexOf('event'), 1)
+            }
+
+            props.changeTypes(newTypes)
+          }}
+        />
+
+        {trans('event', {}, 'agenda')}
+      </label>
+
+      <label className="list-group-item">
+        <input
+          type="checkbox"
+          checked={-1 !== props.types.indexOf('task')}
+          onChange={e => {
+            let newTypes = [].concat(props.types)
+            if (e.target.checked) {
+              newTypes.push('task')
+            } else {
+              newTypes.splice(newTypes.indexOf('task'), 1)
+            }
+
+            props.changeTypes(newTypes)
+          }}
+        />
+
+        {trans('task', {}, 'agenda')}
+      </label>
+    </div>
   </MenuSection>
 
 AgendaMenu.propTypes = {
@@ -38,6 +78,8 @@ AgendaMenu.propTypes = {
     'year',
     'schedule'
   ]).isRequired,
+  types: T.arrayOf(T.oneOf(['event', 'task'])).isRequired,
+  changeTypes: T.func.isRequired,
   selected: T.string.isRequired
 }
 

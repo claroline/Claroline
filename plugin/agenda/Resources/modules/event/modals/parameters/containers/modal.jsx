@@ -21,11 +21,11 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       },
-      save(event, onCreate) {
+      save(event, onSave) {
         dispatch(formActions.saveForm(selectors.STORE_NAME, event.id ? ['apiv2_event_update', {id: event.id}] : ['apiv2_event_create']))
           .then((response) => {
-            if (onCreate) {
-              onCreate(response)
+            if (onSave) {
+              onSave(response)
             }
           })
       },
