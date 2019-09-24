@@ -74,9 +74,10 @@ class StepSerializer
 
         $this->sipe('id', 'setUuid', $data, $step);
         $this->sipe('title', 'setTitle', $data, $step);
+        $this->sipe('slug', 'setSlug', $data, $step);
         $this->sipe('description', 'setDescription', $data, $step);
 
-        if (!$step->getTitle()) {
+        if (!$step->getTitle() && !$step->getSlug()) {
             $step->setSlug('step-'.$step->getOrder());
         }
 

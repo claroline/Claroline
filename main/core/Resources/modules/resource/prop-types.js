@@ -56,7 +56,7 @@ const ResourceNode = {
 
       }),
       commentsActivated: T.bool.isRequired
-    }).isRequired,
+    }),
 
     /**
      * Display configuration.

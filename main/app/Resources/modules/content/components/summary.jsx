@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'

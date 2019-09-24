@@ -4,7 +4,7 @@ import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {NavLink} from '#/main/app/router'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 
 const Vertical = (props) =>
   <nav

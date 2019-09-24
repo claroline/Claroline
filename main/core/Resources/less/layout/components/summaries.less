@@ -1,7 +1,7 @@
 /**
  * Styles for summary
  *
- * ATTENTION : the current styles are set to only display the summary the app menu.
+ * ATTENTION : the current styles are set to only display the summary in the app menu.
  */
 
 
@@ -17,7 +17,7 @@
 .summary-link-container {
     list-style: none;
     font-size: @summary-font;
-    font-style: italic; // TODO : use a var
+    font-style: @summary-font-style;
 }
 
 .summary-link {
@@ -95,6 +95,10 @@
 
     .action-icon {
         flex-shrink: 0;
+    }
+
+    .action-subscript {
+        margin-left: auto;
     }
 }
 

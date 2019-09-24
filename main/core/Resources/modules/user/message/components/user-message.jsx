@@ -5,7 +5,7 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {User as UserTypes} from '#/main/core/user/prop-types'

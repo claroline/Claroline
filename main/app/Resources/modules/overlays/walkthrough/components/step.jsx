@@ -4,7 +4,7 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Popover} from '#/main/app/overlays/popover/components/popover'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'

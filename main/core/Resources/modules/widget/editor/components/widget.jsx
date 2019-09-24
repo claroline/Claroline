@@ -5,7 +5,7 @@ import sum from 'lodash/sum'
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'

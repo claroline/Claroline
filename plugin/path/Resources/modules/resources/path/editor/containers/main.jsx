@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
-import {makeId} from '#/main/core/scaffolding/id'
+import {toKey} from '#/main/core/scaffolding/text'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
@@ -9,6 +9,7 @@ import {EditorMain as EditorMainComponent} from '#/plugin/path/resources/path/ed
 import {actions, selectors} from '#/plugin/path/resources/path/editor/store'
 import {actions as pathActions} from '#/plugin/path/resources/path/store'
 import {flattenSteps} from '#/plugin/path/resources/path/utils'
+import {getStepTitle, getStepSlug} from '#/plugin/path/resources/path/editor/utils'
 
 const EditorMain = withRouter(
   connect(
@@ -19,21 +20,22 @@ const EditorMain = withRouter(
       resourceParent: resourceSelectors.parent(state),
       workspace: resourceSelectors.workspace(state)
     }),
-    (dispatch, ownProps) => ({
-      addStep(parentId = null) {
-        // generate id now to be able to redirect to new step
-        const stepId = makeId()
+    (dispatch) => ({
+      addStep(steps, parent = null) {
+        // generate slug now to be able to redirect
+        const title = getStepTitle(steps, parent)
+        const slug = getStepSlug(steps, toKey(title))
 
-        dispatch(actions.addStep({id: stepId}, parentId))
+        dispatch(actions.addStep({
+          title: title,
+          slug: slug
+        }, parent ? parent.id : null))
 
-        ownProps.history.push(`${ownProps.basePath}/edit/${stepId}`)
+        // return slug for redirection
+        return slug
       },
       removeStep(stepId) {
         dispatch(actions.removeStep(stepId))
-
-        if (`${ownProps.basePath}/edit/${stepId}` === ownProps.history.location.pathname) {
-          ownProps.history.push(`${ownProps.basePath}/edit`)
-        }
       },
       copyStep(stepId, position) {
         dispatch(actions.copyStep(stepId, position))

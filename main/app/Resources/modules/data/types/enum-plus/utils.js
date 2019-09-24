@@ -1,7 +1,7 @@
 import clone from 'lodash/clone'
 
 import {trans} from '#/main/app/intl/translation'
-import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
+import {stripDiacritics} from '#/main/core/scaffolding/text'
 
 const isGroup = (choice) => {
   return choice && Array.isArray(choice.choices) && choice.choices.length > 0

@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
-import {makeId} from '#/main/core/scaffolding/id'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {EditorMain as EditorMainComponent} from '#/plugin/exo/resources/quiz/editor/components/main'
@@ -28,7 +27,7 @@ const EditorMain = withRouter(
       randomPick: selectors.randomPick(state),
       steps: selectors.steps(state)
     }),
-    (dispatch, ownProps) => ({
+    (dispatch) => ({
       /**
        * Push the updated quiz data to the server.
        *
@@ -49,31 +48,13 @@ const EditorMain = withRouter(
       },
 
       /**
-       * Create a new step in the quiz.
-       *
-       * @param {string} path
-       */
-      addStep(path) {
-        // generate id now to be able to redirect to new step
-        const stepId = makeId()
-
-        dispatch(actions.addStep({id: stepId}))
-
-        ownProps.history.push(`${path}/edit/${stepId}`)
-      },
-
-      /**
        * Remove a step from the quiz.
        *
        * @param {string} stepId - the id of the step to delete
        * @param {string} path
        */
-      removeStep(stepId, path) {
+      removeStep(stepId) {
         dispatch(actions.removeStep(stepId))
-
-        if (`${path}/edit/${stepId}` === ownProps.history.location.pathname) {
-          ownProps.history.push(`${path}/edit`)
-        }
       },
 
       /**

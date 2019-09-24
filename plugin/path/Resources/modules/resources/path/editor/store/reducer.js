@@ -2,7 +2,6 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
@@ -11,7 +10,7 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {Step} from '#/plugin/path/resources/path/prop-types'
-import {getStepPath, getStepParent, getFormDataPart} from '#/plugin/path/resources/path/editor/utils'
+import {getStepPath, getStepSlug, getStepParent, getFormDataPart} from '#/plugin/path/resources/path/editor/utils'
 
 import {
   PATH_ADD_STEP,
@@ -21,11 +20,12 @@ import {
 } from '#/plugin/path/resources/path/editor/store/actions'
 import {selectors} from '#/plugin/path/resources/path/editor/store/selectors'
 
-function replaceStepIds(step) {
+function replaceStepIds(step, all) {
   step.id = makeId()
+  step.slug = getStepSlug(all, step.slug)
 
   if (step.children) {
-    step.children = step.children.map(replaceStepIds)
+    step.children = step.children.map((child) => replaceStepIds(child, all))
   }
 
   return step
@@ -84,19 +84,9 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
       const newStep = merge({id: makeId()}, Step.defaultProps, action.step || {})
 
       if (!action.parentId) {
-        if (!newStep.title) {
-          newStep.title = `${trans('step', {}, 'path')} ${newState.steps.length + 1}`
-        }
-
         newState.steps.push(newStep)
       } else {
         const parent = get(newState, getFormDataPart(action.parentId, newState.steps))
-
-        if (!newStep.title) {
-          const parentPath = getStepPath(action.parentId, newState.steps)
-          newStep.title = `${trans('step', {}, 'path')} ${parentPath.map(i => i+1).join('.')}.${parent.children.length + 1}`
-        }
-
         if (!parent.children) {
           parent.children = []
         }
@@ -117,7 +107,7 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
 
       // generate a copy of the step and its subtree
       const original = get(newState, getFormDataPart(action.id, newState.steps))
-      const copy = replaceStepIds(cloneDeep(original))
+      const copy = replaceStepIds(cloneDeep(original), newState.steps)
 
       // put the copy at the correct position
       if (action.position.parent) {

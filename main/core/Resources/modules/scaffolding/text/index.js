@@ -96,7 +96,7 @@ const accentMap = {
   '\u01B6':'z','\u0225':'z','\u0240':'z','\u2C6C':'z','\uA763':'z'
 }
 
-const stripDiacritics = str => {
+function stripDiacritics(str) {
   if (!str) return str
 
   let chars = str.split(''), alter = false
@@ -115,6 +115,28 @@ const stripDiacritics = str => {
   return str
 }
 
+/**
+ * Normalizes a string to be used as a key (eg. id, slug, react array `key`).
+ *
+ * @param text
+ */
+function toKey(text) {
+  return stripDiacritics(text)
+    // removes multiple whitespaces, new lines & tabs by single whitespace
+    .replace(/\s\s+/g, ' ')
+    // replaces dots by hyphen
+    .replace('.', '-')
+    // removes all non alpha-numeric chars
+    .replace(/[^a-zA-Z0-9\- ]/g, '')
+    // replaces whitespaces by hyphen
+    .replace(/\s/g, '-')
+    // removes uppercase
+    .toLowerCase()
+    // shorten text
+    .substring(0, 30)
+}
+
 export {
-  stripDiacritics
+  stripDiacritics,
+  toKey
 }

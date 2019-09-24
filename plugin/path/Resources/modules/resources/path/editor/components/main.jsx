@@ -32,7 +32,10 @@ class EditorMain extends Component {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('step_add_child', {}, 'path'),
-        callback: () => this.props.addStep(step.id),
+        callback: () => {
+          const newSlug = this.props.addStep(this.props.path.steps, step)
+          this.props.history.push(`${this.props.basePath}/edit/${newSlug}`)
+        },
         group: trans('management')
       }, {
         name: 'copy',
@@ -73,7 +76,12 @@ class EditorMain extends Component {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
-        callback: () => this.props.removeStep(step.id),
+        callback: () => {
+          this.props.removeStep(step.id)
+          if (`${this.props.basePath}/edit/${step.slug}` === this.props.location.pathname) {
+            this.props.history.push(`${this.props.basePath}/edit`)
+          }
+        },
         confirm: {
           title: trans('deletion'),
           subtitle: step.title,
@@ -153,6 +161,12 @@ class EditorMain extends Component {
 }
 
 EditorMain.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
+  location: T.shape({
+    pathname: T.string.isRequired
+  }).isRequired,
   basePath: T.string.isRequired,
   workspace: T.object,
   path: T.shape(
