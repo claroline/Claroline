@@ -77,7 +77,7 @@ class EditorMain extends Component {
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
         callback: () => {
-          this.props.removeStep(step)
+          this.props.removeStep(step.id)
           if (`${this.props.basePath}/edit/${step.slug}` === this.props.location.pathname) {
             this.props.history.push(`${this.props.basePath}/edit`)
           }

@@ -128,7 +128,6 @@ const EditorStep = props => {
                         label: trans('copy', {}, 'actions'),
                         callback: () => {
                           refreshIdentifiers(item).then(item => {
-
                             props.copyItem(item, position)
                           })
                         }

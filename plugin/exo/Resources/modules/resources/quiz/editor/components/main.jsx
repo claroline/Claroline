@@ -11,7 +11,6 @@ import {Form} from '#/main/app/content/form/components/form'
 import {Step as StepTypes} from '#/plugin/exo/resources/quiz/prop-types'
 import {EditorParameters} from '#/plugin/exo/resources/quiz/editor/components/parameters'
 import {EditorStep} from '#/plugin/exo/resources/quiz/editor/components/step'
-import {EditorSummary} from '#/plugin/exo/resources/quiz/editor/components/summary'
 import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/step-position'
 
 class EditorMain extends Component {
@@ -68,7 +67,12 @@ class EditorMain extends Component {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
-        callback: () => this.props.removeStep(step.id, this.props.path),
+        callback: () => {
+          this.props.removeStep(step.id)
+          if (`${this.props.path}/edit/${step.slug}` === this.props.location.pathname) {
+            this.props.history.push(`${this.props.path}/edit`)
+          }
+        },
         confirm: {
           title: trans('deletion'),
           subtitle: step.title || trans('step', {number: index + 1}, 'quiz'),
@@ -80,16 +84,10 @@ class EditorMain extends Component {
     ]
   }
 
-  /*getItemActions(step, item, index) {
-    return [
-
-    ]
-  }*/
-
   render() {
     return (
       <Form
-        className="quiz-editor"
+        className="user-select-disabled"
         validating={this.props.validating}
         pendingChanges={this.props.pendingChanges}
         errors={!isEmpty(this.props.errors)}
@@ -103,84 +101,75 @@ class EditorMain extends Component {
           exact: true
         }}
       >
-        <EditorSummary
-          validating={this.props.validating}
-          errors={this.props.errors}
-          steps={this.props.steps.map((step, stepIndex) => ({
-            id: step.id,
-            slug: step.slug,
-            title: step.title,
-            actions: this.getStepActions(step, stepIndex)
-          }))}
-          add={() => this.props.addStep(this.props.path)}
+        <Routes
           path={this.props.path}
-        />
+          routes={[
+            {
+              path: '/edit/parameters',
+              render: () => (
+                <EditorParameters
+                  formName={this.props.formName}
+                  quizType={this.props.quizType}
+                  score={this.props.score}
+                  numberingType={this.props.numberingType}
+                  randomPick={this.props.randomPick}
+                  tags={this.props.tags}
+                  workspace={this.props.workspace}
+                  steps={this.props.steps}
+                  update={this.props.update}
+                />
+              )
+            }, {
+              path: '/edit/:slug',
+              render: (routeProps) => {
+                const stepIndex = this.props.steps.findIndex(step => routeProps.match.params.slug === step.slug)
+                if (-1 !== stepIndex) {
+                  const currentStep = this.props.steps[stepIndex]
 
-        <div className="edit-zone user-select-disabled">
-          <Routes
-            path={this.props.path}
-            routes={[
-              {
-                path: '/edit/parameters',
-                render: () => (
-                  <EditorParameters
-                    formName={this.props.formName}
-                    quizType={this.props.quizType}
-                    score={this.props.score}
-                    numberingType={this.props.numberingType}
-                    randomPick={this.props.randomPick}
-                    tags={this.props.tags}
-                    workspace={this.props.workspace}
-                    steps={this.props.steps}
-                    update={this.props.update}
-                  />
-                )
-              }, {
-                path: '/edit/:slug',
-                render: (routeProps) => {
-                  const stepIndex = this.props.steps.findIndex(step => routeProps.match.params.slug === step.slug)
-                  if (-1 !== stepIndex) {
-                    const currentStep = this.props.steps[stepIndex]
-
-                    return (
-                      <EditorStep
-                        formName={this.props.formName}
-                        path={`steps[${stepIndex}]`}
-                        numberingType={this.props.numberingType}
-                        steps={this.props.steps}
-                        index={stepIndex}
-                        id={currentStep.id}
-                        title={currentStep.title}
-                        hasExpectedAnswers={this.props.hasExpectedAnswers}
-                        score={this.props.score}
-                        items={currentStep.items}
-                        errors={get(this.props.errors, `steps[${stepIndex}]`)}
-                        actions={this.getStepActions(currentStep, stepIndex)}
-                        update={(prop, value) => this.props.update(`steps[${stepIndex}].${prop}`, value)}
-                        moveItem={(itemId, position) => this.props.moveItem(itemId, position)}
-                        copyItem={(itemId, position) => this.props.copyItem(itemId, position)}
-                      />
-                    )
-                  }
-
-                  routeProps.history.push(`${this.props.path}/edit`)
-
-                  return null
+                  return (
+                    <EditorStep
+                      formName={this.props.formName}
+                      path={`steps[${stepIndex}]`}
+                      numberingType={this.props.numberingType}
+                      steps={this.props.steps}
+                      index={stepIndex}
+                      id={currentStep.id}
+                      title={currentStep.title}
+                      hasExpectedAnswers={this.props.hasExpectedAnswers}
+                      score={this.props.score}
+                      items={currentStep.items}
+                      errors={get(this.props.errors, `steps[${stepIndex}]`)}
+                      actions={this.getStepActions(currentStep, stepIndex)}
+                      update={(prop, value) => this.props.update(`steps[${stepIndex}].${prop}`, value)}
+                      moveItem={(itemId, position) => this.props.moveItem(itemId, position)}
+                      copyItem={(itemId, position) => this.props.copyItem(itemId, position)}
+                    />
+                  )
                 }
-              }
-            ]}
 
-            redirect={[
-              {from: '/edit', exact: true, to: '/edit/parameters'}
-            ]}
-          />
-        </div>
+                routeProps.history.push(`${this.props.path}/edit`)
+
+                return null
+              }
+            }
+          ]}
+
+          redirect={[
+            {from: '/edit', exact: true, to: '/edit/parameters'}
+          ]}
+        />
       </Form>
     )
   }
 }
 
 EditorMain.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
+  location: T.shape({
+    pathname: T.string.isRequired
+  }).isRequired,
   path: T.string.isRequired,
   formName: T.string.isRequired,
   validating: T.bool.isRequired,
@@ -203,7 +192,6 @@ EditorMain.propTypes = {
 
   update: T.func.isRequired,
   save: T.func.isRequired,
-  addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,
   removeStep: T.func.isRequired,

@@ -34,8 +34,8 @@ const EditorMain = withRouter(
         // return slug for redirection
         return slug
       },
-      removeStep(step) {
-        dispatch(actions.removeStep(step.id))
+      removeStep(stepId) {
+        dispatch(actions.removeStep(stepId))
       },
       copyStep(stepId, position) {
         dispatch(actions.copyStep(stepId, position))
