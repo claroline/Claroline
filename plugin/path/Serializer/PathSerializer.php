@@ -149,9 +149,9 @@ class PathSerializer
         }
 
         return [
-            'slug' => $step->getSlug(),
             'id' => $step->getUuid(),
             'title' => $step->getTitle(),
+            'slug' => $step->getSlug(),
             'description' => $step->getDescription(),
             'poster' => $poster,
             'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource()) : null,
@@ -238,6 +238,9 @@ class PathSerializer
 
         if (isset($data['title'])) {
             $step->setTitle($data['title']);
+        }
+        if (isset($data['slug'])) {
+            $step->setSlug($data['slug']);
         }
         if (isset($data['description'])) {
             $step->setDescription($data['description']);

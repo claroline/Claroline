@@ -121,8 +121,14 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
   embedded: T.bool,
   picker: T.shape({
     title: T.string,
-    current: T.shape(ResourceNodeTypes.propTypes),
-    root: T.shape(ResourceNodeTypes.propTypes),
+    root: T.shape({
+      slug: T.string.isRequired,
+      name: T.string.isRequired
+    }),
+    current: T.shape({
+      slug: T.string.isRequired,
+      name: T.string.isRequired
+    }),
     filters: T.object
   }),
   onEmbeddedResourceClose: T.func

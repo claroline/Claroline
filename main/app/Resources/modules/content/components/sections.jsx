@@ -7,7 +7,7 @@ import omit from 'lodash/omit'
 import Panel      from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Heading} from '#/main/core/layout/components/heading'

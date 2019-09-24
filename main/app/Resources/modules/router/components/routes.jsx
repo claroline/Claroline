@@ -6,7 +6,7 @@ import {
   Switch
 } from 'react-router-dom'
 
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {Route} from '#/main/app/router/components/route'
 import {Route as RouteTypes} from '#/main/app/router/prop-types'
 

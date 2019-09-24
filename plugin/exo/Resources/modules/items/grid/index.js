@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty'
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {trans} from '#/main/app/intl/translation'
-import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
+import {stripDiacritics} from '#/main/core/scaffolding/text'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {constants} from '#/plugin/exo/items/grid/constants'

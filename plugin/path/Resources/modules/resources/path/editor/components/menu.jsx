@@ -24,7 +24,10 @@ const EditorMenu = props => {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('step_add_child', {}, 'path'),
-          callback: () => props.addStep(step.id),
+          callback: () => {
+            const newSlug = props.addStep(props.steps, step)
+            props.history.push(`${props.path}/edit/${newSlug}`)
+          },
           group: trans('management')
         }, {
           name: 'copy',
@@ -65,7 +68,12 @@ const EditorMenu = props => {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash-o',
           label: trans('delete', {}, 'actions'),
-          callback: () => props.removeStep(step.id),
+          callback: () => {
+            props.removeStep(step)
+            if (`${props.path}/edit/${step.slug}` === props.location.pathname) {
+              props.history.push(`${props.path}/edit`)
+            }
+          },
           confirm: {
             title: trans('deletion'),
             subtitle: step.title,
@@ -90,13 +98,19 @@ const EditorMenu = props => {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('step_add', {}, 'path'),
-        callback: () => props.addStep()
+        callback: () => {
+          const newSlug = props.addStep(props.steps)
+          props.history.push(`${props.path}/edit/${newSlug}`)
+        }
       }])}
     />
   )
 }
 
 EditorMenu.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   location: T.shape({
     pathname: T.string.isRequired
   }).isRequired,

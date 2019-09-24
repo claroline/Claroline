@@ -1,4 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
+import {stripDiacritics} from '#/main/core/scaffolding/text'
 
 export const utils = {}
 
@@ -240,8 +241,6 @@ utils.getKey = (holeId, answer, solutions) => {
 
   return key
 }
-
-import { stripDiacritics } from '#/main/core/scaffolding/text/strip-diacritics'
 
 /**
  *

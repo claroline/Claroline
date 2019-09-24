@@ -2,7 +2,7 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'

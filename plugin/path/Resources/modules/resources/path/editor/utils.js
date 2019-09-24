@@ -1,3 +1,6 @@
+import {trans} from '#/main/app/intl/translation'
+
+import {flattenSteps} from '#/plugin/path/resources/path/utils'
 
 function getFormDataPart(id, steps) {
   const stepPath = getStepPath(id, steps)
@@ -52,8 +55,46 @@ function getStepParent(id, steps) {
   return null
 }
 
+function getStepTitle(steps, parent) {
+  let title
+  if (!parent) {
+    title = `${trans('step', {}, 'path')} ${steps.length + 1}`
+  } else {
+    const parentPath = getStepPath(parent.id, steps)
+    title = `${trans('step', {}, 'path')} ${parentPath.map(i => i+1).join('.')}.${parent.children ? parent.children.length + 1 : 1}`
+  }
+
+  return title
+}
+
+/**
+ * Checks if a slug is unique and generates an unique one if not.
+ *
+ * @param steps
+ * @param desiredSlug
+ */
+function getStepSlug(steps, desiredSlug) {
+  const flatSteps = flattenSteps(steps)
+
+  if (-1 === flatSteps.findIndex(step => step.slug === desiredSlug)) {
+    // slug is free
+    return desiredSlug
+  }
+
+  let i = 1
+  let newSlug = desiredSlug+'-'+i
+  while (-1 !== flatSteps.findIndex(step => step.slug === newSlug)) {
+    newSlug = desiredSlug+'-'+i
+    i = i+1
+  }
+
+  return newSlug
+}
+
 export {
   getFormDataPart,
   getStepPath,
-  getStepParent
+  getStepParent,
+  getStepTitle,
+  getStepSlug
 }

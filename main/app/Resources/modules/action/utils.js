@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 

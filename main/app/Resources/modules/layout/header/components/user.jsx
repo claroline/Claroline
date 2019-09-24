@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'

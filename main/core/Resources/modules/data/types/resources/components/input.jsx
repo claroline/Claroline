@@ -38,8 +38,14 @@ const ResourcesButton = props =>
 
 ResourcesButton.propTypes = {
   title: T.string,
-  current: T.shape(ResourceNodeTypes.propTypes),
-  root: T.shape(ResourceNodeTypes.propTypes),
+  root: T.shape({
+    slug: T.string.isRequired,
+    name: T.string.isRequired
+  }),
+  current: T.shape({
+    slug: T.string.isRequired,
+    name: T.string.isRequired
+  }),
   onChange: T.func.isRequired
 }
 
@@ -113,8 +119,14 @@ implementPropTypes(ResourcesInput, FormFieldTypes, {
   )),
   picker: T.shape({
     title: T.string,
-    current: T.shape(ResourceNodeTypes.propTypes),
-    root: T.shape(ResourceNodeTypes.propTypes),
+    root: T.shape({
+      slug: T.string.isRequired,
+      name: T.string.isRequired
+    }),
+    current: T.shape({
+      slug: T.string.isRequired,
+      name: T.string.isRequired
+    }),
     filters: T.object
   })
 }, {

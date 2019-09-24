@@ -4,7 +4,7 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config/asset'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {toKey} from '#/main/core/scaffolding/text'
 
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
