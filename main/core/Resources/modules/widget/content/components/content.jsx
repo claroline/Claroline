@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEqual from 'lodash/isEqual'
 
@@ -10,36 +10,51 @@ import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/
 
 // the class is because of the use of references
 class WidgetContent extends Component {
-  componentDidMount() {
-    this.mountWidget(this.props.instance, this.props.currentContext)
+  constructor(props) {
+    super(props)
+
+    this.mountWidget = this.mountWidget.bind(this)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    // the embedded resource has changed
-    if (!isEqual(this.props.instance, nextProps.instance)) {
-      // remove old app
-      unmount(this.mountNode)
+  componentDidMount() {
+    this.mountWidget()
+  }
 
-      this.mountWidget(nextProps.instance, nextProps.currentContext)
+  componentDidUpdate(prevProps) {
+    // the embedded resource has changed
+    if (!isEqual(this.props.instance, prevProps.instance)) {
+      if (prevProps.instance) {
+        // remove old app
+        unmount(this.mountNode)
+      }
+
+      setTimeout(this.mountWidget, 0)
     }
   }
 
-  mountWidget(instance, context) {
-    getWidget(instance.type).then(module => {
-      const WidgetApp = new module.App()
+  componentWillUnmount() {
+    // remove old app
+    unmount(this.mountNode)
+  }
 
-      const WidgetAppComponent = () =>
-        <div className="widget-content">
-          {React.createElement(WidgetApp.component)}
-        </div>
+  mountWidget() {
+    if (this.props.instance) {
+      getWidget(this.props.instance.type).then(module => {
+        const WidgetApp = new module.App()
 
-      WidgetAppComponent.displayName = `WidgetApp(${instance.type})`
+        const WidgetAppComponent = () =>
+          <div className="widget-content">
+            {createElement(WidgetApp.component)}
+          </div>
 
-      mount(this.mountNode, WidgetAppComponent, reducer, {
-        instance: instance,
-        currentContext: context
-      }, true)
-    })
+        WidgetAppComponent.displayName = `WidgetApp(${this.props.instance.type})`
+
+        mount(this.mountNode, WidgetAppComponent, reducer, {
+          instance: this.props.instance,
+          currentContext: this.props.currentContext
+        }, true)
+      })
+    }
   }
 
   render() {
