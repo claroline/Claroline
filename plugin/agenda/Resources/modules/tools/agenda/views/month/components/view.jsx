@@ -102,6 +102,14 @@ class AgendaViewMonthComponent extends Component {
     const monthStart = moment(this.props.range[0])
     const monthEnd = moment(this.props.range[1])
 
+    let monthWeeks
+    if (monthEnd.get('week') > monthStart.get('week') + 1) {
+      monthWeeks = monthEnd.get('week') - monthStart.get('week') + 1
+    } else {
+      // year change
+      monthWeeks = (52 + monthEnd.get('week')) - monthStart.get('week') + 1
+    }
+
     return (
       <div className="agenda-month" onWheel={this.onWheel}>
         <div className="calendar-row day-names">
@@ -112,7 +120,7 @@ class AgendaViewMonthComponent extends Component {
           )}
         </div>
 
-        {times(monthEnd.get('week') - monthStart.get('week') + 1, (weekNum) =>
+        {times(monthWeeks, (weekNum) =>
           <div key={`week-${weekNum}`} className="calendar-row week">
             {times(7, (dayNum) => {
               const current = moment(this.props.range[0])
