@@ -16,7 +16,7 @@ export const QUIZ_ITEM_MOVE   = 'QUIZ_ITEM_MOVE'
 export const actions = {}
 
 actions.addStep = makeActionCreator(QUIZ_STEP_ADD, 'step')
-actions.copyStep = makeActionCreator(QUIZ_STEP_COPY, 'id', 'position')
+actions.copyStep = makeActionCreator(QUIZ_STEP_COPY, 'copy', 'position')
 actions.moveStep = makeActionCreator(QUIZ_STEP_MOVE, 'id', 'position')
 actions.removeStep = makeActionCreator(QUIZ_STEP_REMOVE, 'id')
 

@@ -6,7 +6,9 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
+import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
+import {toKey} from '#/main/core/scaffolding/text'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
@@ -26,7 +28,9 @@ function setDefaults(quiz) {
 
   if (isEmpty(formData.steps)) {
     // adds an empty step
-    formData.steps.push(createStep())
+    formData.steps.push(createStep({
+      slug: toKey(trans('step', {number: 1}, 'quiz'))
+    }))
   }
 
   return formData
@@ -156,19 +160,7 @@ export const reducer = makeFormReducer(quizSelectors.STORE_NAME + '.editor', {},
     [QUIZ_STEP_COPY]: (state, action) => {
       const newState = cloneDeep(state)
 
-      const original = newState.steps.find(step => step.id === action.id)
-      if (original) {
-        // create a copy of the step
-        const copy = cloneDeep(original)
-        const newId = makeId()
-        copy.id = newId
-        copy.slug = newId
-
-        // TODO : replace items ids
-
-        // push created step in the list
-        newState.steps = pushStep(copy, newState.steps, action.position)
-      }
+      newState.steps = pushStep(action.copy, newState.steps, action.position)
 
       return newState
     },

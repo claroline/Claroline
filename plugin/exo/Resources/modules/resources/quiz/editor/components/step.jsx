@@ -99,7 +99,7 @@ const EditorStep = props => {
                     icon: 'fa fa-fw fa-lock',
                     label: trans('lock', {}, 'actions'),
                     callback: () => true,
-                    disabled: true,
+                    disabled: true, // TODO : restore
                     group: trans('management')
                   }, {
                     name: 'copy',

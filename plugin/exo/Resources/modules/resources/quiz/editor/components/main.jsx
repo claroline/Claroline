@@ -35,7 +35,7 @@ class EditorMain extends Component {
           selectAction: (position) => ({
             type: CALLBACK_BUTTON,
             label: trans('copy', {}, 'actions'),
-            callback: () => this.props.copyStep(step.id, position)
+            callback: () => this.props.copyStep(step.id, this.props.steps, position)
           })
         }],
         group: trans('management')

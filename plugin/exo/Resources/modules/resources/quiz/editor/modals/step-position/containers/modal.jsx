@@ -14,7 +14,7 @@ const PositionModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       reset(currentPosition = {}) {
-        dispatch(formActions.reset(selectors.STORE_NAME, currentPosition))
+        dispatch(formActions.update(selectors.STORE_NAME, currentPosition))
       },
       update(prop, value) {
         dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))

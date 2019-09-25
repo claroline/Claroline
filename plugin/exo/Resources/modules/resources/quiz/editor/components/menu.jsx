@@ -54,7 +54,7 @@ const EditorMenu = props =>
             selectAction: (position) => ({
               type: CALLBACK_BUTTON,
               label: trans('copy', {}, 'actions'),
-              callback: () => props.copyStep(step.id, position)
+              callback: () => props.copyStep(step.id, props.steps, position)
             })
           }],
           group: trans('management')

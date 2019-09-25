@@ -2,13 +2,13 @@ import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {getItem} from '#/plugin/exo/items'
 import cloneDeep from 'lodash/cloneDeep'
 
-// TODO : find a way to merge with path numbering
-
 function refreshIdentifiers(item) {
   return getItem(item.type).then(definition => {
     return definition.refreshIdentifiers(cloneDeep(item))
   })
 }
+
+// TODO : find a way to merge with path numbering
 
 function getNumbering(type, stepIndex, itemIndex) {
   let numbering = [
