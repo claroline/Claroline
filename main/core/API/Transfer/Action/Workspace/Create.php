@@ -42,6 +42,10 @@ class Create extends AbstractAction
             $model = $this->workspaceManager->getDefaultModel();
         }
 
+        if (!$model) {
+            throw new \Exception('Model not found');
+        }
+
         $workspace = $this->workspaceManager->copy($model, $workspace, false);
 
         //add organizations here
