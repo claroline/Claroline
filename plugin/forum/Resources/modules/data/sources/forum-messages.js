@@ -1,5 +1,4 @@
-import {LINK_BUTTON} from '#/main/app/buttons'
-
+import {URL_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 import {route} from '#/main/core/resource/routing'
 
@@ -9,8 +8,8 @@ export default {
   name: 'forum_messages',
   parameters: {
     primaryAction: (message) => ({
-      type: LINK_BUTTON,
-      target: `${route(message.meta.resource)}/subjects/show/${message.subject.id}`
+      type: URL_BUTTON,
+      target: `#${route(message.meta.resource)}/subjects/show/${message.subject.id}`
     }),
     definition: [
       {

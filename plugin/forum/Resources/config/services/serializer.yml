@@ -24,6 +24,7 @@ services:
            - '@claroline.persistence.object_manager'
            - '@claroline.serializer.forum_subject'
            - '@claroline.serializer.public_file'
+           - '@claroline.serializer.resource_node'
 
     claroline.serializer.forum_message:
          alias: Claroline\ForumBundle\Serializer\MessageSerializer

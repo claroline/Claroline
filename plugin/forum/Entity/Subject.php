@@ -11,8 +11,9 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,24 +26,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Subject
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $title;
 
     /**
      * @ORM\Column(name="created", type="datetime")
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
      */
     protected $creationDate;
 
@@ -58,6 +57,8 @@ class Subject
      *     inversedBy="subjects"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var Forum
      */
     protected $forum;
 
@@ -67,6 +68,8 @@ class Subject
      *     mappedBy="subject"
      * )
      * @ORM\OrderBy({"id" = "ASC"})
+     *
+     * @var Message[]|ArrayCollection
      */
     protected $messages;
 
@@ -76,31 +79,43 @@ class Subject
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="user_id")
+     *
+     * @var User
      */
     protected $creator;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $sticked = false;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $closed = false;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $flagged = false;
 
     /**
      * @ORM\Column(nullable=true)
+     *
+     * @var string
      */
     protected $author;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     protected $viewCount = 0;
 
@@ -116,6 +131,8 @@ class Subject
 
     /**
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     protected $moderation = Forum::VALIDATE_NONE;
 
@@ -125,19 +142,10 @@ class Subject
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->messages = new ArrayCollection();
         $this->creationDate = new \DateTime();
         $this->updated = new \DateTime();
-    }
-
-    /**
-     * Returns the resource id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function getTitle()
@@ -155,6 +163,9 @@ class Subject
         $this->forum = $forum;
     }
 
+    /**
+     * @return Forum
+     */
     public function getForum()
     {
         return $this->forum;
@@ -269,16 +280,6 @@ class Subject
     public function getPoster()
     {
         return $this->poster;
-    }
-
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    public function getContent()
-    {
-        return $this->content;
     }
 
     public function setModerated($moderated)

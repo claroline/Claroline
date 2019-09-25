@@ -42,7 +42,7 @@ const PlayerComponent = (props) =>
         path: '/subjects/show/:id',
         component: Subject,
         onEnter: (params) => {
-          props.invalidateMessagesList(),
+          props.invalidateMessagesList()
           props.openSubject(params.id)
         },
         onLeave: () => {
