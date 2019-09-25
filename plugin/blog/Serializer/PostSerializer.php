@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -18,27 +19,34 @@ class PostSerializer
     private $userSerializer;
     private $commentSerializer;
     private $userRepo;
+    private $tagRepo;
     private $om;
     private $eventDispatcher;
+    private $nodeSerializer;
 
     /**
      * PostSerializer constructor.
      *
-     * @param UserSerializer $userSerializer
-     * @param ObjectManager  $om
+     * @param UserSerializer           $userSerializer
+     * @param CommentSerializer        $commentSerializer
+     * @param ObjectManager            $om
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param ResourceNodeSerializer   $nodeSerializer
      */
     public function __construct(
         UserSerializer $userSerializer,
         CommentSerializer $commentSerializer,
         ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher
-        ) {
+        EventDispatcherInterface $eventDispatcher,
+        ResourceNodeSerializer $nodeSerializer
+    ) {
         $this->userSerializer = $userSerializer;
         $this->commentSerializer = $commentSerializer;
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
         $this->tagRepo = $om->getRepository('Icap\BlogBundle\Entity\Tag');
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
+        $this->nodeSerializer = $nodeSerializer;
     }
 
     /**
@@ -71,8 +79,8 @@ class PostSerializer
     }
 
     /**
-     * @param Post $post
-     * @param array comments
+     * @param Post  $post
+     * @param array $comments
      * @param array $options
      *
      * @return array - The serialized representation of a post
@@ -94,6 +102,12 @@ class PostSerializer
             'title' => $post->getTitle(),
             'content' => isset($options['abstract']) && $options['abstract'] ? $post->getAbstract() : $post->getContent(),
             'abstract' => $this->isAbstract($post, $options),
+            'meta' => [
+                'resource' => $post->getBlog() && $post->getBlog()->getResourceNode() ?
+                    $this->nodeSerializer->serialize($post->getBlog()->getResourceNode(), [Options::SERIALIZE_MINIMAL])
+                    :
+                    null,
+            ],
             'creationDate' => $post->getCreationDate() ? DateNormalizer::normalize($post->getCreationDate()) : new \DateTime(),
             'modificationDate' => $post->getModificationDate() ? DateNormalizer::normalize($post->getModificationDate()) : null,
             'publicationDate' => $post->getPublicationDate() ? DateNormalizer::normalize($post->getPublicationDate()) : DateNormalizer::normalize($post->getCreationDate()),
@@ -115,19 +129,17 @@ class PostSerializer
      * @param Post  $post
      * @param array $options
      *
-     * @return array - Check if post content is truncated
+     * @return bool - Check if post content is truncated
      */
     private function isAbstract(Post $post, array $options = [])
     {
         if (isset($options['abstract']) && $options['abstract']) {
             if ($post->getAbstract() !== $post->getContent()) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

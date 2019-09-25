@@ -11,6 +11,7 @@ services:
             - '@claroline.serializer.blog.comment'
             - '@claroline.persistence.object_manager'
             - '@event_dispatcher'
+            - '@claroline.serializer.resource_node'
 
     claroline.serializer.blog.post:
          alias: Icap\BlogBundle\Serializer\PostSerializer
