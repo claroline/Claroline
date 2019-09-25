@@ -49,7 +49,7 @@ class Updater120504 extends Updater
             }
 
             $sql = "
-                UPDATE claro_resource_node node SET slug = REGEXP_REPLACE(SUBSTR(CONCAT(node.name, '-', node.id),1,100), '[^A-Za-z0-9]+', '-') WHERE slug LIKE '%${char}%'
+                UPDATE claro_resource_node node SET slug = REGEXP_REPLACE(CONCAT(SUBSTR(node.name,1,100),'-',node.id), '[^A-Za-z0-9]+', '-') WHERE slug LIKE '%${char}%'
             ";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
