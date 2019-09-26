@@ -25,24 +25,11 @@ class SchemaProvider
     /**
      * @param string $rootDir
      */
-    public function __construct($rootDir)
+    public function __construct($rootDir, SerializerProvider $serializer)
     {
         $this->rootDir = $rootDir.'/..';
         $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';
-    }
-
-    /**
-     * Registers a new serializer.
-     *
-     * @param mixed $serializer
-     *
-     * @throws \Exception
-     */
-    public function add($serializer)
-    {
-        if (method_exists($serializer, 'getSchema')) {
-            $this->serializers[] = $serializer;
-        }
+        $this->serializer = $serializer;
     }
 
     /**
@@ -79,7 +66,7 @@ class SchemaProvider
      */
     public function get($class)
     {
-        foreach ($this->serializers as $serializer) {
+        foreach ($this->serializer->all() as $serializer) {
             if ($class === $this->getSchemaHandledClass($serializer)) {
                 return $serializer;
             }
