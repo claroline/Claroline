@@ -14,13 +14,16 @@ namespace Claroline\CoreBundle\Listener\Tool;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Home tool.
@@ -44,6 +47,8 @@ class HomeListener
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    private $om;
+
     /**
      * HomeListener constructor.
      *
@@ -52,7 +57,9 @@ class HomeListener
      *     "tokenStorage"  = @DI\Inject("security.token_storage"),
      *     "templating"    = @DI\Inject("templating"),
      *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
+     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
+     *     "translator"    = @DI\Inject("translator"),
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
@@ -66,13 +73,17 @@ class HomeListener
         TwigEngine $templating,
         FinderProvider $finder,
         SerializerProvider $serializer,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
+        TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->authorization = $authorization;
+        $this->om = $om;
+        $this->translator = $translator;
     }
 
     /**
@@ -161,9 +172,27 @@ class HomeListener
         }
         ksort($orderedTabs);
 
+        $tabs = array_values($orderedTabs);
+
+        if (0 === count($orderedTabs)) {
+            $defaultTab = new HomeTab();
+            $defaultTab->setType(HomeTab::TYPE_WORKSPACE);
+            $defaultTab->setWorkspace($workspace);
+            $this->om->persist($defaultTab);
+            $defaultHomeTabConfig = new HomeTabConfig();
+            $defaultHomeTabConfig->setHomeTab($defaultTab);
+            $defaultHomeTabConfig->setName($this->translator->trans('home', [], 'platform'));
+            $defaultHomeTabConfig->setLongTitle($this->translator->trans('home', [], 'platform'));
+            $defaultHomeTabConfig->setLocked(true);
+            $defaultHomeTabConfig->setTabOrder(0);
+            $this->om->persist($defaultHomeTabConfig);
+            $this->om->flush();
+            $orderedTabs[] = $this->serializer->serialize($defaultTab);
+        }
+
         $event->setData([
             'editable' => $this->authorization->isGranted(['home', 'edit'], $workspace),
-            'tabs' => array_values($orderedTabs),
+            'tabs' => $tabs,
             'roles' => array_map(function (Role $role) {
                 return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $workspace->getRoles()->toArray()),
