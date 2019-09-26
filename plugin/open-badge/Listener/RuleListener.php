@@ -151,7 +151,7 @@ class RuleListener
           [
             '%date%' => $now->format('Y-m-d H:i:s'),
           ],
-          'openbadge'
+          'badge'
         ));
         $evidence->setRule($rule);
         $evidence->setName(Rule::RULE_RESOURCE_PASSED);
@@ -171,7 +171,7 @@ class RuleListener
           [
             '%date%' => $now->format('Y-m-d H:i:s'),
           ],
-          'openbadge'
+          'badge'
         ));
         $evidence->setRule($rule);
         $evidence->setName(Rule::RESOURCE_SCORE_ABOVE);
@@ -191,7 +191,7 @@ class RuleListener
           [
             '%date%' => $now->format('Y-m-d H:i:s'),
           ],
-          'openbadge'
+          'badge'
         ));
         $evidence->setRule($rule);
         $evidence->setName(Rule::RESOURCE_COMPLETED_ABOVE);
@@ -211,7 +211,7 @@ class RuleListener
           [
             '%date%' => $now->format('Y-m-d H:i:s'),
           ],
-          'openbadge'
+          'badge'
         ));
         $evidence->setRule($rule);
         $evidence->setName(Rule::RESOURCE_PARTICIPATED);
@@ -232,7 +232,7 @@ class RuleListener
             '%doer%' => $this->tokenStorage->getToken()->getUser()->getUsername(),
             '%date%' => $now->format('Y-m-d H:i:s'),
           ],
-          'openbadge'
+          'badge'
         ));
         $evidence->setRule($rule);
         $evidence->setName(Rule::IN_GROUP);
@@ -254,7 +254,7 @@ class RuleListener
             '%doer%' => $this->tokenStorage->getToken()->getUser()->getUsername(),
             '%date%' => $now->format('Y-m-d H:i:s'),
           ],
-          'openbadge'
+          'badge'
         ));
         $evidence->setRule($rule);
         $evidence->setName(Rule::IN_ROLE);

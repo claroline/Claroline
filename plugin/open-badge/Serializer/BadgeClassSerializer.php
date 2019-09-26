@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
@@ -29,6 +30,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class BadgeClassSerializer
 {
     use SerializerTrait;
+
+    private $router;
+    private $fileUt;
+    private $workspaceSerializer;
+    private $userSerializer;
+    private $groupSerializer;
+    private $om;
+    private $organizationManager;
+    private $criteriaSerializer;
+    private $profileSerializer;
+    private $imageSerializer;
+    private $eventDispatcher;
+    private $tokenStorage;
+    private $publicFileSerializer;
+    private $organizationSerializer;
+    private $ruleSerializer;
 
     public function __construct(
         FileUtilities $fileUt,
@@ -47,6 +64,7 @@ class BadgeClassSerializer
         PublicFileSerializer $publicFileSerializer,
         RuleSerializer $ruleSerializer
     ) {
+        // TODO : simplify DI. There are too many things here
         $this->router = $router;
         $this->fileUt = $fileUt;
         $this->workspaceSerializer = $workspaceSerializer;
@@ -67,7 +85,7 @@ class BadgeClassSerializer
     /**
      * Serializes a Group entity.
      *
-     * @param Group $group
+     * @param BadgeClass $badge
      * @param array $options
      *
      * @return array
@@ -106,8 +124,8 @@ class BadgeClassSerializer
         } else {
             $data['issuingMode'] = $badge->getIssuingMode();
             $data['meta'] = [
-               'created' => $badge->getCreated()->format('Y-m-d\TH:i:s'),
-               'updated' => $badge->getUpdated()->format('Y-m-d\TH:i:s'),
+               'created' => DateNormalizer::normalize($badge->getCreated()),
+               'updated' => DateNormalizer::normalize($badge->getUpdated()),
                'enabled' => $badge->getEnabled(),
             ];
             $data['permissions'] = $this->serializePermissions($badge);
@@ -130,11 +148,11 @@ class BadgeClassSerializer
     /**
      * Deserializes data into a Group entity.
      *
-     * @param \stdClass $data
-     * @param Group     $group
-     * @param array     $options
+     * @param \stdClass  $data
+     * @param BadgeClass $badge
+     * @param array      $options
      *
-     * @return Group
+     * @return BadgeClass
      */
     public function deserialize($data, BadgeClass $badge = null, array $options = [])
     {
@@ -159,6 +177,7 @@ class BadgeClassSerializer
         }
 
         if (isset($data['workspace']) && isset($data['workspace']['id'])) {
+            /** @var Workspace $workspace */
             $workspace = $this->om->getRepository(Workspace::class)->find($data['workspace']['id']);
             $badge->setWorkspace($workspace);
             //main orga maybe instead ? this is fishy
@@ -168,11 +187,7 @@ class BadgeClassSerializer
         }
 
         if (isset($data['tags'])) {
-            if (is_string($data['tags'])) {
-                $this->deserializeTags($badge, explode(',', $data['tags']));
-            } else {
-                $this->deserializeTags($badge, $data['tags']);
-            }
+            $this->deserializeTags($badge, $data['tags'], $options);
         }
 
         if (isset($data['allowedUsers'])) {
@@ -238,9 +253,7 @@ class BadgeClassSerializer
         ]);
         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
 
-        $tags = $event->getResponse();
-
-        return implode(',', $tags);
+        return $event->getResponse();
     }
 
     private function serializePermissions(BadgeClass $badge)

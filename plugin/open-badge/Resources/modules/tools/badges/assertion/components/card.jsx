@@ -1,17 +1,18 @@
 import React from 'react'
-import {DataCard} from '#/main/app/content/card/components/data'
 import {PropTypes as T} from 'prop-types'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 
 const AssertionCard = props =>
-  props.data.badge ?
-    <BadgeCard data={props.data.badge}/>
-    :<DataCard/>
+  <BadgeCard
+    {...props}
+    data={props.data.badge}
+  />
 
 AssertionCard.propTypes = {
-  data: T.shape(
-  ).isRequired
+  data: T.shape({
+
+  }).isRequired
 }
 
 export {

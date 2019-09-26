@@ -2,21 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/app/intl/translation'
-import {ListData} from '#/main/app/content/list/containers/data'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {actions} from '#/plugin/open-badge/tools/badges/badge/store/actions'
-import {transChoice} from '#/main/app/intl/translation'
-import {isAdmin as userIsAdmin} from '#/main/app/security/permissions'
-import {currentUser} from '#/main/app/security'
-
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
-import {BadgeList} from '#/plugin/open-badge/tools/badges/badge/components/definition'
+import {actions} from '#/plugin/open-badge/tools/badges/badge/store/actions'
 
 const BadgesList = (props) =>
   <ListData
@@ -25,7 +19,31 @@ const BadgesList = (props) =>
       url: props.url,
       autoload: true
     }}
-    definition={BadgeList.definition}
+    definition={[
+      {
+        name: 'name',
+        label: trans('name'),
+        displayed: true,
+        primary: true
+      }, {
+        name: 'meta.enabled',
+        label: trans('enabled'),
+        type: 'boolean',
+        displayed: true
+      }, {
+        name: 'assignable',
+        label: trans('assignable', {}, 'badge'),
+        type: 'boolean',
+        displayed: true,
+        filterable: true
+      }, {
+        name: 'workspace',
+        label: trans('workspace'),
+        type: 'workspace',
+        displayed: true,
+        filterable: true
+      }
+    ]}
     card={BadgeCard}
 
     primaryAction={(row) => ({
@@ -41,24 +59,28 @@ const BadgesList = (props) =>
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pen',
-        label: trans('edit'),
+        label: trans('edit', {}, 'actions'),
         scope: ['object', 'collection'],
         target: props.path + `/badges/${rows[0].id}/form`,
-        displayed: 0 < (rows.filter(b => b.permissions.edit).length)
+        displayed: 0 < rows.filter(b => b.permissions.edit).length
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-check-circle',
-        label: trans('enable'),
+        label: trans('enable', {}, 'actions'),
         scope: ['object', 'collection'],
-        displayed: 0 < (rows.filter(b => !b.meta.enabled).length) && userIsAdmin(currentUser()),
+        displayed: 0 < rows.filter(b => !b.meta.enabled).length && props.isAdmin,
         callback: () => props.enable(rows)
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-times-circle',
-        label: trans('disable'),
+        label: trans('disable', {}, 'actions'),
         scope: ['object', 'collection'],
-        displayed: 0 < (rows.filter(b => b.meta.enabled).length) && userIsAdmin(currentUser()),
+        displayed: 0 < rows.filter(b => b.meta.enabled).length && props.isAdmin,
         callback: () => props.disable(rows),
+        confirm: {
+          title: transChoice('disable_badges', rows.length, {count: rows.length}),
+          message: trans('disable_badges_confirm', {users_list: rows.map(b => `${b.name}`).join(', ')}),
+        },
         dangerous: true
       }
     ]}
@@ -67,18 +89,17 @@ const BadgesList = (props) =>
   />
 
 BadgesList.propTypes = {
-  currentUser: T.object,
+  path: T.string.isRequired,
+  isAdmin: T.bool.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
   disable: T.func.isRequired,
-  enable: T.func.isRequired,
-  currentContext: T.object.isRequired,
-  path: T.string.isRequired
+  enable: T.func.isRequired
 }
 
 const Badges = connect(
   (state) => ({
-    currentContext: toolSelectors.context(state),
+    isAdmin: securitySelectors.isAdmin(state),
     path: toolSelectors.path(state)
   }),
   dispatch => ({
@@ -86,15 +107,7 @@ const Badges = connect(
       dispatch(actions.enable(badges))
     },
     disable(badges) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-times-circle',
-          title: transChoice('disable_badges', badges.length, {count: badges.length}),
-          question: trans('disable_badges_confirm', {users_list: badges.map(b => `${b.name}`).join(', ')}),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.disable(badges))
-        })
-      )
+      dispatch(actions.disable(badges))
     }
   })
 )(BadgesList)

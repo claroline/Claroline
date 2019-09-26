@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
@@ -7,7 +8,6 @@ import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
 import {trans} from '#/main/app/intl/translation'
 import {ParametersForm} from '#/plugin/open-badge/tools/badges/parameters/components/parameters'
-import {Badge}  from '#/plugin/open-badge/tools/badges/badge/components/badge'
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
 import {Badges}  from '#/plugin/open-badge/tools/badges/badge/components/list'
 import {BadgeViewer} from '#/plugin/open-badge/tools/badges/badge/components/viewer'
@@ -21,7 +21,7 @@ const Tool = props =>
         name: 'new',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
-        label: trans('add_badge', {}, 'openbadge'),
+        label: trans('add_badge', {}, 'badge'),
         target: `${props.path}/new`,
         primary: true,
         //only for organizationManager
@@ -32,13 +32,13 @@ const Tool = props =>
       <Routes
         path={props.path}
         routes={[
-          {path: '/new',        render: () => trans('add_badge', {}, 'openbadge'), disabled: false},
-          {path: '/my-badges', render: () => trans('my_badges', {}, 'openbadge')},
-          {path: '/badges',     render: () => trans('badges', {}, 'openbadge')},
-          {path: '/badges/:id', render: () => trans('view', {})},
-          {path: '/badges/:id/form', render: () => trans('edit', {})},
-          {path: '/badges/:badgeId/assertions/:id', render: () => trans('assertions', {}, 'openbadge')},
-          {path: '/parameters',    render: () => trans('parameters', {})}
+          {path: '/new',                            render: () => trans('new_badge', {}, 'badge')},
+          {path: '/my-badges',                      render: () => trans('my_badges', {}, 'badge')},
+          {path: '/badges',                         render: () => trans('all_badges', {}, 'badge')},
+          {path: '/badges/:id',                     render: () => trans('view')},
+          {path: '/badges/:id/form',                render: () => trans('edit')},
+          {path: '/badges/:badgeId/assertions/:id', render: () => trans('assertions', {}, 'badge')},
+          {path: '/parameters',                     render: () => trans('parameters')}
         ]}
       />
     }
@@ -48,9 +48,8 @@ const Tool = props =>
       routes={[
         {
           path: '/new',
-          disabled: false,
-          component: Badge,
-          onEnter: () => props.openBadge(null, props.currentContext.data)
+          onEnter: () => props.openBadge(null, props.currentContext.data),
+          component: BadgeForm
         }, {
           path: '/my-badges',
           render: () => {
@@ -78,25 +77,13 @@ const Tool = props =>
           exact: true
         }, {
           path: '/badges/:id',
-          render: () => {
-            const BadgeViewerComponent = (
-              <BadgeViewer/>
-            )
-
-            return BadgeViewerComponent
-          },
           onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
+          component: BadgeViewer,
           exact: true
         }, {
           path: '/badges/:id/form',
-          render: () => {
-            const BadgeEditorComponent = (
-              <BadgeForm/>
-            )
-
-            return BadgeEditorComponent
-          },
-          onEnter: (params) => props.openBadge(params.id, props.currentContext.data)
+          onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
+          component: BadgeForm
         }, {
           path: '/badges/:badgeId/assertion/:id',
           component: AssertionForm,
@@ -113,6 +100,13 @@ const Tool = props =>
       ]}
     />
   </ToolPage>
+
+Tool.propTypes = {
+  path: T.string.isRequired,
+  currentContext: T.object.isRequired,
+  openBadge: T.func.isRequired,
+  openAssertion: T.func.isRequired
+}
 
 export {
   Tool

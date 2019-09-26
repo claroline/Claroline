@@ -8,10 +8,14 @@ use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class OpenBadgeManager
 {
+    /** @var Packages */
+    private $assets;
+
     /** @var ObjectManager */
     private $om;
 
@@ -27,17 +31,20 @@ class OpenBadgeManager
     /**
      * OpenBadgeManager constructor.
      *
+     * @param Packages         $assets
      * @param ObjectManager    $om
      * @param TemplateManager  $templateManager
      * @param WorkspaceManager $workspaceManager
      * @param string           $webDir
      */
     public function __construct(
+        Packages $assets,
         ObjectManager $om,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
         $webDir
     ) {
+        $this->assets = $assets;
         $this->om = $om;
         $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
@@ -124,7 +131,7 @@ class OpenBadgeManager
             'username' => $user->getUsername(),
             'badge_name' => $badge->getName(),
             'badge_description' => $badge->getDescription(),
-            'badge_image' => '<img src="'.$this->webDir.DIRECTORY_SEPARATOR.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_image' => '<img src="'.$this->assets->getUrl($badge->getImage()).'" style="max-width: 100px; max-height: 50px;"/>',
             'badge_duration' => $badge->getDurationValidation(),
             'assertion_id' => $assertion->getUuid(),
             'issued_on' => $assertion->getIssuedOn()->format('d-m-Y H:i'),

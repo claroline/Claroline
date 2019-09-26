@@ -1,8 +1,11 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+
 import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {
@@ -12,11 +15,7 @@ import {
   ISSUING_MODE_WORKSPACE,
   ISSUING_MODE_ORGANIZATION
 } from '#/plugin/open-badge/tools/badges/badge/constants'
-
-import {
-  actions as formActions,
-  selectors as formSelect
-} from '#/main/app/content/form/store'
+import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
 // TODO : add tools
 const BadgeFormComponent = (props) => {
@@ -29,87 +28,80 @@ const BadgeFormComponent = (props) => {
   }
 
   const issuingChoices =  {
-    [ISSUING_MODE_ORGANIZATION]: trans('issuing_mode_organization', {}, 'openbadge'),
-    [ISSUING_MODE_USER]: trans('issuing_mode_user', {}, 'openbadge'),
-    [ISSUING_MODE_GROUP]: trans('issuing_mode_group', {}, 'openbadge'),
-    [ISSUING_MODE_PEER]: trans('issuing_mode_peer', {}, 'openbadge'),
-    [ISSUING_MODE_WORKSPACE]: trans('issuing_mode_workspace', {}, 'openbadge')
-  }
-
-  const fields = [
-    {
-      name: 'name',
-      type: 'string',
-      label: trans('name'),
-      required: true
-    },
-    {
-      name: 'description',
-      type: 'html',
-      label: trans('description'),
-      required: true
-    },
-    {
-      name: 'criteria',
-      type: 'html',
-      label: trans('criteria', {}, 'openbadge'),
-      required: true
-    },
-    {
-      name: 'image',
-      type: 'file',
-      label: trans('image'),
-      required: false
-    },
-    {
-      name: 'issuer',
-      type: 'organization',
-      label: trans('issuer', {}, 'openbadge'),
-      required: true
-    },
-    {
-      name: 'duration',
-      type: 'number',
-      label: trans('duration'),
-      required: false
-    },
-    {
-      name: 'tags',
-      type: 'string',
-      required: false,
-      label: trans('tags'),
-      help: trans('tag_form_help', {}, 'openbadge')
-    }
-  ]
-
-  if (props.currentContext.type === 'workspace') {
-    fields.splice(4, 1)
+    [ISSUING_MODE_ORGANIZATION]: trans('issuing_mode_organization', {}, 'badge'),
+    [ISSUING_MODE_USER]: trans('issuing_mode_user', {}, 'badge'),
+    [ISSUING_MODE_GROUP]: trans('issuing_mode_group', {}, 'badge'),
+    [ISSUING_MODE_PEER]: trans('issuing_mode_peer', {}, 'badge'),
+    [ISSUING_MODE_WORKSPACE]: trans('issuing_mode_workspace', {}, 'badge')
   }
 
   return (
     <FormData
       {...props}
       name={selectors.STORE_NAME +'.badges.current'}
-      meta={true}
       buttons={true}
       target={(badge, isNew) => isNew ?
         ['apiv2_badge-class_create'] :
         ['apiv2_badge-class_update', {id: badge.id}]
       }
+      cancel={{
+        type: LINK_BUTTON,
+        exact: true,
+        target: props.path + '/badges'
+      }}
       sections={[
         {
-          title: trans('badge'),
+          title: trans('general'),
           primary: true,
-          fields
-        },
-        {
-          title: trans('allowed_issuers', {}, 'openbadge'),
+          fields: [
+            {
+              name: 'name',
+              type: 'string',
+              label: trans('name'),
+              required: true
+            }, {
+              name: 'image',
+              type: 'image',
+              label: trans('image'),
+              required: true
+            }, {
+              name: 'criteria',
+              type: 'html',
+              label: trans('criteria', {}, 'badge'),
+              required: true
+            }, {
+              name: 'duration',
+              type: 'number',
+              label: trans('duration')
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-info',
+          title: trans('information'),
+          fields: [
+            {
+              name: 'description',
+              label: trans('description'),
+              type: 'html'
+            }, {
+              name: 'tags',
+              label: trans('tags'),
+              type: 'tag'
+            }, {
+              name: 'issuer',
+              type: 'organization',
+              label: trans('issuer', {}, 'badge'),
+              displayed: 'workspace' !== props.currentContext.type
+            }
+          ]
+        }, {
+          title: trans('allowed_issuers', {}, 'badge'),
           primary: false,
           fields: [
             {
               name: 'issuingMode',
               type: 'choice',
-              label: trans('issuing_mode', {}, 'openbadge'),
+              label: trans('issuing_mode', {}, 'badge'),
               options: {
                 choices: issuingChoices,
                 multiple: true
@@ -136,33 +128,41 @@ const BadgeFormComponent = (props) => {
               }
             }
           ]
-        },
-        {
-          title: trans('automatic_award', {}, 'openbadge'),
+        }, {
+          title: trans('automatic_award', {}, 'badge'),
           primary: false,
           fields:[
             {
               name: 'rules',
-              label: trans('rules', {}, 'openbadge'),
+              label: trans('rules', {}, 'badge'),
               type: 'collection',
               options: {
                 type: 'rule',
-                placeholder: trans('no_rule', {}, 'openbadge'),
-                button: trans('add_rule', {}, 'openbadge')
+                placeholder: trans('no_rule', {}, 'badge'),
+                button: trans('add_rule', {}, 'badge')
               }
             }
           ]
         }
       ]}
     >
-
-
       {props.children}
     </FormData>)
 }
 
+BadgeFormComponent.propTypes = {
+  path: T.string.isRequired,
+  currentContext: T.object.isRequired,
+  new: T.bool.isRequired,
+  badge: T.shape({
+    // TODO : badge types
+  }),
+  updateProp: T.func.isRequired
+}
+
 const BadgeForm = connect(
   (state) => ({
+    path: toolSelectors.path(state),
     currentContext: toolSelectors.context(state),
     new: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME + '.badges.current')),
     badge: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.badges.current'))

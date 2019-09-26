@@ -13,37 +13,49 @@ namespace Claroline\OpenBadgeBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
+ * Represents the obtaining of a BadgeClass by a User.
+ *
  * @ORM\Entity
  * @ORM\Table(name="claro__open_badge_assertion")
  */
 class Assertion
 {
-    use Uuid;
     use Id;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
+     * @var User
      */
     private $recipient;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass", inversedBy="assertions")
+     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var BadgeClass
      */
     private $badge;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\VerificationObject")
+     *
+     * @var VerificationObject
      */
     private $verification;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
      */
     private $issuedOn;
 
@@ -56,33 +68,43 @@ class Assertion
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Evidence")
+     *
+     * @var Evidence[]|ArrayCollection
      */
     private $evidences;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     private $narrative;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     private $revoked = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     private $revocationReason;
 
     public function __construct()
     {
         $this->refreshUuid();
+
+        $this->evidences = new ArrayCollection();
     }
 
     /**
      * Get the value of Recipient.
      *
-     * @return mixed
+     * @return User
      */
     public function getRecipient()
     {
@@ -92,7 +114,7 @@ class Assertion
     /**
      * Set the value of Recipient.
      *
-     * @param mixed recipient
+     * @param User $recipient
      *
      * @return self
      */
@@ -106,7 +128,7 @@ class Assertion
     /**
      * Get the value of Badge.
      *
-     * @return mixed
+     * @return BadgeClass
      */
     public function getBadge()
     {
@@ -116,13 +138,20 @@ class Assertion
     /**
      * Set the value of Badge.
      *
-     * @param mixed badge
+     * @param BadgeClass $badge
      *
      * @return self
      */
     public function setBadge($badge)
     {
+        if ($this->badge) {
+            $this->badge->removeAssertion($this);
+        }
+
         $this->badge = $badge;
+        if ($badge) {
+            $badge->addAssertion($this);
+        }
 
         return $this;
     }
@@ -130,7 +159,7 @@ class Assertion
     /**
      * Get the value of Verification.
      *
-     * @return mixed
+     * @return VerificationObject
      */
     public function getVerification()
     {
@@ -140,7 +169,7 @@ class Assertion
     /**
      * Set the value of Verification.
      *
-     * @param mixed verification
+     * @param VerificationObject $verification
      *
      * @return self
      */
@@ -154,7 +183,7 @@ class Assertion
     /**
      * Get the value of Issued On.
      *
-     * @return mixed
+     * @return \DateTime
      */
     public function getIssuedOn()
     {
@@ -164,7 +193,7 @@ class Assertion
     /**
      * Set the value of Issued On.
      *
-     * @param mixed issuedOn
+     * @param \DateTime $issuedOn
      *
      * @return self
      */
@@ -188,7 +217,7 @@ class Assertion
     /**
      * Set the value of Image.
      *
-     * @param string image
+     * @param string $image
      *
      * @return self
      */
@@ -202,7 +231,7 @@ class Assertion
     /**
      * Get the value of Evidences.
      *
-     * @return mixed
+     * @return Evidence[]|ArrayCollection
      */
     public function getEvidences()
     {
@@ -212,7 +241,7 @@ class Assertion
     /**
      * Set the value of Evidences.
      *
-     * @param mixed evidences
+     * @param Evidence[]|ArrayCollection $evidences
      *
      * @return self
      */
@@ -226,7 +255,7 @@ class Assertion
     /**
      * Get the value of Narrative.
      *
-     * @return mixed
+     * @return string
      */
     public function getNarrative()
     {
@@ -236,7 +265,7 @@ class Assertion
     /**
      * Set the value of Narrative.
      *
-     * @param mixed narrative
+     * @param string $narrative
      *
      * @return self
      */
@@ -250,7 +279,7 @@ class Assertion
     /**
      * Get the value of Revoked.
      *
-     * @return mixed
+     * @return bool
      */
     public function getRevoked()
     {
@@ -260,7 +289,7 @@ class Assertion
     /**
      * Set the value of Revoked.
      *
-     * @param mixed revoked
+     * @param bool $revoked
      *
      * @return self
      */
@@ -274,7 +303,7 @@ class Assertion
     /**
      * Get the value of Revocation Reason.
      *
-     * @return mixed
+     * @return string
      */
     public function getRevocationReason()
     {
@@ -284,7 +313,7 @@ class Assertion
     /**
      * Set the value of Revocation Reason.
      *
-     * @param mixed revocationReason
+     * @param string $revocationReason
      *
      * @return self
      */

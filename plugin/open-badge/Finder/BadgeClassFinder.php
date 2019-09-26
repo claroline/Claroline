@@ -40,12 +40,12 @@ class BadgeClassFinder extends AbstractFinder
               case 'recipient':
                   $qb->join('obj.assertions', 'a');
                   $qb->join('a.recipient', 'r');
-                  $qb->andWhere('r.uuid like :uuid');
+                  $qb->andWhere('r.uuid = :uuid');
                   $qb->setParameter('uuid', $filterValue);
                   break;
               case 'workspace':
                   $qb->join('obj.workspace', 'w');
-                  $qb->andWhere('w.uuid like :workspace');
+                  $qb->andWhere('w.uuid = :workspace');
                   $qb->setParameter('workspace', $filterValue);
                   break;
               case 'assignable':

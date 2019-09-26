@@ -1,4 +1,5 @@
 {
+  "all_badges": "Tous les badges",
   "required_validation": "Validation requise par un administrateur",
   "push_to_backpack": "Envoyer sur Mozilla Backpack",
   "assignable": "Assignable",
@@ -20,6 +21,7 @@
   "select_a_badge": "Sélectionner un badge",
   "badge_selector": "Sélecteur de badge",
   "add_badge": "Ajouter un badge",
+  "new_badge": "Nouveau badge",
   "assertions": "Badges assignés",
   "evidence": "Preuve",
   "evidences": "Preuves",

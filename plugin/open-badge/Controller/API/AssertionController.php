@@ -41,8 +41,12 @@ class AssertionController extends AbstractCrudController
     private $tokenStorage;
 
     /**
-     * @param TwigEngine     $templating
-     * @param FinderProvider $finder
+     * AssertionController constructor.
+     *
+     * @param string                $filesDir
+     * @param OpenBadgeManager      $manager
+     * @param PdfManager            $pdfManager
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         $filesDir,
@@ -56,6 +60,11 @@ class AssertionController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
     }
 
+    public function getClass()
+    {
+        return Assertion::class;
+    }
+
     public function getName()
     {
         return 'badge-assertion';
@@ -65,6 +74,9 @@ class AssertionController extends AbstractCrudController
      * @EXT\Route("/{assertion}/evidences", name="apiv2_assertion_evidences")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
+     *
+     * @param Request   $request
+     * @param Assertion $assertion
      *
      * @return JsonResponse
      */
@@ -81,6 +93,8 @@ class AssertionController extends AbstractCrudController
     /**
      * @EXT\Route("/current-user", name="apiv2_assertion_current_user_list")
      * @EXT\Method("GET")
+     *
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -99,6 +113,9 @@ class AssertionController extends AbstractCrudController
      * @EXT\Route("/user/{user}", name="apiv2_assertion_user_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
+     *
+     * @param Request $request
+     * @param User    $user
      *
      * @return JsonResponse
      */
@@ -132,31 +149,16 @@ class AssertionController extends AbstractCrudController
      *
      * @throws \Exception
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function assertionPdfDownloadAction(Assertion $assertion, User $currentUser)
     {
         $badge = $assertion->getBadge();
         $user = $assertion->getRecipient();
-        $pdfName = $badge->getName().'_'.$user->getFirstName().$user->getLastName();
 
-        $content = $this->manager->generateCertificate($assertion);
-        $pdf = $this->pdfManager->create($content, $pdfName, $currentUser, 'badges');
-
-        $headers = [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="'.$pdfName.'.pdf"',
-        ];
-
-        return new Response(
-            file_get_contents($this->filesDir.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$pdf->getPath()),
-            200,
-            $headers
-        );
-    }
-
-    public function getClass()
-    {
-        return Assertion::class;
+        return new JsonResponse([
+            'name' => $badge->getName().'_'.$user->getFirstName().$user->getLastName(),
+            'content' => $this->manager->generateCertificate($assertion),
+        ]);
     }
 }

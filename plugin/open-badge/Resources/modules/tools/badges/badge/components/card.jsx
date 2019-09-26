@@ -26,8 +26,9 @@ const BadgeCard = props =>
   />
 
 BadgeCard.propTypes = {
-  data: T.shape(
-  ).isRequired
+  data: T.shape({
+    // TODO : badge types
+  }).isRequired
 }
 
 export {

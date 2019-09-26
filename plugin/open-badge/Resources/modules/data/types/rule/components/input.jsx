@@ -8,15 +8,15 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {Select} from '#/main/app/input/components/select'
 
-import {InGroupInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/in-group/components/input'
-import {InRoleInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/in-role/components/input'
-import {ResourceCompletedAboveInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/resource-completed-above/components/input'
-import {ResourceParticipatedInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/resource-participated/components/input'
-import {ResourcePassedInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/resource-passed/components/input'
-import {ResourceScoreAboveInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/resource-score-above/components/input'
-import {WorkspaceCompletedAboveInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/workspace-completed-above/components/input'
-import {WorkspacePassedInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/workspace-passed/components/input'
-import {WorkspaceScoreAboveInput} from '#/plugin/open-badge/tools/badges/data/types/rule/type/workspace-score-above/components/input'
+import {InGroupInput} from '#/plugin/open-badge/data/types/rule/type/in-group/components/input'
+import {InRoleInput} from '#/plugin/open-badge/data/types/rule/type/in-role/components/input'
+import {ResourceCompletedAboveInput} from '#/plugin/open-badge/data/types/rule/type/resource-completed-above/components/input'
+import {ResourceParticipatedInput} from '#/plugin/open-badge/data/types/rule/type/resource-participated/components/input'
+import {ResourcePassedInput} from '#/plugin/open-badge/data/types/rule/type/resource-passed/components/input'
+import {ResourceScoreAboveInput} from '#/plugin/open-badge/data/types/rule/type/resource-score-above/components/input'
+import {WorkspaceCompletedAboveInput} from '#/plugin/open-badge/data/types/rule/type/workspace-completed-above/components/input'
+import {WorkspacePassedInput} from '#/plugin/open-badge/data/types/rule/type/workspace-passed/components/input'
+import {WorkspaceScoreAboveInput} from '#/plugin/open-badge/data/types/rule/type/workspace-score-above/components/input'
 
 import {
   RESOURCE_PASSED,
@@ -29,7 +29,7 @@ import {
   IN_ROLE,
   IN_GROUP,
   PROFILE_COMPLETED
-} from '#/plugin/open-badge/tools/badges/data/types/rule/constants'
+} from '#/plugin/open-badge/data/types/rule/constants'
 
 import {trans} from '#/main/app/intl/translation'
 
@@ -53,15 +53,15 @@ class RuleInput extends Component {
             multiple={false}
             choices={
               {
-                [RESOURCE_PASSED]: trans(RESOURCE_PASSED, {}, 'openbadge'),
-                [RESOURCE_SCORE_ABOVE]: trans(RESOURCE_SCORE_ABOVE, {}, 'openbadge'),
-                [RESOURCE_COMPLETED_ABOVE]: trans(RESOURCE_COMPLETED_ABOVE, {}, 'openbadge'),
+                [RESOURCE_PASSED]: trans(RESOURCE_PASSED, {}, 'badge'),
+                [RESOURCE_SCORE_ABOVE]: trans(RESOURCE_SCORE_ABOVE, {}, 'badge'),
+                [RESOURCE_COMPLETED_ABOVE]: trans(RESOURCE_COMPLETED_ABOVE, {}, 'badge'),
                 //[WORKSPACE_PASSED]: trans(WORKSPACE_PASSED),
                 //[WORKSPACE_SCORE_ABOVE]: trans(WORKSPACE_SCORE_ABOVE),
                 //[WORKSPACE_COMPLETED_ABOVE]: trans(WORKSPACE_COMPLETED_ABOVE),
-                [RESOURCE_PARTICIPATED]: trans(RESOURCE_PARTICIPATED, {}, 'openbadge'),
-                [IN_GROUP]: trans(IN_GROUP, {}, 'openbadge'),
-                [IN_ROLE]: trans(IN_ROLE, {}, 'openbadge')
+                [RESOURCE_PARTICIPATED]: trans(RESOURCE_PARTICIPATED, {}, 'badge'),
+                [IN_GROUP]: trans(IN_GROUP, {}, 'badge'),
+                [IN_ROLE]: trans(IN_ROLE, {}, 'badge')
                 //[PROFILE_COMPLETED]: trans(PROFILE_COMPLETED)
               }
             }

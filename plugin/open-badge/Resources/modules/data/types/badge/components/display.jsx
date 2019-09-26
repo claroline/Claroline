@@ -16,7 +16,7 @@ const BadgeDisplay = (props) => props.data ?
   <EmptyPlaceholder
     size="lg"
     icon="fa fa-books"
-    title={trans('no_badge', {}, 'openbadge')}
+    title={trans('no_badge', {}, 'badge')}
   />
 
 BadgeDisplay.propTypes = {

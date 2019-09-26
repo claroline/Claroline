@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {RuleInput} from '#/plugin/open-badge/tools/badges/data/types/rule/components/input'
+import {RuleInput} from '#/plugin/open-badge/data/types/rule/components/input'
 
 // todo implements Search
 // todo implements render()

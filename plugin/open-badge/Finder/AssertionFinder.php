@@ -31,6 +31,12 @@ class AssertionFinder extends AbstractFinder
                     $qb->andWhere('b.uuid = :uuid');
                     $qb->setParameter('uuid', $filterValue);
                     break;
+                case 'workspace':
+                    $qb->join('obj.badge', 'b');
+                    $qb->join('b.workspace', 'w');
+                    $qb->andWhere('w.uuid = :workspace');
+                    $qb->setParameter('workspace', $filterValue);
+                    break;
                 case 'recipient':
                     $qb->join('obj.recipient', 'r');
                     $qb->andWhere('r.uuid = :uuid');

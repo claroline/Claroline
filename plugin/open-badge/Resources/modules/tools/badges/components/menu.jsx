@@ -7,43 +7,33 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-import {isAdmin as userIsAdmin} from '#/main/app/security/permissions'
-import {currentUser} from '#/main/app/security'
 
 const BadgeMenu = (props) =>
   <MenuSection
-    {...omit(props, 'path', 'creatable')}
-    title={trans('badges', {}, 'tools')}
+    {...omit(props, 'path', 'isAdmin')}
+    title={trans('open-badge', {}, 'tools')}
   >
     <Toolbar
       className="list-group"
       buttonName="list-group-item"
       actions={[
         {
-          icon: 'fa fa-user',
-          label: trans('my_badges', {}, 'openbadge'),
+          name: 'my-badges',
+          label: trans('my_badges', {}, 'badge'),
           target: props.path+'/my-badges',
-          type: LINK_BUTTON,
-          displayed: props.currentContext.type === 'desktop'
+          type: LINK_BUTTON
         }, {
-          icon: 'fa fa-book',
-          label: trans('badges', {}, 'openbadge'),
+          name: 'all-badges',
+          label: trans('all_badges', {}, 'badge'),
           target: props.path+'/badges',
-          type: LINK_BUTTON,
-          displayed: props.currentContext.type !== 'profile'
+          type: LINK_BUTTON
         }, {
-          icon: 'fa fa-cog',
+          name: 'parameters',
+          icon: 'fa fa-fw fa-cog',
           label: trans('parameters'),
           type: LINK_BUTTON,
           target: props.path+'/parameters',
-          onlyIcon: true,
-          displayed: userIsAdmin(currentUser())
-        }, {
-          icon: 'fa fa-book',
-          label: trans('profile'),
-          type: LINK_BUTTON,
-          target: props.path+'/profile/:id',
-          displayed: props.currentContext.type === 'profile'
+          displayed: props.isAdmin
         }
       ]}
     />
@@ -51,10 +41,7 @@ const BadgeMenu = (props) =>
 
 BadgeMenu.propTypes = {
   path: T.string,
-  currentUser: T.object.isRequired,
-  authenticated: T.bool.isRequired,
-  creatable: T.bool.isRequired,
-  currentContext: T.object.isRequired
+  isAdmin: T.bool.isRequired
 }
 
 export {

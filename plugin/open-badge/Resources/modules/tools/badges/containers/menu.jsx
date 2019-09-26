@@ -1,13 +1,14 @@
 import {connect} from 'react-redux'
+
 import {withRouter} from '#/main/app/router'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {BadgeMenu} from '#/plugin/open-badge/tools/badges/components/menu'
 
 const ConnectedBadgeMenu = withRouter(connect(
   state => ({
-    currentContext: state.tool.currentContext
-  }),
-  null
+    isAdmin: securitySelectors.isAdmin(state)
+  })
 )(BadgeMenu))
 
 export {

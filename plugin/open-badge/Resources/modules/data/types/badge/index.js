@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {BadgeDisplay} from '#/plugin/open-badge/tools/badges/data/types/badge/components/display'
-import {BadgeGroup} from '#/plugin/open-badge/tools/badges/data/types/badge/components/group'
+import {BadgeDisplay} from '#/plugin/open-badge/data/types/badge/components/display'
+import {BadgeGroup} from '#/plugin/open-badge/data/types/badge/components/group'
 
 const dataType = {
   name: 'badge',

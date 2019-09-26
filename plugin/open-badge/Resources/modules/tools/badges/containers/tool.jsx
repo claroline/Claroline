@@ -6,20 +6,22 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {Tool} from '#/plugin/open-badge/tools/badges/components/tool'
 
-const ConnectedTool = withRouter(connect(
-  (state) => ({
-    currentContext: toolSelectors.context(state)
-  }),
-  dispatch => ({
-    openBadge(id = null, workspace = null) {
-      dispatch(actions.openBadge(selectors.STORE_NAME +'.badges.current', id, workspace))
-    },
-    openAssertion(id) {
-      dispatch(actions.openAssertion(selectors.STORE_NAME +'.badges.assertion', id))
-    }
-  })
-)(Tool))
+const OpenBadgeTool = withRouter(
+  connect(
+    (state) => ({
+      currentContext: toolSelectors.context(state)
+    }),
+    dispatch => ({
+      openBadge(id = null, workspace = null) {
+        dispatch(actions.openBadge(selectors.STORE_NAME +'.badges.current', id, workspace))
+      },
+      openAssertion(id) {
+        dispatch(actions.openAssertion(selectors.STORE_NAME +'.badges.assertion', id))
+      }
+    })
+  )(Tool)
+)
 
 export {
-  ConnectedTool as OpenBadgeTool
+  OpenBadgeTool
 }
