@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class FileSerializer
@@ -61,7 +62,7 @@ class FileSerializer
             // NB : This will no longer be required when the stream API will use UUIDs
             'url' => $this->router->generate('claro_file_get_media', [
                 'node' => $file->getResourceNode()->getId(),
-            ]),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
 
         $additionalFileData = [];
