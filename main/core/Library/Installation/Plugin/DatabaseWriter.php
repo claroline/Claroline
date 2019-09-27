@@ -264,6 +264,14 @@ class DatabaseWriter
             $this->updateDataSource($sourceConfiguration, $plugin);
         }
 
+        foreach ($processedConfiguration['tools'] as $toolConfiguration) {
+            $this->updateTool($toolConfiguration, $plugin);
+        }
+
+        foreach ($processedConfiguration['themes'] as $themeConfiguration) {
+            $this->updateTheme($themeConfiguration, $plugin);
+        }
+
         // cleans deleted widgets
 
         /** @var Widget[] $installedWidgets */
@@ -282,15 +290,23 @@ class DatabaseWriter
             $this->em->remove($widget);
         }
 
-        foreach ($processedConfiguration['tools'] as $toolConfiguration) {
-            $this->updateTool($toolConfiguration, $plugin);
+        // cleans deleted data sources
+        $installedSources = $this->em->getRepository('ClarolineCoreBundle:DataSource')
+            ->findBy(['plugin' => $plugin]);
+        $sourceNames = array_map(function ($source) {
+            return $source['name'];
+        }, $processedConfiguration['data_sources']);
+
+        $sourcesToDelete = array_filter($installedSources, function (DataSource $source) use ($sourceNames) {
+            return !in_array($source->getName(), $sourceNames);
+        });
+
+        foreach ($sourcesToDelete as $source) {
+            $this->log('Removing data source '.$source->getName());
+            $this->em->remove($source);
         }
 
-        foreach ($processedConfiguration['themes'] as $themeConfiguration) {
-            $this->updateTheme($themeConfiguration, $plugin);
-        }
-
-        //remove admin tools
+        // cleans deleted admin tools
         /** @var AdminTool[] $installedAdminTools */
         $installedAdminTools = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
           ->findBy(['plugin' => $plugin]);
