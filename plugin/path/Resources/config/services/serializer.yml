@@ -8,6 +8,6 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.public_file'
-           - '@claroline.serializer.resource_node'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
            - '@security.token_storage'

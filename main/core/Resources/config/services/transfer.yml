@@ -106,7 +106,7 @@ services:
             - '@claroline.persistence.object_manager'
             - '@claroline.api.crud'
             - '@claroline.manager.workspace_manager'
-            - '@claroline.serializer.workspace'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\CoreBundle\API\Transfer\Action\Workspace\Delete: ~
 

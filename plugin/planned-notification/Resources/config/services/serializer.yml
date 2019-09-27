@@ -17,8 +17,8 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.workspace'
-           - '@claroline.serializer.role'
+           - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
            - '@claroline.serializer.planned_notification.message'
 
     claroline.serializer.planned_notification:

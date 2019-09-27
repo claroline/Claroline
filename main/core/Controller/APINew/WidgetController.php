@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Manager\DataSourceManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -38,12 +37,6 @@ class WidgetController
 
     /**
      * WidgetController constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer"        = @DI\Inject("claroline.api.serializer"),
-     *     "widgetManager"     = @DI\Inject("claroline.manager.widget_manager"),
-     *     "dataSourceManager" = @DI\Inject("claroline.manager.data_source")
-     * })
      *
      * @param SerializerProvider $serializer
      * @param WidgetManager      $widgetManager

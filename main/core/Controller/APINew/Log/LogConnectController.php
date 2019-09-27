@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,13 +47,6 @@ class LogConnectController
 
     /**
      * CourseController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"     = @DI\Inject("security.authorization_checker"),
-     *     "finder"            = @DI\Inject("claroline.api.finder"),
-     *     "logConnectManager" = @DI\Inject("claroline.manager.log_connect"),
-     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder

@@ -2,7 +2,7 @@ services:
     _defaults:
         autowire: false
         autoconfigure: true
-        public: false
+        public: true
 
     _instanceof:
         Claroline\AppBundle\API\Serializer\GenericSerializer:
@@ -24,41 +24,21 @@ services:
           - '%claroline.param.platform_options%'
           - '%claroline.param.archive_directory%'
 
-    claroline.serializer.parameters:
-        alias: Claroline\CoreBundle\API\Serializer\ParametersSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\ObjectLockSerializer:
         tags: [claroline.serializer]
         arguments:
-          - '@claroline.serializer.user'
-
-    claroline.serializer.object_lock:
-        alias: Claroline\CoreBundle\API\Serializer\ObjectLockSerializer
-        public: true
+          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\MessageSerializer:
         arguments:
-          - '@claroline.serializer.user'
+          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
           - '@claroline.persistence.object_manager'
-
-    claroline.serializer.message:
-        alias: Claroline\CoreBundle\API\Serializer\MessageSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
 
-    claroline.serializer.data_source:
-        alias: Claroline\CoreBundle\API\Serializer\DataSourceSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\AdminToolSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.admin_tool:
-        alias: Claroline\CoreBundle\API\Serializer\AdminToolSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer:
         tags: [claroline.serializer]
@@ -71,34 +51,22 @@ services:
           - '@claroline.utilities.misc'
           - '@claroline.utilities.file'
           - '@claroline.api.finder'
-          - '@claroline.serializer.user'
-          - '@claroline.serializer.public_file'
-          - '@claroline.serializer.resource_node'
-
-    claroline.serializer.workspace:
-        alias: Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer
-        public: true
+          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+          - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+          - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Workspace\ShortcutsSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.role'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
 
     Claroline\CoreBundle\API\Serializer\Workspace\PendingRegistrationSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.user'
-
-    claroline.serializer.pending:
-        alias: Claroline\CoreBundle\API\Serializer\Workspace\PendingRegistrationSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\WidgetSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.widget:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\WidgetSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Widget\WidgetInstanceSerializer:
         tags: [claroline.serializer]
@@ -106,59 +74,35 @@ services:
             - '@claroline.persistence.object_manager'
             - '@claroline.api.serializer'
 
-    claroline.serializer.widget_instance:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\WidgetInstanceSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
             - '@Claroline\CoreBundle\API\Finder\Home\WidgetInstanceFinder'
-            - '@claroline.serializer.widget_instance'
-            - '@claroline.serializer.public_file'
-
-    claroline.serializer.widget_container:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetInstanceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
             - '@Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder'
-            - '@claroline.serializer.widget_container'
-            - '@claroline.serializer.workspace'
-            - '@claroline.serializer.user'
-            - '@claroline.serializer.public_file'
-
-    claroline.serializer.home_tab:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\SimpleWidgetSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.widget_simple:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\Type\SimpleWidgetSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.resource_node'
-
-    claroline.serializer.widget_resource:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.widget_list:
-        alias: Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\User\UserSerializer:
         tags: [claroline.serializer]
@@ -168,64 +112,40 @@ services:
             - '@claroline.persistence.object_manager'
             - '@claroline.config.platform_config_handler'
             - '@claroline.manager.facet_manager'
-            - '@claroline.serializer.public_file'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@service_container'
             - '@claroline.event.event_dispatcher'
-            - '@claroline.serializer.organization'
-            - '@claroline.serializer.field_facet_value'
-
-    claroline.serializer.user:
-        alias: Claroline\CoreBundle\API\Serializer\User\UserSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer'
 
     Claroline\CoreBundle\API\Serializer\User\RoleSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
             - '@claroline.api.finder.ordered_tool'
-            - '@claroline.serializer.workspace'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.role:
-        alias: Claroline\CoreBundle\API\Serializer\User\RoleSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\User\ProfileSerializer:
         arguments:
             - '@security.token_storage'
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.facet'
-
-    claroline.serializer.profile:
-        alias: Claroline\CoreBundle\API\Serializer\User\ProfileSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer'
 
     Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
 
-    claroline.serializer.organization:
-        alias: Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\User\LocationSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.location:
-        alias: Claroline\CoreBundle\API\Serializer\User\LocationSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\User\GroupSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.organization'
-            - '@claroline.serializer.role'
-
-    claroline.serializer.group:
-        alias: Claroline\CoreBundle\API\Serializer\User\GroupSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
 
     Claroline\CoreBundle\API\Serializer\Translatable\TranslatableSerializer:
         tags: [claroline.serializer]
@@ -234,114 +154,70 @@ services:
             - '@claroline.manager.locale_manager'
             - '@service_container'
 
-    claroline.serializer.translatable:
-        alias: Claroline\CoreBundle\API\Serializer\Translatable\TranslatableSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Transfer\FileSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.serializer.public_file'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@claroline.persistence.object_manager'
 
     Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer:
         tags: [claroline.serializer]
 
-    claroline.serializer.tool:
-        alias: Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.template.type:
-        alias: Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.parameters'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@claroline.api.serializer'
-
-    claroline.serializer.template:
-        alias: Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.workspace'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.scheduled_task:
-        alias: Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.resource_node'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.resource_user_evaluation:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.manager.resource_action'
 
-    claroline.serializer.resource_type:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
             - '@claroline.event.event_dispatcher'
-            - '@claroline.serializer.public_file'
-            - '@claroline.serializer.user'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@claroline.manager.mask_manager'
             - '@claroline.manager.optimized_rights_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.api.serializer'
 
-    claroline.serializer.resource_node:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Resource\ResourceEvaluationSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.resource_user_evaluation'
-
-    claroline.serializer.resource_evaluation:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\ResourceEvaluationSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.resource_node.comment:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\Resource\Types\TextSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@security.token_storage'
-
-    claroline.serializer.resource_text:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\Types\TextSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Resource\Types\FileSerializer:
         tags: [claroline.serializer]
@@ -350,33 +226,17 @@ services:
             - '%claroline.param.files_directory%'
             - '@event_dispatcher'
 
-    claroline.serializer.resource_file:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\Types\FileSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Resource\Types\DirectorySerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.resource_directory:
-        alias: Claroline\CoreBundle\API\Serializer\Resource\Types\DirectorySerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.config.platform_config_handler'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.theme:
-        alias: Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\CoreBundle\API\Serializer\Platform\PluginSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.plugin:
-        alias: Claroline\CoreBundle\API\Serializer\Platform\PluginSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer:
         arguments:
@@ -391,12 +251,8 @@ services:
             - '@claroline.manager.version_manager'
             - '@claroline.manager.plugin_manager'
             - '@claroline.manager.icon_set_manager'
-            - '@claroline.serializer.resource_type'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
             - '@claroline.oauth.manager'
-
-    claroline.serializer.platform_client:
-        alias: Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:
         tags: [claroline.serializer]
@@ -404,127 +260,71 @@ services:
             - '@translator'
             - '@event_dispatcher'
 
-    claroline.serializer.log:
-        alias: Claroline\CoreBundle\API\Serializer\Log\LogSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectWorkspaceSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.api.serializer'
-
-    claroline.serializer.log.connect.workspace:
-        alias: Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectWorkspaceSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectToolSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.api.serializer'
 
-    claroline.serializer.log.connect.workspace_tool:
-        alias: Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectToolSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectResourceSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.api.serializer'
-
-    claroline.serializer.log.connect.resource:
-        alias: Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectResourceSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectPlatformSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.api.serializer'
 
-    claroline.serializer.log.connect.platform:
-        alias: Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectPlatformSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectAdminToolSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.api.serializer'
-
-    claroline.serializer.log.connect.admin_tool:
-        alias: Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectAdminToolSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.utilities.file'
 
-    claroline.serializer.public_file:
-        alias: Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.role'
-            - '@claroline.serializer.field_facet'
-
-    claroline.serializer.panel_facet:
-        alias: Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
 
     Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.field_facet'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
             - '@service_container'
-
-    claroline.serializer.field_facet_value:
-        alias: Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.field_facet_choice'
-
-    claroline.serializer.field_facet:
-        alias: Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer'
 
     Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer:
         tags: [claroline.serializer]
 
-    claroline.serializer.field_facet_choice:
-        alias: Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer
-        public: true
-
     Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.role'
-            - '@claroline.serializer.panel_facet'
-
-    claroline.serializer.facet:
-        alias: Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer'
 
     Claroline\CoreBundle\API\Serializer\Cryptography\ApiTokenSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.user'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@claroline.persistence.object_manager'
-
-    claroline.serializer.api_token_serializer:
-        alias: Claroline\CoreBundle\API\Serializer\Cryptography\ApiTokenSerializer
-        public: true
 
     Claroline\CoreBundle\API\Serializer\ConnectionMessage\ConnectionMessageSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.role'
-
-    claroline.serializer.connection.message:
-        alias: Claroline\CoreBundle\API\Serializer\ConnectionMessage\ConnectionMessageSerializer
-        public: true
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'

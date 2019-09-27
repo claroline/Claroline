@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class LoggerController
 {
-    /**
-     * @DI\InjectParams({
-     *     "logDir" = @DI\Inject("%claroline.param.log_dir%")
-     * })
-     */
     public function __construct($logDir)
     {
         $this->logDir = $logDir;

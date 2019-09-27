@@ -15,7 +15,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -29,10 +28,6 @@ class ConnectionMessageController extends AbstractCrudController
 
     /**
      * ConnectionMessageController constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.connection_message_manager")
-     * })
      *
      * @param ConnectionMessageManager $manager
      */

@@ -9,7 +9,7 @@ services:
     Claroline\OpenBadgeBundle\Serializer\AssertionSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.serializer.user'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
             - '@router'
@@ -26,13 +26,13 @@ services:
             - '@Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
             - '@event_dispatcher'
-            - '@claroline.serializer.workspace'
-            - '@claroline.serializer.user'
-            - '@claroline.serializer.group'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\GroupSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\ImageSerializer'
             - '@security.token_storage'
-            - '@claroline.serializer.organization'
-            - '@claroline.serializer.public_file'
+            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\RuleSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer:
@@ -54,7 +54,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@router'
-            - '@claroline.serializer.resource_node'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\HostedBadgeSerializer: ~
 

@@ -40,7 +40,7 @@ class PostManager
      *     "trackingManager" = @DI\Inject("icap.blog.manager.tracking"),
      *     "repo"            = @DI\Inject("icap.blog.post_repository"),
      *     "translator"      = @DI\Inject("translator"),
-     *     "userSerializer"  = @DI\Inject("claroline.serializer.user"),
+     *     "userSerializer"  = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\UserSerializer"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      *

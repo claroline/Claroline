@@ -47,7 +47,7 @@ class LogController
      * @DI\InjectParams({
      *     "authorizationChecker"   = @DI\Inject("security.authorization_checker"),
      *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "serializer"             = @DI\Inject("claroline.serializer.log"),
+     *     "serializer"             = @DI\Inject("Claroline\CoreBundle\API\Serializer\Log\LogSerializer"),
      *     "logManager"             = @DI\Inject("claroline.log.manager")
      * })
      *

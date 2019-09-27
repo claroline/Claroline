@@ -13,21 +13,13 @@ namespace Claroline\AppBundle\Persistence;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.persistence.table_manager")
- */
 class TableManager
 {
     use LoggableTrait;
 
     /**
      * ObjectManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "connection" = @DI\Inject("doctrine.dbal.default_connection"),
-     * })
      *
      * @param ObjectManagerInterface $om
      */

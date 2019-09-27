@@ -28,7 +28,7 @@ class WebResourceController extends AbstractCrudController
     /**
      * @DI\InjectParams({
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "webResourceManager"    = @DI\Inject("claroline.manager.web_resource_manager"),
+     *     "webResourceManager"    = @DI\Inject("Claroline\WebResourceBundle\Manager\WebResourceManager"),
      * })
      */
     public function __construct(

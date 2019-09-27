@@ -61,7 +61,7 @@ class AnnouncementManager
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "serializer"      = @DI\Inject("claroline.serializer.announcement"),
+     *     "serializer"      = @DI\Inject("Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer"),
      *     "mailManager"     = @DI\Inject("claroline.manager.mail_manager"),
      *     "taskManager"     = @DI\Inject("claroline.manager.scheduled_task_manager"),
      *     "finder"          = @DI\Inject("claroline.api.finder")

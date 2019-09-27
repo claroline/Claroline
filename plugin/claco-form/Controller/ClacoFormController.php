@@ -89,10 +89,10 @@ class ClacoFormController extends Controller
      *     "serializer"            = @DI\Inject("claroline.api.serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry"),
-     *     "commentSerializer"     = @DI\Inject("claroline.serializer.clacoform.comment"),
-     *     "fieldSerializer"       = @DI\Inject("claroline.serializer.clacoform.field"),
-     *     "entryUserSerializer"   = @DI\Inject("claroline.serializer.clacoform.entry.user"),
+     *     "entrySerializer"       = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntrySerializer"),
+     *     "commentSerializer"     = @DI\Inject("Claroline\ClacoFormBundle\Serializer\CommentSerializer"),
+     *     "fieldSerializer"       = @DI\Inject("Claroline\ClacoFormBundle\Serializer\FieldSerializer"),
+     *     "entryUserSerializer"   = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntryUserSerializer"),
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
      * })
      */

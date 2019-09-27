@@ -8,24 +8,12 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Doctrine\Common\Annotations\Reader;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Route;
 
-/**
- * @DI\Service("claroline.api.routing.documentator")
- */
 class Documentator
 {
     /**
      * Crud constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"     = @DI\Inject("claroline.api.finder"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "router"     = @DI\Inject("claroline.api.routing.finder"),
-     *     "reader"     = @DI\Inject("annotation_reader"),
-     *     "schema"     = @DI\Inject("claroline.api.schema")
-     * })
      *
      * @param Router $router
      */

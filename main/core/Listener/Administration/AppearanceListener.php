@@ -24,7 +24,7 @@ class AppearanceListener
      * AppearanceListener constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"     = @DI\Inject("claroline.serializer.parameters"),
+     *     "serializer"     = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
      *     "iconSetManager" = @DI\Inject("claroline.manager.icon_set_manager")
      * })
      *

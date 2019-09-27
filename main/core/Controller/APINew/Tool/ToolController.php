@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Tool;
 use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ToolManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +28,6 @@ class ToolController extends AbstractApiController
 
     /**
      * ToolController constructor.
-     *
-     * @DI\InjectParams({
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager")
-     * })
      *
      * @param ToolManager $toolManager
      */

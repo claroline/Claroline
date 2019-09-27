@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Manager\PluginManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Manages platform plugins.
  *
- * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
  *
  * @EXT\Route("/plugin")
@@ -24,10 +22,6 @@ class PluginController
 
     /**
      * PluginController constructor.
-     *
-     * @DI\InjectParams({
-     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager")
-     * })
      *
      * @param PluginManager $pluginManager
      */

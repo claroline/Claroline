@@ -8,4 +8,4 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.resource_node'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'

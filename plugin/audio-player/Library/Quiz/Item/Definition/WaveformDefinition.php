@@ -49,7 +49,7 @@ class WaveformDefinition extends AbstractDefinition
      * @DI\InjectParams({
      *     "validator"       = @DI\Inject("claroline.validator.audio.question_waveform"),
      *     "answerValidator" = @DI\Inject("claroline.validator.audio.answer_waveform"),
-     *     "serializer"      = @DI\Inject("claroline.serializer.audio.question_waveform")
+     *     "serializer"      = @DI\Inject("Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer")
      * })
      */
     public function __construct(

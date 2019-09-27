@@ -34,7 +34,7 @@ class LikeActionController extends Controller
      * LikeActionController constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.serializer.resource_node")
+     *     "serializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer")
      * })
      *
      * @param ResourceNodeSerializer $serializer

@@ -9,11 +9,7 @@ use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Repository\ContributionRepository;
 use Icap\WikiBundle\Serializer\ContributionSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("icap.wiki.contribution_manager")
- */
 class ContributionManager
 {
     /** @var ObjectManager */
@@ -26,11 +22,6 @@ class ContributionManager
     private $contributionSerializer;
 
     /**
-     * @DI\InjectParams({
-     *    "om"                      = @DI\Inject("claroline.persistence.object_manager"),
-     *    "contributionSerializer"  = @DI\Inject("claroline.serializer.wiki.section.contribution")
-     * })
-     *
      * @param ObjectManager          $om
      * @param ContributionSerializer $contributionSerializer
      */

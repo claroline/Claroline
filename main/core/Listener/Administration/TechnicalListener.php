@@ -24,7 +24,7 @@ class TechnicalListener
      *
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.serializer.parameters")
+     *     "serializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer")
      * })
      *
      * @param ObjectManager        $om

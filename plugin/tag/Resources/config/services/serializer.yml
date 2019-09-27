@@ -11,4 +11,4 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

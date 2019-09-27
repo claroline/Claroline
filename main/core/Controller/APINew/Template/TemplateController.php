@@ -15,7 +15,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,12 +37,6 @@ class TemplateController extends AbstractCrudController
 
     /**
      * TemplateController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "templateManager" = @DI\Inject("claroline.manager.template_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param TemplateManager               $templateManager

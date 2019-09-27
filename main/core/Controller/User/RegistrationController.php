@@ -55,9 +55,9 @@ class RegistrationController extends Controller
      *     "tokenStorage"         = @DI\Inject("security.token_storage"),
      *     "session"              = @DI\Inject("session"),
      *     "translator"           = @DI\Inject("translator"),
-     *     "profileSerializer"    = @DI\Inject("claroline.serializer.profile"),
+     *     "profileSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\ProfileSerializer"),
      *     "userManager"          = @DI\Inject("claroline.manager.user_manager"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters")
+     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer")
      * })
      *
      * @param TokenStorageInterface $tokenStorage

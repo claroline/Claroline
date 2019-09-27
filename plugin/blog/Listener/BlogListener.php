@@ -125,7 +125,7 @@ class BlogListener
         $blog = $exportEvent->getObject();
         $data = [
           'posts' => array_map(function (Post $post) {
-              return $this->container->get('claroline.serializer.blog.post')->serialize($post, [
+              return $this->container->get('Icap\BlogBundle\Serializer\PostSerializer')->serialize($post, [
                 CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS,
               ]);
           }, $blog->getPosts()->toArray()),
@@ -144,7 +144,7 @@ class BlogListener
 
         foreach ($data['_data']['posts'] as $postData) {
             /** @var Post $post */
-            $post = $this->container->get('claroline.serializer.blog.post')->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
+            $post = $this->container->get('Icap\BlogBundle\Serializer\PostSerializer')->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
 
             if (isset($postData['creationDate'])) {
                 $post->setCreationDate(DateNormalizer::denormalize($postData['creationDate']));
@@ -163,7 +163,7 @@ class BlogListener
 
             foreach ($postData['comments'] as $commentData) {
                 /** @var Comment $comment */
-                $comment = $this->container->get('claroline.serializer.blog.comment')->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
+                $comment = $this->container->get('Icap\BlogBundle\Serializer\CommentSerializer')->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
 
                 $this->container->get('icap.blog.manager.comment')
                   ->createComment($blog, $post, $this->commentSerializer->deserialize($data, null), $comment['isPublished']);

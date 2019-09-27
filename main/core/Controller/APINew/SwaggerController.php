@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,14 +25,6 @@ class SwaggerController
 {
     /**
      * ParametersController constructor.
-     *
-     * @DI\InjectParams({
-     *     "routerFinder"   = @DI\Inject("claroline.api.routing.finder"),
-     *     "documentator"   = @DI\Inject("claroline.api.routing.documentator"),
-     *     "schemaProvider" = @DI\Inject("claroline.api.schema"),
-     *     "configuration"  = @DI\Inject("claroline.serializer.platform_client"),
-     *      "rootDir" = @DI\Inject("%kernel.root_dir%")
-     * })
      */
     public function __construct($routerFinder, $documentator, SchemaProvider $schemaProvider, ClientSerializer $configuration, $rootDir)
     {

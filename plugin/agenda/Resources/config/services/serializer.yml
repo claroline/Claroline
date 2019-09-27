@@ -9,10 +9,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.public_file'
-            - '@claroline.serializer.workspace'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.event:
-         alias: Claroline\AgendaBundle\Serializer\EventSerializer
-         public: true
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

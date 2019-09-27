@@ -33,7 +33,7 @@ class PostController
      * postController constructor.
      *
      * @DI\InjectParams({
-     *     "postSerializer"    = @DI\Inject("claroline.serializer.blog.post"),
+     *     "postSerializer"    = @DI\Inject("Icap\BlogBundle\Serializer\PostSerializer"),
      *     "postManager"       = @DI\Inject("icap.blog.manager.post"),
      *     "trackingManager"   = @DI\Inject("icap.blog.manager.tracking"),
      *     "logThreshold"      = @DI\Inject("%non_repeatable_log_time_in_seconds%")

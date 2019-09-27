@@ -31,7 +31,7 @@ class SectionController
     /**
      * @DI\InjectParams({
      *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "sectionManager"         = @DI\Inject("icap.wiki.section_manager")
+     *     "sectionManager"         = @DI\Inject("Icap\WikiBundle\Manager\SectionManager")
      * })
      *
      * SectionController constructor.
@@ -123,7 +123,7 @@ class SectionController
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('OPEN', $resourceNode, [], true);
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
-        if (Wiki::READ_ONLY_MODE == $wiki->getMode() && !$isAdmin) {
+        if (Wiki::READ_ONLY_MODE === $wiki->getMode() && !$isAdmin) {
             throw new AccessDeniedHttpException('Cannot edit section in READ ONLY wiki');
         }
         $newSection = $this->sectionManager->createSection($wiki, $section, $user, $isAdmin, json_decode($request->getContent(), true));
@@ -155,7 +155,7 @@ class SectionController
         $resourceNode = $wiki->getResourceNode();
         $this->checkPermission('OPEN', $resourceNode, [], true);
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
-        if (Wiki::READ_ONLY_MODE == $wiki->getMode() && !$isAdmin) {
+        if (Wiki::READ_ONLY_MODE === $wiki->getMode() && !$isAdmin) {
             throw new AccessDeniedHttpException('Cannot edit section in READ ONLY wiki');
         }
         $this->sectionManager->updateSection($section, $user, json_decode($request->getContent(), true));

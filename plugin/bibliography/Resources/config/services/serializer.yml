@@ -7,13 +7,5 @@ services:
     Icap\BibliographyBundle\Serializer\BookReferenceConfigurationSerializer:
         tags: [claroline.serializer]
 
-    claroline.serializer.book_reference_configuration:
-         alias: Icap\BibliographyBundle\Serializer\BookReferenceConfigurationSerializer
-         public: true
-
     Icap\BibliographyBundle\Serializer\BookReferenceSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.book_reference:
-         alias: Icap\BibliographyBundle\Serializer\BookReferenceSerializer
-         public: true

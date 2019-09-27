@@ -59,7 +59,7 @@ class AttemptController extends AbstractController
      *     "attemptManager"      = @DI\Inject("ujm_exo.manager.attempt"),
      *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
      *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "userEvalSerializer"  = @DI\Inject("claroline.serializer.resource_user_evaluation")
+     *     "userEvalSerializer"  = @DI\Inject("Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer")
      * })
      *
      * @param AuthorizationCheckerInterface    $authorization

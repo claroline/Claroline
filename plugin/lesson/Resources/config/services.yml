@@ -1,7 +1,9 @@
 imports:
     - { resource: services/finder.yml }
     - { resource: services/serializer.yml }
-
+    - { resource: services/listener.yml }
+    - { resource: services/manager.yml }
+        
 parameters:
 #    lesson.example.class: Icap\LessonBundle\Example
 

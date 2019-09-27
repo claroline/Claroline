@@ -11,12 +11,8 @@ use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
 use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @DI\Service("icap.lesson.manager.chapter")
- */
 class ChapterManager
 {
     /**
@@ -38,13 +34,6 @@ class ChapterManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "chapterSerializer" = @DI\Inject("icap.serializer.lesson.chapter"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"   = @DI\Inject("event_dispatcher")
-     * })
      *
      * @param EntityManager     $entityManager
      * @param ChapterSerializer $chapterSerializer

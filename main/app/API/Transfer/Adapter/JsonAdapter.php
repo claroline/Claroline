@@ -3,12 +3,7 @@
 namespace Claroline\AppBundle\API\Transfer\Adapter;
 
 use Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv\Explanation;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.transfer.adapter")
- */
 class JsonAdapter implements AdapterInterface
 {
     public function decodeSchema($content, Explanation $schema)

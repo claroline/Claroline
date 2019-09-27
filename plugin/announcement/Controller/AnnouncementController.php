@@ -58,7 +58,7 @@ class AnnouncementController
      *
      * @DI\InjectParams({
      *     "manager"    = @DI\Inject("claroline.manager.announcement_manager"),
-     *     "serializer" = @DI\Inject("claroline.serializer.announcement"),
+     *     "serializer" = @DI\Inject("Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer"),
      *     "crud"       = @DI\Inject("claroline.api.crud"),
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "finder"     = @DI\Inject("claroline.api.finder")

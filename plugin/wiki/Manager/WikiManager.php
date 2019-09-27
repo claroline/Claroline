@@ -17,12 +17,8 @@ use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Event\Log\LogWikiConfigureEvent;
 use Icap\WikiBundle\Serializer\WikiSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @DI\Service("icap.wiki.manager")
- */
 class WikiManager
 {
     /**
@@ -51,13 +47,6 @@ class WikiManager
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /**
-     * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "wikiSerializer"     = @DI\Inject("claroline.serializer.wiki"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         WikiSerializer $wikiSerializer,

@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,16 +58,6 @@ class RegistrationController extends AbstractApiController
 
     /**
      * RegistrationController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"            = @DI\Inject("security.authorization_checker"),
-     *     "om"                       = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"               = @DI\Inject("claroline.api.serializer"),
-     *     "finder"                   = @DI\Inject("claroline.api.finder"),
-     *     "crud"                     = @DI\Inject("claroline.api.crud"),
-     *     "workspaceManager"         = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "registrationQueueManager" = @DI\Inject("claroline.manager.workspace_user_queue_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om

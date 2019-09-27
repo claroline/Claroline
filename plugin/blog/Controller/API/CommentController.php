@@ -33,7 +33,7 @@ class CommentController
      * postController constructor.
      *
      * @DI\InjectParams({
-     *     "commentSerializer" = @DI\Inject("claroline.serializer.blog.comment"),
+     *     "commentSerializer" = @DI\Inject("Icap\BlogBundle\Serializer\CommentSerializer"),
      *     "commentManager"    = @DI\Inject("icap.blog.manager.comment"),
      *     "trackingManager"   = @DI\Inject("icap.blog.manager.tracking")
      * })

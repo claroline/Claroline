@@ -10,6 +10,7 @@ imports:
     - { resource: services/crud.yml }
     - { resource: services/twig.yml }
     - { resource: services/voter.yml }
+    - { resource: services/controller.yml }
 
 services:
 

@@ -24,10 +24,10 @@ services:
                   - '@claroline.persistence.object_manager'
               - method: setRouterFinder
                 arguments:
-                  - '@claroline.api.routing.finder'
+                  - '@Claroline\AppBundle\Routing\Finder'
               - method: setRouterDocumentator
                 arguments:
-                  - '@claroline.api.routing.documentator'
+                  - '@Claroline\AppBundle\Routing\Documentator'
               - method: mergeOptions
 
     Claroline\OpenBadgeBundle\Controller\OpenBadgeController:

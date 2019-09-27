@@ -32,7 +32,7 @@ services:
 
     Claroline\CoreBundle\Twig\PlatformConfigurationExtension:
        arguments:
-          - '@claroline.serializer.platform_client'
+          - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
 
     Claroline\CoreBundle\Twig\PcreExtension: ~
 

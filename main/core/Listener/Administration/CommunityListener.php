@@ -40,8 +40,8 @@ class CommunityListener
      *
      * @DI\InjectParams({
      *     "finder"               = @DI\Inject("claroline.api.finder"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
-     *     "profileSerializer"    = @DI\Inject("claroline.serializer.profile"),
+     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
+     *     "profileSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\ProfileSerializer"),
      *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
      *     "userManager"          = @DI\Inject("claroline.manager.user_manager")
      * })

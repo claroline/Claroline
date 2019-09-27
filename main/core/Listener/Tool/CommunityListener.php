@@ -27,8 +27,8 @@ class CommunityListener
      *
      * @DI\InjectParams({
      *     "authorization"        = @DI\Inject("security.authorization_checker"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
-     *     "profileSerializer"    = @DI\Inject("claroline.serializer.profile")
+     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
+     *     "profileSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\ProfileSerializer")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization

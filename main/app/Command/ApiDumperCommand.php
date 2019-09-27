@@ -30,10 +30,10 @@ class ApiDumperCommand extends ContainerAwareCommand
     {
         $format = $input->getOption('format') ?? 'json';
         $data = [];
-        $classes = $this->getContainer()->get('claroline.api.routing.finder')->getHandledClasses();
+        $classes = $this->getContainer()->get('Claroline\AppBundle\Routing\Finder')->getHandledClasses();
 
         foreach ($classes as $class) {
-            $data[$class] = $this->getContainer()->get('claroline.api.routing.documentator')->documentClass($class);
+            $data[$class] = $this->getContainer()->get('Claroline\AppBundle\Routing\Documentator')->documentClass($class);
         }
 
         switch ($format) {

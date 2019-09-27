@@ -2,21 +2,13 @@
 
 namespace Claroline\AppBundle\Routing;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @DI\Service("claroline.api.routing.finder")
- */
 class Finder
 {
     /**
      * Crud constructor.
-     *
-     * @DI\InjectParams({
-     *     "router" = @DI\Inject("router"),
-     * })
      *
      * @param Router $router
      */

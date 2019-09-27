@@ -40,8 +40,8 @@ class ChapterController
      *
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),
-     *     "chapterSerializer" = @DI\Inject("icap.serializer.lesson.chapter"),
-     *     "chapterManager" = @DI\Inject("icap.lesson.manager.chapter")
+     *     "chapterSerializer" = @DI\Inject("Icap\LessonBundle\Serializer\ChapterSerializer"),
+     *     "chapterManager" = @DI\Inject("Icap\LessonBundle\Manager\ChapterManager")
      * })
      *
      * @param ContainerInterface $container

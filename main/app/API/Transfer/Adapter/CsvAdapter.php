@@ -6,23 +6,14 @@ use Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv\Explanation;
 use Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv\ExplanationBuilder;
 use Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv\Property;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.transfer.adapter")
- */
 class CsvAdapter implements AdapterInterface
 {
     /** @var TranslatorInterface */
     private $translator;
 
     /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator")
-     * })
-     *
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)

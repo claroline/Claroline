@@ -1,0 +1,193 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@claroline.api.finder'
+              - method: setSerializer
+                arguments:
+                  - '@claroline.api.serializer'
+              - method: setCrud
+                arguments:
+                  - '@claroline.api.crud'
+              - method: setObjectManager
+                arguments:
+                  - '@claroline.persistence.object_manager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
+    Claroline\CoreBundle\Controller\APINew\Cryptography\ApiTokenController:
+        arguments:
+          - '@security.token_storage'
+
+    Claroline\CoreBundle\Controller\APINew\Log\LogConnectController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.api.finder'
+          - '@claroline.manager.log_connect'
+          - '@claroline.manager.tool_manager'
+
+    Claroline\CoreBundle\Controller\APINew\Platform\PluginController:
+        tags: [security.secure_service]
+        arguments:
+          - '@claroline.manager.plugin_manager'
+
+    Claroline\CoreBundle\Controller\APINew\Resource\Types\DirectoryController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Resource\Types\FileController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Resource\Types\TextController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Resource\ResourceCommentController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Resource\ResourceNodeController:
+        arguments:
+          - '@claroline.manager.resource_action'
+          - '@claroline.manager.resource_manager'
+          - '@claroline.manager.rights_manager'
+
+    Claroline\CoreBundle\Controller\APINew\Template\TemplateController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.manager.template_manager'
+          - '@claroline.manager.tool_manager'
+
+    Claroline\CoreBundle\Controller\APINew\Template\TemplateTypeController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Tool\HomeController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.persistence.object_manager'
+          - '@translator'
+          - '@claroline.api.finder'
+          - '@claroline.manager.lock_manager'
+          - '@claroline.api.crud'
+          - '@Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer'
+
+    Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
+        arguments:
+          - '@claroline.manager.tool_manager'
+
+    Claroline\CoreBundle\Controller\APINew\User\GroupController: ~
+
+    Claroline\CoreBundle\Controller\APINew\User\LocationController: ~
+
+    Claroline\CoreBundle\Controller\APINew\User\OrganizationController: ~
+
+    Claroline\CoreBundle\Controller\APINew\User\ProfileController:
+        arguments:
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.crud'
+          - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+
+    Claroline\CoreBundle\Controller\APINew\User\RoleController: ~
+
+    Claroline\CoreBundle\Controller\APINew\User\UserController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.event.event_dispatcher'
+          - '@claroline.manager.user_manager'
+          - '@claroline.manager.mail_manager'
+
+    Claroline\CoreBundle\Controller\APINew\User\UserTrackingController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Workspace\RegistrationController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.serializer'
+          - '@claroline.api.finder'
+          - '@claroline.api.crud'
+          - '@claroline.manager.workspace_manager'
+          - '@claroline.manager.workspace_user_queue_manager'
+
+    Claroline\CoreBundle\Controller\APINew\Workspace\WorkspaceController:
+        arguments:
+          - '@security.token_storage'
+          - '@security.authorization_checker'
+          - '@claroline.manager.resource_manager'
+          - '@translator'
+          - '@claroline.manager.role_manager'
+          - '@claroline.manager.tool_manager'
+          - '@claroline.manager.workspace_manager'
+          - '@claroline.security.utilities'
+          - '@claroline.utilities.file'
+          - '@claroline.manager.workspace.transfer'
+          - '@claroline.manager.temp_file'
+          - '%claroline.param.workspace_log_dir%'
+
+    Claroline\CoreBundle\Controller\APINew\ConnectionMessageController:
+        arguments:
+          - '@claroline.manager.connection_message_manager'
+
+    Claroline\CoreBundle\Controller\APINew\DataSourceController:
+        arguments:
+          - '@claroline.event.event_dispatcher'
+          - '@claroline.api.serializer'
+          - '@claroline.manager.data_source'
+
+    Claroline\CoreBundle\Controller\APINew\FileController: ~
+
+    Claroline\CoreBundle\Controller\APINew\LocaleController:
+        arguments:
+          - '@claroline.manager.locale_manager'
+
+    Claroline\CoreBundle\Controller\APINew\LoggerController:
+        arguments:
+          - '%claroline.param.log_dir%'
+
+    Claroline\CoreBundle\Controller\APINew\ObjectLockController:
+        arguments:
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.serializer'
+          - '@claroline.manager.lock_manager'
+
+    Claroline\CoreBundle\Controller\APINew\ParametersController:
+        arguments:
+          - '@claroline.config.platform_config_handler'
+          - '@claroline.manager.analytics_manager'
+          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+
+    Claroline\CoreBundle\Controller\APINew\ScheduledTaskController: ~
+
+    Claroline\CoreBundle\Controller\APINew\SwaggerController:
+        arguments:
+          - '@Claroline\AppBundle\Routing\Finder'
+          - '@Claroline\AppBundle\Routing\Documentator'
+          - '@claroline.api.schema'
+          - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
+          - '%kernel.root_dir%'
+
+    Claroline\CoreBundle\Controller\APINew\ThemeController: ~
+
+    Claroline\CoreBundle\Controller\APINew\TransferController:
+        arguments:
+          - '@claroline.api.transfer'
+          - '@claroline.api.serializer'
+          - '@router'
+          - '%claroline.api.core_schema.dir%'
+          - '@claroline.utilities.file'
+          - '@claroline.api.crud'
+          - '@claroline.manager.api_manager'
+          - '@claroline.persistence.object_manager'
+          - '@claroline.async.command'
+
+    Claroline\CoreBundle\Controller\APINew\WidgetController:
+        arguments:
+          - '@claroline.api.serializer'
+          - '@claroline.manager.widget_manager'
+          - '@claroline.manager.data_source'

@@ -29,7 +29,7 @@ class WikiController
      * WikiController constructor.
      *
      * @DI\InjectParams({
-     *     "wikiManager"            = @DI\Inject("icap.wiki.manager")
+     *     "wikiManager"            = @DI\Inject("Icap\WikiBundle\Manager\WikiManager")
      * })
      */
     public function __construct(WikiManager $wikiManager)

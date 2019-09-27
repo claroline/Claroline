@@ -100,7 +100,7 @@ class Updater120000 extends Updater
 
     public function saveOldTabsTables()
     {
-        $tableManager = $this->container->get('claroline.persistence.table_manager');
+        $tableManager = $this->container->get('Claroline\AppBundle\Persistence\TableManager');
         $tableManager->setLogger($this->logger);
 
         $toCopy = [

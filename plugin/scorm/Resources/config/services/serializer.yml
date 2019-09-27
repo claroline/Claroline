@@ -25,7 +25,7 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.serializer.scorm.sco'
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     claroline.serializer.scorm.sco.tracking:
          alias: Claroline\ScormBundle\Serializer\ScoTrackingSerializer

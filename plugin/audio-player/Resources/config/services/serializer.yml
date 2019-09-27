@@ -9,31 +9,15 @@ services:
         arguments:
             - '@claroline.persistence.object_manager'
 
-    claroline.serializer.audio.resource_section:
-         alias: Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer
-         public: true
-
     Claroline\AudioPlayerBundle\Serializer\Resource\SectionCommentSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.audio.resource_section'
-            - '@claroline.serializer.user'
-
-    claroline.serializer.audio.resource_section_comment:
-         alias: Claroline\AudioPlayerBundle\Serializer\Resource\SectionCommentSerializer
-         public: true
+            - '@Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\AudioPlayerBundle\Serializer\Resource\AudioParamsSerializer:
         tags: [claroline.serializer]
 
-    claroline.serializer.audio.params:
-         alias: Claroline\AudioPlayerBundle\Serializer\Resource\AudioParamsSerializer
-         public: true
-
     Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.audio.question_waveform:
-         alias: Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer
-         public: true

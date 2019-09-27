@@ -36,8 +36,8 @@ class BlogController extends Controller
      * BlogController constructor.
      *
      * @DI\InjectParams({
-     *     "blogSerializer"        = @DI\Inject("claroline.serializer.blog"),
-     *     "blogOptionsSerializer" = @DI\Inject("claroline.serializer.blog.options"),
+     *     "blogSerializer"        = @DI\Inject("Icap\BlogBundle\Serializer\BlogSerializer"),
+     *     "blogOptionsSerializer" = @DI\Inject("Icap\BlogBundle\Serializer\BlogOptionsSerializer"),
      *     "blogManager"           = @DI\Inject("icap_blog.manager.blog"),
      *     "postManager"           = @DI\Inject("icap.blog.manager.post"),
      *     "router"                = @DI\Inject("router"),

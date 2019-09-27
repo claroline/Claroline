@@ -20,11 +20,11 @@ services:
     Claroline\ForumBundle\Serializer\MessageSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.serializer.message'
+           - '@Claroline\CoreBundle\API\Serializer\MessageSerializer'
            - '@claroline.persistence.object_manager'
            - '@claroline.serializer.forum_subject'
-           - '@claroline.serializer.public_file'
-           - '@claroline.serializer.resource_node'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     claroline.serializer.forum_message:
          alias: Claroline\ForumBundle\Serializer\MessageSerializer
@@ -36,9 +36,9 @@ services:
            - '@claroline.api.finder'
            - '@claroline.utilities.file'
            - '@event_dispatcher'
-           - '@claroline.serializer.public_file'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
            - '@claroline.manager.forum_manager'
 
     claroline.serializer.forum_subject:

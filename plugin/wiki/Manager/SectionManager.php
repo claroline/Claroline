@@ -14,13 +14,9 @@ use Icap\WikiBundle\Event\Log\LogSectionRemoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionRestoreEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
 use Icap\WikiBundle\Serializer\SectionSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-/**
- * @DI\Service("icap.wiki.section_manager")
- */
 class SectionManager
 {
     /** @var ObjectManager */
@@ -36,12 +32,6 @@ class SectionManager
     protected $eventDispatcher;
 
     /**
-     * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sectionSerializer"      = @DI\Inject("claroline.serializer.wiki.section"),
-     *     "eventDispatcher"        = @DI\Inject("event_dispatcher")
-     * })
-     *
      * @param ObjectManager     $om
      * @param SectionSerializer $sectionSerializer
      * @param $eventDispatcher
@@ -80,7 +70,7 @@ class SectionManager
     {
         $this->sectionSerializer->deserialize($data, $user, $section);
         if (isset($data['move']['section']) && $data['move']['section'] !== $section->getUuid()) {
-            $this->moveSection($section, $data['move']['section'], $data['move']['direction'] === 'before');
+            $this->moveSection($section, $data['move']['section'], 'before' === $data['move']['direction']);
         }
         $this->om->persist($section);
         $this->om->flush();

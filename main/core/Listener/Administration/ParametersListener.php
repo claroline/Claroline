@@ -22,7 +22,7 @@ class ParametersListener
      * ParametersListener constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"    = @DI\Inject("claroline.serializer.parameters"),
+     *     "serializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
      *     "localeManager" = @DI\Inject("claroline.manager.locale_manager")
      * })
      *

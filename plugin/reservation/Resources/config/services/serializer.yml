@@ -8,7 +8,7 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.role'
+           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
 
     claroline.serializer.reservation.resource_rights:
          alias: FormaLibre\ReservationBundle\Serializer\ResourceRightsSerializer
@@ -18,7 +18,7 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.organization'
+           - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
            - '@claroline.serializer.reservation.resource_type'
            - '@claroline.serializer.reservation.resource_rights'
 

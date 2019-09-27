@@ -13,7 +13,6 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,12 +33,6 @@ class ResourceNodeController extends AbstractCrudController
 
     /**
      * ResourceNodeController constructor.
-     *
-     * @DI\InjectParams({
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "actionManager"   = @DI\Inject("claroline.manager.resource_action"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
-     * })
      *
      * @param ResourceActionManager $actionManager
      * @param ResourceManager       $resourceManager

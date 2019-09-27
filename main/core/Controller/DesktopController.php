@@ -55,7 +55,7 @@ class DesktopController
      * @DI\InjectParams({
      *     "authorization"         = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
-     *     "parametersSerializer"  = @DI\Inject("claroline.serializer.parameters"),
+     *     "parametersSerializer"  = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
      *     "serializer"            = @DI\Inject("claroline.api.serializer"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager")
      * })

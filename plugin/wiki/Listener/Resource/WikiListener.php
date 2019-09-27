@@ -18,19 +18,12 @@ use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
 use Icap\WikiBundle\Manager\WikiManager;
 use Icap\WikiBundle\Serializer\WikiSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service()
- */
 class WikiListener
 {
     use PermissionCheckerTrait;
-
-    /** @var EngineInterface */
-    private $templating;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -50,17 +43,6 @@ class WikiListener
     /**
      * WikiListener constructor.
      *
-     * @DI\InjectParams({
-     *     "templating"        = @DI\Inject("templating"),
-     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
-     *     "objectManager"     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"        = @DI\Inject("claroline.serializer.wiki"),
-     *     "wikiManager"       = @DI\Inject("icap.wiki.manager"),
-     *     "sectionManager"    = @DI\Inject("icap.wiki.section_manager"),
-     *     "evaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
-     * })
-     *
-     * @param EngineInterface           $templating
      * @param TokenStorageInterface     $tokenStorage
      * @param ObjectManager             $objectManager
      * @param SerializerProvider        $serializer
@@ -69,27 +51,25 @@ class WikiListener
      * @param ResourceEvaluationManager $evaluationManager
      */
     public function __construct(
-        EngineInterface $templating,
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
         WikiSerializer $serializer,
         WikiManager $wikiManager,
         SectionManager $sectionManager,
-        ResourceEvaluationManager $evaluationManager
+        ResourceEvaluationManager $evaluationManager,
+        AuthorizationCheckerInterface $authorization
     ) {
-        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->om = $objectManager;
         $this->serializer = $serializer;
         $this->wikiManager = $wikiManager;
         $this->sectionManager = $sectionManager;
         $this->evaluationManager = $evaluationManager;
+        $this->authorization = $authorization;
     }
 
     /**
      * Loads a Wiki resource.
-     *
-     * @DI\Observe("resource.icap_wiki.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -114,8 +94,6 @@ class WikiListener
     }
 
     /**
-     * @DI\Observe("resource.icap_wiki.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -127,8 +105,6 @@ class WikiListener
     }
 
     /**
-     * @DI\Observe("resource.icap_wiki.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -141,9 +117,6 @@ class WikiListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.icap_wiki.export")
-     */
     public function onExport(ExportObjectEvent $exportEvent)
     {
         $wiki = $exportEvent->getObject();
@@ -155,9 +128,6 @@ class WikiListener
         $exportEvent->overwrite('_data', $data);
     }
 
-    /**
-     * @DI\Observe("transfer.icap_wiki.import.after")
-     */
     public function onImport(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -204,8 +174,6 @@ class WikiListener
     }
 
     /**
-     * @DI\Observe("generate_resource_user_evaluation_icap_wiki")
-     *
      * @param GenericDataEvent $event
      */
     public function onGenerateResourceTracking(GenericDataEvent $event)

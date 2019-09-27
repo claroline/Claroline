@@ -9,42 +9,22 @@ services:
         arguments:
             - '@claroline.persistence.object_manager'
 
-    claroline.serializer.competency.scale:
-         alias: HeVinci\CompetencyBundle\Serializer\ScaleSerializer
-         public: true
-
     HeVinci\CompetencyBundle\Serializer\LevelSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.competency.scale.level:
-         alias: HeVinci\CompetencyBundle\Serializer\LevelSerializer
-         public: true
 
     HeVinci\CompetencyBundle\Serializer\CompetencySerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.competency_ability'
-            - '@claroline.serializer.competency.scale'
-
-    claroline.serializer.competency:
-         alias: HeVinci\CompetencyBundle\Serializer\CompetencySerializer
-         public: true
+            - '@HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer'
+            - '@HeVinci\CompetencyBundle\Serializer\ScaleSerializer'
 
     HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer:
         tags: [claroline.serializer]
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@claroline.serializer.ability'
-            - '@claroline.serializer.competency.scale.level'
-
-    claroline.serializer.competency_ability:
-         alias: HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer
-         public: true
+            - '@HeVinci\CompetencyBundle\Serializer\AbilitySerializer'
+            - '@HeVinci\CompetencyBundle\Serializer\LevelSerializer'
 
     HeVinci\CompetencyBundle\Serializer\AbilitySerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.ability:
-         alias: HeVinci\CompetencyBundle\Serializer\AbilitySerializer
-         public: true

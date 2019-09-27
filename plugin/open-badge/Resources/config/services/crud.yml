@@ -7,6 +7,6 @@ services:
     Claroline\OpenBadgeBundle\Crud\BadgeClassCrud:
         arguments:
             - '@security.token_storage'
-            - '@claroline.serializer.parameters'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_openbadgebundle_entity_badgeclass, method: preCreate }

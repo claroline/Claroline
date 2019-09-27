@@ -4,7 +4,6 @@ namespace Claroline\AppBundle\API\Listener;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -14,8 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @DI\Service()
- * Move this somewhere else
+ * Move this somewhere else.
  */
 class ApiListener
 {
@@ -24,10 +22,6 @@ class ApiListener
 
     /**
      * ApiListener constructor.
-     *
-     * @DI\InjectParams({
-     *      "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      */
@@ -39,8 +33,6 @@ class ApiListener
 
     /**
      * Converts Exceptions in JSON for the async api.
-     *
-     * @DI\Observe("kernel.exception", priority=99)
      *
      * @param GetResponseForExceptionEvent $event
      */
@@ -82,8 +74,6 @@ class ApiListener
 
     /**
      * If we're returning a JsonResponse, we can get the debug bar by passing ?debug=true on the query string.
-     *
-     * @DI\Observe("kernel.response")
      *
      * @param FilterResponseEvent $event
      */

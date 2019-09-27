@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -15,14 +14,10 @@ namespace Claroline\WebResourceBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * @DI\Service("claroline.manager.web_resource_manager")
- */
 class WebResourceManager
 {
     private $om;
@@ -51,11 +46,6 @@ class WebResourceManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container"           = @DI\Inject("service_container")
-     * })
      */
     public function __construct(
         ObjectManager $om,

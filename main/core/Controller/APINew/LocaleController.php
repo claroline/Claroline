@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\CoreBundle\Manager\LocaleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -30,10 +29,6 @@ class LocaleController
 
     /**
      * LocaleController constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.locale_manager")
-     * })
      *
      * @param LocaleManager $manager
      */

@@ -31,7 +31,6 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -68,21 +67,6 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * WorkspaceController constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "utils"            = @DI\Inject("claroline.security.utilities"),
-     *     "fileUtils"        = @DI\Inject("claroline.utilities.file"),
-     *     "importer"         = @DI\Inject("claroline.manager.workspace.transfer"),
-     *     "logDir"           = @DI\Inject("%claroline.param.workspace_log_dir%"),
-     *     "tempFileManager"  = @DI\Inject("claroline.manager.temp_file")
-     * })
      *
      * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authorization

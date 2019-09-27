@@ -15,7 +15,7 @@ services:
   Claroline\CoreBundle\API\Validator\UserValidator:
       arguments:
         - '@claroline.persistence.object_manager'
-        - '@claroline.serializer.profile'
+        - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
   Claroline\CoreBundle\API\Validator\GroupValidator:
       arguments:

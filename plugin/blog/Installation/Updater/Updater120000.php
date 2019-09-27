@@ -74,7 +74,7 @@ class Updater120000 extends Updater
             && $this->conn->getSchemaManager()->tablesExist(['icap__blog_tag'])) {
             $this->log('Transfer blog tags to tagBundle');
             $om = $this->container->get('claroline.persistence.object_manager');
-            $serializer = $this->container->get('claroline.serializer.blog.post');
+            $serializer = $this->container->get('Icap\BlogBundle\Serializer\PostSerializer');
             $repo = $om->getRepository('Icap\BlogBundle\Entity\Post');
 
             $batchSize = 500;

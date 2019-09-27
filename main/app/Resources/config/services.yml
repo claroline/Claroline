@@ -2,6 +2,9 @@ imports:
   # - { resource: services/controller.yml }
   # - { resource: services/finder.yml }
     - { resource: services/manager.yml }
+    - { resource: services/adapter.yml }
+    - { resource: services/persistence.yml }
+    - { resource: services/routing.yml }
 
 services:
     _defaults:
@@ -69,3 +72,10 @@ services:
     claroline.api.validator:
         alias: Claroline\AppBundle\API\ValidatorProvider
         public: true
+
+    Claroline\AppBundle\API\Listener\ApiListener:
+        arguments:
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onError, priority: 99 }
+            - { name: kernel.event_listener, event: kernel.response, method: onResponse }

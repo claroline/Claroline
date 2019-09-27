@@ -37,7 +37,7 @@ class TemplateListener
     /**
      * @DI\InjectParams({
      *     "authorization"        = @DI\Inject("security.authorization_checker"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
+     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
      *     "templating"           = @DI\Inject("templating"),
      *     "toolManager"          = @DI\Inject("claroline.manager.tool_manager")
      * })

@@ -16,7 +16,7 @@ class ApiControllerTest extends TransactionalTestCase
     {
         parent::setUp();
         $container = $this->client->getContainer();
-        $this->chapterManager = $container->get('icap.lesson.manager.chapter');
+        $this->chapterManager = $container->get('Icap\LessonBundle\Manager\ChapterManager');
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->persist = new Persister($this->om);
     }

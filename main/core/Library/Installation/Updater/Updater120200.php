@@ -49,7 +49,7 @@ class Updater120200 extends Updater
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->translator = $container->get('translator');
 
-        $this->parameters = $container->get('claroline.serializer.parameters')->serialize([Options::SERIALIZE_MINIMAL]);
+        $this->parameters = $container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize([Options::SERIALIZE_MINIMAL]);
 
         $this->contentRepo = $this->om->getRepository(Content::class);
         $this->translationRepo = $this->om->getRepository(ContentTranslation::class);

@@ -10,19 +10,19 @@ services:
            - '@claroline.persistence.object_manager'
            - '@security.token_storage'
            - '@claroline.manager.message_manager'
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\MessageBundle\Serializer\Contact\OptionsSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
            - '@claroline.persistence.object_manager'
 
     Claroline\MessageBundle\Serializer\Contact\ContactSerializer:
         tags: [claroline.serializer]
         arguments:
            - '@Claroline\MessageBundle\Serializer\Contact\CategorySerializer'
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
            - '@claroline.persistence.object_manager'
 
     claroline.serializer.contact:
@@ -32,5 +32,5 @@ services:
     Claroline\MessageBundle\Serializer\Contact\CategorySerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.serializer.user'
+           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
            - '@claroline.persistence.object_manager'

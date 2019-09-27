@@ -8,4 +8,4 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.persistence.object_manager'
-           - '@claroline.serializer.public_file'
+           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

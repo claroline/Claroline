@@ -38,7 +38,7 @@ class AudioPlayerManager
     /**
      * @DI\InjectParams({
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sectionSerializer" = @DI\Inject("claroline.serializer.audio.resource_section")
+     *     "sectionSerializer" = @DI\Inject("Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer")
      * })
      *
      * @param ObjectManager     $om

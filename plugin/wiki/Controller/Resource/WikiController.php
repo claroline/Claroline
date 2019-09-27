@@ -31,7 +31,7 @@ class WikiController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "sectionManager"         = @DI\Inject("icap.wiki.section_manager"),
+     *     "sectionManager"         = @DI\Inject("Icap\WikiBundle\Manager\SectionManager"),
      *     "templating"             = @DI\Inject("templating"),
      *     "pdfRenderer"            = @DI\Inject("knp_snappy.pdf")
      * })

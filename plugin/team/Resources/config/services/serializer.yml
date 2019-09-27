@@ -11,9 +11,9 @@ services:
            - '@claroline.manager.resource_manager'
            - '@claroline.manager.team_manager'
            - '@security.token_storage'
-           - '@claroline.serializer.resource_node'
-           - '@claroline.serializer.role'
-           - '@claroline.serializer.workspace'
+           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     claroline.serializer.team:
          alias: Claroline\TeamBundle\Serializer\TeamSerializer

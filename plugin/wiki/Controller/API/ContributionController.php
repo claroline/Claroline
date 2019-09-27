@@ -39,8 +39,8 @@ class ContributionController
     /**
      * @DI\InjectParams({
      *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "sectionManager"         = @DI\Inject("icap.wiki.section_manager"),
-     *     "contributionManager"    = @DI\Inject("icap.wiki.contribution_manager")
+     *     "sectionManager"         = @DI\Inject("Icap\WikiBundle\Manager\SectionManager"),
+     *     "contributionManager"    = @DI\Inject("Icap\WikiBundle\Manager\ContributionManager")
      * })
      *
      * SectionController constructor.

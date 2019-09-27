@@ -21,7 +21,7 @@ class ScheduledTaskListener
      * ScheduledTaskListener constructor.
      *
      * @DI\InjectParams({
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters")
+     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer")
      * })
      *
      * @param ParametersSerializer $parametersSerializer

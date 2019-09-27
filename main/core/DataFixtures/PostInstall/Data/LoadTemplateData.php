@@ -22,7 +22,7 @@ class LoadTemplateData implements RequiredFixture
     public function load(ObjectManager $om)
     {
         $translator = $this->container->get('translator');
-        $parameters = $this->container->get('claroline.serializer.parameters')->serialize([Options::SERIALIZE_MINIMAL]);
+        $parameters = $this->container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize([Options::SERIALIZE_MINIMAL]);
 
         $templateTypeRepo = $om->getRepository(TemplateType::class);
 

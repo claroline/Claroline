@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -56,13 +55,6 @@ class UserController extends AbstractCrudController
 
     /**
      * UserController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authChecker"     = @DI\Inject("security.authorization_checker"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "manager"         = @DI\Inject("claroline.manager.user_manager"),
-     *     "mailManager"     = @DI\Inject("claroline.manager.mail_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param StrictDispatcher              $eventDispatcher

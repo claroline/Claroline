@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Manager\DataSourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,12 +28,6 @@ class DataSourceController
 
     /**
      * WidgetController constructor.
-     *
-     * @DI\InjectParams({
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
-     *     "manager"         = @DI\Inject("claroline.manager.data_source")
-     * })
      *
      * @param StrictDispatcher   $eventDispatcher
      * @param SerializerProvider $serializer

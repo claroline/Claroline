@@ -68,7 +68,7 @@ class FileController extends AbstractApiController
      *     "session"         = @DI\Inject("session"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
-     *     "serializer"      = @DI\Inject("claroline.serializer.resource_node"),
+     *     "serializer"      = @DI\Inject("Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "fileUtils"       = @DI\Inject("claroline.utilities.file"),

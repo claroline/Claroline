@@ -3,23 +3,14 @@
 namespace Icap\WikiBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * NotificationListener.
- *
- * @DI\Service
  */
 class NotificationListener
 {
-    /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "router"     = @DI\Inject("router")
-     * })
-     */
     public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
         $this->translator = $translator;
@@ -27,10 +18,6 @@ class NotificationListener
     }
 
     /**
-     * @DI\Observe("create_notification_item_resource-icap_wiki-section_create")
-     * @DI\Observe("create_notification_item_resource-icap_wiki-contribution_create")
-     * @DI\Observe("create_notification_item_resource-icap_wiki-user_tagged")
-     *
      * @param NotificationCreateDelegateViewEvent $event
      */
     public function onCreateNotificationItem(NotificationCreateDelegateViewEvent $event)

@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Cryptography;
 use Claroline\AppBundle\Api\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,10 +30,6 @@ class ApiTokenController extends AbstractCrudController
 
     /**
      * ResourceController constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"        = @DI\Inject("security.token_storage")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      */
