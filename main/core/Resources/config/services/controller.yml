@@ -74,8 +74,8 @@ services:
           - '@claroline.persistence.object_manager'
           - '@translator'
           - '@claroline.api.finder'
-          - '@claroline.manager.lock_manager'
           - '@claroline.api.crud'
+          - '@claroline.manager.lock_manager'
           - '@Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer'
 
     Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
