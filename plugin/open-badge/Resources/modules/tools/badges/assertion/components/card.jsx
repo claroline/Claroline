@@ -11,7 +11,9 @@ const AssertionCard = props =>
 
 AssertionCard.propTypes = {
   data: T.shape({
-
+    badge: T.shape({
+      // TODO : badge types
+    })
   }).isRequired
 }
 

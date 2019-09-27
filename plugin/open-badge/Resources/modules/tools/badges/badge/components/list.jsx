@@ -34,7 +34,8 @@ const BadgesList = (props) =>
         name: 'assignable',
         label: trans('assignable', {}, 'badge'),
         type: 'boolean',
-        displayed: true,
+        displayed: false,
+        displayable: false,
         filterable: true
       }, {
         name: 'workspace',
@@ -68,18 +69,18 @@ const BadgesList = (props) =>
         icon: 'fa fa-fw fa-check-circle',
         label: trans('enable', {}, 'actions'),
         scope: ['object', 'collection'],
-        displayed: 0 < rows.filter(b => !b.meta.enabled).length && props.isAdmin,
+        displayed: props.isAdmin && 0 < rows.filter(b => !b.meta.enabled).length,
         callback: () => props.enable(rows)
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-times-circle',
         label: trans('disable', {}, 'actions'),
         scope: ['object', 'collection'],
-        displayed: 0 < rows.filter(b => b.meta.enabled).length && props.isAdmin,
+        displayed: props.isAdmin && 0 < rows.filter(b => b.meta.enabled).length,
         callback: () => props.disable(rows),
         confirm: {
           title: transChoice('disable_badges', rows.length, {count: rows.length}),
-          message: trans('disable_badges_confirm', {users_list: rows.map(b => `${b.name}`).join(', ')}),
+          message: trans('disable_badges_confirm', {users_list: rows.map(b => `${b.name}`).join(', ')})
         },
         dangerous: true
       }

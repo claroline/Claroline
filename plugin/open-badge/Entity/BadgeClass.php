@@ -61,13 +61,6 @@ class BadgeClass
     private $image;
 
     /**
-     * @ORM\Column(type="text")
-     *
-     * @var string
-     */
-    private $criteria;
-
-    /**
      * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule", mappedBy="badge")
      *
      * @var Rule[]|ArrayCollection
@@ -83,6 +76,8 @@ class BadgeClass
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
+     *
+     * @var Workspace
      */
     private $workspace;
 
@@ -140,7 +135,7 @@ class BadgeClass
     /**
      * @ORM\Column(type="json_array")
      *
-     * @var string
+     * @var array
      */
     private $issuingMode = [self::ISSUING_MODE_ORGANIZATION];
 
@@ -226,30 +221,6 @@ class BadgeClass
     }
 
     /**
-     * Get the value of Criteria.
-     *
-     * @return string
-     */
-    public function getCriteria()
-    {
-        return $this->criteria;
-    }
-
-    /**
-     * Set the value of Criteria.
-     *
-     * @param string $criteria
-     *
-     * @return self
-     */
-    public function setCriteria($criteria)
-    {
-        $this->criteria = $criteria;
-
-        return $this;
-    }
-
-    /**
      * Get the value of Issuer.
      *
      * @return Organization
@@ -293,6 +264,9 @@ class BadgeClass
         $this->workspace = $workspace;
     }
 
+    /**
+     * @return Workspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;
@@ -330,6 +304,11 @@ class BadgeClass
         $this->allowedIssuersGroups = $groups;
     }
 
+    /**
+     * @param bool $includeGroups
+     *
+     * @return User[]|ArrayCollection
+     */
     public function getAllowedIssuers($includeGroups = false)
     {
         if ($includeGroups) {
@@ -359,11 +338,17 @@ class BadgeClass
         return $this->allowedIssuersGroups;
     }
 
+    /**
+     * @param array $issuingMode
+     */
     public function setIssuingMode(array $issuingMode)
     {
         $this->issuingMode = $issuingMode;
     }
 
+    /**
+     * @return array
+     */
     public function getIssuingMode()
     {
         return $this->issuingMode;
@@ -385,7 +370,9 @@ class BadgeClass
         return $this->assertions;
     }
 
-
+    /**
+     * @param Assertion $assertion
+     */
     public function addAssertion(Assertion $assertion)
     {
         if (!$this->assertions->contains($assertion)) {
@@ -393,6 +380,9 @@ class BadgeClass
         }
     }
 
+    /**
+     * @param Assertion $assertion
+     */
     public function removeAssertion(Assertion $assertion)
     {
         if ($this->assertions->contains($assertion)) {

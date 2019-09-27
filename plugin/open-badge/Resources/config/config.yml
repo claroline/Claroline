@@ -19,11 +19,11 @@ plugin:
         - name: badges
           type: list
           context: [workspace, desktop]
-          tags: [community]
+          tags: [activity, community]
         - name: my_badges
           type: list
           context: [workspace, desktop]
-          tags: [community]
+          tags: [activity, community]
 
     templates:
         - name: badge_certificate

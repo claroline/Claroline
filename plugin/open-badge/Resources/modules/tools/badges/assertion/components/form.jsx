@@ -1,13 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 import {UserCard} from '#/main/core/user/components/card'

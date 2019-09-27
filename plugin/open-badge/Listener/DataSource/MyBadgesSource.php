@@ -51,7 +51,7 @@ class MyBadgesSource
         $badges = [];
         if ($user instanceof User) {
             $options = $event->getOptions() ? $event->getOptions() : [];
-            $options['hiddenFilters']['recipient'] = true;
+            $options['hiddenFilters']['recipient'] = $user->getUuid();
 
             if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
                 $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();

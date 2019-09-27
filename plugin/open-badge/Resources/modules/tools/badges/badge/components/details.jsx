@@ -21,7 +21,7 @@ import {
 } from '#/main/app/content/form/store'
 
 // TODO : add tools
-const BadgeViewerComponent = (props) =>
+const BadgeDetailsComponent = (props) =>
   <div>
     <BadgeCard
       data={props.badge}
@@ -29,13 +29,13 @@ const BadgeViewerComponent = (props) =>
       orientation="col"
     />
 
-    {props.badge.assignable &&
+    {props.badge.permissions.assign &&
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
         actions={[{
-          displayed: props.badge.assignable,
+          displayed: props.badge.permissions.assign,
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('add_users'),
@@ -97,9 +97,8 @@ const BadgeViewerComponent = (props) =>
     }
   </div>
 
-const BadgeViewer = connect(
+const BadgeDetails = connect(
   (state) => ({
-    currentContext: toolSelectors.context(state),
     path: toolSelectors.path(state),
     badge: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.badges.current'))
   }),
@@ -108,8 +107,8 @@ const BadgeViewer = connect(
       dispatch(actions.addUsers(badgeId, selected))
     }
   })
-)(BadgeViewerComponent)
+)(BadgeDetailsComponent)
 
 export {
-  BadgeViewer
+  BadgeDetails
 }

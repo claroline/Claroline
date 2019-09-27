@@ -41,7 +41,6 @@ services:
         arguments:
           - '%claroline.param.files_directory%'
           - '@Claroline\OpenBadgeBundle\Manager\OpenBadgeManager'
-          - '@claroline.manager.pdf_manager'
           - '@security.token_storage'
 
     Claroline\OpenBadgeBundle\Controller\API\BadgeClassController:

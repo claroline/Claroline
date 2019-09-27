@@ -1,8 +1,11 @@
 import React from 'react'
-import {DataCard} from '#/main/app/content/card/components/data'
-import {asset} from '#/main/app/config/asset'
 import {PropTypes as T} from 'prop-types'
+
+import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
+import {DataCard} from '#/main/app/content/card/components/data'
+
+import {Badge as BadgeTypes} from '#/plugin/open-badge/tools/badges/prop-types'
 
 const BadgeCard = props =>
   <DataCard
@@ -11,10 +14,9 @@ const BadgeCard = props =>
     poster={props.data.image ? asset(props.data.image.url) : null}
     icon="fa fa-trophy"
     title={props.data.name}
-    subtitle={props.data.description}
-    contentText={props.data.criteria}
+    contentText={props.data.description}
     flags={[
-      props.data.meta && props.data.meta.enabled && ['fa fa-eye', trans('enabled')]
+      props.data.meta && props.data.meta.enabled && ['fa fa-fw fa-eye', trans('enabled')]
     ].filter(flag => !!flag)}
     footer={
       <span>
@@ -26,9 +28,9 @@ const BadgeCard = props =>
   />
 
 BadgeCard.propTypes = {
-  data: T.shape({
-    // TODO : badge types
-  }).isRequired
+  data: T.shape(
+    BadgeTypes.propTypes
+  ).isRequired
 }
 
 export {

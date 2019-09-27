@@ -9,7 +9,7 @@ use Symfony\Component\Routing\RouterInterface;
 class CriteriaSerializer
 {
     /**
-     * @param Router $router
+     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
@@ -20,7 +20,7 @@ class CriteriaSerializer
     {
         return  [
             'type' => 'Criteria',
-            'narrative' => $badge->getCriteria(),
+            'narrative' => $badge->getDescription(),
             'id' => $this->router->generate('apiv2_open_badge__criteria', ['badge' => $badge->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
     }

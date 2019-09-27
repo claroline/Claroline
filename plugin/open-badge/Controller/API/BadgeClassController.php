@@ -28,16 +28,24 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class BadgeClassController extends AbstractCrudController
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var OpenBadgeManager */
+    private $manager;
+
     /**
-     * @param TwigEngine     $templating
-     * @param FinderProvider $finder
+     * BadgeClassController constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param OpenBadgeManager      $manager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         OpenBadgeManager $manager
     ) {
-        $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
+        $this->manager = $manager;
     }
 
     public function getName()
@@ -54,6 +62,9 @@ class BadgeClassController extends AbstractCrudController
      * @EXT\Route("/{badge}/users/add", name="apiv2_badge-class_add_users")
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
+     *
+     * @param BadgeClass $badge
+     * @param Request    $request
      *
      * @return JsonResponse
      */
@@ -73,6 +84,8 @@ class BadgeClassController extends AbstractCrudController
     /**
      * @EXT\Route("/enable", name="apiv2_badge-class_enable")
      * @EXT\Method("PUT")
+     *
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -94,6 +107,8 @@ class BadgeClassController extends AbstractCrudController
     /**
      * @EXT\Route("/disable", name="apiv2_badge-class_disable")
      * @EXT\Method("PUT")
+     *
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -117,6 +132,9 @@ class BadgeClassController extends AbstractCrudController
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
+     * @param BadgeClass $badge
+     * @param Request    $request
+     *
      * @return JsonResponse
      */
     public function removeUserAction(BadgeClass $badge, Request $request)
@@ -137,6 +155,9 @@ class BadgeClassController extends AbstractCrudController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
+     * @param Request   $request
+     * @param Workspace $workspace
+     *
      * @return JsonResponse
      */
     public function getWorkspaceBadges(Request $request, Workspace $workspace)
@@ -153,6 +174,9 @@ class BadgeClassController extends AbstractCrudController
      * @EXT\Route("/{badge}/assertion", name="apiv2_badge-class_assertion")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
+     *
+     * @param Request    $request
+     * @param BadgeClass $badge
      *
      * @return JsonResponse
      */

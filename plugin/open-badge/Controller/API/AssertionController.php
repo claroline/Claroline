@@ -16,11 +16,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
-use Claroline\PdfGeneratorBundle\Manager\PdfManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -34,9 +32,6 @@ class AssertionController extends AbstractCrudController
     /** @var OpenBadgeManager */
     private $manager;
 
-    /** @var PdfManager */
-    private $pdfManager;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -45,18 +40,15 @@ class AssertionController extends AbstractCrudController
      *
      * @param string                $filesDir
      * @param OpenBadgeManager      $manager
-     * @param PdfManager            $pdfManager
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         $filesDir,
         OpenBadgeManager $manager,
-        PdfManager $pdfManager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->filesDir = $filesDir;
         $this->manager = $manager;
-        $this->pdfManager = $pdfManager;
         $this->tokenStorage = $tokenStorage;
     }
 

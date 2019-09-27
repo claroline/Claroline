@@ -10,5 +10,6 @@ import {reducer} from '#/plugin/open-badge/tools/badges/store/reducer'
 export default {
   component: OpenBadgeTool,
   menu: BadgeMenu,
-  store: reducer
+  store: reducer,
+  styles: ['claroline-distribution-plugin-open-badge-badges-tool']
 }

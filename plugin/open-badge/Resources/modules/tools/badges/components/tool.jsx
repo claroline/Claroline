@@ -10,7 +10,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ParametersForm} from '#/plugin/open-badge/tools/badges/parameters/components/parameters'
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
 import {Badges}  from '#/plugin/open-badge/tools/badges/badge/components/list'
-import {BadgeViewer} from '#/plugin/open-badge/tools/badges/badge/components/viewer'
+import {BadgeDetails} from '#/plugin/open-badge/tools/badges/badge/components/details'
 import {BadgeForm} from '#/plugin/open-badge/tools/badges/badge/components/form'
 import {AssertionForm} from '#/plugin/open-badge/tools/badges/assertion/components/form'
 
@@ -78,7 +78,7 @@ const Tool = props =>
         }, {
           path: '/badges/:id',
           onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
-          component: BadgeViewer,
+          component: BadgeDetails,
           exact: true
         }, {
           path: '/badges/:id/form',

@@ -86,24 +86,26 @@ class BadgeClassSerializer
      * Serializes a Group entity.
      *
      * @param BadgeClass $badge
-     * @param array $options
+     * @param array      $options
      *
      * @return array
      */
     public function serialize(BadgeClass $badge, array $options = [])
     {
+        $image = null;
+        if ($badge->getImage()) {
+            /** @var PublicFile $image */
+            $image = $this->om->getRepository(PublicFile::class)->findOneBy([
+                'url' => $badge->getImage(),
+            ]);
+        }
+
         $data = [
             'id' => $badge->getUuid(),
             'name' => $badge->getName(),
             'description' => $badge->getDescription(),
-            'criteria' => $badge->getCriteria(),
             'duration' => $badge->getDurationValidation(),
-            'image' => $badge->getImage() && $this->om->getRepository(PublicFile::class)->findOneBy([
-                  'url' => $badge->getImage(),
-              ]) ? $this->publicFileSerializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
-                  'url' => $badge->getImage(),
-              ])
-            ) : null,
+            'image' => $image ? $this->publicFileSerializer->serialize($image) : null,
             'issuer' => $this->organizationSerializer->serialize($badge->getIssuer() ? $badge->getIssuer() : $this->organizationManager->getDefault(true)),
             //only in non list mode I guess
             'tags' => $this->serializeTags($badge),
@@ -116,7 +118,7 @@ class BadgeClassSerializer
             $image = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $badge->getImage()]);
 
             if ($image) {
-                //wtf, this is for mozillabackpack
+                //wtf, this is for mozilla backpack
                 $data['image'] = $this->imageSerializer->serialize($image)['id'];
             }
 
@@ -129,7 +131,6 @@ class BadgeClassSerializer
                'enabled' => $badge->getEnabled(),
             ];
             $data['permissions'] = $this->serializePermissions($badge);
-            $data['assignable'] = $data['permissions']['assign'];
             $data['rules'] = array_map(function (Rule $rule) {
                 return $this->ruleSerializer->serialize($rule);
             }, $badge->getRules()->toArray());
@@ -158,7 +159,6 @@ class BadgeClassSerializer
     {
         $this->sipe('name', 'setName', $data, $badge);
         $this->sipe('description', 'setDescription', $data, $badge);
-        $this->sipe('criteria', 'setCriteria', $data, $badge);
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
         $this->sipe('issuingMode', 'setIssuingMode', $data, $badge);
 

@@ -20,9 +20,9 @@ actions.openBadge = (formName, id = null, workspace = null) => {
         }
       }
     }
-  } else {
-    return formActions.resetForm(formName, {workspace}, true)
   }
+
+  return formActions.resetForm(formName, {workspace}, true)
 }
 
 actions.openAssertion = (formName, id = null) => {
@@ -38,9 +38,9 @@ actions.openAssertion = (formName, id = null) => {
         }
       }
     }
-  } else {
-    return formActions.resetForm(formName, {}, true)
   }
+
+  return formActions.resetForm(formName, {}, true)
 }
 
 actions.addUsers = (id, users) => ({

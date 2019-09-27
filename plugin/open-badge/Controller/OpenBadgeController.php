@@ -16,20 +16,37 @@ use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
+use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer;
 use Claroline\OpenBadgeBundle\Serializer\ImageSerializer;
 use Claroline\OpenBadgeBundle\Serializer\Options;
 use Claroline\OpenBadgeBundle\Serializer\ProfileSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/openbadge2")
+ * @EXT\Route("/openbadge2")
  */
 class OpenBadgeController
 {
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var CriteriaSerializer */
+    private $criteriaSerializer;
+    /** @var ImageSerializer */
+    private $imageSerializer;
+    /** @var ProfileSerializer */
+    private $profileSerializer;
+
+    /**
+     * OpenBadgeController constructor.
+     *
+     * @param SerializerProvider $serializer
+     * @param CriteriaSerializer $criteriaSerializer
+     * @param ImageSerializer    $imageSerializer
+     * @param ProfileSerializer  $profileSerializer
+     */
     public function _construct(
         SerializerProvider $serializer,
         CriteriaSerializer $criteriaSerializer,
@@ -47,6 +64,8 @@ class OpenBadgeController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
+     * @param BadgeClass $badge
+     *
      * @return JsonResponse
      */
     public function getCriteriaAction(BadgeClass $badge)
@@ -59,6 +78,8 @@ class OpenBadgeController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("image", class="ClarolineCoreBundle:File\PublicFile", options={"mapping": {"image": "id"}})
      *
+     * @param PublicFile $image
+     *
      * @return JsonResponse
      */
     public function getImage(PublicFile $image)
@@ -69,6 +90,8 @@ class OpenBadgeController
     /**
      * @EXT\Route("/profile/{profile}", name="apiv2_open_badge__profile")
      * @EXT\Method("GET")
+     *
+     * @param $profile
      *
      * @return JsonResponse
      */
@@ -82,6 +105,8 @@ class OpenBadgeController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
+     * @param BadgeClass $badge
+     *
      * @return JsonResponse
      */
     public function getBadgeAction(BadgeClass $badge)
@@ -93,6 +118,8 @@ class OpenBadgeController
      * @EXT\Route("/assertion/{assertion}.json", name="apiv2_open_badge__assertion")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
+     *
+     * @param Assertion $assertion
      *
      * @return JsonResponse
      */
@@ -106,6 +133,8 @@ class OpenBadgeController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("evidence", class="ClarolineOpenBadgeBundle:Evidence", options={"mapping": {"evidence": "uuid"}})
      *
+     * @param Evidence $evidence
+     *
      * @return JsonResponse
      */
     public function getEvidenceAction(Evidence $evidence)
@@ -118,9 +147,11 @@ class OpenBadgeController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("key", class="ClarolineCoreBundle:Cryptography\CryptographicKey", options={"mapping": {"key": "uuid"}})
      *
+     * @param CryptographicKey $key
+     *
      * @return JsonResponse
      */
-    public function getCryptographicKeyction(CryptographicKey $key)
+    public function getCryptographicKeyAction(CryptographicKey $key)
     {
         return new JsonResponse($this->serializer->serialize($key, [Options::ENFORCE_OPEN_BADGE_JSON]));
     }
@@ -128,6 +159,8 @@ class OpenBadgeController
     /**
      * @EXT\Route("/connect", name="apiv2_open_badge__connect")
      * @EXT\Method("GET")
+     *
+     * @param Request $request
      *
      * @return JsonResponse
      */
