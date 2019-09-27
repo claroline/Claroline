@@ -182,7 +182,6 @@ services:
           - '%claroline.api.core_schema.dir%'
           - '@claroline.utilities.file'
           - '@claroline.api.crud'
-          - '@claroline.manager.api_manager'
           - '@claroline.persistence.object_manager'
           - '@claroline.async.command'
 

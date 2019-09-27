@@ -58,11 +58,11 @@ class TransferController extends AbstractCrudController
     public function __construct(
         TransferProvider $provider,
         SerializerProvider $serializer,
-        FileUtilities $fileUt,
         RouterInterface $router,
-        ObjectManager $om,
-        Crud $crud,
         $schemaDir,
+        FileUtilities $fileUt,
+        Crud $crud,
+        ObjectManager $om,
         $async
     ) {
         $this->provider = $provider;

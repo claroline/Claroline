@@ -28,6 +28,7 @@ actions.addGroupsToRole = (role, groups)  => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.STORE_NAME + '.groups.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.users.list'))
       dispatch(listActions.invalidateData(selectors.STORE_NAME + '.groups.current.roles'))
     }
   }
@@ -41,6 +42,7 @@ actions.unregister = (groups, workspace) => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.STORE_NAME + '.groups.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.users.list'))
     }
   }
 })
