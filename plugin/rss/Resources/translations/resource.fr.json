@@ -1,4 +1,4 @@
 {
-    "claroline_rss": "Flux RSS",
-    "claroline_rss_desc": "Permet d'intégrer dans la plateforme des flux d'actualités issus de différents sites."
+    "rss": "Flux RSS",
+    "rss_desc": "Permet d'intégrer dans la plateforme des flux d'actualités issus de différents sites."
 }
