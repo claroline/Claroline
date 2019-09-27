@@ -7,6 +7,7 @@
   "no_rule": "No rule",
   "rules": "Rules",
   "add_rule": "Add a rule",
+  "criteria": "Award criteria",
   "restrict_duration": "Restrict the validity period",
   "issuing_mode_organization": "Managers of the organization",
   "issuing_mode_user": "Selected users",

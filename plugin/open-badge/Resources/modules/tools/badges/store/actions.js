@@ -1,9 +1,14 @@
+import merge from 'lodash/merge'
+import isEmpty from 'lodash/isEmpty'
+
 import {url} from '#/main/app/api'
 
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
+
+import {Badge as BadgeTypes} from '#/plugin/open-badge/tools/badges/prop-types'
 
 export const actions = {}
 
@@ -22,7 +27,7 @@ actions.openBadge = (formName, id = null, workspace = null) => {
     }
   }
 
-  return formActions.resetForm(formName, {workspace}, true)
+  return formActions.resetForm(formName, merge({}, BadgeTypes.defaultProps, !isEmpty(workspace) ? {workspace: workspace} : {}), true)
 }
 
 actions.openAssertion = (formName, id = null) => {

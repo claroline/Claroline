@@ -7,6 +7,7 @@
   "no_rule": "Aucune règle",
   "rules": "Règles",
   "add_rule": "Ajouter une règle",
+  "criteria": "Critères d'attribution",
   "restrict_duration": "Restreindre la durée de validité",
   "issuing_mode_organization": "Les gestionnaires de l'organization",
   "issuing_mode_user": "Les utilisateurs sélectionnés",

@@ -20,7 +20,7 @@ class CriteriaSerializer
     {
         return  [
             'type' => 'Criteria',
-            'narrative' => $badge->getDescription(),
+            'narrative' => $badge->getCriteria(),
             'id' => $this->router->generate('apiv2_open_badge__criteria', ['badge' => $badge->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
     }

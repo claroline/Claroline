@@ -104,6 +104,7 @@ class BadgeClassSerializer
             'id' => $badge->getUuid(),
             'name' => $badge->getName(),
             'description' => $badge->getDescription(),
+            'criteria' => $badge->getCriteria(),
             'duration' => $badge->getDurationValidation(),
             'image' => $image ? $this->publicFileSerializer->serialize($image) : null,
             'issuer' => $this->organizationSerializer->serialize($badge->getIssuer() ? $badge->getIssuer() : $this->organizationManager->getDefault(true)),
@@ -159,6 +160,7 @@ class BadgeClassSerializer
     {
         $this->sipe('name', 'setName', $data, $badge);
         $this->sipe('description', 'setDescription', $data, $badge);
+        $this->sipe('criteria', 'setCriteria', $data, $badge);
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
         $this->sipe('issuingMode', 'setIssuingMode', $data, $badge);
 

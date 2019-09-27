@@ -106,6 +106,7 @@ const BadgeFormComponent = (props) =>
             type: 'boolean',
             label: trans('enable_manual_issuing', {}, 'badge'),
             help: trans('enable_manual_issuing_help', {}, 'badge'),
+            calculated: isManualIssuing,
             onChange: (enabled) => {
               if (!enabled) {
                 props.updateProp('issuingMode', [])
@@ -115,6 +116,12 @@ const BadgeFormComponent = (props) =>
             },
             linked: [
               {
+                name: 'criteria',
+                label: trans('criteria'),
+                type: 'html',
+                required: true,
+                displayed: isManualIssuing
+              }, {
                 name: 'issuingMode',
                 type: 'choice',
                 label: trans('allowed_issuers', {}, 'badge'),
@@ -143,8 +150,9 @@ const BadgeFormComponent = (props) =>
             label: trans('enable_auto_issuing', {}, 'badge'),
             help: isManualIssuing(props.badge) ? [
               trans('enable_auto_issuing_help', {}, 'badge'),
-              trans('enable_auto_issuing_help_manual', {}, 'badge'),
+              trans('enable_auto_issuing_help_manual', {}, 'badge')
             ] : trans('enable_auto_issuing_help', {}, 'badge'),
+            calculated: isAutoIssuing,
             onChange: (enabled) => {
               if (!enabled) {
                 props.updateProp('rules', [])

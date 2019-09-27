@@ -47,7 +47,7 @@ class BadgeClass
     private $name;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      *
      * @var string
      */
@@ -59,6 +59,13 @@ class BadgeClass
      * @var string
      */
     private $image;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $criteria;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule", mappedBy="badge")
@@ -221,6 +228,30 @@ class BadgeClass
     }
 
     /**
+     * Get the value of Criteria.
+     *
+     * @return string
+     */
+    public function getCriteria()
+    {
+        return $this->criteria;
+    }
+
+    /**
+     * Set the value of Criteria.
+     *
+     * @param string $criteria
+     *
+     * @return self
+     */
+    public function setCriteria($criteria)
+    {
+        $this->criteria = $criteria;
+
+        return $this;
+    }
+
+    /**
      * Get the value of Issuer.
      *
      * @return Organization
@@ -306,7 +337,6 @@ class BadgeClass
 
     /**
      * @param bool $includeGroups
-     *
      * @return User[]|ArrayCollection
      */
     public function getAllowedIssuers($includeGroups = false)
