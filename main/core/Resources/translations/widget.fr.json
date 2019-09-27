@@ -15,10 +15,13 @@
     "restrictions_by_roles" : "Restreindre par rôles",
 
     "simple": "Contenu simple",
+    "simple_desc": "Permet de rédiger et d'afficher un texte riche (lien, image, vidéo).",
     "list": "Liste de données",
+    "list_desc": "Permet de configurer (filtres, modes d'affichage, tri) et d'afficher une liste des éléments choisis.",
     "profile": "Profil d'un utilisateur",
-    "progression": "Progression",
+    "profile_desc": "Permet d'afficher le profil de l'utilisateur courant ou de l'utilisateur choisi.",
     "resource": "Ressource",
+    "resource_desc": "Permet d'afficher une ressource existante.",
 
     "publish_section": "Publier la section",
     "layout_columns": "{1} 1 colonne |]1,Inf[ %count% colonnes"

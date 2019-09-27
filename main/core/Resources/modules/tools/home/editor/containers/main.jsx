@@ -47,7 +47,7 @@ const EditorMain = withRouter(
         dispatch(editorActions.deleteTab(tabs, currentTab))
         const redirected = tabs[tabIndex]
         // redirect
-        navigate('/edit/' + redirected.id)
+        navigate('/edit/' + redirected.slug)
       }
     })
   )(EditorMainComponent)

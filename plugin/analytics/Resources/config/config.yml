@@ -27,4 +27,4 @@ plugin:
         - name: progression
           class: Claroline\AnalyticsBundle\Entity\Widget\Type\ProgressionWidget
           context: [workspace]
-          tags: [resources]
+          tags: [activity]

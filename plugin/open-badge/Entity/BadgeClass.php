@@ -337,6 +337,7 @@ class BadgeClass
 
     /**
      * @param bool $includeGroups
+     * 
      * @return User[]|ArrayCollection
      */
     public function getAllowedIssuers($includeGroups = false)

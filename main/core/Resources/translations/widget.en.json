@@ -15,10 +15,13 @@
     "restrictions_by_roles" : "Restrict by roles",
 
     "simple": "Simple content",
+    "simple_desc": "Allows to create and display a rich text (link, image, video).",
     "list": "Data list",
+    "list_desc": "Allows to configure (filters, display modes, sorting) and display a list of chosen elements.",
     "profile": "User profile",
-    "progression": "Progression",
+    "profile_desc": "Allows to display the profile of the current user or the chosen one.",
     "resource": "Resource",
+    "resource_desc": "Allows to display an existing resource.",
 
     "publish_section": "Publish section",
     "layout_columns": "{1} 1 column |]1,Inf[ %count% columns"

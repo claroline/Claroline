@@ -21,9 +21,9 @@ class ListWidgetParameters extends Component {
     this.loadSourceDefinition(this.props.instance.source)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.instance.source !== nextProps.instance.source) {
-      this.loadSourceDefinition(nextProps.instance.source)
+  componentDidUpdate(prevProps) {
+    if (this.props.instance.source !== prevProps.instance.source) {
+      this.loadSourceDefinition(this.props.instance.source)
     }
   }
 

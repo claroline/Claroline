@@ -18,7 +18,7 @@ plugin:
         - name: blog_posts
           type: list
           context: [workspace, desktop, home]
-          tags: [resources, community]
+          tags: [content, community]
 
     #widgets:
     #  - name: blog_list

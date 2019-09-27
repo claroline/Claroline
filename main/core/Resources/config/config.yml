@@ -185,38 +185,23 @@ plugin:
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
           context: [workspace, desktop, home, administration]
-          tags: [resources]
+          tags: [content]
 
     data_sources:
         - name: resources
           type: list
           context: [workspace, desktop, home, administration]
-          tags: [resources]
+          tags: [content]
 
         - name: workspaces
           type: list
           context: [desktop, workspace, home, administration]
-          tags: [workspaces]
-
-        - name: public_workspaces
-          type: list
-          context: [desktop, workspace, home, administration]
-          tags: [workspaces]
+          tags: [content]
 
         - name: my_workspaces
           type: list
           context: [desktop, workspace, administration]
-          tags: [workspaces]
-
-        - name: managed_workspaces
-          type: list
-          context: [desktop]
-          tags: [workspaces]
-
-        - name: workspace_models
-          type: list
-          context: [desktop]
-          tags: [workspaces]
+          tags: [content]
 
         - name: users
           type: list
@@ -226,12 +211,12 @@ plugin:
         - name: admin_tools
           type: list
           context: [administration]
-          tags: [tools]
+          tags: [structure]
 
         - name: tools
           type: list
           context: [desktop, workspace]
-          tags: [tools]
+          tags: [structure]
 
     tools:
         - name: workspaces

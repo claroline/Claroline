@@ -1759,5 +1759,6 @@
     "hash_invalid": "The update password hash does not exist or has expired",
     "password_invalid": "This password is not valid",
     "password_value_missmatch": "The password values does not match",
-    "password_changed": "Password successfully changed"
+    "password_changed": "Password successfully changed",
+    "activity": "Activity"
 }

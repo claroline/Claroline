@@ -1792,5 +1792,6 @@
     "hash_invalid": "Le hash de changement de mot de passe n'existe pas ou est expiré",
     "password_invalid": "Ce mot de passe n'est pas valide",
     "password_value_missmatch": "Les valeurs des champs mot de passe ne correspondent pas",
-    "password_changed": "Mot de passe modifié avec succès"
+    "password_changed": "Mot de passe modifié avec succès",
+    "activity": "Activité"
 }

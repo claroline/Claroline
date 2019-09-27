@@ -11,9 +11,9 @@ plugin:
         - name: events
           type: list
           context: [workspace, desktop, home]
-          tags: [agenda]
+          tags: [event]
 
         - name: tasks
           type: list
           context: [workspace, desktop, home]
-          tags: [agenda]
+          tags: [event]

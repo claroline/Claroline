@@ -13,4 +13,4 @@ plugin:
         - name: announcements
           type: list
           context: [workspace, desktop, home]
-          tags: [resources, community]
+          tags: [community]

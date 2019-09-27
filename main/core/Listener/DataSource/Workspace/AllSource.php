@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener\DataSource\Workspace;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -40,9 +41,12 @@ class AllSource
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
-
-        $options['hiddenFilters']['model'] = false;
         $options['hiddenFilters']['hidden'] = false;
+
+        if (DataSource::CONTEXT_HOME === $event->getContext()) {
+            $options['hiddenFilters']['model'] = false;
+            $options['hiddenFilters']['personal'] = false;
+        }
 
         $event->setData(
             $this->finder->search(Workspace::class, $options)

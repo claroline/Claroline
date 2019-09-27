@@ -14,4 +14,4 @@ plugin:
         - name: forum_messages
           type: list
           context: [workspace, desktop, home]
-          tags: [resources, community]
+          tags: [community]
