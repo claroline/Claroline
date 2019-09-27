@@ -3,6 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
+// TODO : avoid hard dependency
+import html2pdf from 'html2pdf.js'
+
 import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {hasPermission} from '#/main/app/security'
@@ -323,7 +326,16 @@ class EntryComponent extends Component {
                       canShare={this.canShare()}
 
                       changeOwner={(user) => this.props.changeEntryOwner(this.props.entry.id, user.id)}
-                      downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id)}
+                      downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id).then(pdfContent => {
+                        html2pdf()
+                          .set({
+                            filename: pdfContent.name,
+                            image: { type: 'jpeg', quality: 1 },
+                            html2canvas: { scale: 4 }
+                          })
+                          .from(pdfContent.content, 'string')
+                          .save()
+                      })}
                       share={(user) => this.props.shareEntry(this.props.entryId, user.id)}
                       delete={() => this.props.deleteEntry(this.props.entry)}
                       toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}
@@ -528,7 +540,7 @@ const Entry = withRouter(connect(
       dispatch(actions.switchEntryLock(entryId))
     },
     downloadEntryPdf(entryId) {
-      dispatch(actions.downloadEntryPdf(entryId))
+      return dispatch(actions.downloadEntryPdf(entryId))
     },
     changeEntryOwner(entryId, userId) {
       dispatch(actions.changeEntryOwner(entryId, userId))

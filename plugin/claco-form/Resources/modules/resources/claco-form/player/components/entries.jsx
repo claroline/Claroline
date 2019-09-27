@@ -3,6 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import merge from 'lodash/merge'
 
+// TODO : avoid hard dependency
+import html2pdf from 'html2pdf.js'
+
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -41,10 +44,28 @@ const EntriesComponent = props =>
             callback: () => {
               if (1 < rows.length) {
                 // collection
-                props.downloadEntriesPdf(rows)
+                rows.forEach(row => props.downloadEntryPdf(row.id).then(pdfContent => {
+                  html2pdf()
+                    .set({
+                      filename: pdfContent.name,
+                      image: { type: 'jpeg', quality: 1 },
+                      html2canvas: { scale: 4 }
+                    })
+                    .from(pdfContent.content, 'string')
+                    .save()
+                }))
               } else {
                 // object
-                props.downloadEntryPdf(rows[0].id)
+                props.downloadEntryPdf(rows[0].id).then(pdfContent => {
+                  html2pdf()
+                    .set({
+                      filename: pdfContent.name,
+                      image: { type: 'jpeg', quality: 1 },
+                      html2canvas: { scale: 4 }
+                    })
+                    .from(pdfContent.content, 'string')
+                    .save()
+                })
               }
             },
             scope: ['object', 'collection'],
@@ -121,7 +142,6 @@ EntriesComponent.propTypes = {
   canGeneratePdf: T.bool.isRequired,
 
   downloadEntryPdf: T.func.isRequired,
-  downloadEntriesPdf: T.func.isRequired,
   switchEntriesStatus: T.func.isRequired,
   switchEntriesLock: T.func.isRequired,
   deleteEntries: T.func.isRequired,
@@ -142,10 +162,7 @@ const Entries = connect(
   }),
   (dispatch) => ({
     downloadEntryPdf(entryId) {
-      dispatch(actions.downloadEntryPdf(entryId))
-    },
-    downloadEntriesPdf(entries) {
-      dispatch(actions.downloadEntriesPdf(entries))
+      return dispatch(actions.downloadEntryPdf(entryId))
     },
     switchEntriesStatus(entries, status) {
       dispatch(actions.switchEntriesStatus(entries, status))

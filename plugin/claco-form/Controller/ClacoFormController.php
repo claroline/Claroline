@@ -28,10 +28,8 @@ use Claroline\ClacoFormBundle\Serializer\FieldSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\PdfGeneratorBundle\Manager\PdfManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -52,14 +50,12 @@ class ClacoFormController extends Controller
 {
     use RequestDecoderTrait;
 
-    private $apiManager;
     private $archiveDir;
     private $clacoFormManager;
     private $configHandler;
     private $filesDir;
     private $finder;
     private $locationManager;
-    private $pdfManager;
     private $request;
     private $templating;
     private $translator;
@@ -75,14 +71,12 @@ class ClacoFormController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "apiManager"            = @DI\Inject("claroline.manager.api_manager"),
      *     "archiveDir"            = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
      *     "clacoFormManager"      = @DI\Inject("claroline.manager.claco_form_manager"),
      *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
      *     "filesDir"              = @DI\Inject("%claroline.param.files_directory%"),
      *     "finder"                = @DI\Inject("claroline.api.finder"),
      *     "locationManager"       = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "pdfManager"            = @DI\Inject("claroline.manager.pdf_manager"),
      *     "request"               = @DI\Inject("request_stack"),
      *     "templating"            = @DI\Inject("templating"),
      *     "translator"            = @DI\Inject("translator"),
@@ -97,14 +91,12 @@ class ClacoFormController extends Controller
      * })
      */
     public function __construct(
-        ApiManager $apiManager,
         $archiveDir,
         ClacoFormManager $clacoFormManager,
         PlatformConfigurationHandler $configHandler,
         $filesDir,
         FinderProvider $finder,
         LocationManager $locationManager,
-        PdfManager $pdfManager,
         RequestStack $request,
         TwigEngine $templating,
         TranslatorInterface $translator,
@@ -117,14 +109,12 @@ class ClacoFormController extends Controller
         EntryUserSerializer $entryUserSerializer,
         ObjectManager $om
     ) {
-        $this->apiManager = $apiManager;
         $this->archiveDir = $archiveDir;
         $this->clacoFormManager = $clacoFormManager;
         $this->configHandler = $configHandler;
         $this->filesDir = $filesDir;
         $this->finder = $finder;
         $this->locationManager = $locationManager;
-        $this->pdfManager = $pdfManager;
         $this->request = $request->getMasterRequest();
         $this->templating = $templating;
         $this->translator = $translator;
@@ -564,59 +554,11 @@ class ClacoFormController extends Controller
     public function entryPdfDownloadAction(Entry $entry, User $user)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
-        $pdf = $this->generatePdfForEntry($entry, $user);
 
-        $headers = [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="'.$entry->getTitle().'.pdf"',
-        ];
-
-        return new Response(
-            file_get_contents($this->filesDir.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$pdf->getPath()),
-            200,
-            $headers
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/entries/pdf/download",
-     *     name="claro_claco_form_entries_pdf_download",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * Downloads pdf version of entries into a ZIP archive
-     *
-     * @param User $user
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function entriesPdfDownloadAction(User $user, Request $request)
-    {
-        $entries = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
-        $fileName = count($entries) > 0 ? $entries[0]->getClacoForm()->getResourceNode()->getName() : 'clacoForm';
-
-        foreach ($entries as $entry) {
-            $this->clacoFormManager->checkEntryAccess($entry);
-        }
-
-        $archive = $this->generateArchiveForEntries($entries, $user);
-
-        $response = new StreamedResponse();
-        $response->setCallBack(
-            function () use ($archive) {
-                readfile($archive);
-            }
-        );
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName.'.zip'));
-        $response->headers->set('Content-Type', 'application/zip; charset=utf-8');
-        $response->headers->set('Connection', 'close');
-        $response->send();
-
-        return new Response();
+        return new JsonResponse([
+            'name' => $entry->getTitle(),
+            'content' => $this->generatePdfForEntry($entry, $user),
+        ]);
     }
 
     /**
@@ -1094,7 +1036,7 @@ class ClacoFormController extends Controller
             }
         }
 
-        $html = $this->templating->render(
+        return $this->templating->render(
             'ClarolineClacoFormBundle:claco_form:entry.html.twig',
             [
                 'entry' => $entry,
@@ -1108,33 +1050,6 @@ class ClacoFormController extends Controller
                 'comments' => $comments,
             ]
         );
-
-        return $this->pdfManager->create($html, $entry->getTitle(), $user, 'clacoform_entries');
-    }
-
-    private function generateArchiveForEntries(array $entries, User $user)
-    {
-        $pdfs = [];
-        $ds = DIRECTORY_SEPARATOR;
-
-        foreach ($entries as $entry) {
-            $pdfs[] = $this->generatePdfForEntry($entry, $user);
-        }
-
-        $archive = new \ZipArchive();
-        $pathArch = $this->configHandler->getParameter('tmp_dir').$ds.Uuid::uuid4()->toString().'.zip';
-        $archive->open($pathArch, \ZipArchive::CREATE);
-
-        foreach ($pdfs as $pdf) {
-            $archive->addFromString(
-                $pdf->getName().'.pdf',
-                file_get_contents($this->filesDir.$ds.'pdf'.$ds.$pdf->getPath())
-            );
-        }
-        $archive->close();
-        file_put_contents($this->archiveDir, $pathArch."\n", FILE_APPEND);
-
-        return $pathArch;
     }
 
     private function zipEntries($content, ClacoForm $clacoForm)

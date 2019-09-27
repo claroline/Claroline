@@ -99,13 +99,14 @@ actions.switchEntriesLock = (entries, locked) => ({
   }
 })
 
-actions.downloadEntryPdf = (entryId) => () => {
-  window.location.href = url(['claro_claco_form_entry_pdf_download', {entry: entryId}])
-}
-
-actions.downloadEntriesPdf = (entries) => () => {
-  window.location.href = url(['claro_claco_form_entries_pdf_download', {ids: entries.map(e => e.id)}])
-}
+actions.downloadEntryPdf = (entryId) => ({
+  [API_REQUEST]: {
+    url: ['claro_claco_form_entry_pdf_download', {entry: entryId}],
+    request: {
+      method: 'GET'
+    }
+  }
+})
 
 // TODO : should send the whole comment object
 actions.createComment = (entryId, content) => ({
