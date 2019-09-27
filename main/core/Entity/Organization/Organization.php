@@ -357,8 +357,10 @@ class Organization
      */
     public function addGroup(Group $group)
     {
-        $this->groups->add($group);
-        $group->getOrganizations()->add($this);
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+            $group->getOrganizations()->add($this);
+        }
     }
 
     /**
@@ -366,7 +368,7 @@ class Organization
      */
     public function removeGroup(Group $group)
     {
-        $this->groups->remove($group);
+        $this->groups->removeElement($group);
         $group->getOrganizations()->removeElement($this);
     }
 
