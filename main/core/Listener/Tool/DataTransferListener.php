@@ -15,12 +15,9 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Home tool.
- *
- * @DI\Service()
  */
 class DataTransferListener
 {
@@ -31,11 +28,6 @@ class DataTransferListener
 
     /**
      * DataTransferListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "transfer"   = @DI\Inject("claroline.api.transfer")
-     * })
      *
      * @param TransferProvider   $transfer
      * @param SerializerProvider $serializer
@@ -48,8 +40,6 @@ class DataTransferListener
 
     /**
      * Displays home on Workspace.
-     *
-     * @DI\Observe("open_tool_workspace_transfer")
      *
      * @param DisplayToolEvent $event
      */

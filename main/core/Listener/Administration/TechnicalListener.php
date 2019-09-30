@@ -6,11 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- */
 class TechnicalListener
 {
     /** @var ObjectManager */
@@ -21,11 +17,6 @@ class TechnicalListener
 
     /**
      * TechnicalListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer")
-     * })
      *
      * @param ObjectManager        $om
      * @param ParametersSerializer $serializer
@@ -40,8 +31,6 @@ class TechnicalListener
 
     /**
      * Displays technical administration tool.
-     *
-     * @DI\Observe("administration_tool_technical_settings")
      *
      * @param OpenAdministrationToolEvent $event
      */

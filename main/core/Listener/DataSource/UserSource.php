@@ -6,11 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class UserSource
 {
     /** @var FinderProvider */
@@ -18,10 +14,6 @@ class UserSource
 
     /**
      * UserSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -32,8 +24,6 @@ class UserSource
     }
 
     /**
-     * @DI\Observe("data_source.users.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

@@ -6,13 +6,10 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * List the workspaces in which the current user is registered.
- *
- * @DI\Service
  */
 class RegisteredSource
 {
@@ -24,11 +21,6 @@ class RegisteredSource
 
     /**
      * RegisteredSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param FinderProvider $finder
      * @param TokenStorage   $tokenStorage
@@ -42,8 +34,6 @@ class RegisteredSource
     }
 
     /**
-     * @DI\Observe("data_source.my_workspaces.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

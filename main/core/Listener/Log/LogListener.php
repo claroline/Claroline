@@ -33,14 +33,10 @@ use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class LogListener
 {
     private $om;
@@ -54,17 +50,6 @@ class LogListener
     private $logConnectManager;
 
     /**
-     * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "container"           = @DI\Inject("service_container"),
-     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
-     *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "logConnectManager"   = @DI\Inject("claroline.manager.log_connect")
-     * })
-     *
      * @param ObjectManager                $om
      * @param TokenStorageInterface        $tokenStorage
      * @param ContainerInterface           $container
@@ -346,8 +331,6 @@ class LogListener
     }
 
     /**
-     * @DI\Observe("log")
-     *
      * @param LogGenericEvent $event
      */
     public function onLog(LogGenericEvent $event)
@@ -396,8 +379,6 @@ class LogListener
     }
 
     /**
-     * @DI\Observe("create_log_list_item")
-     *
      * @param LogCreateDelegateViewEvent $event
      */
     public function onLogListItem(LogCreateDelegateViewEvent $event)
@@ -412,8 +393,6 @@ class LogListener
     }
 
     /**
-     * @DI\Observe("create_log_details")
-     *
      * @param LogCreateDelegateViewEvent $event
      */
     public function onLogDetails(LogCreateDelegateViewEvent $event)

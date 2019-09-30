@@ -5,12 +5,9 @@ namespace Claroline\CoreBundle\Listener\Administration;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Scheduled tasks tool.
- *
- * @DI\Service()
  */
 class ScheduledTaskListener
 {
@@ -19,10 +16,6 @@ class ScheduledTaskListener
 
     /**
      * ScheduledTaskListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer")
-     * })
      *
      * @param ParametersSerializer $parametersSerializer
      */
@@ -33,8 +26,6 @@ class ScheduledTaskListener
 
     /**
      * Displays scheduled tasks administration tool.
-     *
-     * @DI\Observe("administration_tool_tasks_scheduling")
      *
      * @param OpenAdministrationToolEvent $event
      */

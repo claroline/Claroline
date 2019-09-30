@@ -15,15 +15,12 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Workspaces tool.
- *
- * @DI\Service()
  */
 class WorkspacesListener
 {
@@ -41,14 +38,6 @@ class WorkspacesListener
 
     /**
      * HomeListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "templating"    = @DI\Inject("templating"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param TokenStorageInterface         $tokenStorage
      * @param TwigEngine                    $templating
@@ -72,8 +61,6 @@ class WorkspacesListener
 
     /**
      * Displays workspaces on Desktop.
-     *
-     * @DI\Observe("open_tool_desktop_workspaces")
      *
      * @param DisplayToolEvent $event
      */

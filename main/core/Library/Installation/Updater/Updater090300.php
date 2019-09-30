@@ -62,7 +62,7 @@ class Updater090300 extends Updater
         $toCheck = [];
         $i = 0;
         $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
-        $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
+        $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->disable();
 
         foreach ($models as $model) {
             $code = '[MOD]'.$model['name'];
@@ -92,7 +92,7 @@ class Updater090300 extends Updater
                     $users = $om->findByIds('Claroline\CoreBundle\Entity\User', $userIds);
                     $groups = $om->findByIds('Claroline\CoreBundle\Entity\User', $groupIds);
                     $nodes = $om->findByIds('Claroline\CoreBundle\Entity\Resource\ResourceNode', $nodeIds);
-                    if (count($users) === 0) {
+                    if (0 === count($users)) {
                         $users[0] = $this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
                     }
                     $user = $users[0];
@@ -150,7 +150,7 @@ class Updater090300 extends Updater
             }
         }
 
-        $this->container->get('claroline.core_bundle.listener.log.log_listener')->enable();
+        $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->enable();
         $this->om->allowForceFlush(true);
 
         $this->connection->query('SET FOREIGN_KEY_CHECKS=1');

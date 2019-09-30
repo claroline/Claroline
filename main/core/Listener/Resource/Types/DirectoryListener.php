@@ -28,13 +28,10 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Integrates the "Directory" resource.
- *
- * @DI\Service
  */
 class DirectoryListener
 {
@@ -49,15 +46,6 @@ class DirectoryListener
 
     /**
      * DirectoryListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
-     *     "crud"            = @DI\Inject("claroline.api.crud"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "actionManager"   = @DI\Inject("claroline.manager.resource_action"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
-     * })
      *
      * @param ObjectManager         $om
      * @param SerializerProvider    $serializer
@@ -85,8 +73,6 @@ class DirectoryListener
     /**
      * Loads a directory.
      *
-     * @DI\Observe("resource.directory.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -100,8 +86,6 @@ class DirectoryListener
 
     /**
      * Adds a new resource inside a directory.
-     *
-     * @DI\Observe("resource.directory.add")
      *
      * @param ResourceActionEvent $event
      */
@@ -167,8 +151,6 @@ class DirectoryListener
     /**
      * Creates a new directory.
      *
-     * @DI\Observe("resource.directory.create")
-     *
      * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
@@ -178,8 +160,6 @@ class DirectoryListener
 
     /**
      * Removes a directory.
-     *
-     * @DI\Observe("resource.directory.delete")
      *
      * @param deleteResourceEvent $event
      */

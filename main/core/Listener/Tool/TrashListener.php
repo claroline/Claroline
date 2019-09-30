@@ -12,16 +12,10 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class TrashListener
 {
     /**
-     * @DI\Observe("open_tool_workspace_resource_trash")
-     *
      * @param DisplayToolEvent $event
      */
     public function onDisplayWorkspace(DisplayToolEvent $event)

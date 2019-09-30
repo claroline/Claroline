@@ -10,13 +10,9 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service()
- */
 class ResourceListener
 {
     /** @var TokenStorageInterface */
@@ -36,14 +32,6 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "crud"             = @DI\Inject("claroline.api.crud"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "manager"          = @DI\Inject("claroline.manager.resource_manager"),
-     *     "lifecycleManager" = @DI\Inject("claroline.manager.resource_lifecycle")
-     * })
      *
      * @param TokenStorageInterface    $tokenStorage
      * @param Crud                     $crud
@@ -66,8 +54,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
@@ -88,8 +74,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.create")
-     *
      * @param ResourceActionEvent $event
      */
     public function create(ResourceActionEvent $event)
@@ -99,8 +83,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.open")
-     *
      * @param ResourceActionEvent $event
      */
     public function open(ResourceActionEvent $event)
@@ -110,8 +92,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.about")
-     *
      * @param ResourceActionEvent $event
      */
     public function about(ResourceActionEvent $event)
@@ -123,8 +103,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.configure")
-     *
      * @param ResourceActionEvent $event
      */
     public function configure(ResourceActionEvent $event)
@@ -137,8 +115,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.rights")
-     *
      * @param ResourceActionEvent $event
      */
     public function rights(ResourceActionEvent $event)
@@ -162,8 +138,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.edit")
-     *
      * @param ResourceActionEvent $event
      */
     public function edit(ResourceActionEvent $event)
@@ -172,8 +146,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.publish")
-     *
      * @param ResourceActionEvent $event
      */
     public function publish(ResourceActionEvent $event)
@@ -186,8 +158,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.unpublish")
-     *
      * @param ResourceActionEvent $event
      */
     public function unpublish(ResourceActionEvent $event)
@@ -200,8 +170,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.export")
-     *
      * @param ResourceActionEvent $event
      */
     public function export(ResourceActionEvent $event)
@@ -210,8 +178,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.delete")
-     *
      * @param ResourceActionEvent $event
      */
     public function delete(ResourceActionEvent $event)
@@ -236,8 +202,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.restore")
-     *
      * @param ResourceActionEvent $event
      */
     public function restore(ResourceActionEvent $event)
@@ -250,8 +214,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.copy")
-     *
      * @param ResourceActionEvent $event
      */
     public function copy(ResourceActionEvent $event)
@@ -277,8 +239,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.move")
-     *
      * @param ResourceActionEvent $event
      */
     public function move(ResourceActionEvent $event)

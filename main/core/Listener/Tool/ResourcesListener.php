@@ -15,11 +15,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class ResourcesListener
 {
     /** @var SerializerProvider */
@@ -29,11 +25,6 @@ class ResourcesListener
 
     /**
      * ResourcesListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
@@ -49,8 +40,6 @@ class ResourcesListener
     /**
      * Displays resources on Desktop.
      *
-     * @DI\Observe("open_tool_desktop_resources")
-     *
      * @param DisplayToolEvent $event
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
@@ -63,8 +52,6 @@ class ResourcesListener
 
     /**
      * Displays resources on Workspace.
-     *
-     * @DI\Observe("open_tool_workspace_resources")
      *
      * @param DisplayToolEvent $event
      */

@@ -4,12 +4,9 @@ namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Transfer tool.
- *
- * @DI\Service()
  */
 class TransferListener
 {
@@ -18,10 +15,6 @@ class TransferListener
 
     /**
      * TransferListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "transfer" = @DI\Inject("claroline.api.transfer")
-     * })
      *
      * @param TransferProvider $transfer
      */
@@ -32,8 +25,6 @@ class TransferListener
 
     /**
      * Displays transfer tool.
-     *
-     * @DI\Observe("administration_tool_transfer")
      *
      * @param OpenAdministrationToolEvent $event
      */

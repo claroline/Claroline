@@ -10,13 +10,10 @@ use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Community administration tool.
  * Manages Users, Groups, Roles, Organizations, Locations, Profile, Parameters.
- *
- * @DI\Service()
  */
 class CommunityListener
 {
@@ -37,14 +34,6 @@ class CommunityListener
 
     /**
      * CommunityListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"               = @DI\Inject("claroline.api.finder"),
-     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
-     *     "profileSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\ProfileSerializer"),
-     *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
-     *     "userManager"          = @DI\Inject("claroline.manager.user_manager")
-     * })
      *
      * @param FinderProvider       $finder
      * @param ParametersSerializer $parametersSerializer
@@ -69,8 +58,6 @@ class CommunityListener
     /**
      * Displays user administration tool.
      *
-     * @DI\Observe("administration_tool_community")
-     *
      * @param OpenAdministrationToolEvent $event
      */
     public function onDisplayTool(OpenAdministrationToolEvent $event)
@@ -87,8 +74,6 @@ class CommunityListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMergeUsers(MergeUsersEvent $event)
@@ -96,11 +81,9 @@ class CommunityListener
         // Replace creator of resource nodes
         $resourcesCount = $this->resourceManager->replaceCreator($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] updated resources count: $resourcesCount");
-
         // Merge all roles onto user to keep
         $rolesCount = $this->userManager->transferRoles($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] transferred roles count: $rolesCount");
-
         // Change personal workspace into regular
         $event->getRemoved()->getPersonalWorkspace()->setPersonal(false);
     }

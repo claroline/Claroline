@@ -9,12 +9,8 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-/**
- * @DI\Service
- */
 class ToolSource
 {
     /** @var FinderProvider */
@@ -31,13 +27,6 @@ class ToolSource
 
     /**
      * ToolSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"           = @DI\Inject("claroline.api.finder"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
      *
      * @param FinderProvider     $finder
      * @param SerializerProvider $serializer
@@ -57,8 +46,6 @@ class ToolSource
     }
 
     /**
-     * @DI\Observe("data_source.tools.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

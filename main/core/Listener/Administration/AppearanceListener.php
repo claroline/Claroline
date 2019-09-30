@@ -7,11 +7,7 @@ use Claroline\CoreBundle\Entity\Icon\IconSet;
 use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Manager\IconSetManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- */
 class AppearanceListener
 {
     /** @var ParametersSerializer */
@@ -22,11 +18,6 @@ class AppearanceListener
 
     /**
      * AppearanceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer"     = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
-     *     "iconSetManager" = @DI\Inject("claroline.manager.icon_set_manager")
-     * })
      *
      * @param ParametersSerializer $serializer
      * @param IconSetManager       $iconSetManager
@@ -41,8 +32,6 @@ class AppearanceListener
 
     /**
      * Displays appearance administration tool.
-     *
-     * @DI\Observe("administration_tool_appearance_settings")
      *
      * @param OpenAdministrationToolEvent $event
      */

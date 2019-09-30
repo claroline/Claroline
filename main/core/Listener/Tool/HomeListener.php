@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -27,8 +26,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Home tool.
- *
- * @DI\Service()
  */
 class HomeListener
 {
@@ -52,16 +49,6 @@ class HomeListener
     /**
      * HomeListener constructor.
      *
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "templating"    = @DI\Inject("templating"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
-     *     "translator"    = @DI\Inject("translator"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
      * @param TokenStorageInterface         $tokenStorage
      * @param TwigEngine                    $templating
      * @param FinderProvider                $finder
@@ -69,13 +56,13 @@ class HomeListener
      * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         TwigEngine $templating,
         FinderProvider $finder,
         SerializerProvider $serializer,
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ObjectManager $om
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -88,8 +75,6 @@ class HomeListener
 
     /**
      * Displays home on Desktop.
-     *
-     * @DI\Observe("open_tool_desktop_home")
      *
      * @param DisplayToolEvent $event
      */
@@ -148,8 +133,6 @@ class HomeListener
 
     /**
      * Displays home on Workspace.
-     *
-     * @DI\Observe("open_tool_workspace_home")
      *
      * @param DisplayToolEvent $event
      */

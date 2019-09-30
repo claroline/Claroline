@@ -15,14 +15,10 @@ use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Service
- */
 class TemplateListener
 {
     /** @var AuthorizationCheckerInterface */
@@ -35,13 +31,6 @@ class TemplateListener
     private $toolManager;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization"        = @DI\Inject("security.authorization_checker"),
-     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer"),
-     *     "templating"           = @DI\Inject("templating"),
-     *     "toolManager"          = @DI\Inject("claroline.manager.tool_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param ParametersSerializer          $parametersSerializer
      * @param TwigEngine                    $templating
@@ -60,8 +49,6 @@ class TemplateListener
     }
 
     /**
-     * @DI\Observe("administration_tool_templates_management")
-     *
      * @param OpenAdministrationToolEvent $event
      */
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)

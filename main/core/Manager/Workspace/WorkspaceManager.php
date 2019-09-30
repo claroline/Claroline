@@ -777,7 +777,7 @@ class WorkspaceManager
                 $this->om->flush();
             }
 
-            $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
+            $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->disable();
 
             $this->log('Build from json...');
             $zip = new \ZipArchive();
@@ -801,7 +801,7 @@ class WorkspaceManager
             $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
             $this->log('Build and set default admin');
             $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
-            $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
+            $this->container->get('Claroline\CoreBundle\Listener\Log\LogListener')->setDefaults();
 
             if (0 === count($this->shortcutsRepo->findBy(['workspace' => $workspace]))) {
                 $this->log('Generating default shortcuts...');

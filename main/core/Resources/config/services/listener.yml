@@ -1,0 +1,263 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true #because lazy
+        tags: [claroline.crud]
+
+    Claroline\CoreBundle\Listener\Administration\AppearanceListener:
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@claroline.manager.icon_set_manager'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_appearance_settings, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\Administration\CommunityListener:
+        arguments:
+            - '@claroline.api.finder'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.user_manager'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_community, method: onDisplayTool }
+            - { name: kernel.event_listener, event: merge_users, method: onMergeUsers }
+
+    Claroline\CoreBundle\Listener\Administration\HomeListener:
+        arguments:
+            - '@claroline.api.finder'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_home, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\Administration\IntegrationListener:
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_integration, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\Administration\ParametersListener:
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@claroline.manager.locale_manager'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_main_settings, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\Administration\ScheduledTaskListener:
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_tasks_scheduling, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\Administration\TechnicalListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_technical_settings, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\Administration\TemplateListener:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@templating'
+            - '@claroline.manager.tool_manager'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_templates_management, method: onAdministrationToolOpen }
+
+    Claroline\CoreBundle\Listener\Administration\TransferListener:
+        arguments:
+            - '@claroline.api.transfer'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_transfer, method: onDisplayTool }
+
+    Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
+        arguments:
+            - '@claroline.api.finder'
+        tags:
+            - { name: kernel.event_listener, event: data_source.workspaces.load, method: getData }
+
+    Claroline\CoreBundle\Listener\DataSource\Workspace\RegisteredSource:
+        arguments:
+            - '@claroline.api.finder'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.my_workspaces.load, method: getData }
+
+    Claroline\CoreBundle\Listener\DataSource\AdminToolSource:
+        arguments:
+            - '@claroline.api.finder'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.admin_tools.load, method: getData }
+
+    Claroline\CoreBundle\Listener\DataSource\ResourceSource:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.finder'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.resources.load, method: getData }
+
+    Claroline\CoreBundle\Listener\DataSource\ToolSource:
+        arguments:
+            - '@claroline.api.finder'
+            - '@claroline.api.serializer'
+            - '@security.token_storage'
+            - '@claroline.manager.workspace_manager'
+        tags:
+            - { name: kernel.event_listener, event: data_source.tools.load, method: getData }
+
+    Claroline\CoreBundle\Listener\DataSource\UserSource:
+        arguments:
+            - '@claroline.api.finder'
+        tags:
+            - { name: kernel.event_listener, event: data_source.users.load, method: getData }
+
+    Claroline\CoreBundle\Listener\Log\LogListener:
+        public: true
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@security.token_storage'
+            - '@service_container'
+            - '@claroline.manager.role_manager'
+            - '@claroline.config.platform_config_handler'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.resource_evaluation_manager'
+            - '@claroline.manager.log_connect'
+        tags:
+            - { name: kernel.event_listener, event: log, method: onLog }
+            - { name: kernel.event_listener, event: create_log_list_item, method: onLogListItem }
+            - { name: kernel.event_listener, event: create_log_details, method: onLogDetails }
+
+    Claroline\CoreBundle\Listener\Notification\NotificationUserParametersListener:
+        tags:
+            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
+
+    Claroline\CoreBundle\Listener\Resource\Types\DirectoryListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.serializer'
+            - '@claroline.api.crud'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.resource_action'
+            - '@claroline.manager.rights_manager'
+        tags:
+            - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
+            - { name: kernel.event_listener, event: resource.directory.create, method: onCreate }
+            - { name: kernel.event_listener, event: resource.directory.delete, method: onDelete }
+
+    Claroline\CoreBundle\Listener\Resource\Types\FileListener:
+        arguments:
+            - '@security.token_storage'
+            - '@claroline.persistence.object_manager'
+            - '@claroline.event.event_dispatcher'
+            - '%claroline.param.files_directory%'
+            - '@claroline.utilities.mime_type_guesser'
+            - '@claroline.api.serializer'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.resource_evaluation_manager'
+            - '@claroline.utilities.file'
+        tags:
+            - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.file.change_file, method: onFileChange }
+            - { name: kernel.event_listener, event: resource.file.delete, method: onDelete }
+            - { name: kernel.event_listener, event: transfer.file.import.before, method: onImportBefore }
+            - { name: kernel.event_listener, event: transfer.file.export, method: onExportFile }
+            - { name: kernel.event_listener, event: transfer.file.import.after, method: onImportFile }
+            - { name: kernel.event_listener, event: resource.file.copy, method: onCopy }
+            - { name: kernel.event_listener, event: download_file, method: onDownload }
+            - { name: kernel.event_listener, event: generate_resource_user_evaluation_file, method: onGenerateResourceTracking }
+
+    Claroline\CoreBundle\Listener\Resource\Types\TextListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@templating'
+            - '@claroline.api.serializer'
+        tags:
+            - { name: kernel.event_listener, event: resource.text.load, method: onLoad }
+            - { name: kernel.event_listener, event: open_text, method: open }
+            - { name: kernel.event_listener, event: resource.text.delete, method: delete }
+
+    Claroline\CoreBundle\Listener\Resource\ResourceListener:
+        arguments:
+            - '@security.token_storage'
+            - '@claroline.api.crud'
+            - '@claroline.api.serializer'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.resource_lifecycle'
+        tags:
+            - { name: kernel.event_listener, event: resource.load, method: load }
+            - { name: kernel.event_listener, event: resource.create, method: create }
+            - { name: kernel.event_listener, event: resource.open, method: open }
+            - { name: kernel.event_listener, event: resource.about, method: about }
+            - { name: kernel.event_listener, event: resource.configure, method: configure }
+            - { name: kernel.event_listener, event: resource.rights, method: rights }
+            - { name: kernel.event_listener, event: resource.edit, method: edit }
+            - { name: kernel.event_listener, event: resource.publish, method: publish }
+            - { name: kernel.event_listener, event: resource.unpublish, method: unpublish }
+            - { name: kernel.event_listener, event: resource.export, method: export }
+            - { name: kernel.event_listener, event: resource.delete, method: delete }
+            - { name: kernel.event_listener, event: resource.restore, method: restore }
+            - { name: kernel.event_listener, event: resource.copy, method: copy }
+            - { name: kernel.event_listener, event: resource.move, method: move }
+
+    Claroline\CoreBundle\Listener\Tool\CommunityListener:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_community, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: open_tool_desktop_community, method: onDisplayDesktop }
+
+    Claroline\CoreBundle\Listener\Tool\DataTransferListener:
+        arguments:
+            - '@claroline.api.transfer'
+            - '@claroline.api.serializer'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_transfer, method: onDisplayWorkspace }
+
+    Claroline\CoreBundle\Listener\Tool\HomeListener:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@templating'
+            - '@claroline.api.finder'
+            - '@claroline.api.serializer'
+            - '@translator'
+            - '@claroline.persistence.object_manager'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_home, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: open_tool_workspace_home, method: onDisplayWorkspace }
+
+    Claroline\CoreBundle\Listener\Tool\ParametersListener:
+        arguments:
+            - '@claroline.api.finder'
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.serializer'
+            - '@templating'
+            - '@security.token_storage'
+            - '@claroline.manager.tool_manager'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_parameters, method: onDisplayDesktopParameters }
+
+    Claroline\CoreBundle\Listener\Tool\ResourcesListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.serializer'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_resources, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: open_tool_workspace_resources, method: onDisplayWorkspace }
+
+    Claroline\CoreBundle\Listener\Tool\TrashListener:
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_resource_trash, method: onDisplayWorkspace }
+
+    Claroline\CoreBundle\Listener\Tool\WorkspacesListener:
+        arguments:
+            - '@security.token_storage'
+            - '@templating'
+            - '@claroline.api.finder'
+            - '@claroline.api.serializer'
+            - '@security.authorization_checker'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_workspaces, method: onDisplayDesktop }

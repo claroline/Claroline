@@ -8,12 +8,8 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-/**
- * @DI\Service
- */
 class ResourceSource
 {
     /** @var ResourceNodeRepository */
@@ -27,12 +23,6 @@ class ResourceSource
 
     /**
      * ResourceSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param ObjectManager  $om
      * @param FinderProvider $finder
@@ -49,8 +39,6 @@ class ResourceSource
     }
 
     /**
-     * @DI\Observe("data_source.resources.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

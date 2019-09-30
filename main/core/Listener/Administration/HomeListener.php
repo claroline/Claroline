@@ -5,11 +5,7 @@ namespace Claroline\CoreBundle\Listener\Administration;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- */
 class HomeListener
 {
     /** @var FinderProvider */
@@ -17,10 +13,6 @@ class HomeListener
 
     /**
      * HomeListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -31,8 +23,6 @@ class HomeListener
 
     /**
      * Displays home administration tool.
-     *
-     * @DI\Observe("administration_tool_home")
      *
      * @param OpenAdministrationToolEvent $event
      */

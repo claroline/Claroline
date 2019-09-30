@@ -23,9 +23,6 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Service()
- */
 class ParametersListener
 {
     /** @var FinderProvider */
@@ -48,15 +45,6 @@ class ParametersListener
 
     /**
      * ToolListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"   = @DI\Inject("claroline.api.serializer"),
-     *     "templating"   = @DI\Inject("templating"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager")
-     * })
      *
      * @param FinderProvider        $finder
      * @param ObjectManager         $om

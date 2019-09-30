@@ -30,7 +30,6 @@ use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,8 +37,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Integrates the File resource into Claroline.
- *
- * @DI\Service
  *
  * @todo : move some logic into a manager
  * @todo : move file resource into it's own plugin
@@ -78,18 +75,6 @@ class FileListener
     /**
      * FileListener constructor.
      *
-     * @DI\InjectParams({
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "filesDir"            = @DI\Inject("%claroline.param.files_directory%"),
-     *     "mimeTypeGuesser"     = @DI\Inject("claroline.utilities.mime_type_guesser"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer"),
-     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "fileUtils"           = @DI\Inject("claroline.utilities.file")
-     * })
-     *
      * @param TokenStorageInterface     $tokenStorage
      * @param ObjectManager             $om
      * @param StrictDispatcher          $eventDispatcher
@@ -123,8 +108,6 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("resource.file.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -171,8 +154,6 @@ class FileListener
     /**
      * Changes actual file associated to File resource.
      *
-     * @DI\Observe("resource.file.change_file")
-     *
      * @param ResourceActionEvent $event
      */
     public function onFileChange(ResourceActionEvent $event)
@@ -200,8 +181,6 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("resource.file.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -218,9 +197,6 @@ class FileListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.file.import.before")
-     */
     public function onImportBefore(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -234,9 +210,6 @@ class FileListener
         $event->setExtra($data);
     }
 
-    /**
-     * @DI\Observe("transfer.file.export")
-     */
     public function onExportFile(ExportObjectEvent $exportEvent)
     {
         $file = $exportEvent->getObject();
@@ -248,9 +221,6 @@ class FileListener
         $exportEvent->overwrite('_path', $newPath);
     }
 
-    /**
-     * @DI\Observe("transfer.file.import.after")
-     */
     public function onImportFile(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -267,8 +237,6 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("resource.file.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -306,8 +274,6 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("download_file")
-     *
      * @param DownloadResourceEvent $event
      */
     public function onDownload(DownloadResourceEvent $event)
@@ -340,8 +306,6 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("generate_resource_user_evaluation_file")
-     *
      * @param GenericDataEvent $event
      */
     public function onGenerateResourceTracking(GenericDataEvent $event)
