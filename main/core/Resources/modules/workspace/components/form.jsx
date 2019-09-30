@@ -8,6 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as workspaceSelectors} from '#/main/core/workspace/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
@@ -57,7 +58,8 @@ const WorkspaceFormComponent = (props) =>
                 title: trans('workspace_models')
               }
             },
-            displayed: props.new
+            displayed: props.new,
+            mode: 'standard'
           }
         ]
       }, {
@@ -70,17 +72,20 @@ const WorkspaceFormComponent = (props) =>
             label: trans('description'),
             options: {
               long: true
-            }
+            },
+            mode: 'standard'
           }, {
             name: 'meta.model',
             label: trans('define_as_model'),
             type: 'boolean',
-            disabled: !props.new
+            disabled: !props.new,
+            mode: 'expert'
           }, {
             name: 'meta.personal',
             label: trans('personal'),
             type: 'boolean',
-            disabled: true
+            disabled: true,
+            mode: 'expert'
           }, {
             name: 'meta.forceLang',
             type: 'boolean',
@@ -91,6 +96,7 @@ const WorkspaceFormComponent = (props) =>
                 props.updateProp('meta.lang', null)
               }
             },
+            mode: 'advanced',
             linked: [{
               name: 'meta.lang',
               label: trans('lang'),
@@ -110,16 +116,19 @@ const WorkspaceFormComponent = (props) =>
           }, {
             name: 'display.showMenu',
             type: 'boolean',
-            label: trans('showTools')
+            label: trans('showTools'),
+            mode: 'expert'
           }, {
             name: 'display.showProgression',
             type: 'boolean',
-            label: trans('showProgression')
+            label: trans('showProgression'),
+            mode: 'advanced'
           }
         ]
       }, {
         icon: 'fa fa-fw fa-sign-in',
         title: trans('opening_parameters'),
+        mode: 'advanced',
         fields: [
           {
             name: 'opening.type',
@@ -173,6 +182,8 @@ const WorkspaceFormComponent = (props) =>
       }, {
         icon: 'fa fa-fw fa-map-signs',
         title: trans('breadcrumb'),
+        mode: 'advanced',
+        displayed: props.hasBreadcrumb, // only show breadcrumb config if it's not disabled at platform level
         fields: [
           {
             name: 'breadcrumb.displayed',
@@ -203,6 +214,7 @@ const WorkspaceFormComponent = (props) =>
       }, {
         icon: 'fa fa-fw fa-user-plus',
         title: trans('registration'),
+        mode: 'standard',
         fields: [
           {
             name: 'registration.url',
@@ -236,12 +248,14 @@ const WorkspaceFormComponent = (props) =>
       }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
+        mode: 'advanced',
         fields: [
           {
             name: 'restrictions.hidden',
             type: 'boolean',
             label: trans('restrict_hidden'),
-            help: trans('restrict_hidden_help')
+            help: trans('restrict_hidden_help'),
+            mode: 'expert'
           }, {
             name: 'restrictions.enableDates',
             label: trans('restrict_by_dates'),
@@ -294,6 +308,7 @@ const WorkspaceFormComponent = (props) =>
                 props.updateProp('restrictions.allowedIps', [])
               }
             },
+            mode: 'expert',
             linked: [
               {
                 name: 'restrictions.allowedIps',
@@ -385,6 +400,7 @@ const WorkspaceFormComponent = (props) =>
       }, {
         icon: 'fa fa-fw fa-bell-o',
         title: trans('notifications'),
+        mode: 'advanced',
         fields: [
           {
             name: 'notifications.enabled',
@@ -398,13 +414,13 @@ const WorkspaceFormComponent = (props) =>
     {props.children}
   </FormData>
 
-
 WorkspaceFormComponent.propTypes = {
   tools: T.array,
   root: T.object,
   children: T.any,
   // from redux
   isAdmin: T.bool.isRequired,
+  hasBreadcrumb: T.bool.isRequired,
   new: T.bool.isRequired,
   updateProp: T.func.isRequired
 }
@@ -412,6 +428,7 @@ WorkspaceFormComponent.propTypes = {
 const WorkspaceForm = connect(
   (state, ownProps) => ({
     isAdmin: securitySelectors.isAdmin(state),
+    hasBreadcrumb: configSelectors.param(state, 'display.breadcrumb'),
     new: formSelect.isNew(formSelect.form(state, ownProps.name)),
     tools: workspaceSelectors.tools(state),
     root: workspaceSelectors.root(state)

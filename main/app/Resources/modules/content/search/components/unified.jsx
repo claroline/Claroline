@@ -1,11 +1,14 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data/types'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons/callback'
 import {getPropDefinition} from '#/main/app/content/list/utils'
 
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
@@ -93,7 +96,7 @@ AvailableFilterFlag.propTypes = {
 }
 
 const AvailableFilterContent = props => {
-  const isValidSearch = !props.definition.validate || !props.definition.validate(props.currentSearch, props.options)
+  const isValidSearch = !isEmpty(props.currentSearch) && (!props.definition.validate || !props.definition.validate(props.currentSearch, props.options))
 
   return (
     <li role="presentation">
@@ -203,6 +206,7 @@ class SearchUnified extends Component {
     super(props)
 
     this.state = {
+      opened: false,
       currentSearch: ''
     }
 
@@ -226,14 +230,23 @@ class SearchUnified extends Component {
   }
 
   updateSearch(search) {
-    this.setState({currentSearch: search})
+    this.setState({currentSearch: search, opened: !isEmpty(search)})
   }
 
   render() {
     return (
       <div className={classes('list-search search-unified', {
-        open: this.state.currentSearch
+        open: this.state.opened
       })}>
+        <Button
+          className="btn btn-link search-icon"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-search"
+          label={trans('filters')}
+          tooltip="bottom"
+          callback={() => this.setState({opened : !this.state.opened})}
+        />
+
         <div className="search-filters">
           {this.props.current.map(activeFilter => {
             const propDef = getPropDefinition(activeFilter.property, this.props.available)
@@ -262,11 +275,7 @@ class SearchUnified extends Component {
           />
         </div>
 
-        <span className="search-icon" aria-hidden="true" role="presentation">
-          <span className="fa fa-fw fa-search" />
-        </span>
-
-        {this.state.currentSearch &&
+        {this.state.opened &&
           <FiltersList
             available={this.props.available.filter(availableFilter =>
               // removes locked filters

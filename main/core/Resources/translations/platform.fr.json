@@ -60,8 +60,6 @@
     "add_groups": "Ajouter des groupes",
     "add_panel_to_facet": "Ajouter un panel",
     "add_pending": "Ajouter une plateforme amie",
-    "add_resource": "Ajouter une ressource",
-    "add_resources": "Ajouter des ressources",
     "add_role": "Ajouter un rôle",
     "add_role_to_groups": "Ajouter un rôle à %count% groupe(s)",
     "add_role_to_users": "Ajouter un rôle à %count% utilisateur(s)",
@@ -791,8 +789,6 @@
     "no_message": "Aucun message",
     "no_model": "Aucun modèle",
     "no_organization": "Aucune organisation",
-    "no_resource": "Aucune ressource n'a été ajoutée pour le moment.",
-    "no_resources_in_workspace": "Cet espace ne contient actuellement aucune ressource.",
     "no_role": "Aucun rôle",
     "no_role_selected_message": "Aucun rôle sélectionné.",
     "no_search_results": "Votre recherche n'a retourné aucun résultat.",
@@ -1468,6 +1464,7 @@
     "list_available_page_sizes": "Résultats par page disponibles",
     "list_available_sorts": "Tris disponibles",
     "list_available_filters": "Filtres disponibles",
+    "form_mode": "Mode :",
     "results_per_page": "Résultats par page",
     "pages": "Pages",
     "current_page": "Page %current% sur %pages%",
@@ -1793,5 +1790,9 @@
     "password_invalid": "Ce mot de passe n'est pas valide",
     "password_value_missmatch": "Les valeurs des champs mot de passe ne correspondent pas",
     "password_changed": "Mot de passe modifié avec succès",
-    "activity": "Activité"
+    "activity": "Activité",
+    "enabled": "Actif",
+    "disabled": "Inactif",
+    "default": "Défaut",
+    "standard": "Standard"
 }

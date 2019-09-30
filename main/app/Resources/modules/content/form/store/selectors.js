@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 const form = (state, formName) => get(state, formName)
 
 const isNew = (formState) => formState.new
+const mode = (formState) => formState.mode
 const validating = (formState) => formState.validating
 const pendingChanges = (formState) => formState.pendingChanges
 const errors = (formState) => formState.errors
@@ -27,6 +28,7 @@ const saveEnabled = createSelector(
 export const selectors = {
   form,
   isNew,
+  mode,
   validating,
   pendingChanges,
   errors,

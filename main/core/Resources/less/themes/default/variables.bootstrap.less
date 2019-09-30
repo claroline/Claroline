@@ -704,9 +704,9 @@
 
 @panel-bg:                    #fff;
 @panel-body-padding:          15px;
-@panel-heading-padding:       15px; // default : 10px 15px
+@panel-heading-padding:       @panel-heading-padding-v @panel-heading-padding-h;
 @panel-footer-padding:        @panel-heading-padding;
-@panel-border-radius:         0;
+@panel-border-radius:         6px;
 
 //** Border color for elements within panels
 @panel-inner-border:          #ddd;

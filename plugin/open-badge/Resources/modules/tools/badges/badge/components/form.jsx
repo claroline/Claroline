@@ -67,6 +67,16 @@ const BadgeFormComponent = (props) =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
+        fields: [
+          {
+            name: 'color',
+            label: trans('color'),
+            type: 'color'
+          }
+        ]
+      }, {
         id: 'restrictions',
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
@@ -117,7 +127,7 @@ const BadgeFormComponent = (props) =>
             linked: [
               {
                 name: 'criteria',
-                label: trans('criteria'),
+                label: trans('criteria', {}, 'badge'),
                 type: 'html',
                 required: true,
                 displayed: isManualIssuing

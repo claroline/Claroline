@@ -60,8 +60,6 @@
     "add_groups": "Add groups",
     "add_panel_to_facet": "Add a panel",
     "add_pending": "Add a friend platform",
-    "add_resource": "Add a resource",
-    "add_resources": "Add resources",
     "add_role": "Add a role",
     "add_role_to_groups": "Add a role to %count% group(s)",
     "add_role_to_users": "Add a role to %count% user(s)",
@@ -778,8 +776,6 @@
     "no_message": "No message",
     "no_model": "No model",
     "no_organization": "No organization",
-    "no_resource": "No resource.",
-    "no_resources_in_workspace": "There are currently no resources in this workspace.",
     "no_role": "No role",
     "no_role_selected_message": "No role selected.",
     "no_search_results": "Your search hasn't returned any result.",
@@ -1437,6 +1433,7 @@
     "list_available_page_sizes": "Available results per page",
     "list_available_sorts": "Available sort",
     "list_available_filters": "Available filters",
+    "form_mode": "Mode:",
     "results_per_page": "Results per page",
     "pages": "Pages",
     "current_page": "Page %current% of %pages%",
@@ -1760,5 +1757,9 @@
     "password_invalid": "This password is not valid",
     "password_value_missmatch": "The password values does not match",
     "password_changed": "Password successfully changed",
-    "activity": "Activity"
+    "activity": "Activity",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "default": "Default",
+    "standard": "Standard"
 }

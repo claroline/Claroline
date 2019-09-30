@@ -5,12 +5,6 @@
     }
 </style>
 
-{% if isDesktop %}
-    <div class="col-md-2 log_list_item_head">
-        {{'workspace'|trans({},'log')}}
-    </div>
-{% endif %}
-
 <div class="col-md-2 log_list_item_head">
     {{'date'|trans({}, 'platform')}}
 </div>
@@ -23,10 +17,6 @@
     {{'user'|trans({}, 'platform')}}
 </div>
 
-{% if isDesktop %}
-    <div class='col-md-4 log_list_item_head'>
-{% else %}
-    <div class='col-md-6 log_list_item_head'>
-{% endif %}
+<div class='col-md-6 log_list_item_head'>
     {{'action'|trans({}, 'platform')}}
 </div>

@@ -17,7 +17,7 @@ const MenuMain = props =>
         <Button
           {...props.backAction}
           className="app-menu-back"
-          icon="fa fa-angle-double-left"
+          icon="fa fa-arrow-left"
           tooltip="right"
         />
       }

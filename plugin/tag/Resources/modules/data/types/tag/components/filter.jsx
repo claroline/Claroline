@@ -18,7 +18,7 @@ const TagFilter = (props) =>
       type={MODAL_BUTTON}
       tooltip="left"
       icon="fa fa-fw fa-tags"
-      label={props.placeholder || trans('select_tags', {}, 'tag')}
+      label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
       modal={[MODAL_TAGS, {
         objectClass: props.objectClass,

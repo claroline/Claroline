@@ -4,13 +4,17 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Heading} from '#/main/core/layout/components/heading'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
 import {Form} from '#/main/app/content/form/components/form'
 import {FormFieldset} from '#/main/app/content/form/components/fieldset'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
+import {constants} from '#/main/app/content/form/constants'
 import {createFormDefinition} from '#/main/app/content/form/utils'
 import {DataFormSection as DataFormSectionTypes} from '#/main/app/content/form/prop-types'
 
@@ -38,6 +42,34 @@ function getSectionErrors(sectionFields = [], errors = {}) {
   return sectionErrors
 }
 
+const FormModes = props =>
+  <div className="form-mode">
+    <span className="hidden-xs">{trans('form_mode')}</span>
+
+    <Button
+      id="data-form-mode-menu"
+      className="btn btn-link"
+      type={MENU_BUTTON}
+      label={constants.FORM_MODES[props.current]}
+      primary={true}
+      menu={{
+        label: trans('form_modes'),
+        align: 'right',
+        items: Object.keys(constants.FORM_MODES).map(mode => ({
+          type: CALLBACK_BUTTON,
+          label: constants.FORM_MODES[mode],
+          active: props.current === mode,
+          callback: () => props.updateMode(mode)
+        }))
+      }}
+    />
+  </div>
+
+FormModes.propTypes = {
+  current: T.string.isRequired,
+  updateMode: T.func.isRequired
+}
+
 const FormData = (props) => {
   const hLevel = props.level + (props.title ? 1 : 0)
   let hDisplay
@@ -45,7 +77,7 @@ const FormData = (props) => {
     hDisplay = props.displayLevel + (props.title ? 1 : 0)
   }
 
-  const sections = createFormDefinition(props.sections, props.data)
+  const sections = createFormDefinition(props.mode, props.sections, props.data)
 
   const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
   const otherSections = 1 !== sections.length ? sections.filter(section => !section.primary) : []
@@ -78,6 +110,13 @@ const FormData = (props) => {
         />
       }
 
+      {false &&
+        <FormModes
+          current={props.mode}
+          updateMode={props.setMode}
+        />
+      }
+
       {primarySections.map(primarySection =>
         <div
           id={`${getSectionId(primarySection, props.id)}-section`}
@@ -91,6 +130,7 @@ const FormData = (props) => {
           <FormFieldset
             id={getSectionId(primarySection, props.id)}
             className="panel-body"
+            mode={props.mode}
             disabled={props.disabled || primarySection.disabled}
             fields={primarySection.fields}
             data={props.data}
@@ -126,6 +166,7 @@ const FormData = (props) => {
                 id={getSectionId(section, props.id)}
                 fill={true}
                 className="panel-body"
+                mode={props.mode}
                 disabled={props.disabled || section.disabled}
                 fields={section.fields}
                 data={props.data}
@@ -159,6 +200,7 @@ FormData.propTypes = {
   displayLevel: T.number,
   title: T.string,
   className: T.string,
+  mode: T.string.isRequired,
   disabled: T.bool,
   errors: T.object,
   validating: T.bool,
@@ -199,6 +241,7 @@ FormData.propTypes = {
     disabled: T.bool
     // todo find a way to document custom action type props
   }),
+  setMode: T.func.isRequired,
   setErrors: T.func.isRequired,
   updateProp: T.func.isRequired,
   children: T.node

@@ -3,9 +3,13 @@
 
 .notification-card {
     .data-card-header {
-        min-width: 0;
+        min-width: 0 !important;
         background: transparent;
-        border-right: none;
+        border-right-width: 0 !important;
+    }
+
+    .data-card-content {
+        max-width: none !important;
     }
 
     &.data-card-sm .data-card-icon {

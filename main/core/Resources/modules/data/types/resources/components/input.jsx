@@ -19,7 +19,7 @@ const ResourcesButton = props =>
     type={MODAL_BUTTON}
     className="btn"
     icon="fa fa-fw fa-folder"
-    label={trans('add_resources')}
+    label={trans('add_resources', {}, 'resource')}
     primary={true}
     modal={[MODAL_RESOURCES, {
       title: props.title,
@@ -102,7 +102,7 @@ const ResourcesInput = props => {
       id={props.id}
       size="lg"
       icon="fa fa-folder"
-      title={trans('no_resource')}
+      title={trans('no_resource', {}, 'resource')}
     >
       <ResourcesButton
         {...props.picker}

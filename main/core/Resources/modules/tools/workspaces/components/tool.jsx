@@ -1,5 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
@@ -43,7 +45,7 @@ const WorkspacesTool = (props) =>
           path: '/new',
           disabled: !props.creatable,
           component: WorkspaceCreation,
-          onEnter: () => props.resetForm('workspaces.creation', WorkspaceType.defaultProps)
+          onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
         }, {
           path: '/registered',
           render: () => {
@@ -97,15 +99,17 @@ const WorkspacesTool = (props) =>
       ]}
 
       redirect={[
-        {from: '/', exact: true, to: '/registered', disabled: !props.authenticated},
-        {from: '/', exact: true, to: '/public', disabled: props.authenticated}
+        {from: '/', exact: true, to: '/registered', disabled: isEmpty(props.currentUser)},
+        {from: '/', exact: true, to: '/public',     disabled: !isEmpty(props.currentUser)}
       ]}
     />
   </ToolPage>
 
 WorkspacesTool.propTypes = {
   path: T.string.isRequired,
-  authenticated: T.bool.isRequired,
+  currentUser: T.shape({
+    // TODO : user types
+  }),
   creatable: T.bool.isRequired,
   resetForm: T.func.isRequired
 }

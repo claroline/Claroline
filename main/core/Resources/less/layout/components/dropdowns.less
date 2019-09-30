@@ -1,5 +1,6 @@
 .dropdown-menu {
     padding: @dropdown-menu-padding-v @dropdown-menu-padding-h; // more vars
+    font-style: normal; // avoid getting font transformation from parent
     font-family: @font-family-base; // just to avoid getting title font when headings
 
     // adds more customization options
@@ -8,7 +9,7 @@
 
     > li > a,
     > li > button {
-        padding: @dropdown-link-padding;
+        padding: @dropdown-link-padding-v @dropdown-link-padding-h;
     }
 
     .dropdown-checkbox {
@@ -16,7 +17,7 @@
             white-space: nowrap;
             display: block;
             line-height: @line-height-base;
-            padding: @dropdown-link-padding;
+            padding: @dropdown-link-padding-v @dropdown-link-padding-h;
             padding-left: 35px; // for the checkbox
         }
 
@@ -30,7 +31,7 @@
 
     // increases space between icons and text
     .icon-with-text-right {
-        margin-right: 15px;
+        margin-right: @dropdown-link-padding-h;
     }
 
     // removes additional margin when checkboxes/radios are inside dropdown
@@ -53,7 +54,7 @@
 .dropdown-header {
     font-weight: bold;
     font-style: italic;
-    padding: @dropdown-link-padding;
+    padding: @dropdown-link-padding-v @dropdown-link-padding-h;
 }
 
 // allows buttons for better HTML semantics
@@ -175,6 +176,7 @@
 }
 
 .dropdown-menu .data-card {
+    border-radius: 0;
     border: none;
     box-shadow: none;
 

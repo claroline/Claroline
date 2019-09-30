@@ -6,8 +6,10 @@ import set from 'lodash/set'
 import {makeInstanceReducer, combineReducers, reduceReducers} from '#/main/app/store/reducer'
 import {cleanErrors} from '#/main/app/content/form/utils'
 
+import {constants} from '#/main/app/content/form/constants'
 import {
   FORM_RESET,
+  FORM_SET_MODE,
   FORM_SET_ERRORS,
   FORM_SUBMIT,
   FORM_UPDATE
@@ -15,6 +17,7 @@ import {
 
 const defaultState = {
   new: false,
+  mode: constants.FORM_MODE_DEFAULT,
   validating: false,
   pendingChanges: false,
   errors: {},
@@ -22,73 +25,70 @@ const defaultState = {
   originalData: {}
 }
 
-const newReducer = makeInstanceReducer(defaultState.new, {
-  [FORM_RESET]: (state, action) => !!action.isNew
-})
-
-/**
- * Reduces the validating state of the form.
- * (becomes true on form submission)
- */
-const validatingReducer = makeInstanceReducer(defaultState.validating, {
-  [FORM_RESET]: () => defaultState.validating,
-  [FORM_SUBMIT]: () => true,
-  [FORM_UPDATE]: () => false
-})
-
-const pendingChangesReducer = makeInstanceReducer(defaultState.pendingChanges, {
-  [FORM_RESET]: () => defaultState.pendingChanges,
-  [FORM_UPDATE]: () => true
-})
-
-/**
- * Reduces the errors of the form.
- */
-const errorsReducer = makeInstanceReducer(defaultState.errors, {
-  /**
-   * Resets to default (aka empty) when the form is reset.
-   */
-  [FORM_RESET]: () => defaultState.errors,
-
-  /**
-   * Sets form validation errors.
-   * It MUST receive `undefined` value for fixed errors in order to remove them from store.
-   *
-   * @param state
-   * @param action
-   */
-  [FORM_SET_ERRORS]: (state, action) => cleanErrors(state, action.errors)
-})
-
-/**
- * Reduces the data of the form.
- */
-const dataReducer = makeInstanceReducer(defaultState.data, {
-  [FORM_RESET]: (state, action) => action.data || {},
-  [FORM_UPDATE]: (state, action) => {
-    if (action.path) {
-      // update correct property
-      const newState = cloneDeep(state)
-      set(newState, action.path, action.value)
-
-      return newState
-    }
-
-    return action.value
-  }
-})
-
-const originalDataReducer = makeInstanceReducer(defaultState.originalData, {
-  [FORM_RESET]: (state, action) => action.data || {}
-})
-
 const baseReducer = {
-  new: newReducer,
-  validating: validatingReducer,
-  pendingChanges: pendingChangesReducer,
-  errors: errorsReducer,
-  data: dataReducer,
-  originalData: originalDataReducer
+  new: makeInstanceReducer(defaultState.new, {
+    [FORM_RESET]: (state, action) => !!action.isNew
+  }),
+
+  mode: makeInstanceReducer(defaultState.mode, {
+    [FORM_SET_MODE]: (state, action) => action.mode
+  }),
+
+  /**
+   * Reduces the validating state of the form.
+   * (becomes true on form submission)
+   */
+  validating: makeInstanceReducer(defaultState.validating, {
+    [FORM_RESET]: () => defaultState.validating,
+    [FORM_SUBMIT]: () => true,
+    [FORM_UPDATE]: () => false
+  }),
+
+  pendingChanges: makeInstanceReducer(defaultState.pendingChanges, {
+    [FORM_RESET]: () => defaultState.pendingChanges,
+    [FORM_UPDATE]: () => true
+  }),
+
+  /**
+   * Reduces the errors of the form.
+   */
+  errors: makeInstanceReducer(defaultState.errors, {
+    /**
+     * Resets to default (aka empty) when the form is reset.
+     */
+    [FORM_RESET]: () => defaultState.errors,
+
+    /**
+     * Sets form validation errors.
+     * It MUST receive `undefined` value for fixed errors in order to remove them from store.
+     *
+     * @param state
+     * @param action
+     */
+    [FORM_SET_ERRORS]: (state, action) => cleanErrors(state, action.errors)
+  }),
+
+  /**
+   * Reduces the data of the form.
+   */
+  data: makeInstanceReducer(defaultState.data, {
+    [FORM_RESET]: (state, action) => action.data || {},
+    [FORM_UPDATE]: (state, action) => {
+      if (action.path) {
+        // update correct property
+        const newState = cloneDeep(state)
+        set(newState, action.path, action.value)
+
+        return newState
+      }
+
+      return action.value
+    }
+  }),
+
+  originalData: makeInstanceReducer(defaultState.originalData, {
+    [FORM_RESET]: (state, action) => action.data || {}
+  })
 }
 
 /**

@@ -20,7 +20,7 @@ const ResourceFilter = (props) =>
       type={MODAL_BUTTON}
       tooltip="left"
       icon="fa fa-fw fa-folder"
-      label={props.placeholder || trans('select_resource')}
+      label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
       modal={[MODAL_RESOURCES, {
         selectAction: (selected) => ({

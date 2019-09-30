@@ -19,6 +19,7 @@ const AboutModal = props =>
     icon="fa fa-fw fa-info"
     title={trans('about')}
     subtitle={props.workspace.name}
+    poster={props.workspace.poster ? props.workspace.poster.url : undefined}
   >
     <ContentMeta
       creator={get(props.workspace, 'meta.creator')}

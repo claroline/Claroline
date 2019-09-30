@@ -18,7 +18,7 @@ const NotificationCard = props =>
       'data-card-muted': props.data.read
     })}
     icon={
-      <UserAvatar picture={get(props.data, 'notification.meta.creator.picture')} alt={true} />
+      <UserAvatar picture={get(props.data, 'notification.meta.creator.picture')} />
     }
     title={displayUsername(get(props.data, 'notification.meta.creator')) + ' ' + props.data.text}
     subtitle={trans('done_at', {

@@ -19,6 +19,9 @@
 
 .search-unified {
     position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
     font-size: @font-size-large;
 
     &.open {
@@ -26,13 +29,9 @@
     }
 
     .search-icon {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        padding: @padding-large-vertical;
-        color: @list-controls-color;
+        font-size: @font-size-large;
+        padding: @padding-large-vertical @padding-large-horizontal;
         height: @input-height-large;
-        width: @input-height-large;
         line-height: @line-height-large;
         display: flex;
         align-items: center;
@@ -40,10 +39,10 @@
     }
 
     .search-filters {
+        flex: 1;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        margin-left: @input-height-large; // because of the absolute search icon
     }
 
     .search-control {

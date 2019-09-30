@@ -166,7 +166,7 @@
 @flying-alert-opacity:        .8; // becomes 1 on alert hover
 @flying-alert-width:          400px;
 @flying-alert-padding:        5px;
-@flying-alert-border-radius:  @panel-border-radius;
+@flying-alert-border-radius:  0;
 @flying-alert-box-shadow:     0 0 3px rgba(0,0,0,.5); // same as topbar
 @flying-alert-margin-bottom:  10px;
 @flying-alert-icon-size:      32px;
@@ -298,6 +298,8 @@
 // Panels
 // ---
 
+@panel-heading-padding-v:  15px;
+@panel-heading-padding-h:  15px;
 @panel-box-shadow:         @box-shadow-base;
 @panel-margin-bottom:      @component-margin-bottom;
 
@@ -344,7 +346,8 @@
 @dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.2);
 @dropdown-menu-border-radius: 0;
 
-@dropdown-link-padding:       5px 15px;
+@dropdown-link-padding-v:     5px;
+@dropdown-link-padding-h:     15px;
 
 
 // -

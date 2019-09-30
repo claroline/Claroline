@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
@@ -46,11 +47,11 @@ class DirectoryMenu extends Component {
           links={[
             {
               type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-share fa-flip-horizontal',
+              icon: 'fa fa-fw fa-arrow-left',
               label: get(this.props.currentNode, 'parent') ?
                 trans('back_to', {target: get(this.props.currentNode, 'parent.name')}) :
                 trans('back'),
-              displayed: !!get(this.props.currentNode, 'parent'),
+              displayed: isEmpty(this.props.rootNode) || this.props.currentNode.slug !== this.props.rootNode.slug,
               target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug', '')}`,
               exact: true
             }, {
@@ -72,6 +73,9 @@ DirectoryMenu.propTypes = {
     pathname: T.string.isRequired
   }),
   basePath: T.string.isRequired,
+  rootNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ),
   currentNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,

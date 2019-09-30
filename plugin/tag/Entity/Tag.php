@@ -13,6 +13,7 @@ namespace Claroline\TagBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Color;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,6 +33,7 @@ class Tag
 
     // meta
     use Description;
+    use Color;
 
     /**
      * The name of the tag.
@@ -42,15 +44,6 @@ class Tag
      * @var string
      */
     private $name;
-
-    /**
-     * The display color of the tag.
-     *
-     * @ORM\Column(nullable=true)
-     *
-     * @var string
-     */
-    private $color;
 
     /**
      * The user who created the tag.
@@ -99,26 +92,6 @@ class Tag
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * Get color.
-     *
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
-     * Set color.
-     *
-     * @param string $color
-     */
-    public function setColor($color)
-    {
-        $this->color = $color;
     }
 
     /**

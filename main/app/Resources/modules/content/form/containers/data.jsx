@@ -28,6 +28,7 @@ const FormData = connect(
 
     return {
       new: selectors.isNew(formState),
+      mode: selectors.mode(formState),
       data: data,
       errors: errors,
       pendingChanges: selectors.pendingChanges(formState),
@@ -35,6 +36,10 @@ const FormData = connect(
     }
   },
   (dispatch, ownProps) => ({
+    setMode(mode) {
+      dispatch(actions.setMode(ownProps.name, mode))
+    },
+
     setErrors(errors) {
       if (ownProps.dataPart) {
         errors = set({}, ownProps.dataPart, errors)

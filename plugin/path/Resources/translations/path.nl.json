@@ -131,7 +131,6 @@
     "step_has_duration": "de stap heeft een duur",
     "step_locked": "Deze stap is vergrendeld.",
     "step_locked_info": "U hebt geen toegang tot deze stap want : ",
-    "step_no_resource": "Er is geen bron verbonden aan deze stap.",
     "step_paste": "Plakken",
     "step_to_template": "Als sjabloon opslaan",
     "step_unlocked": "Stap %step% ontgrendeld voor %user%",

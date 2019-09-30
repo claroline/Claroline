@@ -238,7 +238,7 @@ class AgendaManager
         $tz = $date->getTimezone();
 
         return $this->container->get('templating')->render(
-            'ClarolineAgendaBundle:tool:export_ics_calendar.ics.twig',
+            'ClarolineAgendaBundle:ics_calendar.ics.twig',
             [
                 'tzName' => $tz->getName(),
                 'events' => $events,

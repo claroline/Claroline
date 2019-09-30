@@ -2,12 +2,14 @@
 
 namespace Claroline\AppBundle\Controller\Platform;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
@@ -27,27 +29,33 @@ class ClientController
     /** @var PlatformConfigurationHandler */
     private $configHandler;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /** @var ClientSerializer */
+    private $clientSerializer;
+
     /**
      * ClientController constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
-     * })
      *
      * @param TokenStorageInterface        $tokenStorage
      * @param StrictDispatcher             $dispatcher
      * @param PlatformConfigurationHandler $configHandler
+     * @param SerializerProvider           $serializer
+     * @param ClientSerializer             $clientSerializer
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         StrictDispatcher $dispatcher,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        SerializerProvider $serializer,
+        ClientSerializer $clientSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->configHandler = $configHandler;
+        $this->serializer = $serializer;
+        $this->clientSerializer = $clientSerializer;
     }
 
     /**
@@ -60,12 +68,20 @@ class ClientController
      */
     public function indexAction()
     {
+        $currentUser = null;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $currentUser = $this->serializer->serialize(
+                $this->tokenStorage->getToken()->getUser()
+            );
+        }
+
         return [
-            'meta' => [],
+            'parameters' => $this->clientSerializer->serialize(),
             'maintenance' => [
                 'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),
                 'message' => $this->configHandler->getParameter('maintenance.message'),
             ],
+            'currentUser' => $currentUser,
             'impersonated' => $this->isImpersonated(),
 
             'header' => [

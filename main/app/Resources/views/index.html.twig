@@ -38,7 +38,16 @@
         {% endblock %}
 
         {# Adds stylesheets #}
-        {% include 'ClarolineAppBundle:layout:stylesheets.html.twig' %}
+        {# Styles from current theme #}
+        <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css') }}" />
+
+        {# Styles from loaded plugins #}
+        {{ injectedStylesheets | raw }}
+
+        {# Styles from plateform configuration #}
+        {% for file in parameters.stylesheets %}
+            <script src="{{ asset(file) }}"></script>
+        {% endfor %}
     </head>
 
     <body>
@@ -49,19 +58,42 @@
 
             data-maintenance="{{ maintenance | json_encode | raw | escape }}"
             data-impersonated="{{ impersonated ? 'true' : 'false' }}"
-            data-current-user="{{ app.user | api_serialize | json_encode | raw | escape }}"
+            data-current-user="{{ currentUser | json_encode | raw | escape }}"
             data-header="{{ header | json_encode | raw | escape }}"
             data-footer="{{ footer | json_encode | raw | escape }}"
-            data-config="{{ platform_config() | json_encode | raw | escape }}"
+            data-config="{{ parameters | json_encode | raw | escape }}"
         ></div>
 
         {# Anchor for UI portals (eg. modals, walkthroughs) #}
         <div class="app-overlays-container"></div>
 
         {# Dumps some server vars in the DOM to make it available in JS #}
-        {% include "ClarolineAppBundle:layout:variables.html.twig" %}
+        <div id="sf-environement" data-env="{{ app.environment }}"></div>
+        <div id="platform-config" data-parameters="{{ parameters | json_encode | raw | escape }}"></div>
+        <div id="current-user"    data-user="{{ currentUser | json_encode | raw | escape }}"></div>
 
         {# Adds javascripts #}
-        {% include 'ClarolineAppBundle:layout:javascripts.html.twig' %}
+        <script src="{{ hotAsset('runtime') }}"></script>
+        {# Base libraries #}
+        <script src="{{ hotAsset('vendor') }}"></script>
+        {# Frequently used Claroline JS #}
+        <script src="{{ hotAsset('app') }}"></script>
+        {# Claroline Plugins configuration #}
+        <script src="{{ hotAsset('plugins') }}"></script>
+        {# Polyfills #}
+        <script src="{{ hotAsset('claroline-distribution-main-app-polyfills') }}"></script>
+        {# Router #}
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        {# Main Claroline UI app #}
+        <script src="{{ hotAsset('claroline-distribution-main-app-layout') }}"></script>
+
+        {# JS from loaded plugins #}
+        {{ injectedJavascripts | raw }}
+
+        {# JS from plateform configuration #}
+        {% for file in parameters.javascripts %}
+            <script src="{{ asset(file) }}"></script>
+        {% endfor %}
     </body>
 </html>

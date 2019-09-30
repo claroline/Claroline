@@ -36,7 +36,7 @@ const AssertionsList = (props) =>
       }, {
         name: 'badge.meta.enabled',
         type: 'boolean',
-        label: trans('enabled', {}, 'badge'),
+        label: trans('enabled'),
         displayed: true
       }
     ]}

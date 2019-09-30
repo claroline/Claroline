@@ -122,7 +122,6 @@ const DataGridSort = props =>
     />
   </div>
 
-
 DataGridSort.propTypes = {
   current: T.shape({
     property: T.string,

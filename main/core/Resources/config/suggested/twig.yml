@@ -3,6 +3,4 @@ twig:
     strict_variables: "%kernel.debug%"
 
     globals:
-      uploadsDir:     "%claroline.param.uploads_directory%"
       config:         '@claroline.config.platform_config_handler'
-      token_storage:  '@security.token_storage'

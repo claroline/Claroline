@@ -19,13 +19,13 @@ const TransferMenu = (props) =>
         {
           name: 'import',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-save',
+          icon: 'fa fa-fw fa-upload',
           label: trans('import'),
           target: `${props.path}/import`
         }, {
           name: 'history',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-download',
+          icon: 'fa fa-fw fa-history',
           label: trans('history'),
           target: `${props.path}/history`
         }

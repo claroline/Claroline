@@ -13,6 +13,7 @@ namespace Claroline\OpenBadgeBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Color;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
@@ -30,14 +31,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class BadgeClass
 {
-    use Uuid;
-    use Id;
-
     const ISSUING_MODE_ORGANIZATION = 'organization';
     const ISSUING_MODE_USER = 'user';
     const ISSUING_MODE_GROUP = 'group';
     const ISSUING_MODE_PEER = 'peer';
     const ISSUING_MODE_WORKSPACE = 'workspace';
+
+    // identifiers
+    use Id;
+    use Uuid;
+
+    // meta
+    use Color;
 
     /**
      * @ORM\Column()
@@ -337,7 +342,7 @@ class BadgeClass
 
     /**
      * @param bool $includeGroups
-     * 
+     *
      * @return User[]|ArrayCollection
      */
     public function getAllowedIssuers($includeGroups = false)

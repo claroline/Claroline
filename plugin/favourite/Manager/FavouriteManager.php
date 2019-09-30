@@ -45,8 +45,8 @@ class FavouriteManager
             ->getRepository(WorkspaceFavourite::class)
             ->findBy(['user' => $user]);
 
-        return array_map(function (WorkspaceFavourite $recent) {
-            return $recent->getWorkspace();
+        return array_map(function (WorkspaceFavourite $favourite) {
+            return $favourite->getWorkspace();
         }, $workspaces);
     }
 
@@ -63,8 +63,8 @@ class FavouriteManager
             ->getRepository(ResourceFavourite::class)
             ->findBy(['user' => $user]);
 
-        return array_map(function (ResourceFavourite $recent) {
-            return $recent->getResource();
+        return array_map(function (ResourceFavourite $favourite) {
+            return $favourite->getResource();
         }, $resources);
     }
 

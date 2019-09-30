@@ -63,3 +63,30 @@ body {
         }
     }
 }
+
+.app-loader {
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: @zindex-modal + 1;
+    height: 3px;
+    background: fadeOut(@brand-primary, 70%);
+
+    &:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: @brand-primary;
+        width: 50%;
+        height: 3px;
+        animation: app-loader-move 1.5s ease-out 1s infinite running;
+    }
+}
+
+@keyframes app-loader-move {
+    from {left: -50%;}
+    to   {left: 100%;}
+}

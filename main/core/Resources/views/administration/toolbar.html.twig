@@ -1,5 +1,0 @@
-<aside
-    class="administration-toolbar-container app-menu"
-    data-opened-tool="{{ '"' ~ current ~ '"' }}" {# double quotes are not a typo, this is needed to be catched as a string by JSON.parse #}
-    data-tools="{{ tools | json_encode | raw | escape }}"
-></aside>

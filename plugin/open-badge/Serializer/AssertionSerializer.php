@@ -4,6 +4,7 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -12,6 +13,29 @@ class AssertionSerializer
 {
     use SerializerTrait;
 
+    /** @var UserSerializer */
+    private $userSerializer;
+    /** @var BadgeClassSerializer */
+    private $badgeSerializer;
+    /** @var ProfileSerializer */
+    private $profileSerializer;
+    /** @var RouterInterface */
+    private $router;
+    /** @var VerificationObjectSerializer */
+    private $verificationObjectSerializer;
+    /** @var IdentityObjectSerializer */
+    private $identityObjectSerializer;
+
+    /**
+     * AssertionSerializer constructor.
+     *
+     * @param UserSerializer               $userSerializer
+     * @param BadgeClassSerializer         $badgeSerializer
+     * @param ProfileSerializer            $profileSerializer
+     * @param RouterInterface              $router
+     * @param VerificationObjectSerializer $verificationObjectSerializer
+     * @param IdentityObjectSerializer     $identityObjectSerializer
+     */
     public function __construct(
         UserSerializer $userSerializer,
         BadgeClassSerializer $badgeSerializer,
@@ -60,7 +84,7 @@ class AssertionSerializer
                 'id' => $assertion->getUuid(),
                 'user' => $this->userSerializer->serialize($assertion->getRecipient()),
                 'badge' => $this->badgeSerializer->serialize($assertion->getBadge()),
-                'data' => $this->serialize($assertion, [Options::ENFORCE_OPEN_BADGE_JSON]),
+                'issuedOn' => DateNormalizer::normalize($assertion->getIssuedOn()),
             ];
         }
 
@@ -74,10 +98,6 @@ class AssertionSerializer
         $date->modify('+ '.$badge->getDurationValidation().' day');
 
         return $date->format('Y-m-d');
-    }
-
-    public function serializeMeta(Assertion $assertion, array $options = [])
-    {
     }
 
     public function getClass()

@@ -2,6 +2,8 @@
     "activity": "Activité",
     "add_files": "Ajouter des fichiers",
     "add_resource": "Ajouter une ressource",
+    "add_resources": "Ajouter des ressources",
+    "no_resource": "Aucune ressource n'a été ajoutée pour le moment.",
     "change_file": "Modifier le fichier",
     "close_redirect_desktop": "Bureau",
     "close_redirect_workspace": "Ouverture de l'espace d'activités",

@@ -5,11 +5,14 @@ import get from 'lodash/get'
 import set from 'lodash/set'
 
 import {DataInput} from '#/main/app/data/components/input'
-import {createFieldsetDefinition} from '#/main/app/content/form/utils'
 
 // todo : restore readOnly
 // todo : add auto focus
 
+/**
+ * ATTENTION : as it's only be used in the FormData component, the `fields` are not defaulted by the component.
+ * You should consider apply `createFieldsetDefinition` on your fields list before using it.
+ */
 class FormFieldset extends Component {
   constructor(props) {
     super(props)
@@ -96,15 +99,13 @@ class FormFieldset extends Component {
   }
 
   render() {
-    const fields = createFieldsetDefinition(this.props.fields, this.props.data)
-
     return (
       <fieldset
         id={this.props.id}
         className={this.props.className}
         disabled={this.props.disabled}
       >
-        {this.renderFields(fields)}
+        {this.renderFields(this.props.fields)}
 
         {this.props.children}
       </fieldset>
@@ -116,6 +117,7 @@ FormFieldset.propTypes = {
   id: T.string,
   className: T.string,
   disabled: T.bool,
+  mode: T.string.isRequired,
   size: T.oneOf(['sm', 'lg']),
   errors: T.object,
   validating: T.bool,

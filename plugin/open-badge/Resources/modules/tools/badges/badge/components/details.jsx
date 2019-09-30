@@ -1,41 +1,40 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 
-import {actions}    from '#/plugin/open-badge/tools/badges/store/actions'
-
-import {MODAL_USERS} from '#/main/core/modals/users'
 import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-
-import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
-
 import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSection} from '#/main/app/content/form/components/sections'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {UserCard} from '#/main/core/user/components/card'
+import {MODAL_USERS} from '#/main/core/modals/users'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
-import {UserCard} from '#/main/core/user/components/card'
+import {actions, selectors}  from '#/plugin/open-badge/tools/badges/store'
 
-import {
-  selectors as formSelect
-} from '#/main/app/content/form/store'
+import {selectors as formSelectors} from '#/main/app/content/form/store'
 
 // TODO : add tools
 const BadgeDetailsComponent = (props) =>
-  <div>
+  <Fragment>
+    <div className="badge-meta">
+
+    </div>
+
     <BadgeCard
       data={props.badge}
       size="sm"
       orientation="col"
     />
 
-    {props.badge.permissions.assign &&
+    {get(props.badge, 'permissions.assign') &&
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
         actions={[{
-          displayed: props.badge.permissions.assign,
+          displayed: get(props.badge, 'permissions.assign'),
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('add_users'),
@@ -50,7 +49,7 @@ const BadgeDetailsComponent = (props) =>
           }]
         }]}
       >
-        {props.badge.meta && props.badge.meta.enabled ?
+        {get(props.badge, 'meta.enabled ') ?
           <ListData
             name={selectors.STORE_NAME + '.badges.current.assertions'}
             fetch={{
@@ -95,12 +94,12 @@ const BadgeDetailsComponent = (props) =>
         }
       </FormSection>
     }
-  </div>
+  </Fragment>
 
 const BadgeDetails = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    badge: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.badges.current'))
+    badge: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.badges.current'))
   }),
   (dispatch) =>({
     addUsers(badgeId, selected) {

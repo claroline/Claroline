@@ -19,41 +19,18 @@
         }
     }
 
-    .panel-title-icon { // for retro compatibility
-        margin-right: 10px;
+    .panel-title {
+        .icon-with-text-right {
+            margin-right: @panel-heading-padding-h;
+        }
     }
 
     .panel-body img {
         max-width: 100%;
     }
 
-    // Changes some components behaviors when they are inside a panel
-    > table thead tr td,
-    > table tbody tr td,
-    > table thead tr th,
-    > table tbody tr th,
-    > table tr td,
-    > table tr th,
-    .workspace-list-pager > table tr td,
-    .workspace-list-pager > table tr th {
-        padding-right: 14px !important;
-        padding-left: 14px !important;
-    }
-
-    form > .list-group {
-        margin-bottom: 0;
-        > .list-group-item {
-            border-left: none;
-            border-right: none;
-            border-bottom: none;
-            .border-top-radius(0);
-            .border-bottom-radius(0);
-        }
-    }
-
     // remove box-shadow of some components when contained in a panel
     .panel,
-    .breadcrumb, // this should not happen
     .table > tbody {
          box-shadow: none;
      }
@@ -67,17 +44,19 @@
     > .panel-group {
         margin: 0;
 
-        > div,
         .panel {
             border-radius: 0;
             border-left: 0;
             border-right: 0;
 
-            + div,
             + .panel {
                 border-top: none;
                 margin-top: 0;
             }
+        }
+
+        .panel-heading {
+            border-radius: 0;
         }
 
         // avoids double border
@@ -91,24 +70,6 @@
 }
 
 .panel-group {
-    > div, // allow containers (some SPA requires additional containers, cf. quizzes editor)
-    .panel {
-        + div, // allow containers (some SPA requires additional containers, cf. quizzes editor)
-        + .panel {
-            margin-top: @panel-group-panel-margin;
-        }
-    }
-
-    // disabled panels
-    .panel-disabled {
-        box-shadow: none;
-        opacity: 0.75;
-
-        .panel-title > a {
-            cursor: not-allowed;
-        }
-    }
-
     .panel-title > a {
         display: block; // make the click zone fill the parent block
         cursor: pointer; // the <a> tag to toggle the panel has no href, so the cursor do not change properly
@@ -127,22 +88,14 @@
             stroke: @brand-primary;
         }
     }
-
-    .panel-title > a {
-        display: block; // make the click zone fill the parent block
-        cursor: pointer; // the <a> tag to toggle the panel has no href, so the cursor do not change properly
-    }
-
-    .panel-title.opened {
-        color: @brand-primary;
-        font-weight: bold;
-    }
 }
 
-.panel-btn {
-    border-radius: 0 0 @panel-border-radius @panel-border-radius;
-    display: block;
-    width: 100%;
-    padding: 10px @panel-body-padding;
-    .font-size-modifier(16px);
+// disabled panels
+.panel-disabled {
+    box-shadow: none;
+    opacity: 0.75;
+
+    .panel-title > a {
+        cursor: not-allowed;
+    }
 }

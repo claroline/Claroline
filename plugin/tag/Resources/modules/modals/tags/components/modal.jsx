@@ -16,7 +16,7 @@ const TagsModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect', 'objectClass')}
       icon="fa fa-fw fa-tags"
       className="data-picker-modal"
       bsSize="lg"

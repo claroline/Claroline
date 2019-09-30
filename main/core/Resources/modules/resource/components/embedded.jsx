@@ -77,6 +77,7 @@ class ResourceEmbedded extends Component {
         impersonated: this.props.impersonated
       },
       [configSelectors.STORE_NAME]: this.props.config,
+      // mount the resource tool in the store
       tool: {
         loaded: true,
         name: 'resources',
@@ -85,6 +86,10 @@ class ResourceEmbedded extends Component {
           type: 'desktop'
         }
       },
+      resources: { // TODO : retrieve tool store name from var
+        root: this.props.resourceNode
+      },
+      // mount the resource in the store
       resource: {
         embedded: true,
         showHeader: this.props.showHeader,

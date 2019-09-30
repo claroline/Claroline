@@ -11,7 +11,9 @@ import {reducer as parametersReducer} from '#/plugin/open-badge/tools/badges/par
 
 const reducer = combineReducers({
   badges: combineReducers({
-    list: makeListReducer(selectors.STORE_NAME + '.badges.list', {}, {
+    list: makeListReducer(selectors.STORE_NAME + '.badges.list', {
+      sortBy: {property: 'name', direction: 1}
+    }, {
       invalidated: makeReducer(false, {
         [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true,
         [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME + '.badges.current']: () => true

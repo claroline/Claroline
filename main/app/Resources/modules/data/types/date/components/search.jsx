@@ -15,15 +15,15 @@ const DateSearch = props =>
     }
 
     <Button
-      className="btn"
+      className="btn btn-filter"
       type={MENU_BUTTON}
       icon={props.calendarIcon}
       label={trans('show-calendar', {}, 'actions')}
-      tooltip="right"
-      size={props.size}
+      tooltip="left"
+      size="sm"
       disabled={props.disabled}
       menu={
-        <div className="dropdown-menu">
+        <div className="dropdown-menu dropdown-menu-right">
           <Calendar
             selected={props.isValid ? props.search : ''}
             onChange={props.updateSearch}

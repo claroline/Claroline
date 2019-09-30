@@ -10,6 +10,9 @@ const Workspace = {
     poster: T.string,
     meta: T.shape({
       slug: T.string,
+      creator: T.shape({
+        // TODO : user types
+      }),
       model: T.bool,
       personal: T.bool,
       usedStorage: T.number,
@@ -22,10 +25,7 @@ const Workspace = {
     }),
     display: T.shape({
       showProgression: T.bool,
-      showMenu: T.bool,
-      openResource: T.shape(
-        ResourceNode.propTypes
-      )
+      showMenu: T.bool
     }),
     breadcrumb: T.shape({
       displayed: T.bool
@@ -66,8 +66,8 @@ const Workspace = {
       target: 'home'
     },
     display: {
-      showMenu: true,
-      openResource: null
+      showProgression: true,
+      showMenu: true
     },
     breadcrumb: {
       displayed: true,

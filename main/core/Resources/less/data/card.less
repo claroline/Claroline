@@ -61,7 +61,7 @@
     }
 }
 
-// TODO : create a mixin to generate card styles viants
+// TODO : create a mixin to generate card styles variants
 .data-card-muted {
     border-color: @data-card-muted-border;
     color: @data-card-muted-color;
@@ -107,7 +107,10 @@
 
 .data-card-header {
     position: relative; // constrain flags
-    text-align: center;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: @data-card-header-bg;
     border-color: @data-card-inner-border;
 }
@@ -276,6 +279,7 @@
 // XS screens :
 @media (max-width: @screen-xs-max) {
     .data-card-row {
+        &.data-card-xs,
         &.data-card-sm {
             .data-card-horizontal-variant();
         }

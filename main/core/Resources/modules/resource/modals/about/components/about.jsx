@@ -20,6 +20,7 @@ const AboutModal = props =>
     icon="fa fa-fw fa-info"
     title={trans('about')}
     subtitle={props.resourceNode.name}
+    poster={props.resourceNode.poster ? props.resourceNode.poster.url : undefined}
   >
     <ContentMeta
       creator={get(props.resourceNode, 'meta.creator')}

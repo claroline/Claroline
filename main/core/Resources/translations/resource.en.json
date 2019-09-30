@@ -2,6 +2,8 @@
     "activity": "Activity",
     "add_files": "Add files",
     "add_resource": "Add a resource",
+    "add_resources": "Add resources",
+    "no_resource": "No resource.",
     "change_file": "Change file",
     "close_redirect_desktop": "Desktop",
     "close_redirect_workspace": "Workspace opening",

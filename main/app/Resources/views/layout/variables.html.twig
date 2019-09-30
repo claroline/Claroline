@@ -1,5 +1,0 @@
-{# Makes some server vars available to client #}
-
-<div id="sf-environement" data-env="{{ app.environment }}"></div>
-<div id="platform-config" data-parameters="{{ platform_config() | json_encode | raw | escape }}"></div>
-<div id="current-user"    data-user="{{ app.user | api_serialize | json_encode | raw | escape }}"></div>

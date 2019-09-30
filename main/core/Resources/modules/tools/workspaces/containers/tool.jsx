@@ -10,7 +10,7 @@ import {WorkspacesTool as WorkspacesToolComponent} from '#/main/core/tools/works
 const WorkspacesTool = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    authenticated: securitySelectors.isAuthenticated(state),
+    currentUser: securitySelectors.currentUser(state),
     creatable: selectors.creatable(state)
   }),
   (dispatch) => ({

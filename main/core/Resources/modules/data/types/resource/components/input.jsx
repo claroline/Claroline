@@ -85,7 +85,7 @@ const ResourceInput = props => {
         id={props.id}
         size="lg"
         icon="fa fa-folder"
-        title={trans('no_resource')}
+        title={trans('no_resource', {}, 'resource')}
       >
         <ModalButton
           className="btn"
@@ -106,13 +106,12 @@ const ResourceInput = props => {
           }}
         >
           <span className="fa fa-fw fa-hand-pointer-o icon-with-text-right" />
-          {trans('add_resource')}
+          {trans('add_resource', {}, 'resource')}
         </ModalButton>
       </EmptyPlaceholder>
     )
   }
 }
-
 
 implementPropTypes(ResourceInput, FormFieldTypes, {
   value: T.shape(
@@ -129,14 +128,14 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
       slug: T.string.isRequired,
       name: T.string.isRequired
     }),
-    filters: T.object
+    filters: T.array
   }),
   onEmbeddedResourceClose: T.func
 }, {
   value: null,
   picker: {
     current: null,
-    filters: {},
+    filters: [],
     root: null
   }
 })

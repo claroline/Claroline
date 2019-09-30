@@ -20,7 +20,7 @@ const Tool = props =>
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-plus',
-        label: trans('add_resource', {}, 'reservation'),
+        label: trans('add_resource', {}, 'resource'),
         target: '/form'
       }, {
         name: 'resource_types',

@@ -25,7 +25,7 @@ const ResourceDisplay = (props) => {
     <EmptyPlaceholder
       size="lg"
       icon="fa fa-folder"
-      title={trans('no_resource')}
+      title={trans('no_resource', {}, 'resource')}
     />
   )
 }

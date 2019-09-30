@@ -74,7 +74,7 @@ class AddDocumentModal extends Component {
               onClick={() => this.props.pickResource(this.state)}
             >
               <span className="fa fa-fw fa-plus icon-with-text-right"/>
-              {trans('add_resource')}
+              {trans('add_resource', {}, 'resource')}
             </button>
           </EmptyPlaceholder>
         }

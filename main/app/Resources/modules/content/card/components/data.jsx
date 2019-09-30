@@ -100,21 +100,19 @@ CardAction.propTypes = {
  * @constructor
  */
 const CardHeader = props => {
-  let headerStyles
+  let headerStyles = {}
   if (props.poster) {
-    headerStyles = {
-      backgroundImage: 'url(' + props.poster + ')',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }
-  } else if (props.color) {
-    headerStyles = {
-      background: props.color
-    }
+    headerStyles.backgroundImage = `url(${props.poster})`
+    headerStyles.backgroundSize = 'cover'
+    headerStyles.backgroundPosition = 'center'
+  }
+
+  if (props.color) {
+    headerStyles.backgroundColor = props.color
   }
 
   return (
-    <div className="data-card-header" style={headerStyles}>
+    <div className="data-card-header" style={!isEmpty(headerStyles) ? headerStyles : undefined}>
       {props.icon &&
         <CardAction action={props.action} className="data-card-icon">
           {typeof props.icon === 'string' ?

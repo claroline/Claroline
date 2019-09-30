@@ -59,18 +59,20 @@ const BadgesList = (props) =>
     actions={(rows) => [
       {
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pen',
+        icon: 'fa fa-fw fa-pencil',
         label: trans('edit', {}, 'actions'),
         scope: ['object', 'collection'],
         target: props.path + `/badges/${rows[0].id}/form`,
-        displayed: 0 < rows.filter(b => b.permissions.edit).length
+        displayed: 0 < rows.filter(b => b.permissions.edit).length,
+        group: trans('management')
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-check-circle',
         label: trans('enable', {}, 'actions'),
         scope: ['object', 'collection'],
         displayed: props.isAdmin && 0 < rows.filter(b => !b.meta.enabled).length,
-        callback: () => props.enable(rows)
+        callback: () => props.enable(rows),
+        group: trans('management')
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-times-circle',
@@ -82,7 +84,7 @@ const BadgesList = (props) =>
           title: transChoice('disable_badges', rows.length, {count: rows.length}),
           message: trans('disable_badges_confirm', {users_list: rows.map(b => `${b.name}`).join(', ')})
         },
-        dangerous: true
+        group: trans('management')
       }
     ]}
 

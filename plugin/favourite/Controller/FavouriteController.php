@@ -53,7 +53,7 @@ class FavouriteController extends AbstractApiController
     }
 
     /**
-     * Gets the current user history.
+     * Gets the current user favourites.
      *
      * @EXT\Route("/", name="claro_user_favourites")
      * @EXT\ParamConverter("currentUser", converter="current_user")

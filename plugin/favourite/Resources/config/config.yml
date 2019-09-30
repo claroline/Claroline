@@ -6,3 +6,14 @@ plugin:
           decoder: open
           scope: [object, collection]
           api: [GET, POST, DELETE]
+
+    #data_sources:
+    #    - name: my_favourite_resources
+    #      type: list
+    #      context: [workspace, desktop]
+    #      tags: [content]
+
+    #    - name: my_favourite_workspaces
+    #      type: list
+    #      context: [desktop]
+    #      tags: [content]

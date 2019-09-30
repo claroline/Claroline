@@ -60,7 +60,7 @@ class ResourcesModal extends Component {
             {
               name: 'back',
               type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-share fa-flip-horizontal',
+              icon: 'fa fa-fw fa-arrow-left',
               label: get(this.props.currentDirectory, 'parent') ?
                 trans('back_to', {target: get(this.props.currentDirectory, 'parent.name')}) :
                 trans('back'),

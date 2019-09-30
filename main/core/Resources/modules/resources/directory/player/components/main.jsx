@@ -1,13 +1,17 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {url} from '#/main/app/api'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 
 import resourcesSource from '#/main/core/data/sources/resources'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {getActions, getDefaultAction} from '#/main/core/resource/utils'
 
 /**
@@ -39,9 +43,22 @@ const PlayerMain = props =>
   <ListSource
     name={props.listName}
     fetch={{
-      url: ['apiv2_resource_list', {parent: props.id, all: props.all}],
+      url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],
       autoload: true
     }}
+    customActions={[
+      {
+        name: 'back',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-arrow-left',
+        label: get(props.currentNode, 'parent') ?
+          trans('back_to', {target: get(props.currentNode, 'parent.name')}) :
+          trans('back'),
+        disabled: !isEmpty(props.rootNode) && props.currentNode.slug === props.rootNode.slug,
+        target: `${props.path}/${get(props.currentNode, 'parent.slug', '')}`,
+        exact: true
+      }
+    ]}
     source={merge({}, resourcesSource, {
       // adds actions to source
       parameters: {
@@ -69,7 +86,12 @@ PlayerMain.propTypes = {
   all: T.string,
   embedded: T.bool.isRequired,
   currentUser: T.object,
-  id: T.string,
+  rootNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ),
+  currentNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
   listName: T.string.isRequired,
   listConfiguration: T.shape(
     ListParametersTypes.propTypes

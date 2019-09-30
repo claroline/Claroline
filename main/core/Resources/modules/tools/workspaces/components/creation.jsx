@@ -82,7 +82,9 @@ class WorkspaceCreation extends Component {
           exact: true
         }}
       >
-        <Logs data={this.props.logData} />
+        {!isEmpty(this.props.logData) &&
+          <Logs data={this.props.logData} />
+        }
       </WorkspaceForm>
     )}
 }
