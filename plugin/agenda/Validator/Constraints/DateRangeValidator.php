@@ -13,28 +13,24 @@ namespace Claroline\AgendaBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Validator("claroline_daterange_validator")
- */
 class DateRangeValidator extends ConstraintValidator
 {
     public function validate($object, Constraint $constraint)
     {
         // If the checkbox isAllDay is checked and isTask is unchecked
         if ($object->isAllDay() && !$object->isTask()) {
-            if ($object->getStart() === null) {
+            if (null === $object->getStart()) {
                 $this->context->addViolation('valid_start_date_required');
             }
         }
         // If isAllDay and isTask are unchecked
         elseif (!$object->isAllDay() && !$object->isTask()) {
-            if ($object->getStart() === null) {
+            if (null === $object->getStart()) {
                 $this->context->addViolation('valid_start_date_required');
             }
 
-            if ($object->getStart() !== null && $object->getEnd() !== null) {
+            if (null !== $object->getStart() && null !== $object->getEnd()) {
                 if ($object->getStartInTimestamp() > $object->getEndInTimestamp()) {
                     $this->context->addViolation('invalid_date_range');
                 }
@@ -45,7 +41,7 @@ class DateRangeValidator extends ConstraintValidator
             }
         }
 
-        if ($object->getEnd() === null) {
+        if (null === $object->getEnd()) {
             $this->context->addViolation('valid_end_date_required');
         }
     }

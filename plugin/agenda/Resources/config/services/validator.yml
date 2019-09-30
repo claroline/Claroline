@@ -1,0 +1,11 @@
+services:
+  _defaults:
+      autowire: false
+      autoconfigure: false
+      public: true
+
+  Claroline\AgendaBundle\Validator\Constraints\DateRangeValidator: ~
+
+  claroline_daterange_validator:
+      alias: Claroline\AgendaBundle\Validator\Constraints\DateRangeValidator
+      public: true

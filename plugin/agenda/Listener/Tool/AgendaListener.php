@@ -13,34 +13,13 @@ namespace Claroline\AgendaBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- *  @DI\Service()
- */
 class AgendaListener
 {
     /** @var SerializerProvider */
     private $serializer;
 
     /**
-     * AgendaListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
-     *
-     * @param SerializerProvider $serializer
-     */
-    public function __construct(
-        SerializerProvider $serializer
-    ) {
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_agenda")
-     *
      * @param DisplayToolEvent $event
      */
     public function onDisplayWorkspace(DisplayToolEvent $event)
@@ -50,8 +29,6 @@ class AgendaListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_agenda")
-     *
      * @param DisplayToolEvent $event
      */
     public function onDisplayDesktop(DisplayToolEvent $event)

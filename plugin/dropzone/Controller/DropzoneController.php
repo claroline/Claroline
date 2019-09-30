@@ -117,7 +117,7 @@ class DropzoneController extends DropzoneBaseController
                         }
                     }
 
-                    $AgendaManager = $this->get('claroline.manager.agenda_manager');
+                    $AgendaManager = $this->get('Claroline\AgendaBundle\Manager\AgendaManager');
                     $workspace = $dropzone->getResourceNode()->getWorkspace();
                     //Set the Agenda Drop Events.
                     if (null !== $dropzone->getStartAllowDrop() && null !== $dropzone->getEndAllowDrop()) {
@@ -196,7 +196,7 @@ class DropzoneController extends DropzoneBaseController
                 }
             } else {
                 // if manual mode, we delete agenda events related to
-                $AgendaManager = $this->get('claroline.manager.agenda_manager');
+                $AgendaManager = $this->get('Claroline\AgendaBundle\Manager\AgendaManager');
 
                 if (null !== $dropzone->getEventDrop()) {
                     $event = $dropzone->getEventDrop();

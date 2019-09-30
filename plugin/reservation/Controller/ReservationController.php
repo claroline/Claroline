@@ -39,7 +39,7 @@ class ReservationController extends Controller
      *      "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *      "router"      = @DI\Inject("router"),
      *      "request"     = @DI\Inject("request_stack"),
-     *      "agendaManager" = @DI\Inject("claroline.manager.agenda_manager"),
+     *      "agendaManager" = @DI\Inject("Claroline\AgendaBundle\Manager\AgendaManager"),
      *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
      *      "translator"    = @DI\Inject("translator"),
      *      "tokenStorage"  = @DI\Inject("security.token_storage")

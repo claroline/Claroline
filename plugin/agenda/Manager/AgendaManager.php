@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\RoleManager;
 use ICal\ICal;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,9 +28,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.manager.agenda_manager")
- */
 class AgendaManager
 {
     private $om;
@@ -42,18 +38,6 @@ class AgendaManager
     private $su;
     private $container;
 
-    /**
-     * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "rootDir"      = @DI\Inject("%kernel.root_dir%"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "translator"   = @DI\Inject("translator"),
-     *     "su"           = @DI\Inject("claroline.security.utilities"),
-     *     "container"    = @DI\Inject("service_container")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         $rootDir,

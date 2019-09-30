@@ -155,7 +155,7 @@ class EventController extends AbstractCrudController
     public function exportAction(Request $request)
     {
         $id = $request->query->get('workspace');
-        $file = $this->container->get('claroline.manager.agenda_manager')->export($id);
+        $file = $this->container->get('Claroline\AgendaBundle\Manager\AgendaManager')->export($id);
 
         $response = new StreamedResponse();
 
@@ -193,7 +193,7 @@ class EventController extends AbstractCrudController
         $fileEntity = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
         $file = $this->serializer->deserialize($file, $fileEntity);
         $fileData = $this->container->get('claroline.utilities.file')->getContents($file);
-        $events = $this->container->get('claroline.manager.agenda_manager')->import($fileData, $workspace);
+        $events = $this->container->get('Claroline\AgendaBundle\Manager\AgendaManager')->import($fileData, $workspace);
 
         return new JsonResponse(array_map(function (Event $event) {
             return $this->serializer->serialize($event);

@@ -15,12 +15,8 @@ use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class AgendaSource
 {
     /** @var FinderProvider */
@@ -28,11 +24,6 @@ class AgendaSource
 
     /**
      * AgendaSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -45,8 +36,6 @@ class AgendaSource
     }
 
     /**
-     * @DI\Observe("data_source.events.load")
-     *
      * @param GetDataEvent $event
      */
     public function getEventsData(GetDataEvent $event)
@@ -70,8 +59,6 @@ class AgendaSource
     }
 
     /**
-     * @DI\Observe("data_source.tasks.load")
-     *
      * @param GetDataEvent $event
      */
     public function getTasksData(GetDataEvent $event)

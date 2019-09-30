@@ -1,0 +1,16 @@
+services:
+  _defaults:
+      autowire: false
+      autoconfigure: false
+      public: true
+
+  Claroline\AgendaBundle\Manager\AgendaManager:
+      arguments:
+          - '@claroline.persistence.object_manager'
+          - '%kernel.root_dir%'
+          - '@security.token_storage'
+          - '@security.authorization_checker'
+          - '@claroline.manager.role_manager'
+          - '@translator'
+          - '@claroline.security.utilities'
+          - '@service_container'

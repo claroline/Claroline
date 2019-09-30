@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\AgendaBundle\Listener\Tool\AgendaListener:
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_agenda, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: open_tool_desktop_agenda, method: onDisplayDesktop }
+
+    Claroline\AgendaBundle\Listener\DataSource\AgendaSource:
+        arguments:
+            - '@claroline.api.finder'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.events.load, method: getEventsData }
+            - { name: kernel.event_listener, event: data_source.tasks.load, method: getTasksData }
+
+    Claroline\AgendaBundle\Listener\MergeUserListener:
+        arguments:
+            - '@Claroline\AgendaBundle\Manager\AgendaManager'
+        tags:
+            - { name: kernel.event_listener, event: merge_users, method: onMerge }
