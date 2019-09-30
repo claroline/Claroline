@@ -76,6 +76,7 @@ actions.fetchResource = (resourceNode, embedded = false) => ({
         case 401: dispatch(actions.setRestrictionsError(response)); break
         default: dispatch(actions.setServerErrors(response))
       }
+      dispatch(actions.setResourceLoaded(true))
     }
   }
 })
