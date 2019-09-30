@@ -23,8 +23,11 @@
       "description": "The number of days the badge is valid"
     },
     "tags": {
-      "type": ["string", "null"],
-      "description": "A tag list (coma separated)"
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": ["image"],
