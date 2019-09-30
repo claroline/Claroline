@@ -200,7 +200,7 @@ UsersMergeForm.propTypes = {
 const UsersMerge = connect(
   (state) => ({
     currentUser: securitySelectors.currentUser(state),
-    selectedUsers: state.users.compare.selected // TODO : use a selector
+    selectedUsers: baseSelectors.selected(state) // TODO : use a selector
   }),
   (dispatch) => ({
     mergeUsers(userToKeep, userToRemove, navigate) {

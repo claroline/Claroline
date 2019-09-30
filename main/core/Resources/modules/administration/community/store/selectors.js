@@ -9,8 +9,13 @@ const platformRoles = createSelector(
   (store) => store.platformRoles
 )
 
+const selected = createSelector(
+  [store],
+  (store) => store.users.compare.selected
+)
+
 export const selectors = {
   STORE_NAME,
-
+  selected,
   platformRoles
 }
