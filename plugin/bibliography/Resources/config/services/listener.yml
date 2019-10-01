@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Icap\BibliographyBundle\Listener\Resource\BibliographyListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.api.serializer'
+        tags:
+            - { name: kernel.event_listener, event: resource.icap_bibliography.load, method: load }
+            - { name: kernel.event_listener, event: resource.icap_bibliography.delete, method: onDelete }

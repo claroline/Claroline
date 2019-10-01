@@ -6,11 +6,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- */
 class BibliographyListener
 {
     /** @var ObjectManager */
@@ -21,11 +17,6 @@ class BibliographyListener
 
     /**
      * BibliographyListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager      $objectManager
      * @param SerializerProvider $serializer
@@ -41,8 +32,6 @@ class BibliographyListener
     /**
      * Loads a Bibliography resource.
      *
-     * @DI\Observe("resource.icap_bibliography.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
@@ -55,8 +44,6 @@ class BibliographyListener
     }
 
     /**
-     * @DI\Observe("resource.icap_bibliography.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)

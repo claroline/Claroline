@@ -5,7 +5,6 @@ namespace Icap\BibliographyBundle\Controller\API;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
 use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ApiController
@@ -15,10 +14,6 @@ class ApiController
 
     /**
      * ApiController constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */
