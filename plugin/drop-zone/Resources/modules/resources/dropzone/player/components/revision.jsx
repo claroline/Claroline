@@ -14,7 +14,6 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 import {
   DropzoneType,
@@ -164,21 +163,7 @@ const Revision = withRouter(connect(
       dispatch(
         modalActions.showModal(MODAL_ADD_DOCUMENT, {
           allowedDocuments: allowedDocuments,
-          save: (data) => dispatch(actions.saveManagerDocument(dropId, revisionId, data.type, data.data)),
-          pickResource: (data) => {
-            let title
-            let callback
-            title = trans('add_primary_resource', {}, 'path')
-            callback = (selected) => {dispatch(actions.saveManagerDocument(dropId, revisionId, data.type, selected[0].id))}
-            dispatch(modalActions.showModal(MODAL_RESOURCES, {
-              title: title,
-              selectAction: (selected) => ({
-                type: 'callback',
-                label: trans('select', {}, 'actions'),
-                callback: () => callback(selected)
-              })
-            }))
-          }
+          save: (data) => dispatch(actions.saveManagerDocument(dropId, revisionId, data.type, data.data))
         })
       )
     },

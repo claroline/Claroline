@@ -15,14 +15,6 @@ import {getToolDocumentType} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {constants as configConstants} from '#/plugin/drop-zone/plugin/configuration/constants'
 import {DocumentType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 
-const DocumentActions = () =>
-  <div className="document-actions">
-  </div>
-
-DocumentActions.propTypes = {
-
-}
-
 const Document = props =>
   <li className="document">
     <span className={classes('fa', {
@@ -33,8 +25,6 @@ const Document = props =>
     })} />
 
     {constants.DOCUMENT_TYPES[props.type]}
-
-    <DocumentActions/>
   </li>
 
 Document.propTypes = {
@@ -77,8 +67,6 @@ const DocumentRow = props =>
 
       {props.document.type === constants.DOCUMENT_TYPE_RESOURCE &&
         <LinkButton
-          className="btn-link"
-          primary={true}
           target={resourceRoute(props.document.data)}
         >
           {props.document.data.name}

@@ -8,6 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Summary} from '#/main/app/content/components/summary'
 
+import {Path as PathTypes, Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {MODAL_STEP_POSITION} from '#/plugin/path/resources/path/editor/modals/position'
 
 const EditorMenu = props => {
@@ -115,12 +116,12 @@ EditorMenu.propTypes = {
     pathname: T.string.isRequired
   }).isRequired,
   basePath: T.string.isRequired,
-  path: T.shape({
-    // TODO : path types
-  }),
-  steps: T.arrayOf(T.shape({
-    // TODO : step types
-  })),
+  path: T.shape(
+    PathTypes.propTypes
+  ),
+  steps: T.arrayOf(T.shape(
+    StepTypes.propTypes
+  )),
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,

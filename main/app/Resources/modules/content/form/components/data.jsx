@@ -221,8 +221,8 @@ FormData.propTypes = {
     className: T.string.isRequired
   }),
 
-  getLock: T.func.isRequired,
-  unlock: T.func.isRequired,
+  getLock: T.func,
+  unlock: T.func,
 
   /**
    * The save action of the form.
@@ -249,6 +249,7 @@ FormData.propTypes = {
 
 FormData.defaultProps = {
   level: 2,
+  mode: constants.FORM_MODE_DEFAULT,
   data: {}
 }
 

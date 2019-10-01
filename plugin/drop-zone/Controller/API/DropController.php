@@ -260,8 +260,11 @@ class DropController
                     case Document::DOCUMENT_TYPE_TEXT:
                     case Document::DOCUMENT_TYPE_URL:
                     case Document::DOCUMENT_TYPE_RESOURCE:
-                        $uuid = $request->request->get('dropData', false);
-                        $document = $this->manager->createDocument($drop, $user, $type, $uuid);
+                        $data = $request->request->get('dropData');
+                        if ($data) {
+                            $data = json_decode($data, true);
+                        }
+                        $document = $this->manager->createDocument($drop, $user, $type, $data);
                         $documents[] = $this->manager->serializeDocument($document);
                         break;
                 }

@@ -21,7 +21,6 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document'
 import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
-import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {Comments} from '#/plugin/drop-zone/resources/dropzone/player/components/comments'
 
@@ -221,26 +220,11 @@ const MyDrop = connect(
   }),
   (dispatch) => ({
     saveDocument: (dropType, dropData) => dispatch(actions.saveDocument(dropType, dropData)),
-    addDocument(dropId, allowedDocuments, parent = null) {
+    addDocument(dropId, allowedDocuments) {
       dispatch(
         modalActions.showModal(MODAL_ADD_DOCUMENT, {
           allowedDocuments: allowedDocuments,
-          save: (data) => dispatch(actions.saveDocument(dropId, data.type, data.data)),
-          pickResource: (data) => {
-            let title
-            let callback
-            title = trans('add_primary_resource', {}, 'path')
-            callback = (selected) => {dispatch(actions.saveDocument(dropId, data.type, selected[0].id))}
-            dispatch(modalActions.showModal(MODAL_RESOURCES, {
-              title: title,
-              current: parent,
-              selectAction: (selected) => ({
-                type: 'callback',
-                label: trans('select', {}, 'actions'),
-                callback: () => callback(selected)
-              })
-            }))
-          }
+          save: (data) => dispatch(actions.saveDocument(dropId, data.type, data.data))
         })
       )
     },

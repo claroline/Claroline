@@ -463,7 +463,7 @@ class DropzoneManager
         $document->setIsManager($isManager);
 
         if (Document::DOCUMENT_TYPE_RESOURCE === $document->getType()) {
-            $resourceNode = $this->resourceNodeRepo->findOneBy(['uuid' => $documentData]);
+            $resourceNode = $this->resourceNodeRepo->findOneBy(['uuid' => $documentData['id']]);
             $document->setData($resourceNode);
         } else {
             $document->setData($documentData);

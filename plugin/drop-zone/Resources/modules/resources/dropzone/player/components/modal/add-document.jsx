@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {registry} from '#/main/app/modals/registry'
 import {trans} from '#/main/app/intl/translation'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
@@ -27,7 +27,7 @@ class AddDocumentModal extends Component {
   render() {
     return (
       <FormDataModal
-        {...this.props}
+        {...omit(this.props, 'allowedDocuments', 'pickResource')}
         icon="fa fa-fw fa-plus"
         title={trans('add_document', {}, 'dropzone')}
         saveButtonText={trans('add')}
@@ -52,40 +52,22 @@ class AddDocumentModal extends Component {
                 name: 'data',
                 type: this.state.type,
                 label: trans('document', {}, 'dropzone'),
-                displayed: null !== this.state.type && constants.DOCUMENT_TYPE_RESOURCE !== this.state.type,
                 required: true,
+                displayed: !!this.state.type,
                 options: {
-                  autoUpload: false
+                  autoUpload: false // for file
                 }
               }
             ]
           }
         ]}
-      >
-        { null !== this.state.type && constants.DOCUMENT_TYPE_RESOURCE === this.state.type &&
-          <EmptyPlaceholder
-            size="lg"
-            icon="fa fa-folder"
-            title={''}
-          >
-            <button
-              type="button"
-              className="btn btn-primary btn-emphasis"
-              onClick={() => this.props.pickResource(this.state)}
-            >
-              <span className="fa fa-fw fa-plus icon-with-text-right"/>
-              {trans('add_resource', {}, 'resource')}
-            </button>
-          </EmptyPlaceholder>
-        }
-      </FormDataModal>
+      />
     )
   }
 }
 
 AddDocumentModal.propTypes = {
   save: T.func.isRequired,
-  pickResource: T.func.isRequired,
   allowedDocuments: T.arrayOf(
     T.oneOf(Object.keys(constants.DOCUMENT_TYPES))
   ).isRequired

@@ -146,7 +146,8 @@ const EditorComponent = props =>
             options: {
               choices: constants.DOCUMENT_TYPES,
               multiple: true,
-              condensed: false
+              condensed: false,
+              inline: false
             }
           }, {
             name: 'parameters.revisionEnabled',
