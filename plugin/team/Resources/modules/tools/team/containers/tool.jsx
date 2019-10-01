@@ -30,7 +30,7 @@ const TeamTool = withRouter(
           selfUnregistration: teamParams.selfUnregistration,
           publicDirectory: teamParams.publicDirectory,
           deletableDirectory: teamParams.deletableDirectory,
-          creatableResources: resourceTypes
+          creatableResources: resourceTypes.map(type => type.name)
         }))
       },
       resetCurrentTeam() {
@@ -43,7 +43,7 @@ const TeamTool = withRouter(
           selfUnregistration: teamParams.selfUnregistration,
           publicDirectory: teamParams.publicDirectory,
           deletableDirectory: teamParams.deletableDirectory,
-          creatableResources: resourceTypes
+          creatableResources: resourceTypes.map(type => type.name)
         }, true))
       },
       resetMultipleTeamsForm() {

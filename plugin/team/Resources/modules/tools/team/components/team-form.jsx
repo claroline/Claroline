@@ -94,9 +94,10 @@ const TeamForm = props =>
               displayed: props.isNew,
               options: {
                 multiple: true,
-                condensed: true,
+                condensed: false,
+                inline: false,
                 choices: props.resourceTypes.reduce((acc, type) => {
-                  acc[type] = trans(type, {}, 'resource')
+                  acc[type.name] = trans(type.name, {}, 'resource')
 
                   return acc
                 }, {})
@@ -176,7 +177,7 @@ TeamForm.propTypes = {
     uuid: T.string.isRequired
   }).isRequired,
   isNew: T.bool.isRequired,
-  resourceTypes: T.arrayOf(T.string).isRequired,
+  resourceTypes: T.arrayOf(T.object).isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,

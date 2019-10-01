@@ -81,9 +81,10 @@ const MultipleTeamForm = props =>
               label: trans('user_creatable_resources', {}, 'team'),
               options: {
                 multiple: true,
-                condensed: true,
+                condensed: false,
+                inline: false,
                 choices: props.resourceTypes.reduce((acc, type) => {
-                  acc[type] = trans(type, {}, 'resource')
+                  acc[type.name] = trans(type.name, {}, 'resource')
 
                   return acc
                 }, {})
@@ -112,7 +113,7 @@ MultipleTeamForm.propTypes = {
   workspace: T.shape({
     uuid: T.string.isRequired
   }).isRequired,
-  resourceTypes: T.arrayOf(T.string).isRequired,
+  resourceTypes: T.arrayOf(T.object).isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired

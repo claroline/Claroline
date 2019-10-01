@@ -1,5 +1,7 @@
 import {createSelector} from 'reselect'
 
+import {selectors as configSelectors} from '#/main/app/config/store/selectors'
+
 const STORE_NAME = 'claroline_team_tool'
 
 const store = (state) => state[STORE_NAME]
@@ -24,10 +26,7 @@ const myTeams = createSelector(
   (store) => store.myTeams
 )
 
-const resourceTypes = createSelector(
-  [store],
-  (store) => store.resourceTypes
-)
+const resourceTypes = (state) => configSelectors.param(state, 'resources.types')
 
 export const selectors = {
   STORE_NAME,

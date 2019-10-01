@@ -68,7 +68,7 @@ const TeamTool = props =>
         }, {
           path: '/teams/:id',
           component: Team,
-          onEnter: (params) => props.openCurrentTeam(params.id, props.teamParams, props.workspaceId),
+          onEnter: (params) => props.openCurrentTeam(params.id, props.teamParams, props.workspaceId, props.resourceTypes),
           onLeave: () => props.resetCurrentTeam(),
           exact: true
         }, {
