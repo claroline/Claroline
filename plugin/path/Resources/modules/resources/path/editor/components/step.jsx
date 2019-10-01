@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -117,11 +118,13 @@ const EditorStep = props =>
               name: 'evaluated',
               type: 'boolean',
               label: trans('evaluated', {}, 'path'),
-              help: trans('evaluated_help', {}, 'path')
+              help: trans('evaluated_help', {}, 'path'),
+              displayed: (step) => !isEmpty(step.primaryResource)
             }, {
               name: 'showResourceHeader',
               type: 'boolean',
-              label: trans('show_resource_header')
+              label: trans('show_resource_header'),
+              displayed: (step) => !isEmpty(step.primaryResource)
             }
           ]
         }, {
