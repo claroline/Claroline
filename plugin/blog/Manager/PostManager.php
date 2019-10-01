@@ -11,13 +11,9 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Repository\PostRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("icap.blog.manager.post")
- */
 class PostManager
 {
     private $om;
@@ -34,16 +30,6 @@ class PostManager
     const GET_UNPUBLISHED_POSTS = 'GET_UNPUBLISHED_POSTS';
 
     /**
-     * @DI\InjectParams({
-     *     "finder"          = @DI\Inject("claroline.api.finder"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "trackingManager" = @DI\Inject("icap.blog.manager.tracking"),
-     *     "repo"            = @DI\Inject("icap.blog.post_repository"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "userSerializer"  = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\UserSerializer"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
-     * })
-     *
      * @param FinderProvider      $finder
      * @param ObjectManager       $om
      * @param BlogTrackingManager $trackingManager

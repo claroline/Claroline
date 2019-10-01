@@ -9,25 +9,14 @@ use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostPublishEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class NotificationListener.
- *
- * @DI\Service
  */
 class NotificationListener
 {
-    private $templating;
-
-    /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "router"     = @DI\Inject("router")
-     * })
-     */
     public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
         $this->translator = $translator;
@@ -36,14 +25,6 @@ class NotificationListener
 
     /**
      * @param NotificationCreateDelegateViewEvent $event
-     * @DI\Observe("create_notification_item_resource-icap_blog-post_create")
-     * @DI\Observe("create_notification_item_resource-icap_blog-post_update")
-     * @DI\Observe("create_notification_item_resource-icap_blog-post_publish")
-     * @DI\Observe("create_notification_item_resource-icap_blog-comment_create")
-     * @DI\Observe("create_notification_item_resource-icap_blog-comment_update")
-     * @DI\Observe("create_notification_item_resource-icap_blog-comment_publish")
-     * @DI\Observe("create_notification_item_resource-icap_blog-post-user_tagged")
-     * @DI\Observe("create_notification_item_resource-icap_blog-comment-user_tagged")
      */
     public function onCreateNotificationItem(NotificationCreateDelegateViewEvent $event)
     {

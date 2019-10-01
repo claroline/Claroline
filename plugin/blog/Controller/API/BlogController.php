@@ -9,10 +9,10 @@ use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route("blog/{blogId}/", options={"expose"=true})
@@ -32,14 +32,6 @@ class BlogController
     /**
      * BlogController constructor.
      *
-     * @DI\InjectParams({
-     *     "finder"                = @DI\Inject("claroline.api.finder"),
-     *     "blogSerializer"        = @DI\Inject("Icap\BlogBundle\Serializer\BlogSerializer"),
-     *     "blogOptionsSerializer" = @DI\Inject("Icap\BlogBundle\Serializer\BlogOptionsSerializer"),
-     *     "blogManager"           = @DI\Inject("icap_blog.manager.blog"),
-     *     "postManager"           = @DI\Inject("icap.blog.manager.post")
-     * })
-     *
      * @param FinderProvider        $finder
      * @param BlogSerializer        $blogSerializer
      * @param BlogOptionsSerializer $blogOptionsSerializer
@@ -51,13 +43,15 @@ class BlogController
         BlogSerializer $blogSerializer,
         BlogOptionsSerializer $blogOptionsSerializer,
         BlogManager $blogManager,
-        PostManager $postManager
+        PostManager $postManager,
+        AuthorizationCheckerInterface $authorization
       ) {
         $this->finder = $finder;
         $this->blogSerializer = $blogSerializer;
         $this->blogOptionsSerializer = $blogOptionsSerializer;
         $this->blogManager = $blogManager;
         $this->postManager = $postManager;
+        $this->authorization = $authorization;
     }
 
     /**

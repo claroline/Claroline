@@ -9,11 +9,11 @@ use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\BlogTrackingManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\PostSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -32,14 +32,6 @@ class PostController
     /**
      * postController constructor.
      *
-     * @DI\InjectParams({
-     *     "postSerializer"    = @DI\Inject("Icap\BlogBundle\Serializer\PostSerializer"),
-     *     "postManager"       = @DI\Inject("icap.blog.manager.post"),
-     *     "trackingManager"   = @DI\Inject("icap.blog.manager.tracking"),
-     *     "logThreshold"      = @DI\Inject("%non_repeatable_log_time_in_seconds%")
-
-     * })
-     *
      * @param PostSerializer      $postSerializer
      * @param PostManager         $postManager
      * @param BlogTrackingManager $trackingManager
@@ -49,12 +41,14 @@ class PostController
         PostSerializer $postSerializer,
         PostManager $postManager,
         BlogTrackingManager $trackingManager,
-        $logThreshold)
+        $logThreshold,
+        AuthorizationCheckerInterface $authorization)
     {
         $this->postSerializer = $postSerializer;
         $this->postManager = $postManager;
         $this->trackingManager = $trackingManager;
         $this->logThreshold = $logThreshold;
+        $this->authorization = $authorization;
     }
 
     /**

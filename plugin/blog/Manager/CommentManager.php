@@ -12,11 +12,7 @@ use Icap\BlogBundle\Entity\Member;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Repository\CommentRepository;
 use Icap\BlogBundle\Repository\MemberRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("icap.blog.manager.comment")
- */
 class CommentManager
 {
     /**
@@ -29,14 +25,6 @@ class CommentManager
     private $trackingManager;
 
     /**
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "repo"            = @DI\Inject("icap.blog.comment_repository"),
-     *     "memberRepo"      = @DI\Inject("icap.blog.member_repository"),
-     *     "finder"          = @DI\Inject("claroline.api.finder"),
-     *     "trackingManager" = @DI\Inject("icap.blog.manager.tracking")
-     * })
-     *
      * @param ObjectManager       $om
      * @param CommentRepository   $repo
      * @param MemberRepository    $memberRepo

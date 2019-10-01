@@ -6,12 +6,9 @@ use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\CommentManager;
 use Icap\BlogBundle\Manager\PostManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class ApiListener.
- *
- * @DI\Service
  */
 class ApiListener
 {
@@ -25,12 +22,6 @@ class ApiListener
     private $blogManager;
 
     /**
-     * @DI\InjectParams({
-     *     "commentManager" = @DI\Inject("icap.blog.manager.comment"),
-     *     "postManager"    = @DI\Inject("icap.blog.manager.post"),
-     *     "blogManager"    = @DI\Inject("icap_blog.manager.blog")
-     * })
-     *
      * @param CommentManager $commentManager
      * @param PostManager    $postManager
      * @param BlogManager    $blogManager
@@ -43,8 +34,6 @@ class ApiListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)

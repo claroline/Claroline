@@ -17,15 +17,12 @@ use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\CommentSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service
- */
 class BlogListener
 {
     use PermissionCheckerTrait;
@@ -40,12 +37,6 @@ class BlogListener
     /**
      * BlogListener constructor.
      *
-     * @DI\InjectParams({
-     *     "httpKernel"   = @DI\Inject("http_kernel"),
-     *     "requestStack" = @DI\Inject("request_stack"),
-     *     "container"    = @DI\Inject("service_container")
-     * })
-     *
      * @param HttpKernelInterface $httpKernel
      * @param RequestStack        $requestStack
      * @param ContainerInterface  $container
@@ -53,16 +44,16 @@ class BlogListener
     public function __construct(
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
-        ContainerInterface $container
+        ContainerInterface $container,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->container = $container;
+        $this->authorization = $authorization;
     }
 
     /**
-     * @DI\Observe("resource.icap_blog.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -71,8 +62,8 @@ class BlogListener
         $blog = $event->getResource();
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
-        $postManager = $this->container->get('icap.blog.manager.post');
-        $blogManager = $this->container->get('icap_blog.manager.blog');
+        $postManager = $this->container->get('Icap\BlogBundle\Manager\PostManager');
+        $blogManager = $this->container->get('Icap\BlogBundle\Manager\BlogManager');
 
         $parameters['limit'] = -1;
 
@@ -103,8 +94,6 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("resource.icap_blog.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -117,9 +106,6 @@ class BlogListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.icap_blog.export")
-     */
     public function onExport(ExportObjectEvent $exportEvent)
     {
         $blog = $exportEvent->getObject();
@@ -133,9 +119,6 @@ class BlogListener
         $exportEvent->overwrite('_data', $data);
     }
 
-    /**
-     * @DI\Observe("transfer.icap_blog.import.after")
-     */
     public function onImport(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -165,7 +148,7 @@ class BlogListener
                 /** @var Comment $comment */
                 $comment = $this->container->get('Icap\BlogBundle\Serializer\CommentSerializer')->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
 
-                $this->container->get('icap.blog.manager.comment')
+                $this->container->get('Icap\BlogBundle\Manager\CommentManager')
                   ->createComment($blog, $post, $this->commentSerializer->deserialize($data, null), $comment['isPublished']);
 
                 if (isset($commentData['creationDate'])) {
@@ -189,20 +172,18 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("resource.icap_blog.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
     {
         $entityManager = $this->container->get('claroline.persistence.object_manager');
-        $postManager = $this->container->get('icap.blog.manager.post');
+        $postManager = $this->container->get('Icap\BlogBundle\Manager\PostManager');
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
 
         $newBlog = $event->getCopy();
 
-        $this->container->get('icap_blog.manager.blog')->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
+        $this->container->get('Icap\BlogBundle\Manager\BlogManager')->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
 
         foreach ($blog->getPosts() as $post) {
             /** @var Post $newPost */
@@ -248,8 +229,6 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("generate_resource_user_evaluation_icap_blog")
-     *
      * @param GenericDataEvent $event
      */
     public function onGenerateResourceTracking(GenericDataEvent $event)

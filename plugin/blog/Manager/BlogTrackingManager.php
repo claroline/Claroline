@@ -22,14 +22,10 @@ use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostPublishEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("icap.blog.manager.tracking")
- */
 class BlogTrackingManager
 {
     const BLOG_TYPE = 'icap_blog';
@@ -42,12 +38,6 @@ class BlogTrackingManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
-     *     "evalutionManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "translator"       = @DI\Inject("translator")
-     * })
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,

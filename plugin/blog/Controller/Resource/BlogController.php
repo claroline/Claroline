@@ -38,8 +38,8 @@ class BlogController extends Controller
      * @DI\InjectParams({
      *     "blogSerializer"        = @DI\Inject("Icap\BlogBundle\Serializer\BlogSerializer"),
      *     "blogOptionsSerializer" = @DI\Inject("Icap\BlogBundle\Serializer\BlogOptionsSerializer"),
-     *     "blogManager"           = @DI\Inject("icap_blog.manager.blog"),
-     *     "postManager"           = @DI\Inject("icap.blog.manager.post"),
+     *     "blogManager"           = @DI\Inject("Icap\BlogBundle\Manager\BlogManager"),
+     *     "postManager"           = @DI\Inject("Icap\BlogBundle\Manager\PostManager"),
      *     "router"                = @DI\Inject("router"),
      *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage")

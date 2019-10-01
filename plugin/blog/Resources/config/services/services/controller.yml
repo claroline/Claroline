@@ -1,0 +1,29 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Icap\BlogBundle\Controller\API\BlogController:
+        arguments:
+          - '@claroline.api.finder'
+          - '@Icap\BlogBundle\Serializer\BlogSerializer'
+          - '@Icap\BlogBundle\Serializer\BlogOptionsSerializer'
+          - '@Icap\BlogBundle\Manager\BlogManager'
+          - '@Icap\BlogBundle\Manager\PostManager'
+          - '@security.authorization_checker'
+
+    Icap\BlogBundle\Controller\API\CommentController:
+        arguments:
+          - '@Icap\BlogBundle\Serializer\CommentSerializer'
+          - '@Icap\BlogBundle\Manager\CommentManager'
+          - '@Icap\BlogBundle\Manager\BlogTrackingManager'
+          - '@security.authorization_checker'
+
+    Icap\BlogBundle\Controller\API\PostController:
+        arguments:
+          - '@Icap\BlogBundle\Serializer\PostSerializer'
+          - '@Icap\BlogBundle\Manager\PostManager'
+          - '@Icap\BlogBundle\Manager\BlogTrackingManager'
+          - '%non_repeatable_log_time_in_seconds%'
+          - '@security.authorization_checker'

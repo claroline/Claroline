@@ -1,0 +1,40 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Icap\BlogBundle\Manager\BlogManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '%icap.blog.banner_directory%'
+            - '@icap.blog.blog_repository'
+            - '@icap.blog.member_repository'
+            - '@event_dispatcher'
+            - '@Icap\BlogBundle\Manager\PostManager'
+            - '@claroline.utilities.file'
+
+    Icap\BlogBundle\Manager\BlogTrackingManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@claroline.manager.resource_evaluation_manager'
+            - '@translator'
+
+    Icap\BlogBundle\Manager\CommentManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@icap.blog.comment_repository'
+            - '@icap.blog.member_repository'
+            - '@claroline.api.finder'
+            - '@Icap\BlogBundle\Manager\BlogTrackingManager'
+
+
+    Icap\BlogBundle\Manager\PostManager:
+        arguments:
+            - '@claroline.api.finder'
+            - '@claroline.persistence.object_manager'
+            - '@Icap\BlogBundle\Manager\BlogTrackingManager'
+            - '@icap.blog.post_repository'
+            - '@translator'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@event_dispatcher'

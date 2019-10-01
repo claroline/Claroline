@@ -15,13 +15,9 @@ use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Repository\BlogRepository;
 use Icap\BlogBundle\Repository\MemberRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * @DI\Service("icap_blog.manager.blog")
- */
 class BlogManager
 {
     private $objectManager;
@@ -32,18 +28,6 @@ class BlogManager
     private $postManager;
     private $fileUtils;
 
-    /**
-     * @DI\InjectParams({
-     *     "objectManager"   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "uploadDir"       = @DI\Inject("%icap.blog.banner_directory%"),
-     *     "repo"            = @DI\Inject("icap.blog.blog_repository"),
-     *     "memberRepo"      = @DI\Inject("icap.blog.member_repository"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "postManager"     = @DI\Inject("icap.blog.manager.post"),
-     *     "fileUtils"       = @DI\Inject("claroline.utilities.file")
-     *
-     * })
-     */
     public function __construct(
         ObjectManager $objectManager,
         $uploadDir,

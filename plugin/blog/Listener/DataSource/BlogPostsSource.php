@@ -16,11 +16,7 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class BlogPostsSource
 {
     /** @var FinderProvider */
@@ -28,10 +24,6 @@ class BlogPostsSource
 
     /**
      * BlogPostsSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -41,8 +33,6 @@ class BlogPostsSource
     }
 
     /**
-     * @DI\Observe("data_source.blog_posts.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

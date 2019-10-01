@@ -28,4 +28,4 @@ services:
     Icap\BlogBundle\Serializer\BlogOptionsSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@icap_blog.manager.blog'
+            - '@Icap\BlogBundle\Manager\BlogManager'
