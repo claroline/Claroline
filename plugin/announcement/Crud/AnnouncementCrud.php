@@ -10,22 +10,11 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.crud.announcement")
- * @DI\Tag("claroline.crud")
- */
 class AnnouncementCrud
 {
     /**
      * AnnouncementManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "manager"         = @DI\Inject("claroline.manager.announcement_manager")
-     * })
      *
      * @param StrictDispatcher $eventDispatcher
      */
@@ -40,8 +29,6 @@ class AnnouncementCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_announcementbundle_entity_announcement")
-     *
      * @param CreateEvent $event
      */
     public function preCreate(CreateEvent $event)
@@ -60,8 +47,6 @@ class AnnouncementCrud
     }
 
     /**
-     * @DI\Observe("crud_post_update_object_claroline_announcementbundle_entity_announcement")
-     *
      * @param CreateEvent $event
      */
     public function postUpdate(UpdateEvent $event)
@@ -76,8 +61,6 @@ class AnnouncementCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_delete_object_claroline_announcementbundle_entity_announcement")
-     *
      * @param CreateEvent $event
      */
     public function preDelete(DeleteEvent $event)

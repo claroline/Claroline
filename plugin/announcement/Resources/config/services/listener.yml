@@ -1,0 +1,27 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+        public: false
+
+    Claroline\AnnouncementBundle\Listener\DataSource\AnnouncementSource:
+        arguments:
+            - '@claroline.api.finder'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: data_source.announcements.load, method: getData }
+
+    Claroline\AnnouncementBundle\Listener\Resource\AnnouncementListener:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@templating'
+            - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
+            - '@claroline.api.serializer'
+            - '@claroline.api.crud'
+            - '@security.authorization_checker'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.load, method: load }
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.copy, method: copy }
+            - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.export, method: onExport }
+            - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.import.after, method: onImport }
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.deleter, method: delete }

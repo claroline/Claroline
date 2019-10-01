@@ -1,0 +1,40 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@claroline.api.finder'
+              - method: setSerializer
+                arguments:
+                  - '@claroline.api.serializer'
+              - method: setCrud
+                arguments:
+                  - '@claroline.api.crud'
+              - method: setObjectManager
+                arguments:
+                  - '@claroline.persistence.object_manager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
+    Claroline\AnnouncementBundle\Controller\AnnouncementController:
+        arguments:
+          - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
+          - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
+          - '@claroline.api.crud'
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.finder'
+          - '@security.authorization_checker'

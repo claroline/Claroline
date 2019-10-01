@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+        public: false
+
+    Claroline\AnnouncementBundle\Manager\AnnouncementManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@claroline.event.event_dispatcher'
+            - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
+            - '@claroline.manager.mail_manager'
+            - '@claroline.manager.scheduled_task_manager'
+            - '@claroline.api.finder'

@@ -15,10 +15,10 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages announces of an announcement resource.
@@ -56,14 +56,6 @@ class AnnouncementController
     /**
      * AnnouncementController constructor.
      *
-     * @DI\InjectParams({
-     *     "manager"    = @DI\Inject("claroline.manager.announcement_manager"),
-     *     "serializer" = @DI\Inject("Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer"),
-     *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder"     = @DI\Inject("claroline.api.finder")
-     * })
-     *
      * @param AnnouncementManager    $manager
      * @param AnnouncementSerializer $serializer
      * @param Crud                   $crud
@@ -75,13 +67,15 @@ class AnnouncementController
         AnnouncementSerializer $serializer,
         Crud $crud,
         ObjectManager $om,
-        FinderProvider $finder
+        FinderProvider $finder,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->manager = $manager;
         $this->serializer = $serializer;
         $this->crud = $crud;
         $this->om = $om;
         $this->finder = $finder;
+        $this->authorization = $authorization;
 
         $this->roleRepo = $om->getRepository(Role::class);
     }

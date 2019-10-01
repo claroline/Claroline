@@ -15,12 +15,8 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class AnnouncementSource
 {
     /** @var FinderProvider */
@@ -31,11 +27,6 @@ class AnnouncementSource
 
     /**
      * AnnouncementSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
      *
      * @param FinderProvider        $finder
      * @param TokenStorageInterface $tokenStorage
@@ -49,8 +40,6 @@ class AnnouncementSource
     }
 
     /**
-     * @DI\Observe("data_source.announcements.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)
