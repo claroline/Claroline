@@ -4,7 +4,6 @@ namespace Claroline\AnalyticsBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,11 +25,6 @@ class AnalyticsController
 
     /**
      * AnalyticsController constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "analyticsManager"       = @DI\Inject("claroline.manager.analytics_manager")
-     * })
      *
      * @param AnalyticsManager $analyticsManager
      */

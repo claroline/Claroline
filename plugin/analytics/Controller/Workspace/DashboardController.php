@@ -4,7 +4,6 @@ namespace Claroline\AnalyticsBundle\Controller\Workspace;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +23,6 @@ class DashboardController
 
     /**
      * LogController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorizationChecker" = @DI\Inject("security.authorization_checker"),
-     *     "analyticsManager"     = @DI\Inject("claroline.manager.analytics_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param AnalyticsManager              $analyticsManager

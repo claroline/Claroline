@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\NoResultException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -36,11 +35,6 @@ class TrackingController extends Controller
 
     /**
      * TrackingController constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer

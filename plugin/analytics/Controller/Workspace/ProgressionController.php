@@ -5,7 +5,6 @@ namespace Claroline\AnalyticsBundle\Controller\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ProgressionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -16,10 +15,6 @@ class ProgressionController
 
     /**
      * ProgressionController constructor.
-     *
-     * @DI\InjectParams({
-     *     "progressionManager" = @DI\Inject("claroline.manager.progression_manager")
-     * })
      *
      * @param ProgressionManager $progressionManager
      */

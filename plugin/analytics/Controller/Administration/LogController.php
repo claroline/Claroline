@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LogManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -36,13 +35,6 @@ class LogController
     private $loggedUser;
 
     /**
-     * @DI\InjectParams({
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "serializer"             = @DI\Inject("claroline.api.serializer"),
-     *     "logManager"             = @DI\Inject("claroline.log.manager")
-     * })
-     *
      * LogController constructor.
      *
      * @param FinderProvider     $finder

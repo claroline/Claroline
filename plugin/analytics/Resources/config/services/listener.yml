@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\AnalyticsBundle\Listener\Administration\DashboardListener:
+        arguments:
+            - '@claroline.event.manager'
+        tags:
+            - { name: kernel.event_listener, event: administration_tool_dashboard, method: onDisplayTool }
+            - { name: kernel.event_listener, event: crud_pre_patch_object_claroline_corebundle_entity_user, method: listenUserPatch }
+
+    Claroline\AnalyticsBundle\Listener\Tool\DashboardListener:
+        arguments:
+            - '@claroline.event.manager'
+            - '@claroline.persistence.object_manager'
+            - '@claroline.manager.progression_manager'
+            - '@security.token_storage'
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_dashboard, method: onDisplayWorkspace }

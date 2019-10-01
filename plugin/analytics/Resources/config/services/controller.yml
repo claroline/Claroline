@@ -1,0 +1,45 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\AnalyticsBundle\Controller\Administration\AnalyticsController:
+        arguments:
+          - '@security.token_storage'
+          - '@claroline.manager.analytics_manager'
+
+    Claroline\AnalyticsBundle\Controller\Administration\LogController:
+        arguments:
+          - '@security.token_storage'
+          - '@claroline.api.finder'
+          - '@claroline.api.serializer'
+          - '@claroline.log.manager'
+
+    Claroline\AnalyticsBundle\Controller\Resource\LogController:
+        arguments:
+          - '@security.token_storage'
+          - '@claroline.api.finder'
+          - '@claroline.api.serializer'
+          - '@claroline.log.manager'
+
+    Claroline\AnalyticsBundle\Controller\User\TrackingController:
+        arguments:
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.serializer'
+
+    Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.manager.analytics_manager'
+
+    Claroline\AnalyticsBundle\Controller\Workspace\LogController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.api.finder'
+          - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
+          - '@claroline.log.manager'
+
+    Claroline\AnalyticsBundle\Controller\Workspace\ProgressionController:
+        arguments:
+          - '@claroline.manager.progression_manager'

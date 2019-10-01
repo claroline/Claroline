@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\LogManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -35,13 +34,6 @@ class LogController
     private $logManager;
 
     /**
-     * @DI\InjectParams({
-     *     "authorizationChecker"   = @DI\Inject("security.authorization_checker"),
-     *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "serializer"             = @DI\Inject("claroline.api.serializer"),
-     *     "logManager"             = @DI\Inject("claroline.log.manager")
-     * })
-     *
      * LogController constructor.
      *
      * @param AuthorizationCheckerInterface $authorizationChecker

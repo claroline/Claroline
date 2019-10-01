@@ -39,13 +39,6 @@ class DashboardListener
     /**
      * DashboardListener constructor.
      *
-     * @DI\InjectParams({
-     *     "eventManager"       = @DI\Inject("claroline.event.manager"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "progressionManager" = @DI\Inject("claroline.manager.progression_manager"),
-     *     "tokenStorage"       = @DI\Inject("security.token_storage")
-     * })
-     *
      * @param EventManager          $eventManager
      * @param ObjectManager         $om
      * @param ProgressionManager    $progressionManager
@@ -66,8 +59,6 @@ class DashboardListener
 
     /**
      * Displays dashboard on Workspace.
-     *
-     * @DI\Observe("open_tool_workspace_dashboard")
      *
      * @param DisplayToolEvent $event
      */
