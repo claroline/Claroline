@@ -170,11 +170,9 @@ services:
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
         arguments:
             - '@claroline.persistence.object_manager'
-            - '@templating'
             - '@claroline.api.serializer'
         tags:
-            - { name: kernel.event_listener, event: resource.text.load, method: onLoad }
-            - { name: kernel.event_listener, event: open_text, method: open }
+            - { name: kernel.event_listener, event: resource.text.load, method: load }
             - { name: kernel.event_listener, event: resource.text.delete, method: delete }
 
     Claroline\CoreBundle\Listener\Resource\ResourceListener:

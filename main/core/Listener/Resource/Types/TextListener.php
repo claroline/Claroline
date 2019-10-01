@@ -13,20 +13,13 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 
 class TextListener
 {
     /** @var ObjectManager */
     private $om;
-
-    /** @var TwigEngine */
-    private $templating;
 
     /** @var SerializerProvider */
     private $serializer;
@@ -35,16 +28,13 @@ class TextListener
      * TextListener constructor.
      *
      * @param ObjectManager      $om
-     * @param TwigEngine         $templating
      * @param SerializerProvider $serializer
      */
     public function __construct(
         ObjectManager $om,
-        TwigEngine $templating,
         SerializerProvider $serializer)
     {
         $this->om = $om;
-        $this->templating = $templating;
         $this->serializer = $serializer;
     }
 
@@ -59,24 +49,6 @@ class TextListener
             'text' => $this->serializer->serialize($event->getResource()),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param OpenResourceEvent $event
-     */
-    public function open(OpenResourceEvent $event)
-    {
-        $text = $event->getResource();
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:text:index.html.twig',
-            [
-                'text' => $text,
-                '_resource' => $text,
-            ]
-        );
-
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
