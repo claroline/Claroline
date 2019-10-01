@@ -1,2 +1,15 @@
 imports:
     - { resource: services/serializer.yml }
+
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\RssBundle\Listener\RssListener:
+        arguments:
+           - '@claroline.api.serializer'
+        tags:
+            - { name: kernel.event_listener, event: resource.rss_feed.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.rss_feed.delete, method: onDelete }

@@ -15,7 +15,6 @@ use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,11 +35,6 @@ class EventController extends AbstractCrudController
 
     /**
      * EventController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param TokenStorageInterface         $tokenStorage

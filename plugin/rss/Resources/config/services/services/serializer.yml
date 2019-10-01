@@ -8,7 +8,3 @@ services:
         tags: [claroline.serializer]
         arguments:
            - '@claroline.rss_reader.provider'
-           
-    claroline.serializer.scorm:
-         alias: Claroline\ScormBundle\Serializer\ScormSerializer
-         public: true
