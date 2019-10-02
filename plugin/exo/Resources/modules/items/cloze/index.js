@@ -104,7 +104,7 @@ export default {
 
     item.solutions.map(solution => {
       const hole = item.holes.find(hole => hole.id === solution.holeId)
-      const answer = answers ? answers.data.find(answer => answer.holeId === hole.id): null
+      const answer = answers && answers.data ? answers.data.find(answer => answer.holeId === hole.id) : null
       const expected = utils.findSolutionExpectedAnswer(solution)
 
 

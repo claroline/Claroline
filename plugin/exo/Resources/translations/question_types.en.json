@@ -11,6 +11,7 @@
     "open_desc": "Answer a question with a text that may contain resources (e.g. text, image, audio, video). The open question requires a manual correction.",
     "pair": "Pairing",
     "pair_desc": "Put items (e.g. text, image, audio, video) in pairs.",
+    "resource": "Resource",
     "set": "Classifying",
     "set_desc": "Move items (e.g. text, image, audio, video) inside sets.",
     "words": "Keywords",

@@ -388,6 +388,7 @@ class Waveform extends Component {
             {this.props.rateControl &&
               <CallbackButton
                 className="btn"
+                title={trans('slow_down_audio', {}, 'audio')}
                 callback={() => {
                   const newRate = parseFloat((this.state.wavesurfer.getPlaybackRate() - 0.1).toFixed(1))
 
@@ -427,6 +428,7 @@ class Waveform extends Component {
             {this.props.rateControl &&
               <CallbackButton
                 className="btn"
+                title={trans('speed_up_audio', {}, 'audio')}
                 callback={() => {
                   const newRate = parseFloat((this.state.wavesurfer.getPlaybackRate() + 0.1).toFixed(1))
 

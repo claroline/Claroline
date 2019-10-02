@@ -4,6 +4,7 @@ import textContent from '#/plugin/exo/contents/text'
 import imageContent from '#/plugin/exo/contents/image'
 import audioContent from '#/plugin/exo/contents/audio'
 import videoContent from '#/plugin/exo/contents/video'
+import resourceContent from '#/plugin/exo/contents/resource'
 
 let registeredContentTypes = {}
 let defaultRegistered = false
@@ -24,7 +25,7 @@ function registerContentItemType(definition) {
 
 function registerDefaultContentItemTypes() {
   if (!defaultRegistered) {
-    [textContent, imageContent, audioContent, videoContent].forEach(registerContentItemType)
+    [textContent, imageContent, audioContent, videoContent, resourceContent].forEach(registerContentItemType)
     defaultRegistered = true
   }
 }

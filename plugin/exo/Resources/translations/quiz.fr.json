@@ -15,6 +15,7 @@
     "allow_test_exit": "Permettre d'interrompre le questionnaire",
     "allow_to_edit": "Autoriser l'édition",
     "allow_to_edit_answers": "Autoriser l'édition des réponses des étapes validées",
+    "allowed_resource_types_info": "Seules les ressources de type [Blog, Cours, Diaporama, Fichier, Scorm, Texte, Wiki] sont autorisées.",
     "already": "Cette question est déjà partagée avec cet utilisateur.",
     "already_answered": "Vous avez déjà répondu à ce questionnaire.",
     "anonymize_results": "Rendre les résultats des utilisateurs anonymes",

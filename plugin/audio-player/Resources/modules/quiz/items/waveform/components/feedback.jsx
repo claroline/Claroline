@@ -15,7 +15,7 @@ const WaveformFeedback = props =>
   <div className="waveform-feedback">
     <Waveform
       id={`waveform-feedback-${props.item.id}`}
-      url={asset(props.item.url)}
+      url={asset(props.item.file)}
       editable={false}
       regions={props.answer.map(a => Object.assign({}, a, {
         color: !props.item.hasExpectedAnswers || isCorrectAnswer(props.item.solutions, a.start, a.end) ?

@@ -31,6 +31,7 @@ const Section = {
     help: T.string,
     showAudio: T.bool,
     audioUrl: T.string,
+    audioDescription: T.string,
     comment: T.shape(Comment.propTypes)
   },
   defaultProps: {

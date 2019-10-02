@@ -103,7 +103,7 @@ class WaveformPlayer extends Component {
       <div>
         <Waveform
           id={`waveform-player-${this.props.item.id}`}
-          url={asset(this.props.item.url)}
+          url={asset(this.props.item.file)}
           editable={!this.props.disabled}
           maxRegions={this.props.item.answersLimit}
           regions={this.props.answer.map(a => a.id ? a : Object.assign({}, a, {id: makeId()}))}
@@ -156,7 +156,7 @@ class WaveformPlayer extends Component {
 WaveformPlayer.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
-    url: T.string.isRequired,
+    file: T.string.isRequired,
     answersLimit: T.number.isRequired
   }).isRequired,
   answer: T.arrayOf(T.shape({

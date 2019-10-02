@@ -252,10 +252,10 @@ class WaveformComponent extends Component {
   render() {
     return (
       <div>
-        {this.props.item.url &&
+        {this.props.item.file &&
           <Waveform
             id={`waveform-editor-${this.props.item.id}`}
-            url={asset(this.props.item.url)}
+            url={asset(this.props.item.file)}
             regions={this.props.item.solutions.map(s => s.section)}
             selectedRegion={this.state.currentSection}
             toPlay={this.state.toPlay}
@@ -431,7 +431,7 @@ const WaveformEditor = (props) => {
               required: true,
               calculated: () => null,
               onChange: (file) => {
-                props.update('url', file.url)
+                props.update('file', file.url)
                 props.update('solutions', [])
               },
               options: {

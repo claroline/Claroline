@@ -32,6 +32,7 @@ const ResourceInput = props => {
               title: props.picker.title,
               current: props.picker.current,
               root: props.picker.root,
+              filters: props.picker.filters,
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('select', {}, 'actions'),

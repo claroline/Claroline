@@ -105,6 +105,11 @@ class Section
     private $audioUrl;
 
     /**
+     * @ORM\Column(name="audio_description", type="string", nullable=true)
+     */
+    private $audioDescription;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\AudioPlayerBundle\Entity\Resource\SectionComment",
      *     mappedBy="section"
@@ -349,6 +354,22 @@ class Section
     public function setAudioUrl($audioUrl)
     {
         $this->audioUrl = $audioUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAudioDescription()
+    {
+        return $this->audioDescription;
+    }
+
+    /**
+     * @param string $audioDescription
+     */
+    public function setAudioDescription($audioDescription)
+    {
+        $this->audioDescription = $audioDescription;
     }
 
     /**

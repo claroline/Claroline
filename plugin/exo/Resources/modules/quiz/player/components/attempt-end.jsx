@@ -36,6 +36,26 @@ const AttemptEndComponent = props =>
       }
 
       <div className={props.showAttemptScore ? 'col-md-9':'col-md-12'}>
+        {props.showAttemptScore &&
+        get(props.paper, 'total') &&
+        get(props.paper, 'structure.parameters.successScore') &&
+        get(props.paper, 'structure.parameters.successMessage') &&
+        (get(props.paper, 'score') / get(props.paper, 'total')) * 100 >= get(props.paper, 'structure.parameters.successScore') &&
+          <div className="alert alert-info">
+            <HtmlText>{get(props.paper, 'structure.parameters.successMessage')}</HtmlText>
+          </div>
+        }
+
+        {props.showAttemptScore &&
+        get(props.paper, 'total') &&
+        get(props.paper, 'structure.parameters.successScore') &&
+        get(props.paper, 'structure.parameters.failureMessage') &&
+        (get(props.paper, 'score') / get(props.paper, 'total')) * 100 < get(props.paper, 'structure.parameters.successScore') &&
+          <div className="alert alert-danger">
+            <HtmlText>{get(props.paper, 'structure.parameters.failureMessage')}</HtmlText>
+          </div>
+        }
+
         {props.endMessage ?
           <HtmlText>{props.endMessage}</HtmlText> :
           <div>
@@ -54,7 +74,7 @@ const AttemptEndComponent = props =>
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-flask',
                 label: trans('test', {}, 'actions'),
-                target: '/test',
+                target: `${props.path}/test`,
                 exact: true,
                 primary: true,
                 displayed: props.testMode
@@ -63,7 +83,7 @@ const AttemptEndComponent = props =>
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-redo',
                 label: trans('exercise_restart', {}, 'quiz'),
-                target: '/play',
+                target: `${props.path}/play`,
                 exact: true,
                 primary: true,
                 displayed: props.hasMoreAttempts
@@ -72,7 +92,7 @@ const AttemptEndComponent = props =>
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-check-double',
                 label: trans('view_paper', {}, 'quiz'),
-                target: `/papers/${props.paper.id}`,
+                target: `${props.path}/papers/${props.paper.id}`,
                 displayed: props.showAttemptCorrection,
                 primary: true
               }, {
@@ -80,7 +100,7 @@ const AttemptEndComponent = props =>
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-bar-chart',
                 label: trans('statistics', {}, 'quiz'),
-                target: '/statistics',
+                target: `${props.path}/statistics`,
                 displayed: props.showStatistics
               }, {
                 name: 'home',
@@ -98,6 +118,7 @@ const AttemptEndComponent = props =>
   </div>
 
 AttemptEndComponent.propTypes = {
+  path: T.string.isRequired,
   workspace: T.object,
   paper: T.shape({ // TODO : paper prop types
     id: T.string.isRequired,
@@ -119,6 +140,7 @@ const AttemptEnd = connect(
     const paper = playerSelect.paper(state)
 
     return {
+      path: resourceSelect.path(state),
       workspace: resourceSelect.workspace(state),
       paper: paper,
       testMode: playerSelect.testMode(state),

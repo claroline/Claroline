@@ -24,7 +24,7 @@ const WaveformPaper = props =>
       <div className="waveform-paper">
         <Waveform
           id={`waveform-paper-yours-${props.item.id}`}
-          url={asset(props.item.url)}
+          url={asset(props.item.file)}
           editable={false}
           regions={props.answer.map(a => Object.assign({}, a, {
             color: !props.item.hasExpectedAnswers || isCorrectAnswer(props.item.solutions, a.start, a.end) ?
@@ -59,7 +59,7 @@ const WaveformPaper = props =>
       <div>
         <Waveform
           id={`waveform-paper-expected-${props.item.id}`}
-          url={asset(props.item.url)}
+          url={asset(props.item.file)}
           editable={false}
           regions={props.item.solutions.filter(s => 0 < s.score).map(s => s.section)}
         />
@@ -83,7 +83,7 @@ const WaveformPaper = props =>
       <div>
         <Waveform
           id={`waveform-paper-stats-${props.item.id}`}
-          url={asset(props.item.url)}
+          url={asset(props.item.file)}
           editable={false}
           regions={props.item.solutions.map(s => Object.assign({}, s.section, {
             color: 0 < s.score ?

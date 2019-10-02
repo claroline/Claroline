@@ -7,7 +7,6 @@
     "end": "Fin",
     "end_tolerance": "Tolérance de fin",
     "export_comments_to_csv": "Exporter les commentaires (CSV)",
-    "introduction": "Introduction",
     "pause": "Pause",
     "play": "Play",
     "section_deletion": "Suppression de la section",
@@ -20,6 +19,8 @@
     "show_help": "Afficher l'aide",
     "show_section_audio": "Afficher le fichier audio associé à la section",
     "show_transcript": "Afficher la transcription",
+    "slow_down_audio": "Ralentir l'audio",
+    "speed_up_audio": "Accélérer l'audio",
     "start": "Début",
     "start_tolerance": "Tolérance de début",
     "transcript": "Transcription"

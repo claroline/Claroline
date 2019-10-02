@@ -46,7 +46,7 @@ const Section = props =>
           callback={() => props.updateOption(props.section.id, 'showHelp', !props.options.showHelp)}
           primary={true}
         >
-          <span className="fa fa-file-text-o"/>
+          <span className="fa fa-question"/>
         </CallbackButton>
       }
       {props.section.commentsAllowed &&
@@ -78,6 +78,9 @@ const Section = props =>
       }
     </div>
     <div className="section-display">
+      {props.section.title &&
+        <h3>{props.section.title}</h3>
+      }
       {props.options.showHelp &&
         <HtmlText className="section-help">
           {props.section.help}
@@ -136,6 +139,11 @@ const Section = props =>
       )}
       {props.options.showAudioUrl && props.section.audioUrl &&
         <div>
+          {props.section.audioDescription &&
+            <div className="well well-sm">
+              {props.section.audioDescription}
+            </div>
+          }
           <audio
             controls
           >

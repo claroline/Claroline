@@ -15,7 +15,7 @@ const Section = {
 
 const WaveformItem = {
   propTypes: {
-    url: T.string,
+    file: T.string,
     tolerance: T.number,
     penalty: T.number,
     answersLimit: T.number,
@@ -26,7 +26,7 @@ const WaveformItem = {
     }))
   },
   defaultProps: {
-    url: null,
+    file: null,
     tolerance: 1,
     penalty: 0,
     answersLimit: 0,

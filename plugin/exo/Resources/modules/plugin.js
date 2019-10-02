@@ -34,7 +34,8 @@ registry.add('UJMExoBundle', {
     'audio'    : () => { return import(/* webpackChunkName: "quiz-item-audio" */     '#/plugin/exo/contents/audio') },
     'image'    : () => { return import(/* webpackChunkName: "quiz-item-image" */     '#/plugin/exo/contents/image') },
     'text'     : () => { return import(/* webpackChunkName: "quiz-item-text" */      '#/plugin/exo/contents/text') },
-    'video'    : () => { return import(/* webpackChunkName: "quiz-item-video" */     '#/plugin/exo/contents/video') }
+    'video'    : () => { return import(/* webpackChunkName: "quiz-item-video" */     '#/plugin/exo/contents/video') },
+    'resource' : () => { return import(/* webpackChunkName: "quiz-item-resource" */  '#/plugin/exo/contents/resource') }
   },
 
   tools: {

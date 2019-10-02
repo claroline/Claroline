@@ -15,6 +15,7 @@
     "allow_test_exit": "Allow test exit",
     "allow_to_edit": "Allow to edit",
     "allow_to_edit_answers": "Allow to edit answers from validated steps",
+    "allowed_resource_types_info": "Only resources of type [Blog, Diaporama, File, Lesson, Scorm, Text, Wiki] are allowed.",
     "already": "This question is already shared with this user.",
     "already_answered": "You have already answered this quiz.",
     "anonymize_results": "Anonymize user results",
