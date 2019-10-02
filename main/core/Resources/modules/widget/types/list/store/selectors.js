@@ -30,7 +30,7 @@ const sorting = createSelector(
 
 const pageSize = createSelector(
   [contentSelectors.parameters],
-  (parameters) => parameters.pageSize || false
+  (parameters) => parameters.pageSize
 )
 
 export const selectors = {
