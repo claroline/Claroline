@@ -2,13 +2,9 @@
 
 namespace Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Item\Type;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
-/**
- * @DI\Service("claroline.validator.audio.question_waveform")
- */
 class WaveformQuestionValidator extends JsonSchemaValidator
 {
     public function getJsonSchemaUri()

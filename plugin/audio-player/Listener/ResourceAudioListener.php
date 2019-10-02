@@ -17,12 +17,8 @@ use Claroline\AudioPlayerBundle\Entity\Resource\Section;
 use Claroline\AudioPlayerBundle\Manager\AudioPlayerManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class ResourceAudioListener
 {
     /** @var AudioPlayerManager */
@@ -35,12 +31,6 @@ class ResourceAudioListener
     private $tokenStorage;
 
     /**
-     * @DI\InjectParams({
-     *     "manager"      = @DI\Inject("claroline.manager.audio_player"),
-     *     "serializer"   = @DI\Inject("claroline.api.serializer"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
-     * })
-     *
      * @param AudioPlayerManager    $manager
      * @param SerializerProvider    $serializer
      * @param TokenStorageInterface $tokenStorage
@@ -56,8 +46,6 @@ class ResourceAudioListener
     }
 
     /**
-     * @DI\Observe("file.audio.load")
-     *
      * @param LoadFileEvent $event
      *
      * @return array
@@ -106,8 +94,6 @@ class ResourceAudioListener
     }
 
     /**
-     * @DI\Observe("resource.file.deserialize")
-     *
      * @param GenericDataEvent $event
      */
     public function onResourceAudioDeserialize(GenericDataEvent $event)

@@ -7,7 +7,6 @@ use Claroline\AudioPlayerBundle\Entity\Quiz\Misc\Section;
 use Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer;
 use Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Attempt\AnswerData\WaveformAnswerValidator;
 use Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Item\Type\WaveformQuestionValidator;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -18,9 +17,6 @@ use UJM\ExoBundle\Library\Item\Definition\AbstractDefinition;
 
 /**
  * Waveform question definition.
- *
- * @DI\Service("claroline.definition.audio.question_waveform")
- * @DI\Tag("ujm_exo.definition.item")
  */
 class WaveformDefinition extends AbstractDefinition
 {
@@ -45,12 +41,6 @@ class WaveformDefinition extends AbstractDefinition
      * @param WaveformQuestionValidator  $validator
      * @param WaveformAnswerValidator    $answerValidator
      * @param WaveformQuestionSerializer $serializer
-     *
-     * @DI\InjectParams({
-     *     "validator"       = @DI\Inject("claroline.validator.audio.question_waveform"),
-     *     "answerValidator" = @DI\Inject("claroline.validator.audio.answer_waveform"),
-     *     "serializer"      = @DI\Inject("Claroline\AudioPlayerBundle\Serializer\Quiz\WaveformQuestionSerializer")
-     * })
      */
     public function __construct(
         WaveformQuestionValidator $validator,

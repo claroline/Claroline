@@ -18,11 +18,7 @@ use Claroline\AudioPlayerBundle\Entity\Resource\SectionComment;
 use Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.audio_player")
- */
 class AudioPlayerManager
 {
     /** @var ObjectManager */
@@ -36,11 +32,6 @@ class AudioPlayerManager
     private $sectionCommentRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sectionSerializer" = @DI\Inject("Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer")
-     * })
-     *
      * @param ObjectManager     $om
      * @param SectionSerializer $sectionSerializer
      */

@@ -15,7 +15,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AudioPlayerBundle\Entity\Resource\SectionComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,11 +33,6 @@ class SectionCommentController extends AbstractCrudController
     private $translator;
 
     /**
-     * @DI\InjectParams({
-     *     "claroUtils" = @DI\Inject("claroline.utilities.misc"),
-     *     "translator" = @DI\Inject("translator")
-     * })
-     *
      * @param ClaroUtilities      $claroUtils
      * @param TranslatorInterface $translator
      */
