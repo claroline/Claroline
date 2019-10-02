@@ -14,12 +14,9 @@ namespace Claroline\LinkBundle\Listener\Resource;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\LinkBundle\Manager\ShortcutManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Integrates the "Shortcut" resource.
- *
- * @DI\Service
  */
 class ResourceListener
 {
@@ -28,10 +25,6 @@ class ResourceListener
 
     /**
      * ShortcutListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "shortcutManager" = @DI\Inject("claroline.manager.shortcut")
-     * })
      *
      * @param ShortcutManager $shortcutManager
      */
@@ -44,8 +37,6 @@ class ResourceListener
     /**
      * Gets all shortcuts of a resource.
      *
-     * @DI\Observe("resource.shortcuts")
-     *
      * @param ResourceActionEvent $event
      */
     public function shortcuts(ResourceActionEvent $event)
@@ -54,8 +45,6 @@ class ResourceListener
 
     /**
      * Removes all linked shortcuts when a resource is deleted.
-     *
-     * @DI\Observe("resource.delete")
      *
      * @param ResourceActionEvent $event
      */

@@ -17,12 +17,9 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Integrates the "Shortcut" resource.
- *
- * @DI\Service
  */
 class ShortcutListener
 {
@@ -31,10 +28,6 @@ class ShortcutListener
 
     /**
      * ShortcutListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "resourceLifecycleManager" = @DI\Inject("claroline.manager.resource_lifecycle")
-     * })
      *
      * @param ResourceLifecycleManager $resourceLifecycleManager
      */
@@ -48,8 +41,6 @@ class ShortcutListener
      * Loads a shortcut.
      * It forwards the event to the target of the shortcut.
      *
-     * @DI\Observe("resource.shortcut.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function load(LoadResourceEvent $event)
@@ -57,14 +48,14 @@ class ShortcutListener
         /** @var Shortcut $shortcut */
         $shortcut = $event->getResource();
 
-        $this->resourceLifecycle->load($shortcut->getTarget());
+        $targetEvent = $this->resourceLifecycle->load($shortcut->getTarget());
+
+        $event->setData($targetEvent->getData());
     }
 
     /**
      * Opens a shortcut.
      * It forwards the event to the target of the shortcut.
-     *
-     * @DI\Observe("resource.shortcut.open")
      *
      * @param OpenResourceEvent $event
      */
@@ -73,14 +64,14 @@ class ShortcutListener
         /** @var Shortcut $shortcut */
         $shortcut = $event->getResource();
 
-        $this->resourceLifecycle->open($shortcut->getTarget());
+        $targetEvent = $this->resourceLifecycle->open($shortcut->getTarget());
+
+        $event->setData($targetEvent->getData());
     }
 
     /**
      * Exports a shortcut.
      * It forwards the event to the target of the shortcut.
-     *
-     * @DI\Observe("resource.shortcut.export")
      *
      * @param DownloadResourceEvent $event
      */
@@ -89,13 +80,13 @@ class ShortcutListener
         /** @var Shortcut $shortcut */
         $shortcut = $event->getResource();
 
-        $this->resourceLifecycle->export($shortcut->getTarget());
+        $targetEvent = $this->resourceLifecycle->export($shortcut->getTarget());
+
+        $event->setData($targetEvent->getData());
     }
 
     /**
      * Removes a shortcut.
-     *
-     * @DI\Observe("resource.shortcut.delete")
      *
      * @param DeleteResourceEvent $event
      */

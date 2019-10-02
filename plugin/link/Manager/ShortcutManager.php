@@ -15,12 +15,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use Doctrine\Common\Persistence\ObjectRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Manages resource shortcuts.
- *
- * @DI\Service("claroline.manager.shortcut")
  */
 class ShortcutManager
 {
@@ -32,10 +29,6 @@ class ShortcutManager
 
     /**
      * ShortcutManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
      *
      * @param ObjectManager $om
      */
