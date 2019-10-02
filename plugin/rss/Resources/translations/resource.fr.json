@@ -1,4 +1,4 @@
 {
-    "rss": "Flux RSS",
-    "rss_desc": "Permet d'intégrer dans la plateforme des flux d'actualités issus de différents sites."
+    "rss_feed": "Flux RSS",
+    "rss_feed_desc": "Permet d'intégrer dans la plateforme des flux d'actualités issus de différents sites."
 }
