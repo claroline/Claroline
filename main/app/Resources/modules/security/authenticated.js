@@ -15,16 +15,20 @@ let userLoaded = false // because for anonymous, currentUser stay null
  * Loads configuration object from DOM anchor.
  */
 function load() {
-  const userEl = document.querySelector('#current-user')
+  const userEl = document.querySelector('#claroline-app')
 
   invariant(userEl, 'Can not find current user.')
 
-  user = userEl.dataset.user && 0 !== userEl.dataset.user.length ? JSON.parse(userEl.dataset.user) : null
+  user = userEl.dataset.currentUser && 0 !== userEl.dataset.currentUser.length ? JSON.parse(userEl.dataset.currentUser) : null
 
   userLoaded = true
 }
 
-
+/**
+ * @return {object}
+ *
+ * @deprecated retrieve it from redux store instead.
+ */
 function currentUser() {
   if (!userLoaded) {
     load()

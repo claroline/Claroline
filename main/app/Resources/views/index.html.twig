@@ -53,6 +53,7 @@
     <body>
         {# Anchor for react app to mount in #}
         <div
+            id="claroline-app"
             class="app-container"
             role="presentation"
 
@@ -66,11 +67,6 @@
 
         {# Anchor for UI portals (eg. modals, walkthroughs) #}
         <div class="app-overlays-container"></div>
-
-        {# Dumps some server vars in the DOM to make it available in JS #}
-        <div id="sf-environement" data-env="{{ app.environment }}"></div>
-        <div id="platform-config" data-parameters="{{ parameters | json_encode | raw | escape }}"></div>
-        <div id="current-user"    data-user="{{ currentUser | json_encode | raw | escape }}"></div>
 
         {# Adds javascripts #}
         <script src="{{ hotAsset('runtime') }}"></script>

@@ -15,12 +15,12 @@ let parameters = null
  * Loads configuration object from DOM anchor.
  */
 function load() {
-  const platformConfig = document.querySelector('#platform-config')
+  const platformConfig = document.querySelector('#claroline-app')
 
   invariant(platformConfig, 'Can not find platform configuration.')
-  invariant(platformConfig.dataset.parameters, 'Can not find platform configuration parameters.')
+  invariant(platformConfig.dataset.config, 'Can not find platform configuration parameters.')
 
-  parameters = JSON.parse(platformConfig.dataset.parameters) || {}
+  parameters = JSON.parse(platformConfig.dataset.config) || {}
 }
 
 /**
