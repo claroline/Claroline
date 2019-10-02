@@ -44,7 +44,12 @@ actions.initializeMyDrop = (dropzoneId, teamId = null, navigate, path) => ({
 
 actions.saveDocument = (dropId, documentType, documentData) => {
   const formData = new FormData()
-  formData.append('dropData', JSON.stringify(documentData))
+  if (constants.DOCUMENT_TYPE_FILE === documentType) {
+    formData.append('dropData', documentData)
+  } else {
+    formData.append('dropData', JSON.stringify(documentData))
+  }
+
   formData.append('fileName', 'test')
   formData.append('sourceType', 'uploadedfile')
   return {
