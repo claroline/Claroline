@@ -30,6 +30,8 @@
     margin: 0;
     border-bottom: none;
     .box-shadow(0 2px 2px rgba(0,0,0,.15));
+    // this is to make box shadow appear over content with bg. I should find a better way to handle it (without z-index)
+    z-index: 1;
 
     .page-header-content { // todo : remove me (old pages)
         flex: 3;

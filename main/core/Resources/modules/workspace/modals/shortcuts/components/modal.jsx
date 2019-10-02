@@ -78,8 +78,6 @@ class ShortcutsModal extends Component {
         {...omit(this.props, 'tools', 'handleSelect')}
         title={trans('add_shortcut')}
         icon="fa fa-fw fa-external-link"
-        className="data-picker-modal"
-        bsSize="lg"
       >
         {this.props.tools.map(toolName =>
           <ShortcutRow

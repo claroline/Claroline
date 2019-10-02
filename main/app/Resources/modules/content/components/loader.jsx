@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Hourglass} from '#/main/app/animation/components/hourglass'
 
 const ContentLoader = (props) =>
-  <div className={classes('content-loader', {
+  <div className={classes('content-loader', props.className, {
     [`content-loader-${props.size}`]: !!props.size,
     [`content-loader-${props.direction}`]: !!props.direction
   })}>
@@ -22,6 +22,7 @@ const ContentLoader = (props) =>
   </div>
 
 ContentLoader.propTypes = {
+  className: T.string,
   size: T.oneOf(['sm', 'lg']),
   direction: T.oneOf(['horizontal', 'vertical']),
   description: T.string
