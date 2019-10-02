@@ -47,5 +47,11 @@
   "resource_participated": "Resource participated",
   "in_group": "In group",
   "in_role": "In role",
-  "profile_completed": "Profile completed"
+  "profile_completed": "Profile completed",
+  "granted_at": "obtained on %date%",
+  "granted_date": "Date of obtaining",
+  "not_granted": "You don't own this badge",
+  "grant_users": "Grant to users",
+  "badge_disabled_help": "This badge is disabled and cannot be granted.",
+  "no_criteria": "No criteria has been defined"
 }

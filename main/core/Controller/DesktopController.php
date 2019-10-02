@@ -111,10 +111,10 @@ class DesktopController
 
         return new JsonResponse([
             'userProgression' => null,
-            'tools' => array_values(array_map(function (Tool $orderedTool) {
+            'tools' => array_values(array_map(function (Tool $tool) {
                 return [
-                    'icon' => $orderedTool->getClass(),
-                    'name' => $orderedTool->getName(),
+                    'icon' => $tool->getClass(),
+                    'name' => $tool->getName(),
                 ];
             }, $tools)),
             'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
@@ -164,10 +164,10 @@ class DesktopController
     {
         $tools = $this->toolManager->getDisplayedDesktopOrderedTools($currentUser);
 
-        return new JsonResponse(array_values(array_map(function (Tool $orderedTool) {
+        return new JsonResponse(array_values(array_map(function (Tool $tool) {
             return [
-                'icon' => $orderedTool->getClass(),
-                'name' => $orderedTool->getName(),
+                'icon' => $tool->getClass(),
+                'name' => $tool->getName(),
             ];
         }, $tools)));
     }

@@ -97,6 +97,9 @@ class ToolMain extends Component {
                 styles: resolved.default.styles
               })
             }
+          },
+          () => {
+            // TODO : properly handle error
           }
         )
         .then(

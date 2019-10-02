@@ -49,12 +49,15 @@ const ResourceCard = props => {
       })}
       id={props.data.id}
       poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
-      icon={<ResourceIcon className="icon" mimeType={props.data.meta.mimeType} />}
+      icon={
+        <ResourceIcon className="icon" mimeType={props.data.meta.mimeType} />
+      }
       title={props.data.name}
       subtitle={trans(props.data.meta.type, {}, 'resource')}
       flags={[
         props.data.rights && hasPermission('administrate', props.data) && [classes('fa fa-fw', rightsIcon), trans(rightsTip, {}, 'resource')],
-        ['fa fa-fw fa-eye', transChoice('resource_views', props.data.meta.views, {count: props.data.meta.views}, 'resource'), props.data.meta.views],
+        !props.data.meta.published && ['fa fa-fw fa-eye-slash', trans('resource_not_published', {}, 'resource')],
+        props.data.meta.published && ['fa fa-fw fa-eye', transChoice('resource_views', props.data.meta.views, {count: props.data.meta.views}, 'resource'), props.data.meta.views],
         props.data.social && ['fa fa-fw fa-thumbs-up', transChoice('resource_likes', props.data.social.likes, {count: props.data.social.likes}, 'resource'), props.data.social.likes]
       ].filter(flag => !!flag)}
       contentText={props.data.meta.description}

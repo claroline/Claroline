@@ -86,10 +86,10 @@ class AdministrationController
         }
 
         return new JsonResponse([
-            'tools' => array_values(array_map(function (AdminTool $orderedTool) {
+            'tools' => array_values(array_map(function (AdminTool $tool) {
                 return [
-                    'icon' => $orderedTool->getClass(),
-                    'name' => $orderedTool->getName(),
+                    'icon' => $tool->getClass(),
+                    'name' => $tool->getName(),
                 ];
             }, $tools)),
         ]);
@@ -137,10 +137,10 @@ class AdministrationController
         $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
 
         return new JsonResponse([
-            'tools' => array_values(array_map(function (AdminTool $orderedTool) {
+            'tools' => array_values(array_map(function (AdminTool $tool) {
                 return [
-                    'icon' => $orderedTool->getClass(),
-                    'name' => $orderedTool->getName(),
+                    'icon' => $tool->getClass(),
+                    'name' => $tool->getName(),
                 ];
             }, $tools)),
         ]);

@@ -1,5 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
+import {User} from '#/main/core/user/prop-types'
+
 import {constants} from '#/plugin/open-badge/tools/badges/badge/constants'
 
 const Badge = {
@@ -18,6 +20,7 @@ const Badge = {
   },
   defaultProps: {
     issuingMode: [constants.ISSUING_MODE_ORGANIZATION],
+    description: '',
     meta: {
       enabled: true
     }
@@ -26,7 +29,14 @@ const Badge = {
 
 const Assertion = {
   propTypes: {
-    id: T.string
+    id: T.string,
+    issuedOn: T.string.isRequired,
+    badge: T.shape(
+      Badge.propTypes
+    ).isRequired,
+    user: T.shape(
+      User.propTypes
+    ).isRequired
   }
 }
 

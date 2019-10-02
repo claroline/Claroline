@@ -67,7 +67,7 @@ class Assertion
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Evidence")
+     * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Evidence", mappedBy="assertion")
      *
      * @var Evidence[]|ArrayCollection
      */

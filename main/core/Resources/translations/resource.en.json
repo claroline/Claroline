@@ -37,6 +37,7 @@
     "resource_showIcon": "Display the resource icon in the header",
     "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge.",
     "resource_views": "{0} This resource has never been viewed. | {1} This resource has been viewed once. | ]1,Inf[ This resource has been viewed %count% times.",
+    "resource_not_published": "This resource is not published.",
     "restricted_access_message": "You can not access this resource because all access conditions are not met.",
     "text": "Text",
     "text_desc": "Allow to edit a rich text (link, image, video) directly on the platform.",

@@ -48,6 +48,7 @@ UserPageHeader.propTypes = {
 
 const UserPage = props =>
   <PageSimple
+    className="user-page"
     showBreadcrumb={props.showBreadcrumb}
     path={props.breadcrumb.concat([{
       label: props.user.name,

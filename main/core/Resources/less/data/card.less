@@ -311,8 +311,11 @@
     }
 
     &.data-card-poster {
-        .data-card-toolbar .dropdown:not(.open) .dropdown-toggle {
-            .text-movie-subtitles();
+        .data-card-toolbar {
+            > .data-card-toolbar-btn,
+            .dropdown:not(.open) .dropdown-toggle {
+                .text-movie-subtitles();
+            }
         }
     }
 

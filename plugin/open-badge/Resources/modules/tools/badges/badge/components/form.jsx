@@ -10,6 +10,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
+import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 import {constants} from '#/plugin/open-badge/tools/badges/badge/constants'
 import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
@@ -28,7 +29,7 @@ const BadgeFormComponent = (props) =>
     cancel={{
       type: LINK_BUTTON,
       exact: true,
-      target: props.path + '/badges'
+      target: `${props.path}/badges/${!props.new ? props.badge.id : ''}`
     }}
     sections={[
       {
@@ -91,6 +92,7 @@ const BadgeFormComponent = (props) =>
             name: '_restrictDuration',
             type: 'boolean',
             label: trans('restrict_duration', {}, 'badge'),
+            calculated: (badge) => badge._restrictDuration || badge.duration,
             onChange: (enabled) => {
               if (!enabled) {
                 props.updateProp('duration', null)
@@ -192,9 +194,9 @@ BadgeFormComponent.propTypes = {
   path: T.string.isRequired,
   currentContext: T.object.isRequired,
   new: T.bool.isRequired,
-  badge: T.shape({
-    // TODO : badge types
-  }),
+  badge: T.shape(
+    BadgeTypes.propTypes
+  ),
   updateProp: T.func.isRequired
 }
 
@@ -205,9 +207,9 @@ const BadgeForm = connect(
     new: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME + '.badges.current')),
     badge: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.badges.current'))
   }),
-  (dispatch, ownProps) =>({
+  (dispatch) =>({
     updateProp(propName, propValue) {
-      dispatch(formActions.updateProp(ownProps.name, propName, propValue))
+      dispatch(formActions.updateProp(selectors.STORE_NAME +'.badges.current', propName, propValue))
     }
   })
 )(BadgeFormComponent)

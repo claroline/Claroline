@@ -310,7 +310,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $position
     ) {
         $orderedTool = new OrderedTool();
-        $orderedTool->setName($tool->getName());
         $orderedTool->setTool($tool);
         $orderedTool->setWorkspace($workspace);
         $orderedTool->setOrder($position);
@@ -332,7 +331,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $position
     ) {
         $orderedTool = new OrderedTool();
-        $orderedTool->setName($tool->getName());
         $orderedTool->setTool($tool);
         $orderedTool->setUser($user);
         $orderedTool->setOrder($position);

@@ -14,13 +14,8 @@ const TransferTool = (props) =>
       <Routes
         path={props.path}
         routes={[
-          {
-            path: '/import',
-            render: () => trans('import')
-          }, {
-            path: '/history',
-            render: () => trans('history')
-          }
+          {path: '/import',  render: () => trans('import')},
+          {path: '/history', render: () => trans('history')}
         ]}
       />
     }

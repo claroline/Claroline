@@ -13,7 +13,7 @@ const reducer = makeReducer({}, {
       return {}
     }
   },
-  [LOG_RESET]: () => {return {}}
+  [LOG_RESET]: () => ({})
 })
 
 export {

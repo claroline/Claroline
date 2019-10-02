@@ -6,13 +6,15 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
-import {ProfileNav} from '#/main/core/user/profile/components/nav'
 import {ProfileFacets} from '#/main/core/user/profile/components/facets'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {ProfileFacet} from '#/main/core/administration/community/profile/components/facet'
 import {actions, selectors} from '#/main/core/administration/community/profile/store'
+
+// TODO : redirect on facet delete
 
 const ProfileTabComponent = props =>
   <ToolPage
@@ -25,28 +27,33 @@ const ProfileTabComponent = props =>
   >
     <div className="row user-profile" style={{marginTop: 20}}>
       <div className="user-profile-aside col-md-3">
-        <ProfileNav
-          prefix={`${props.path}/profile`}
-          facets={props.facets}
-          actions={(facet) => [
-            {
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-trash-o',
-              label: trans('delete'),
-              displayed: (facet) => !facet.meta || !facet.meta.main,
-              callback: () => props.removeFacet(facet),
-              confirm: {
-                title: trans('profile_remove_facet'),
-                message: trans('profile_remove_facet_question')
-              },
-              dangerous: true
-            }
-          ]}
+        <Vertical
+          basePath={`${props.path}/profile`}
+          tabs={props.facets.map(facet => ({
+            icon: facet.icon,
+            title: facet.title,
+            path: `/${facet.id}`,
+            actions: [
+              {
+                name: 'delete',
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-trash-o',
+                label: trans('delete', {}, 'actions'),
+                displayed: !facet.meta || !facet.meta.main,
+                callback: () => props.removeFacet(facet),
+                confirm: {
+                  title: trans('profile_remove_facet'),
+                  message: trans('profile_remove_facet_question')
+                },
+                dangerous: true
+              }
+            ]
+          }))}
         />
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-block btn-add-facet"
+          className="btn btn-emphasis btn-block btn-add-facet"
           icon="fa fa-fw fa-plus"
           label={trans('profile_facet_add')}
           callback={props.addFacet}

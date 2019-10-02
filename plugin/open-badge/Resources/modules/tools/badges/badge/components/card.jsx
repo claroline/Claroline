@@ -7,22 +7,23 @@ import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/content/card/components/data'
 
-import {Badge as BadgeTypes} from '#/plugin/open-badge/tools/badges/prop-types'
+import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 
 const BadgeCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    className={classes(props.className, {
+    className={classes('badge-card', props.className, {
       'data-card-muted': !get(props.data, 'meta.enabled')
     })}
-    poster={get(props.data, 'image.url') ? asset(get(props.data, 'image.url')) : null}
-    icon="fa fa-trophy"
+    icon={
+      <img src={get(props.data, 'image.url') ? asset(get(props.data, 'image.url')) : null} />
+    }
     title={props.data.name}
     color={props.data.color}
     contentText={props.data.description}
     flags={[
-      get(props.data, 'meta.enabled') && ['fa fa-fw fa-check', trans('enabled')]
+      !get(props.data, 'meta.enabled') && ['fa fa-fw fa-eye-slash', trans('disabled')]
     ].filter(flag => !!flag)}
     footer={
       <span>

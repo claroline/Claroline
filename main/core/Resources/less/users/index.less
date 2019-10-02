@@ -9,7 +9,6 @@
 @import "comments";
 @import "authentication"; // todo : should not be included in main theme file
 @import "message";
-@import "profile"; // todo : should not be included in main theme file
 @import "timeline";
 @import "tracking";
 
@@ -66,5 +65,21 @@
 
     h2:first-of-type {
         margin-top: 0;
+    }
+}
+
+.user-profile {
+    .no-section-info {
+        margin-bottom: @component-margin-bottom;
+        font-style: italic;
+        text-align: center;
+    }
+
+    .btn-add-facet {
+        text-align: left;
+
+        + .lateral-link {
+            margin-top: 5px;
+        }
     }
 }

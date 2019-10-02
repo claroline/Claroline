@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-import {Badge as BadgeType} from '#/plugin/open-badge/tools/badges/prop-types'
+import {Badge as BadgeType} from '#/plugin/open-badge/prop-types'
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 
 //todo: implement badge picker

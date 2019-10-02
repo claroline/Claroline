@@ -10,13 +10,15 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
-import {actions} from '#/plugin/open-badge/tools/badges/badge/store/actions'
+import {actions, selectors} from '#/plugin/open-badge/tools/badges/badge/store'
 
 const BadgesList = (props) =>
   <ListData
-    name={props.name}
+    name={selectors.LIST_NAME}
     fetch={{
-      url: props.url,
+      url: 'workspace' === props.currentContext.type ?
+        ['apiv2_badge-class_workspace_badge_list', {workspace: props.currentContext.data.uuid}] :
+        ['apiv2_badge-class_list'],
       autoload: true
     }}
     definition={[
@@ -48,21 +50,17 @@ const BadgesList = (props) =>
     card={BadgeCard}
 
     primaryAction={(row) => ({
-      label: trans('open'),
+      label: trans('open', {}, 'actions'),
       type: LINK_BUTTON,
       target: props.path + `/badges/${row.id}`
     })}
-    delete={{
-      url: ['apiv2_badge-class_delete_bulk'],
-      displayed: (rows) => 0 < (rows.filter(b => b.permissions.delete).length)
-    }}
     actions={(rows) => [
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pencil',
         label: trans('edit', {}, 'actions'),
         scope: ['object', 'collection'],
-        target: props.path + `/badges/${rows[0].id}/form`,
+        target: props.path + `/badges/${rows[0].id}/edit`,
         displayed: 0 < rows.filter(b => b.permissions.edit).length,
         group: trans('management')
       }, {
@@ -70,7 +68,7 @@ const BadgesList = (props) =>
         icon: 'fa fa-fw fa-check-circle',
         label: trans('enable', {}, 'actions'),
         scope: ['object', 'collection'],
-        displayed: props.isAdmin && 0 < rows.filter(b => !b.meta.enabled).length,
+        displayed: 0 < rows.filter(b => b.permissions.edit && !b.meta.enabled).length,
         callback: () => props.enable(rows),
         group: trans('management')
       }, {
@@ -78,12 +76,26 @@ const BadgesList = (props) =>
         icon: 'fa fa-fw fa-times-circle',
         label: trans('disable', {}, 'actions'),
         scope: ['object', 'collection'],
-        displayed: props.isAdmin && 0 < rows.filter(b => b.meta.enabled).length,
+        displayed: 0 < rows.filter(b => b.permissions.edit && b.meta.enabled).length,
         callback: () => props.disable(rows),
         confirm: {
           title: transChoice('disable_badges', rows.length, {count: rows.length}),
           message: trans('disable_badges_confirm', {users_list: rows.map(b => `${b.name}`).join(', ')})
         },
+        group: trans('management')
+      }, {
+        name: 'delete',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-trash-o',
+        label: trans('delete', {}, 'actions'),
+        dangerous: true,
+        displayed: 0 < rows.filter(b => b.permissions.delete).length,
+        confirm: {
+          title: trans('objects_delete_title'),
+          message: transChoice('objects_delete_question', 1, {count: 1}),
+          button: trans('delete', {}, 'actions')
+        },
+        callback: () => props.delete(rows),
         group: trans('management')
       }
     ]}
@@ -93,19 +105,23 @@ const BadgesList = (props) =>
 
 BadgesList.propTypes = {
   path: T.string.isRequired,
+  currentContext: T.object.isRequired,
   isAdmin: T.bool.isRequired,
-  name: T.string.isRequired,
-  url: T.oneOfType([T.string, T.array]).isRequired,
   disable: T.func.isRequired,
-  enable: T.func.isRequired
+  enable: T.func.isRequired,
+  delete: T.func.isRequired
 }
 
 const Badges = connect(
   (state) => ({
     isAdmin: securitySelectors.isAdmin(state),
+    currentContext: toolSelectors.context(state),
     path: toolSelectors.path(state)
   }),
   dispatch => ({
+    delete(badges) {
+      dispatch(actions.delete(badges))
+    },
     enable(badges) {
       dispatch(actions.enable(badges))
     },

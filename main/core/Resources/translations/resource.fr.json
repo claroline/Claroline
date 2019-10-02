@@ -37,6 +37,7 @@
     "resource_showIcon": "Afficher l'icône de la ressource dans l'entête",
     "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression.",
     "resource_views": "{0} Cette ressource n'a jamais été vue. | [1,Inf[ Cette resource a été vue %count% fois.",
+    "resource_not_published": "Cette ressource n'est pas publiée.",
     "restricted_access_message": "Vous ne pouvez pas accéder à cette ressource car toutes les conditions d'accès ne sont pas satisfaites.",
     "text": "Texte",
     "text_desc": "Permet de rédiger un texte riche (lien, image, vidéo) directement dans la plateforme.",

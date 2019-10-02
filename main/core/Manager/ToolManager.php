@@ -119,7 +119,7 @@ class ToolManager
             $ot = [];
 
             foreach ($workspaces as $workspace) {
-                $ot[] = $this->setWorkspaceTool($tool, $totalTools, $tool->getName(), $workspace);
+                $ot[] = $this->setWorkspaceTool($tool, $totalTools, $workspace);
                 ++$offset;
                 $this->log('Adding tool '.$offset.'/'.$total);
             }
@@ -137,7 +137,6 @@ class ToolManager
     /**
      * @param Tool      $tool
      * @param int       $position
-     * @param string    $name
      * @param Workspace $workspace
      * @param int       $orderedToolType
      *
@@ -148,7 +147,6 @@ class ToolManager
     public function setWorkspaceTool(
         Tool $tool,
         $position,
-        $name,
         Workspace $workspace,
         $orderedToolType = 0
     ) {
@@ -177,7 +175,6 @@ class ToolManager
         }
 
         $orderedTool->setWorkspace($workspace);
-        $orderedTool->setName($name);
         $orderedTool->setOrder($position);
         $orderedTool->setTool($tool);
         $orderedTool->setType($orderedToolType);
@@ -239,7 +236,6 @@ class ToolManager
                 $this->setWorkspaceTool(
                     $undisplayedTool,
                     $initPos,
-                    $undisplayedTool->getName(),
                     $workspace,
                     $type
                 );
@@ -269,15 +265,14 @@ class ToolManager
     }
 
     /**
-     * @param Tool   $tool
-     * @param User   $user
-     * @param int    $position
-     * @param string $name
-     * @param int    $type
+     * @param Tool $tool
+     * @param User $user
+     * @param int  $position
+     * @param int  $type
      *
      * @throws ToolPositionAlreadyOccupiedException
      */
-    public function addDesktopTool(Tool $tool, User $user, $position, $name, $type = 0)
+    public function addDesktopTool(Tool $tool, User $user, $position, $type = 0)
     {
         $switchTool = $this->orderedToolRepo->findOneBy(
             ['user' => $user, 'order' => $position, 'type' => $type]
@@ -288,7 +283,6 @@ class ToolManager
             $desktopTool->setUser($user);
             $desktopTool->setTool($tool);
             $desktopTool->setOrder($position);
-            $desktopTool->setName($name);
             $desktopTool->setVisibleInDesktop(true);
             $desktopTool->setType($type);
             $this->om->persist($desktopTool);
@@ -304,7 +298,10 @@ class ToolManager
     /**
      * Adds the mandatory tools at the user creation.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
+     * @param int  $type
+     *
+     * @return Tool[]
      */
     public function addRequiredToolsToUser(User $user, $type = 0)
     {
@@ -325,7 +322,6 @@ class ToolManager
                 $requiredTool,
                 $user,
                 $position,
-                $requiredTool->getName(),
                 $type
             );
             ++$position;
@@ -416,8 +412,7 @@ class ToolManager
 
     public function getAdminToolByName($name)
     {
-        return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
-            ->findOneByName($name);
+        return $this->adminToolRepo->findOneBy(['name' => $name]);
     }
 
     /**
@@ -428,7 +423,7 @@ class ToolManager
     public function getAdminToolsByRoles(array $roles)
     {
         $disabled = $this->container->get('claroline.config.platform_config_handler')->getParameter('security.disabled_admin_tools');
-        $tools = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
+        $tools = $this->adminToolRepo->findByRoles($roles);
         $allowed = [];
 
         foreach ($tools as $tool) {
@@ -477,7 +472,6 @@ class ToolManager
             if (!$wot) {
                 $orderedTool = new OrderedTool();
                 $orderedTool->setUser($user);
-                $orderedTool->setName($tool->getName());
                 $orderedTool->setOrder($startPosition);
                 $orderedTool->setTool($tool);
                 $orderedTool->setVisibleInDesktop(false);
@@ -512,6 +506,12 @@ class ToolManager
         );
     }
 
+    /**
+     * @param int  $type
+     * @param bool $executeQuery
+     *
+     * @return \Doctrine\ORM\Query|OrderedTool[]
+     */
     public function getConfigurableDesktopOrderedToolsByTypeForAdmin($type = 0, $executeQuery = true)
     {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
@@ -577,7 +577,6 @@ class ToolManager
                     $orderedTool->setUser($user);
                     $orderedTool->setType(0);
                     $orderedTool->setOrder(1);
-                    $orderedTool->setName($toolName);
                 }
 
                 if (isset($config[$toolName])) {
@@ -646,7 +645,7 @@ class ToolManager
        ];
 
         foreach ($tools as $tool) {
-            $tool = $this->om->getRepository(Tool::class)->findOneByName($tool);
+            $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $tool]);
 
             if ($tool) {
                 $this->log('Removing tool '.$tool->getName());

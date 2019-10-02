@@ -47,5 +47,11 @@
   "resource_participated": "Participation à la ressource",
   "in_group": "Fait partie du groupe",
   "in_role": "Possède le role",
-  "profile_completed": "Profile complété"
+  "profile_completed": "Profile complété",
+  "granted_at": "obtenu le %date%",
+  "granted_date": "Date d'obtention",
+  "not_granted": "Vous ne possédez pas ce badge",
+  "grant_users": "Attribuer à des utilisateurs",
+  "badge_disabled_help": "Ce badge est désactivé et ne peut être attribué.",
+  "no_criteria": "Aucun critère d'attribution n'a été défini."
 }

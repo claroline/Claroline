@@ -4,10 +4,10 @@ import {connect} from 'react-redux'
 
 import {selectors as detailsSelectors} from '#/main/app/content/details/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {route} from '#/main/core/user/routing'
 import {UserDetails} from '#/main/core/user/components/details'
-import {ProfileNav} from '#/main/core/user/profile/components/nav'
 import {ProfileFacets} from '#/main/core/user/profile/components/facets'
 import {ProfileFacet} from '#/main/core/user/profile/player/components/facet'
 import {actions, selectors} from '#/main/core/user/profile/store'
@@ -20,9 +20,13 @@ const ProfileShowComponent = props =>
       />
 
       {props.facets && 1 < props.facets.length &&
-        <ProfileNav
-          prefix={route(props.user, props.path) + '/show'}
-          facets={props.facets}
+        <Vertical
+          basePath={route(props.user, props.path) + '/show'}
+          tabs={props.facets.map(facet => ({
+            icon: facet.icon,
+            title: facet.title,
+            path: `/${facet.id}`
+          }))}
         />
       }
     </div>

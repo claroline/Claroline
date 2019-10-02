@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
@@ -8,25 +9,22 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {ResourceCard} from '#/main/core/resource/components/card'
 
-import {selectors} from '#/plugin/open-badge/tools/badges/modals/evidence/store/selectors'
+import {selectors} from '#/plugin/open-badge/tools/badges/assertion/modals/evidence/store/selectors'
 
 const EvidenceModal = props =>
   <Modal
-    {...props}
+    {...omit(props, 'assertion', 'evidence', 'isNew', 'saveEvidence', 'initForm')}
     icon="fa fa-fw fa-cog"
     title={trans('evidence', {}, 'badge')}
     subtitle={props.assertion.badge.name}
     onEntering={() => props.initForm(props.evidence)}
   >
     <FormData
-      {...props}
       name={selectors.STORE_NAME}
-      meta={false}
-      buttons={false}
       target={['apiv2_evidence_create']}
       sections={[
         {
-          title: trans('evidence', {}, 'badge'),
+          title: trans('general'),
           primary: true,
           fields: [
             {
@@ -34,8 +32,7 @@ const EvidenceModal = props =>
               type: 'string',
               label: trans('name'),
               required: true
-            },
-            {
+            }, {
               name: 'narrative',
               type: 'html',
               label: trans('narrative', {}, 'badge'),
@@ -43,21 +40,20 @@ const EvidenceModal = props =>
               options: {
                 long: true
               }
+            }, {
+              name: 'resource',
+              type: 'resource',
+              label: trans('resource')
             }
           ]
         }
       ]}
-    >
-    </FormData>
-    {props.evidence.resource &&
-      <ResourceCard data={props.evidence.resource}/> 
-    }
+    />
+
     <Button
-      className="btn"
-      style={{marginTop: 10}}
+      className="btn modal-btn"
       type={CALLBACK_BUTTON}
-      icon="fa fa-fw fa-save"
-      label={trans('save')}
+      label={trans('save', {}, 'actions')}
       primary={true}
       callback={() => {
         props.saveEvidence(props.assertion)
@@ -67,11 +63,16 @@ const EvidenceModal = props =>
   </Modal>
 
 EvidenceModal.propTypes = {
-  fadeModal: T.func.isRequired,
+  assertion: T.object,
+  evidence: T.object,
+
+  // from store
+  isNew: T.bool.isRequired,
   saveEvidence: T.func.isRequired,
   initForm: T.func.isRequired,
-  assertion: T.object,
-  evidence: T.object
+
+  // from modal
+  fadeModal: T.func.isRequired
 }
 
 export {

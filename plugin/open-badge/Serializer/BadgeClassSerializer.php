@@ -165,6 +165,7 @@ class BadgeClassSerializer
         $this->sipe('criteria', 'setCriteria', $data, $badge);
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
         $this->sipe('issuingMode', 'setIssuingMode', $data, $badge);
+        $this->sipe('meta.enabled', 'setEnabled', $data, $badge);
 
         if (isset($data['issuer'])) {
             $badge->setIssuer($this->om->getObject($data['issuer'], Organization::class));

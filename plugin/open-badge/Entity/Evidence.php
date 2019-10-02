@@ -53,7 +53,7 @@ class Evidence
     private $audience;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion")
+     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", inversedBy="evidences")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $assertion;

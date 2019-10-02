@@ -6,7 +6,7 @@ import {URL_BUTTON} from '#/main/app/buttons'
 import {route as desktopRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {AssertionCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
+import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
 
 export default {
   name: 'my_badges',
@@ -26,12 +26,21 @@ export default {
         displayed: true,
         primary: true
       }, {
+        name: 'issuedOn',
+        label: trans('granted_date', {}, 'badge'),
+        type: 'date',
+        displayed: true,
+        primary: true,
+        options: {
+          time: true
+        }
+      }, {
         name: 'badge.meta.enabled',
         type: 'boolean',
         label: trans('enabled', {}, 'badge'),
         displayed: true
       }
     ],
-    card: AssertionCard
+    card: AssertionBadgeCard
   }
 }

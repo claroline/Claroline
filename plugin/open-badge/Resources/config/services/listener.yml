@@ -21,6 +21,6 @@ services:
             - '@claroline.api.serializer'
             - '@templating'
         tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_open-badge, method: onDisplayDesktop }
-            - { name: kernel.event_listener, event: open_tool_workspace_open-badge, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: open_tool_desktop_badges, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: open_tool_workspace_badges, method: onDisplayWorkspace }
             - { name: kernel.event_listener, event: layout.inject.javascript, method: onInjectJs }

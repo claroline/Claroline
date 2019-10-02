@@ -11,14 +11,14 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {AssertionCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
-import {actions} from '#/plugin/open-badge/tools/badges/assertion/store'
+import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
+import {actions, selectors} from '#/plugin/open-badge/tools/badges/assertion/store'
 
 const AssertionsList = (props) =>
   <ListData
-    name={props.name}
+    name={selectors.LIST_NAME}
     fetch={{
-      url: props.url,
+      url: ['apiv2_assertion_current_user_list'],
       autoload: true
     }}
     primaryAction={(row) => ({
@@ -34,6 +34,15 @@ const AssertionsList = (props) =>
         displayed: true,
         primary: true
       }, {
+        name: 'issuedOn',
+        label: trans('issued_on', {}, 'badge'),
+        type: 'date',
+        displayed: true,
+        primary: true,
+        options: {
+          time: true
+        }
+      }, {
         name: 'badge.meta.enabled',
         type: 'boolean',
         label: trans('enabled'),
@@ -44,29 +53,16 @@ const AssertionsList = (props) =>
       {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-download',
-        label: trans('download'),
+        label: trans('download', {}, 'actions'),
         scope: ['object'],
-        callback: () => {
-          props.download(rows[0]).then(pdfContent => {
-            html2pdf()
-              .set({
-                filename:    pdfContent.name,
-                image:       { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 4 }
-              })
-              .from(pdfContent.content, 'string')
-              .save()
-          })
-        }
+        callback: () => props.download(rows[0])
       }
     ]}
-    card={AssertionCard}
+    card={AssertionBadgeCard}
     display={{current: listConstants.DISPLAY_LIST_SM}}
   />
 
 AssertionsList.propTypes = {
-  name: T.string.isRequired,
-  url: T.oneOfType([T.string, T.array]).isRequired,
   path: T.string.isRequired,
   download: T.func.isRequired
 }
@@ -77,7 +73,16 @@ const Assertions = connect(
   }),
   (dispatch) => ({
     download(assertion) {
-      return dispatch(actions.download(assertion))
+      dispatch(actions.download(assertion)).then(pdfContent => {
+        html2pdf()
+          .set({
+            filename:    pdfContent.name,
+            image:       { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 4 }
+          })
+          .from(pdfContent.content, 'string')
+          .save()
+      })
     }
   })
 )(AssertionsList)

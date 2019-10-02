@@ -18,6 +18,6 @@ registry.add('ClarolineOpenBadgeBundle', {
    * Provides Administration tools.
    */
   tools: {
-    'open-badge': () => { return import(/* webpackChunkName: "plugin-admin-open-badge" */ '#/plugin/open-badge/tools/badges') },
+    'badges': () => { return import(/* webpackChunkName: "plugin-open-badge-tool-badges" */ '#/plugin/open-badge/tools/badges') },
   }
 })

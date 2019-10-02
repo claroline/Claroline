@@ -1,112 +1,223 @@
 import React, {Fragment} from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
-import {trans} from '#/main/app/intl/translation'
+import isEmpty from 'lodash/isEmpty'
 
+import {withRouter} from '#/main/app/router'
+import {trans, transChoice} from '#/main/app/intl/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {FormSection} from '#/main/app/content/form/components/sections'
+import {constants as listConst} from '#/main/app/content/list/constants'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {UserCard} from '#/main/core/user/components/card'
 import {MODAL_USERS} from '#/main/core/modals/users'
 
-import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
-import {actions, selectors}  from '#/plugin/open-badge/tools/badges/store'
+import {BadgeLayout}  from '#/plugin/open-badge/tools/badges/badge/components/layout'
+import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
+import {AssertionUserCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
+import {actions, selectors}  from '#/plugin/open-badge/tools/badges/badge/store'
 
-import {selectors as formSelectors} from '#/main/app/content/form/store'
-
-// TODO : add tools
 const BadgeDetailsComponent = (props) =>
-  <Fragment>
-    <div className="badge-meta">
+  <BadgeLayout
+    badge={props.badge}
+    assertion={null}
 
-    </div>
+    backAction={{
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-arrow-left',
+      label: trans('back'),
+      tooltip: 'bottom',
+      target: `${props.path}/badges`
+    }}
+    actions={[
+      {
+        name: 'edit',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-pencil',
+        label: trans('edit', {}, 'actions'),
+        target: props.path + `/badges/${props.badge.id}/edit`,
+        displayed: get(props.badge, 'permissions.edit'),
+        group: trans('management')
+      }, {
+        name: 'enable',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-check-circle',
+        label: trans('enable', {}, 'actions'),
+        displayed: get(props.badge, 'permissions.edit') && !get(props.badge, 'meta.enabled'),
+        callback: () => props.enable(props.badge),
+        group: trans('management')
+      }, {
+        name: 'disable',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-times-circle',
+        label: trans('disable', {}, 'actions'),
+        displayed: get(props.badge, 'permissions.edit') && get(props.badge, 'meta.enabled'),
+        callback: () => props.disable(props.badge),
+        confirm: {
+          title: transChoice('disable_badges', 1, {count: 1}),
+          message: trans('disable_badges_confirm', {badges_list: props.badge.name})
+        },
+        group: trans('management')
+      }, {
+        name: 'delete',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-trash-o',
+        label: trans('delete', {}, 'actions'),
+        dangerous: true,
+        displayed: get(props.badge, 'permissions.delete'),
+        confirm: {
+          title: trans('objects_delete_title'),
+          message: transChoice('objects_delete_question', 1, {count: 1}),
+          button: trans('delete', {}, 'actions')
+        },
+        callback: () => props.delete(props.badge).then(() => {
+          props.history.push(props.path+'/badges')
+        }),
+        group: trans('management')
+      }
+    ]}
 
-    <BadgeCard
-      data={props.badge}
-      size="sm"
-      orientation="col"
-    />
-
-    {get(props.badge, 'permissions.assign') &&
-      <FormSection
-        className="embedded-list-section"
-        icon="fa fa-fw fa-user"
-        title={trans('users')}
-        actions={[{
-          displayed: get(props.badge, 'permissions.assign'),
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-plus',
-          label: trans('add_users'),
-          modal: [MODAL_USERS, {
-            url: ['apiv2_user_list_registerable'], // maybe not the correct URL
-            title: props.title,
-            selectAction: (selected) => ({
-              type: CALLBACK_BUTTON,
-              label: trans('select', {}, 'actions'),
-              callback: () => props.addUsers(props.badge.id, selected)
-            })
-          }]
-        }]}
-      >
-        {get(props.badge, 'meta.enabled ') ?
-          <ListData
-            name={selectors.STORE_NAME + '.badges.current.assertions'}
-            fetch={{
-              url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
-              autoload: props.badge.id && !props.new
-            }}
-            primaryAction={(row) => ({
-              type: LINK_BUTTON,
-              target: props.path + `/badges/${props.badge.id}/assertion/${row.id}`,
-              label: trans('', {}, 'actions')
-            })}
-            delete={{
-              url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}]
-            }}
-            definition={[
-              {
-                name: 'user.username',
-                type: 'username',
-                label: trans('username'),
-                displayed: true,
-                primary: true
-              }, {
-                name: 'user.lastName',
-                type: 'string',
-                label: trans('last_name'),
-                displayed: true
-              }, {
-                name: 'user.firstName',
-                type: 'string',
-                label: trans('first_name'),
-                displayed: true
-              }, {
-                name: 'user.email',
-                type: 'email',
-                label: trans('email'),
-                displayed: true
-              }
-            ]}
-            card={UserCard}
-          />:
-          <div>{trans('badge_must_be_enabled or assignable')}</div>
+    sections={[
+      {
+        name: 'activity',
+        label: trans('activity'),
+        render() {
+          return (
+            <ListData
+              name={selectors.FORM_NAME + '.assertions'}
+              fetch={{
+                url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
+                autoload: !isEmpty(props.badge)
+              }}
+              primaryAction={(row) => ({
+                type: LINK_BUTTON,
+                target: props.path + `/badges/${props.badge.id}/assertion/${row.id}`,
+                label: trans('open', {}, 'actions')
+              })}
+              delete={{
+                url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
+                displayed: () => get(props.badge, 'permissions.assign')
+              }}
+              definition={[
+                {
+                  name: 'user',
+                  type: 'user',
+                  label: trans('user'),
+                  displayed: true
+                }, {
+                  name: 'issuedOn',
+                  label: trans('granted_date', {}, 'badge'),
+                  type: 'date',
+                  displayed: true,
+                  primary: true,
+                  options: {
+                    time: true
+                  }
+                }
+              ]}
+              card={AssertionUserCard}
+              display={{
+                current: listConst.DISPLAY_LIST_SM,
+                available: [
+                  listConst.DISPLAY_TABLE_SM,
+                  listConst.DISPLAY_TABLE,
+                  listConst.DISPLAY_LIST_SM,
+                  listConst.DISPLAY_TILES_SM
+                ]
+              }}
+            />
+          )
         }
-      </FormSection>
-    }
-  </Fragment>
+      }, {
+        name: 'granting',
+        icon: 'fa fa-fw fa-certificate',
+        label: 'Règles d\'attribution',
+        render() {
+          return (
+            <Fragment>
+              {!props.badge.meta.enabled &&
+                <div className="alert alert-info">
+                  <span className="fa fa-fw fa-info-circle icon-with-text-right" />
+                  {trans('badge_disabled_help', {}, 'badge')}
+                </div>
+              }
 
-const BadgeDetails = connect(
-  (state) => ({
-    path: toolSelectors.path(state),
-    badge: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.badges.current'))
-  }),
-  (dispatch) =>({
-    addUsers(badgeId, selected) {
-      dispatch(actions.addUsers(badgeId, selected))
-    }
-  })
-)(BadgeDetailsComponent)
+              <div className="panel panel-default">
+                <HtmlText className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</HtmlText>
+              </div>
+
+              {get(props.badge, 'permissions.assign') &&
+                <Button
+                  className="btn btn-block btn-emphasis component-container"
+                  type={MODAL_BUTTON}
+                  label={trans('grant_users', {}, 'badge')}
+                  disabled={!props.badge.meta.enabled}
+                  modal={[MODAL_USERS, {
+                    url: ['apiv2_user_list_registerable'], // maybe not the correct URL
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('select', {}, 'actions'),
+                      callback: () => props.grant(props.badge.id, selected)
+                    })
+                  }]}
+                  primary={true}
+                />
+              }
+            </Fragment>
+          )
+        }
+      }
+    ]}
+  />
+
+BadgeDetailsComponent.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
+  path: T.string.isRequired,
+  badge: T.shape(
+    BadgeTypes.propTypes
+  ),
+  enable: T.func.isRequired,
+  disable: T.func.isRequired,
+  delete: T.func.isRequired,
+  grant: T.func.isRequired
+}
+
+BadgeDetailsComponent.defaultProps = {
+  badge: {}
+}
+
+const BadgeDetails = withRouter(
+  connect(
+    (state) => ({
+      path: toolSelectors.path(state),
+      badge: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
+    }),
+    (dispatch) =>({
+      enable(badge) {
+        dispatch(actions.enable([badge])).then(response => {
+          dispatch(formActions.resetForm(selectors.FORM_NAME, response[0]))
+        })
+      },
+      disable(badge) {
+        return dispatch(actions.disable([badge])).then(response => {
+          dispatch(formActions.resetForm(selectors.FORM_NAME, response[0]))
+        })
+      },
+      delete(badge) {
+        return dispatch(actions.delete([badge]))
+      },
+
+      grant(badgeId, selected) {
+        dispatch(actions.grant(badgeId, selected))
+      }
+    })
+  )(BadgeDetailsComponent)
+)
 
 export {
   BadgeDetails

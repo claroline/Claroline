@@ -66,7 +66,7 @@ class Updater120503 extends Updater
             $this->om->flush();
         }
 
-        $sql = "DELETE FROM claro_ordered_tool WHERE name = '${toolName}'";
+        $sql = "DELETE ot FROM claro_ordered_tool AS ot LEFT JOIN claro_tools AS t ON (ot.tool_id = t.id) WHERE t.name = '${toolName}'";
 
         $this->log($sql);
         $stmt = $this->conn->prepare($sql);

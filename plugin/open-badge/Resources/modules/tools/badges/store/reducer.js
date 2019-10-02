@@ -5,7 +5,6 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {Badge as BadgeType} from '#/plugin/open-badge/tools/badges/prop-types'
 import {selectors} from '#/plugin/open-badge/tools/badges/store/selectors'
 import {reducer as parametersReducer} from '#/plugin/open-badge/tools/badges/parameters/store/reducer'
 
@@ -24,10 +23,10 @@ const reducer = combineReducers({
         [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
       })
     }),
-    current: makeFormReducer(selectors.STORE_NAME + '.badges.current', {
-      data: BadgeType.defaultProps
-    }, {
-      assertions: makeListReducer(selectors.STORE_NAME + '.badges.current.assertions', {}, {
+    current: makeFormReducer(selectors.STORE_NAME + '.badges.current', {}, {
+      assertions: makeListReducer(selectors.STORE_NAME + '.badges.current.assertions', {
+        sortBy: {property: 'issuedOn', direction: -1}
+      }, {
         invalidated: makeReducer(false, {
           [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
         })

@@ -38,7 +38,6 @@ class OrderedToolTransfer
     {
         $data = [
           'tool' => $orderedTool->getTool()->getName(),
-          'name' => $orderedTool->getName(),
           'position' => $orderedTool->getOrder(),
           'restrictions' => $this->serializeRestrictions($orderedTool, $options),
         ];
@@ -99,7 +98,6 @@ class OrderedToolTransfer
         if ($tool) {
             $orderedTool->setWorkspace($workspace);
             $orderedTool->setTool($tool);
-            $orderedTool->setName($data['name']);
             $orderedTool->setOrder($data['position']);
 
             foreach ($data['restrictions'] as $restriction) {

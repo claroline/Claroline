@@ -4,5 +4,9 @@
     "remove_user": "Supprimer un utilisateur",
     "delete": "Supprimer",
     "update": "Mettre à jour",
-    "create_or_update": "Créer ou mettre à jour"
+    "create_or_update": "Créer ou mettre à jour",
+    "facet": "Onglet du profil",
+    "workspace": "Espace d'activités",
+    "group": "Groupe",
+    "user": "Utilisateur"
 }

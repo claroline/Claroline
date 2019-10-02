@@ -1,40 +1,42 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors} from '#/main/core/tools/transfer/store'
 
-const Error = error => {
-  return(
-    <pre>
-      <div>{trans('line')}: {error.line}</div>
-      {typeof error.value === 'string' ?
-        error.value:
-        Object.keys(error.value).map((key, i) => <div key={'error'+key+i}>{error.value[key].path}: {error.value[key].message}</div>)
-      }
-    </pre>
-  )
-}
+const Error = props =>
+  <pre>
+    <div>{trans('line')}: {props.line}</div>
+
+    {typeof props.value === 'string' ?
+      props.value :
+      Object.keys(props.value).map((key, i) => <div key={'error'+key+i}>{props.value[key].path}: {props.value[key].message}</div>)
+    }
+  </pre>
 
 Error.propTypes = {
+  line: T.number,
+  value: T.oneOfType([T.string, T.arrayOf(T.shape({
+    path: T.string,
+    message: T.string
+  }))])
 }
 
-const Success = success => {
-  return(
-    <pre>
-      {success.log}
-    </pre>
-  )
-}
+const Success = props =>
+  <pre>
+    {props.log}
+  </pre>
 
 Success.propTypes = {
+  log: T.string
 }
 
 const Logs = props => {
-  if (props.data) {
+  if (!isEmpty(props.data)) {
     return (
       <div>
         <pre>
@@ -89,9 +91,9 @@ const Logs = props => {
         </FormSections>
       </div>
     )
-  } else {
-    return(<div> Loading... </div>)
   }
+
+  return null
 }
 
 Logs.propTypes = {
@@ -101,8 +103,7 @@ Logs.propTypes = {
 const ConnectedLog = connect(
   state => ({
     data: selectors.log(state)
-  }),
-  null
+  })
 )(Logs)
 
 export {

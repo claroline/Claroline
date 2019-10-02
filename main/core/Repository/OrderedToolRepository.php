@@ -28,6 +28,22 @@ class OrderedToolRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderedTool::class);
     }
 
+    public function findOneByNameAndWorkspace($name, Workspace $workspace = null)
+    {
+        $query = $this->_em->createQuery('
+            SELECT ot
+                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                JOIN ot.tool t
+                WHERE ot.workspace = :workspace
+                AND t.name = :name
+                ORDER BY ot.order
+        ');
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('name', $name);
+
+        return $query->getOneOrNullResult();
+    }
+
     /**
      * Returns the workspace ordered tools accessible to some given roles.
      *

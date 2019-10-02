@@ -75,7 +75,7 @@ class ToolManagerTest extends MockeryTestCase
         $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $orderedTool = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $manager->shouldReceive('extractFiles')->once()->with($arch, $config)->andReturn($files);
-        $manager->shouldReceive('setWorkspaceTool')->with($tool, $position, $name, $workspace)
+        $manager->shouldReceive('setWorkspaceTool')->with($tool, $position, $workspace)
             ->once()->andReturn($orderedTool);
         $manager->shouldReceive('addRoleToOrderedTool')->times(2);
         $tool->shouldReceive('getName')->once()->andReturn('claro_tool');
@@ -123,7 +123,7 @@ class ToolManagerTest extends MockeryTestCase
             $this->om->shouldReceive('flush')->once();
         }
 
-        $this->getManager()->setWorkspaceTool($tool, 1, 'tool', $workspace);
+        $this->getManager()->setWorkspaceTool($tool, 1, $workspace);
     }
 
     public function testAddRole()
@@ -212,7 +212,7 @@ class ToolManagerTest extends MockeryTestCase
             $this->om->shouldReceive('flush')->once();
         }
 
-        $this->getManager()->addDesktopTool($tool, $user, $position, 'name');
+        $this->getManager()->addDesktopTool($tool, $user, $position);
     }
 
     public function testMove()
@@ -334,9 +334,9 @@ class ToolManagerTest extends MockeryTestCase
             ->once()
             ->with(['name' => 'parameters'])
             ->andReturn($parameters);
-        $manager->shouldReceive('addDesktopTool')->once()->with($home, $user, 1, 'home');
-        $manager->shouldReceive('addDesktopTool')->once()->with($resmanager, $user, 2, 'resources');
-        $manager->shouldReceive('addDesktopTool')->once()->with($parameters, $user, 3, 'parameters');
+        $manager->shouldReceive('addDesktopTool')->once()->with($home, $user, 1);
+        $manager->shouldReceive('addDesktopTool')->once()->with($resmanager, $user, 2);
+        $manager->shouldReceive('addDesktopTool')->once()->with($parameters, $user, 3);
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('persist')->once()->with($user);
         $this->om->shouldReceive('endFlushSuite')->once()->with($user);

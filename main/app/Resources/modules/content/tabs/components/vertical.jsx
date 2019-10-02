@@ -5,6 +5,7 @@ import omit from 'lodash/omit'
 
 import {NavLink} from '#/main/app/router'
 import {toKey} from '#/main/core/scaffolding/text'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 
 const Vertical = (props) =>
   <nav
@@ -22,6 +23,15 @@ const Vertical = (props) =>
           <span className={classes(tab.icon, tab.title && 'icon-with-text-right')} />
         }
         {tab.title}
+
+        {tab.actions && 0 !== tab.actions.length &&
+          <Toolbar
+            className="lateral-nav-actions"
+            buttonName='btn btn-link'
+            tooltip="right"
+            actions={tab.actions}
+          />
+        }
       </NavLink>
     )}
   </nav>
@@ -32,8 +42,11 @@ Vertical.propTypes= {
   tabs: T.arrayOf(T.shape({
     path: T.string.isRequired,
     exact: T.bool,
-    icon: T.string.isRequired,
-    title: T.string.isRequired
+    icon: T.string,
+    title: T.string.isRequired,
+    actions: T.arrayOf(T.shape({
+      // TODO : action types
+    }))
   })).isRequired
 }
 

@@ -11,7 +11,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const BadgeMenu = (props) =>
   <MenuSection
     {...omit(props, 'path', 'isAdmin')}
-    title={trans('open-badge', {}, 'tools')}
+    title={trans('badges', {}, 'tools')}
   >
     <Toolbar
       className="list-group"

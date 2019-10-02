@@ -1794,5 +1794,6 @@
     "enabled": "Actif",
     "disabled": "Inactif",
     "default": "Défaut",
-    "standard": "Standard"
+    "standard": "Standard",
+    "history": "Historique"
 }

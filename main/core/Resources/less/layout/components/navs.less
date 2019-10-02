@@ -1,47 +1,112 @@
+// allows button tags as nav toggle
 .nav {
-    > .active > a {
+    padding-left: 0; // Override default ul/ol
+    margin-bottom: 0;
+    list-style: none;
+    &:extend(.clearfix all);
+
+    > li {
+        position: relative;
+        display: block;
+        padding-left: 0; // Override default ul/ol
+        margin-bottom: 0;
+        list-style: none;
+        &:extend(.clearfix all);
+
+        > a,
+        > button,
+        > .dropdown > button {
+            position: relative;
+            display: block;
+            padding: @nav-link-padding;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+                background-color: @nav-link-hover-bg;
+            }
+        }
+
+        // Disabled state sets text to gray and nukes hover/tab effects
+        &.disabled > a,
+        &.disabled > button,
+        &.disabled > .dropdown > button {
+            color: @nav-disabled-link-color;
+
+            &:hover,
+            &:focus {
+                color: @nav-disabled-link-hover-color;
+                text-decoration: none;
+                cursor: @cursor-disabled;
+                background-color: transparent;
+            }
+        }
+    }
+
+    // Open dropdowns
+    .open > a,
+    .open > button {
+        &,
+        &:hover,
+        &:focus,
+        &:active {
+            box-shadow: none;
+            background-color: @nav-link-hover-bg;
+            border-color: @link-color;
+        }
+    }
+
+    > .active > a,
+    > .active > button,
+    > .active > .dropdown > button {
         outline: none;
     }
 }
 
-// more configurable nav-tabs
-.nav-tabs > li {
-    > a {
-        color: @nav-tabs-link-color;
-        margin-right: @nav-spacing;
-        border-radius: @nav-tabs-border-radius @nav-tabs-border-radius 0 0; // make border radius configurable
-    }
-}
 
-// adds more vars to configure nav-pills behavior
-// Also rewrite the space between navs to create it the same way `.nav-tabs`
-// this fixes a wrong left alignment when tabs breaks on multi-lines
-.nav-pills > li {
-    > a {
-        color: @nav-pills-link-color;
-        background: @nav-pills-link-bg;
-        margin-right: @nav-spacing; // create space between tabs
+// Give the tabs something to sit on
+.nav-tabs {
+    border-bottom: 1px solid @nav-tabs-border-color;
+    > li {
+        float: left;
+        // Make the list-items overlay the bottom border
+        margin-bottom: -1px;
+
+        // Actual tabs (as links)
+        > a,
+        > button,
+        > .dropdown > button {
+            color: @nav-tabs-link-color;
+            margin-right: @nav-spacing;
+            border-radius: @nav-tabs-border-radius; // make border radius configurable
+            line-height: @line-height-base;
+            border: 1px solid transparent;
+            &:hover {
+                border-color: @nav-tabs-link-hover-border-color @nav-tabs-link-hover-border-color @nav-tabs-border-color;
+            }
+        }
+
+        // Active state, and its :hover to override normal :hover
+        &.active > a,
+        &.active > button,
+        &.active > .dropdown > button {
+            &,
+            &:hover,
+            &:focus {
+                color: @nav-tabs-active-link-hover-color;
+                cursor: default;
+                background-color: @nav-tabs-active-link-hover-bg;
+                border: 1px solid @nav-tabs-active-link-hover-border-color;
+                border-bottom-color: transparent;
+            }
+        }
     }
 
-    &:last-child > a {
-        margin-right: 0;
-    }
-
-    + li > a {
-        margin-left: 0; // removes default bootstrap behavior
-    }
-}
-
-// rewrite stacked pills to use new vars and spacing
-.nav-stacked > li {
-    > a {
-        margin-top: @nav-spacing; // use new var for v-spacing
-        margin-right: 0; // horizontal spacing is not needed in this case
-    }
-
-    + li, // removes default bootstrap behavior
-    &:first-child > a {
-        margin-top: 0;
+    // Specific dropdowns
+    .dropdown-menu {
+        // make dropdown border overlap tab border
+        margin-top: -1px;
+        // Remove the top rounded corners here since there is a hard edge above the menu
+        .border-top-radius(0);
     }
 }
 

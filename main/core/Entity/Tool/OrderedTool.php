@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,27 +31,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_tool_ws_type",
  *             columns={"tool_id", "workspace_id", "ordered_tool_type"}
- *         ),
- *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_name_by_workspace",
- *             columns={"workspace_id", "name"}
  *         )
  *     }
  * )
- * @DoctrineAssert\UniqueEntity({"name", "workspace"})
  * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
  * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
  */
 class OrderedTool
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(
@@ -80,11 +70,6 @@ class OrderedTool
      * @ORM\Column(name="display_order", type="integer")
      */
     protected $order;
-
-    /**
-     * @ORM\Column()
-     */
-    protected $name;
 
     /**
      * @ORM\Column(name="is_visible_in_desktop", type="boolean")
@@ -125,11 +110,6 @@ class OrderedTool
         $this->rights = new ArrayCollection();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
     public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
@@ -161,16 +141,6 @@ class OrderedTool
     public function getOrder()
     {
         return $this->order;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function setUser(User $user = null)
@@ -226,7 +196,7 @@ class OrderedTool
     public function __toString()
     {
         return is_null($this->workspace) ?
-            $this->name :
-            '['.$this->workspace->getName().'] '.$this->name;
+            $this->tool->getName() :
+            '['.$this->workspace->getName().'] '.$this->tool->getName();
     }
 }

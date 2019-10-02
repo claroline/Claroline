@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class LogConnectManager
@@ -45,6 +46,7 @@ class LogConnectManager
     private $translator;
 
     private $logRepo;
+    /** @var OrderedToolRepository */
     private $orderedToolRepo;
     private $adminToolRepo;
 
@@ -630,7 +632,7 @@ class LogConnectManager
 
     private function createLogConnectTool(User $user, $toolName, \DateTime $date, Workspace $workspace = null)
     {
-        $orderedTool = $this->orderedToolRepo->findOneBy(['workspace' => $workspace, 'name' => $toolName]);
+        $orderedTool = $this->orderedToolRepo->findOneByNameAndWorkspace($toolName, $workspace);
 
         if (!is_null($orderedTool)) {
             // Creates a new workspace tool connection with no duration for the current connection
