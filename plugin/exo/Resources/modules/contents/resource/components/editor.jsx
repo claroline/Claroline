@@ -40,7 +40,8 @@ const ResourceEditorComponent = props =>
             options: {
               picker: {
                 current: props.resourceNode && props.resourceNode.parent ? props.resourceNode.parent : null,
-                root: null
+                root: null,
+                filters: [{property: 'resourceType', value: ['directory'].concat(authorizedTypes), locked: true}]
               }
             },
             onChange: (resource) => {
