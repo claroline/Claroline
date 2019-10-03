@@ -87,7 +87,6 @@ class BlogListener
           'archives' => $postManager->getArchives($blog),
           'tags' => $blogManager->getTags($blog, $postsData),
           'blog' => $this->container->get('claroline.api.serializer')->serialize($blog),
-          'pdfEnabled' => $this->container->get('claroline.config.platform_config_handler')->getParameter('is_pdf_export_active'),
         ]);
 
         $event->stopPropagation();

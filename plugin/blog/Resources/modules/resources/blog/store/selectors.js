@@ -54,11 +54,6 @@ const posts = createSelector(
   }
 )
 
-const pdfEnabled = createSelector(
-  [resource],
-  (resource) => resource.pdfEnabled
-)
-
 const postEdit = createSelector(
   [resource],
   (resource) => resource.post_edit
@@ -128,7 +123,6 @@ export const selectors = {
   showComments,
   comments,
   posts,
-  pdfEnabled,
   postEdit,
   goHome,
   calendarSelectedDate,

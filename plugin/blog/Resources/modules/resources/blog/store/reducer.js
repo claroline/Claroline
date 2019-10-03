@@ -51,9 +51,6 @@ const reducer = combineReducers({
   reportedComments: moderationReducer.reportedComments,
   moderationPosts: moderationReducer.moderationPosts,
   trustedUsers: moderationReducer.trustedUsers,
-  pdfEnabled: makeReducer(false, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.pdfEnabled
-  }),
   blog: combineReducers({
     data: combineReducers({
       id: makeReducer('', {

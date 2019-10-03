@@ -9,18 +9,19 @@ use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route("/blog", options={"expose"=true})
  */
-class BlogController extends Controller
+class BlogController
 {
     use PermissionCheckerTrait;
 
@@ -34,16 +35,6 @@ class BlogController extends Controller
 
     /**
      * BlogController constructor.
-     *
-     * @DI\InjectParams({
-     *     "blogSerializer"        = @DI\Inject("Icap\BlogBundle\Serializer\BlogSerializer"),
-     *     "blogOptionsSerializer" = @DI\Inject("Icap\BlogBundle\Serializer\BlogOptionsSerializer"),
-     *     "blogManager"           = @DI\Inject("Icap\BlogBundle\Manager\BlogManager"),
-     *     "postManager"           = @DI\Inject("Icap\BlogBundle\Manager\PostManager"),
-     *     "router"                = @DI\Inject("router"),
-     *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "tokenStorage"          = @DI\Inject("security.token_storage")
-     * })
      *
      * @param BlogSerializer               $blogSerializer
      * @param BlogOptionsSerializer        $blogOptionsSerializer
@@ -60,7 +51,9 @@ class BlogController extends Controller
         PostManager $postManager,
         UrlGeneratorInterface $router,
         PlatformConfigurationHandler $configHandler,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        TwigEngine $templating,
+        AuthorizationCheckerInterface $authorization
       ) {
         $this->blogSerializer = $blogSerializer;
         $this->blogOptionsSerializer = $blogOptionsSerializer;
@@ -69,6 +62,8 @@ class BlogController extends Controller
         $this->router = $router;
         $this->configHandler = $configHandler;
         $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -78,7 +73,9 @@ class BlogController extends Controller
     {
         //for backwards compatibility with older url using id and not uuid
         $blog = $this->blogManager->getBlogByIdOrUuid($blogId);
-        $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
+        $node = $blog->getResourceNode();
+        $workspace = $node->getWorkspace();
+        $this->checkPermission('OPEN', $node, [], true);
 
         if (is_null($blog)) {
             throw new NotFoundHttpException();
@@ -86,8 +83,8 @@ class BlogController extends Controller
         $feed = [
             'title' => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
-            'siteUrl' => $this->generateUrl('icap_blog_open', ['blogId' => $blog->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            'feedUrl' => $this->generateUrl('icap_blog_rss', ['blogId' => $blog->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            'siteUrl' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).'#/desktop/workspaces/open/'.$workspace->getSlug().'/resources/'.$node->getSlug(),
+            'feedUrl' => $this->router->generate('icap_blog_rss', ['blogId' => $blog->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             'lang' => $this->configHandler->getParameter('locale_language'),
         ];
 
@@ -108,7 +105,7 @@ class BlogController extends Controller
             foreach ($posts['data'] as $post) {
                 $items[] = [
                     'title' => $post['title'],
-                    'url' => $this->generateUrl('apiv2_blog_post_get', ['blogId' => $blog->getId(), 'postId' => $post['slug']], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'url' => $this->router->generate('apiv2_blog_post_get', ['blogId' => $blog->getId(), 'postId' => $post['slug']], UrlGeneratorInterface::ABSOLUTE_URL),
                     'date' => date('d/m/Y h:i:s', strtotime($post['publicationDate'])),
                     'intro' => $post['content'],
                     'author' => $post['authorName'],
@@ -116,7 +113,7 @@ class BlogController extends Controller
             }
         }
 
-        return new Response($this->renderView('IcapBlogBundle:blog/rss:rss.html.twig', [
+        return new Response($this->templating->render('IcapBlogBundle:blog/rss:rss.html.twig', [
             'feed' => $feed,
             'items' => $items,
         ]), 200, [
@@ -156,29 +153,14 @@ class BlogController extends Controller
             }
         }
 
-        $content = $this->renderView('IcapBlogBundle:blog/pdf:view.pdf.twig',
-            [
-                '_resource' => $blog,
-                'posts' => $items,
-            ]
-            );
+        $content = $this->templating->render(
+            'IcapBlogBundle:blog/pdf:view.pdf.twig',
+            ['_resource' => $blog, 'posts' => $items]
+        );
 
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml(
-                $content,
-                [
-                    'outline' => true,
-                    'footer-right' => '[page]/[toPage]',
-                    'footer-spacing' => 3,
-                    'footer-font-size' => 8,
-                ],
-                true
-                ),
-            200,
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="'.$blog->getResourceNode()->getName().'.pdf"',
-            ]
-            );
+        return new JsonResponse([
+          'name' => $blog->getResourceNode()->getSlug(),
+          'content' => $content,
+        ]);
     }
 }
