@@ -123,7 +123,7 @@ class FinderProvider
 
         if (0 < $count && empty($data)) {
             // search should have returned results, but we have requested a non existent page => get the last page
-            $page = ceil($count / $limit) - 1;
+            $page = 0 !== $limit ? ceil($count / $limit) - 1 : 1;
             // load last page data
             $data = $this->fetch($class, $allFilters, $sortBy, $page, $limit);
         }
