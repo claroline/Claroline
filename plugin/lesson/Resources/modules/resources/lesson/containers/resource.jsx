@@ -32,6 +32,9 @@ const LessonResource = withRouter(
         },
         fetchChapterTree(lessonId) {
           dispatch(actions.fetchChapterTree(lessonId))
+        },
+        downloadLessonPdf(lessonId) {
+          return dispatch(actions.downloadLessonPdf(lessonId))
         }
       })
     )(LessonResourceComponent)

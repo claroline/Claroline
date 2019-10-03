@@ -8,12 +8,12 @@ use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
 use Icap\LessonBundle\Repository\ChapterRepository;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route("lesson/{lessonId}", options={"expose"=true})
@@ -35,25 +35,27 @@ class ChapterController
     /** @var ChapterSerializer */
     private $chapterSerializer;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
     /**
      * chapterController constructor.
-     *
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "chapterSerializer" = @DI\Inject("Icap\LessonBundle\Serializer\ChapterSerializer"),
-     *     "chapterManager" = @DI\Inject("Icap\LessonBundle\Manager\ChapterManager")
-     * })
      *
      * @param ContainerInterface $container
      * @param ChapterSerializer  $chapterSerializer
      * @param ChapterManager     $chapterManager
      */
-    public function __construct(ContainerInterface $container, ChapterSerializer $chapterSerializer, ChapterManager $chapterManager)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        ChapterSerializer $chapterSerializer,
+        ChapterManager $chapterManager,
+        AuthorizationCheckerInterface $authorization
+    ) {
         $this->container = $container;
         $this->chapterRepository = $this->container->get('doctrine.orm.entity_manager')->getRepository('IcapLessonBundle:Chapter');
         $this->chapterSerializer = $chapterSerializer;
         $this->chapterManager = $chapterManager;
+        $this->authorization = $authorization;
     }
 
     /**

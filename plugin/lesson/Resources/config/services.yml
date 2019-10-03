@@ -3,7 +3,8 @@ imports:
     - { resource: services/serializer.yml }
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
-        
+    - { resource: services/controller.yml }     
+
 parameters:
 #    lesson.example.class: Icap\LessonBundle\Example
 

@@ -71,9 +71,6 @@ const reducer = combineReducers({
       })
     })
   }),
-  exportPdfEnabled: makeReducer(false, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.exportPdfEnabled
-  }),
   tree: combineReducers({
     invalidated: makeReducer(false, {
       [TREE_LOADED]: () => false,

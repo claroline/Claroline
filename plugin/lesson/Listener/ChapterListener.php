@@ -14,23 +14,13 @@ namespace Icap\LessonBundle\Listener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\NotificationBundle\Entity\UserPickerContent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
 
-/**
- * @DI\Service("icap.lesson_bundle.entity_listener.chapter")
- * @DI\Tag("doctrine.entity_listener")
- */
 class ChapterListener
 {
-    /** @var  \Icap\NotificationBundle\Manager\NotificationManager */
+    /** @var \Icap\NotificationBundle\Manager\NotificationManager */
     private $notificationManager;
 
-    /**
-     * @DI\InjectParams({
-     * "notificationManager" = @DI\Inject("icap.notification.manager"),
-     * })
-     */
     public function __construct(NotificationManager $notificationManager)
     {
         $this->notificationManager = $notificationManager;
@@ -41,22 +31,22 @@ class ChapterListener
         $userPicker = $chapter->getUserPicker();
         $lesson = $chapter->getLesson();
         if (
-            $userPicker !== null &&
+            null !== $userPicker &&
             count($userPicker->getUserIds()) > 0 &&
-            $lesson->getResourceNode() !== null
+            null !== $lesson->getResourceNode()
         ) {
-            $details = array(
-                'chapter' => array(
+            $details = [
+                'chapter' => [
                     'lesson' => $lesson->getId(),
                     'chapter' => $chapter->getId(),
                     'title' => $chapter->getTitle(),
-                ),
-                'resource' => array(
+                ],
+                'resource' => [
                     'id' => $lesson->getId(),
                     'name' => $lesson->getResourceNode()->getName(),
                     'type' => $lesson->getResourceNode()->getResourceType()->getName(),
-                ),
-            );
+                ],
+            ];
             $notification = $this->notificationManager->createNotification(
                 'resource-icap_lesson-user_tagged',
                 'lesson',
@@ -69,7 +59,7 @@ class ChapterListener
 
     public function prePersist(Chapter $chapter, LifecycleEventArgs $event)
     {
-        if ($chapter->getText() != null) {
+        if (null !== $chapter->getText()) {
             $userPicker = new UserPickerContent($chapter->getText());
             $chapter->setUserPicker($userPicker);
             $chapter->setText($userPicker->getFinalText());

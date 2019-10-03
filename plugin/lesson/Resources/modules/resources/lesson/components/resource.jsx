@@ -2,13 +2,15 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {url} from '#/main/app/api'
-import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
 import {Editor} from '#/plugin/lesson/resources/lesson/editor/components/editor'
+
+// TODO : avoid hard dependency
+import html2pdf from 'html2pdf.js'
 
 class LessonResource extends Component {
   constructor(props) {
@@ -42,13 +44,20 @@ class LessonResource extends Component {
             exact: true
           },
           {
-            type: DOWNLOAD_BUTTON,
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-file-pdf-o',
             displayed: this.props.canExport,
             label: trans('pdf_export'),
-            file: {
-              url: url(['icap_lesson_export_pdf', {lesson: this.props.lesson.id}])
-            }
+            callback: () => this.props.downloadLessonPdf(this.props.lesson.id).then(pdfContent => {
+              html2pdf()
+                .set({
+                  filename: pdfContent.name,
+                  image: { type: 'jpeg', quality: 1 },
+                  html2canvas: { scale: 4 }
+                })
+                .from(pdfContent.content, 'string')
+                .save()
+            })
           }
         ]}
         routes={[
@@ -99,7 +108,8 @@ LessonResource.propTypes = {
   createChapter: T.func.isRequired,
   copyChapter: T.func.isRequired,
   loadChapter: T.func.isRequired,
-  editChapter: T.func.isRequired
+  editChapter: T.func.isRequired,
+  downloadLessonPdf: T.func.isRequired
 }
 
 export {

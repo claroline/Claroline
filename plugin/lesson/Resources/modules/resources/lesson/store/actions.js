@@ -95,3 +95,12 @@ actions.fetchChapterTree = lessonId => dispatch => {
 actions.positionChange = value => (dispatch, getState) => {
   dispatch(actions.positionSelected(value === selectors.treeData(getState()).slug))
 }
+
+actions.downloadLessonPdf = (lessonId) => ({
+  [API_REQUEST]: {
+    url: ['icap_lesson_export_pdf', {lesson: lessonId}],
+    request: {
+      method: 'GET'
+    }
+  }
+})

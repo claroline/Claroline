@@ -45,12 +45,7 @@ const treeInvalidated = createSelector(
   (tree) => tree.invalidated
 )
 
-const exportPdfEnabled = createSelector(
-  [resource],
-  (resource) => resource.exportPdfEnabled
-)
-
-const canExport = (state) => hasPermission('export', resourceSelect.resourceNode(state)) && exportPdfEnabled(state)
+const canExport = (state) => hasPermission('export', resourceSelect.resourceNode(state))
 
 const canEdit = (state) => hasPermission('edit', resourceSelect.resourceNode(state))
 

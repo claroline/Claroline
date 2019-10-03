@@ -33,3 +33,30 @@ services:
             - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_update,      method: onChapterCreateLogDetails }
             - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_delete,      method: onChapterCreateLogDetails }
             - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_move,        method: onChapterCreateLogDetails }
+
+    Icap\LessonBundle\Listener\NotificationUserParametersListener:
+        tags:
+            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
+
+    Icap\LessonBundle\Listener\NotificationListener:
+        arguments:
+            - '@translator'
+            - '@router'
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_create, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_update, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-user_tagged, method: onCreateNotificationItem }
+
+    Icap\LessonBundle\Listener\NotificationListener:
+        arguments:
+            - '@translator'
+            - '@router'
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_create, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_update, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-user_tagged, method: onCreateNotificationItem }
+
+    Icap\LessonBundle\Listener\ChapterListener:
+        arguments:
+            - '@icap.notification.manager'
+        tags: ['doctrine.entity_listener']

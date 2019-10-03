@@ -20,8 +20,7 @@ const reducer = combineReducers({
   wikiForm: editorReducer,
   sections: sectionsReducer,
   deletedSections: deletedSectionsReducer,
-  history: historyReducer,
-  exportPdfEnabled: makeReducer(false, {})
+  history: historyReducer
 })
 
 export {

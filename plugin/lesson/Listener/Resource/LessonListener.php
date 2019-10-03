@@ -74,7 +74,6 @@ class LessonListener
         $root = $this->chapterRepository->findOneBy(['lesson' => $lesson, 'level' => 0, 'parent' => null]);
 
         $event->setData([
-            'exportPdfEnabled' => $this->config->getParameter('is_pdf_export_active'),
             'lesson' => $this->serializer->serialize($lesson),
             'tree' => $this->chapterManager->serializeChapterTree($lesson),
             'chapter' => $firstChapter ? $this->serializer->serialize($firstChapter) : null,

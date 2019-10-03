@@ -2,15 +2,28 @@
 
 namespace Icap\LessonBundle\Controller\Resource;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\LessonBundle\Entity\Lesson;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class LessonController extends Controller
 {
     use PermissionCheckerTrait;
+
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
+        TwigEngine $templating
+    ) {
+        $this->authorization = $authorization;
+        $this->om = $om;
+        $this->templating = $templating;
+    }
 
     /**
      * @EXT\Route(
@@ -24,27 +37,18 @@ class LessonController extends Controller
     {
         $this->checkPermission('EXPORT', $lesson->getResourceNode(), [], true);
 
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+        $chapterRepository = $this->om->getRepository('IcapLessonBundle:Chapter');
         $tree = $chapterRepository->buildChapterTree($lesson->getRoot());
-        $content = $this->renderView(
+        $content = $this->templating->render(
             'IcapLessonBundle:lesson:open.pdf.twig', [
             '_resource' => $lesson,
             'tree' => $tree,
                 ]
         );
 
-        return new Response(
-                $this->get('knp_snappy.pdf')->getOutputFromHtml(
-                        $content, [
-                    'outline' => true,
-                    'footer-right' => '[page]/[toPage]',
-                    'footer-spacing' => 3,
-                    'footer-font-size' => 8,
-                        ], true
-                ), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$lesson->getResourceNode()->getName().'.pdf"',
-                ]
-        );
+        return new JsonResponse([
+          'content' => $content,
+          'name' => $lesson->getResourceNode()->getName(),
+        ]);
     }
 }
