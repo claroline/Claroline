@@ -62,3 +62,8 @@ services:
           - '@Icap\WikiBundle\Manager\ContributionManager'
        tags:
           - { name: kernel.event_listener, event: merge_users, method: onMerge }
+
+    Icap\WikiBundle\Listener\Entity\ContributionListener:
+       arguments:
+          - '@icap.notification.manager'
+       tags: ['doctrine.entity_listener']

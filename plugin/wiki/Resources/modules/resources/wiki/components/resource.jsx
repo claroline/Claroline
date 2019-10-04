@@ -2,8 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {url} from '#/main/app/api'
-import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+// TODO : avoid hard dependency
+import html2pdf from 'html2pdf.js'
+
+import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
@@ -24,14 +26,22 @@ const WikiResource = props =>
         label: trans('show_overview'),
         target: props.path,
         exact: true
-      }, {
-        type: DOWNLOAD_BUTTON,
+      },
+      {
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
         displayed: props.canExport,
         label: trans('pdf_export'),
-        file: {
-          url: url(['icap_wiki_export_pdf', {id: props.wiki.id}])
-        }
+        callback: () => props.downloadWikiPdf(props.wiki.id).then(pdfContent => {
+          html2pdf()
+            .set({
+              filename: pdfContent.name,
+              image: { type: 'jpeg', quality: 1 },
+              html2canvas: { scale: 4 }
+            })
+            .from(pdfContent.content, 'string')
+            .save()
+        })
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
@@ -86,7 +96,8 @@ WikiResource.propTypes = {
   resetForm: T.func.isRequired,
   setCurrentHistorySection: T.func.isRequired,
   setCurrentHistoryVersion: T.func.isRequired,
-  setCurrentHistoryCompareSet: T.func.isRequired
+  setCurrentHistoryCompareSet: T.func.isRequired,
+  downloadWikiPdf: T.func.isRequired
 }
 
 export {

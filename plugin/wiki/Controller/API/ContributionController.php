@@ -9,10 +9,10 @@ use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Manager\ContributionManager;
 use Icap\WikiBundle\Manager\SectionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -37,12 +37,6 @@ class ContributionController
     private $contributionManager;
 
     /**
-     * @DI\InjectParams({
-     *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "sectionManager"         = @DI\Inject("Icap\WikiBundle\Manager\SectionManager"),
-     *     "contributionManager"    = @DI\Inject("Icap\WikiBundle\Manager\ContributionManager")
-     * })
-     *
      * SectionController constructor.
      *
      * @param FinderProvider      $finder
@@ -52,11 +46,13 @@ class ContributionController
     public function __construct(
         FinderProvider $finder,
         SectionManager $sectionManager,
-        ContributionManager $contributionManager
+        ContributionManager $contributionManager,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->finder = $finder;
         $this->sectionManager = $sectionManager;
         $this->contributionManager = $contributionManager;
+        $this->authorization = $authorization;
     }
 
     /**

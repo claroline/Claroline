@@ -6,17 +6,16 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Snappy\Pdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @EXT\Route("/wiki", options={"expose"=true})
  */
-class WikiController extends Controller
+class WikiController
 {
     use PermissionCheckerTrait;
 
@@ -30,12 +29,6 @@ class WikiController extends Controller
     private $pdfRenderer;
 
     /**
-     * @DI\InjectParams({
-     *     "sectionManager"         = @DI\Inject("Icap\WikiBundle\Manager\SectionManager"),
-     *     "templating"             = @DI\Inject("templating"),
-     *     "pdfRenderer"            = @DI\Inject("knp_snappy.pdf")
-     * })
-     *
      * SectionController constructor.
      *
      * @param SectionManager  $sectionManager
@@ -45,11 +38,11 @@ class WikiController extends Controller
     public function __construct(
         SectionManager $sectionManager,
         EngineInterface $templating,
-        Pdf $pdfRenderer
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->sectionManager = $sectionManager;
         $this->templating = $templating;
-        $this->pdfRenderer = $pdfRenderer;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -86,22 +79,9 @@ class WikiController extends Controller
             ]
         );
 
-        return new Response(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml(
-                $content,
-                [
-                    'outline' => true,
-                    'footer-right' => '[page]/[toPage]',
-                    'footer-spacing' => 3,
-                    'footer-font-size' => 8,
-                ],
-                true
-            ),
-            200,
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="'.$resourceNode->getName().'.pdf"',
-            ]
-        );
+        return new JsonResponse([
+            'content' => $content,
+            'name' => $resourceNode->getName(),
+        ]);
     }
 }

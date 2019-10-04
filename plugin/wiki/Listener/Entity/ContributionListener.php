@@ -12,24 +12,14 @@
 namespace Icap\WikiBundle\Listener\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Icap\WikiBundle\Entity\Contribution;
-use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
+use Icap\WikiBundle\Entity\Contribution;
 
-/**
- * @DI\Service("icap.wiki_bundle.entity_listener.contribution")
- * @DI\Tag("doctrine.entity_listener")
- */
 class ContributionListener
 {
-    /** @var  \Icap\NotificationBundle\Manager\NotificationManager */
+    /** @var \Icap\NotificationBundle\Manager\NotificationManager */
     private $notificationManager;
 
-    /**
-     * @DI\InjectParams({
-     * "notificationManager" = @DI\Inject("icap.notification.manager"),
-     * })
-     */
     public function __construct(NotificationManager $notificationManager)
     {
         $this->notificationManager = $notificationManager;
@@ -41,12 +31,12 @@ class ContributionListener
         $section = $contribution->getSection();
         $wiki = $section->getWiki();
         if (
-            $userPicker !== null &&
+            null !== $userPicker &&
             count($userPicker->getUserIds()) > 0 &&
-            $wiki->getResourceNode() !== null
+            null !== $wiki->getResourceNode()
         ) {
-            $details = array(
-                'contribution' => array(
+            $details = [
+                'contribution' => [
                     'wiki' => $wiki->getId(),
                     'section' => $section->getId(),
                     'id' => $contribution->getId(),
@@ -55,13 +45,13 @@ class ContributionListener
                     'contributor' => $contribution->getContributor()->getFirstName().
                         ' '.
                         $contribution->getContributor()->getLastName(),
-                ),
-                'resource' => array(
+                ],
+                'resource' => [
                     'id' => $wiki->getId(),
                     'name' => $wiki->getResourceNode()->getName(),
                     'type' => $wiki->getResourceNode()->getResourceType()->getName(),
-                ),
-            );
+                ],
+            ];
             $notification = $this->notificationManager->createNotification(
                 'resource-icap_wiki-user_tagged',
                 'wiki',

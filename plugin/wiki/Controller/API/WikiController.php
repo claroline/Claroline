@@ -5,10 +5,10 @@ namespace Icap\WikiBundle\Controller\API;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\WikiManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route("/wiki/{id}")
@@ -27,14 +27,11 @@ class WikiController
 
     /**
      * WikiController constructor.
-     *
-     * @DI\InjectParams({
-     *     "wikiManager"            = @DI\Inject("Icap\WikiBundle\Manager\WikiManager")
-     * })
      */
-    public function __construct(WikiManager $wikiManager)
+    public function __construct(WikiManager $wikiManager, AuthorizationCheckerInterface $authorization)
     {
         $this->wikiManager = $wikiManager;
+        $this->authorization = $authorization;
     }
 
     /**

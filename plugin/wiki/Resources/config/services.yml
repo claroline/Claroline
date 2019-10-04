@@ -3,3 +3,4 @@ imports:
     - { resource: services/serializer.yml }
     - { resource: services/manager.yml }
     - { resource: services/listener.yml }
+    - { resource: services/controller.yml }
