@@ -29,13 +29,9 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class ClacoFormListener
 {
     private $clacoFormManager;
@@ -47,16 +43,6 @@ class ClacoFormListener
     private $tokenStorage;
 
     /**
-     * @DI\InjectParams({
-     *     "clacoFormManager"      = @DI\Inject("claroline.manager.claco_form_manager"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
-     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
-     *     "finder"                = @DI\Inject("claroline.api.finder")
-     * })
-     *
      * @param ClacoFormManager             $clacoFormManager
      * @param ObjectManager                $om
      * @param FinderProvider               $finder
@@ -85,8 +71,6 @@ class ClacoFormListener
 
     /**
      * Loads the ClacoForm resource.
-     *
-     * @DI\Observe("resource.claroline_claco_form.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -127,8 +111,6 @@ class ClacoFormListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_claco_form.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -141,9 +123,6 @@ class ClacoFormListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_claco_form.export")
-     */
     public function onExport(ExportObjectEvent $exportEvent)
     {
         $clacoForm = $exportEvent->getObject();
@@ -154,9 +133,6 @@ class ClacoFormListener
         $exportEvent->setData($data);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_claco_form.import.before")
-     */
     public function onImportBefore(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -171,9 +147,6 @@ class ClacoFormListener
         $event->setExtra($data);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_claco_form.import.after")
-     */
     public function onImportAfter(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -232,8 +205,6 @@ class ClacoFormListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_claco_form.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)

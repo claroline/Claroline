@@ -16,7 +16,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,11 +33,6 @@ class EntryController extends AbstractCrudController
 
     /**
      * EntryController constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"  = @DI\Inject("claroline.api.finder"),
-     *     "manager" = @DI\Inject("claroline.manager.claco_form_manager")
-     * })
      *
      * @param FinderProvider   $finder
      * @param ClacoFormManager $manager

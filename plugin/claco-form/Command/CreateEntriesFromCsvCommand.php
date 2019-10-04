@@ -90,7 +90,7 @@ class CreateEntriesFromCsvCommand extends ContainerAwareCommand
                     $data[] = $lineData;
                 }
             }
-            $manager = $this->getContainer()->get('claroline.manager.claco_form_manager');
+            $manager = $this->getContainer()->get('Claroline\ClacoFormBundle\Manager\ClacoFormManager');
             $manager->setLogger($consoleLogger);
             $manager->importEntryFromCsv($clacoForm, $user, $data);
         } else {

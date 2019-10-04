@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    Claroline\ClacoFormBundle\Manager\ClacoFormManager:
+        arguments:
+            - '@security.authorization_checker'
+            - '@event_dispatcher'
+            - '@claroline.manager.facet_manager'
+            - '@filesystem'
+            - '%claroline.param.files_directory%'
+            - '@claroline.manager.message_manager'
+            - '@claroline.persistence.object_manager'
+            - '@router'
+            - '@security.token_storage'
+            - '@translator'
+            - '@claroline.manager.user_manager'

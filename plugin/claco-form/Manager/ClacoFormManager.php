@@ -88,20 +88,6 @@ class ClacoFormManager
     /**
      * ClacoFormManager constructor.
      *
-     * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager"),
-     *     "fileSystem"      = @DI\Inject("filesystem"),
-     *     "filesDir"        = @DI\Inject("%claroline.param.files_directory%"),
-     *     "messageManager"  = @DI\Inject("claroline.manager.message_manager"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router"          = @DI\Inject("router"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param EventDispatcherInterface      $eventDispatcher
      * @param FacetManager                  $facetManager

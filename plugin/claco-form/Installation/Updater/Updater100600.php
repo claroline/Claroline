@@ -21,7 +21,7 @@ class Updater100600 extends Updater
 
     public function __construct(ContainerInterface $container)
     {
-        $this->manager = $container->get('claroline.manager.claco_form_manager');
+        $this->manager = $container->get('Claroline\ClacoFormBundle\Manager\ClacoFormManager');
         $this->om = $container->get('claroline.persistence.object_manager');
     }
 

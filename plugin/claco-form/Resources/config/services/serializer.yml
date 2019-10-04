@@ -35,7 +35,7 @@ services:
     Claroline\ClacoFormBundle\Serializer\EntrySerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.manager.claco_form_manager'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
             - '@Claroline\ClacoFormBundle\Serializer\CategorySerializer'
             - '@Claroline\ClacoFormBundle\Serializer\CommentSerializer'
             - '@Claroline\ClacoFormBundle\Serializer\FieldValueSerializer'

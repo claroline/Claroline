@@ -11,11 +11,9 @@
 
 namespace Claroline\ClacoFormBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -24,7 +22,6 @@ use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\ClacoFormBundle\Serializer\CommentSerializer;
 use Claroline\ClacoFormBundle\Serializer\EntrySerializer;
 use Claroline\ClacoFormBundle\Serializer\EntryUserSerializer;
-use Claroline\ClacoFormBundle\Serializer\FieldSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -33,7 +30,6 @@ use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +42,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * @todo : break me into multiple files
  */
-class ClacoFormController extends Controller
+class ClacoFormController
 {
     use RequestDecoderTrait;
 
@@ -54,7 +50,6 @@ class ClacoFormController extends Controller
     private $clacoFormManager;
     private $configHandler;
     private $filesDir;
-    private $finder;
     private $locationManager;
     private $request;
     private $templating;
@@ -66,16 +61,14 @@ class ClacoFormController extends Controller
     private $userManager;
     private $entrySerializer;
     private $commentSerializer;
-    private $fieldSerializer;
     private $entryUserSerializer;
 
     /**
      * @DI\InjectParams({
      *     "archiveDir"            = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
-     *     "clacoFormManager"      = @DI\Inject("claroline.manager.claco_form_manager"),
+     *     "clacoFormManager"      = @DI\Inject("Claroline\ClacoFormBundle\Manager\ClacoFormManager"),
      *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
      *     "filesDir"              = @DI\Inject("%claroline.param.files_directory%"),
-     *     "finder"                = @DI\Inject("claroline.api.finder"),
      *     "locationManager"       = @DI\Inject("claroline.manager.organization.location_manager"),
      *     "request"               = @DI\Inject("request_stack"),
      *     "templating"            = @DI\Inject("templating"),
@@ -85,9 +78,7 @@ class ClacoFormController extends Controller
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "entrySerializer"       = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntrySerializer"),
      *     "commentSerializer"     = @DI\Inject("Claroline\ClacoFormBundle\Serializer\CommentSerializer"),
-     *     "fieldSerializer"       = @DI\Inject("Claroline\ClacoFormBundle\Serializer\FieldSerializer"),
-     *     "entryUserSerializer"   = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntryUserSerializer"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
+     *     "entryUserSerializer"   = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntryUserSerializer")
      * })
      */
     public function __construct(
@@ -95,7 +86,6 @@ class ClacoFormController extends Controller
         ClacoFormManager $clacoFormManager,
         PlatformConfigurationHandler $configHandler,
         $filesDir,
-        FinderProvider $finder,
         LocationManager $locationManager,
         RequestStack $request,
         TwigEngine $templating,
@@ -105,15 +95,12 @@ class ClacoFormController extends Controller
         UserManager $userManager,
         EntrySerializer $entrySerializer,
         CommentSerializer $commentSerializer,
-        FieldSerializer $fieldSerializer,
-        EntryUserSerializer $entryUserSerializer,
-        ObjectManager $om
+        EntryUserSerializer $entryUserSerializer
     ) {
         $this->archiveDir = $archiveDir;
         $this->clacoFormManager = $clacoFormManager;
         $this->configHandler = $configHandler;
         $this->filesDir = $filesDir;
-        $this->finder = $finder;
         $this->locationManager = $locationManager;
         $this->request = $request->getMasterRequest();
         $this->templating = $templating;
@@ -123,9 +110,7 @@ class ClacoFormController extends Controller
         $this->userManager = $userManager;
         $this->entrySerializer = $entrySerializer;
         $this->commentSerializer = $commentSerializer;
-        $this->fieldSerializer = $fieldSerializer;
         $this->entryUserSerializer = $entryUserSerializer;
-        $this->om = $om;
     }
 
     /**
