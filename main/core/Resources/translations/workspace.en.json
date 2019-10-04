@@ -6,5 +6,14 @@
   "managed_workspaces": "Managed workspaces",
   "my_workspaces": "My workspaces",
   "public_workspaces": "Public workspaces",
-  "workspace_models": "Models of workspaces"
+  "workspace_models": "Models of workspaces",
+
+  "workspace_archived": "This workspace is archived.",
+  "workspace_hidden": "This workspace is hidden.",
+  "workspace_model": "This workspace is a model.",
+  "workspace_personal": "This workspace is a personal workspace.",
+  "workspace_manager_registration": "Registration is managed by managers.",
+  "workspace_public_registration": "Registration is public.",
+  "workspace_manager_unregistration": "Unregistration is managed by managers.",
+  "workspace_public_unregistration": "Unregistration is public."
 }

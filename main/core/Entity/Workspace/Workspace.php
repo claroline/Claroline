@@ -739,7 +739,7 @@ class Workspace
         $this->archived = $archived;
     }
 
-    public function getArchived()
+    public function isArchived()
     {
         return $this->archived;
     }

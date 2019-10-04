@@ -751,7 +751,7 @@ class WorkspaceManager
         return $workspaceRoles;
     }
 
-    public function archive(Workspace $workspace, array $options = [])
+    public function archive(Workspace $workspace)
     {
         //rename with [archive] and ids
         $workspace->setName('[archive]'.$workspace->getName());
@@ -759,6 +759,17 @@ class WorkspaceManager
         $workspace->setArchived(true);
 
         $this->om->persist($workspace);
+
+        return $workspace;
+    }
+
+    public function unarchive(Workspace $workspace)
+    {
+        $workspace->setArchived(false);
+
+        $this->om->persist($workspace);
+
+        return $workspace;
     }
 
     public function getDefaultModel($isPersonal = false, $restore = false)

@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -379,26 +378,91 @@ class WorkspaceController extends AbstractCrudController
                 );
             }
         }
+
         if (empty($errors)) {
-            parent::deleteBulkAction($request, Workspace::class);
-
-            return new JsonResponse('success', 200);
-        } else {
-            $validIds = [];
-            $ids = $request->query->get('ids');
-
-            foreach ($ids as $id) {
-                if (!isset($errors[$id])) {
-                    $validIds[] = $id;
-                }
-            }
-            if (count($validIds) > 0) {
-                $request->query->set('ids', $validIds);
-                parent::deleteBulkAction($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
-            }
-
-            return new JsonResponse(['errors' => $errors], 422);
+            return parent::deleteBulkAction($request, Workspace::class);
         }
+
+        $validIds = [];
+        $ids = $request->query->get('ids');
+
+        foreach ($ids as $id) {
+            if (!isset($errors[$id])) {
+                $validIds[] = $id;
+            }
+        }
+        if (count($validIds) > 0) {
+            $request->query->set('ids', $validIds);
+            parent::deleteBulkAction($request, Workspace::class);
+        }
+
+        return new JsonResponse(['errors' => $errors], 422);
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Archive workspaces.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
+     *     }
+     * )
+     * @Route("/archive", name="apiv2_workspace_archive")
+     * @Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function archiveBulkAction(Request $request)
+    {
+        $processed = [];
+
+        /** @var Workspace[] $workspaces */
+        $workspaces = parent::decodeIdsString($request, Workspace::class);
+        foreach ($workspaces as $workspace) {
+            if ($this->authorization->isGranted('EDIT', $workspace) && !$workspace->isModel() && !$workspace->isArchived()) {
+                $processed[] = $this->workspaceManager->archive($workspace);
+            }
+        }
+
+        $this->om->flush();
+
+        return new JsonResponse(array_map(function (Workspace $workspace) {
+            return $this->serializer->serialize($workspace);
+        }, $processed));
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Unarchive workspaces.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
+     *     }
+     * )
+     * @Route("/unarchive", name="apiv2_workspace_unarchive")
+     * @Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function unarchiveBulkAction(Request $request)
+    {
+        $processed = [];
+
+        /** @var Workspace[] $workspaces */
+        $workspaces = parent::decodeIdsString($request, Workspace::class);
+        foreach ($workspaces as $workspace) {
+            if ($this->authorization->isGranted('EDIT', $workspace) && !$workspace->isModel() && $workspace->isArchived()) {
+                $processed[] = $this->workspaceManager->unarchive($workspace);
+            }
+        }
+
+        $this->om->flush();
+
+        return new JsonResponse(array_map(function (Workspace $workspace) {
+            return $this->serializer->serialize($workspace);
+        }, $processed));
     }
 
     /**

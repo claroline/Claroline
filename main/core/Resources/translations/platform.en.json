@@ -1762,5 +1762,8 @@
     "disabled": "Disabled",
     "default": "Default",
     "standard": "Standard",
-    "history": "History"
+    "history": "History",
+    "workspaces_archive_title": "Archive workspaces",
+    "workspaces_archive_question": "{1} Are you sure you want to archive the selected workspace ?|[2,Inf[ Are you sure you want to archive the %count% selected workspaces ?",
+    "archived": "Archived"
 }

@@ -1,6 +1,7 @@
 {
   "add": "Ajouter",
   "administrate": "Administrer",
+  "archive": "Archiver",
   "cancel": "Annuler",
   "change": "Changer",
   "click_here": "Cliquez ici",
@@ -78,6 +79,7 @@
   "sort": "Trier",
   "start": "Commencer",
   "test": "Tester",
+  "unarchive": "Désarchiver",
   "unfollow": "Ne plus suivre",
   "unlike": "Je n'aime plus",
   "unlock": "Déverrouiller",

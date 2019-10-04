@@ -29,9 +29,9 @@ const WorkspacesTool = (props) =>
       <Routes
         path={props.path}
         routes={[
-          {path: '/new',            render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.creatable},
-          {path: '/registered',     render: () => trans('my_workspaces', {}, 'workspace')},
-          {path: '/public',         render: () => trans('public_workspaces', {}, 'workspace')},
+          {path: '/new',        render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.creatable},
+          {path: '/registered', render: () => trans('my_workspaces', {}, 'workspace')},
+          {path: '/public',     render: () => trans('public_workspaces', {}, 'workspace')},
           {path: '/managed',        render: () => trans('managed_workspaces', {}, 'workspace')},
           {path: '/model',          render: () => trans('workspace_models', {}, 'workspace'), disabled: !props.creatable}
         ]}
@@ -77,6 +77,18 @@ const WorkspacesTool = (props) =>
               <WorkspaceList
                 url={['apiv2_workspace_list_managed']}
                 name="workspaces.managed"
+                customDefinition={[
+                  {
+                    name: 'meta.archived',
+                    label: trans('archived'),
+                    type: 'boolean',
+                    alias: 'archived',
+                    displayed: false,
+                    displayable: false,
+                    sortable: false,
+                    filterable: true
+                  }
+                ]}
               />
             )
 

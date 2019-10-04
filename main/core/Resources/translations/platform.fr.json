@@ -1795,5 +1795,8 @@
     "disabled": "Inactif",
     "default": "Défaut",
     "standard": "Standard",
-    "history": "Historique"
+    "history": "Historique",
+    "workspaces_archive_title": "Archiver des espaces d'activités",
+    "workspaces_archive_question": "{1} Êtes-vous sûr de vouloir archiver l'espace d'activités sélectionné ?|[2,Inf[ Êtes-vous sur de vouloir archiver les %count% espaces d'activités sélectionnés ?",
+    "archived": "Archivé"
 }

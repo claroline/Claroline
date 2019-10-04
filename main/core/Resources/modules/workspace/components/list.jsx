@@ -95,7 +95,7 @@ const Workspaces = (props) => {
             objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace'
           }
         }
-      ]}
+      ].concat(props.customDefinition)}
       card={WorkspaceCard}
 
       primaryAction={(row) => getDefaultAction(row, workspacesRefresher, props.basePath, props.currentUser)}
@@ -109,11 +109,15 @@ Workspaces.propTypes = {
   currentUser: T.object,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
+  customDefinition: T.arrayOf(T.shape({
+    // TODO : data list prop types
+  })),
   invalidate: T.func.isRequired
 }
 
 Workspaces.defaultProps = {
-  basePath: ''
+  basePath: '',
+  customDefinition: []
 }
 
 const WorkspaceList = connect(

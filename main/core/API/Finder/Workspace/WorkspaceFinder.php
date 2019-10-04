@@ -47,7 +47,10 @@ class WorkspaceFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $searches['archived'] = false;
+        // force non archived workspaces only if not explicitly requested
+        if (!array_key_exists('archived', $searches)) {
+            $searches['archived'] = false;
+        }
 
         foreach ($searches as $filterName => $filterValue) {
             //remap some filters...
@@ -168,14 +171,6 @@ class WorkspaceFinder extends AbstractFinder
                     if ($filterValue) {
                         $qb->andWhere('r.name like :ROLE_WS_MANAGER');
                         $qb->setParameter('ROLE_WS_MANAGER', 'ROLE_WS_MANAGER%');
-                    }
-                    break;
-                case 'archived':
-                    if (false === $filterValue) {
-                        $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->isNull('obj.archived'),
-                            $qb->expr()->eq('obj.archived', 0)
-                        ));
                     }
                     break;
                 default:

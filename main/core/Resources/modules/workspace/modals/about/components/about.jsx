@@ -58,39 +58,48 @@ const AboutModal = props =>
               type: 'string'
             }, {
               name: 'meta.model',
-              label: 'Cet espace d\'activités n\'est pas un modèle.',
+              label: trans('workspace_model', {}, 'workspace'),
               type: 'boolean',
               hideLabel: true,
+              displayed: get(props.workspace, 'meta.model'),
               options: {
-                icon: 'fa fa-fw fa-briefcase',
-                labelChecked: 'Cet espace d\'activités est un modèle.'
+                icon: 'fa fa-fw fa-briefcase'
               }
             }, {
               name: 'meta.personal',
-              label: 'Cet espace d\'activités n\'est pas un espace personnel.',
+              label: trans('workspace_personal', {}, 'workspace'),
               type: 'boolean',
               hideLabel: true,
+              displayed: get(props.workspace, 'meta.personal'),
               options: {
-                icon: 'fa fa-fw fa-user',
-                labelChecked: 'Cet espace d\'activités est un espace personnel.'
+                icon: 'fa fa-fw fa-user'
+              }
+            }, {
+              name: 'meta.archived',
+              label: trans('workspace_archived', {}, 'workspace'),
+              type: 'boolean',
+              hideLabel: true,
+              displayed: get(props.workspace, 'meta.archived'),
+              options: {
+                icon: 'fa fa-fw fa-box'
               }
             }, {
               name: 'registration.selfRegistration',
-              label: 'Les inscriptions sont gérées par les gestionnaires.',
+              label: trans('workspace_manager_registration', {}, 'workspace'),
               type: 'boolean',
               hideLabel: true,
               options: {
                 icon: 'fa fa-fw fa-user-plus',
-                labelChecked: 'Les inscriptions sont publiques.'
+                labelChecked: trans('workspace_public_registration', {}, 'workspace')
               }
             }, {
               name: 'registration.selfUnregistration',
-              label: 'Les désinscriptions sont gérées par les gestionnaires.',
+              label: trans('workspace_manager_unregistration', {}, 'workspace'),
               type: 'boolean',
               hideLabel: true,
               options: {
                 icon: 'fa fa-fw fa-user-times',
-                labelChecked: 'Les désinscriptions sont publiques.'
+                labelChecked: trans('workspace_public_unregistration', {}, 'workspace')
               }
             }
           ]

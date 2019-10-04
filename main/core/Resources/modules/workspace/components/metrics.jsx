@@ -15,7 +15,7 @@ const WorkspaceMetrics = props =>
         <CountGauge
           className="metric-card-gauge"
           value={props.workspace.meta.totalUsers}
-          total={props.workspace.restrictions.maxUsers}
+          total={props.workspace.restrictions.maxUsers || props.workspace.meta.totalUsers}
           displayValue={(value) => number(value, true)}
           width={props.width}
           height={props.height}
@@ -30,7 +30,7 @@ const WorkspaceMetrics = props =>
         <CountGauge
           className="metric-card-gauge"
           value={props.workspace.meta.totalResources}
-          total={props.workspace.restrictions.maxResources}
+          total={props.workspace.restrictions.maxResources || props.workspace.meta.totalResources}
           displayValue={(value) => number(value, true)}
           width={props.width}
           height={props.height}
@@ -45,7 +45,7 @@ const WorkspaceMetrics = props =>
         <CountGauge
           className="metric-card-gauge"
           value={props.workspace.meta.usedStorage}
-          total={props.workspace.restrictions.maxStorage}
+          total={props.workspace.restrictions.maxStorage || props.workspace.meta.usedStorage}
           displayValue={(value) => fileSize(value, true)}
           unit={trans('bytes_short')}
           width={props.width}

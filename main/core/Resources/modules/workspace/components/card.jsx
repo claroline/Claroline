@@ -17,10 +17,10 @@ const WorkspaceCard = props =>
     title={props.data.name}
     subtitle={props.data.code}
     flags={[
-      get(props.data, 'meta.personal')                       && ['fa fa-user',      trans('personal_workspace')],
-      get(props.data, 'meta.model')                          && ['fa fa-briefcase', trans('model')],
-      get(props.data, 'display.displayable')                 && ['fa fa-eye',       trans('displayable_in_workspace_list')],
-      get(props.data, 'registration.selfRegistration')       && ['fa fa-globe',     trans('public_registration')],
+      get(props.data, 'meta.archived')                       && ['fa fa-box',       trans('workspace_archived', {}, 'workspace')],
+      get(props.data, 'meta.personal')                       && ['fa fa-user',      trans('workspace_personal', {}, 'workspace')],
+      get(props.data, 'restrictions.hidden')                 && ['fa fa-eye-slash', trans('workspace_hidden', {}, 'workspace')],
+      get(props.data, 'registration.selfRegistration')       && ['fa fa-globe',     trans('workspace_public_registration', {}, 'workspace')],
       get(props.data, 'registration.waitingForRegistration') && ['fa fa-hourglass', trans('pending')]
     ].filter(flag => !!flag)}
     contentText={get(props.data, 'meta.description')}
