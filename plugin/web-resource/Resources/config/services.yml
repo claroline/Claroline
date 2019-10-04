@@ -4,7 +4,56 @@ services:
         autoconfigure: false
         public: true #because controller
 
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@claroline.api.finder'
+              - method: setSerializer
+                arguments:
+                  - '@claroline.api.serializer'
+              - method: setCrud
+                arguments:
+                  - '@claroline.api.crud'
+              - method: setObjectManager
+                arguments:
+                  - '@claroline.persistence.object_manager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
     Claroline\WebResourceBundle\Manager\WebResourceManager:
         arguments:
           - '@claroline.persistence.object_manager'
           - '@service_container'
+
+    Claroline\WebResourceBundle\Controller\API\WebResourceController:
+        arguments:
+          - '@claroline.manager.resource_manager'
+          - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
+
+    Claroline\WebResourceBundle\Listener\WebResourceListener:
+        arguments:
+          - '%claroline.param.files_directory%'
+          - '@claroline.persistence.object_manager'
+          - '%claroline.param.uploads_directory%'
+          - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
+          - '@claroline.manager.resource_manager'
+          - '@claroline.api.serializer'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.load, method: onLoad }
+            - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.before, method: onImportBefore }
+            - { name: kernel.event_listener, event: transfer.claroline_web_resource.export, method: onExportFile }
+            - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.after, method: onImportFile }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.delete, method: onDelete }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.copy, method: onCopy }
+            - { name: kernel.event_listener, event: download_claroline_web_resource, method: onDownload }
+            - { name: kernel.event_listener, event: resource.claroline_web_resource.change_file, method: onFileChange }

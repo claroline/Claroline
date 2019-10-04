@@ -15,7 +15,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,12 +24,6 @@ class WebResourceController extends AbstractCrudController
     private $resourceManager;
     private $webResourceManager;
 
-    /**
-     * @DI\InjectParams({
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "webResourceManager"    = @DI\Inject("Claroline\WebResourceBundle\Manager\WebResourceManager"),
-     * })
-     */
     public function __construct(
         ResourceManager $resourceManager,
         WebResourceManager $webResourceManager

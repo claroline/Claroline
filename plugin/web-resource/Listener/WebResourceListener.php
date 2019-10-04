@@ -23,14 +23,10 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * @DI\Service("claroline.listener.web_resource_listener")
- */
 class WebResourceListener
 {
     /** @var string */
@@ -50,15 +46,6 @@ class WebResourceListener
 
     /**
      * WebResourceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "filesDir"           = @DI\Inject("%claroline.param.files_directory%"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "uploadDir"          = @DI\Inject("%claroline.param.uploads_directory%"),
-     *     "serializer"         = @DI\Inject("claroline.api.serializer"),
-     *     "webResourceManager" = @DI\Inject("Claroline\WebResourceBundle\Manager\WebResourceManager"),
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager")
-     * })
      *
      * @param string             $filesDir
      * @param ObjectManager      $om
@@ -83,8 +70,6 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_web_resource.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -111,9 +96,6 @@ class WebResourceListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_web_resource.import.before")
-     */
     public function onImportBefore(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -127,9 +109,6 @@ class WebResourceListener
         $event->setExtra($data);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_web_resource.export")
-     */
     public function onExportFile(ExportObjectEvent $exportEvent)
     {
         $file = $exportEvent->getObject();
@@ -144,9 +123,6 @@ class WebResourceListener
         $exportEvent->overwrite('_path', $newPath);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_web_resource.import.after")
-     */
     public function onImportFile(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -161,8 +137,6 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_web_resource.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -191,8 +165,6 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_web_resource.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -206,8 +178,6 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("download_claroline_web_resource")
-     *
      * @param DownloadResourceEvent $event
      */
     public function onDownload(DownloadResourceEvent $event)
@@ -275,8 +245,6 @@ class WebResourceListener
 
     /**
      * Changes actual file associated to File resource.
-     *
-     * @DI\Observe("resource.claroline_web_resource.change_file")
      *
      * @param ResourceActionEvent $event
      */
