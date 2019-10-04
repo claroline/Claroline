@@ -27,7 +27,6 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,19 +66,6 @@ class WorkspaceController
 
     /**
      * WorkspaceController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer"),
-     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"          = @DI\Inject("translator"),
-     *     "utils"               = @DI\Inject("claroline.security.utilities"),
-     *     "manager"             = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "restrictionsManager" = @DI\Inject("claroline.manager.workspace_restrictions")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om

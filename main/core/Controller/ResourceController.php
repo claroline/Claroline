@@ -118,17 +118,17 @@ class ResourceController
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
         EngineInterface $templating,
+        FinderProvider $finder,
         Utilities $security,
         SerializerProvider $serializer,
         ResourceManager $manager,
         ResourceActionManager $actionManager,
-        ResourceEvaluationManager $resourceEvaluationManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
+        AuthorizationCheckerInterface $authorization,
         EventManager $eventManager,
-        FinderProvider $finder
+        ResourceEvaluationManager $resourceEvaluationManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;

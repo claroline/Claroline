@@ -43,11 +43,6 @@ claro_file:
     type: annotation
     prefix: file
 
-claro_admin_resource_icons:
-    resource: "@ClarolineCoreBundle/Controller/Administration/IconController.php"
-    prefix: admin/parameters/appearance/icon
-    type: annotation
-
 claro_admin_archives:
     resource: "@ClarolineCoreBundle/Controller/Administration/ArchiveController.php"
     prefix: archive

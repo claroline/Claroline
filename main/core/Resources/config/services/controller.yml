@@ -190,3 +190,93 @@ services:
           - '@claroline.api.serializer'
           - '@claroline.manager.widget_manager'
           - '@claroline.manager.data_source'
+
+    Claroline\CoreBundle\Controller\Administration\ArchiveController:
+        arguments:
+          - '%claroline.param.archive_directory%'
+        tags: ['security.secure_service']
+
+    Claroline\CoreBundle\Controller\User\RegistrationController:
+        arguments:
+          - '@security.token_storage'
+          - '@session'
+          - '@translator'
+          - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+          - '@claroline.manager.user_manager'
+          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+
+    Claroline\CoreBundle\Controller\AdministrationController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+          - '@event_dispatcher'
+          - '@claroline.manager.tool_manager'
+
+    Claroline\CoreBundle\Controller\AuthenticationController:
+        tags: ['security.secure_service']
+        arguments:
+          - '@request_stack'
+          - '@claroline.manager.user_manager'
+          - '@security.encoder_factory'
+          - '@claroline.persistence.object_manager'
+          - '@translator'
+          - '@claroline.authenticator'
+          - '@claroline.manager.mail_manager'
+          - '@router'
+          - '@claroline.config.platform_config_handler'
+          - '@claroline.event.event_dispatcher'
+
+    Claroline\CoreBundle\Controller\DesktopController:
+        tags: ['security.secure_service']
+        arguments:
+          - '@security.authorization_checker'
+          - '@event_dispatcher'
+          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+          - '@claroline.api.serializer'
+          - '@claroline.manager.tool_manager'
+
+    Claroline\CoreBundle\Controller\FileController:
+        arguments:
+          - '@session'
+          - '@claroline.persistence.object_manager'
+          - '%claroline.param.files_directory%'
+          - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+          - '@claroline.manager.resource_manager'
+          - '@claroline.manager.role_manager'
+          - '@claroline.utilities.file'
+          - '@claroline.api.finder'
+          - '@security.token_storage'
+          - '@security.authorization_checker'
+
+    Claroline\CoreBundle\Controller\ResourceController:
+        arguments:
+          - '@security.token_storage'
+          - '@templating'
+          - '@claroline.api.finder'
+          - '@claroline.security.utilities'
+          - '@claroline.api.serializer'
+          - '@claroline.manager.resource_manager'
+          - '@claroline.manager.resource_action'
+          - '@claroline.manager.resource_restrictions'
+          - '@claroline.persistence.object_manager'
+          - '@security.authorization_checker'
+          - '@claroline.event.manager'
+          - '@claroline.manager.resource_evaluation_manager'
+
+    Claroline\CoreBundle\Controller\SearchController:
+        arguments:
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.serializer'
+
+    Claroline\CoreBundle\Controller\WorkspaceController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.persistence.object_manager'
+          - '@event_dispatcher'
+          - '@security.token_storage'
+          - '@claroline.api.serializer'
+          - '@claroline.manager.tool_manager'
+          - '@translator'
+          - '@claroline.security.utilities'
+          - '@claroline.manager.workspace_manager'
+          - '@claroline.manager.workspace_restrictions'

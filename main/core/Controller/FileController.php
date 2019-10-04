@@ -26,7 +26,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,6 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @EXT\Route(options={"expose"=true})
@@ -64,18 +64,6 @@ class FileController extends AbstractApiController
     /**
      * FileController constructor.
      *
-     * @DI\InjectParams({
-     *     "session"         = @DI\Inject("session"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
-     *     "serializer"      = @DI\Inject("Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "fileUtils"       = @DI\Inject("claroline.utilities.file"),
-     *     "finder"          = @DI\Inject("claroline.api.finder"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage")
-     * })
-     *
      * @param SessionInterface      $session
      * @param ObjectManager         $om
      * @param string                $fileDir
@@ -95,7 +83,8 @@ class FileController extends AbstractApiController
         RoleManager $roleManager,
         FileUtilities $fileUtils,
         FinderProvider $finder,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
@@ -106,6 +95,7 @@ class FileController extends AbstractApiController
         $this->roleManager = $roleManager;
         $this->fileUtils = $fileUtils;
         $this->finder = $finder;
+        $this->authorization = $authorization;
     }
 
     /**

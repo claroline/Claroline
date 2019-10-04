@@ -16,9 +16,7 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -33,7 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @EXT\Route("/user/registration", options={"expose"=true})
  */
-class RegistrationController extends Controller
+class RegistrationController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -50,15 +48,6 @@ class RegistrationController extends Controller
 
     /**
      * RegistrationController constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
-     *     "session"              = @DI\Inject("session"),
-     *     "translator"           = @DI\Inject("translator"),
-     *     "profileSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\ProfileSerializer"),
-     *     "userManager"          = @DI\Inject("claroline.manager.user_manager"),
-     *     "parametersSerializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\ParametersSerializer")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param SessionInterface      $session
