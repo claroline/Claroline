@@ -9,7 +9,7 @@ services:
         arguments:
            - '@claroline.persistence.object_manager'
            - '@claroline.manager.resource_manager'
-           - '@claroline.manager.team_manager'
+           - '@Claroline\TeamBundle\Manager\TeamManager'
            - '@security.token_storage'
            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'

@@ -22,31 +22,16 @@ use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Claroline\TeamBundle\Serializer\TeamSerializer;
 use Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.transfer.claroline_team_tool")
- */
 class Team implements ToolImporterInterface
 {
-    /**
-     * @DI\InjectParams({
-     *     "authorization"        = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
-     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder"               = @DI\Inject("claroline.api.finder"),
-     *     "teamSerializer"       = @DI\Inject("claroline.serializer.team"),
-     *     "teamManager"          = @DI\Inject("claroline.manager.team_manager"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.team.parameters")
-     * })
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        FinderProvider $finder,
         ObjectManager $om,
+        FinderProvider $finder,
         TeamSerializer $teamSerializer,
         TeamManager $teamManager,
         WorkspaceTeamParametersSerializer $parametersSerializer

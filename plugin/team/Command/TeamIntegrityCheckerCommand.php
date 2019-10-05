@@ -27,7 +27,7 @@ class TeamIntegrityCheckerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $code = $input->getArgument('code');
-        $teamManager = $this->getContainer()->get('claroline.manager.team_manager');
+        $teamManager = $this->getContainer()->get('Claroline\TeamBundle\Manager\TeamManager');
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
 
         $workspaces = $code ?

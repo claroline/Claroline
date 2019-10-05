@@ -20,9 +20,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service
- */
 class TeamListener
 {
     /** @var AuthorizationCheckerInterface */
@@ -35,13 +32,6 @@ class TeamListener
     private $tokenStorage;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
-     *     "teamManager"   = @DI\Inject("claroline.manager.team_manager"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param SerializerProvider            $serializer
      * @param TeamManager                   $teamManager

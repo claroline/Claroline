@@ -469,6 +469,7 @@ services:
           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
           - '@service_container'
 
+    #alias is required: todo: use tags
     claroline.transfer.ordered_tool:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer
         public: true
@@ -488,6 +489,7 @@ services:
             - { name: kernel.event_listener, event: export_tool_resources, method: onExport }
             - { name: kernel.event_listener, event: import_tool_resources, method: onImport }
 
+    #alias is required: todo: use tags
     claroline.transfer.resources:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager
         public: true
@@ -497,7 +499,8 @@ services:
           - '@claroline.api.serializer'
           - '@claroline.api.finder'
           - '@claroline.api.crud'
-
+          
+    #alias is required: todo: use tags
     claroline.transfer.home:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\Home
         public: true

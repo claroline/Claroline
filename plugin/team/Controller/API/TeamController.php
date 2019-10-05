@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,12 +39,6 @@ class TeamController extends AbstractCrudController
 
     /**
      * TeamController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "teamManager"   = @DI\Inject("claroline.manager.team_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder

@@ -15,6 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -23,11 +24,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.team_manager")
- */
 class TeamManager
 {
     private $om;
@@ -40,15 +37,6 @@ class TeamManager
     private $teamRepo;
     private $workspaceTeamParamsRepo;
 
-    /**
-     * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "resourceManager"   = @DI\Inject("claroline.manager.resource_manager"),
-     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
-     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
-     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         ResourceManager $resourceManager,
@@ -248,9 +236,10 @@ class TeamManager
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $this->rightsManager->editPerms(['open' => true], $role, $root);
+        $tool = $this->om->getRepository(Tool::class)->findOneByName('resources');
         $orderedTool = $this->om
             ->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
-            ->findOneBy(['workspace' => $workspace, 'name' => 'resources']);
+            ->findOneBy(['workspace' => $workspace, 'tool' => $tool]);
 
         if (!empty($orderedTool)) {
             $this->toolRightsManager->setToolRights($orderedTool, $role, 1);
