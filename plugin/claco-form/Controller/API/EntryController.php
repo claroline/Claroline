@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -25,21 +24,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class EntryController extends AbstractCrudController
 {
-    /* @var FinderProvider */
-    protected $finder;
-
     /* @var ClacoFormManager */
     protected $manager;
 
     /**
      * EntryController constructor.
      *
-     * @param FinderProvider   $finder
      * @param ClacoFormManager $manager
      */
-    public function __construct(FinderProvider $finder, ClacoFormManager $manager)
+    public function __construct(ClacoFormManager $manager)
     {
-        $this->finder = $finder;
         $this->manager = $manager;
     }
 

@@ -30,22 +30,17 @@ services:
                 arguments:
                   - '@service_container'
 
-    Claroline\ClacoFormBundle\Controller\API\CategoryController:
-        arguments:
-          - '@claroline.api.finder'
+    Claroline\ClacoFormBundle\Controller\API\CategoryController: ~
 
     Claroline\ClacoFormBundle\Controller\API\ClacoFormController: ~
 
     Claroline\ClacoFormBundle\Controller\API\EntryController:
         arguments:
-          - '@claroline.api.finder'
           - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Controller\API\EntryUserController: ~
 
-    Claroline\ClacoFormBundle\Controller\API\CategoryController:
-        arguments:
-          - '@claroline.api.finder'
+    Claroline\ClacoFormBundle\Controller\API\KeywordController: ~
 
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:

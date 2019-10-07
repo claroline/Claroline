@@ -998,6 +998,9 @@ class ClacoFormController
                             }
                             $value = implode(', ', $values);
                             break;
+                        case FieldFacet::BOOLEAN_TYPE:
+                            $value = $fieldValues[$field->getId()] ? $field->getName() : '';
+                            break;
                         default:
                             $value = $fieldValues[$field->getId()];
                     }

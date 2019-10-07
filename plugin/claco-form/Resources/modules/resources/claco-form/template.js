@@ -48,6 +48,10 @@ function generateFromTemplate(template, fields, entry, includeMeta = false) {
             }
             break
 
+          case 'boolean':
+            replacedField = fieldValue ? f.label : ''
+            break
+
           default:
             replacedField = fieldValue
         }

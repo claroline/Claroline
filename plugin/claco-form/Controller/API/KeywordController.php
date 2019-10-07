@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -23,19 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class KeywordController extends AbstractCrudController
 {
-    /* var FinderProvider */
-    protected $finder;
-
-    /**
-     * KeywordController constructor.
-     *
-     * @param FinderProvider $finder
-     */
-    public function __construct(FinderProvider $finder)
-    {
-        $this->finder = $finder;
-    }
-
     public function getClass()
     {
         return 'Claroline\ClacoFormBundle\Entity\Keyword';
