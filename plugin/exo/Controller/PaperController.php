@@ -8,7 +8,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,14 +48,6 @@ class PaperController
 
     /**
      * PaperController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder"          = @DI\Inject("claroline.api.finder"),
-     *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
-     *     "exerciseManager" = @DI\Inject("ujm_exo.manager.exercise")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om

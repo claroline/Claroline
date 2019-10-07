@@ -89,7 +89,7 @@ class ItemSerializer
         $this->hintSerializer = $hintSerializer;
         $this->resourceContentSerializer = $resourceContentSerializer;
         $this->itemObjectSerializer = $itemObjectSerializer;
-        $this->container = $container; // FIXME : this is a cheat to avoid a circular reference with `ujm_exo.manager.item`
+        $this->container = $container; // FIXME : this is a cheat to avoid a circular reference with `UJM\ExoBundle\Manager\Item\ItemManager`
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -125,7 +125,7 @@ class ItemSerializer
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $question->getMimeType())) {
             // question items
             $canEdit = $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User ?
-                $this->container->get('ujm_exo.manager.item')->canEdit($question, $this->tokenStorage->getToken()->getUser()) :
+                $this->container->get('UJM\ExoBundle\Manager\Item\ItemManager')->canEdit($question, $this->tokenStorage->getToken()->getUser()) :
                 false;
             // Adds minimal information
             $serialized = array_merge($serialized, [

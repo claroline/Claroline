@@ -2,16 +2,12 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.step")
- */
 class StepValidator extends JsonSchemaValidator
 {
     /**
@@ -29,11 +25,6 @@ class StepValidator extends JsonSchemaValidator
      *
      * @param ItemValidator    $itemValidator
      * @param ContentValidator $contentValidator
-     *
-     * @DI\InjectParams({
-     *     "itemValidator" = @DI\Inject("ujm_exo.validator.item"),
-     *     "contentValidator"  = @DI\Inject("ujm_exo.validator.content")
-     * })
      */
     public function __construct(
         ItemValidator $itemValidator,

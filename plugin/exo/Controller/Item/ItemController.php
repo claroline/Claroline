@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Controller\Item;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,12 +34,6 @@ class ItemController extends AbstractController
 
     /**
      * ItemController constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder"  = @DI\Inject("claroline.api.finder"),
-     *     "manager" = @DI\Inject("ujm_exo.manager.item"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
-     * })
      *
      * @param FinderProvider           $finder
      * @param ItemManager              $manager

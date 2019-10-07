@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,14 +52,6 @@ class AttemptController extends AbstractController
 
     /**
      * AttemptController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "attemptManager"      = @DI\Inject("ujm_exo.manager.attempt"),
-     *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "userEvalSerializer"  = @DI\Inject("Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer")
-     * })
      *
      * @param AuthorizationCheckerInterface    $authorization
      * @param AttemptManager                   $attemptManager

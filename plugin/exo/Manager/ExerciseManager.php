@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
@@ -23,9 +22,6 @@ use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator;
 
-/**
- * @DI\Service("ujm_exo.manager.exercise")
- */
 class ExerciseManager
 {
     /** @var ObjectManager */
@@ -60,18 +56,6 @@ class ExerciseManager
 
     /**
      * ExerciseManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "validator"       = @DI\Inject("ujm_exo.validator.exercise"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.exercise"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "itemManager"     = @DI\Inject("ujm_exo.manager.item"),
-     *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
-     *     "utils"           = @DI\Inject("claroline.utilities.misc"),
-     *     "definitions"     = @DI\Inject("ujm_exo.collection.item_definitions"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
-     * })
      *
      * @param ObjectManager             $om
      * @param ExerciseValidator         $validator

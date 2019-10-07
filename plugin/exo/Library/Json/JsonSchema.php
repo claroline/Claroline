@@ -2,14 +2,11 @@
 
 namespace UJM\ExoBundle\Library\Json;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JVal\Utils;
 use JVal\Validator as SchemaValidator;
 
 /**
  * Loads and validates JSON Schemas.
- *
- * @DI\Service("ujm_exo.library.json_schema")
  */
 class JsonSchema
 {
@@ -36,10 +33,6 @@ class JsonSchema
      * JsonSchema constructor.
      *
      * @param string $kernelDir
-     *
-     * @DI\InjectParams({
-     *     "kernelDir" = @DI\Inject("%kernel.root_dir%")
-     * })
      */
     public function __construct($kernelDir)
     {

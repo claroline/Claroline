@@ -3,15 +3,11 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\Item\HintSerializer;
 
-/**
- * @DI\Service("ujm_exo.manager.hint")
- */
 class HintManager
 {
     /**
@@ -26,11 +22,6 @@ class HintManager
 
     /**
      * HintManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"    = @DI\Inject("ujm_exo.serializer.hint")
-     * })
      *
      * @param ObjectManager  $objectManager
      * @param HintSerializer $serializer

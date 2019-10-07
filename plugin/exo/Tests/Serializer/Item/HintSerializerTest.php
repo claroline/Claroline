@@ -36,7 +36,7 @@ class HintSerializerTest extends JsonDataTestCase
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
 
         // We trust validator service as it is fully tested
-        $this->validator = $this->client->getContainer()->get('ujm_exo.validator.hint');
+        $this->validator = $this->client->getContainer()->get('UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator');
         $this->serializer = $this->client->getContainer()->get('ujm_exo.serializer.hint');
 
         $this->hint = new Hint();

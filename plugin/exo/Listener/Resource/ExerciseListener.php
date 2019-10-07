@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -23,8 +22,6 @@ use UJM\ExoBundle\Manager\ExerciseManager;
 
 /**
  * Listens to resource events dispatched by the core.
- *
- * @DI\Service("ujm_exo.listener.exercise")
  */
 class ExerciseListener
 {
@@ -57,18 +54,6 @@ class ExerciseListener
 
     /**
      * ExerciseListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "exerciseManager"     = @DI\Inject("ujm_exo.manager.exercise"),
-     *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
-     *     "docimologyManager"   = @DI\Inject("ujm_exo.manager.docimology"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "templating"          = @DI\Inject("templating"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
@@ -104,8 +89,6 @@ class ExerciseListener
 
     /**
      * Loads the Exercise resource.
-     *
-     * @DI\Observe("resource.ujm_exercise.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -149,8 +132,6 @@ class ExerciseListener
     /**
      * Deletes an Exercise resource.
      *
-     * @DI\Observe("resource.ujm_exercise.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -168,8 +149,6 @@ class ExerciseListener
     }
 
     /**
-     * @DI\Observe("docimology_ujm_exercise")
-     *
      * @param CustomActionResourceEvent $event
      */
     public function onDocimology(CustomActionResourceEvent $event)

@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Manager\Item;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -22,9 +21,6 @@ use UJM\ExoBundle\Serializer\Item\HintSerializer;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
-/**
- * @DI\Service("ujm_exo.manager.item")
- */
 class ItemManager
 {
     /**
@@ -69,15 +65,6 @@ class ItemManager
 
     /**
      * ItemManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "scoreManager"    = @DI\Inject("ujm_exo.manager.score"),
-     *     "validator"       = @DI\Inject("ujm_exo.validator.item"),
-     *     "serializer"      = @DI\Inject("ujm_exo.serializer.item"),
-     *     "itemDefinitions" = @DI\Inject("ujm_exo.collection.item_definitions"),
-     *     "hintSerializer"  = @DI\Inject("ujm_exo.serializer.hint")
-     * })
      *
      * @param ObjectManager             $om
      * @param ScoreManager              $scoreManager

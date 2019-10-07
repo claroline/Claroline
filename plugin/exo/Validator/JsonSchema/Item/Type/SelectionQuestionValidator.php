@@ -2,13 +2,9 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema\Item\Type;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.question_selection")
- */
 class SelectionQuestionValidator extends JsonSchemaValidator
 {
     public function getJsonSchemaUri()

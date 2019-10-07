@@ -2,15 +2,11 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.exercise")
- */
 class ExerciseValidator extends JsonSchemaValidator
 {
     /**
@@ -22,10 +18,6 @@ class ExerciseValidator extends JsonSchemaValidator
      * ExerciseValidator constructor.
      *
      * @param StepValidator $stepValidator
-     *
-     * @DI\InjectParams({
-     *     "stepValidator" = @DI\Inject("ujm_exo.validator.step")
-     * })
      */
     public function __construct(StepValidator $stepValidator)
     {

@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Library\Item;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Item\Definition\ContentItemDefinition;
 use UJM\ExoBundle\Library\Item\Definition\Exception\UnregisterableDefinitionException;
 use UJM\ExoBundle\Library\Item\Definition\Exception\UnregisteredDefinitionException;
@@ -10,8 +9,6 @@ use UJM\ExoBundle\Library\Item\Definition\ItemDefinitionInterface;
 
 /**
  * Collects definition class for each Item type defined.
- *
- * @DI\Service("ujm_exo.collection.item_definitions")
  */
 class ItemDefinitionsCollection
 {

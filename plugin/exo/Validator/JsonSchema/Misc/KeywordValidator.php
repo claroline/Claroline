@@ -2,14 +2,11 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema\Misc;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
 /**
  * Validates Keyword data.
- *
- * @DI\Service("ujm_exo.validator.keyword")
  */
 class KeywordValidator extends JsonSchemaValidator
 {

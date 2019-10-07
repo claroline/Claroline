@@ -9,7 +9,7 @@ services:
             calls:
               - method: setJsonSchema
                 arguments:
-                  - '@ujm_exo.library.json_schema'
+                  - '@UJM\ExoBundle\Library\Json\JsonSchema'
 
     Claroline\AudioPlayerBundle\Validator\Quiz\JsonSchema\Attempt\AnswerData\WaveformAnswerValidator: ~
 

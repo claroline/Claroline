@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,12 +37,6 @@ class ShareController extends AbstractController
 
     /**
      * ShareController constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userSerializer" = @DI\Inject("ujm_exo.serializer.user"),
-     *     "shareManager"   = @DI\Inject("ujm_exo.manager.share")
-     * })
      *
      * @param ObjectManager  $om
      * @param UserSerializer $userSerializer

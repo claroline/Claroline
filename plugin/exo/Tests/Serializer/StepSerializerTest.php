@@ -29,7 +29,7 @@ class StepSerializerTest extends JsonDataTestCase
         parent::setUp();
 
         // We trust validator service as it is fully tested
-        $this->validator = $this->client->getContainer()->get('ujm_exo.validator.step');
+        $this->validator = $this->client->getContainer()->get('UJM\ExoBundle\Validator\JsonSchema\StepValidator');
         $this->serializer = $this->client->getContainer()->get('ujm_exo.serializer.step');
 
         $this->step = new Step();

@@ -3,14 +3,10 @@
 namespace UJM\ExoBundle\Validator\JsonSchema\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.answer")
- */
 class AnswerValidator extends JsonSchemaValidator
 {
     /**
@@ -28,11 +24,6 @@ class AnswerValidator extends JsonSchemaValidator
      *
      * @param ObjectManager             $om
      * @param ItemDefinitionsCollection $itemDefinitions
-     *
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "itemDefinitions" = @DI\Inject("ujm_exo.collection.item_definitions")
-     * })
      */
     public function __construct(
         ObjectManager $om,

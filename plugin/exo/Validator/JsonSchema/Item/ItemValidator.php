@@ -2,15 +2,11 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema\Item;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.item")
- */
 class ItemValidator extends JsonSchemaValidator
 {
     /**
@@ -34,12 +30,6 @@ class ItemValidator extends JsonSchemaValidator
      * @param ItemDefinitionsCollection $itemDefinitions
      * @param HintValidator             $hintValidator
      * @param ContentValidator          $contentValidator
-     *
-     * @DI\InjectParams({
-     *     "itemDefinitions"   = @DI\Inject("ujm_exo.collection.item_definitions"),
-     *     "hintValidator"     = @DI\Inject("ujm_exo.validator.hint"),
-     *     "contentValidator"  = @DI\Inject("ujm_exo.validator.content")
-     * })
      */
     public function __construct(
         ItemDefinitionsCollection $itemDefinitions,

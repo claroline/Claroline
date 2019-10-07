@@ -58,7 +58,7 @@ class PaperGeneratorTest extends TransactionalTestCase
 
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
         $this->generator = $this->client->getContainer()->get('ujm_exo.generator.paper');
-        $this->exerciseValidator = $this->client->getContainer()->get('ujm_exo.validator.exercise');
+        $this->exerciseValidator = $this->client->getContainer()->get('UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator');
 
         $this->persist = new Persister($this->om);
 

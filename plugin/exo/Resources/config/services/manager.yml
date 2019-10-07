@@ -1,0 +1,77 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    UJM\ExoBundle\Manager\Attempt\AnswerManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerValidator'
+            - '@ujm_exo.serializer.answer'
+
+    UJM\ExoBundle\Manager\Attempt\PaperManager:
+        arguments:
+            - '@security.authorization_checker'
+            - '@claroline.persistence.object_manager'
+            - '@event_dispatcher'
+            - '@ujm_exo.serializer.paper'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+            - '@UJM\ExoBundle\Manager\Attempt\ScoreManager'
+            - '@claroline.manager.resource_evaluation_manager'
+
+    UJM\ExoBundle\Manager\Attempt\ScoreManager: ~
+
+    UJM\ExoBundle\Manager\Item\ItemManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@UJM\ExoBundle\Manager\Attempt\ScoreManager'
+            - '@UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator'
+            - '@ujm_exo.serializer.item'
+            - '@ujm_exo.collection.item_definitions'
+            - '@UJM\ExoBundle\Serializer\Item\HintSerializer'
+
+    UJM\ExoBundle\Manager\Item\ShareManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+
+    UJM\ExoBundle\Manager\AttemptManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@ujm_exo.generator.paper'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+            - '@UJM\ExoBundle\Manager\Attempt\AnswerManager'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+            - '@ujm_exo.serializer.item'
+            - '@event_dispatcher'
+
+    UJM\ExoBundle\Manager\CorrectionManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@UJM\ExoBundle\Manager\Attempt\AnswerManager'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+            - '@ujm_exo.serializer.item'
+
+    UJM\ExoBundle\Manager\DocimologyManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+
+    UJM\ExoBundle\Manager\ExerciseManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator'
+            - '@ujm_exo.serializer.exercise'
+            - '@claroline.manager.resource_manager'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
+            - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+            - '@claroline.utilities.misc'
+            - '@ujm_exo.collection.item_definitions'
+            - '@event_dispatcher'
+
+    UJM\ExoBundle\Manager\HintManager:
+        arguments:
+            - '@claroline.persistence.object_manager'
+            - '@ujm_exo.serializer.hint'

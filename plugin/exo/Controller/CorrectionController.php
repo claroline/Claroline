@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Controller;
 
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,11 +33,6 @@ class CorrectionController extends AbstractController
 
     /**
      * CorrectionController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"     = @DI\Inject("security.authorization_checker"),
-     *     "correctionManager" = @DI\Inject("ujm_exo.manager.correction")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param CorrectionManager             $correctionManager

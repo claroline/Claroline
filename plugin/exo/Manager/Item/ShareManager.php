@@ -6,13 +6,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Repository\ItemRepository;
 
-/**
- * @DI\Service("ujm_exo.manager.share")
- */
 class ShareManager
 {
     /**
@@ -27,11 +23,6 @@ class ShareManager
 
     /**
      * ShareManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager"),
-     *     "itemManager" = @DI\Inject("ujm_exo.manager.item")
-     * })
      *
      * @param ObjectManager $om
      * @param ItemManager   $itemManager

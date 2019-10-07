@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -13,9 +12,6 @@ use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
-/**
- * @DI\Service("ujm_exo.manager.correction")
- */
 class CorrectionManager
 {
     /**
@@ -45,13 +41,6 @@ class CorrectionManager
 
     /**
      * ExerciseManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "answerManager"  = @DI\Inject("ujm_exo.manager.answer"),
-     *     "paperManager"   = @DI\Inject("ujm_exo.manager.paper"),
-     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
-     * })
      *
      * @param ObjectManager  $om
      * @param AnswerManager  $answerManager

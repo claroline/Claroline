@@ -28,7 +28,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@ujm_exo.serializer.step'
-            - '@ujm_exo.manager.item'
+            - '@UJM\ExoBundle\Manager\Item\ItemManager'
 
     ujm_exo.serializer.exercise:
          alias: UJM\ExoBundle\Serializer\ExerciseSerializer

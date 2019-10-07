@@ -1,0 +1,77 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@claroline.api.finder'
+              - method: setSerializer
+                arguments:
+                  - '@claroline.api.serializer'
+              - method: setCrud
+                arguments:
+                  - '@claroline.api.crud'
+              - method: setObjectManager
+                arguments:
+                  - '@claroline.persistence.object_manager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
+    UJM\ExoBundle\Controller\Item\ItemController:
+        arguments:
+          - '@claroline.api.finder'
+          - '@UJM\ExoBundle\Manager\Item\ItemManager'
+          - '@event_dispatcher'
+
+    UJM\ExoBundle\Controller\Item\ShareController:
+        arguments:
+          - '@claroline.persistence.object_manager'
+          - '@ujm_exo.serializer.user'
+          - '@UJM\ExoBundle\Manager\Item\ShareManager'
+
+    UJM\ExoBundle\Controller\AttemptController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\AttemptManager'
+          - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+          - '@claroline.manager.resource_evaluation_manager'
+          - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer'
+
+    UJM\ExoBundle\Controller\CorrectionController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\CorrectionManager'
+
+    UJM\ExoBundle\Controller\ExerciseController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\ExerciseManager'
+          - '@UJM\ExoBundle\Manager\DocimologyManager'
+          - '@UJM\ExoBundle\Manager\Item\ItemManager'
+
+    UJM\ExoBundle\Controller\ExerciseController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@UJM\ExoBundle\Manager\ExerciseManager'
+          - '@UJM\ExoBundle\Manager\DocimologyManager'
+
+    UJM\ExoBundle\Controller\PaperController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.persistence.object_manager'
+          - '@claroline.api.finder'
+          - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
+          - '@UJM\ExoBundle\Manager\ExerciseManager'

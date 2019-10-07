@@ -67,7 +67,7 @@ class ItemValidatorTest extends JsonSchemaTestCase
     public function testUnknownQuestionTypeThrowsError()
     {
         // We don't use `$this->validator` as we have mocked this part for other tests
-        $validator = $this->client->getContainer()->get('ujm_exo.validator.item');
+        $validator = $this->client->getContainer()->get('UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator');
 
         $questionData = $this->loadTestData('question/base/invalid/unknown-type.json');
 

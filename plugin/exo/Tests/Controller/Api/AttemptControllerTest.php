@@ -50,7 +50,7 @@ class AttemptControllerTest extends TransactionalTestCase
 
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
         $this->paperGenerator = $this->client->getContainer()->get('ujm_exo.generator.paper');
-        $this->attemptManager = $this->client->getContainer()->get('ujm_exo.manager.attempt');
+        $this->attemptManager = $this->client->getContainer()->get('UJM\ExoBundle\Manager\AttemptManager');
 
         $this->persist = new Persister($this->om);
         $this->john = $this->persist->user('john');

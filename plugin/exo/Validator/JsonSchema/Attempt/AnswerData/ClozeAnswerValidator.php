@@ -2,15 +2,11 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
 use UJM\ExoBundle\Entity\Misc\Hole;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.answer_cloze")
- */
 class ClozeAnswerValidator extends JsonSchemaValidator
 {
     public function getJsonSchemaUri()

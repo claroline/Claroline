@@ -120,7 +120,7 @@ class Updater120410 extends Updater
     private function dumpTotal(Paper $paper)
     {
         /** @var PaperManager $paperManager */
-        $paperManager = $this->container->get('ujm_exo.manager.paper');
+        $paperManager = $this->container->get('UJM\ExoBundle\Manager\Attempt\PaperManager');
 
         /** @var ObjectManager $om */
         $om = $this->container->get('claroline.persistence.object_manager');

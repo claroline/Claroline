@@ -2,15 +2,11 @@
 
 namespace UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Misc\Cell;
 use UJM\ExoBundle\Entity\QuestionType\GridQuestion;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
-/**
- * @DI\Service("ujm_exo.validator.answer_grid")
- */
 class GridAnswerValidator extends JsonSchemaValidator
 {
     public function getJsonSchemaUri()

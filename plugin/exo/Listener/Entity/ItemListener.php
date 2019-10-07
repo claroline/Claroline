@@ -3,16 +3,12 @@
 namespace UJM\ExoBundle\Listener\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 
 /**
  * Manages Life cycle of the Item.
- *
- * @DI\Service("ujm_exo.listener.entity_item")
- * @DI\Tag("doctrine.entity_listener")
  */
 class ItemListener
 {
@@ -23,10 +19,6 @@ class ItemListener
 
     /**
      * ItemListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
      *
      * @param ContainerInterface $container
      */

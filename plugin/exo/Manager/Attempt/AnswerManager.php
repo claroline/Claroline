@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Manager\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Validation;
@@ -13,8 +12,6 @@ use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerValidator;
 
 /**
  * AnswerManager manages answers made by users to questions.
- *
- * @DI\Service("ujm_exo.manager.answer")
  */
 class AnswerManager
 {
@@ -35,12 +32,6 @@ class AnswerManager
 
     /**
      * AnswerManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "validator"  = @DI\Inject("ujm_exo.validator.answer"),
-     *     "serializer" = @DI\Inject("ujm_exo.serializer.answer")
-     * })
      *
      * @param ObjectManager    $om
      * @param AnswerValidator  $validator

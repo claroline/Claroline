@@ -4,12 +4,9 @@ namespace UJM\ExoBundle\Controller;
 
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
@@ -39,13 +36,6 @@ class ExerciseController extends AbstractController
 
     /**
      * ExerciseController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"     = @DI\Inject("security.authorization_checker"),
-     *     "exerciseManager"   = @DI\Inject("ujm_exo.manager.exercise"),
-     *     "docimologyManager" = @DI\Inject("ujm_exo.manager.docimology"),
-     *     "itemManager"       = @DI\Inject("ujm_exo.manager.item")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager

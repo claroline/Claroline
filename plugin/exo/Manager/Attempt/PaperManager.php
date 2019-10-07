@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
@@ -24,9 +23,6 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 
-/**
- * @DI\Service("ujm_exo.manager.paper")
- */
 class PaperManager
 {
     /**
@@ -66,16 +62,6 @@ class PaperManager
 
     /**
      * PaperManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
-     *     "serializer"          = @DI\Inject("ujm_exo.serializer.paper"),
-     *     "itemManager"         = @DI\Inject("ujm_exo.manager.item"),
-     *     "scoreManager"        = @DI\Inject("ujm_exo.manager.score"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om

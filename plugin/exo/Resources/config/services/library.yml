@@ -17,8 +17,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\WordsDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_words'
-           - '@ujm_exo.validator.answer_words'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\WordsQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\WordsAnswerValidator'
            - '@ujm_exo.serializer.question_words'
 
     ujm_exo.definition.question_words:
@@ -28,8 +28,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\SetDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_set'
-           - '@ujm_exo.validator.answer_set'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\SetQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SetAnswerValidator'
            - '@ujm_exo.serializer.question_set'
 
     ujm_exo.definition.question_set:
@@ -39,8 +39,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\SelectionDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_selection'
-           - '@ujm_exo.validator.answer_selection'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\SelectionQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SelectionAnswerValidator'
            - '@ujm_exo.serializer.question_selection'
 
     ujm_exo.definition.question_selection:
@@ -50,8 +50,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\PairDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_pair'
-           - '@ujm_exo.validator.answer_pair'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\PairQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\PairAnswerValidator'
            - '@ujm_exo.serializer.question_pair'
 
     ujm_exo.definition.question_pair:
@@ -61,8 +61,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\OrderingDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_ordering'
-           - '@ujm_exo.validator.answer_ordering'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\OrderingQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OrderingAnswerValidator'
            - '@ujm_exo.serializer.question_ordering'
 
     ujm_exo.definition.question_ordering:
@@ -72,8 +72,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\OpenDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_open'
-           - '@ujm_exo.validator.answer_open'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\OpenQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OpenAnswerValidator'
            - '@ujm_exo.serializer.question_open'
 
     ujm_exo.definition.question_open:
@@ -83,8 +83,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\MatchDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_match'
-           - '@ujm_exo.validator.answer_match'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\MatchQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\MatchAnswerValidator'
            - '@ujm_exo.serializer.question_match'
 
     ujm_exo.definition.question_match:
@@ -94,8 +94,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\GridDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_grid'
-           - '@ujm_exo.validator.answer_grid'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\GridQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GridAnswerValidator'
            - '@ujm_exo.serializer.question_grid'
 
     ujm_exo.definition.question_grid:
@@ -105,8 +105,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\GraphicDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_graphic'
-           - '@ujm_exo.validator.answer_graphic'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\GraphicQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GraphicAnswerValidator'
            - '@ujm_exo.serializer.question_graphic'
 
     ujm_exo.definition.question_graphic:
@@ -116,7 +116,7 @@ services:
     UJM\ExoBundle\Library\Item\Definition\ContentItemDefinition:
         tags: [ujm_exo.definition.content_item]
         arguments:
-           - '@ujm_exo.validator.item_content'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\ContentItemValidator'
            - '@ujm_exo.serializer.item_content'
 
     ujm_exo.definition.item_content:
@@ -126,8 +126,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\ClozeDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_cloze'
-           - '@ujm_exo.validator.answer_cloze'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\ClozeQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ClozeAnswerValidator'
            - '@ujm_exo.serializer.question_cloze'
 
     ujm_exo.definition.question_cloze:
@@ -137,8 +137,8 @@ services:
     UJM\ExoBundle\Library\Item\Definition\ChoiceDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_choice'
-           - '@ujm_exo.validator.answer_choice'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\ChoiceQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ChoiceAnswerValidator'
            - '@ujm_exo.serializer.question_choice'
 
     ujm_exo.definition.question_choice:
@@ -148,10 +148,20 @@ services:
     UJM\ExoBundle\Library\Item\Definition\BooleanDefinition:
         tags: [ujm_exo.definition.item]
         arguments:
-           - '@ujm_exo.validator.question_boolean'
-           - '@ujm_exo.validator.answer_boolean'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Item\Type\BooleanQuestionValidator'
+           - '@UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\BooleanAnswerValidator'
            - '@ujm_exo.serializer.question_boolean'
 
     ujm_exo.definition.question_boolean:
          alias: UJM\ExoBundle\Library\Item\Definition\BooleanDefinition
          public: true
+
+    UJM\ExoBundle\Library\Item\ItemDefinitionsCollection: ~
+
+    ujm_exo.collection.item_definitions:
+         alias: UJM\ExoBundle\Library\Item\ItemDefinitionsCollection
+         public: true
+
+    UJM\ExoBundle\Library\Json\JsonSchema:
+        arguments:
+           - '%kernel.root_dir%'

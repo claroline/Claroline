@@ -2,14 +2,11 @@
 
 namespace UJM\ExoBundle\Library\Validator;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Json\JsonSchema;
 use UJM\ExoBundle\Library\Options\Validation;
 
 /**
  * Base class for Validators that uses JSON schema definition.
- *
- * @DI\Service("ujm_exo.validator.json_schema", abstract=true)
  */
 abstract class JsonSchemaValidator implements ValidatorInterface
 {
@@ -20,10 +17,6 @@ abstract class JsonSchemaValidator implements ValidatorInterface
 
     /**
      * @param JsonSchema $jsonSchema
-     *
-     * @DI\InjectParams({
-     *     "jsonSchema" = @DI\Inject("ujm_exo.library.json_schema")
-     * })
      */
     public function setJsonSchema($jsonSchema)
     {
