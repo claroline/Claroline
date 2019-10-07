@@ -16,11 +16,12 @@ const RolesModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
       icon="fa fa-fw fa-id-badge"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={props.resetSelect}
+      onEntering={() => props.resetFilters(props.filters)}
+      onExiting={props.reset}
     >
       <ListData
         name={selectors.STORE_NAME}
@@ -47,17 +48,22 @@ const RolesModal = props => {
 RolesModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  })),
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(
     T.shape(RoleType.propTypes)
   ).isRequired,
-  resetSelect: T.func.isRequired
+  resetFilters: T.func.isRequired,
+  reset: T.func.isRequired
 }
 
 RolesModal.defaultProps = {
   url: ['apiv2_role_list'],
-  title: trans('roles')
+  title: trans('roles'),
+  filters: []
 }
 
 export {

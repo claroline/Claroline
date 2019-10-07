@@ -16,11 +16,11 @@ const LocationsModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'reset')}
       icon="fa fa-fw fa-location-arrow"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={props.resetSelect}
+      onExiting={props.reset}
     >
       <ListData
         name={selectors.STORE_NAME}
@@ -50,7 +50,7 @@ LocationsModal.propTypes = {
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(T.shape(LocationType.propTypes)).isRequired,
-  resetSelect: T.func.isRequired
+  reset: T.func.isRequired
 }
 
 LocationsModal.defaultProps = {

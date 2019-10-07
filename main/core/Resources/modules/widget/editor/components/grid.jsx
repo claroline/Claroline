@@ -188,7 +188,7 @@ class WidgetGridEditor extends Component {
         }
 
         <Button
-          className="btn btn-block btn-emphasis btn-add-section"
+          className="btn btn-block btn-emphasis btn-add-section component-container"
           type={MODAL_BUTTON}
           label={trans('add_section')}
           modal={[MODAL_WIDGET_CREATION, {

@@ -77,9 +77,9 @@ const Parameters = (props) => {
                 label: trans('default_role'),
                 required: true,
                 options: {
-                  noEmpty: true,
+                  choices: roleEnum,
                   condensed: true,
-                  choices: roleEnum
+                  noEmpty: true
                 }
               }, {
                 name: 'registration.validation',

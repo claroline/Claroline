@@ -1,16 +1,18 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_GROUPS} from '#/main/core/modals/groups'
+import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
@@ -57,44 +59,20 @@ const OrganizationForm = props =>
             options: {
               condensed: true,
               choices: {
-                'external': trans('external'),
-                'internal': trans('internal')
+                external: trans('external'),
+                internal: trans('internal')
               }
             }
           }
         ]
       }, {
-        title: trans('limit'),
-        fields: [
-          {
-            name: 'limit.enable',
-            type: 'boolean',
-            label: trans('enable'),
-            required: true,
-            onChange: (enabled) => {
-              props.updateLimit(enabled)
-            },
-            linked: [
-              {
-                name: 'limit.users',
-                type: 'number',
-                label: trans('users'),
-                required: true,
-                displayed: () =>  props.organization.limit ? props.organization.limit.users > -1: false
-              }
-            ]
-          }
-        ]
-      }, {
+        icon: 'fa fa-fw fa-info',
         title: trans('information'),
         fields: [
           {
             name: 'parent',
             type: 'organization',
-            label: trans('parent'),
-            options: {
-              filterChoices: (value, key) => props.organization.id !== key
-            }
+            label: trans('parent')
           }, {
             name: 'email',
             type: 'email',
@@ -106,6 +84,31 @@ const OrganizationForm = props =>
             required: false
           }
         ]
+      }, {
+        icon: 'fa fa-fw fa-key',
+        title: trans('access_restrictions'),
+        fields: [
+          {
+            name: 'limit.enable',
+            type: 'boolean',
+            label: trans('access_max_users'),
+            onChange: (enabled) => {
+              if (!enabled) {
+                props.updateProp('limit.users', -1)
+              } else {
+                props.updateProp('limit.users', null)
+              }
+            },
+            linked: [
+              {
+                name: 'limit.users',
+                type: 'number',
+                label: trans('maxUsers'),
+                displayed: get(props.organization, 'limit.enabled') || get(props.organization, 'limit.users', -1) > -1
+              }
+            ]
+          }
+        ]
       }
     ]}
   >
@@ -114,15 +117,64 @@ const OrganizationForm = props =>
     >
       <FormSection
         className="embedded-list-section"
+        icon="fa fa-fw fa-user-cog"
+        title={trans('managers')}
+        disabled={props.new}
+        actions={[
+          {
+            name: 'add',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('add_managers'),
+            modal: [MODAL_USERS, {
+              url: ['apiv2_user_list_managed_organization'],
+              selectAction: (users) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addManagers(props.organization.id, users)
+              })
+            }]
+          }
+        ]}
+      >
+        <ListData
+          name={`${baseSelectors.STORE_NAME}.organizations.current.managers`}
+          fetch={{
+            url: ['apiv2_organization_list_managers', {id: props.organization.id}],
+            autoload: props.organization.id && !props.new
+          }}
+          primaryAction={(row) => ({
+            type: LINK_BUTTON,
+            target: `${props.path}/users/form/${row.id}`,
+            label: trans('edit', {}, 'actions')
+          })}
+          delete={{
+            url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
+          }}
+          definition={UserList.definition}
+          card={UserList.card}
+        />
+      </FormSection>
+
+      <FormSection
+        className="embedded-list-section"
         icon="fa fa-fw fa-book"
         title={trans('workspaces')}
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_workspace'),
-            callback: () => props.pickWorkspaces(props.organization.id)
+            modal: [MODAL_WORKSPACES, {
+              url: ['apiv2_workspace_list'],
+              selectAction: (workspaces) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addWorkspaces(props.organization.id, workspaces)
+              })
+            }]
           }
         ]}
       >
@@ -148,10 +200,18 @@ const OrganizationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
-            callback: () => props.pickUsers(props.organization.id)
+            modal: [MODAL_USERS, {
+              url: ['apiv2_user_list_managed_organization'],
+              selectAction: (users) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addUsers(props.organization.id, users)
+              })
+            }]
           }
         ]}
       >
@@ -181,10 +241,18 @@ const OrganizationForm = props =>
         disabled={props.new}
         actions={[
           {
+            name: 'add',
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
-            callback: () => props.pickGroups(props.organization.id)
+            modal: [MODAL_GROUPS, {
+              url: ['apiv2_group_list_managed'],
+              selectAction: (groups) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addGroups(props.organization.id, groups)
+              })
+            }]
           }
         ]}
       >
@@ -206,39 +274,6 @@ const OrganizationForm = props =>
           card={GroupList.card}
         />
       </FormSection>
-
-      <FormSection
-        className="embedded-list-section"
-        icon="fa fa-fw fa-users"
-        title={trans('managers')}
-        disabled={props.new}
-        actions={[
-          {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-plus',
-            label: trans('add_managers'),
-            callback: () => props.pickManagers(props.organization.id)
-          }
-        ]}
-      >
-        <ListData
-          name={`${baseSelectors.STORE_NAME}.organizations.current.managers`}
-          fetch={{
-            url: ['apiv2_organization_list_managers', {id: props.organization.id}],
-            autoload: props.organization.id && !props.new
-          }}
-          primaryAction={(row) => ({
-            type: LINK_BUTTON,
-            target: `${props.path}/users/form/${row.id}`,
-            label: trans('edit', {}, 'actions')
-          })}
-          delete={{
-            url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
-          }}
-          definition={UserList.definition}
-          card={UserList.card}
-        />
-      </FormSection>
     </FormSections>
   </FormData>
 
@@ -249,85 +284,37 @@ OrganizationForm.propTypes = {
     id: T.string,
     limit: T.shape({
       enable: T.boolean,
-      users: T.integer
+      users: T.number
     })
   }).isRequired,
-  pickUsers: T.func.isRequired,
-  pickGroups: T.func.isRequired,
-  pickWorkspaces: T.func.isRequired,
-  pickManagers: T.func.isRequired,
-  updateLimit: T.func.isRequired
+  addUsers: T.func.isRequired,
+  addGroups: T.func.isRequired,
+  addWorkspaces: T.func.isRequired,
+  addManagers: T.func.isRequired,
+  updateProp: T.func.isRequired
 }
 
 const Organization = connect(
   state => ({
     path: toolSelectors.path(state),
-    new: formSelect.isNew(formSelect.form(state, baseSelectors.STORE_NAME+'.organizations.current')),
-    organization: formSelect.data(formSelect.form(state, baseSelectors.STORE_NAME+'.organizations.current'))
+    new: formSelectors.isNew(formSelectors.form(state, baseSelectors.STORE_NAME+'.organizations.current')),
+    organization: formSelectors.data(formSelectors.form(state, baseSelectors.STORE_NAME+'.organizations.current'))
   }),
   dispatch => ({
-    updateLimit(enabled) {
-      dispatch(actions.updateLimit(enabled))
+    updateProp(name, value) {
+      dispatch(formActions.updateProp(baseSelectors.STORE_NAME+'.organizations.current', name, value))
     },
-    pickUsers(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_users'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.users.picker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list_managed_organization'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addUsers(organizationId, selected))
-      }))
+    addUsers(organizationId, users) {
+      dispatch(actions.addUsers(organizationId, users))
     },
-    pickManagers(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_managers'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.users.picker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list_managed_organization'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addManagers(organizationId, selected))
-      }))
+    addManagers(organizationId, users) {
+      dispatch(actions.addManagers(organizationId, users))
     },
-    pickGroups(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-users',
-        title: trans('add_groups'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.groups.picker',
-        definition: GroupList.definition,
-        card: GroupList.card,
-        fetch: {
-          url: ['apiv2_group_list_managed'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addGroups(organizationId, selected))
-      }))
+    addGroups(organizationId, groups) {
+      dispatch(actions.addGroups(organizationId, groups))
     },
-    pickWorkspaces(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-books',
-        title: trans('add_workspaces'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.workspaces.picker',
-        definition: WorkspaceList.definition,
-        card: WorkspaceList.card,
-        fetch: {
-          url: ['apiv2_workspace_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addWorkspaces(organizationId, selected))
-      }))
+    addWorkspaces(organizationId, workspaces) {
+      dispatch(actions.addWorkspaces(organizationId, workspaces))
     }
   })
 )(OrganizationForm)

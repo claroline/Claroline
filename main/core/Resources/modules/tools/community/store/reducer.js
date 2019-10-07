@@ -29,7 +29,7 @@ const reducer = combineReducers({
     })
   }),
   restrictions: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.restrictions
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.restrictions || []
   })
 })
 

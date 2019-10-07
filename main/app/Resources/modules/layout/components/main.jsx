@@ -22,9 +22,7 @@ import {WorkspaceMain} from '#/main/core/workspace/containers/main'
 const LayoutMain = props =>
   <Fragment>
     <div className="app" role="presentation">
-      {false &&
-        <div className="app-loader" />
-      }
+      {false && <div className="app-loader" />}
 
       <HeaderMain
         maintenance={props.maintenance}
@@ -88,7 +86,7 @@ const LayoutMain = props =>
       }
     </div>
 
-    {false && (props.authenticated && props.sidebar) &&
+    {(false && props.authenticated && props.sidebar) &&
       <LayoutSidebar
         close={props.closeSidebar}
       />

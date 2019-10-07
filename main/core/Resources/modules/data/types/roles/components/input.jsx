@@ -23,6 +23,7 @@ const RolesButton = props =>
     modal={[MODAL_ROLES, {
       url: ['apiv2_role_platform_loggable_list'], // maybe not the correct URL
       title: props.title,
+      filters: props.filters,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         label: trans('select', {}, 'actions'),
@@ -33,6 +34,9 @@ const RolesButton = props =>
 
 RolesButton.propTypes = {
   title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  })),
   onChange: T.func.isRequired
 }
 
@@ -105,7 +109,10 @@ const RolesInput = props => {
 implementPropTypes(RolesInput, FormFieldTypes, {
   value: T.arrayOf(T.shape(RoleType.propTypes)),
   picker: T.shape({
-    title: T.string
+    title: T.string,
+    filters: T.arrayOf(T.shape({
+      // TODO : list filter types
+    }))
   })
 }, {
   value: null,

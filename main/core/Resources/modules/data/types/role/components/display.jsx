@@ -14,8 +14,7 @@ const RoleDisplay = (props) => !isEmpty(props.data) ?
       <RoleCard
         key={`group-card-${role.id}`}
         data={role}
-        size="sm"
-        orientation="col"
+        size="xs"
       />
     )}
   </Fragment> :

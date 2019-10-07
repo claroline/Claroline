@@ -16,11 +16,11 @@ const TemplateTypesModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'confirmText', 'selected', 'selectAction', 'reset')}
       className="data-picker-modal"
       icon="fa fa-fw fa-file-alt"
       bsSize="lg"
-      onExiting={props.resetSelect}
+      onExiting={props.reset}
     >
       <ListData
         name={selectors.STORE_NAME}
@@ -69,7 +69,7 @@ TemplateTypesModal.propTypes = {
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(T.shape(TemplateTypeType.propTypes)).isRequired,
-  resetSelect: T.func.isRequired
+  reset: T.func.isRequired
 }
 
 TemplateTypesModal.defaultProps = {

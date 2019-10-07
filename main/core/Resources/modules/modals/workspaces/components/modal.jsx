@@ -16,11 +16,11 @@ const WorkspacesModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
-      icon="fa fa-fw fa-books"
+      {...omit(props, 'url', 'selected', 'selectAction', 'reset', 'model')}
+      icon="fa fa-fw fa-book"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={props.resetSelect}
+      onExiting={props.reset}
     >
       <ListData
         name={selectors.STORE_NAME}
@@ -51,7 +51,7 @@ WorkspacesModal.propTypes = {
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(T.shape(WorkspaceType.propTypes)).isRequired,
-  resetSelect: T.func.isRequired
+  reset: T.func.isRequired
 }
 
 WorkspacesModal.defaultProps = {

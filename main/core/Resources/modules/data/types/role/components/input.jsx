@@ -22,6 +22,7 @@ const RoleButton = props =>
     modal={[MODAL_ROLES, {
       url: ['apiv2_role_platform_loggable_list'],
       title: props.title,
+      filters: props.filters,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         label: trans('select', {}, 'actions'),
@@ -32,6 +33,9 @@ const RoleButton = props =>
 
 RoleButton.propTypes = {
   title: T.string,
+  filters: T.arrayOf(T.shape({
+    // TODO : list filter types
+  })),
   onChange: T.func.isRequired
 }
 
@@ -52,8 +56,7 @@ const RoleInput = props => {
       <Fragment>
         <RoleCard
           data={props.value}
-          size="sm"
-          orientation="col"
+          size="xs"
           actions={actions}
         />
 
@@ -65,26 +68,29 @@ const RoleInput = props => {
         }
       </Fragment>
     )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-id-card"
-        title={trans('no_role')}
-      >
-        <RoleButton
-          {...props.picker}
-          onChange={props.onChange}
-        />
-      </EmptyPlaceholder>
-    )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-id-card"
+      title={trans('no_role')}
+    >
+      <RoleButton
+        {...props.picker}
+        onChange={props.onChange}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(RoleInput, FormFieldTypes, {
   value: T.arrayOf(T.shape(RoleType.propTypes)),
   picker: T.shape({
-    title: T.string
+    title: T.string,
+    filters: T.arrayOf(T.shape({
+      // TODO : list filter types
+    }))
   })
 }, {
   value: null

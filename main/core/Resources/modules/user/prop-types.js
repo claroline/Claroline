@@ -92,10 +92,18 @@ const Organization = {
     parent: T.shape({
       id: T.string.isRequired,
       name: T.string.isRequired
+    }),
+    limit: T.shape({
+      enabled: T.bool,
+      users: T.number
     })
   },
   defaultProps: {
-    parent: null
+    parent: null,
+    limit: {
+      enabled: false,
+      users: -1
+    }
   }
 }
 

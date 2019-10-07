@@ -15,8 +15,9 @@ const TemplateTypesModal = withReducer(selectors.STORE_NAME, reducer)(
       selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
-      resetSelect() {
+      reset() {
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
+        dispatch(listActions.invalidateData(selectors.STORE_NAME))
       }
     })
   )(TemplateTypesModalComponent)

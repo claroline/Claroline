@@ -16,11 +16,11 @@ const GroupsModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'reset')}
       icon="fa fa-fw fa-users"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={props.resetSelect}
+      onExiting={props.reset}
     >
       <ListData
         name={selectors.STORE_NAME}
@@ -52,7 +52,7 @@ GroupsModal.propTypes = {
 
   // from store
   selected: T.arrayOf(T.shape(GroupType.propTypes)).isRequired,
-  resetSelect: T.func.isRequired
+  reset: T.func.isRequired
 }
 
 GroupsModal.defaultProps = {
