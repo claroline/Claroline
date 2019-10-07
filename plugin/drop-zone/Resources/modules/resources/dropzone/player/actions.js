@@ -18,6 +18,7 @@ export const CURRENT_REVISION_ID_LOAD = 'CURRENT_REVISION_ID_LOAD'
 export const REVISION_LOAD = 'REVISION_LOAD'
 export const REVISION_RESET = 'REVISION_RESET'
 export const REVISION_COMMENT_UPDATE = 'REVISION_COMMENT_UPDATE'
+export const REVISION_DOCUMENT_REMOVE = 'REVISION_DOCUMENT_REMOVE'
 export const MY_DROP_COMMENT_UPDATE = 'MY_DROP_COMMENT_UPDATE'
 export const MANAGER_DOCUMENTS_ADD = 'MANAGER_DOCUMENTS_ADD'
 
@@ -191,6 +192,7 @@ actions.loadRevision = makeActionCreator(REVISION_LOAD, 'revision')
 actions.resetRevision = makeActionCreator(REVISION_RESET)
 actions.updateRevisionComment = makeActionCreator(REVISION_COMMENT_UPDATE, 'comment')
 actions.updateMyDropComment = makeActionCreator(MY_DROP_COMMENT_UPDATE, 'comment')
+actions.removeRevisionDocument = makeActionCreator(REVISION_DOCUMENT_REMOVE, 'documentId')
 
 actions.saveRevisionComment = (comment) => ({
   [API_REQUEST]: {
@@ -245,6 +247,6 @@ actions.deleteManagerDocument = (documentId) => ({
     request: {
       method: 'DELETE'
     },
-    success: (data, dispatch) => dispatch(actions.removeDocument(documentId))
+    success: (data, dispatch) => dispatch(actions.removeRevisionDocument(documentId))
   }
 })
