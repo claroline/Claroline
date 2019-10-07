@@ -64,7 +64,7 @@ class LogConnectTool extends AbstractLogConnect
         $this->tool = $tool;
 
         if ($tool) {
-            $this->setToolName($tool->getName());
+            $this->setToolName($tool->getTool()->getName());
             $this->setOrignalToolName($tool->getTool()->getName());
 
             $workspace = $tool->getWorkspace();
