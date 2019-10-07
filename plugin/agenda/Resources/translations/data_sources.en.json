@@ -1,4 +1,6 @@
 {
     "events": "List of events",
-    "tasks": "List of tasks"
+    "events_desc": "Allows to list events of the current user.",
+    "tasks": "List of tasks",
+    "tasks_desc": "Allows to list tasks of the current user."
 }

@@ -1,4 +1,6 @@
 {
     "badges": "Liste de badges",
-    "my_badges": "Liste de mes badges"
+    "badges_desc": "Permet de lister les badges disponibles.",
+    "my_badges": "Liste de mes badges",
+    "my_badges_desc": "Permet de lister les badges obtenus par l'utilisateur courant."
 }

@@ -1,3 +1,4 @@
 {
-    "announcements": "Liste d'annonces"
+    "announcements": "Liste d'annonces",
+    "announcements_desc": "Permet de lister des annonces d'une ou plusieurs ressources Annonces."
 }

@@ -1,3 +1,4 @@
 {
-    "announcements": "List of announcements"
+    "announcements": "List of announcements",
+    "announcements_desc": "Allows to list some announcements from one or many Announcements resources."
 }
