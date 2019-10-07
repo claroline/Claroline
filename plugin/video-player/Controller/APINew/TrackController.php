@@ -12,7 +12,6 @@
 namespace Claroline\VideoPlayerBundle\Controller\APINew;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +23,6 @@ class TrackController extends AbstractCrudController
 {
     private $fileDir;
 
-    /**
-     * @DI\InjectParams({
-     *      "fileDir" = @DI\Inject("%claroline.param.files_directory%")
-     * })
-     */
     public function __construct($fileDir)
     {
         $this->fileDir = $fileDir;

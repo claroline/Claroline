@@ -7,11 +7,7 @@ use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\VideoPlayerBundle\Entity\Track;
 use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
 use Claroline\VideoPlayerBundle\Serializer\TrackSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class VideoListener
 {
     /** @var TrackSerializer */
@@ -23,11 +19,6 @@ class VideoListener
     /**
      * VideoListener constructor.
      *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.serializer.video.track"),
-     *     "manager"    = @DI\Inject("claroline.manager.video_player_manager")
-     * })
-     *
      * @param TrackSerializer    $serializer
      * @param VideoPlayerManager $manager
      */
@@ -38,8 +29,6 @@ class VideoListener
     }
 
     /**
-     * @DI\Observe("file.video.load")
-     *
      * @param LoadFileEvent $event
      */
     public function onLoad(LoadFileEvent $event)
