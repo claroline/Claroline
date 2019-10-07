@@ -1,5 +1,0 @@
-knp_snappy:
-    pdf:
-        enabled:    true
-        binary:     /usr/bin/wkhtmltopdf.sh
-        options:    []

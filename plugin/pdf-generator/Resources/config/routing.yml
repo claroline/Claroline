@@ -1,4 +1,0 @@
-claro_pdf_generator_controller:
-    resource: "@ClarolinePdfGeneratorBundle/Controller/PdfController.php"
-    type:     annotation
-    prefix:   /
