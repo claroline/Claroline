@@ -263,6 +263,7 @@ class ResourceController
         if ($fileName) {
             $fileName = str_replace('/', '_', $fileName);
             $fileName = str_replace('\\', '_', $fileName);
+            $fileName = str_replace(' ', '_', $fileName);
         }
 
         $response = new BinaryFileResponse($file, 200, ['Content-Disposition' => "attachment; filename={$fileName}"]);
