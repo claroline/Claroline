@@ -2,5 +2,6 @@
     "iframe_desc": "Afficher l'URL au sein de la ressource",
     "redirect_desc": "Ouvrir l'URL dans l'onglet courant",
     "tab_desc": "Ouvrir l'URL dans un nouvel onglet",
-    "url": "URL"
+    "url": "URL",
+    "https_iframe_help": "L'URL doit utiliser le protocole HTTPS pour pouvoir s'afficher correctement."
 }

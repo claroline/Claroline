@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as formSelectors, actions as formActions} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
@@ -34,43 +34,44 @@ const UrlForm = props =>
             label: trans('url', {}, 'url'),
             type: 'url',
             required: true
-          },
-          {
+          }, {
             name: 'mode',
             label: trans('mode'),
+            help: 'iframe' === props.url.mode ? trans('https_iframe_help', {}, 'url') : undefined,
             type: 'choice',
-            required: true,
             options: {
               multiple: false,
               condensed: true,
               choices: {
-                'iframe': trans('iframe_desc', {}, 'url'),
-                'redirect': trans('redirect_desc', {}, 'url'),
-                'tab': trans('tab_desc', {}, 'url')
+                iframe: trans('iframe_desc', {}, 'url'),
+                redirect: trans('redirect_desc', {}, 'url'),
+                tab: trans('tab_desc', {}, 'url')
               }
-            }
-          },
-          {
-            name: 'ratioList',
-            type: 'choice',
-            displayed: url => url.mode === 'iframe',
-            label: trans('display_ratio_list'),
-            options: {
-              multiple: false,
-              condensed: false,
-              choices: constants.DISPLAY_RATIO_LIST
             },
-            onChange: (ratio) => props.updateProp('ratio', parseFloat(ratio))
-          }, {
-            name: 'ratio',
-            type: 'number',
-            displayed: url => url.mode === 'iframe',
-            label: trans('display_ratio'),
-            options: {
-              min: 0,
-              unit: '%'
-            },
-            onChange: () => props.updateProp('ratioList', null)
+            linked: [
+              {
+                name: 'ratioList',
+                type: 'choice',
+                displayed: url => url.mode === 'iframe',
+                label: trans('display_ratio_list'),
+                options: {
+                  multiple: false,
+                  condensed: false,
+                  choices: constants.DISPLAY_RATIO_LIST
+                },
+                onChange: (ratio) => props.updateProp('ratio', parseFloat(ratio))
+              }, {
+                name: 'ratio',
+                type: 'number',
+                displayed: url => url.mode === 'iframe',
+                label: trans('display_ratio'),
+                options: {
+                  min: 0,
+                  unit: '%'
+                },
+                onChange: () => props.updateProp('ratioList', null)
+              }
+            ]
           }
         ]
       }
@@ -80,7 +81,8 @@ const UrlForm = props =>
 UrlForm.propTypes = {
   path: T.string.isRequired,
   url: T.shape({
-    'id': T.number.isRequired
+    id: T.number.isRequired,
+    mode: T.string
   }).isRequired,
   updateProp: T.func.isRequired
 }
@@ -88,7 +90,7 @@ UrlForm.propTypes = {
 const Editor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
-    url: selectors.url(state)
+    url: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
   }),
   (dispatch) => ({
     updateProp(propName, propValue) {

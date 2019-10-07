@@ -6,7 +6,8 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 const UrlCreation = connect(
   (state) => ({
-    newNode: selectors.newNode(state)
+    newNode: selectors.newNode(state),
+    newResource: selectors.newResource(state)
   }),
   (dispatch) => ({
     updateProp(propName, propValue) {

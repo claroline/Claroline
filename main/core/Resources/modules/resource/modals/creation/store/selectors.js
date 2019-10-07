@@ -16,7 +16,12 @@ const formData = createSelector(
 
 const newNode = createSelector(
   [formData],
-  (formData) => formData.resourceNode
+  (formData) => formData[FORM_NODE_PART]
+)
+
+const newResource = createSelector(
+  [formData],
+  (formData) => formData[FORM_RESOURCE_PART]
 )
 
 const saveEnabled = createSelector(
@@ -29,6 +34,7 @@ export const selectors = {
   FORM_NODE_PART,
   FORM_RESOURCE_PART,
   newNode,
+  newResource,
   form,
   saveEnabled
 }

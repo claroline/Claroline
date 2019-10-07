@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -8,6 +9,7 @@ import {constants} from '#/plugin/scorm/resources/scorm/constants'
 
 const UrlForm = props =>
   <FormData
+    embedded={true}
     level={5}
     name={selectors.STORE_NAME}
     dataPart={selectors.FORM_RESOURCE_PART}
@@ -26,38 +28,42 @@ const UrlForm = props =>
             label: trans('mode'),
             type: 'choice',
             required: true,
+            help: 'iframe' === get(props.newResource, 'mode') ? trans('https_iframe_help', {}, 'url') : undefined,
             options: {
               multiple: false,
               condensed: true,
               choices: {
-                'iframe': trans('iframe_desc', {}, 'url'),
-                'redirect': trans('redirect_desc', {}, 'url'),
-                'tab': trans('tab_desc', {}, 'url')
+                iframe: trans('iframe_desc', {}, 'url'),
+                redirect: trans('redirect_desc', {}, 'url'),
+                tab: trans('tab_desc', {}, 'url')
               }
-            }
-          }, {
-            name: 'ratioList',
-            type: 'choice',
-            displayed: url => url && url.mode === 'iframe',
-            label: trans('display_ratio_list'),
-            options: {
-              multiple: false,
-              condensed: false,
-              choices: constants.DISPLAY_RATIO_LIST
             },
-            onChange: (ratio) => {
-              props.updateProp('ratio', parseFloat(ratio))
-            }
-          }, {
-            name: 'ratio',
-            type: 'number',
-            displayed: url => url && url.mode === 'iframe',
-            label: trans('display_ratio'),
-            options: {
-              min: 0,
-              unit: '%'
-            },
-            onChange: () => props.updateProp('ratioList', null)
+            linked: [
+              {
+                name: 'ratioList',
+                type: 'choice',
+                displayed: url => url && url.mode === 'iframe',
+                label: trans('display_ratio_list'),
+                options: {
+                  multiple: false,
+                  condensed: false,
+                  choices: constants.DISPLAY_RATIO_LIST
+                },
+                onChange: (ratio) => {
+                  props.updateProp('ratio', parseFloat(ratio))
+                }
+              }, {
+                name: 'ratio',
+                type: 'number',
+                displayed: url => url && url.mode === 'iframe',
+                label: trans('display_ratio'),
+                options: {
+                  min: 0,
+                  unit: '%'
+                },
+                onChange: () => props.updateProp('ratioList', null)
+              }
+            ]
           }
         ]
       }
@@ -67,6 +73,10 @@ const UrlForm = props =>
 UrlForm.propTypes = {
   newNode: T.shape({
     name: T.string
+  }),
+  newResource: T.shape({
+    url: T.string,
+    mode: T.string
   }),
   updateProp: T.func.isRequired
 }
