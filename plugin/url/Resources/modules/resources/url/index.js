@@ -1,6 +1,8 @@
-import {reducer} from '#/plugin/url/resources/url/store'
+
 import {UrlCreation} from '#/plugin/url/resources/url/containers/creation'
 import {UrlResource} from '#/plugin/url/resources/url/containers/resource'
+import {UrlMenu} from '#/plugin/url/resources/url/components/menu'
+import {reducer} from '#/plugin/url/resources/url/store'
 
 /**
  * @constructor
@@ -14,6 +16,7 @@ export const Creation = () => ({
  */
 export default {
   component: UrlResource,
+  menu: UrlMenu,
   store: reducer,
   styles: ['claroline-distribution-main-core-iframe']
 }
