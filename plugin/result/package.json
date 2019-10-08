@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "lint": "standard Resources/modules/**/*.js",
-    "test": "mocha Resources/tests/**/*_test.js --compilers js:babel-core/register"
-  }
-}
