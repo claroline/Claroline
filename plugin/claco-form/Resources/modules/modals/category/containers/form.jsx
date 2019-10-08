@@ -32,7 +32,8 @@ const CategoryFormModal = withReducer(selectors.STORE_NAME, reducer)(
             notify_edition: true,
             notify_removal: true,
             notify_pending_comment: true
-          }
+          },
+          fieldsValues: []
         }, !!category))
       }
     })

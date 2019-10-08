@@ -95,6 +95,9 @@ class FieldChoiceCategorySerializer
                         $this->sipe('value', 'setStringValue', $data, $fieldChoiceCategory);
                     }
                     break;
+                case FieldFacet::CASCADE_TYPE:
+                    $this->sipe('value', 'setArrayValue', $data, $fieldChoiceCategory);
+                    break;
                 default:
                     $this->sipe('value', 'setStringValue', $data, $fieldChoiceCategory);
             }
