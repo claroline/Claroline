@@ -36,7 +36,7 @@ class ResourceController extends AbstractCrudController
     /**
      * @DI\InjectParams({
      *     "apiManager" = @DI\Inject("claroline.manager.api_manager"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      *
      * @param ApiManager    $apiManager

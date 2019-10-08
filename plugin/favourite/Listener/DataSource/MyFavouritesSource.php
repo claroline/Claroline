@@ -25,7 +25,7 @@ class MyFavouritesSource
      *
      * @DI\InjectParams({
      *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "finder"       = @DI\Inject("claroline.api.finder")
+     *     "finder"       = @DI\Inject("Claroline\AppBundle\API\FinderProvider")
      * })
      *
      * @param TokenStorageInterface $tokenStorage

@@ -6,18 +6,18 @@ services:
 
     Claroline\AnnouncementBundle\Listener\DataSource\AnnouncementSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.announcements.load, method: getData }
 
     Claroline\AnnouncementBundle\Listener\Resource\AnnouncementListener:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@templating'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
-            - '@claroline.api.serializer'
-            - '@claroline.api.crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.load, method: load }

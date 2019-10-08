@@ -14,64 +14,40 @@ services:
 
     Claroline\AppBundle\API\FinderProvider:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
-
-    claroline.api.finder:
-        alias: Claroline\AppBundle\API\FinderProvider
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\AppBundle\API\Crud:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.event.event_dispatcher'
-            - '@claroline.api.serializer'
-            - '@claroline.api.validator'
-            - '@claroline.api.schema'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\ValidatorProvider'
+            - '@Claroline\AppBundle\API\SchemaProvider'
             - '@security.authorization_checker'
-
-    claroline.api.crud:
-        alias: Claroline\AppBundle\API\Crud
-        public: true
 
     Claroline\AppBundle\API\SchemaProvider:
         arguments:
             - '%kernel.root_dir%'
-            - '@claroline.api.serializer'
-
-    claroline.api.schema:
-        alias: Claroline\AppBundle\API\SchemaProvider
-        public: true
+            - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\AppBundle\API\SerializerProvider:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%kernel.root_dir%'
-
-    claroline.api.serializer:
-        alias: Claroline\AppBundle\API\SerializerProvider
-        public: true
 
     Claroline\AppBundle\API\TransferProvider:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
-            - '@claroline.api.schema'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\SchemaProvider'
             - '%claroline.param.import_log_dir%'
             - '@translator'
 
-    claroline.api.transfer:
-        alias: Claroline\AppBundle\API\TransferProvider
-        public: true
-
     Claroline\AppBundle\API\ValidatorProvider:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.schema'
-
-    claroline.api.validator:
-        alias: Claroline\AppBundle\API\ValidatorProvider
-        public: true
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SchemaProvider'
 
     Claroline\AppBundle\API\Listener\ApiListener:
         arguments:
@@ -79,3 +55,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onError, priority: 99 }
             - { name: kernel.event_listener, event: kernel.response, method: onResponse }
+
+    Claroline\AppBundle\Persistence\ObjectManager:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@logger'
+
+    Claroline\AppBundle\Event\StrictDispatcher:
+        arguments:
+            - '@event_dispatcher'

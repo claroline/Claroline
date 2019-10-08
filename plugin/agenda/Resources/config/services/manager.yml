@@ -6,7 +6,7 @@ services:
 
   Claroline\AgendaBundle\Manager\AgendaManager:
       arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%kernel.root_dir%'
           - '@security.token_storage'
           - '@security.authorization_checker'

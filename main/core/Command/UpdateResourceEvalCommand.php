@@ -34,7 +34,7 @@ class UpdateResourceEvalCommand extends ContainerAwareCommand
     private function updateResourceUserEvaluationProgression()
     {
         /** @var ObjectManager $om */
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $dql = '
             SELECT e
             FROM Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation e

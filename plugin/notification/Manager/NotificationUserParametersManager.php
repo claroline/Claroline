@@ -42,7 +42,7 @@ class NotificationUserParametersManager
 
     /**
      * @DI\InjectParams({
-     *      "em"    = @DI\Inject("claroline.persistence.object_manager"),
+     *      "em"    = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *      "ed"    = @DI\Inject("event_dispatcher")
      * })
      */

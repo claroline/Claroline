@@ -12,11 +12,8 @@
 namespace Claroline\CoreBundle\Library\Configuration;
 
 use Claroline\AppBundle\API\Utils\ArrayUtils;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.config.platform_config_handler")
- *
  * Service used for accessing or modifying the platform configuration parameters.
  */
 class PlatformConfigurationHandler
@@ -26,10 +23,6 @@ class PlatformConfigurationHandler
 
     /**
      * PlatformConfigurationHandler constructor.
-     *
-     * @DI\InjectParams({
-     *     "configFile" = @DI\Inject("%claroline.param.platform_options%")
-     * })
      *
      * @param string $configFile
      */

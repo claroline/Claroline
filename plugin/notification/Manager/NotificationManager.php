@@ -34,7 +34,7 @@ class NotificationManager
      * NotificationManager constructor.
      *
      * @DI\InjectParams({
-     *      "om"                            = @DI\Inject("claroline.persistence.object_manager"),
+     *      "om"                            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *      "tokenStorage"                  = @DI\Inject("security.token_storage"),
      *      "eventDispatcher"               = @DI\Inject("event_dispatcher"),
      *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters")

@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This recorder is used to register a plugin both in database and in the
@@ -21,8 +20,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  * this task.
  *
  * @todo Remove this class (as there's only one writer now -> refactor DatabaseWriter)
- *
- * @DI\Service("claroline.plugin.recorder")
  */
 class Recorder
 {
@@ -34,11 +31,6 @@ class Recorder
 
     /**
      * Recorder constructor.
-     *
-     * @DI\InjectParams({
-     *     "dbWriter"  = @DI\Inject("claroline.plugin.recorder_database_writer"),
-     *     "validator" = @DI\Inject("claroline.plugin.validator")
-     * })
      *
      * @param DatabaseWriter $dbWriter
      * @param Validator      $validator

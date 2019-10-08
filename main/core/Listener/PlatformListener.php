@@ -57,7 +57,7 @@ class PlatformListener
      * @DI\InjectParams({
      *     "kernel"        = @DI\Inject("kernel"),
      *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "config"        = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "config"        = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
      *     "tempManager"   = @DI\Inject("claroline.manager.temp_file"),
      *     "localeManager" = @DI\Inject("claroline.manager.locale_manager")
      * })

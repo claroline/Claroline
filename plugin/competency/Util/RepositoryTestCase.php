@@ -28,7 +28,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
     {
         parent::setUp();
         $container = $this->client->getContainer();
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     protected function persistCompetency($name, Competency $parent = null, Scale $scale = null)

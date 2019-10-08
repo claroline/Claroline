@@ -54,9 +54,9 @@ class ForumListener
      * ForumListener constructor.
      *
      * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"        = @DI\Inject("claroline.api.serializer"),
-     *     "crud"              = @DI\Inject("claroline.api.crud"),
+     *     "om"                = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
+     *     "serializer"        = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
+     *     "crud"              = @DI\Inject("Claroline\AppBundle\API\Crud"),
      *     "evaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "manager"           = @DI\Inject("claroline.manager.forum_manager"),
      *     "tokenStorage"      = @DI\Inject("security.token_storage")

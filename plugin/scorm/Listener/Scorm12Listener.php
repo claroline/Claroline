@@ -31,7 +31,7 @@ class Scorm12Listener
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"        = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      */
     public function __construct(ContainerInterface $container, ObjectManager $om)

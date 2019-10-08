@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -32,14 +32,14 @@ services:
 
     Icap\WikiBundle\Controller\API\ContributionController:
         arguments:
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\WikiBundle\Manager\SectionManager'
           - '@Icap\WikiBundle\Manager\ContributionManager'
           - '@security.authorization_checker'
 
     Icap\WikiBundle\Controller\API\SectionController:
         arguments:
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\WikiBundle\Manager\SectionManager'
           - '@security.authorization_checker'
 

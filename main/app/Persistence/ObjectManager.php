@@ -17,13 +17,9 @@ use Doctrine\Common\Persistence\ObjectManagerDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnitOfWork;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-/**
- * @DI\Service("claroline.persistence.object_manager")
- */
 class ObjectManager extends ObjectManagerDecorator
 {
     use LoggableTrait;
@@ -40,11 +36,6 @@ class ObjectManager extends ObjectManagerDecorator
 
     /**
      * ObjectManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "logger" = @DI\Inject("logger")
-     * })
      *
      * @param ObjectManagerInterface $om
      */

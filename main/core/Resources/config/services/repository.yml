@@ -42,7 +42,7 @@ services:
     Claroline\CoreBundle\Repository\UserRepository:
         arguments:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Repository\Log\LogRepository:
         arguments:

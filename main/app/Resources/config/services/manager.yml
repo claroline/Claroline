@@ -6,9 +6,9 @@ services:
 
     Claroline\AppBundle\Manager\DatabaseManager:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@doctrine.dbal.default_connection'
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '%claroline.param.archive_directory%'
 
     claroline.manager.database_manager:
@@ -25,7 +25,7 @@ services:
 
     Claroline\AppBundle\Manager\CacheManager:
         arguments:
-            - '@claroline.event.event_dispatcher'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '%kernel.root_dir%'
 
     claroline.manager.cache_manager:
@@ -34,7 +34,7 @@ services:
 
     Claroline\AppBundle\Manager\File\TempFileManager:
         arguments:
-            - '@claroline.config.platform_config_handler'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     claroline.manager.temp_file:
         alias: Claroline\AppBundle\Manager\File\TempFileManager

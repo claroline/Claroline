@@ -81,7 +81,7 @@ class InstallationManager
         // Load configuration
         if ($bundle instanceof PluginBundleInterface) {
             $this->log('Saving configuration...');
-            $this->container->get('claroline.plugin.recorder')->register($bundle);
+            $this->container->get('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')->register($bundle);
         }
 
         if ($additionalInstaller) {
@@ -125,7 +125,7 @@ class InstallationManager
         // Update configuration
         if ($bundle instanceof PluginBundleInterface) {
             $this->log('Updating configuration...');
-            $this->container->get('claroline.plugin.recorder')->update($bundle);
+            $this->container->get('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')->update($bundle);
         }
 
         if ($additionalInstaller) {

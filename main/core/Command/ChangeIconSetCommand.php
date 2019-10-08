@@ -56,7 +56,7 @@ class ChangeIconSetCommand extends ContainerAwareCommand
         $consoleLogger = ConsoleLogger::get($output);
         $iconSetManager->setLogger($consoleLogger);
         $iconSetManager->setActiveResourceIconSetByCname($iconSetSlug, $force);
-        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler = $this->getContainer()->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $configHandler->setParameter('resource_icon_set', $iconSetSlug);
     }
 }

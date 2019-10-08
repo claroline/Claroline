@@ -41,9 +41,9 @@ class PlannedNotificationListener
      *
      * @DI\InjectParams({
      *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "crud"          = @DI\Inject("claroline.api.crud"),
-     *     "finder"        = @DI\Inject("claroline.api.finder")
+     *     "om"            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
+     *     "crud"          = @DI\Inject("Claroline\AppBundle\API\Crud"),
+     *     "finder"        = @DI\Inject("Claroline\AppBundle\API\FinderProvider")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization

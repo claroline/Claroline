@@ -35,7 +35,7 @@ class UpdateConfigCommand extends ContainerAwareCommand
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
-        $this->getContainer()->get('claroline.plugin.installer')->setLogger($consoleLogger);
-        $this->getContainer()->get('claroline.plugin.installer')->updateAllConfigurations();
+        $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer')->setLogger($consoleLogger);
+        $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer')->updateAllConfigurations();
     }
 }

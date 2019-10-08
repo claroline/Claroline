@@ -28,7 +28,7 @@ class Updater120501 extends Updater
         $this->logger = $logger;
         $this->container = $container;
         $this->conn = $container->get('doctrine.dbal.default_connection');
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()

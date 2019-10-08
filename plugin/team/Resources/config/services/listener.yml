@@ -13,7 +13,7 @@ services:
     Claroline\TeamBundle\Listener\TeamListener:
         arguments:
             - '@security.authorization_checker'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\TeamBundle\Manager\TeamManager'
             - '@security.token_storage'
         tags:

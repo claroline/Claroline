@@ -58,7 +58,7 @@ class DebugServiceCommand extends ContainerAwareCommand implements AdminCliComma
             $manager->setLogger($consoleLogger);
         }
         $method = $input->getArgument('method_name');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         if ($input->getOption('debug_doctrine_all')) {
             $om->setLogger($consoleLogger);

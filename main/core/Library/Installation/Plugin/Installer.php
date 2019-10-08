@@ -17,14 +17,11 @@ use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
- *
- * @DI\Service("claroline.plugin.installer")
  */
 class Installer
 {
@@ -53,16 +50,6 @@ class Installer
 
     /**
      * Installer constructor.
-     *
-     * @DI\InjectParams({
-     *     "validator"     = @DI\Inject("claroline.plugin.validator"),
-     *     "recorder"      = @DI\Inject("claroline.plugin.recorder"),
-     *     "installer"     = @DI\Inject("claroline.installation.manager"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager"),
-     *     "translator"    = @DI\Inject("translator"),
-     *     "versionManager" = @DI\Inject("claroline.manager.version_manager")
-     * })
      *
      * @param Validator           $validator
      * @param Recorder            $recorder

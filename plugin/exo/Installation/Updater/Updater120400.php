@@ -17,7 +17,7 @@ class Updater120400 extends Updater
     public function postUpdate()
     {
         $this->log('Initializing option to allow edition of answers of validated steps...');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $exercises = $om->getRepository(Exercise::class)->findAll();
         $i = 0;
 

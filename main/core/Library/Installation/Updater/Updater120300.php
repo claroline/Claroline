@@ -43,7 +43,7 @@ class Updater120300 extends Updater
     {
         $this->logger = $logger;
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->cryptoManager = $container->get('claroline.manager.cryptography_manager');
         $this->migrationManager = $container->get('claroline.migration.manager');
     }

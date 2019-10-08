@@ -146,7 +146,7 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
 
     private function deleteOrphans()
     {
-        $toDelete = $this->getContainer()->get('claroline.api.finder')->fetch(Workspace::class, ['orphan' => true]);
+        $toDelete = $this->getContainer()->get('Claroline\AppBundle\API\FinderProvider')->fetch(Workspace::class, ['orphan' => true]);
         if (count($toDelete) > 0) {
             $this->confirmWorkspaceDelete($toDelete);
         }
@@ -197,7 +197,7 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
         $this->getContainer()->get('Claroline\CoreBundle\Listener\Log\LogListener')->disable();
 
         if ($this->getForce() || $continue) {
-            $om = $this->getContainer()->get('claroline.persistence.object_manager');
+            $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
             $i = 1;
 
             $om->startFlushSuite();

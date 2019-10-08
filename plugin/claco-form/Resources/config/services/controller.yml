@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -36,23 +36,26 @@ services:
 
     Claroline\ClacoFormBundle\Controller\API\EntryController:
         arguments:
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Controller\API\EntryUserController: ~
 
-    Claroline\ClacoFormBundle\Controller\API\KeywordController: ~
+    Claroline\ClacoFormBundle\Controller\API\KeywordController:
+        arguments:
+          - '@Claroline\AppBundle\API\FinderProvider'
 
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:
           - '%claroline.param.platform_generated_archive_path%'
           - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '%claroline.param.files_directory%'
           - '@claroline.manager.organization.location_manager'
           - '@request_stack'
           - '@templating'
           - '@translator'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@security.token_storage'
           - '@claroline.manager.user_manager'
           - '@Claroline\ClacoFormBundle\Serializer\EntrySerializer'

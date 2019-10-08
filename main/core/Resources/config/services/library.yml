@@ -1,0 +1,84 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\CoreBundle\Library\Configuration\PlatformDefaults:
+        tags: ['claroline.configuration']
+
+    Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler:
+        arguments:
+            - '%claroline.param.platform_options%'
+
+    Claroline\CoreBundle\Library\Configuration\LegacyParametersMapping:
+        tags: ['claroline.configuration.mapping.legacy']
+
+    Claroline\CoreBundle\Library\Installation\Refresher:
+        arguments:
+            - '@service_container'
+
+    Claroline\CoreBundle\Library\Installation\OperationExecutor:
+        arguments:
+            - '@kernel'
+            - '@claroline.installation.manager'
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.version_manager'
+
+    Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker:
+        arguments:
+            - '@router'
+            - '@claroline.symfony_yaml'
+
+    Claroline\CoreBundle\Library\Installation\Plugin\Recorder:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter'
+            - '@claroline.plugin.validator'
+
+    Claroline\CoreBundle\Library\Installation\Plugin\Loader: ~
+
+    Claroline\CoreBundle\Library\Installation\Plugin\Installer:
+        arguments:
+            - '@claroline.plugin.validator'
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
+            - '@claroline.installation.manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.plugin_manager'
+            - '@translator'
+            - '@claroline.manager.version_manager'
+
+    Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.mask_manager'
+            - '@filesystem'
+            - '@kernel'
+            - '@claroline.manager.tool_manager'
+            - '@claroline.manager.tool_mask_decoder_manager'
+            - '@claroline.manager.icon_set_manager'
+
+    Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker:
+        arguments:
+            - '@claroline.symfony_yaml'
+            - '@doctrine.orm.entity_manager'
+
+    Claroline\CoreBundle\Library\Mailing\TransportFactory:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Library\Mailing\Mailer:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%kernel.root_dir%'
+
+    Claroline\CoreBundle\Library\Mailing\Client\SwiftMailer:
+        tags: ['claroline.mailing']
+        arguments:
+            - '@mailer'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Library\Mailing\Client\Postal:
+        tags: ['claroline.mailing']
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

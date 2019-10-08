@@ -33,12 +33,12 @@ class ReservationManager
 
     /**
      * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"           = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "rootDir"      = @DI\Inject("%kernel.root_dir%"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "translator"   = @DI\Inject("translator"),
      *      "em"          = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *      "eventDispatcher" = @DI\Inject("Claroline\AppBundle\Event\StrictDispatcher")
      * })
      */
     public function __construct(

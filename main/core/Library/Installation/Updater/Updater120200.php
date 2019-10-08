@@ -46,7 +46,7 @@ class Updater120200 extends Updater
     {
         $this->logger = $logger;
 
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->translator = $container->get('translator');
 
         $this->parameters = $container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize([Options::SERIALIZE_MINIMAL]);

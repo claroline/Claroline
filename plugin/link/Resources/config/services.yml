@@ -7,12 +7,12 @@ services:
     Claroline\LinkBundle\Serializer\ShortcutSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\LinkBundle\Manager\ShortcutManager:
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\LinkBundle\Listener\Resource\ResourceListener:
         arguments:

@@ -13,15 +13,11 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Composer\Script\Event;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.installation.refresher")
- */
 class Refresher
 {
     /** @var ContainerInterface */
@@ -31,10 +27,6 @@ class Refresher
 
     /**
      * Refresher constructor.
-     *
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
      *
      * @param ContainerInterface $container
      */

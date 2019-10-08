@@ -13,14 +13,11 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Doctrine\ORM\EntityManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Parser;
 
 /**
  * Checker used to validate the configuration file of a plugin.
- *
- * @DI\Service("claroline.plugin.config_checker")
  */
 class ConfigurationChecker implements CheckerInterface
 {
@@ -34,11 +31,6 @@ class ConfigurationChecker implements CheckerInterface
 
     /**
      * ConfigurationChecker constructor.
-     *
-     * @DI\InjectParams({
-     *     "yamlParser" = @DI\Inject("claroline.symfony_yaml"),
-     *     "em"         = @DI\Inject("doctrine.orm.entity_manager")
-     * })
      *
      * @param Parser        $yamlParser
      * @param EntityManager $em

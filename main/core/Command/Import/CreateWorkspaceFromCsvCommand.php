@@ -53,7 +53,7 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
         $update = $input->getOption('update');
         $username = $input->getArgument('owner_username');
         $consoleLogger = ConsoleLogger::get($output);
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $om->setLogger($consoleLogger)->activateLog();
         $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
             ->activateLog()

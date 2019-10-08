@@ -25,7 +25,7 @@ class Migration12HomeTabCommand extends ContainerAwareCommand
           WidgetContainerConfig::class => ['name', null],
         ];
 
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         foreach ($toFilter as $class => $data) {
             $entities = $om->getRepository($class)->findAll();

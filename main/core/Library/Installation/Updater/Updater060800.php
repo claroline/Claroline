@@ -23,7 +23,7 @@ class Updater060800 extends Updater
     public function __construct(ContainerInterface $container, $logger)
     {
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->adminToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
         $this->orgaManager = $this->container->get('claroline.manager.organization.organization_manager');
         $this->orgaManager->setLogger($logger);

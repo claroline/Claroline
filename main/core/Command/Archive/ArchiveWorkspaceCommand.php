@@ -45,10 +45,10 @@ class ArchiveWorkspaceCommand extends ContainerAwareCommand
             $this->getContainer()->get('claroline.manager.workspace_manager')->archive($workspace);
 
             if (0 === $i % 500) {
-                $this->getContainer()->get('claroline.persistence.object_manager')->flush();
+                $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->flush();
             }
         }
 
-        $this->getContainer()->get('claroline.persistence.object_manager')->flush();
+        $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->flush();
     }
 }

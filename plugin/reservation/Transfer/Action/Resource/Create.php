@@ -17,7 +17,7 @@ class Create extends AbstractAction
      * Action constructor.
      *
      * @DI\InjectParams({
-     *     "crud" = @DI\Inject("claroline.api.crud")
+     *     "crud" = @DI\Inject("Claroline\AppBundle\API\Crud")
      * })
      *
      * @param Crud $crud

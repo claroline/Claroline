@@ -14,7 +14,7 @@ services:
     Claroline\AnalyticsBundle\Listener\Tool\DashboardListener:
         arguments:
             - '@claroline.event.manager'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.progression_manager'
             - '@security.token_storage'
         tags:

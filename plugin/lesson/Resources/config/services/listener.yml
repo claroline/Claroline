@@ -7,9 +7,9 @@ services:
     Icap\LessonBundle\Listener\Resource\LessonListener:
         arguments:
            - '@templating'
-           - '@claroline.persistence.object_manager'
-           - '@claroline.config.platform_config_handler'
-           - '@claroline.api.serializer'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+           - '@Claroline\AppBundle\API\SerializerProvider'
            - '@Icap\LessonBundle\Manager\ChapterManager'
         tags:
             - { name: kernel.event_listener, event: resource.icap_lesson.load, method: onLoad }

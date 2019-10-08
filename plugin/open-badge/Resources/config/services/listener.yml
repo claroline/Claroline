@@ -6,7 +6,7 @@ services:
 
     Claroline\OpenBadgeBundle\Listener\RuleListener:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@translator'
             - '@security.token_storage'
         tags:
@@ -18,7 +18,7 @@ services:
 
     Claroline\OpenBadgeBundle\Listener\ToolListener:
         arguments:
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@templating'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_badges, method: onDisplayDesktop }

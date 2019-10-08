@@ -38,7 +38,7 @@ class FileUtilities
      * @DI\InjectParams({
      *     "filesDir"       = @DI\Inject("%claroline.param.files_directory%"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"             = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "publicFilesDir" = @DI\Inject("%claroline.param.public_files_directory%"),
      *     "tokenStorage"   = @DI\Inject("security.token_storage")
      * })

@@ -36,7 +36,7 @@ class ProgressManager
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      *
      * @param ObjectManager $om
@@ -102,7 +102,7 @@ class ProgressManager
      *
      * @param User|Group $subject
      *
-     * @return null|int
+     * @return int|null
      */
     public function recomputeUserProgress($subject)
     {

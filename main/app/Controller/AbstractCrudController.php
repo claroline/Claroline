@@ -55,10 +55,10 @@ abstract class AbstractCrudController extends AbstractApiController
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
-        $this->finder = $container->get('claroline.api.finder');
-        $this->serializer = $container->get('claroline.api.serializer');
-        $this->crud = $container->get('claroline.api.crud');
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->finder = $container->get('Claroline\AppBundle\API\FinderProvider');
+        $this->serializer = $container->get('Claroline\AppBundle\API\SerializerProvider');
+        $this->crud = $container->get('Claroline\AppBundle\API\Crud');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->routerFinder = $container->get('Claroline\AppBundle\Routing\Finder');
         $this->routerDocumentator = $container->get('Claroline\AppBundle\Routing\Documentator');
         $this->options = $this->mergeOptions();

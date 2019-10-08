@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use RuntimeException;
 
 /**
@@ -20,8 +19,6 @@ use RuntimeException;
  * known by the application kernel.
  *
  * @todo Remove to this class or move it to the installation bundle
- *
- * @DI\Service("claroline.plugin.loader")
  */
 class Loader
 {

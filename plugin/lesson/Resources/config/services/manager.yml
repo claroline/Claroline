@@ -8,5 +8,5 @@ services:
         arguments:
            - '@doctrine.orm.entity_manager'
            - '@Icap\LessonBundle\Serializer\ChapterSerializer'
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@event_dispatcher'

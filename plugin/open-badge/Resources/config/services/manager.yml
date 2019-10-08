@@ -6,7 +6,7 @@ services:
     Claroline\OpenBadgeBundle\Manager\OpenBadgeManager:
         arguments:
           - '@assets.packages'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.template_manager'
           - '@claroline.manager.workspace_manager'
           - '%claroline.param.web_directory%'

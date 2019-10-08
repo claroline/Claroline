@@ -26,7 +26,7 @@ class ClaroRouter extends Router
         array $options = [],
         RequestContext $context = null
     ) {
-        $ch = $container->get('claroline.config.platform_config_handler');
+        $ch = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->host = $ch->getParameter('domain_name');
         $context = $context ?: new RequestContext();
         $sslEnabled = $ch->getParameter('ssl_enabled');

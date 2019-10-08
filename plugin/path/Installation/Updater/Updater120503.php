@@ -30,7 +30,7 @@ class Updater120503 extends Updater
         $this->log('Initializing default score to success of all paths...');
 
         /** @var ObjectManager $om */
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $paths = $om->getRepository(Path::class)->findAll();
 
         $om->startFlushSuite();

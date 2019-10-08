@@ -95,7 +95,7 @@ class CleanResourceTypeDatabaseCommand extends ContainerAwareCommand
     public function removeResources(array $types, $consoleLogger)
     {
         $databaseManager = $this->getContainer()->get('claroline.manager.database_manager');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $databaseManager->setLogger($consoleLogger);
 
         foreach ($types as $type) {

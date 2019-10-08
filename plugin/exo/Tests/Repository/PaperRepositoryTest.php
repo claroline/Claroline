@@ -61,7 +61,7 @@ class PaperRepositoryTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
+        $this->om = $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->paperGenerator = $this->client->getContainer()->get('ujm_exo.generator.paper');
         $this->persist = new Persister($this->om);
         $this->repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');

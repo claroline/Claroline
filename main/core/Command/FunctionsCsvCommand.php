@@ -109,7 +109,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $importCsvManager = $this->getContainer()->get('claroline.manager.import_csv_manager');
         $file = $input->getArgument('functions_csv_path');
         $lines = str_getcsv(file_get_contents($file), PHP_EOL);

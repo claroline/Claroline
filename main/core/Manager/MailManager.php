@@ -76,7 +76,7 @@ class MailManager
      */
     public function isMailerAvailable()
     {
-        return $this->container->get('claroline.config.platform_config_handler')->getParameter('mailer.enabled');
+        return $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler')->getParameter('mailer.enabled');
     }
 
     /**

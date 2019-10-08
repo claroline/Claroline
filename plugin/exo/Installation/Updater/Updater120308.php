@@ -20,7 +20,7 @@ class Updater120308 extends Updater
     public function postUpdate()
     {
         $this->log('Migrating boolean questions');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $boolQs = $om->getRepository(BooleanQuestion::class)->findAll();
         $i = 0;
         $total = count($boolQs);

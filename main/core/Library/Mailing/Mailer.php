@@ -13,23 +13,13 @@ namespace Claroline\CoreBundle\Library\Mailing;
 
 use Claroline\AppBundle\Logger\FileLogger;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.library.mailing.mailer")
- */
 class Mailer
 {
     private $mailer;
     private $ch;
     private $rootDir;
 
-    /**
-     * @DI\InjectParams({
-     *     "rootDir" = @DI\Inject("%kernel.root_dir%"),
-     *     "ch"      = @DI\Inject("claroline.config.platform_config_handler")
-     * })
-     */
     public function __construct(
         PlatformConfigurationHandler $ch,
         $rootDir

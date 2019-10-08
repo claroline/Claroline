@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -37,7 +37,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\Log\LogConnectController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@claroline.manager.log_connect'
           - '@claroline.manager.tool_manager'
 
@@ -71,10 +71,10 @@ services:
     Claroline\CoreBundle\Controller\APINew\Tool\HomeController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
-          - '@claroline.api.finder'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.lock_manager'
           - '@Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer'
 
@@ -90,8 +90,8 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\User\ProfileController:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
     Claroline\CoreBundle\Controller\APINew\User\RoleController: ~
@@ -99,7 +99,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\User\UserController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.mail_manager'
 
@@ -108,10 +108,10 @@ services:
     Claroline\CoreBundle\Controller\APINew\Workspace\RegistrationController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.serializer'
-          - '@claroline.api.finder'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.workspace_user_queue_manager'
 
@@ -136,8 +136,8 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\DataSourceController:
         arguments:
-          - '@claroline.event.event_dispatcher'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.data_source'
 
     Claroline\CoreBundle\Controller\APINew\FileController: ~
@@ -152,13 +152,13 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\ObjectLockController:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.lock_manager'
 
     Claroline\CoreBundle\Controller\APINew\ParametersController:
         arguments:
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.analytics_manager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
@@ -168,7 +168,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\Routing\Finder'
           - '@Claroline\AppBundle\Routing\Documentator'
-          - '@claroline.api.schema'
+          - '@Claroline\AppBundle\API\SchemaProvider'
           - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
           - '%kernel.root_dir%'
 
@@ -176,18 +176,18 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\TransferController:
         arguments:
-          - '@claroline.api.transfer'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\TransferProvider'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@router'
           - '%claroline.api.core_schema.dir%'
           - '@claroline.utilities.file'
-          - '@claroline.api.crud'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.async.command'
 
     Claroline\CoreBundle\Controller\APINew\WidgetController:
         arguments:
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.widget_manager'
           - '@claroline.manager.data_source'
 
@@ -218,13 +218,13 @@ services:
           - '@request_stack'
           - '@claroline.manager.user_manager'
           - '@security.encoder_factory'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
           - '@claroline.authenticator'
           - '@claroline.manager.mail_manager'
           - '@router'
-          - '@claroline.config.platform_config_handler'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\DesktopController:
         tags: ['security.secure_service']
@@ -232,19 +232,19 @@ services:
           - '@security.authorization_checker'
           - '@event_dispatcher'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.tool_manager'
 
     Claroline\CoreBundle\Controller\FileController:
         arguments:
           - '@session'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.files_directory%'
           - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
           - '@claroline.manager.resource_manager'
           - '@claroline.manager.role_manager'
           - '@claroline.utilities.file'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@security.token_storage'
           - '@security.authorization_checker'
 
@@ -252,29 +252,29 @@ services:
         arguments:
           - '@security.token_storage'
           - '@templating'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@claroline.security.utilities'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.resource_manager'
           - '@claroline.manager.resource_action'
           - '@claroline.manager.resource_restrictions'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
           - '@claroline.event.manager'
           - '@claroline.manager.resource_evaluation_manager'
 
     Claroline\CoreBundle\Controller\SearchController:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\CoreBundle\Controller\WorkspaceController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@event_dispatcher'
           - '@security.token_storage'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.tool_manager'
           - '@translator'
           - '@claroline.security.utilities'

@@ -44,7 +44,7 @@ class ScormController extends AbstractApiController
     /**
      * @DI\InjectParams({
      *     "authorization"         = @DI\Inject("security.authorization_checker"),
-     *     "finder"                = @DI\Inject("claroline.api.finder"),
+     *     "finder"                = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
      *     "scormManager"          = @DI\Inject("claroline.manager.scorm_manager"),
      *     "scoTrackingSerializer" = @DI\Inject("claroline.serializer.scorm.sco.tracking"),
      *     "translator"            = @DI\Inject("translator")

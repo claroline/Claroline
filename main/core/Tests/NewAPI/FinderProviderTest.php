@@ -16,7 +16,7 @@ class FinderProviderTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->provider = $this->client->getContainer()->get('claroline.api.finder');
+        $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\FinderProvider');
         $this->reader = $this->client->getContainer()->get('annotation_reader');
         $tokenStorage = $this->client->getContainer()->get('security.token_storage');
         $token = new AnonymousToken('key', 'anon.');
@@ -101,7 +101,7 @@ class FinderProviderTest extends TransactionalTestCase
     public function getHandledClassesProvider()
     {
         parent::setUp();
-        $provider = $this->client->getContainer()->get('claroline.api.finder');
+        $provider = $this->client->getContainer()->get('Claroline\AppBundle\API\FinderProvider');
 
         $finders = array_filter($provider->all(), function ($finder) {
             return method_exists($finder, 'getFilters') ? count($finder->getFilters()) > 0 : false;

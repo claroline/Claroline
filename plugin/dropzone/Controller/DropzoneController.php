@@ -43,7 +43,7 @@ class DropzoneController extends DropzoneBaseController
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $platformConfigHandler = $this->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $dateFormat = $this->get('translator')->trans('date_form_format', [], 'platform');
         $lang = $platformConfigHandler->getParameter('locale_language');
         $form = $this->createForm(
@@ -424,7 +424,7 @@ class DropzoneController extends DropzoneBaseController
             $view = 'IcapDropzoneBundle:drop:drops_download_between_dates_modal.html.twig';
         }
 
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $platformConfigHandler = $this->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $form = $this->createForm(DropsDownloadBetweenDatesType, $dropzone, ['language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_datepicker_format', [], 'platform')]);
 
         return $this->render($view, [

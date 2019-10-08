@@ -22,7 +22,7 @@ class Updater100600 extends Updater
     public function __construct(ContainerInterface $container)
     {
         $this->manager = $container->get('Claroline\ClacoFormBundle\Manager\ClacoFormManager');
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()

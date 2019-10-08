@@ -20,7 +20,7 @@ class Updater100000 extends Updater
 
     public function __construct(ContainerInterface $container)
     {
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()

@@ -26,7 +26,7 @@ class Updater120406 extends Updater
         $this->log('Convert boolean papers...');
 
         /** @var ObjectManager $om */
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         $papers = $om
             ->createQuery('

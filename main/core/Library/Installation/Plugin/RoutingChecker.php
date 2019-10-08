@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\PluginBundleInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -21,8 +20,6 @@ use Symfony\Component\Yaml\Parser;
  * Checker used to validate the routing of a plugin.
  *
  * @todo Remove or rewrite this checker (multiple routing formats, prefix checking, etc.)
- *
- * @DI\Service("claroline.plugin.routing_checker")
  */
 class RoutingChecker implements CheckerInterface
 {
@@ -40,11 +37,6 @@ class RoutingChecker implements CheckerInterface
     private $errors;
 
     /**
-     * @DI\InjectParams({
-     *     "router"     = @DI\Inject("router"),
-     *     "yamlParser" = @DI\Inject("claroline.symfony_yaml")
-     * })
-     *
      * Constructor.
      *
      * @param Router                         $router

@@ -830,7 +830,7 @@ class RoleManager
 
         if ($role->getWorkspace()) {
             $maxUsers = $role->getWorkspace()->getMaxUsers();
-            $countByWorkspace = $this->container->get('claroline.api.finder')->fetch(
+            $countByWorkspace = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch(
               User::class,
               ['workspace' => $role->getWorkspace()->getUuid()],
               null,
@@ -1252,7 +1252,7 @@ class RoleManager
             $creator->addRole($manager);
         }
 
-        $roles = $this->container->get('claroline.api.finder')->fetch('Claroline\CoreBundle\Entity\Role', ['name' => $workspace->getUuid()]);
+        $roles = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch('Claroline\CoreBundle\Entity\Role', ['name' => $workspace->getUuid()]);
 
         foreach ($roles as $role) {
             if (!$role->getWorkspace()) {

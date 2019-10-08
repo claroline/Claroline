@@ -21,11 +21,11 @@ services:
             - '@UJM\ExoBundle\Manager\ExerciseManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\DocimologyManager'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.resource_evaluation_manager'
             - '@templating'
             - '@security.token_storage'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.ujm_exercise.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.ujm_exercise.delete, method: onDelete }

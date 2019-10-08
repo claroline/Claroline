@@ -17,7 +17,7 @@ class Updater100600 extends Updater
     {
         $this->log('Updating tags id to uuids...');
         //switch the ids from the tags to the uuids
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $repo = $om->getRepository('Claroline\TagBundle\Entity\TaggedObject');
         $taggedObjects = $repo->findBy(['objectClass' => 'UJM\ExoBundle\Entity\Item\Item']);
         $i = 0;

@@ -145,7 +145,7 @@ class WorkspaceManager
             }
         }
 
-        $ch = $this->container->get('claroline.config.platform_config_handler');
+        $ch = $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
@@ -183,7 +183,7 @@ class WorkspaceManager
         }
 
         $tabs = $this->om->getRepository(HomeTab::class)->findBy(['workspace' => $workspace]);
-        $crud = $this->container->get('claroline.api.crud');
+        $crud = $this->container->get('Claroline\AppBundle\API\Crud');
 
         foreach ($tabs as $tab) {
             $crud->delete($tab);
@@ -633,7 +633,7 @@ class WorkspaceManager
     public function copyFromCode(Workspace $workspace, $code)
     {
         if ($this->logger) {
-            $this->container->get('claroline.api.serializer')->setLogger($this->logger);
+            $this->container->get('Claroline\AppBundle\API\SerializerProvider')->setLogger($this->logger);
         }
 
         $newWorkspace = new Workspace();
@@ -888,7 +888,7 @@ class WorkspaceManager
     public function setWorkspacesFlag()
     {
         /** @var Workspace[] $workspaces */
-        $workspaces = $this->container->get('claroline.api.finder')->fetch(Workspace::class, [
+        $workspaces = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch(Workspace::class, [
             'name' => 'Espace personnel',
             'meta.personal' => false,
             //maybe add personal user here

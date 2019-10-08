@@ -20,7 +20,7 @@ class Updater070100 extends Updater
 
     public function postUpdate()
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         $toPublishPaths = $om->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths(true);
 

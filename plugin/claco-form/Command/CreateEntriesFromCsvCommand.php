@@ -44,7 +44,7 @@ class CreateEntriesFromCsvCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $userRepo = $om->getRepository(User::class);
         $resourceNodeRepo = $om->getRepository(ResourceNode::class);

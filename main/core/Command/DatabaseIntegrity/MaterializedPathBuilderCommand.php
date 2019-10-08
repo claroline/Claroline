@@ -28,7 +28,7 @@ class MaterializedPathBuilderCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $total = $om->count(ResourceNode::class);
         $output->writeln('Building resource paths ('.$total.')');
 

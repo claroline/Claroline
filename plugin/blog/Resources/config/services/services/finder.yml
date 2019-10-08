@@ -10,13 +10,13 @@ services:
             calls:
                 - method: setObjectManager
                   arguments:
-                     - '@claroline.persistence.object_manager'
+                     - '@Claroline\AppBundle\Persistence\ObjectManager'
                 - method: setEntityManager
                   arguments:
                      - '@doctrine.orm.entity_manager'
                 - method: setEventDispatcher
                   arguments:
-                     - '@claroline.event.event_dispatcher'
+                     - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Icap\BlogBundle\Finder\CommentFinder: ~
 

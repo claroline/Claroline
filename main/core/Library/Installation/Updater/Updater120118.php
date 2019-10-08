@@ -231,6 +231,6 @@ class Updater120118 extends Updater
             return $parameters[$name];
         }
 
-        return $this->container->get('claroline.config.platform_config_handler')->getParameter($name);
+        return $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler')->getParameter($name);
     }
 }

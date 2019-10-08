@@ -33,7 +33,7 @@ class MultipleIdsConverter implements ParamConverterInterface
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      */
     public function __construct(ObjectManager $om)

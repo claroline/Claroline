@@ -86,7 +86,7 @@ class BlogListener
           'authors' => $postManager->getAuthors($blog),
           'archives' => $postManager->getArchives($blog),
           'tags' => $blogManager->getTags($blog, $postsData),
-          'blog' => $this->container->get('claroline.api.serializer')->serialize($blog),
+          'blog' => $this->container->get('Claroline\AppBundle\API\SerializerProvider')->serialize($blog),
         ]);
 
         $event->stopPropagation();
@@ -122,7 +122,7 @@ class BlogListener
     {
         $data = $event->getData();
         $blog = $event->getObject();
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         foreach ($data['_data']['posts'] as $postData) {
             /** @var Post $post */
@@ -175,7 +175,7 @@ class BlogListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $entityManager = $this->container->get('claroline.persistence.object_manager');
+        $entityManager = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $postManager = $this->container->get('Icap\BlogBundle\Manager\PostManager');
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
@@ -232,7 +232,7 @@ class BlogListener
      */
     public function onGenerateResourceTracking(GenericDataEvent $event)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceEvalManager = $this->container->get('claroline.manager.resource_evaluation_manager');
         $data = $event->getData();
         $node = $data['resourceNode'];

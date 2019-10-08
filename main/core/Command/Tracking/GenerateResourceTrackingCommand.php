@@ -48,7 +48,7 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<comment>Generating resource trackings...</comment>');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $dispatcher = $this->getContainer()->get('event_dispatcher');
         $userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -101,7 +101,7 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
                     $output->writeln('        --------------------');
                     ++$i;
 
-                    if ($i % 200 === 0) {
+                    if (0 === $i % 200) {
                         $om->forceFlush();
                         $output->writeln('Processed');
                     }

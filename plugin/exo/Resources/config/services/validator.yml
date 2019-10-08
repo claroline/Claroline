@@ -37,7 +37,7 @@ services:
 
     UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerValidator:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@ujm_exo.collection.item_definitions'
 
     UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator: ~

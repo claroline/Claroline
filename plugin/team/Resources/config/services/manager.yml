@@ -8,8 +8,8 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@claroline.serializer.team'
             - '@Claroline\TeamBundle\Manager\TeamManager'
             - '@claroline.serializer.team.parameters'
@@ -21,7 +21,7 @@ services:
 
     Claroline\TeamBundle\Manager\TeamManager:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.manager.role_manager'

@@ -77,7 +77,7 @@ class ScormManager
      *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
      *     "fileSystem"            = @DI\Inject("filesystem"),
      *     "filesDir"              = @DI\Inject("%claroline.param.files_directory%"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"                    = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "resourceEvalManager"   = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
      *     "scormLib"              = @DI\Inject("claroline.library.scorm"),

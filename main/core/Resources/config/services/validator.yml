@@ -10,25 +10,25 @@ services:
 
   Claroline\CoreBundle\API\Validator\WorkspaceValidator:
       arguments:
-        - '@claroline.persistence.object_manager'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
 
   Claroline\CoreBundle\API\Validator\UserValidator:
       arguments:
-        - '@claroline.persistence.object_manager'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
         - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
   Claroline\CoreBundle\API\Validator\GroupValidator:
       arguments:
-        - '@claroline.persistence.object_manager'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
 
   Claroline\CoreBundle\API\Validator\Resource\ResourceNodeValidator:
       arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
   Claroline\CoreBundle\Validator\Constraints\UsernameValidator:
       arguments:
-          - '@claroline.config.platform_config_handler'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
 
   username_validator:
@@ -37,8 +37,8 @@ services:
 
   Claroline\CoreBundle\Validator\Constraints\UserAdministrativeCodeValidator:
       arguments:
-          - '@claroline.config.platform_config_handler'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
 
   user_administrative_code_validator:

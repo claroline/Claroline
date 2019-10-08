@@ -24,7 +24,7 @@ class ClientListener
      *
      * @DI\InjectParams({
      *     "templating"    = @DI\Inject("templating"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler")
      * })
      *
      * @param TwigEngine                   $templating

@@ -6,14 +6,14 @@ services:
 
     Claroline\AnnouncementBundle\Crud\AnnouncementAggregateCrud:
         arguments:
-            - '@claroline.api.crud'
+            - '@Claroline\AppBundle\API\Crud'
         tags:
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_announcementbundle_entity_announcementaggregate, method: preDelete }
 
     Claroline\AnnouncementBundle\Crud\AnnouncementCrud:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.event.event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_announcementbundle_entity_announcement, method: preCreate }

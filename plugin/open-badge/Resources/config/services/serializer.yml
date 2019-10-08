@@ -21,7 +21,7 @@ services:
         arguments:
             - '@claroline.utilities.file'
             - '@router'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.organization.organization_manager'
             - '@Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
@@ -67,14 +67,14 @@ services:
     Claroline\OpenBadgeBundle\Serializer\ProfileSerializer:
         arguments:
             - '@router'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\OpenBadgeBundle\Serializer\RevocationListSerializer: ~
 
     Claroline\OpenBadgeBundle\Serializer\RuleSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\OpenBadgeBundle\Serializer\SignedBadgeSerializer:
         tags: [claroline.serializer]

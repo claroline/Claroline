@@ -55,7 +55,7 @@ class FileController extends AbstractCrudController
         $handler = $request->get('handler');
         $objects = [];
         /** @var StrictDispatcher */
-        $dispatcher = $this->container->get('claroline.event.event_dispatcher');
+        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
 
         foreach ($files as $file) {
             $object = $this->crud->create(

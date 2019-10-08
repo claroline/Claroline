@@ -6,7 +6,7 @@ services:
 
     Icap\BlogBundle\Listener\DataSource\BlogPostsSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.blog_posts.load, method: getData }
 

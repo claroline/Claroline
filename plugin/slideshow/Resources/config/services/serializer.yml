@@ -7,5 +7,5 @@ services:
     Claroline\SlideshowBundle\Serializer\SlideshowSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

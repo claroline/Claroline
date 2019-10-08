@@ -6,4 +6,4 @@ services:
 
     Claroline\VideoPlayerBundle\Manager\VideoPlayerManager:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -9,7 +9,7 @@ services:
 
     Claroline\RssBundle\Listener\RssListener:
         arguments:
-           - '@claroline.api.serializer'
+           - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.rss_feed.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.rss_feed.delete, method: onDelete }

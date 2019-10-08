@@ -59,7 +59,7 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
             'resource' => Document::DOCUMENT_TYPE_RESOURCE,
         ];
 
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $filesDir = $this->getContainer()->getParameter('claroline.param.files_directory');
         $fileSystem = $this->getContainer()->get('filesystem');

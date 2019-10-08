@@ -23,7 +23,7 @@ class DirectoryIntegrityCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-        $om = $container->get('claroline.persistence.object_manager');
+        $om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         if ($code = $input->getOption('workspace')) {
             $workspace = $om->getRepository(Workspace::class)->findOneByCode($code);

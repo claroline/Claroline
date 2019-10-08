@@ -20,7 +20,7 @@ class Updater500002 extends Updater
 
     public function __construct(ContainerInterface $container)
     {
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()
@@ -40,7 +40,7 @@ class Updater500002 extends Updater
 
     private function updateExtension($type, $name, Plugin $plugin)
     {
-        $class = $type === 'tool' ?
+        $class = 'tool' === $type ?
             'Claroline\CoreBundle\Entity\Tool\Tool' :
             'Claroline\CoreBundle\Entity\Widget\Widget';
 

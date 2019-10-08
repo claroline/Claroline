@@ -150,7 +150,7 @@ class ResourceNodeController extends AbstractCrudController
         $publicFiles = [];
         $resources = [];
         /** @var StrictDispatcher */
-        $dispatcher = $this->container->get('claroline.event.event_dispatcher');
+        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
 
         foreach ($files as $file) {
             $publicFile = $this->crud->create(

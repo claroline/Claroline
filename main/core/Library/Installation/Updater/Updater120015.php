@@ -17,7 +17,7 @@ class Updater120015 extends Updater
     {
         $this->container = $container;
         $this->logger = $logger;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->conn = $container->get('doctrine.dbal.default_connection');
     }
 
@@ -43,7 +43,7 @@ class Updater120015 extends Updater
             'claroline_chat_room',
             'claroline_big_blue_button',
             'claroline_result',
-            'ujm_lti_resource'
+            'ujm_lti_resource',
         ];
 
         $typeList = implode(',', array_map(function ($type) {

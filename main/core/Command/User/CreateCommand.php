@@ -69,8 +69,8 @@ class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
             $roleName = PlatformRoles::USER;
         }
 
-        $crud = $this->getContainer()->get('claroline.api.crud');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $crud = $this->getContainer()->get('Claroline\AppBundle\API\Crud');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         $object = $crud->create(
             UserEntity::class,

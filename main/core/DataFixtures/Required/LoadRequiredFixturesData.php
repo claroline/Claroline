@@ -44,7 +44,7 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
     public function load(ObjectManager $manager)
     {
         $fixturesDir = $this->getDir().DIRECTORY_SEPARATOR.'Data';
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($fixturesDir),

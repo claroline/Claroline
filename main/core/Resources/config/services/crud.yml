@@ -13,7 +13,7 @@ services:
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.role_manager'
             - '@claroline.manager.organization.organization_manager'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: preDelete }
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_workspace_workspace, method: preCreate }
@@ -34,7 +34,7 @@ services:
 
     Claroline\CoreBundle\API\Crud\User\RoleCrud:
         arguments:
-            - '@claroline.event.event_dispatcher'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@doctrine.dbal.default_connection'
         tags:
           - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_role, method: preCreate }
@@ -44,9 +44,9 @@ services:
     Claroline\CoreBundle\API\Crud\User\OrganizationCrud:
         arguments:
             - '@security.token_storage'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.cryptography_manager'
-            - '@claroline.api.crud'
+            - '@Claroline\AppBundle\API\Crud'
         tags:
           - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_organization_organization, method: preCreate }
           - { name: kernel.event_listener, event: crud_post_create_object_claroline_corebundle_entity_organization_organization, method: postCreate }
@@ -67,7 +67,7 @@ services:
 
     Claroline\CoreBundle\API\Crud\Home\WidgetInstanceCrud:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
           - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_widget_widgetinstance, method: preDelete }
 
@@ -77,7 +77,7 @@ services:
 
     Claroline\CoreBundle\API\Crud\Home\WidgetContainerCrud:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.crud.widget_instance'
         tags:
           - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_widget_widgetcontainer, method: preDelete }
@@ -88,7 +88,7 @@ services:
 
     Claroline\CoreBundle\API\Crud\Home\HomeTabCrud:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.crud.widget_container'
         tags:
           - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_tab_hometab, method: preDelete }
@@ -101,7 +101,7 @@ services:
         arguments:
             - '%claroline.param.files_directory%'
             - '@filesystem'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%claroline.param.public_files_directory%'
             - '@security.token_storage'
             - '@claroline.utilities.file'

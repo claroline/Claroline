@@ -21,14 +21,14 @@ class Updater070000 extends Updater
     public function __construct(ContainerInterface $container, $logger)
     {
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->logger = $logger;
     }
 
     public function postUpdate()
     {
         $pluginRepo = $this->om->getRepository('ClarolineCoreBundle:Plugin');
-        $plugin = $pluginRepo->findOneBy(array('vendorName' => 'Claroline', 'bundleName' => 'VideoJsBundle'));
+        $plugin = $pluginRepo->findOneBy(['vendorName' => 'Claroline', 'bundleName' => 'VideoJsBundle']);
 
         if ($plugin) {
             $this->log('Removing VideoJsBundle plugin from database...');

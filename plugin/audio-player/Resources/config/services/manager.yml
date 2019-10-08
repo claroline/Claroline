@@ -6,5 +6,5 @@ services:
 
     Claroline\AudioPlayerBundle\Manager\AudioPlayerManager:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer'

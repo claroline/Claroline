@@ -7,7 +7,7 @@ services:
     Icap\WikiBundle\Listener\Resource\WikiListener:
        arguments:
           - '@security.token_storage'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Icap\WikiBundle\Serializer\WikiSerializer'
           - '@Icap\WikiBundle\Manager\WikiManager'
           - '@Icap\WikiBundle\Manager\SectionManager'

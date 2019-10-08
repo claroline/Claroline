@@ -13,7 +13,7 @@ class TransferProviderTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->provider = $this->client->getContainer()->get('claroline.api.transfer');
+        $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\TransferProvider');
     }
 
     /**

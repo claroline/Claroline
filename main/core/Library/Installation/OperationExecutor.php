@@ -18,15 +18,12 @@ use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * @DI\Service("claroline.installation.operation_executor")
- *
  * Installs/updates platform bundles based on the comparison of
  * previous and current local composer repositories (i.e. the file
  * "vendor/composer/installed.json" and its backup in "app/config").
@@ -43,15 +40,6 @@ class OperationExecutor
     private $detector;
     private $om;
 
-    /**
-     * @DI\InjectParams({
-     *     "kernel"             = @DI\Inject("kernel"),
-     *     "baseInstaller"      = @DI\Inject("claroline.installation.manager"),
-     *     "pluginInstaller"    = @DI\Inject("claroline.plugin.installer"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "versionManager"     = @DI\Inject("claroline.manager.version_manager")
-     * })
-     */
     public function __construct(
         KernelInterface $kernel,
         InstallationManager $baseInstaller,

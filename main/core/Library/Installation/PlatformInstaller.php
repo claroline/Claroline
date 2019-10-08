@@ -43,10 +43,10 @@ class PlatformInstaller
 
     /**
      * @DI\InjectParams({
-     *     "opExecutor"         = @DI\Inject("claroline.installation.operation_executor"),
+     *     "opExecutor"         = @DI\Inject("Claroline\CoreBundle\Library\Installation\OperationExecutor"),
      *     "baseInstaller"      = @DI\Inject("claroline.installation.manager"),
-     *     "pluginInstaller"    = @DI\Inject("claroline.plugin.installer"),
-     *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
+     *     "pluginInstaller"    = @DI\Inject("Claroline\CoreBundle\Library\Installation\Plugin\Installer"),
+     *     "refresher"          = @DI\Inject("Claroline\CoreBundle\Library\Installation\Refresher"),
      *     "container"          = @DI\Inject("service_container")
      * })
      */

@@ -66,7 +66,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         if (version_compare($currentVersion, '9.0.0', '<')) {
             $updater = new Updater090000(
                 $this->container->get('doctrine.dbal.default_connection'),
-                $this->container->get('claroline.persistence.object_manager'),
+                $this->container->get('Claroline\AppBundle\Persistence\ObjectManager'),
                 $this->container->get('ujm_exo.serializer.exercise'),
                 $this->container->get('ujm_exo.serializer.step'),
                 $this->container->get('ujm_exo.serializer.item')

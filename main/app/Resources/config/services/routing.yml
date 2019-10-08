@@ -12,8 +12,8 @@ services:
     Claroline\AppBundle\Routing\Documentator:
         public: true
         arguments:
-            - '@claroline.api.finder'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'
             - '@annotation_reader'
             - '@Claroline\AppBundle\Routing\Finder'

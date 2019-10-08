@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -34,7 +34,7 @@ services:
         arguments:
           - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
           - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
-          - '@claroline.api.crud'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@security.authorization_checker'

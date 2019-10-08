@@ -52,9 +52,9 @@ class DropController
      *
      * @DI\InjectParams({
      *     "apiManager" = @DI\Inject("claroline.manager.api_manager"),
-     *     "finder"     = @DI\Inject("claroline.api.finder"),
+     *     "finder"     = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
      *     "manager"    = @DI\Inject("claroline.manager.dropzone_manager"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      *
      * @param ApiManager      $apiManager

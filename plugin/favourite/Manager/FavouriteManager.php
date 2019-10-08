@@ -22,7 +22,7 @@ class FavouriteManager
      * FavouriteManager constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      * })
      *
      * @param ObjectManager $om

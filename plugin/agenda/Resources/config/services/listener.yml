@@ -11,7 +11,7 @@ services:
 
     Claroline\AgendaBundle\Listener\DataSource\AgendaSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.events.load, method: getEventsData }

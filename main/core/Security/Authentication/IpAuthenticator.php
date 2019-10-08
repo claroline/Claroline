@@ -29,7 +29,7 @@ class IpAuthenticator implements SimplePreAuthenticatorInterface
      * IpAuthenticator constructor.
      *
      * @DI\InjectParams({
-     *     "config"           = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "config"           = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
      *     "whiteListManager" = @DI\Inject("claroline.manager.ip_white_list_manager")
      * })
      *

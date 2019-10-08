@@ -7,7 +7,7 @@ services:
     Claroline\VideoPlayerBundle\Serializer\TrackSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@claroline.manager.file_manager'
 
     claroline.serializer.video.track:

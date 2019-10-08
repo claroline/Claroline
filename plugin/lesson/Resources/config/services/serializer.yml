@@ -8,10 +8,10 @@ services:
         tags: [claroline.serializer]
         public: false
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Icap\LessonBundle\Serializer\LessonSerializer:
         tags: [claroline.serializer]
         public: false
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'

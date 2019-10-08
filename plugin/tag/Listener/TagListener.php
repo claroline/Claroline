@@ -33,7 +33,7 @@ class TagListener
      * TagListener constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "tagManager" = @DI\Inject("claroline.manager.tag_manager")
      * })
      *

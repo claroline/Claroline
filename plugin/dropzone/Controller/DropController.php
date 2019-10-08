@@ -39,7 +39,7 @@ class DropController extends DropzoneBaseController
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "eventDispatcher" = @DI\Inject("Claroline\AppBundle\Event\StrictDispatcher"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
      */

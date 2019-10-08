@@ -31,7 +31,7 @@ class Updater100000 extends Updater
     {
         $this->container = $container;
         $this->logger = $logger;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->connection = $this->container->get('doctrine.dbal.default_connection');
     }
 
@@ -110,8 +110,8 @@ class Updater100000 extends Updater
         $this->om->flush();
 
         $this->log('Building new menus and masks');
-        $this->container->get('claroline.plugin.installer')->setLogger($this->logger);
-        $this->container->get('claroline.plugin.installer')->updateAllConfigurations();
+        $this->container->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer')->setLogger($this->logger);
+        $this->container->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer')->updateAllConfigurations();
         $this->log('On older plateforms, resource permissions might have changed !');
     }
 
@@ -164,7 +164,7 @@ class Updater100000 extends Updater
     {
         $logos = new \DirectoryIterator($this->container->getParameter('claroline.param.logos_directory'));
         $logoService = $this->container->get('claroline.common.logo_service');
-        $ch = $this->container->get('claroline.config.platform_config_handler');
+        $ch = $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
 
         foreach ($logos as $logo) {
             if ($logo->isFile()) {

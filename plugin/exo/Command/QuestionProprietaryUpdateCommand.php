@@ -46,7 +46,7 @@ class QuestionProprietaryUpdateCommand extends ContainerAwareCommand
         $id = $input->getArgument('question_id');
         $container = $this->getContainer();
         $helper = $this->getHelper('question');
-        $om = $container->get('claroline.persistence.object_manager');
+        $om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $newOwner = $om->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($username);
         $item = $om->getRepository('UJMExoBundle:Item\Item')->find($id);
         $all = $input->getOption('all');

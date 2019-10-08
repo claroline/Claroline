@@ -30,7 +30,7 @@ class LoadAdminHomeData implements RequiredFixture
         $this->container = $container;
 
         $this->translator = $container->get('translator');
-        $this->serializer = $container->get('claroline.api.serializer');
+        $this->serializer = $container->get('Claroline\AppBundle\API\SerializerProvider');
     }
 
     public function load(ObjectManager $manager)

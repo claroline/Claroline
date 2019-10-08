@@ -7,7 +7,7 @@ services:
     Claroline\TeamBundle\Serializer\TeamSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@claroline.manager.resource_manager'
            - '@Claroline\TeamBundle\Manager\TeamManager'
            - '@security.token_storage'
@@ -22,7 +22,7 @@ services:
     Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.serializer.team.parameters:
          alias: Claroline\TeamBundle\Serializer\WorkspaceTeamParametersSerializer

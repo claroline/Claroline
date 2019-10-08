@@ -12,7 +12,7 @@ services:
             - '@filesystem'
             - '%claroline.param.files_directory%'
             - '@claroline.manager.message_manager'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
             - '@security.token_storage'
             - '@translator'

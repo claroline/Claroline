@@ -9,7 +9,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Icap\BlogBundle\Serializer\CommentSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
@@ -18,7 +18,7 @@ services:
         public: true
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Icap\BlogBundle\Serializer\BlogSerializer:
         tags: [claroline.serializer]

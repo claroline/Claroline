@@ -59,7 +59,7 @@ class OauthManager
      * @DI\InjectParams({
      *      "entityManager"         = @DI\Inject("doctrine.orm.entity_manager"),
      *      "cacheManager"          = @DI\Inject("claroline.manager.cache_manager"),
-     *      "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *      "platformConfigHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
      *      "tokenStorage"          = @DI\Inject("security.token_storage"),
      *      "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *      "registrationManager"   = @DI\Inject("claroline.manager.registration_manager"),

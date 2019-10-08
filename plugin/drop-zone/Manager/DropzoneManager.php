@@ -98,14 +98,14 @@ class DropzoneManager
      * DropzoneManager constructor.
      *
      * @DI\InjectParams({
-     *     "crud"                   = @DI\Inject("claroline.api.crud"),
-     *     "serializer"             = @DI\Inject("claroline.api.serializer"),
+     *     "crud"                   = @DI\Inject("Claroline\AppBundle\API\Crud"),
+     *     "serializer"             = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
      *     "fileSystem"             = @DI\Inject("filesystem"),
      *     "filesDir"               = @DI\Inject("%claroline.param.files_directory%"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"                     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "resourceEvalManager"    = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "archiveDir"             = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
-     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "configHandler"          = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
      *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager")
      * })

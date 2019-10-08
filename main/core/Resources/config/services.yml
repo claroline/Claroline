@@ -12,6 +12,7 @@ imports:
     - { resource: services/voter.yml }
     - { resource: services/controller.yml }
     - { resource: services/listener.yml }
+    - { resource: services/library.yml }
 
 services:
 
@@ -22,8 +23,8 @@ services:
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
         arguments:
-            - routing: "@claroline.plugin.routing_checker"
-              config: "@claroline.plugin.config_checker"
+            - routing: '@Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker'
+              config: '@Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker'
 
     # vendor classes used as service arguments
     claroline.symfony_yaml:

@@ -56,7 +56,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
         file_put_contents($tmp, $file);
         $file = new File($tmp);
 
-        $object = $this->getContainer()->get('claroline.api.crud')->create(
+        $object = $this->getContainer()->get('Claroline\AppBundle\API\Crud')->create(
             PublicFile::class,
             [],
             ['file' => $file]
@@ -69,7 +69,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
 
         $data = json_decode($json, true);
         $data['code'] = $input->getArgument('code');
-        $data['archive'] = $this->getContainer()->get('claroline.api.serializer')->serialize($object);
+        $data['archive'] = $this->getContainer()->get('Claroline\AppBundle\API\SerializerProvider')->serialize($object);
         $workspace = new Workspace();
         $workspace->setCode($data['code']);
 

@@ -24,7 +24,7 @@ class Updater120000 extends Updater
     {
         $this->container = $container;
         $this->logger = $logger;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()

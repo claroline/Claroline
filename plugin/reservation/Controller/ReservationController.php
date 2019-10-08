@@ -36,7 +36,7 @@ class ReservationController extends Controller
 
     /**
      * @DI\InjectParams({
-     *      "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *      "om"          = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *      "router"      = @DI\Inject("router"),
      *      "request"     = @DI\Inject("request_stack"),
      *      "agendaManager" = @DI\Inject("Claroline\AgendaBundle\Manager\AgendaManager"),

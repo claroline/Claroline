@@ -34,7 +34,7 @@ class RichTextExporter
      * @param ResourceManager $resourceManager
      *
      * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"              = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "resourceManager" = @Di\Inject("claroline.manager.resource_manager")
      * })
      */

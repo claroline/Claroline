@@ -97,7 +97,7 @@ class RemoveUsersCommand extends ContainerAwareCommand
 
         $helper = $this->getHelper('question');
         //get excluding roles
-        $roles = $this->getContainer()->get('claroline.persistence.object_manager')
+        $roles = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')
             ->getRepository('ClarolineCoreBundle:Role')
             ->findAllPlatformRoles();
         $roleNames = array_map(function ($role) {
@@ -147,7 +147,7 @@ class RemoveUsersCommand extends ContainerAwareCommand
         }
 
         if ($this->getForce() || $continue) {
-            $om = $this->getContainer()->get('claroline.persistence.object_manager');
+            $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
             $om->startFlushSuite();
 
             foreach ($usersToDelete as $user) {

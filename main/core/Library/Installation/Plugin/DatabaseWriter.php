@@ -33,7 +33,6 @@ use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\PluginRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
@@ -42,8 +41,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * This class is used to save/delete a plugin and its possible dependencies (like
  * custom resource types) in the database.
- *
- * @DI\Service("claroline.plugin.recorder_database_writer")
  *
  * @todo break me into multiple writers (one for each config section).
  */
@@ -65,16 +62,6 @@ class DatabaseWriter
     /**
      * Constructor.
      *
-     * @DI\InjectParams({
-     *     "em"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mm"              = @DI\Inject("claroline.manager.mask_manager"),
-     *     "fileSystem"      = @DI\Inject("filesystem"),
-     *     "kernel"          = @DI\Inject("kernel"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
-     *     "iconSetManager"  = @DI\Inject("claroline.manager.icon_set_manager")
-     * })
-     *
      * @param ObjectManager          $em
      * @param Filesystem             $fileSystem
      * @param KernelInterface        $kernel
@@ -85,9 +72,9 @@ class DatabaseWriter
      */
     public function __construct(
         ObjectManager $em,
+        MaskManager $mm,
         Filesystem $fileSystem,
         KernelInterface $kernel,
-        MaskManager $mm,
         ToolManager $toolManager,
         ToolMaskDecoderManager $toolMaskManager,
         IconSetManager $iconSetManager

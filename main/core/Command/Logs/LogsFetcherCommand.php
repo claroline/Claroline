@@ -44,7 +44,7 @@ class LogsFetcherCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('group');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $logRepo = $om->getRepository('Claroline\CoreBundle\Entity\Log\Log');
         $xlsExporter = $this->getContainer()->get('claroline.exporter.xls');
 

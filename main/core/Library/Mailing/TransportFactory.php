@@ -12,20 +12,11 @@
 namespace Claroline\CoreBundle\Library\Mailing;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.mailing.transport_factory")
- */
 class TransportFactory
 {
     private $configHandler;
 
-    /**
-     * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
-     * })
-     */
     public function __construct(PlatformConfigurationHandler $configHandler)
     {
         $this->configHandler = $configHandler;
@@ -35,12 +26,12 @@ class TransportFactory
     {
         $type = $this->configHandler->getParameter('mailer_transport');
 
-        if ($type === 'sendmail') {
+        if ('sendmail' === $type) {
             return new \Swift_Transport_SendmailTransport(
                 new \Swift_Transport_StreamBuffer(new \Swift_StreamFilters_StringReplacementFilterFactory()),
                 new \Swift_Events_SimpleEventDispatcher()
             );
-        } elseif ($type === 'smtp') {
+        } elseif ('smtp' === $type) {
             $transport = $this->getBaseSmtpTransport();
             $transport->setHost($this->configHandler->getParameter('mailer_host'));
             $transport->setPort($this->configHandler->getParameter('mailer_port'));
@@ -53,7 +44,7 @@ class TransportFactory
             $transport->setSourceIp(null);
 
             return $transport;
-        } elseif ($type === 'gmail') {
+        } elseif ('gmail' === $type) {
             $transport = $this->getBaseSmtpTransport();
             $transport->setHost('smtp.gmail.com');
             $transport->setPort(465);

@@ -7,7 +7,7 @@ services:
     HeVinci\CompetencyBundle\Serializer\ScaleSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     HeVinci\CompetencyBundle\Serializer\LevelSerializer:
         tags: [claroline.serializer]
@@ -15,14 +15,14 @@ services:
     HeVinci\CompetencyBundle\Serializer\CompetencySerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer'
             - '@HeVinci\CompetencyBundle\Serializer\ScaleSerializer'
 
     HeVinci\CompetencyBundle\Serializer\CompetencyAbilitySerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@HeVinci\CompetencyBundle\Serializer\AbilitySerializer'
             - '@HeVinci\CompetencyBundle\Serializer\LevelSerializer'
 

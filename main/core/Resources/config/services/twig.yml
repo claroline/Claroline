@@ -15,7 +15,7 @@ services:
        arguments:
            - '@twig.extension.assets'
            - '@claroline.manager.theme_manager'
-           - '@claroline.config.platform_config_handler'
+           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
            - '%kernel.root_dir%'
 
     Claroline\CoreBundle\Twig\WebpackExtension:

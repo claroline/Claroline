@@ -35,7 +35,7 @@ class Updater120000 extends Updater
         $this->log('Initializing progression of path evaluations...');
 
         /** @var ObjectManager $om */
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $paths = $om->getRepository('Innova\PathBundle\Entity\Path\Path')->findAll();
 
         $om->startFlushSuite();

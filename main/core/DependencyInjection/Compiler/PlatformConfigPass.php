@@ -19,11 +19,11 @@ class PlatformConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('claroline.config.platform_config_handler')) {
+        if (false === $container->hasDefinition('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler')) {
             return;
         }
 
-        $configHandler = $container->getDefinition('claroline.config.platform_config_handler');
+        $configHandler = $container->getDefinition('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
 
         foreach (array_keys($container->findTaggedServiceIds('claroline.configuration')) as $id) {
             $configHandler->addMethodCall('addDefaultParameters', [new Reference($id)]);

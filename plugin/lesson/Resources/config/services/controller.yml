@@ -14,5 +14,5 @@ services:
     Icap\LessonBundle\Controller\Resource\LessonController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@templating'

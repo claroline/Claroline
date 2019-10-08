@@ -126,7 +126,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
      */
     protected function getObjectManager()
     {
-        return $this->getContainer()->get('claroline.persistence.object_manager');
+        return $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     /**
@@ -272,7 +272,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
         $perm = 0;
 
-        $finder = $this->container->get('claroline.api.finder.ordered_tool');
+        $finder = $this->container->get('Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder');
         $ot = $finder->findOneBy([
           'tool' => $toolName,
           'workspace' => $workspace->getUuid(),

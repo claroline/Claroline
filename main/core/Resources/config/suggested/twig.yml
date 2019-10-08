@@ -3,4 +3,4 @@ twig:
     strict_variables: "%kernel.debug%"
 
     globals:
-      config:         '@claroline.config.platform_config_handler'
+      config:         '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

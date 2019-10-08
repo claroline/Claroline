@@ -56,7 +56,7 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
         $removeGroups = $input->getOption('group');
 
         $container = $this->getContainer();
-        $om = $container->get('claroline.persistence.object_manager');
+        $om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $helper = $this->getHelper('question');
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $roleManager = $this->getContainer()->get('claroline.manager.role_manager');

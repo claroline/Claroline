@@ -28,7 +28,7 @@ class Authenticator
 
     /**
      * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"              = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "encodeFactory"   = @DI\Inject("security.encoder_factory")
      * })

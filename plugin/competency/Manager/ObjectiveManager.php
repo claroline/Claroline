@@ -30,7 +30,7 @@ class ObjectiveManager
 
     /**
      * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"                = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
      *     "progressManager"   = @DI\Inject("hevinci.competency.progress_manager"),
      *     "translator"        = @DI\Inject("translator")

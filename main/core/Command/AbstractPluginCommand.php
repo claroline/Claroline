@@ -69,7 +69,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function getPluginInstaller(OutputInterface $output)
     {
         /** @var \Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
-        $installer = $this->getContainer()->get('claroline.plugin.installer');
+        $installer = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer');
         $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,

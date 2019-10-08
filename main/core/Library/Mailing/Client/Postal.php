@@ -4,21 +4,11 @@ namespace Claroline\CoreBundle\Library\Mailing\Client;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Message;
-use JMS\DiExtraBundle\Annotation as DI;
 use Postal\Client;
 use Postal\SendMessage;
 
-/**
- * @DI\Service("claroline.mailing.postal")
- * @DI\Tag("claroline.mailing")
- */
 class Postal implements MailClientInterface
 {
-    /**
-     * @DI\InjectParams({
-     *     "ch" = @DI\Inject("claroline.config.platform_config_handler")
-     * })
-     */
     public function __construct(PlatformConfigurationHandler $ch)
     {
         $this->ch = $ch;

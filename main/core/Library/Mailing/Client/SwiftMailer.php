@@ -5,17 +5,12 @@ namespace Claroline\CoreBundle\Library\Mailing\Client;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Library\Mailing\Validator;
-use JMS\DiExtraBundle\Annotation as DI;
 use Swift_Attachment;
 use Swift_Message;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Swift_TransportException;
 
-/**
- * @DI\Service("claroline.mailing.swiftmailer")
- * @DI\Tag("claroline.mailing")
- */
 class SwiftMailer implements MailClientInterface
 {
     const UNABLE_TO_START_TRANSPORT = 'unable_to_start_transport';
@@ -23,12 +18,6 @@ class SwiftMailer implements MailClientInterface
     const UNABLE_TO_START_SENDMAIL = 'unable_to_start_sendmail';
     const UNABLE_TO_START_GMAIL = 'unable_to_start_gmail';
 
-    /**
-     * @DI\InjectParams({
-     *     "ch"     = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "mailer" = @DI\Inject("mailer")
-     * })
-     */
     public function __construct(\Swift_Mailer $mailer, PlatformConfigurationHandler $ch)
     {
         $this->mailer = $mailer;

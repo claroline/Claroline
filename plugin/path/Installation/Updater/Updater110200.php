@@ -33,7 +33,7 @@ class Updater110200 extends Updater
     private function cleanMasks()
     {
         /** @var ObjectManager $om */
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         /** @var MaskManager $maskManager */
         $maskManager = $this->container->get('claroline.manager.mask_manager');
@@ -60,7 +60,7 @@ class Updater110200 extends Updater
         $this->log('Initializing resource node of steps...');
 
         /** @var ObjectManager $om */
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $steps = $om->getRepository('Innova\PathBundle\Entity\Step')->findAll();
 
         $om->startFlushSuite();

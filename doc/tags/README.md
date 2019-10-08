@@ -20,7 +20,7 @@ Here is an example of a call from a controller function to tag a workspace with 
     *******************************************************************
         $data = array('tag' => 'My Tags', 'object' => $workspace);
 
-        $this->get('claroline.event.event_dispatcher')->dispatch(
+        $this->get('Claroline\AppBundle\Event\StrictDispatcher')->dispatch(
             'claroline_tag_object',
             'GenericData',
             array($data)
@@ -73,7 +73,7 @@ Here is an example to fetch all workspaces tagged as "My Tags", ordered by name 
             'order' => 'ASC'
         );
 
-        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+        $event = $this->get('Claroline\AppBundle\Event\StrictDispatcher')->dispatch(
             'claroline_retrieve_tagged_objects',
             'GenericData',
             array($data)

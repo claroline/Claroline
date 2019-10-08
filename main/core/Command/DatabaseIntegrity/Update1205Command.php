@@ -145,7 +145,7 @@ class Update1205Command extends ContainerAwareCommand
 
     public function replace($regex, $replacement, $text, $prefix, $show = false)
     {
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $matches = [];
         preg_match('!'.$regex.'!', $text, $matches, PREG_OFFSET_CAPTURE);
         array_shift($matches);

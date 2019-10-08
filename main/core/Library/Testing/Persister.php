@@ -40,7 +40,7 @@ class Persister
 
     /**
      * @InjectParams({
-     *     "om"        = @Inject("claroline.persistence.object_manager"),
+     *     "om"        = @Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "container" = @Inject("service_container")
      * })
      */

@@ -250,7 +250,7 @@ class TransferController extends AbstractCrudController
         $handler = $request->get('handler');
 
         /** @var StrictDispatcher */
-        $dispatcher = $this->container->get('claroline.event.event_dispatcher');
+        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
 
         $object = $this->crud->create(
               PublicFile::class,

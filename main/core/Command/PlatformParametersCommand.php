@@ -42,7 +42,7 @@ class PlatformParametersCommand extends ContainerAwareCommand
     {
         //same as above
         $defaultConf = new PlatformDefaults();
-        $handler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $handler = $this->getContainer()->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
 
         foreach ($defaultConf->getDefaultParameters() as $param => $value) {
             if ($value = $input->getOption($param)) {

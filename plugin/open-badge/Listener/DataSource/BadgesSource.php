@@ -20,7 +20,7 @@ class BadgesSource
      * BadgesSource constructor.
      *
      * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder")
+     *     "finder" = @DI\Inject("Claroline\AppBundle\API\FinderProvider")
      * })
      *
      * @param FinderProvider $finder

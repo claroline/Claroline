@@ -22,14 +22,14 @@ class UserCrud
     {
         //too many dependencies, simplify this when we can
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
-        $this->finder = $container->get('claroline.api.finder');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
+        $this->finder = $container->get('Claroline\AppBundle\API\FinderProvider');
         $this->roleManager = $container->get('claroline.manager.role_manager');
         $this->toolManager = $container->get('claroline.manager.tool_manager');
         $this->mailManager = $container->get('claroline.manager.mail_manager');
         $this->userManager = $container->get('claroline.manager.user_manager');
-        $this->dispatcher = $container->get('claroline.event.event_dispatcher');
-        $this->config = $container->get('claroline.config.platform_config_handler');
+        $this->dispatcher = $container->get('Claroline\AppBundle\Event\StrictDispatcher');
+        $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->cryptoManager = $container->get('claroline.manager.cryptography_manager');
     }
 

@@ -10,7 +10,7 @@ services:
     UJM\LtiBundle\Serializer\LtiResourceSerializer:
         tags: [claroline.serializer]
         arguments:
-           - '@claroline.persistence.object_manager'
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@request_stack'
            - '@UJM\LtiBundle\Serializer\LtiAppSerializer'
            - '@security.token_storage'

@@ -40,7 +40,7 @@ class Updater090300 extends Updater
         $this->fileSystem = $container->get('filesystem');
         $this->iconSetsDir = $container->getParameter('claroline.param.icon_sets_directory');
         $this->connection = $this->container->get('doctrine.dbal.default_connection');
-        $this->om = $this->container->get('claroline.persistence.object_manager');
+        $this->om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         //set the default claroline user
         $defaultUser = $container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
@@ -52,7 +52,7 @@ class Updater090300 extends Updater
     {
         $this->createDefaultModel();
         $roleManager = $this->container->get('claroline.manager.role_manager');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         try {
             $models = $this->connection->query('SELECT * FROM claro_workspace_model')->fetchAll();
         } catch (\Exception $e) {

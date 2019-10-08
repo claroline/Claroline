@@ -54,7 +54,7 @@ class LogsArchiverCommand extends ContainerAwareCommand
         if ($from) {
             $from = \DateTime::createFromFormat('m-d-Y', $from);
         } else {
-            $from = $this->getContainer()->get('claroline.persistence.object_manager')->getRepository(Log::class)->findBy([], null, 1)[0]->getDateLog();
+            $from = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getRepository(Log::class)->findBy([], null, 1)[0]->getDateLog();
         }
 
         $searches = ['dateLog' => $from->format('Y-m-d h:i:s')];

@@ -27,7 +27,7 @@ abstract class TransactionalTestCase extends WebTestCase
         parent::setUp();
         $this->client = self::createClient();
         $this->client->disableReboot();
-        $this->client->getContainer()->get('claroline.persistence.object_manager')->beginTransaction();
+        $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->beginTransaction();
     }
 
     protected function tearDown()
@@ -38,7 +38,7 @@ abstract class TransactionalTestCase extends WebTestCase
         // (by PHPUnit?) and the original error is hidden behind a fatal
         // "Call to a member function shutdown() on a non-object"...
         if ($this->client instanceof TransactionalTestClient) {
-            $this->client->getContainer()->get('claroline.persistence.object_manager')->rollback();
+            $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->rollback();
         }
 
         // the following helps to free memory and speed up test suite execution.
@@ -79,7 +79,7 @@ abstract class TransactionalTestCase extends WebTestCase
 
     public function setPlatformOption($parameter, $value)
     {
-        $ch = $this->client->getContainer()->get('claroline.config.platform_config_handler');
+        $ch = $this->client->getContainer()->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $ch->setParameter($parameter, $value);
     }
 }

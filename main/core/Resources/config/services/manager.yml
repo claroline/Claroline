@@ -5,8 +5,8 @@ services:
 
     Claroline\CoreBundle\Manager\WorkspaceUserQueueManager:
         arguments:
-          - '@claroline.event.event_dispatcher'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.role_manager'
 
     claroline.manager.workspace_user_queue_manager:
@@ -15,7 +15,7 @@ services:
 
     Claroline\CoreBundle\Manager\WidgetManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.plugin_manager'
 
     claroline.manager.widget_manager:
@@ -24,7 +24,7 @@ services:
 
     Claroline\CoreBundle\Manager\VersionManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%kernel.root_dir%'
 
     claroline.manager.version_manager:
@@ -36,11 +36,11 @@ services:
           - '@service_container'
           - '@claroline.manager.group_manager'
           - '@claroline.manager.mail_manager'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.organization.organization_manager'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.role_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@security.token_storage'
           - '@translator'
           - '@validator'
@@ -52,7 +52,7 @@ services:
 
     Claroline\CoreBundle\Manager\ToolRightsManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.tool_mask_decoder_manager'
 
     claroline.manager.tool_rights_manager:
@@ -61,7 +61,7 @@ services:
 
     Claroline\CoreBundle\Manager\ToolMaskDecoderManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.tool_mask_decoder_manager:
         alias: Claroline\CoreBundle\Manager\ToolMaskDecoderManager
@@ -70,7 +70,7 @@ services:
     Claroline\CoreBundle\Manager\ToolManager:
         public: true
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.role_manager'
           - '@claroline.manager.tool_mask_decoder_manager'
           - '@claroline.manager.tool_rights_manager'
@@ -82,7 +82,7 @@ services:
 
     Claroline\CoreBundle\Manager\TermsOfServiceManager:
         arguments:
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@service_container'
           - '@claroline.manager.content_manager'
           - '@claroline.manager.user_manager'
@@ -94,7 +94,7 @@ services:
 
     Claroline\CoreBundle\Manager\SecurityTokenManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.security_token_manager:
         alias: Claroline\CoreBundle\Manager\SecurityTokenManager
@@ -103,11 +103,11 @@ services:
     Claroline\CoreBundle\Manager\RoleManager:
         public: true
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@service_container'
           - '@translator'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.template_manager'
 
     claroline.manager.role_manager:
@@ -119,13 +119,13 @@ services:
           - '@claroline.manager.role_manager'
           - '@service_container'
           - '@claroline.manager.rights_manager'
-          - '@claroline.event.event_dispatcher'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.utilities.misc'
           - '@claroline.security.utilities'
           - '@translator'
-          - '@claroline.config.platform_config_handler'
-          - '@claroline.api.serializer'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.resource_lifecycle'
 
     claroline.manager.resource_manager:
@@ -134,8 +134,8 @@ services:
 
     Claroline\CoreBundle\Manager\RegistrationManager:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.locale_manager'
           - '@claroline.common.terms_of_service_manager'
           - '@claroline.manager.facet_manager'
@@ -150,10 +150,10 @@ services:
 
     Claroline\CoreBundle\Manager\ProgressionManager:
         arguments:
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@claroline.manager.resource_evaluation_manager'
           - '@router'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
 
     claroline.manager.progression_manager:
         alias: Claroline\CoreBundle\Manager\ProgressionManager
@@ -162,7 +162,7 @@ services:
     Claroline\CoreBundle\Manager\PluginManager:
         arguments:
           - '%kernel.root_dir%'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@kernel'
 
     claroline.manager.plugin_manager:
@@ -173,7 +173,7 @@ services:
         arguments:
           - '@claroline.manager.cache_manager'
           - '@service_container'
-          - '@claroline.library.mailing.mailer'
+          - '@Claroline\CoreBundle\Library\Mailing\Mailer'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
           - '@router'
           - '@claroline.manager.template_manager'
@@ -186,8 +186,8 @@ services:
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
           - '@service_container'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@translator'
           - '@claroline.utilities.misc'
 
@@ -197,8 +197,8 @@ services:
 
     Claroline\CoreBundle\Manager\LogConnectManager:
         arguments:
-          - '@claroline.api.finder'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
 
     claroline.manager.log_connect:
@@ -207,7 +207,7 @@ services:
 
     Claroline\CoreBundle\Manager\LockManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
           - '@security.token_storage'
 
@@ -217,7 +217,7 @@ services:
 
     Claroline\CoreBundle\Manager\LocaleManager:
         arguments:
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.user_manager'
           - '@security.token_storage'
 
@@ -236,7 +236,7 @@ services:
 
     Claroline\CoreBundle\Manager\ImportCsvManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
           - '@claroline.manager.group_manager'
           - '@claroline.manager.role_manager'
@@ -253,9 +253,9 @@ services:
           - '%claroline.param.web_dir%'
           - '%claroline.param.icon_sets_web_dir%'
           - '%claroline.param.icon_sets_directory%'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.utilities.thumbnail_creator'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     claroline.manager.icon_set_manager:
         alias: Claroline\CoreBundle\Manager\IconSetManager
@@ -268,7 +268,7 @@ services:
           - '%claroline.param.thumbnails_directory%'
           - '%kernel.root_dir%'
           - '@claroline.utilities.misc'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.relative_thumbnail_base_path%'
           - '@claroline.utilities.file'
           - '%claroline.param.public_files_directory%'
@@ -280,7 +280,7 @@ services:
 
     Claroline\CoreBundle\Manager\HomeTabManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@service_container'
 
     claroline.manager.home_tab_manager:
@@ -289,8 +289,8 @@ services:
 
     Claroline\CoreBundle\Manager\GroupManager:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.role_manager'
 
     claroline.manager.group_manager:
@@ -299,11 +299,11 @@ services:
 
     Claroline\CoreBundle\Manager\FileManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.files_directory%'
           - '@claroline.utilities.misc'
           - '@claroline.manager.resource_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '%claroline.param.uploads_directory%'
           - '@security.token_storage'
           - '@claroline.manager.workspace_manager'
@@ -316,7 +316,7 @@ services:
         arguments:
           - '@security.token_storage'
           - '@security.authorization_checker'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
           - '@service_container'
 
@@ -327,7 +327,7 @@ services:
     Claroline\CoreBundle\Manager\ExporterManager:
         arguments:
           - '@translator'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.exporter_manager:
         alias: Claroline\CoreBundle\Manager\ExporterManager
@@ -336,7 +336,7 @@ services:
     Claroline\CoreBundle\Manager\EventManager:
         arguments:
           - '@kernel'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
 
     claroline.event.manager:
@@ -346,8 +346,8 @@ services:
     Claroline\CoreBundle\Manager\DataSourceManager:
         arguments:
           - '@security.token_storage'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.plugin_manager'
 
     claroline.manager.data_source:
@@ -362,7 +362,7 @@ services:
 
     Claroline\CoreBundle\Manager\CryptographyManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.cryptography_manager:
         alias: Claroline\CoreBundle\Manager\CryptographyManager
@@ -372,7 +372,7 @@ services:
         arguments:
           - '@doctrine'
           - '@request_stack'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.content_manager:
         alias: Claroline\CoreBundle\Manager\ContentManager
@@ -380,8 +380,8 @@ services:
 
     Claroline\CoreBundle\Manager\ConnectionMessageManager:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
 
     claroline.manager.connection_message_manager:
         alias: Claroline\CoreBundle\Manager\ConnectionMessageManager
@@ -397,14 +397,14 @@ services:
 
     Claroline\CoreBundle\Manager\ApiManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.curl_manager'
           - '@service_container'
-          - '@claroline.api.transfer'
-          - '@claroline.api.finder'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\TransferProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.utilities.file'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\API\Crud'
 
     claroline.manager.api_manager:
         alias: Claroline\CoreBundle\Manager\ApiManager
@@ -412,12 +412,12 @@ services:
 
     Claroline\CoreBundle\Manager\AnalyticsManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.log.manager'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.widget_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.analytics_manager:
         alias: Claroline\CoreBundle\Manager\AnalyticsManager
@@ -437,8 +437,8 @@ services:
         arguments:
           - '@claroline.manager.role_manager'
           - '@claroline.manager.resource_manager'
-          - '@claroline.event.event_dispatcher'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.utilities.misc'
           - '@claroline.security.utilities'
           - '@service_container'
@@ -449,13 +449,13 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\TransferManager:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.temp_file'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.transfer.ordered_tool'
-          - '@claroline.api.finder'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
           - '@security.token_storage'
           - '@claroline.utilities.file'
 
@@ -476,14 +476,14 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager:
         arguments:
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.user_manager'
-          - '@claroline.api.finder'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
           - '@security.token_storage'
           - '@claroline.manager.resource_manager'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
 
         tags:
             - { name: kernel.event_listener, event: export_tool_resources, method: onExport }
@@ -496,9 +496,9 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\Home:
         arguments:
-          - '@claroline.api.serializer'
-          - '@claroline.api.finder'
-          - '@claroline.api.crud'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
           
     #alias is required: todo: use tags
     claroline.transfer.home:
@@ -507,9 +507,9 @@ services:
 
     Claroline\CoreBundle\Manager\Theme\ThemeManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '%kernel.root_dir%'
           - '@Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer'
           - '@claroline.manager.plugin_manager'
@@ -530,7 +530,7 @@ services:
 
     Claroline\CoreBundle\Manager\Template\TemplateManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     claroline.manager.template_manager:
@@ -539,8 +539,8 @@ services:
 
     Claroline\CoreBundle\Manager\Task\ScheduledTaskManager:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer'
 
     claroline.manager.scheduled_task_manager:
@@ -550,8 +550,8 @@ services:
     Claroline\CoreBundle\Manager\Resource\RightsManager:
         arguments:
           - '@security.token_storage'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.role_manager'
           - '@claroline.manager.mask_manager'
           - '@service_container'
@@ -573,8 +573,8 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager:
         arguments:
-          - '@claroline.event.event_dispatcher'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.resource_lifecycle:
         alias: Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager
@@ -583,7 +583,7 @@ services:
     Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager:
         arguments:
           - '@event_dispatcher'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.resource_evaluation_manager:
         alias: Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager
@@ -591,9 +591,9 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceActionManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
-          - '@claroline.event.event_dispatcher'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.resource_manager'
 
     claroline.manager.resource_action:
@@ -610,7 +610,7 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.mask_manager:
         alias: Claroline\CoreBundle\Manager\Resource\MaskManager
@@ -618,7 +618,7 @@ services:
 
     Claroline\CoreBundle\Manager\Organization\OrganizationManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.organization.organization_manager:
         alias: Claroline\CoreBundle\Manager\Organization\OrganizationManager
@@ -626,8 +626,8 @@ services:
 
     Claroline\CoreBundle\Manager\Organization\LocationManager:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.curl_manager'
 
     claroline.manager.organization.location_manager:

@@ -16,7 +16,7 @@ abstract class DataFixture
     {
         $this->container = $container;
         $this->output = $output;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     abstract protected function load();

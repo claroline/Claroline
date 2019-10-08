@@ -19,11 +19,11 @@ class MailingConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('claroline.library.mailing.mailer')) {
+        if (false === $container->hasDefinition('Claroline\CoreBundle\Library\Mailing\Mailer')) {
             return;
         }
 
-        $providerDef = $container->getDefinition('claroline.library.mailing.mailer');
+        $providerDef = $container->getDefinition('Claroline\CoreBundle\Library\Mailing\Mailer');
 
         $taggedServices = $container->findTaggedServiceIds('claroline.mailing');
 

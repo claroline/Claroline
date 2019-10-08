@@ -29,7 +29,7 @@ class Updater120503 extends Updater
         $this->logger = $logger;
         $this->container = $container;
         $this->conn = $container->get('doctrine.dbal.default_connection');
-        $this->om = $this->container->get('claroline.persistence.object_manager');
+        $this->om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()
@@ -50,7 +50,7 @@ class Updater120503 extends Updater
     {
         $this->log('Updating notifications refresh delay...');
 
-        $configHandler = $this->container->get('claroline.config.platform_config_handler');
+        $configHandler = $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $configHandler->setParameter('notifications_refresh_delay', 0);
 
         $this->log('Notifications refresh delay updated.');

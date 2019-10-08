@@ -7,11 +7,11 @@ services:
     Claroline\ClacoFormBundle\Listener\Resource\ClacoFormListener:
         arguments:
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.finder'
-            - '@claroline.config.platform_config_handler'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@claroline.manager.role_manager'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_claco_form.load, method: onLoad }

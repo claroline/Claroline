@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -32,7 +32,7 @@ services:
 
     Icap\BibliographyBundle\Controller\API\ApiController:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Icap\BibliographyBundle\Controller\API\BookReferenceConfigurationController: ~
 

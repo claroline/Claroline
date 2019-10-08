@@ -130,7 +130,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         }
 
         /** @var Refresher $refresher */
-        $refresher = $this->getContainer()->get('claroline.installation.refresher');
+        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
         $refresher->setOutput($output);
 
         // clear cache

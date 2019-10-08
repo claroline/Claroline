@@ -29,7 +29,7 @@ class UserListener
      * UserListener constructor.
      *
      * @DI\InjectParams({
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"      = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "manager" = @DI\Inject("claroline.manager.tag_manager")
      * })
      *

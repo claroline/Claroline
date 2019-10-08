@@ -29,7 +29,7 @@ class Updater120304 extends Updater
         $this->container = $container;
         $this->userManager = $container->get('claroline.manager.user_manager');
         $this->workspaceManager = $container->get('claroline.manager.workspace_manager');
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function postUpdate()

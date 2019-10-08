@@ -19,7 +19,7 @@ class LogListener
     /**
      * @DI\InjectParams({
      *     "notificationManager" = @DI\Inject("icap.notification.manager"),
-     *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler")
+     *     "ch"                  = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler")
      * })
      */
     public function __construct(

@@ -10,13 +10,13 @@ services:
             calls:
                 - method: setObjectManager
                   arguments:
-                     - '@claroline.persistence.object_manager'
+                     - '@Claroline\AppBundle\Persistence\ObjectManager'
                 - method: setEntityManager
                   arguments:
                      - '@doctrine.orm.entity_manager'
                 - method: setEventDispatcher
                   arguments:
-                     - '@claroline.event.event_dispatcher'
+                     - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\API\Finder\TransferFinder: ~
 
@@ -31,19 +31,11 @@ services:
 
     Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder: ~
 
-    claroline.api.finder.ordered_tool:
-        alias: Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder
-        public: true
-
     Claroline\CoreBundle\API\Finder\User\UserFinder:
         arguments:
           - '@security.authorization_checker'
           - '@security.token_storage'
           - '@claroline.manager.workspace_manager'
-
-    claroline.api.finder.user:
-        alias: Claroline\CoreBundle\API\Finder\User\UserFinder
-        public: true
 
     Claroline\CoreBundle\API\Finder\User\RoleFinder:
         arguments:
@@ -74,7 +66,7 @@ services:
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
         arguments:
           - '@claroline.manager.plugin_manager'
-          - '@claroline.config.platform_config_handler'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
 

@@ -25,7 +25,7 @@ class RefreshCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $refresher = $this->getContainer()->get('claroline.installation.refresher');
+        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
         $refresher->setOutput($output);
         $refresher->refresh($input->getOption('env'));
     }

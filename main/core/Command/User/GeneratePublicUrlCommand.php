@@ -28,7 +28,7 @@ class GeneratePublicUrlCommand extends ContainerAwareCommand
     {
         $output->writeln('Updating public url for users...');
 
-        $objectManager = $this->getContainer()->get('claroline.persistence.object_manager');
+        $objectManager = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
         $userRepository = $objectManager->getRepository('ClarolineCoreBundle:User');

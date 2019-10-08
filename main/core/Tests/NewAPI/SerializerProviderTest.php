@@ -17,9 +17,9 @@ class SerializerProviderTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->provider = $this->client->getContainer()->get('claroline.api.serializer');
-        $this->validator = $this->client->getContainer()->get('claroline.api.validator');
-        $this->schema = $this->client->getContainer()->get('claroline.api.schema');
+        $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\SerializerProvider');
+        $this->validator = $this->client->getContainer()->get('Claroline\AppBundle\API\ValidatorProvider');
+        $this->schema = $this->client->getContainer()->get('Claroline\AppBundle\API\SchemaProvider');
         $this->sampleDir = $this->client->getContainer()->getParameter('claroline.api.sample.dir');
 
         $tokenStorage = $this->client->getContainer()->get('security.token_storage');
@@ -78,8 +78,8 @@ class SerializerProviderTest extends TransactionalTestCase
     public function getHandledClassesProvider()
     {
         parent::setUp();
-        $provider = $this->client->getContainer()->get('claroline.api.serializer');
-        $schemaProvider = $this->client->getContainer()->get('claroline.api.schema');
+        $provider = $this->client->getContainer()->get('Claroline\AppBundle\API\SerializerProvider');
+        $schemaProvider = $this->client->getContainer()->get('Claroline\AppBundle\API\SchemaProvider');
 
         $classes = array_map(function ($serializer) use ($provider) {
             return [$provider->getSerializerHandledClass($serializer)];

@@ -18,9 +18,9 @@ class ResourceRightsIntegrityCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->conn = $this->getContainer()->get('doctrine.dbal.default_connection');
-        $roles[] = $this->getContainer()->get('claroline.persistence.object_manager')->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
-        $roles[] = $this->getContainer()->get('claroline.persistence.object_manager')->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $roles[] = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
+        $roles[] = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         foreach ($roles as $role) {
             $sql = "

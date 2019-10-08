@@ -7,7 +7,7 @@ services:
     Claroline\ClacoFormBundle\Serializer\KeywordSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\FieldValueSerializer:
         tags: [claroline.serializer]
@@ -21,13 +21,13 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer'
             - '@claroline.manager.facet_manager'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\ClacoFormBundle\Serializer\FieldSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\EntryUserSerializer:
         tags: [claroline.serializer]
@@ -41,7 +41,7 @@ services:
             - '@Claroline\ClacoFormBundle\Serializer\FieldValueSerializer'
             - '@Claroline\ClacoFormBundle\Serializer\KeywordSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\CommentSerializer:
         tags: [claroline.serializer]
@@ -54,11 +54,11 @@ services:
             - '@Claroline\ClacoFormBundle\Serializer\CategorySerializer'
             - '@Claroline\ClacoFormBundle\Serializer\FieldSerializer'
             - '@Claroline\ClacoFormBundle\Serializer\KeywordSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\CategorySerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

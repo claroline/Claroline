@@ -28,7 +28,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
      * @DI\InjectParams({
      *   "em"                       = @DI\Inject("doctrine.orm.entity_manager"),
      *   "session"                  = @DI\Inject("session"),
-     *   "platformConfigHandler"    = @DI\Inject("claroline.config.platform_config_handler")
+     *   "platformConfigHandler"    = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler")
      * })
      *
      * @param $em

@@ -55,9 +55,9 @@ class PathTrackingController
      *
      * @DI\InjectParams({
      *     "authorization"          = @DI\Inject("security.authorization_checker"),
-     *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"             = @DI\Inject("claroline.api.serializer"),
+     *     "finder"                 = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
+     *     "om"                     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
+     *     "serializer"             = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
      * })

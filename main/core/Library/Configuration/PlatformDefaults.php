@@ -11,12 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use JMS\DiExtraBundle\Annotation as DI;
-
-/**
- * @DI\Service()
- * @DI\Tag("claroline.configuration")
- */
 class PlatformDefaults implements ParameterProviderInterface
 {
     const REGISTRATION_MAIL_VALIDATION_NONE = 0;

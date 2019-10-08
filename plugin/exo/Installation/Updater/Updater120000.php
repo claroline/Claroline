@@ -17,7 +17,7 @@ class Updater120000 extends Updater
     {
         $this->log('Updating mandatory option of questions in quiz...');
 
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $repo = $om->getRepository('UJM\ExoBundle\Entity\StepItem');
         $stepItems = $repo->findAll();
         $i = 0;

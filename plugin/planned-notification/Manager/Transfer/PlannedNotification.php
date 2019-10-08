@@ -33,9 +33,9 @@ class PlannedNotification implements ToolImporterInterface
      * @DI\InjectParams({
      *     "authorization" = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "crud"          = @DI\Inject("claroline.api.crud")
+     *     "om"            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
+     *     "finder"        = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
+     *     "crud"          = @DI\Inject("Claroline\AppBundle\API\Crud")
      * })
      */
     public function __construct(

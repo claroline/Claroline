@@ -17,7 +17,7 @@ class RootNodeIntegrityCheckerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $roots = $om->getRepository(ResourceNode::class)->findBy(['parent' => null, 'personal' => false]);
 
         $i = 0;

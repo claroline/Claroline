@@ -38,7 +38,7 @@ class HistoryController
      * HistoryController constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "serializer" = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
      *     "manager"    = @DI\Inject("claroline.manager.history")
      * })
      *

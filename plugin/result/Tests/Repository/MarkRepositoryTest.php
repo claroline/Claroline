@@ -27,7 +27,7 @@ class MarkRepositoryTest extends TransactionalTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
+        $this->om = $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->repo = $this->om->getRepository('ClarolineResultBundle:Mark');
         $this->persist = new Persister($this->om, $this->client->getContainer());
     }

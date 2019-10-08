@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -32,13 +32,13 @@ services:
 
     UJM\ExoBundle\Controller\Item\ItemController:
         arguments:
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@UJM\ExoBundle\Manager\Item\ItemManager'
           - '@event_dispatcher'
 
     UJM\ExoBundle\Controller\Item\ShareController:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@ujm_exo.serializer.user'
           - '@UJM\ExoBundle\Manager\Item\ShareManager'
 
@@ -71,7 +71,7 @@ services:
     UJM\ExoBundle\Controller\PaperController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
           - '@UJM\ExoBundle\Manager\ExerciseManager'

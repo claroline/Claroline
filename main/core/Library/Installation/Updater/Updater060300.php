@@ -23,7 +23,7 @@ class Updater060300 extends Updater
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->adminToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
     }
 
@@ -40,7 +40,7 @@ class Updater060300 extends Updater
         $this->log('Creating Widgets management admin tool...');
         $widgetsTools = $this->adminToolRepo->findByName('widgets_management');
 
-        if (count($widgetsTools) === 0) {
+        if (0 === count($widgetsTools)) {
             $widgetsTool = new AdminTool();
             $widgetsTool->setName('widgets_management');
             $widgetsTool->setClass('list-alt');

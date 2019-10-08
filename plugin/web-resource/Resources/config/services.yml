@@ -9,16 +9,16 @@ services:
             calls:
               - method: setFinder
                 arguments:
-                  - '@claroline.api.finder'
+                  - '@Claroline\AppBundle\API\FinderProvider'
               - method: setSerializer
                 arguments:
-                  - '@claroline.api.serializer'
+                  - '@Claroline\AppBundle\API\SerializerProvider'
               - method: setCrud
                 arguments:
-                  - '@claroline.api.crud'
+                  - '@Claroline\AppBundle\API\Crud'
               - method: setObjectManager
                 arguments:
-                  - '@claroline.persistence.object_manager'
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
               - method: setRouterFinder
                 arguments:
                   - '@Claroline\AppBundle\Routing\Finder'
@@ -32,7 +32,7 @@ services:
 
     Claroline\WebResourceBundle\Manager\WebResourceManager:
         arguments:
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@service_container'
 
     Claroline\WebResourceBundle\Controller\API\WebResourceController:
@@ -43,11 +43,11 @@ services:
     Claroline\WebResourceBundle\Listener\WebResourceListener:
         arguments:
           - '%claroline.param.files_directory%'
-          - '@claroline.persistence.object_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.uploads_directory%'
           - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
           - '@claroline.manager.resource_manager'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_web_resource.load, method: onLoad }
             - { name: kernel.event_listener, event: transfer.claroline_web_resource.import.before, method: onImportBefore }

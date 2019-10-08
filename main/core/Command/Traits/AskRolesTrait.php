@@ -22,7 +22,7 @@ trait AskRolesTrait
 
     public function askRoles($all, $input, $output, $container, $helper)
     {
-        $roles = $container->get('claroline.persistence.object_manager')
+        $roles = $container->get('Claroline\AppBundle\Persistence\ObjectManager')
             ->getRepository('ClarolineCoreBundle:Role')
             ->findAllPlatformRoles();
         $roleNames = array_map(function ($role) {

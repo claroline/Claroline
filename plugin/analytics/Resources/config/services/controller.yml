@@ -12,21 +12,21 @@ services:
     Claroline\AnalyticsBundle\Controller\Administration\LogController:
         arguments:
           - '@security.token_storage'
-          - '@claroline.api.finder'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.log.manager'
 
     Claroline\AnalyticsBundle\Controller\Resource\LogController:
         arguments:
           - '@security.token_storage'
-          - '@claroline.api.finder'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.log.manager'
 
     Claroline\AnalyticsBundle\Controller\User\TrackingController:
         arguments:
-          - '@claroline.persistence.object_manager'
-          - '@claroline.api.serializer'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
         arguments:
@@ -36,7 +36,7 @@ services:
     Claroline\AnalyticsBundle\Controller\Workspace\LogController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.api.finder'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
           - '@claroline.log.manager'
 

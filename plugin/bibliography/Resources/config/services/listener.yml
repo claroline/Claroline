@@ -6,8 +6,8 @@ services:
 
     Icap\BibliographyBundle\Listener\Resource\BibliographyListener:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.icap_bibliography.load, method: load }
             - { name: kernel.event_listener, event: resource.icap_bibliography.delete, method: onDelete }

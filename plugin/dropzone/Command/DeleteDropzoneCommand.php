@@ -28,7 +28,7 @@ class DeleteDropzoneCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $dropzoneRepo = $om->getRepository('Icap\DropzoneBundle\Entity\Dropzone');
         $allDropzones = $dropzoneRepo->findAll();

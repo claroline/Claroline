@@ -11,9 +11,9 @@ services:
             calls:
                 - method: setDependencies
                   arguments:
-                    - '@claroline.persistence.object_manager'
+                    - '@Claroline\AppBundle\Persistence\ObjectManager'
                     - '@doctrine.orm.entity_manager'
-                    - '@claroline.event.event_dispatcher'
+                    - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\OpenBadgeBundle\Finder\AssertionFinder: ~
 

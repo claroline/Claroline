@@ -30,7 +30,7 @@ class CompetencyManager
     /**
      * @DI\InjectParams({
      *     "converter"  = @DI\Inject("hevinci.competency.transfer_converter"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "translator" = @DI\Inject("translator")
      * })
      *

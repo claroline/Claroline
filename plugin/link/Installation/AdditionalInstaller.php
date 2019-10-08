@@ -12,7 +12,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
     {
         $this->log('Get `resource_shortcut` from core plugin...');
 
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $conn = $this->container->get('doctrine.dbal.default_connection');
 
         /** @var ResourceType $coreType */

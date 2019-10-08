@@ -24,7 +24,7 @@ class ReservationAdminController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"                     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "resourceTypeSerializer" = @DI\Inject("claroline.serializer.reservation.resource_type")
      * })
      *

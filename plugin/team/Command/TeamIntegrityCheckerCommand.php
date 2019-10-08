@@ -28,7 +28,7 @@ class TeamIntegrityCheckerCommand extends ContainerAwareCommand
     {
         $code = $input->getArgument('code');
         $teamManager = $this->getContainer()->get('Claroline\TeamBundle\Manager\TeamManager');
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         $workspaces = $code ?
           [$om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)] :

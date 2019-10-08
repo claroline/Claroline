@@ -29,7 +29,7 @@ class Updater120000 extends Updater
         $this->log('Update resourceWeb file path ...');
 
         /** @var ObjectManager $om */
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceType = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneBy(['name' => 'claroline_web_resource']);
         $resourceNodes = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode')->findBy(['resourceType' => $resourceType]);
         $resourceManager = $this->container->get('claroline.manager.resource_manager');

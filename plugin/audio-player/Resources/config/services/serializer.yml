@@ -7,12 +7,12 @@ services:
     Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\AudioPlayerBundle\Serializer\Resource\SectionCommentSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AudioPlayerBundle\Serializer\Resource\SectionSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 

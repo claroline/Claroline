@@ -9,7 +9,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

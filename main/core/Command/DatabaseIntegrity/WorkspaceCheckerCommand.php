@@ -75,7 +75,7 @@ class WorkspaceCheckerCommand extends ContainerAwareCommand
         $workspaces = $query->getResult();
 
         $defaultOrganization = $this->getContainer()->get('claroline.manager.organization.organization_manager')->getDefault();
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         foreach ($workspaces as $workspace) {
             $output->writeln('Restoring organization for '.$workspace->getName().'...');

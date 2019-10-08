@@ -66,7 +66,7 @@ class DropzoneListener
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "templating"      = @DI\Inject("templating"),
-     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
+     *     "serializer"      = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
      *     "teamManager"     = @DI\Inject("Claroline\TeamBundle\Manager\TeamManager"),
      *     "translator"      = @DI\Inject("translator")
      * })

@@ -29,8 +29,8 @@ class Manager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder"),
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager")
+     *     "finder" = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
+     *     "om"     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      */
     public function __construct(FinderProvider $finder, ObjectManager $om)

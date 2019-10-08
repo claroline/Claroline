@@ -53,7 +53,7 @@ class DropzoneController
      * DropzoneController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"           = @DI\Inject("claroline.api.finder"),
+     *     "finder"           = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
      *     "manager"          = @DI\Inject("claroline.manager.dropzone_manager"),
      *     "filesDir"         = @DI\Inject("%claroline.param.files_directory%"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher")

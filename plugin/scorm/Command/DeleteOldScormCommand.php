@@ -28,7 +28,7 @@ class DeleteOldScormCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $scorm12Repo = $om->getRepository('Claroline\ScormBundle\Entity\Scorm12Resource');
         $scorm2004Repo = $om->getRepository('Claroline\ScormBundle\Entity\Scorm2004Resource');

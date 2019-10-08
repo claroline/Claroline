@@ -7,7 +7,7 @@ services:
     Claroline\AudioPlayerBundle\Listener\ResourceAudioListener:
         arguments:
             - '@Claroline\AudioPlayerBundle\Manager\AudioPlayerManager'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: file.audio.load, method: onResourceAudioLoad }

@@ -58,10 +58,10 @@ class ScormListener
      * @DI\InjectParams({
      *     "filesDir"            = @DI\Inject("%claroline.param.files_directory%"),
      *     "fileSystem"          = @DI\Inject("filesystem"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"                  = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "scormManager"        = @DI\Inject("claroline.manager.scorm_manager"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer"),
+     *     "serializer"          = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "uploadDir"           = @DI\Inject("%claroline.param.uploads_directory%")
      * })

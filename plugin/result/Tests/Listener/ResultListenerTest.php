@@ -33,7 +33,7 @@ class ResultListenerTest extends TransactionalTestCase
         parent::setUp();
         $container = $this->client->getContainer();
         $this->listener = $container->get('claroline.result.result_listener');
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->persist = new Persister($this->om, $container);
     }
 

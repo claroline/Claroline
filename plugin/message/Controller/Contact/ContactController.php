@@ -50,7 +50,7 @@ class ContactController extends AbstractCrudController
      *     "apiManager"        = @DI\Inject("claroline.manager.api_manager"),
      *     "contactManager"    = @DI\Inject("claroline.manager.contact_manager"),
      *     "contactSerializer" = @DI\Inject("claroline.serializer.contact"),
-     *     "finder"            = @DI\Inject("claroline.api.finder"),
+     *     "finder"            = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
      *     "tokenStorage"      = @DI\Inject("security.token_storage"),
      *     "userSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\UserSerializer")
      * })

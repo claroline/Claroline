@@ -24,7 +24,7 @@ class SessionStorageOptionsFactory
 
     /**
      * @DI\InjectParams({
-     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "configHandler"  = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
      *     "defaultOptions" = @DI\Inject("%session.storage.options%")
      * })
      */
@@ -38,7 +38,7 @@ class SessionStorageOptionsFactory
     {
         return array_merge(
             $this->defaultOptions,
-            array('cookie_lifetime' => $this->configHandler->getParameter('cookie_lifetime'))
+            ['cookie_lifetime' => $this->configHandler->getParameter('cookie_lifetime')]
         );
     }
 }

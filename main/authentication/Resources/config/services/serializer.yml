@@ -13,7 +13,7 @@ services:
                      - '@annotation_reader'
                 - method: setObjectManager
                   arguments:
-                     - '@claroline.persistence.object_manager'
+                     - '@Claroline\AppBundle\Persistence\ObjectManager'
 
 
     Claroline\AuthenticationBundle\Serializer\OauthUserSerializer: ~

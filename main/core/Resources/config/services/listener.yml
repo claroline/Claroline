@@ -14,7 +14,7 @@ services:
 
     Claroline\CoreBundle\Listener\Administration\CommunityListener:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
             - '@claroline.manager.resource_manager'
@@ -25,7 +25,7 @@ services:
 
     Claroline\CoreBundle\Listener\Administration\HomeListener:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: administration_tool_home, method: onDisplayTool }
 
@@ -48,7 +48,7 @@ services:
 
     Claroline\CoreBundle\Listener\Administration\TechnicalListener:
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
         tags:
             - { name: kernel.event_listener, event: administration_tool_technical_settings, method: onDisplayTool }
@@ -64,42 +64,42 @@ services:
 
     Claroline\CoreBundle\Listener\Administration\TransferListener:
         arguments:
-            - '@claroline.api.transfer'
+            - '@Claroline\AppBundle\API\TransferProvider'
         tags:
             - { name: kernel.event_listener, event: administration_tool_transfer, method: onDisplayTool }
 
     Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.workspaces.load, method: getData }
 
     Claroline\CoreBundle\Listener\DataSource\Workspace\RegisteredSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.my_workspaces.load, method: getData }
 
     Claroline\CoreBundle\Listener\DataSource\AdminToolSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.admin_tools.load, method: getData }
 
     Claroline\CoreBundle\Listener\DataSource\ResourceSource:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: data_source.resources.load, method: getData }
 
     Claroline\CoreBundle\Listener\DataSource\ToolSource:
         arguments:
-            - '@claroline.api.finder'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
             - '@claroline.manager.workspace_manager'
         tags:
@@ -107,18 +107,18 @@ services:
 
     Claroline\CoreBundle\Listener\DataSource\UserSource:
         arguments:
-            - '@claroline.api.finder'
+            - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_listener, event: data_source.users.load, method: getData }
 
     Claroline\CoreBundle\Listener\Log\LogListener:
         public: true
         arguments:
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.token_storage'
             - '@service_container'
             - '@claroline.manager.role_manager'
-            - '@claroline.config.platform_config_handler'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_evaluation_manager'
             - '@claroline.manager.log_connect'
@@ -133,9 +133,9 @@ services:
 
     Claroline\CoreBundle\Listener\Resource\Types\DirectoryListener:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
-            - '@claroline.api.crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_action'
             - '@claroline.manager.rights_manager'
@@ -148,11 +148,11 @@ services:
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
         arguments:
             - '@security.token_storage'
-            - '@claroline.persistence.object_manager'
-            - '@claroline.event.event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '%claroline.param.files_directory%'
             - '@claroline.utilities.mime_type_guesser'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_evaluation_manager'
             - '@claroline.utilities.file'
@@ -169,8 +169,8 @@ services:
 
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.text.load, method: load }
             - { name: kernel.event_listener, event: resource.text.delete, method: delete }
@@ -178,8 +178,8 @@ services:
     Claroline\CoreBundle\Listener\Resource\ResourceListener:
         arguments:
             - '@security.token_storage'
-            - '@claroline.api.crud'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_lifecycle'
         tags:
@@ -209,8 +209,8 @@ services:
 
     Claroline\CoreBundle\Listener\Tool\DataTransferListener:
         arguments:
-            - '@claroline.api.transfer'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\TransferProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_transfer, method: onDisplayWorkspace }
 
@@ -219,19 +219,19 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
             - '@templating'
-            - '@claroline.api.finder'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@translator'
-            - '@claroline.persistence.object_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_home, method: onDisplayDesktop }
             - { name: kernel.event_listener, event: open_tool_workspace_home, method: onDisplayWorkspace }
 
     Claroline\CoreBundle\Listener\Tool\ParametersListener:
         arguments:
-            - '@claroline.api.finder'
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@templating'
             - '@security.token_storage'
             - '@claroline.manager.tool_manager'
@@ -240,8 +240,8 @@ services:
 
     Claroline\CoreBundle\Listener\Tool\ResourcesListener:
         arguments:
-            - '@claroline.persistence.object_manager'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_resources, method: onDisplayDesktop }
             - { name: kernel.event_listener, event: open_tool_workspace_resources, method: onDisplayWorkspace }
@@ -254,8 +254,8 @@ services:
         arguments:
             - '@security.token_storage'
             - '@templating'
-            - '@claroline.api.finder'
-            - '@claroline.api.serializer'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_workspaces, method: onDisplayDesktop }

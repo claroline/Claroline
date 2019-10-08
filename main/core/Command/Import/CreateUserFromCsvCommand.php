@@ -56,7 +56,7 @@ class CreateUserFromCsvCommand extends ContainerAwareCommand
     {
         //validate the csv file...
         $consoleLogger = ConsoleLogger::get($output);
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         if ($output->isDebug()) {
             $om->setLogger($consoleLogger)->activateLog();

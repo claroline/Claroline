@@ -35,7 +35,7 @@ class Updater120000 extends Updater
     private function migrateBanners()
     {
         $this->log('Transfer blog banners to resourceNode');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $repo = $om->getRepository('Icap\BlogBundle\Entity\Blog');
         $fu = $this->container->get('claroline.utilities.file');
         $uploadDir = $this->container->getParameter('icap.blog.banner_directory');
@@ -73,7 +73,7 @@ class Updater120000 extends Updater
         if ($this->conn->getSchemaManager()->tablesExist(['icap__blog_post_tag'])
             && $this->conn->getSchemaManager()->tablesExist(['icap__blog_tag'])) {
             $this->log('Transfer blog tags to tagBundle');
-            $om = $this->container->get('claroline.persistence.object_manager');
+            $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
             $serializer = $this->container->get('Icap\BlogBundle\Serializer\PostSerializer');
             $repo = $om->getRepository('Icap\BlogBundle\Entity\Post');
 
@@ -106,7 +106,7 @@ class Updater120000 extends Updater
     private function setCommentModerationMode()
     {
         $this->log('Updating new commentModerationMode attribute from old autoPublishComment');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $repo = $om->getRepository('Icap\BlogBundle\Entity\BlogOptions');
         $options = $repo->findAll();
         $i = 0;
@@ -129,7 +129,7 @@ class Updater120000 extends Updater
     private function deleteOldPostAction()
     {
         $this->log('Deleting old Post action...');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceTypeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $menuActionRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\MenuAction');
         $blogType = $resourceTypeRepo->findOneBy(['name' => 'icap_blog']);

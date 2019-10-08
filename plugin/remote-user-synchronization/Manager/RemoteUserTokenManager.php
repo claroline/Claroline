@@ -30,8 +30,8 @@ class RemoteUserTokenManager
 
     /**
      * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
+     *     "configHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
+     *     "om"            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
      * })
      */
     public function __construct(PlatformConfigurationHandler $configHandler, ObjectManager $om)
