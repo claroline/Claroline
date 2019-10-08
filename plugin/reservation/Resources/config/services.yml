@@ -1,4 +1,0 @@
-imports:
-    - { resource: services/finder.yml }
-    - { resource: services/serializer.yml }
-    - { resource: services/voter.yml }
