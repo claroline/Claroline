@@ -13,12 +13,8 @@ namespace Claroline\ScormBundle\Listener;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service
- */
 class Scorm2004Listener
 {
     // path to the Scorm archive file
@@ -28,12 +24,6 @@ class Scorm2004Listener
     // path to the Scorm unzipped files
     private $scormResourcesPath;
 
-    /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "om"        = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
-     */
     public function __construct(ContainerInterface $container, ObjectManager $om)
     {
         $this->filePath = $container->getParameter('claroline.param.files_directory');
@@ -46,8 +36,6 @@ class Scorm2004Listener
     }
 
     /**
-     * @DI\Observe("resource.claroline_scorm_2004.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)

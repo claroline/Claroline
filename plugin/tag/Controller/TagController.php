@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +30,6 @@ class TagController extends AbstractCrudController
 
     /**
      * TagController constructor.
-     *
-     * @DI\InjectParams({
-     *     "tagManager" = @DI\Inject("claroline.manager.tag_manager")
-     * })
      *
      * @param TagManager $tagManager
      */

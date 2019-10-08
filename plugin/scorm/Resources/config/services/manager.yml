@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ScormBundle\Manager\ScormManager:
+       arguments:
+          - '@event_dispatcher'
+          - '@filesystem'
+          - '%claroline.param.files_directory%'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@claroline.manager.resource_evaluation_manager'
+          - '@claroline.manager.resource_manager'
+          - '@claroline.library.scorm'
+          - '@claroline.serializer.scorm'
+          - '@claroline.serializer.scorm.sco'
+          - '@claroline.serializer.scorm.sco.tracking'
+          - '%claroline.param.uploads_directory%'

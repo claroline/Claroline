@@ -30,15 +30,6 @@ services:
                 arguments:
                   - '@service_container'
 
-    Claroline\AppBundle\Controller\Platform\ClientController:
+    Claroline\TagBundle\Controller\TagController:
         arguments:
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
-
-    Claroline\AppBundle\Controller\Platform\LocaleController:
-        arguments:
-          - '@claroline.manager.locale_manager'
-          - '@security.token_storage'
+          - '@Claroline\TagBundle\Manager\TagManager'

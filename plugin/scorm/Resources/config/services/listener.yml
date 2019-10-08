@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ScormBundle\Listener\Scorm12Listener:
+        arguments:
+            - '@service_container'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_scorm_12.delete, method: onDelete }
+
+    Claroline\ScormBundle\Listener\Scorm2004Listener:
+        arguments:
+            - '@service_container'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_listener, event: resource.claroline_scorm_2004.delete, method: onDelete }
+
+    Claroline\ScormBundle\Listener\ScormListener:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@filesystem'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
+            - '@Claroline\ScormBundle\Manager\ScormManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.token_storage'
+            - '%claroline.param.uploads_directory%'
+        tags:
+           - { name: kernel.event_listener, event: resource.claroline_scorm.load, method: onLoad }
+           - { name: kernel.event_listener, event: resource.claroline_scorm.delete, method: onDelete }
+           - { name: kernel.event_listener, event: transfer.claroline_scorm.import.before, method: onImportBefore }
+           - { name: kernel.event_listener, event: transfer.claroline_scorm.export, method: onExportFile }
+           - { name: kernel.event_listener, event: transfer.claroline_scorm.import.after, method: onImportFile }
+           - { name: kernel.event_listener, event: resource.claroline_scorm.copy, method: onCopy }
+           - { name: kernel.event_listener, event: download_claroline_scorm, method: onDownload }

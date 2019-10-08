@@ -3,12 +3,8 @@
 namespace Claroline\TagBundle\Listener\Platform;
 
 use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\TwigEngine;
 
-/**
- * @DI\Service
- */
 class ClientListener
 {
     /** @var TwigEngine */
@@ -16,10 +12,6 @@ class ClientListener
 
     /**
      * ClientListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
-     * })
      *
      * @param TwigEngine $templating
      */
@@ -29,8 +21,6 @@ class ClientListener
     }
 
     /**
-     * @DI\Observe("layout.inject.stylesheet")
-     *
      * @param InjectStylesheetEvent $event
      */
     public function onInjectCss(InjectStylesheetEvent $event)

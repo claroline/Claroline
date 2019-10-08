@@ -11,7 +11,6 @@
 
 namespace Claroline\AppBundle\Event;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -20,8 +19,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * whenever a communication between the core and the plugins is required and will
  * automatically throw an exception if this communication went wrong (i.e. if the
  * plugin didn't respond as expected).
- *
- * @DI\Service("claroline.event.event_dispatcher")
  *
  * @todo : move me inside \EventDispatcher namespace
  */
@@ -32,10 +29,6 @@ class StrictDispatcher
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "ed" = @DI\Inject("event_dispatcher")
-     * })
      */
     public function __construct(EventDispatcherInterface $ed)
     {

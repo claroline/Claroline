@@ -20,7 +20,6 @@ use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
 use Claroline\ScormBundle\Manager\ScormManager;
 use Claroline\ScormBundle\Serializer\ScoTrackingSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,14 +41,6 @@ class ScormController extends AbstractApiController
     private $translator;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization"         = @DI\Inject("security.authorization_checker"),
-     *     "finder"                = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
-     *     "scormManager"          = @DI\Inject("claroline.manager.scorm_manager"),
-     *     "scoTrackingSerializer" = @DI\Inject("claroline.serializer.scorm.sco.tracking"),
-     *     "translator"            = @DI\Inject("translator")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder
      * @param ScormManager                  $scormManager

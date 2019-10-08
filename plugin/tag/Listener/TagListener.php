@@ -16,11 +16,7 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class TagListener
 {
     /** @var ObjectManager */
@@ -31,11 +27,6 @@ class TagListener
 
     /**
      * TagListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "tagManager" = @DI\Inject("claroline.manager.tag_manager")
-     * })
      *
      * @param ObjectManager $om
      * @param TagManager    $tagManager
@@ -49,8 +40,6 @@ class TagListener
     }
 
     /**
-     * @DI\Observe("objects.search")
-     *
      * @param SearchObjectsEvent $event
      */
     public function onSearchObjects(SearchObjectsEvent $event)
@@ -85,8 +74,6 @@ class TagListener
     }
 
     /**
-     * @DI\Observe("claroline_tag_object")
-     *
      * @param GenericDataEvent $event
      */
     public function onObjectTag(GenericDataEvent $event)
@@ -103,8 +90,6 @@ class TagListener
     }
 
     /**
-     * @DI\Observe("claroline_tag_multiple_data")
-     *
      * @param GenericDataEvent $event
      */
     public function onDataTag(GenericDataEvent $event)
@@ -121,8 +106,6 @@ class TagListener
     }
 
     /**
-     * @DI\Observe("claroline_retrieve_user_workspaces_by_tag")
-     *
      * @param GenericDataEvent $event
      */
     public function onRetrieveUserWorkspacesByTag(GenericDataEvent $event)
@@ -148,8 +131,6 @@ class TagListener
 
     /**
      * Used by serializers to retrieves tags.
-     *
-     * @DI\Observe("claroline_retrieve_used_tags_by_class_and_ids")
      *
      * @param GenericDataEvent $event
      */
@@ -185,8 +166,6 @@ class TagListener
 
     /**
      * Used by serializers to retrieves tags object.
-     *
-     * @DI\Observe("claroline_retrieve_used_tags_object_by_class_and_ids")
      *
      * @param GenericDataEvent $event
      */

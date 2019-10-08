@@ -5,11 +5,7 @@ namespace Claroline\TagBundle\Listener;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\TagBundle\Manager\TagManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class WorkspaceListener
 {
     /** @var TagManager */
@@ -17,10 +13,6 @@ class WorkspaceListener
 
     /**
      * WorkspaceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.tag_manager")
-     * })
      *
      * @param TagManager $manager
      */
@@ -30,8 +22,6 @@ class WorkspaceListener
     }
 
     /**
-     * @DI\Observe("claroline_workspaces_delete")
-     *
      * @param GenericDataEvent $event
      */
     public function onDelete(GenericDataEvent $event)

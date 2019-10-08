@@ -12,18 +12,13 @@
 namespace Claroline\TextPlayerBundle\Listener\File\Type;
 
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Integrates Text files into Claroline.
- *
- * @DI\Service()
  */
 class TextListener
 {
     /**
-     * @DI\Observe("file.text.load")
-     *
      * @param LoadFileEvent $event
      */
     public function onLoad(LoadFileEvent $event)

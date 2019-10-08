@@ -11,19 +11,11 @@
 
 namespace Claroline\AppBundle\Command;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Process\Process;
 
-/**
- * @DI\Service("claroline.async.command")
- */
 class AsyncCommand
 {
     /**
-     * @DI\InjectParams({
-     *     "rootDir"  = @DI\Inject("%kernel.root_dir%")
-     * })
-     *
      * @param string $rootDir
      */
     public function __construct($rootDir)

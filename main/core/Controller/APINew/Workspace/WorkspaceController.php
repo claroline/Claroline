@@ -171,7 +171,7 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['user' => $this->container->get('security.token_storage')->getToken()->getUser()->getId()]]),
+            array_merge($request->query->all(), ['hiddenFilters' => ['user' => $this->tokenStorage->getToken()->getUser()->getId()]]),
             $this->getOptions()['list']
         ));
     }

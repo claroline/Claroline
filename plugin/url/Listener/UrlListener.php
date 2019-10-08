@@ -6,11 +6,7 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use HeVinci\UrlBundle\Entity\Url;
 use HeVinci\UrlBundle\Serializer\UrlSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class UrlListener
 {
     /** @var UrlSerializer */
@@ -18,10 +14,6 @@ class UrlListener
 
     /**
      * UrlListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.serializer.url")
-     * })
      *
      * @param UrlSerializer $serializer
      */
@@ -32,8 +24,6 @@ class UrlListener
 
     /**
      * Loads an URL resource.
-     *
-     * @DI\Observe("resource.hevinci_url.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -50,8 +40,6 @@ class UrlListener
     }
 
     /**
-     * @DI\Observe("resource.hevinci_url.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)

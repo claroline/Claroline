@@ -6,12 +6,9 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Used to integrate Slideshow to Claroline resource manager.
- *
- * @DI\Service()
  */
 class SlideshowListener
 {
@@ -20,10 +17,6 @@ class SlideshowListener
 
     /**
      * SlideshowListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("Claroline\AppBundle\API\SerializerProvider")
-     * })
      *
      * @param SerializerProvider $serializer
      */
@@ -34,8 +27,6 @@ class SlideshowListener
 
     /**
      * Loads the Slideshow resource.
-     *
-     * @DI\Observe("resource.claro_slideshow.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -52,8 +43,6 @@ class SlideshowListener
 
     /**
      * Fired when a ResourceNode of type Slideshow is deleted.
-     *
-     * @DI\Observe("resource.claro_slideshow.delete")
      *
      * @param DeleteResourceEvent $event
      */

@@ -3,7 +3,6 @@
 namespace Claroline\VideoPlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\TwigEngine;
 
 class PluginListener
@@ -13,10 +12,6 @@ class PluginListener
 
     /**
      * VideoPlayerListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "templating"      = @DI\Inject("templating")
-     * })
      *
      * @param TwigEngine $templating
      */

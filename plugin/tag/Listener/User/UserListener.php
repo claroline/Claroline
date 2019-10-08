@@ -9,11 +9,7 @@ use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Manager\TagManager;
 use Claroline\TagBundle\Repository\TagRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class UserListener
 {
     /** @var ObjectManager */
@@ -27,11 +23,6 @@ class UserListener
 
     /**
      * UserListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"      = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "manager" = @DI\Inject("claroline.manager.tag_manager")
-     * })
      *
      * @param ObjectManager $om
      * @param TagManager    $manager
@@ -47,8 +38,6 @@ class UserListener
     }
 
     /**
-     * @DI\Observe("claroline_users_delete")
-     *
      * @param GenericDataEvent $event
      */
     public function onDelete(GenericDataEvent $event)
@@ -65,8 +54,6 @@ class UserListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)

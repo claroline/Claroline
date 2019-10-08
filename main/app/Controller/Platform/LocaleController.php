@@ -12,7 +12,6 @@
 namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\CoreBundle\Manager\LocaleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,11 +26,6 @@ class LocaleController
 
     /**
      * LocaleController constructor.
-     *
-     * @DI\InjectParams({
-     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage")
-     * })
      *
      * @param LocaleManager         $localeManager
      * @param TokenStorageInterface $tokenStorage

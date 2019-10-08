@@ -30,15 +30,10 @@ services:
                 arguments:
                   - '@service_container'
 
-    Claroline\AppBundle\Controller\Platform\ClientController:
+    Claroline\ScormBundle\Controller\API\ScormController:
         arguments:
-          - '@security.token_storage'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
-
-    Claroline\AppBundle\Controller\Platform\LocaleController:
-        arguments:
-          - '@claroline.manager.locale_manager'
-          - '@security.token_storage'
+          - '@security.authorization_checker'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\ScormBundle\Manager\ScormManager'
+          - '@claroline.serializer.scorm.sco.tracking'
+          - '@translator'

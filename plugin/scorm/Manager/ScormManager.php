@@ -27,15 +27,11 @@ use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
 use Claroline\ScormBundle\Serializer\ScormSerializer;
 use Claroline\ScormBundle\Serializer\ScoSerializer;
 use Claroline\ScormBundle\Serializer\ScoTrackingSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * @DI\Service("claroline.manager.scorm_manager")
- */
 class ScormManager
 {
     /** @var EventDispatcherInterface */
@@ -72,20 +68,6 @@ class ScormManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
-     *     "fileSystem"            = @DI\Inject("filesystem"),
-     *     "filesDir"              = @DI\Inject("%claroline.param.files_directory%"),
-     *     "om"                    = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "resourceEvalManager"   = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
-     *     "scormLib"              = @DI\Inject("claroline.library.scorm"),
-     *     "scormSerializer"       = @DI\Inject("claroline.serializer.scorm"),
-     *     "scoSerializer"         = @DI\Inject("claroline.serializer.scorm.sco"),
-     *     "scoTrackingSerializer" = @DI\Inject("claroline.serializer.scorm.sco.tracking"),
-     *     "uploadDir"             = @DI\Inject("%claroline.param.uploads_directory%")
-     * })
      *
      * @param EventDispatcherInterface  $eventDispatcher
      * @param Filesystem                $fileSystem

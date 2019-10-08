@@ -5,11 +5,7 @@ namespace Claroline\TagBundle\Listener\Resource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\TagBundle\Manager\TagManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class ResourceListener
 {
     /** @var TagManager */
@@ -17,10 +13,6 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.tag_manager")
-     * })
      *
      * @param TagManager $manager
      */
@@ -30,8 +22,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("claroline_resources_delete")
-     *
      * @param GenericDataEvent $event
      */
     public function onDelete(GenericDataEvent $event)

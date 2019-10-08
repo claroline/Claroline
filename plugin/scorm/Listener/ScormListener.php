@@ -23,15 +23,11 @@ use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\ScormManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class ScormListener
 {
     /** @var string */
@@ -55,17 +51,6 @@ class ScormListener
     private $scoTrackingRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "filesDir"            = @DI\Inject("%claroline.param.files_directory%"),
-     *     "fileSystem"          = @DI\Inject("filesystem"),
-     *     "om"                  = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "scormManager"        = @DI\Inject("claroline.manager.scorm_manager"),
-     *     "serializer"          = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "uploadDir"           = @DI\Inject("%claroline.param.uploads_directory%")
-     * })
-     *
      * @param string                    $filesDir
      * @param Filesystem                $fileSystem
      * @param ObjectManager             $om
@@ -99,8 +84,6 @@ class ScormListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_scorm.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -124,8 +107,6 @@ class ScormListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_scorm.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -155,9 +136,6 @@ class ScormListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_scorm.import.before")
-     */
     public function onImportBefore(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -189,9 +167,6 @@ class ScormListener
         return $string;
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_scorm.export")
-     */
     public function onExportFile(ExportObjectEvent $exportEvent)
     {
         $file = $exportEvent->getObject();
@@ -203,9 +178,6 @@ class ScormListener
         $exportEvent->overwrite('_path', $newPath);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_scorm.import.after")
-     */
     public function onImportFile(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -224,8 +196,6 @@ class ScormListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_scorm.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -270,8 +240,6 @@ class ScormListener
     }
 
     /**
-     * @DI\Observe("download_claroline_scorm")
-     *
      * @param DownloadResourceEvent $event
      */
     public function onDownload(DownloadResourceEvent $event)

@@ -4,12 +4,7 @@ namespace HeVinci\UrlBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use HeVinci\UrlBundle\Entity\Url;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.serializer.url")
- * @DI\Tag("claroline.serializer")
- */
 class UrlSerializer
 {
     use SerializerTrait;

@@ -37,7 +37,7 @@ class ConvertOldScormCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $withoutLogs = $input->getOption('no-logs');
-        $scormManager = $this->getContainer()->get('claroline.manager.scorm_manager');
+        $scormManager = $this->getContainer()->get('Claroline\ScormBundle\Manager\ScormManager');
 
         $output->writeln('<info>  Starting conversion of Scorm 1.2 resources...</info>');
         $scormManager->convertAllScorm12(!$withoutLogs);

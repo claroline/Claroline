@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -50,8 +49,6 @@ class TeamListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_claroline_team_tool")
-     *
      * @param DisplayToolEvent $event
      */
     public function onWorkspaceToolOpen(DisplayToolEvent $event)

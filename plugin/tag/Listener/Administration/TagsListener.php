@@ -12,16 +12,10 @@
 namespace Claroline\TagBundle\Listener\Administration;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class TagsListener
 {
     /**
-     * @DI\Observe("administration_tool_claroline_tag_admin_tool")
-     *
      * @param OpenAdministrationToolEvent $event
      */
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)

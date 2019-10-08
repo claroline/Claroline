@@ -5,11 +5,7 @@ namespace Claroline\TagBundle\Listener\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\TagBundle\Manager\TagManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class GroupListener
 {
     /** @var TagManager */
@@ -17,10 +13,6 @@ class GroupListener
 
     /**
      * GroupListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.tag_manager")
-     * })
      *
      * @param TagManager $manager
      */
@@ -30,8 +22,6 @@ class GroupListener
     }
 
     /**
-     * @DI\Observe("claroline_groups_delete")
-     *
      * @param GenericDataEvent $event
      */
     public function onDelete(GenericDataEvent $event)

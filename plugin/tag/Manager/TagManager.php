@@ -17,11 +17,7 @@ use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
 use Claroline\TagBundle\Repository\TagRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.tag_manager")
- */
 class TagManager
 {
     /** @var ObjectManager */
@@ -35,10 +31,6 @@ class TagManager
 
     /**
      * TagManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
      *
      * @param ObjectManager $om
      */

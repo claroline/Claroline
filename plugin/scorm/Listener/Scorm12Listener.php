@@ -28,12 +28,6 @@ class Scorm12Listener
     // path to the Scorm unzipped files
     private $scormResourcesPath;
 
-    /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "om"        = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
-     */
     public function __construct(ContainerInterface $container, ObjectManager $om)
     {
         $this->filePath = $container->getParameter('claroline.param.files_directory');
@@ -46,8 +40,6 @@ class Scorm12Listener
     }
 
     /**
-     * @DI\Observe("resource.claroline_scorm_12.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)

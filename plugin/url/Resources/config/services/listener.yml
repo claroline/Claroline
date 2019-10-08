@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    HeVinci\UrlBundle\Listener\UrlListener:
+        arguments:
+            - '@claroline.serializer.url'
+        tags:
+            - { name: kernel.event_listener, event: resource.hevinci_url.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.hevinci_url.delete, method: onDelete }

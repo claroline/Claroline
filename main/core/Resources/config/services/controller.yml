@@ -183,13 +183,13 @@ services:
           - '@claroline.utilities.file'
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.async.command'
+          - '@Claroline\AppBundle\Command\AsyncCommand'
 
     Claroline\CoreBundle\Controller\APINew\WidgetController:
         arguments:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.widget_manager'
-          - '@claroline.manager.data_source'
+          - '@Claroline\AppBundle\Command\AsyncCommand'
 
     Claroline\CoreBundle\Controller\Administration\ArchiveController:
         arguments:

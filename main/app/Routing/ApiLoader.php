@@ -6,7 +6,6 @@ namespace Claroline\AppBundle\Routing;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Doctrine\Common\Annotations\Reader;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method as MethodConfig;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as RouteConfig;
 use Symfony\Component\Config\FileLocatorInterface;
@@ -14,10 +13,6 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * @DI\Service("claroline.routing.api_loader")
- * @DI\Tag("routing.loader")
- */
 class ApiLoader extends Loader
 {
     const DEFAULT_MAP = [
@@ -45,12 +40,6 @@ class ApiLoader extends Loader
 
     /**
      * ApiLoader constructor.
-     *
-     * @DI\InjectParams({
-     *     "locator"   = @DI\Inject("file_locator"),
-     *     "reader"    = @DI\Inject("annotation_reader"),
-     *     "container" = @DI\Inject("service_container")
-     * })
      *
      * @param FileLocatorInterface $locator
      * @param Reader               $reader
