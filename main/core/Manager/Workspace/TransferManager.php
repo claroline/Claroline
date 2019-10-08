@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
-use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -31,20 +30,35 @@ class TransferManager
 
     /** @var ObjectManager */
     private $om;
-
     /** @var StrictDispatcher */
     private $dispatcher;
-
+    /** @var TempFileManager */
+    private $tempFileManager;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var FinderProvider */
+    private $finder;
+    /** @var Crud */
+    private $crud;
+    /** @var TokenStorage */
+    private $tokenStorage;
+    /** @var OrderedToolTransfer */
+    private $ots;
+    /** @var FileUtilities */
+    private $fileUts;
 
     /**
-     * Crud constructor.
+     * TransferManager constructor.
      *
-     * @param ObjectManager      $om
-     * @param StrictDispatcher   $dispatcher
-     * @param SerializerProvider $serializer
-     * @param ValidatorProvider  $validator
+     * @param ObjectManager       $om
+     * @param StrictDispatcher    $dispatcher
+     * @param TempFileManager     $tempFileManager
+     * @param SerializerProvider  $serializer
+     * @param OrderedToolTransfer $ots
+     * @param FinderProvider      $finder
+     * @param Crud                $crud
+     * @param TokenStorage        $tokenStorage
+     * @param FileUtilities       $fileUts
      */
     public function __construct(
       ObjectManager $om,
@@ -69,7 +83,8 @@ class TransferManager
     }
 
     /**
-     * @param mixed $data - the serialized data of the object to create
+     * @param array     $data      - the serialized data of the object to create
+     * @param Workspace $workspace
      *
      * @return object
      */
@@ -133,9 +148,10 @@ class TransferManager
     {
         $serialized = $this->serializer->serialize($workspace, [Options::REFRESH_UUID]);
 
-        //if roles duplicatas, remove them
+        // if roles duplicates, remove them
         $roles = $serialized['roles'];
 
+        $uniques = [];
         foreach ($roles as $role) {
             $uniques[$role['translationKey']] = ['type' => $role['type']];
         }
@@ -149,12 +165,13 @@ class TransferManager
         $serialized['roles'] = $roles;
 
         //we want to load the resources first
+        /** @var OrderedTool[] $ot */
         $ot = $workspace->getOrderedTools()->toArray();
 
         $idx = 0;
 
         foreach ($ot as $key => $tool) {
-            if ('resources' === $tool->getName()) {
+            if ('resources' === $tool->getTool()->getName()) {
                 $idx = $key;
             }
         }
@@ -175,8 +192,10 @@ class TransferManager
     /**
      * Deserializes Workspace data into entities.
      *
-     * @param array $data
-     * @param array $options
+     * @param array     $data
+     * @param Workspace $workspace
+     * @param array     $options
+     * @param FileBag   $bag
      *
      * @return Workspace
      */
@@ -193,6 +212,7 @@ class TransferManager
         $workspace = $this->serializer->deserialize($data, $workspace, $options);
 
         $this->log('Deserializing the roles...');
+        $roles = [];
         foreach ($data['roles'] as $roleData) {
             $roleData['workspace']['uuid'] = $workspace->getUuid();
             $role = $this->serializer->deserialize($roleData, new Role());
@@ -245,7 +265,7 @@ class TransferManager
     {
         foreach ($data['orderedTools'] as $key => $orderedToolData) {
             //copied from crud
-            $name = 'export_tool_'.$orderedToolData['name'];
+            $name = 'export_tool_'.$orderedToolData['tool'];
             //use an other even. StdClass is not pretty
             if (isset($orderedToolData['data'])) {
                 /** @var ExportObjectEvent $event */
@@ -297,7 +317,7 @@ class TransferManager
         $replaced = json_encode($serialized);
 
         foreach ($serialized['orderedTools'] as $tool) {
-            if ('resources' === $tool['name']) {
+            if ('resources' === $tool['tool']) {
                 $nodes = $tool['data']['nodes'];
 
                 foreach ($nodes as $data) {

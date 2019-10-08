@@ -76,7 +76,7 @@ class OrderedToolTransfer
     public function dispatchPreEvent(array $data, array $orderedToolData)
     {
         //use event instead maybe ? or tagged service
-        $serviceName = 'claroline.transfer.'.$orderedToolData['name'];
+        $serviceName = 'claroline.transfer.'.$orderedToolData['tool'];
 
         if ($this->container->has($serviceName)) {
             $importer = $this->container->get($serviceName);
