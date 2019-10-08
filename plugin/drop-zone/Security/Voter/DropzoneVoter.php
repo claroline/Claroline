@@ -12,13 +12,8 @@
 namespace Claroline\DropZoneBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class DropzoneVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)

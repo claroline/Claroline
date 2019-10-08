@@ -14,16 +14,11 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
-use Doctrine\ORM\EntityManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * This voter is involved in access decisions for facets.
- *
- * @DI\Service
- * @DI\Tag("security.voter")
  */
 class FacetVoter
 {
@@ -32,18 +27,6 @@ class FacetVoter
 
     const VIEW = 'view';
     const EDIT = 'edit';
-
-    /**
-     * @DI\InjectParams({
-     *     "em"        = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "container" = @DI\Inject("service_container")
-     * })
-     */
-    public function __construct(EntityManager $em, $container)
-    {
-        $this->em = $em;
-        $this->container = $container;
-    }
 
     /**
      * Attributes can either be "open" or "edit".
@@ -133,7 +116,7 @@ class FacetVoter
                 $panel = $field->getPanelFacet();
                 //can we edit the panel because we were granted the right to do it ?
                 $access = $this->checkPanelEdit($token, $panel);
-                if ($access === VoterInterface::ACCESS_DENIED) {
+                if (VoterInterface::ACCESS_DENIED === $access) {
                     //nope
                     return $access;
                 }

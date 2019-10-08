@@ -12,14 +12,9 @@
 namespace UJM\LtiBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use UJM\LtiBundle\Entity\LtiResource;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class LtiResourceVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)

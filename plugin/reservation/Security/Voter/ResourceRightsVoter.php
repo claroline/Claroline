@@ -13,14 +13,9 @@ namespace FormaLibre\ReservationBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use FormaLibre\ReservationBundle\Entity\ResourceRights;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class ResourceRightsVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
@@ -72,7 +67,7 @@ class ResourceRightsVoter extends AbstractVoter
         $user = $token->getUser();
         $resource = $resourceRights->getResource();
 
-        if (!$this->hasAdminToolAccess($token, 'formalibre_reservation_tool') || $user === 'anon.') {
+        if (!$this->hasAdminToolAccess($token, 'formalibre_reservation_tool') || 'anon.' === $user) {
             return VoterInterface::ACCESS_DENIED;
         }
         $userOrganizations = $user->getOrganizations();

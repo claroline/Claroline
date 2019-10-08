@@ -13,14 +13,9 @@ namespace Claroline\CoreBundle\Security\Voter\Tool\Home;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class ToolVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)

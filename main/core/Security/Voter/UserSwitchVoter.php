@@ -21,8 +21,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 
  // use theses annotations later
- // @DI\Service
- // @DI\Tag("security.voter")
 class UserSwitchVoter extends Voter
 {
     protected function supports($attribute, $subject)

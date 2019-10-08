@@ -36,14 +36,11 @@ services:
 
     Claroline\ClacoFormBundle\Controller\API\EntryController:
         arguments:
-          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Controller\API\EntryUserController: ~
 
-    Claroline\ClacoFormBundle\Controller\API\KeywordController:
-        arguments:
-          - '@Claroline\AppBundle\API\FinderProvider'
+    Claroline\ClacoFormBundle\Controller\API\KeywordController: ~
 
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:

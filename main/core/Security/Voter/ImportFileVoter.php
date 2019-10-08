@@ -12,14 +12,9 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Import\File;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class ImportFileVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)

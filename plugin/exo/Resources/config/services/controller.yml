@@ -62,12 +62,6 @@ services:
           - '@UJM\ExoBundle\Manager\DocimologyManager'
           - '@UJM\ExoBundle\Manager\Item\ItemManager'
 
-    UJM\ExoBundle\Controller\ExerciseController:
-        arguments:
-          - '@security.authorization_checker'
-          - '@UJM\ExoBundle\Manager\ExerciseManager'
-          - '@UJM\ExoBundle\Manager\DocimologyManager'
-
     UJM\ExoBundle\Controller\PaperController:
         arguments:
           - '@security.authorization_checker'

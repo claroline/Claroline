@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\PlatformRoles;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -20,9 +19,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * This voter grants access to admin users, whenever the attribute or the
  * class is. This means that administrators are seen by the AccessDecisionManager
  * as if they have all the possible roles and permissions on every object or class.
- *
- * @DI\Service
- * @DI\Tag("security.voter")
  */
 class AdministratorVoter implements VoterInterface
 {
@@ -57,7 +53,7 @@ class AdministratorVoter implements VoterInterface
     private function isUsurpatingWorkspaceRole(TokenInterface $token)
     {
         foreach ($token->getRoles() as $role) {
-            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+            if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
                 return true;
             }
         }

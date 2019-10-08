@@ -12,3 +12,72 @@ services:
               - method: setContainer
                 arguments:
                   - '@service_container'
+            #this will have to change one day I think
+
+    Claroline\CoreBundle\Security\Voter\ConnectionMessage\ConnectionMessageVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Template\TemplateVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Tool\Home\HomeTabVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Tool\Home\ToolVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetContainerVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetInstanceVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\AdministrationToolVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\AdministratorVoter:
+        tags: [security.voter]
+
+    Claroline\CoreBundle\Security\Voter\ApiTokenVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\FacetVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\GroupVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\ImportFileVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\IPWhiteListVoter:
+        tags: [security.voter]
+        arguments:
+            - '@claroline.manager.ip_white_list_manager'
+
+    Claroline\CoreBundle\Security\Voter\LocationVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\OrganizationVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\PublicFileVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\ResourceCommentVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\ResourceVoter:
+        tags: [security.voter]
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+            - '@claroline.security.utilities'
+            - '@claroline.manager.mask_manager'
+            - '@claroline.manager.resource_manager'
+            - '@claroline.manager.workspace_manager'
+            - '@claroline.manager.rights_manager'
+            - '@claroline.manager.resource_restrictions'
+
+    Claroline\CoreBundle\Security\Voter\RoleVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\TextVoter: ~
+
+    #no tag here
+    Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\UserVoter: ~
+
+    Claroline\CoreBundle\Security\Voter\WidgetVoter:
+        tags: [security.voter]
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+            - '@claroline.manager.workspace_manager'
+
+    Claroline\CoreBundle\Security\Voter\WorkspaceVoter: ~

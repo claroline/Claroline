@@ -13,14 +13,9 @@ namespace Claroline\DropZoneBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-/**
- * @DI\Service
- * @DI\Tag("security.voter")
- */
 class RevisionCommentVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
