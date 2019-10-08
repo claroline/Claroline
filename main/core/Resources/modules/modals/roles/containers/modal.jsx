@@ -19,7 +19,7 @@ const RolesModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(listActions.resetFilters(selectors.STORE_NAME, filters))
       },
       reset() {
-        dispatch(listActions.reset(selectors.STORE_NAME))
+        dispatch(listActions.resetSelect(selectors.STORE_NAME))
         dispatch(listActions.invalidateData(selectors.STORE_NAME))
       }
     })
