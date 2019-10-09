@@ -15,11 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\ForumBundle\Entity\Message;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class ForumSource
 {
     /** @var FinderProvider */
@@ -27,10 +23,6 @@ class ForumSource
 
     /**
      * ForumSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder" = @DI\Inject("Claroline\AppBundle\API\FinderProvider")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -40,8 +32,6 @@ class ForumSource
     }
 
     /**
-     * @DI\Observe("data_source.forum_messages.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

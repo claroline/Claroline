@@ -8,13 +8,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\MessageBundle\Manager\MessageManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.crud.forum_subject")
- * @DI\Tag("claroline.crud")
- */
 class SubjectCrud
 {
     use PermissionCheckerTrait;
@@ -22,27 +18,21 @@ class SubjectCrud
     /**
      * ForumSerializer constructor.
      *
-     * @DI\InjectParams({
-     *     "om"           = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "messageManager" = @DI\Inject("Claroline\MessageBundle\Manager\MessageManager")
-     * })
-     *
      * @param FinderProvider $finder
      */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
-        MessageManager $messageManager
+        MessageManager $messageManager,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->messageManager = $messageManager;
+        $this->authorization = $authorization;
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_forumbundle_entity_subject")
-     *
      * @param CreateEvent $event
      *
      * @return ResourceNode

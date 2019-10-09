@@ -13,21 +13,11 @@ namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service()
- */
 class NotificationListener
 {
-    /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "router"     = @DI\Inject("router")
-     * })
-     */
     public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
         $this->translator = $translator;
@@ -36,7 +26,6 @@ class NotificationListener
 
     /**
      * @param NotificationCreateDelegateViewEvent $event
-     * @DI\Observe("create_notification_item_forum_message-create")
      */
     public function onCreateNotificationItem(NotificationCreateDelegateViewEvent $event)
     {
@@ -64,8 +53,6 @@ class NotificationListener
 
     /**
      * @param NotificationUserParametersEvent $event
-     *
-     * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {

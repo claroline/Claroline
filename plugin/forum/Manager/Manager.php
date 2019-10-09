@@ -16,22 +16,13 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Validation\User as ValidationUser;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.forum_manager")
- */
 class Manager
 {
     private $finder;
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder" = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
-     *     "om"     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
      */
     public function __construct(FinderProvider $finder, ObjectManager $om)
     {

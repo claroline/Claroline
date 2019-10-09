@@ -4,12 +4,9 @@ namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\ForumBundle\Manager\Manager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class ApiListener.
- *
- * @DI\Service
  */
 class ApiListener
 {
@@ -17,10 +14,6 @@ class ApiListener
     private $manager;
 
     /**
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.forum_manager")
-     * })
-     *
      * @param Manager $manager
      */
     public function __construct(Manager $manager)
@@ -29,8 +22,6 @@ class ApiListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)

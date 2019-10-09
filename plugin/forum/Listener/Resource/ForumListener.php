@@ -23,13 +23,9 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\Manager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class ForumListener
 {
     /** @var ObjectManager */
@@ -52,15 +48,6 @@ class ForumListener
 
     /**
      * ForumListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "serializer"        = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "crud"              = @DI\Inject("Claroline\AppBundle\API\Crud"),
-     *     "evaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "manager"           = @DI\Inject("claroline.manager.forum_manager"),
-     *     "tokenStorage"      = @DI\Inject("security.token_storage")
-     * })
      *
      * @param ObjectManager             $om
      * @param SerializerProvider        $serializer
@@ -88,8 +75,6 @@ class ForumListener
     /**
      * Loads a Forum resource.
      *
-     * @DI\Observe("resource.claroline_forum.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onOpen(LoadResourceEvent $event)
@@ -114,8 +99,6 @@ class ForumListener
     /**
      * Deletes a forum resource.
      *
-     * @DI\Observe("resource.claroline_forum.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -123,9 +106,6 @@ class ForumListener
         $event->stopPropagation();
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_forum.export")
-     */
     public function onExport(ExportObjectEvent $exportEvent)
     {
         $forum = $exportEvent->getObject();
@@ -137,9 +117,6 @@ class ForumListener
         $exportEvent->overwrite('_data', $data);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_forum.import.before")
-     */
     public function onImportBefore(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -154,9 +131,6 @@ class ForumListener
         $event->setExtra($data);
     }
 
-    /**
-     * @DI\Observe("transfer.claroline_forum.import.after")
-     */
     public function onImport(ImportObjectEvent $event)
     {
         $data = $event->getData();
@@ -172,8 +146,6 @@ class ForumListener
 
     /**
      * Creates evaluation for forum resource.
-     *
-     * @DI\Observe("generate_resource_user_evaluation_claroline_forum")
      *
      * @param GenericDataEvent $event
      */

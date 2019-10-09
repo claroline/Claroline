@@ -13,27 +13,15 @@ use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User;
 use Claroline\ForumBundle\Event\LogPostMessageEvent;
 use Claroline\MessageBundle\Manager\MessageManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service("claroline.crud.forum_message")
- * @DI\Tag("claroline.crud")
- */
 class MessageCrud
 {
     use PermissionCheckerTrait;
 
     /**
      * ForumSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"             = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "messageManager" = @DI\Inject("Claroline\MessageBundle\Manager\MessageManager"),
-     *     "dispatcher"     = @DI\Inject("Claroline\AppBundle\Event\StrictDispatcher"),
-     *     "userFinder"     = @DI\Inject("Claroline\CoreBundle\API\Finder\User\UserFinder")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -42,18 +30,18 @@ class MessageCrud
         TokenStorageInterface $tokenStorage,
         MessageManager $messageManager,
         StrictDispatcher $dispatcher,
-        UserFinder $userFinder
+        UserFinder $userFinder,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->messageManager = $messageManager;
         $this->dispatcher = $dispatcher;
         $this->userFinder = $userFinder;
+        $this->authorization = $authorization;
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_forumbundle_entity_message")
-     *
      * @param CreateEvent $event
      *
      * @return ResourceNode
@@ -90,8 +78,6 @@ class MessageCrud
     }
 
     /**
-     * @DI\Observe("crud_post_create_object_claroline_forumbundle_entity_message")
-     *
      * @param CreateEvent $event
      *
      * @return ResourceNode
