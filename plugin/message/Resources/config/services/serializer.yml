@@ -9,7 +9,7 @@ services:
         arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@security.token_storage'
-           - '@claroline.manager.message_manager'
+           - '@Claroline\MessageBundle\Manager\MessageManager'
            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
     Claroline\MessageBundle\Serializer\Contact\OptionsSerializer:

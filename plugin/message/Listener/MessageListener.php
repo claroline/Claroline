@@ -16,11 +16,7 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\MessageBundle\Manager\MessageManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- */
 class MessageListener
 {
     /** @var MessageManager */
@@ -30,11 +26,6 @@ class MessageListener
 
     /**
      * MessageListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
-     *     "taskManager"    = @DI\Inject("claroline.manager.scheduled_task_manager")
-     * })
      *
      * @param MessageManager       $messageManager
      * @param ScheduledTaskManager $taskManager
@@ -48,8 +39,6 @@ class MessageListener
     }
 
     /**
-     * @DI\Observe("claroline_message_sending")
-     *
      * @param SendMessageEvent $event
      */
     public function onMessageSending(SendMessageEvent $event)
@@ -64,8 +53,6 @@ class MessageListener
     }
 
     /**
-     * @DI\Observe("claroline_message_sending_to_users")
-     *
      * @param SendMessageEvent $event
      */
     public function onMessageSendingToUsers(SendMessageEvent $event)
@@ -81,8 +68,6 @@ class MessageListener
     }
 
     /**
-     * @DI\Observe("claroline_scheduled_task_execute_message")
-     *
      * @param GenericDataEvent $event
      */
     public function onExecuteMessageTask(GenericDataEvent $event)

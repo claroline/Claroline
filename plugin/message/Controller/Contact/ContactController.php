@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\MessageBundle\Entity\Contact\Contact;
 use Claroline\MessageBundle\Manager\ContactManager;
 use Claroline\MessageBundle\Serializer\Contact\ContactSerializer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,15 +44,6 @@ class ContactController extends AbstractCrudController
 
     /**
      * ContactController constructor.
-     *
-     * @DI\InjectParams({
-     *     "apiManager"        = @DI\Inject("claroline.manager.api_manager"),
-     *     "contactManager"    = @DI\Inject("claroline.manager.contact_manager"),
-     *     "contactSerializer" = @DI\Inject("claroline.serializer.contact"),
-     *     "finder"            = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
-     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
-     *     "userSerializer"    = @DI\Inject("Claroline\CoreBundle\API\Serializer\User\UserSerializer")
-     * })
      *
      * @param ApiManager            $apiManager
      * @param ContactManager        $contactManager

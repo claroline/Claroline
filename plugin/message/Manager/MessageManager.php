@@ -37,12 +37,6 @@ class MessageManager
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "mailManager"  = @DI\Inject("claroline.manager.mail_manager"),
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "om"           = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
      */
     public function __construct(
         MailManager $mailManager,

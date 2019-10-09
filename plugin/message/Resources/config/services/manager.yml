@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\MessageBundle\Manager\ContactManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\MessageBundle\Manager\MessageManager:
+        arguments:
+            - '@claroline.manager.mail_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'

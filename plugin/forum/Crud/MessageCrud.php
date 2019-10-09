@@ -30,7 +30,7 @@ class MessageCrud
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
      *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
+     *     "messageManager" = @DI\Inject("Claroline\MessageBundle\Manager\MessageManager"),
      *     "dispatcher"     = @DI\Inject("Claroline\AppBundle\Event\StrictDispatcher"),
      *     "userFinder"     = @DI\Inject("Claroline\CoreBundle\API\Finder\User\UserFinder")
      * })

@@ -16,11 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Contact\Category;
 use Claroline\MessageBundle\Entity\Contact\Contact;
 use Claroline\MessageBundle\Entity\Contact\Options;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.contact_manager")
- */
 class ContactManager
 {
     private $om;
@@ -30,12 +26,6 @@ class ContactManager
     private $optionsRepo;
 
     /**
-     * ContactManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
-     *
      * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)

@@ -13,13 +13,10 @@ namespace Claroline\MessageBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\MessageBundle\Manager\ContactManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Messaging tool.
- *
- * @DI\Service()
  */
 class MessagingListener
 {
@@ -31,11 +28,6 @@ class MessagingListener
 
     /**
      * ContactsListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "contactManager" = @DI\Inject("claroline.manager.contact_manager")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param ContactManager        $contactManager
@@ -50,8 +42,6 @@ class MessagingListener
 
     /**
      * Displays messaging on Desktop.
-     *
-     * @DI\Observe("open_tool_desktop_messaging")
      *
      * @param DisplayToolEvent $event
      */

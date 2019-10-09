@@ -11,7 +11,7 @@ services:
             - '@claroline.manager.facet_manager'
             - '@filesystem'
             - '%claroline.param.files_directory%'
-            - '@claroline.manager.message_manager'
+            - '@Claroline\MessageBundle\Manager\MessageManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
             - '@security.token_storage'

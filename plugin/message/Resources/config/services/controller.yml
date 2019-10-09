@@ -1,0 +1,46 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@Claroline\AppBundle\API\FinderProvider'
+              - method: setSerializer
+                arguments:
+                  - '@Claroline\AppBundle\API\SerializerProvider'
+              - method: setCrud
+                arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+              - method: setObjectManager
+                arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
+    Claroline\MessageBundle\Controller\Contact\ContactController:
+        arguments:
+          - '@claroline.manager.api_manager'
+          - '@Claroline\MessageBundle\Manager\ContactManager'
+          - '@claroline.serializer.contact'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@security.token_storage'
+          - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
+    Claroline\MessageBundle\Controller\Contact\OptionsController: ~
+
+    Claroline\MessageBundle\Controller\MessageController:
+        arguments:
+          - '@Claroline\MessageBundle\Manager\MessageManager'

@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\MessageBundle\Crud\Message:
+        arguments:
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+        tags:
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_messagebundle_entity_message, method: postCreate }
