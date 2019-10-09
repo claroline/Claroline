@@ -11,11 +11,7 @@ use Claroline\HistoryBundle\Entity\ResourceRecent;
 use Claroline\HistoryBundle\Entity\WorkspaceRecent;
 use Claroline\HistoryBundle\Repository\ResourceRecentRepository;
 use Claroline\HistoryBundle\Repository\WorkspaceRecentRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.history")
- */
 class HistoryManager
 {
     use LoggableTrait;
@@ -30,10 +26,6 @@ class HistoryManager
 
     /**
      * HistoryManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
      *
      * @param ObjectManager $om
      */

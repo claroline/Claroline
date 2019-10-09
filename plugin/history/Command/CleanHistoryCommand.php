@@ -21,7 +21,7 @@ class CleanHistoryCommand extends ContainerAwareCommand
         $logger = ConsoleLogger::get($output);
 
         /** @var HistoryManager $historyManager */
-        $historyManager = $this->getContainer()->get('claroline.manager.history');
+        $historyManager = $this->getContainer()->get('Claroline\HistoryBundle\Manager\HistoryManager');
         $historyManager->setLogger($logger);
         $historyManager->cleanRecent();
     }

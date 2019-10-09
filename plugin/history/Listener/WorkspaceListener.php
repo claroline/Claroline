@@ -27,7 +27,7 @@ class WorkspaceListener
      *
      * @DI\InjectParams({
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "manager"          = @DI\Inject("claroline.manager.history"),
+     *     "manager"          = @DI\Inject("Claroline\HistoryBundle\Manager\HistoryManager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      *

@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\HistoryBundle\Manager\HistoryManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\HistoryBundle\Listener\WorkspaceListener:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'
+            - '@claroline.manager.workspace_manager'
+
+    Claroline\HistoryBundle\Listener\ResourceListener:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'
+
+    Claroline\HistoryBundle\Controller\HistoryController:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'

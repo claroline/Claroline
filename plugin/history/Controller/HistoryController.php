@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\HistoryBundle\Manager\HistoryManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -36,11 +35,6 @@ class HistoryController
 
     /**
      * HistoryController constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "manager"    = @DI\Inject("claroline.manager.history")
-     * })
      *
      * @param SerializerProvider $serializer
      * @param HistoryManager     $manager
