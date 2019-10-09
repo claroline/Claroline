@@ -52,7 +52,7 @@ const PlayerRestrictions = props => {
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-check-double',
                 label: trans('view_paper', {}, 'quiz'),
-                target: `/papers/${props.lastAttempt.id}`,
+                target: `${props.path}/papers/${props.lastAttempt.id}`,
                 displayed: showAttemptCorrection,
                 primary: true
               }, {
@@ -60,7 +60,7 @@ const PlayerRestrictions = props => {
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-bar-chart',
                 label: trans('statistics', {}, 'quiz'),
-                target: '/statistics',
+                target: `${props.path}/statistics`,
                 displayed: props.showStatistics
               }, {
                 name: 'home',
@@ -79,6 +79,7 @@ const PlayerRestrictions = props => {
 }
 
 PlayerRestrictions.propTypes = {
+  path: T.string,
   showStatistics: T.bool,
   workspace: T.object,
   message: T.string,

@@ -69,7 +69,7 @@ function calculateScore(paper) {
 function calculateTotal(paper) {
   const items = []
   paper.structure.steps.map(step => {
-    step.items.map(item => {
+    step.items.filter(item => (item.type.match(/^application\/x\.[^/]+\+json$/))).map(item => {
       const itemTotal = calculateItemTotal(item)
       if (itemTotal) {
         items.push(new Answerable(itemTotal, item.id))
