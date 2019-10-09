@@ -52,12 +52,6 @@ class PlannedNotificationManager
     /**
      * PlannedNotificationManager constructor.
      *
-     * @DI\InjectParams({
-     *     "mailManager"          = @DI\Inject("claroline.manager.mail_manager"),
-     *     "om"                   = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "scheduledTaskManager" = @DI\Inject("claroline.manager.scheduled_task_manager")
-     * })
-     *
      * @param MailManager          $mailManager
      * @param ObjectManager        $om
      * @param ScheduledTaskManager $scheduledTaskManager

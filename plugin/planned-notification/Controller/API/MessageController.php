@@ -14,7 +14,6 @@ namespace Claroline\PlannedNotificationBundle\Controller\API;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +28,6 @@ class MessageController extends AbstractCrudController
 
     /**
      * MessageController constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.planned_notification_manager")
-     * })
      *
      * @param PlannedNotificationManager $manager
      */

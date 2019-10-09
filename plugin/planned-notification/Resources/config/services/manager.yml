@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\PlannedNotificationBundle\Manager\Transfer\PlannedNotification:
+       arguments:
+          - '@security.authorization_checker'
+          - '@security.token_storage'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
+
+    claroline.transfer.claroline_planned_notification_tool:
+        alias: Claroline\PlannedNotificationBundle\Manager\Transfer\PlannedNotification
+        public: true
+
+    Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager:
+       arguments:
+          - '@claroline.manager.mail_manager'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@claroline.manager.scheduled_task_manager'

@@ -1,8 +1,8 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: true
 
     _instanceof:
         Claroline\AppBundle\Controller\AbstractCrudController:
@@ -30,26 +30,11 @@ services:
                 arguments:
                   - '@service_container'
 
-    Icap\WikiBundle\Controller\API\ContributionController:
+    Claroline\PlannedNotificationBundle\Controller\API\MessageController:
         arguments:
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Icap\WikiBundle\Manager\SectionManager'
-          - '@Icap\WikiBundle\Manager\ContributionManager'
-          - '@security.authorization_checker'
+          - '@Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager'
 
-    Icap\WikiBundle\Controller\API\SectionController:
-        arguments:
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Icap\WikiBundle\Manager\SectionManager'
-          - '@security.authorization_checker'
 
-    Icap\WikiBundle\Controller\API\WikiController:
+    Claroline\PlannedNotificationBundle\Controller\API\PlannedNotificationController:
         arguments:
-          - '@Icap\WikiBundle\Manager\WikiManager'
-          - '@security.authorization_checker'
-
-    Icap\WikiBundle\Controller\Resource\WikiController:
-        arguments:
-          - '@Icap\WikiBundle\Manager\SectionManager'
-          - '@templating'
-          - '@security.authorization_checker'
+          - '@Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager'
