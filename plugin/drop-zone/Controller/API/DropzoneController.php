@@ -23,12 +23,12 @@ use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Event\Log\LogDocumentOpenEvent;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Entity\Team;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -52,24 +52,18 @@ class DropzoneController
     /**
      * DropzoneController constructor.
      *
-     * @DI\InjectParams({
-     *     "finder"           = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
-     *     "manager"          = @DI\Inject("claroline.manager.dropzone_manager"),
-     *     "filesDir"         = @DI\Inject("%claroline.param.files_directory%"),
-     *     "eventDispatcher"  = @DI\Inject("event_dispatcher")
-     * })
-     *
      * @param FinderProvider           $finder
      * @param DropzoneManager          $manager
      * @param string                   $filesDir
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir, EventDispatcherInterface  $eventDispatcher)
+    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir, EventDispatcherInterface  $eventDispatcher, AuthorizationCheckerInterface $authorization)
     {
         $this->finder = $finder;
         $this->manager = $manager;
         $this->filesDir = $filesDir;
         $this->eventDispatcher = $eventDispatcher;
+        $this->authorization = $authorization;
     }
 
     /**

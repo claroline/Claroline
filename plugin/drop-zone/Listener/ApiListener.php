@@ -4,12 +4,9 @@ namespace Claroline\DropZoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class ApiListener.
- *
- * @DI\Service
  */
 class ApiListener
 {
@@ -17,10 +14,6 @@ class ApiListener
     private $dropzoneManager;
 
     /**
-     * @DI\InjectParams({
-     *     "dropzoneManager" = @DI\Inject("claroline.manager.dropzone_manager")
-     * })
-     *
      * @param DropzoneManager $dropzoneManager
      */
     public function __construct(DropzoneManager $dropzoneManager)
@@ -29,8 +22,6 @@ class ApiListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)

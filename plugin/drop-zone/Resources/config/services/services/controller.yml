@@ -1,0 +1,62 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@Claroline\AppBundle\API\FinderProvider'
+              - method: setSerializer
+                arguments:
+                  - '@Claroline\AppBundle\API\SerializerProvider'
+              - method: setCrud
+                arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+              - method: setObjectManager
+                arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
+    Claroline\DropZoneBundle\Controller\API\DropCommentController: ~
+
+    Claroline\DropZoneBundle\Controller\API\DropController:
+        arguments:
+            - '@claroline.manager.api_manager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.authorization_checker'
+            
+    Claroline\DropZoneBundle\Controller\API\DropzoneController:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
+            - '%claroline.param.files_directory%'
+            - '@event_dispatcher'
+            - '@security.authorization_checker'
+
+    Claroline\DropZoneBundle\Controller\API\DropzoneToolController: ~
+
+    Claroline\DropZoneBundle\Controller\API\RevisionCommentController: ~
+
+    Claroline\DropZoneBundle\Controller\API\RevisionController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
+
+    Claroline\DropZoneBundle\Controller\Resource\DropzoneController:
+        arguments:
+            - '@router'

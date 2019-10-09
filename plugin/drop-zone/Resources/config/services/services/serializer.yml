@@ -40,7 +40,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\DropZoneBundle\Serializer\CriterionSerializer'
-            - '@claroline.manager.dropzone_manager'
+            - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.serializer.dropzone:

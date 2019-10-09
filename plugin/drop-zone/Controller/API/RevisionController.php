@@ -19,7 +19,6 @@ use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,11 +40,6 @@ class RevisionController extends AbstractCrudController
 
     /**
      * RevisionController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "manager"       = @DI\Inject("claroline.manager.dropzone_manager")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param DropzoneManager               $manager

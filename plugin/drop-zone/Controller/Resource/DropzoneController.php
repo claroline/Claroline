@@ -6,12 +6,18 @@ use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @EXT\Route("/", options={"expose"=true})
  */
 class DropzoneController extends Controller
 {
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * For backwards compatibility with notification twigs.
      *
@@ -23,7 +29,7 @@ class DropzoneController extends Controller
         $node = $dropzone->getResourceNode();
 
         return $this->redirect(
-            $this->generateUrl('claro_index').
+            $this->router->generate('claro_index').
             '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug()
         );
     }
@@ -40,7 +46,7 @@ class DropzoneController extends Controller
         $node = $dropzone->getResourceNode();
 
         return $this->redirect(
-            $this->generateUrl('claro_index').
+            $this->router->generate('claro_index').
             '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug().
             '/drop/'.$drop->getUuid()
         );

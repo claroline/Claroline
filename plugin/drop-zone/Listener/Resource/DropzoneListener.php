@@ -16,22 +16,16 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Manager\TeamManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service
- */
 class DropzoneListener
 {
     private $tokenStorage;
@@ -60,22 +54,10 @@ class DropzoneListener
     /**
      * DropzoneListener constructor.
      *
-     * @DI\InjectParams({
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "dropzoneManager" = @DI\Inject("claroline.manager.dropzone_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "templating"      = @DI\Inject("templating"),
-     *     "serializer"      = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "teamManager"     = @DI\Inject("Claroline\TeamBundle\Manager\TeamManager"),
-     *     "translator"      = @DI\Inject("translator")
-     * })
-     *
      * @param TokenStorageInterface $tokenStorage
      * @param DropzoneManager       $dropzoneManager
      * @param FormFactory           $formFactory
      * @param RequestStack          $requestStack
-     * @param TwigEngine            $templating
      * @param SerializerProvider    $serializer
      * @param TeamManager           $teamManager
      * @param TranslatorInterface   $translator
@@ -85,7 +67,6 @@ class DropzoneListener
         DropzoneManager $dropzoneManager,
         FormFactory $formFactory,
         RequestStack $requestStack,
-        TwigEngine $templating,
         SerializerProvider $serializer,
         TeamManager $teamManager,
         TranslatorInterface $translator
@@ -94,15 +75,12 @@ class DropzoneListener
         $this->dropzoneManager = $dropzoneManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
-        $this->templating = $templating;
         $this->serializer = $serializer;
         $this->teamManager = $teamManager;
         $this->translator = $translator;
     }
 
     /**
-     * @DI\Observe("resource.claroline_dropzone.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -117,28 +95,6 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("open_claroline_dropzone")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        /** @var Dropzone $dropzone */
-        $dropzone = $event->getResource();
-
-        $content = $this->templating->render(
-            'ClarolineDropZoneBundle:dropzone:open.html.twig', array_merge([
-                '_resource' => $dropzone,
-            ], $this->getDropzoneData($dropzone))
-        );
-
-        $event->setResponse(new Response($content));
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("resource.claroline_dropzone.copy")
-     *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -153,8 +109,6 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("resource.claroline_dropzone.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)

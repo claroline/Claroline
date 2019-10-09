@@ -1,8 +1,3 @@
-# Plugin
-claro_dropzone_plugin:
-    resource: "@ClarolineDropZoneBundle/Controller/PluginController.php"
-    type: annotation
-
 # JSON API
 claro_dropzone_api:
     resource: "@ClarolineDropZoneBundle/Controller/API/"
