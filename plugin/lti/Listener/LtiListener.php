@@ -5,18 +5,13 @@ namespace UJM\LtiBundle\Listener;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ToolManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\LtiBundle\Entity\LtiApp;
 
-/**
- * @DI\Service
- */
 class LtiListener
 {
     /** @var AuthorizationCheckerInterface */
@@ -31,14 +26,6 @@ class LtiListener
     private $ltiAppRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "om"            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "serializer"    = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "templating"    = @DI\Inject("templating"),
-     *     "toolManager"   = @DI\Inject("claroline.manager.tool_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om
      * @param SerializerProvider            $serializer
@@ -62,8 +49,6 @@ class LtiListener
 
     /**
      * Loads a LTI resource.
-     *
-     * @DI\Observe("resource.ujm_lti_resource.load")
      *
      * @param LoadResourceEvent $event
      */
