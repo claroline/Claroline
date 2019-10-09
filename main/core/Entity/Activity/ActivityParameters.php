@@ -116,24 +116,11 @@ class ActivityParameters
     protected $evaluationType;
 
     /**
-     * Rules for the Activity.
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityRule",
-     *     mappedBy="activityParameters"
-     * )
-     */
-    protected $rules;
-
-    /**
      * Class constructor.
      */
     public function __construct()
     {
         $this->secondaryResources = new ArrayCollection();
-        $this->rules = new ArrayCollection();
     }
 
     /**
