@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Entity\Activity;
 
-use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\ActivityRuleRepository")
  * @ORM\Table(name="claro_activity_rule")
  */
-class ActivityRule extends Rule
+class ActivityRule
 {
     /**
      * @ORM\ManyToOne(
