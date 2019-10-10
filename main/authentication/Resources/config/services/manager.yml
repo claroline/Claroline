@@ -13,3 +13,5 @@ services:
             - '@claroline.manager.user_manager'
             - '@claroline.manager.registration_manager'
             - '@claroline.authenticator'
+        tags:
+            - { name: kernel.event_listener, event: refresh_cache, method: refreshCache }
