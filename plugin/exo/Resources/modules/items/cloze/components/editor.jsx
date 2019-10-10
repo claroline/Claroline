@@ -158,12 +158,11 @@ class MainField extends Component {
       if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
         newItem._popover = false
       }
-
     }
 
     this.props.update('holes', newItem.holes)
-    this.props.update('_popover', newItem._popover)
-    this.props.update('_holeId', newItem._holeId)
+    this.props.update('_popover', newItem._popover || false)
+    this.props.update('_holeId', newItem._holeId || null)
     this.props.update('text', newItem.text)
   }
 
@@ -242,9 +241,8 @@ class MainField extends Component {
                 holes.splice(holes.findIndex(hole => hole.id === toRemove), 1)
                 solutions.splice(solutions.findIndex(solution => solution.holeId === toRemove), 1)
               })
-              item = Object.assign({}, this.props.item, {holes, solutions})
+              item = Object.assign({}, item, {holes, solutions})
             }
-
             this.props.update('text', item.text)
             this.props.update('holes', item.holes)
             this.props.update('solutions', item.solutions)
