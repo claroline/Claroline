@@ -12,6 +12,7 @@
 namespace Innova\PathBundle\Controller\API;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -19,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Innova\PathBundle\Entity\Path\Path;
+use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -111,19 +113,23 @@ class PathTrackingController
         if (!$tool || !$this->authorization->isGranted('OPEN', $tool)) {
             throw new AccessDeniedException();
         }
+
+        /** @var Path[] $paths */
         $paths = $this->finder->fetch(
             Path::class,
             ['workspace' => $workspace->getUuid()]
         );
-        $data = [];
 
+        $data = [];
         foreach ($paths as $path) {
             // Reverse steps to proceed the latest steps first as we will only keep the most advanced step the users have done
+            /** @var Step[] $steps */
             $steps = array_reverse($path->getSteps()->toArray());
             $stepsData = [];
             $usersDone = [];
 
             foreach ($steps as $step) {
+                /** @var UserProgression[] $progressions */
                 $progressions = $this->userProgressionRepo->findBy(['step' => $step]);
                 $stepUsers = [];
 
@@ -144,21 +150,15 @@ class PathTrackingController
                         }
                     }
                 }
+
                 $stepsData[] = [
-                    'step' => [
-                        'id' => $step->getUuid(),
-                        'title' => $step->getTitle(),
-                    ],
+                    'step' => $this->serializer->serialize($step, [Options::SERIALIZE_MINIMAL]),
                     'users' => $stepUsers,
                 ];
             }
 
             $data[] = [
-                'path' => [
-                    'id' => $path->getResourceNode()->getUuid(),
-                    'name' => $path->getResourceNode()->getName(),
-                    'resourceId' => $path->getResourceNode()->getUuid(),
-                ],
+                'path' => $this->serializer->serialize($path->getResourceNode()),
                 'steps' => array_reverse($stepsData),
             ];
         }

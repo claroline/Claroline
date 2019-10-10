@@ -1,6 +1,5 @@
 plugin:
     has_options: false
-    icon: res_forum.png
 
     resources:
         - name: claroline_forum

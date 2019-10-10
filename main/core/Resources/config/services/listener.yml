@@ -3,7 +3,6 @@ services:
         autowire: false
         autoconfigure: false
         public: true #because lazy
-        tags: [claroline.crud]
 
     Claroline\CoreBundle\Listener\Administration\AppearanceListener:
         arguments:
@@ -253,7 +252,6 @@ services:
     Claroline\CoreBundle\Listener\Tool\WorkspacesListener:
         arguments:
             - '@security.token_storage'
-            - '@templating'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.authorization_checker'

@@ -342,6 +342,7 @@ class Step
     {
         if (!$this->children->contains($step)) {
             $this->children->add($step);
+            $step->setPath($this->path);
             $step->setParent($this);
         }
 
@@ -363,6 +364,20 @@ class Step
         }
 
         return $this;
+    }
+
+    public function getChild($childId)
+    {
+        $found = null;
+
+        foreach ($this->children as $step) {
+            if ($step->getUuid() === $childId) {
+                $found = $step;
+                break;
+            }
+        }
+
+        return $found;
     }
 
     /**

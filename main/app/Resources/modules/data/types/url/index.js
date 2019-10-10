@@ -1,5 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
+import {UrlCell} from '#/main/app/data/types/url/components/cell'
 import {UrlDisplay} from '#/main/app/data/types/url/components/display'
 import {UrlInput} from '#/main/app/data/types/url/components/input'
 
@@ -14,10 +15,12 @@ const dataType = {
   },
   components: {
     details: UrlDisplay,
+    table: UrlCell,
 
     // new api
     input: UrlInput,
-    display: UrlDisplay
+    display: UrlDisplay,
+    cell: UrlCell
   }
 }
 

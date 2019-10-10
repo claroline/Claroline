@@ -1,6 +1,5 @@
 plugin:
   has_options: false
-  icon: res_url.png
 
   resources:
     - name: hevinci_url

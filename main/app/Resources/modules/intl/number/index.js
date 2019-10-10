@@ -51,5 +51,6 @@ function fileSize(num, short = true) {
 
 export {
   number,
-  fileSize
+  fileSize,
+  precision
 }

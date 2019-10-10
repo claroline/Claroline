@@ -1,6 +1,5 @@
 plugin:
   has_options: false
-  icon: res_web.png
 
   resources:
     - name: claroline_web_resource

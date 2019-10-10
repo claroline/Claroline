@@ -1,6 +1,6 @@
 plugin:
     has_options: false
-    icon: res_exo.png
+
     resources:
         - name: ujm_exercise
           class: UJM\ExoBundle\Entity\Exercise

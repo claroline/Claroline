@@ -75,13 +75,6 @@ const UsersModal = props => {
             sortable: false
           }, {
             name: 'unionOrganizationName',
-            type: 'string',
-            label: trans('group'),
-            displayed: false,
-            displayable: false,
-            sortable: false
-          }, {
-            name: 'unionOrganizationName',
             label: trans('organization'),
             type: 'string',
             displayed: false,

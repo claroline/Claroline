@@ -1,12 +1,10 @@
 plugin:
     has_options: false
-    icon: icap_lesson_icon.png
 
     resources:
         - name: icap_lesson
           class: Icap\LessonBundle\Entity\Lesson
           tags: [content]
-          is_browsable: true
           exportable: false
           actions:
               - name: chapter

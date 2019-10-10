@@ -1,28 +1,42 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {actions as listActions} from '#/main/app/content/list/store'
 
 import {route} from '#/main/core/user/routing'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 import {UserCard} from '#/main/core/user/components/card'
 
-const Users = props =>
+const UserList = props =>
   <ListData
     name={props.name}
     fetch={{
       url: props.url,
       autoload: true
     }}
-    primaryAction={(row) => ({
+    primaryAction={props.primaryAction || ((row) => ({
       type: LINK_BUTTON,
       target: route(row)
-    })}
-    actions={(rows) => props.getActions ? props.getActions(rows): []}
+    }))}
+    actions={props.actions}
     definition={[
       {
+        name: 'picture',
+        type: 'user', // required to get correct styles (no padding + small picture size)
+        label: trans('avatar'),
+        displayed: true,
+        filterable: false,
+        sortable: false,
+        render: (user) => {
+          const Avatar = (
+            <UserAvatar picture={user.picture} alt={false} />
+          )
+
+          return Avatar
+        }
+      }, {
         name: 'username',
         type: 'username',
         label: trans('username'),
@@ -53,19 +67,31 @@ const Users = props =>
         options: {
           time: true
         }
+      }, {
+        name: 'group_name',
+        type: 'string',
+        label: trans('group'),
+        displayed: false,
+        displayable: false,
+        sortable: false
+      }, {
+        name: 'unionOrganizationName',
+        label: trans('organization'),
+        type: 'string',
+        displayed: false,
+        displayable: false,
+        sortable: false
       }
     ]}
     card={UserCard}
   />
 
-const UserList = connect(
-  null,
-  dispatch => ({
-    invalidate(name) {
-      dispatch(listActions.invalidateData(name))
-    }
-  })
-)(Users)
+UserList.propTypes = {
+  name: T.string.isRequired,
+  url: T.oneOfType([T.string, T.array]).isRequired,
+  primaryAction: T.func,
+  actions: T.func
+}
 
 export {
   UserList

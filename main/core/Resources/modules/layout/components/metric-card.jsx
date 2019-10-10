@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge.jsx'
+import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 import {number} from '#/main/app/intl'
 /**
  * Creates a Metric Card.

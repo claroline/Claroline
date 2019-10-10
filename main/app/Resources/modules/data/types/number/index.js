@@ -47,8 +47,8 @@ const dataType = {
    * Displays a number value.
    * NB. trans typing to string permits to avoid React interpret 0 value as falsy and display nothing.
    *
-   * @param {number}  raw
-   * @param {options} options
+   * @param {number} raw
+   * @param {object} options
    *
    * @return {string}
    */
@@ -57,7 +57,7 @@ const dataType = {
   /**
    * Validates a number value.
    *
-   * @param {mixed}  value   - the value to validate
+   * @param {*}      value   - the value to validate
    * @param {object} options - the current number options
    *
    * @return {string} - the first error message if any

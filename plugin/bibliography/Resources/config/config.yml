@@ -1,9 +1,8 @@
 plugin:
   has_options: true
-  icon: icap_bibliography_icon_admin.png
 
   resources:
-    - name: icap_bibliography
-      class: Icap\BibliographyBundle\Entity\BookReference
-      tags: [content]
-      exportable: false
+      - name: icap_bibliography
+        class: Icap\BibliographyBundle\Entity\BookReference
+        tags: [content]
+        exportable: false

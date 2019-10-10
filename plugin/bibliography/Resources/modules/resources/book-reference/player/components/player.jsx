@@ -29,7 +29,6 @@ const PlayerComponent = props =>
         name={selectors.STORE_NAME+'.bookReference'}
         sections={[
           {
-            id: 'general',
             title: trans('general'),
             primary: true,
             fields: [
@@ -49,8 +48,8 @@ const PlayerComponent = props =>
             ]
           },
           {
-            id: 'details',
-            title: trans('details', {}, 'icap_bibliography'),
+            icon: 'fa fa-fw fa-info',
+            title: trans('information'),
             fields: [
               {
                 name: 'publisher',

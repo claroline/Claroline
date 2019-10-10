@@ -15,6 +15,7 @@ registry.add('ClarolineAppBundle', {
       'collection'  : () => { return import(/* webpackChunkName: "app-data-type-collection" */   '#/main/app/data/types/collection') },
       'color'       : () => { return import(/* webpackChunkName: "app-data-type-color" */        '#/main/app/data/types/color') },
       'country'     : () => { return import(/* webpackChunkName: "app-data-type-country" */      '#/main/app/data/types/country') },
+      'currency'    : () => { return import(/* webpackChunkName: "app-data-type-currency" */     '#/main/app/data/types/currency') },
       'date'        : () => { return import(/* webpackChunkName: "app-data-type-date" */         '#/main/app/data/types/date') },
       'date-range'  : () => { return import(/* webpackChunkName: "app-data-type-date-range" */   '#/main/app/data/types/date-range') },
       'email'       : () => { return import(/* webpackChunkName: "app-data-type-email" */        '#/main/app/data/types/email') },

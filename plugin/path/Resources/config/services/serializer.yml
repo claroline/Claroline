@@ -7,6 +7,11 @@ services:
     Innova\PathBundle\Serializer\PathSerializer:
         tags: [claroline.serializer]
         arguments:
+           - '@Innova\PathBundle\Serializer\StepSerializer'
+
+    Innova\PathBundle\Serializer\StepSerializer:
+        tags: [claroline.serializer]
+        arguments:
            - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'

@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -27,9 +26,6 @@ class WorkspacesListener
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /** @var TwigEngine */
-    private $templating;
-
     /** @var FinderProvider */
     private $finder;
 
@@ -40,20 +36,17 @@ class WorkspacesListener
      * HomeListener constructor.
      *
      * @param TokenStorageInterface         $tokenStorage
-     * @param TwigEngine                    $templating
      * @param FinderProvider                $finder
      * @param SerializerProvider            $serializer
      * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        TwigEngine $templating,
         FinderProvider $finder,
         SerializerProvider $serializer,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
         $this->finder = $finder;
         $this->serializer = $serializer;
         $this->authorization = $authorization;

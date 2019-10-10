@@ -21,6 +21,7 @@ import {route as userRoute} from '#/main/core/user/routing'
 
 import {Badge as BadgeTypes, Assertion as AssertionTypes} from '#/plugin/open-badge/prop-types'
 
+// TODO : reuse ContentHeading
 // TODO : enabled granted placeholder if current user does not have the badge
 
 class BadgeLayoutComponent extends Component {

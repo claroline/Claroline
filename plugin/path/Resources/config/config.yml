@@ -1,6 +1,5 @@
 plugin:
   has_options: false
-  icon: res_file.png
 
   resources:
     - name: innova_path

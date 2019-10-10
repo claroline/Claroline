@@ -1,6 +1,5 @@
 plugin:
     has_options: false
-    icon: icap_blog_icon.png
 
     resources:
         - name: icap_blog
@@ -8,25 +7,14 @@ plugin:
           tags: [community, content]
           exportable: false
           actions:
-            - name: blog_post
-              decoder: post
+              - name: blog_post
+                decoder: post
 
-            - name: moderate
-              decoder: moderate
+              - name: moderate
+                decoder: moderate
 
     data_sources:
         - name: blog_posts
           type: list
           context: [workspace, desktop, home]
           tags: [content, community]
-
-    #widgets:
-    #  - name: blog_list
-    #    is_configurable: true
-    #    is_exportable: false
-    #  - name: blog
-    #    is_configurable: true
-    #    is_exportable: false
-    #  - name: tag_list
-    #    is_configurable: true
-    #    is_exportable: false

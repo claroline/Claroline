@@ -1,0 +1,9 @@
+{
+  "currency": {
+    "value": "%unit% %value%",
+    "euro": "EUR",
+    "euro_short": "€",
+    "dollar": "USD",
+    "dollar_short": "$"
+  }
+}
