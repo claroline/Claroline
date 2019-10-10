@@ -16,11 +16,7 @@ use Claroline\AuthenticationBundle\Manager\OauthManager;
 use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorage\SessionStorage;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GoogleResourceOwner;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\LinkedinResourceOwner;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.oauth.hwi.resource_owner_factory")
- */
 class ResourceOwnerFactory
 {
     private $httpUtils;
@@ -28,12 +24,6 @@ class ResourceOwnerFactory
     private $session;
 
     /**
-     * @DI\InjectParams({
-     *     "oauthManager" = @DI\Inject("claroline.oauth.manager"),
-     *     "httpUtils"     = @DI\Inject("security.http_utils"),
-     *     "session"       = @DI\Inject("session")
-     * })
-     *
      * @param OauthManager $oauthManager
      * @param $httpUtils
      * @param $session

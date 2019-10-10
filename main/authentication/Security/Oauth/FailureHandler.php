@@ -11,7 +11,6 @@
 
 namespace Claroline\AuthenticationBundle\Security\Oauth;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +20,6 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("claroline.oauth.failure_handler")
- */
 class FailureHandler implements AuthenticationFailureHandlerInterface
 {
     /**
@@ -34,19 +30,16 @@ class FailureHandler implements AuthenticationFailureHandlerInterface
      * @var TranslatorInterface
      */
     private $translator;
+
     /**
      * FailureHandler constructor.
-     *
-     * @DI\InjectParams({
-     *     "router"     = @DI\Inject("router"),
-     *     "translator" = @DI\Inject("translator")
-     * })
      */
     public function __construct(Router $router, TranslatorInterface $translator)
     {
         $this->router = $router;
         $this->translator = $translator;
     }
+
     /**
      * This is called when an interactive authentication attempt fails. This is
      * called by authentication listeners inheriting from

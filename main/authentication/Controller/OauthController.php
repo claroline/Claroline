@@ -42,7 +42,7 @@ class OauthController extends AbstractCrudController
      * @DI\InjectParams({
      *     "router"        = @DI\Inject("router"),
      *     "configHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "oauthManager"  = @DI\Inject("claroline.oauth.manager")
+     *     "oauthManager"  = @DI\Inject("Claroline\AuthenticationBundle\Manager\OauthManager")
      * })
      *
      * @param RouterInterface              $router

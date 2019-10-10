@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\AuthenticationBundle\Manager\OauthManager:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.manager.cache_manager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@security.token_storage'
+            - '@claroline.manager.user_manager'
+            - '@claroline.manager.registration_manager'
+            - '@claroline.authenticator'

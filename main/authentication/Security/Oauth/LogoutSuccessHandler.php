@@ -12,7 +12,6 @@
 namespace Claroline\AuthenticationBundle\Security\Oauth;
 
 use Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +22,6 @@ use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 /**
  * Class LogoutSuccessHandler.
- *
- * @DI\Service("claroline.oauth.logout_success_handler")
  */
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 {
@@ -40,12 +37,6 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
     /**
      * LogoutSuccessHandler constructor.
      *
-     * @DI\InjectParams({
-     *     "session"                = @DI\Inject("session"),
-     *     "router"                 = @DI\Inject("router"),
-     *     "resourceOwnerFactory"   = @DI\Inject("claroline.oauth.hwi.resource_owner_factory")
-     * })
-     *
      * @param SessionInterface     $session
      * @param Router               $router
      * @param ResourceOwnerFactory $resourceOwnerFactory
@@ -56,6 +47,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
         $this->router = $router;
         $this->resourceOwnerFactory = $resourceOwnerFactory;
     }
+
     /**
      * Creates a Response object to send upon a successful logout.
      *
@@ -71,7 +63,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
             try {
                 $resourceOwnerName = str_replace('_', '', ucwords($resourceOwnerToken['resourceOwnerName'], '_'));
                 $resourceOwner = $this->resourceOwnerFactory->{'get'.$resourceOwnerName.'ResourceOwner'}();
-                if ($resourceOwnerName === 'Office365' || $resourceOwnerName === 'WindowsLive') {
+                if ('Office365' === $resourceOwnerName || 'WindowsLive' === $resourceOwnerName) {
                     return $resourceOwner->logout($redirectUrl);
                 }
                 $resourceOwner->revokeToken($resourceOwnerToken['token']);

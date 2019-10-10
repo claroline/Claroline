@@ -13,12 +13,7 @@ namespace Claroline\AuthenticationBundle\Library;
 
 use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
 use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.configuration")
- */
 class PlatformDefaults implements ParameterProviderInterface
 {
     public function getDefaultParameters()

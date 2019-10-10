@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory:
+        arguments:
+            - '@Claroline\AuthenticationBundle\Manager\OauthManager'
+            - '@security.http_utils'
+            - '@session'
+
+    Claroline\AuthenticationBundle\Security\Oauth\FailureHandler:
+        arguments:
+            - '@router'
+            - '@translator'
+
+    Claroline\AuthenticationBundle\Security\Oauth\LogoutSuccessHandler:
+        arguments:
+            - '@session'
+            - '@router'
+            - '@Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory'
+
+    Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@session'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

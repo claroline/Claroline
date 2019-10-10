@@ -252,7 +252,7 @@ services:
             - '@claroline.manager.plugin_manager'
             - '@claroline.manager.icon_set_manager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
-            - '@claroline.oauth.manager'
+            - '@Claroline\AuthenticationBundle\Manager\OauthManager'
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:
         tags: [claroline.serializer]

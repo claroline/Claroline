@@ -26,9 +26,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-/**
- * @DI\Service("claroline.oauth.manager")
- */
 class OauthManager
 {
     /** @var EntityManager */
@@ -56,16 +53,6 @@ class OauthManager
     private $oauthUserRepository;
 
     /**
-     * @DI\InjectParams({
-     *      "entityManager"         = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "cacheManager"          = @DI\Inject("claroline.manager.cache_manager"),
-     *      "platformConfigHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *      "tokenStorage"          = @DI\Inject("security.token_storage"),
-     *      "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *      "registrationManager"   = @DI\Inject("claroline.manager.registration_manager"),
-     *      "authenticator"         = @DI\Inject("claroline.authenticator")
-     * })
-     *
      * @param EntityManager                $entityManager
      * @param CacheManager                 $cacheManager
      * @param PlatformConfigurationHandler $platformConfigHandler

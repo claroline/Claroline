@@ -20,7 +20,7 @@ class UserListener
      * UserListener constructor.
      *
      * @DI\InjectParams({
-     *     "oauthManager" = @Di\Inject("claroline.oauth.manager")
+     *     "oauthManager" = @Di\Inject("Claroline\AuthenticationBundle\Manager\OauthManager")
      * })
      *
      * @param OauthManager $oauthManager

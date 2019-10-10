@@ -30,7 +30,7 @@ class OauthConfigPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $factory = new Reference('claroline.oauth.hwi.resource_owner_factory');
+        $factory = new Reference('Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory');
         foreach (OauthConfiguration::resourceOwners() as $resourceOwner) {
             $resourceOwnerNoSpaces = str_replace(' ', '', $resourceOwner);
             $conf = new Definition();

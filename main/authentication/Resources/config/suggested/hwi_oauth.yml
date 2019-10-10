@@ -73,10 +73,10 @@ security:
     firewalls:
         main:
             logout:
-                success_handler: claroline.oauth.logout_success_handler
+                success_handler: Claroline\AuthenticationBundle\Security\Oauth\LogoutSuccessHandler
             oauth:
                 oauth_user_provider:
-                    service: claroline.oauth.user_provider
+                    service: Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider
                 resource_owners:
                     dropbox:      /login/check-dropbox
                     facebook:     /login/check-facebook
@@ -88,7 +88,7 @@ security:
                     windows_live: /login/check-windows
                     generic:      /login/check-generic
                 #success_handler:    claroline.security.authentication.success_handler
-                failure_handler:    claroline.oauth.failure_handler
+                failure_handler:    Claroline\AuthenticationBundle\Security\Oauth\FailureHandler
                 login_path: /login
                 failure_path: /login
                 use_forward: false

@@ -13,12 +13,7 @@ namespace Claroline\AuthenticationBundle\Library;
 
 use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
 use Claroline\CoreBundle\Library\Configuration\LegacyParametersMappingInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.configuration.mapping.legacy")
- */
 class LegacyParametersMapping implements LegacyParametersMappingInterface
 {
     public function getMapping()

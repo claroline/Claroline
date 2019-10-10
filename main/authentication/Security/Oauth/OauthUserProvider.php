@@ -6,16 +6,12 @@ use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * @DI\Service("claroline.oauth.user_provider")
- */
 class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
 {
     private $em;
@@ -25,12 +21,6 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
     private $platformConfigHandler;
 
     /**
-     * @DI\InjectParams({
-     *   "em"                       = @DI\Inject("doctrine.orm.entity_manager"),
-     *   "session"                  = @DI\Inject("session"),
-     *   "platformConfigHandler"    = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler")
-     * })
-     *
      * @param $em
      * @param Session                      $session
      * @param PlatformConfigurationHandler $platformConfigHandler
