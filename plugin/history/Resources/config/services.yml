@@ -13,11 +13,15 @@ services:
             - '@security.token_storage'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
             - '@claroline.manager.workspace_manager'
+        tags:
+            - { name: kernel.event_listener, event: workspace.open, method: onOpen }
 
     Claroline\HistoryBundle\Listener\ResourceListener:
         arguments:
             - '@security.token_storage'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
+        tags:
+            - { name: kernel.event_listener, event: resource.load, method: onLoad }
 
     Claroline\HistoryBundle\Controller\HistoryController:
         arguments:

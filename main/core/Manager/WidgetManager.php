@@ -14,11 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
 use Claroline\CoreBundle\Repository\WidgetInstanceRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.widget_manager")
- */
 class WidgetManager
 {
     /** @var ObjectManager */
@@ -35,11 +31,6 @@ class WidgetManager
 
     /**
      * WidgetManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager")
-     * })
      *
      * @param ObjectManager $om
      * @param PluginManager $pluginManager

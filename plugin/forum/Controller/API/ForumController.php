@@ -9,7 +9,6 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\Manager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +23,6 @@ class ForumController extends AbstractCrudController
 
     /**
      * ForumController constructor.
-     *
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("Claroline\ForumBundle\Manager\Manager")
-     * })
      *
      * @param Manager $manager
      */

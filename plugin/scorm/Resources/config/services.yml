@@ -4,3 +4,11 @@ imports:
     - { resource: services/manager.yml }
     - { resource: services/listener.yml }
     - { resource: services/controller.yml }
+
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\ScormBundle\Library\ScormLib: ~

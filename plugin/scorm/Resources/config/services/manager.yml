@@ -12,7 +12,7 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.resource_evaluation_manager'
           - '@claroline.manager.resource_manager'
-          - '@claroline.library.scorm'
+          - '@Claroline\ScormBundle\Library\ScormLib'
           - '@claroline.serializer.scorm'
           - '@claroline.serializer.scorm.sco'
           - '@claroline.serializer.scorm.sco.tracking'

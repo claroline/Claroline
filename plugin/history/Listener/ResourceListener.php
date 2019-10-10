@@ -4,12 +4,8 @@ namespace Claroline\HistoryBundle\Listener;
 
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\HistoryBundle\Manager\HistoryManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service()
- */
 class ResourceListener
 {
     /** @var TokenStorageInterface */
@@ -20,11 +16,6 @@ class ResourceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "manager"      = @DI\Inject("Claroline\HistoryBundle\Manager\HistoryManager")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param HistoryManager        $manager
@@ -38,8 +29,6 @@ class ResourceListener
     }
 
     /**
-     * @DI\Observe("resource.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)

@@ -24,11 +24,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Claroline\PlannedNotificationBundle\Repository\PlannedNotificationRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.manager.planned_notification_manager")
- */
 class PlannedNotificationManager
 {
     /** @var MailManager */

@@ -278,7 +278,7 @@ class MessageController extends AbstractCrudController
 
         foreach ($ids as $id) {
             $message = $this->find($this->getClass(), $id);
-            $this->container->get('claroline.manager.message_manager')->remove($message);
+            $this->container->get('Claroline\MessageBundle\Manager\MessageManager')->remove($message);
         }
 
         $this->om->endFlushSuite();

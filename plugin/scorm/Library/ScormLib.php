@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -14,11 +13,7 @@ namespace Claroline\ScormBundle\Library;
 
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.library.scorm")
- */
 class ScormLib
 {
     /**

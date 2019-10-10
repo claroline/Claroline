@@ -13,12 +13,8 @@ namespace Claroline\ScormBundle\Listener;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service
- */
 class Scorm12Listener
 {
     // path to the Scorm archive file

@@ -104,7 +104,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
         /** @var PlatformInstaller $installer */
-        $installer = $this->getContainer()->get('claroline.installation.platform_installer');
+        $installer = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\PlatformInstaller');
         $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
 

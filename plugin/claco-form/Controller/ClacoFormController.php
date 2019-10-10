@@ -27,7 +27,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -63,24 +62,6 @@ class ClacoFormController
     private $commentSerializer;
     private $entryUserSerializer;
 
-    /**
-     * @DI\InjectParams({
-     *     "archiveDir"            = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
-     *     "clacoFormManager"      = @DI\Inject("Claroline\ClacoFormBundle\Manager\ClacoFormManager"),
-     *     "configHandler"         = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "filesDir"              = @DI\Inject("%claroline.param.files_directory%"),
-     *     "locationManager"       = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "request"               = @DI\Inject("request_stack"),
-     *     "templating"            = @DI\Inject("templating"),
-     *     "translator"            = @DI\Inject("translator"),
-     *     "serializer"            = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
-     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "entrySerializer"       = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntrySerializer"),
-     *     "commentSerializer"     = @DI\Inject("Claroline\ClacoFormBundle\Serializer\CommentSerializer"),
-     *     "entryUserSerializer"   = @DI\Inject("Claroline\ClacoFormBundle\Serializer\EntryUserSerializer")
-     * })
-     */
     public function __construct(
         $archiveDir,
         ClacoFormManager $clacoFormManager,

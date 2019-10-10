@@ -8,9 +8,6 @@ use Claroline\HistoryBundle\Manager\HistoryManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service()
- */
 class WorkspaceListener
 {
     /** @var TokenStorageInterface */
@@ -24,12 +21,6 @@ class WorkspaceListener
 
     /**
      * ResourceListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "manager"          = @DI\Inject("Claroline\HistoryBundle\Manager\HistoryManager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param HistoryManager        $manager

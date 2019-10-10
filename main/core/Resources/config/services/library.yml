@@ -63,6 +63,15 @@ services:
             - '@claroline.symfony_yaml'
             - '@doctrine.orm.entity_manager'
 
+    Claroline\CoreBundle\Library\Installation\PlatformInstaller:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Installation\OperationExecutor'
+            - '@claroline.installation.manager'
+            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
+            - '@Claroline\CoreBundle\Library\Installation\Refresher'
+            - '@kernel'
+            - '@service_container'
+
     Claroline\CoreBundle\Library\Mailing\TransportFactory:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
