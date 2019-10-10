@@ -6,7 +6,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Manager\NotificationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +19,6 @@ class FollowerResourceController extends AbstractCrudController
     private $manager;
 
     /**
-     * @DI\InjectParams({
-     *     "manager"    = @DI\Inject("icap.notification.manager")
-     * })
-     *
      * @param NotificationManager $manager
      */
     public function __construct(NotificationManager $manager)

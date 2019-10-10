@@ -110,7 +110,7 @@ class UserCrud
 
         if (in_array(Options::ADD_NOTIFICATIONS, $options)) {
             //i'm not sure we can depend on that one
-            $nManager = $this->container->get('icap.notification.manager.notification_user_parameters');
+            $nManager = $this->container->get('Icap\NotificationBundle\Manager\NotificationUserParametersManager');
             $notifications = $this->config->getParameter('auto_enable_notifications');
             $nManager->processUpdate($notifications, $user);
         }

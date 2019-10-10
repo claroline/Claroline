@@ -65,5 +65,5 @@ services:
 
     Icap\WikiBundle\Listener\Entity\ContributionListener:
        arguments:
-          - '@icap.notification.manager'
+          - '@Icap\NotificationBundle\Manager\NotificationManager'
        tags: ['doctrine.entity_listener']

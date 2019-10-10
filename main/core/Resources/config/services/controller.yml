@@ -189,7 +189,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.widget_manager'
-          - '@Claroline\AppBundle\Command\AsyncCommand'
+          - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
     Claroline\CoreBundle\Controller\Administration\ArchiveController:
         arguments:

@@ -15,7 +15,6 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\AuthenticationBundle\Manager\OauthManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,12 +37,6 @@ class OauthController extends AbstractCrudController
 
     /**
      * OauthController constructor.
-     *
-     * @DI\InjectParams({
-     *     "router"        = @DI\Inject("router"),
-     *     "configHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "oauthManager"  = @DI\Inject("Claroline\AuthenticationBundle\Manager\OauthManager")
-     * })
      *
      * @param RouterInterface              $router
      * @param PlatformConfigurationHandler $configHandler

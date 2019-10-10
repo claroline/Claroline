@@ -1264,7 +1264,7 @@ class UserManager
 
         $user->setIsMailValidated($emailValidted);
         $user->setIsMailNotified($emailRedirect);
-        $nManager = $this->container->get('icap.notification.manager.notification_user_parameters');
+        $nManager = $this->container->get('Icap\NotificationBundle\Manager\NotificationUserParametersManager');
         $nManager->processUpdate($notifications, $user);
         $this->objectManager->persist($user);
         $this->objectManager->flush();

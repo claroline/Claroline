@@ -49,5 +49,5 @@ services:
 
     Icap\LessonBundle\Listener\ChapterListener:
         arguments:
-            - '@icap.notification.manager'
+            - '@Icap\NotificationBundle\Manager\NotificationManager'
         tags: ['doctrine.entity_listener']

@@ -6,22 +6,12 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class LogListener
 {
     private $notificationManager;
     private $ch;
 
-    /**
-     * @DI\InjectParams({
-     *     "notificationManager" = @DI\Inject("icap.notification.manager"),
-     *     "ch"                  = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler")
-     * })
-     */
     public function __construct(
         NotificationManager $notificationManager,
         PlatformConfigurationHandler $ch
@@ -31,8 +21,6 @@ class LogListener
     }
 
     /**
-     * @DI\Observe("log")
-     *
      * @param LogGenericEvent $event
      */
     public function onLog(LogGenericEvent $event)

@@ -9,13 +9,9 @@ use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\NotificationBundle\Entity\FollowerResource;
 use Icap\NotificationBundle\Entity\Notification;
 use Icap\NotificationBundle\Entity\NotificationViewer;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("icap.notification.manager")
- */
 class NotificationManager
 {
     /** @var ObjectManager */
@@ -32,13 +28,6 @@ class NotificationManager
 
     /**
      * NotificationManager constructor.
-     *
-     * @DI\InjectParams({
-     *      "om"                            = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *      "tokenStorage"                  = @DI\Inject("security.token_storage"),
-     *      "eventDispatcher"               = @DI\Inject("event_dispatcher"),
-     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters")
-     * })
      *
      * @param ObjectManager                     $om
      * @param TokenStorageInterface             $tokenStorage

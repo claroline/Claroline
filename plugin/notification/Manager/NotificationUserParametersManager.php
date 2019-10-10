@@ -15,13 +15,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use Icap\NotificationBundle\Entity\NotificationUserParameters;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class NotificationUserParametersManager.
- *
- * @DI\Service("icap.notification.manager.notification_user_parameters")
  */
 class NotificationUserParametersManager
 {
@@ -40,12 +37,6 @@ class NotificationUserParametersManager
      */
     private $em;
 
-    /**
-     * @DI\InjectParams({
-     *      "em"    = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *      "ed"    = @DI\Inject("event_dispatcher")
-     * })
-     */
     public function __construct(ObjectManager $em, EventDispatcherInterface $ed)
     {
         $this->em = $em;

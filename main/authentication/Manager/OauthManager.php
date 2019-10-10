@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -81,8 +80,6 @@ class OauthManager
     }
 
     /**
-     * @DI\Observe("refresh_cache")
-     *
      * @param RefreshCacheEvent $event
      */
     public function refreshCache(RefreshCacheEvent $event)

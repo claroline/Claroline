@@ -5,12 +5,8 @@ namespace Icap\NotificationBundle\Listener\Platform;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 
-/**
- * @DI\Service
- */
 class ClientListener
 {
     /** @var TwigEngine */
@@ -21,11 +17,6 @@ class ClientListener
 
     /**
      * ClientListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "templating"    = @DI\Inject("templating"),
-     *     "configHandler" = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler")
-     * })
      *
      * @param TwigEngine                   $templating
      * @param PlatformConfigurationHandler $configHandler
@@ -41,8 +32,6 @@ class ClientListener
     /**
      * Appends notifications configuration to the global config object.
      *
-     * @DI\Observe("claroline_populate_client_config")
-     *
      * @param GenericDataEvent $event
      */
     public function onConfig(GenericDataEvent $event)
@@ -56,8 +45,6 @@ class ClientListener
     }
 
     /**
-     * @DI\Observe("layout.inject.stylesheet")
-     *
      * @param InjectStylesheetEvent $event
      */
     public function onInjectCss(InjectStylesheetEvent $event)

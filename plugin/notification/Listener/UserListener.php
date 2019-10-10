@@ -4,12 +4,9 @@ namespace Icap\NotificationBundle\Listener;
 
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Icap\NotificationBundle\Manager\NotificationUserParametersManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class UserListener.
- *
- * @DI\Service
  */
 class UserListener
 {
@@ -17,10 +14,6 @@ class UserListener
     private $manager;
 
     /**
-     * @DI\InjectParams({
-     *     "manager" = @DI\Inject("icap.notification.manager.notification_user_parameters")
-     * })
-     *
      * @param NotificationUserParametersManager $manager
      */
     public function __construct(NotificationUserParametersManager $manager)
@@ -29,8 +22,6 @@ class UserListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)
