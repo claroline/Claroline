@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\FavouriteBundle\Manager\FavouriteManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +30,6 @@ class FavouriteController extends AbstractApiController
 
     /**
      * FavouriteController constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "serializer" = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "manager"    = @DI\Inject("hevinci.favourite.manager")
-     * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer

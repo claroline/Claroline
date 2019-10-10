@@ -4,12 +4,9 @@ namespace HeVinci\FavouriteBundle\Listener;
 
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use HeVinci\FavouriteBundle\Manager\FavouriteManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class UserListener.
- *
- * @DI\Service
  */
 class UserListener
 {
@@ -17,10 +14,6 @@ class UserListener
     private $favouriteManager;
 
     /**
-     * @DI\InjectParams({
-     *     "favouriteManager" = @DI\Inject("hevinci.favourite.manager")
-     * })
-     *
      * @param FavouriteManager $favouriteManager
      */
     public function __construct(FavouriteManager $favouriteManager)
@@ -29,8 +22,6 @@ class UserListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)

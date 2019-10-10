@@ -8,11 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\FavouriteBundle\Entity\ResourceFavourite;
 use HeVinci\FavouriteBundle\Entity\WorkspaceFavourite;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("hevinci.favourite.manager")
- */
 class FavouriteManager
 {
     /** @var ObjectManager */
@@ -20,10 +16,6 @@ class FavouriteManager
 
     /**
      * FavouriteManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     * })
      *
      * @param ObjectManager $om
      */
