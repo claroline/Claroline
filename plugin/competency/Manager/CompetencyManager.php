@@ -9,12 +9,8 @@ use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Transfer\Converter;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("hevinci.competency.competency_manager")
- */
 class CompetencyManager
 {
     private $converter;
@@ -28,12 +24,6 @@ class CompetencyManager
     private $scaleRepo;
 
     /**
-     * @DI\InjectParams({
-     *     "converter"  = @DI\Inject("hevinci.competency.transfer_converter"),
-     *     "om"         = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "translator" = @DI\Inject("translator")
-     * })
-     *
      * @param Converter           $converter
      * @param ObjectManager       $om
      * @param TranslatorInterface $translator

@@ -5,12 +5,9 @@ namespace HeVinci\CompetencyBundle\Listener;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class UserListener.
- *
- * @DI\Service
  */
 class UserListener
 {
@@ -23,11 +20,6 @@ class UserListener
     /**
      * UserListener constructor.
      *
-     * @DI\InjectParams({
-     *     "objectiveManager" = @DI\Inject("hevinci.competency.objective_manager"),
-     *     "progressManager"  = @DI\Inject("hevinci.competency.progress_manager")
-     * })
-     *
      * @param ObjectiveManager $objectiveManager
      * @param ProgressManager  $progressManager
      */
@@ -38,8 +30,6 @@ class UserListener
     }
 
     /**
-     * @DI\Observe("merge_users")
-     *
      * @param MergeUsersEvent $event
      */
     public function onMerge(MergeUsersEvent $event)

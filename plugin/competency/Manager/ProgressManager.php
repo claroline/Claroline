@@ -13,11 +13,7 @@ use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
 use HeVinci\CompetencyBundle\Entity\Progress\ObjectiveProgress;
 use HeVinci\CompetencyBundle\Entity\Progress\UserProgress;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("hevinci.competency.progress_manager")
- */
 class ProgressManager
 {
     private $om;
@@ -35,10 +31,6 @@ class ProgressManager
     private $cachedUserProgress = null;
 
     /**
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
-     *
      * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)

@@ -22,7 +22,7 @@ class ProgressManagerTest extends RepositoryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->manager = $this->client->getContainer()->get('hevinci.competency.progress_manager');
+        $this->manager = $this->client->getContainer()->get('HeVinci\CompetencyBundle\Manager\ProgressManager');
         $this->abilityProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\AbilityProgress');
         $this->competencyProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
         $this->competencyProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgressLog');

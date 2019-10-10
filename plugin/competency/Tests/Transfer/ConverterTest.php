@@ -14,8 +14,8 @@ class ConverterTest extends RepositoryTestCase
     public function testConversionRoundTrip($frameworkFileName)
     {
         $container = $this->client->getContainer();
-        $manager = $container->get('hevinci.competency.competency_manager');
-        $converter = $container->get('hevinci.competency.transfer_converter');
+        $manager = $container->get('HeVinci\CompetencyBundle\Manager\CompetencyManager');
+        $converter = $container->get('HeVinci\CompetencyBundle\Transfer\Converter');
         $file = __DIR__.'/../../Resources/format/valid/'.$frameworkFileName;
 
         $originalJson = file_get_contents($file);
@@ -46,7 +46,7 @@ class ConverterTest extends RepositoryTestCase
         $this->persistLevel('Level 3', $scale);
         $this->om->flush();
 
-        $converter = $this->client->getContainer()->get('hevinci.competency.transfer_converter');
+        $converter = $this->client->getContainer()->get('HeVinci\CompetencyBundle\Transfer\Converter');
         $file = __DIR__.'/../../Resources/format/valid/minimal-1.json';
         $framework = $converter->convertToEntity(file_get_contents($file));
 

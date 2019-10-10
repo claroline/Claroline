@@ -8,13 +8,11 @@ use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("hasRole('ROLE_USER')")
  * @EXT\Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
@@ -26,12 +24,6 @@ class MyObjectiveController
     private $progressManager;
 
     /**
-     * @DI\InjectParams({
-     *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "objectiveManager"  = @DI\Inject("hevinci.competency.objective_manager"),
-     *     "progressManager"   = @DI\Inject("hevinci.competency.progress_manager")
-     * })
-     *
      * @param CompetencyManager $competencyManager
      * @param ObjectiveManager  $objectiveManager
      * @param ProgressManager   $progressManager

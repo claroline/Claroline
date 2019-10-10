@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ToolManager;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,12 +41,6 @@ class CompetencyController extends AbstractCrudController
     private $toolManager;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "manager"       = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "toolManager"   = @DI\Inject("claroline.manager.tool_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param CompetencyManager             $manager
      * @param ToolManager                   $toolManager

@@ -11,12 +11,8 @@ use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @DI\Service("hevinci.competency.objective_manager")
- */
 class ObjectiveManager
 {
     private $om;
@@ -29,13 +25,6 @@ class ObjectiveManager
     private $translator;
 
     /**
-     * @DI\InjectParams({
-     *     "om"                = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "progressManager"   = @DI\Inject("hevinci.competency.progress_manager"),
-     *     "translator"        = @DI\Inject("translator")
-     * })
-     *
      * @param ObjectManager       $om
      * @param CompetencyManager   $competencyManager
      * @param ProgressManager     $progressManager

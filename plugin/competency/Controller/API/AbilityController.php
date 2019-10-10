@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -34,11 +33,6 @@ class AbilityController extends AbstractCrudController
     private $manager;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "manager"       = @DI\Inject("hevinci.competency.competency_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param CompetencyManager             $manager
      */

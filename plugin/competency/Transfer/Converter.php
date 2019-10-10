@@ -8,20 +8,12 @@ use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("hevinci.competency.transfer_converter")
- */
 class Converter
 {
     private $om;
 
     /**
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
-     *
      * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)

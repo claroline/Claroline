@@ -1,0 +1,53 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractCrudController:
+            calls:
+              - method: setFinder
+                arguments:
+                  - '@Claroline\AppBundle\API\FinderProvider'
+              - method: setSerializer
+                arguments:
+                  - '@Claroline\AppBundle\API\SerializerProvider'
+              - method: setCrud
+                arguments:
+                  - '@Claroline\AppBundle\API\Crud'
+              - method: setObjectManager
+                arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+              - method: setRouterFinder
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Finder'
+              - method: setRouterDocumentator
+                arguments:
+                  - '@Claroline\AppBundle\Routing\Documentator'
+              - method: mergeOptions
+              - method: setContainer
+                arguments:
+                  - '@service_container'
+
+    HeVinci\CompetencyBundle\Controller\API\AbilityController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+
+    HeVinci\CompetencyBundle\Controller\API\CompetencyAbilityController: ~
+
+    HeVinci\CompetencyBundle\Controller\API\CompetencyController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+            - '@claroline.manager.tool_manager'
+
+    HeVinci\CompetencyBundle\Controller\API\ScaleController: ~
+
+    HeVinci\CompetencyBundle\Controller\MyObjectiveController:
+        tags: ['security.secure_service']
+        arguments:
+            - '@HeVinci\CompetencyBundle\Manager\CompetencyManager'
+            - '@HeVinci\CompetencyBundle\Manager\ObjectiveManager'
+            - '@HeVinci\CompetencyBundle\Manager\ProgressManager'
