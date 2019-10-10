@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Innova\PathBundle\Manager\UserProgressionManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
+            - '@claroline.manager.resource_evaluation_manager'

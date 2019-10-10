@@ -23,7 +23,6 @@ use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
 use Innova\PathBundle\Manager\UserProgressionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,15 +53,6 @@ class PathTrackingController
 
     /**
      * PathTrackingController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"          = @DI\Inject("security.authorization_checker"),
-     *     "finder"                 = @DI\Inject("Claroline\AppBundle\API\FinderProvider"),
-     *     "om"                     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "serializer"             = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder

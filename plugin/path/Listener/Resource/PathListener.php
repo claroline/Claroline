@@ -15,15 +15,12 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Used to integrate Path to Claroline resource manager.
- *
- * @DI\Service()
  */
 class PathListener
 {
@@ -50,16 +47,6 @@ class PathListener
 
     /**
      * PathListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "templating"             = @DI\Inject("templating"),
-     *     "translator"             = @DI\Inject("translator"),
-     *     "om"                     = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "serializer"             = @DI\Inject("Claroline\AppBundle\API\SerializerProvider"),
-     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
-     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
-     * })
      *
      * @param TokenStorageInterface  $tokenStorage
      * @param TwigEngine             $templating
@@ -90,8 +77,6 @@ class PathListener
     /**
      * Loads the Path resource.
      *
-     * @DI\Observe("resource.innova_path.load")
-     *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
@@ -111,8 +96,6 @@ class PathListener
     /**
      * Fired when a ResourceNode of type Path is deleted.
      *
-     * @DI\Observe("resource.innova_path.delete")
-     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -122,8 +105,6 @@ class PathListener
 
     /**
      * Fired when a ResourceNode of type Path is duplicated.
-     *
-     * @DI\Observe("resource.innova_path.copy")
      *
      * @param CopyResourceEvent $event
      *
@@ -164,8 +145,6 @@ class PathListener
 
     /**
      * Fired when a Resource Evaluation with a score is created.
-     *
-     * @DI\Observe("resource.score_evaluation.created")
      *
      * @param GenericDataEvent $event
      */

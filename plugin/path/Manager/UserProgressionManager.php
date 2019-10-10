@@ -11,12 +11,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("innova_path.manager.user_progression")
- */
 class UserProgressionManager
 {
     /** @var ObjectManager */
@@ -34,12 +30,6 @@ class UserProgressionManager
 
     /**
      * UserProgressionManager constructor.
-     *
-     * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
-     * })
      *
      * @param ObjectManager             $om
      * @param TokenStorageInterface     $tokenStorage

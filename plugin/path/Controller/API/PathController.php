@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,11 +38,6 @@ class PathController extends AbstractCrudController
 
     /**
      * PathController constructor.
-     *
-     * @DI\InjectParams({
-     *     "authorization"          = @DI\Inject("security.authorization_checker"),
-     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
-     * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param UserProgressionManager        $userProgressionManager
