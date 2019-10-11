@@ -15,22 +15,12 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\NotificationBundle\Entity\UserPickerContent;
 use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("icap.blog_bundle.entity_listener.comment")
- * @DI\Tag("doctrine.entity_listener")
- */
 class CommentListener
 {
     /** @var \Icap\NotificationBundle\Manager\NotificationManager */
     private $notificationManager;
 
-    /**
-     * @DI\InjectParams({
-     * "notificationManager" = @DI\Inject("Icap\NotificationBundle\Manager\NotificationManager"),
-     * })
-     */
     public function __construct(NotificationManager $notificationManager)
     {
         $this->notificationManager = $notificationManager;

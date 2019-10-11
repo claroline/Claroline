@@ -60,3 +60,13 @@ services:
     Icap\BlogBundle\Listener\NotificationUserParametersListener:
         tags:
             - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
+
+    Icap\BlogBundle\Listener\CommentListener:
+        tags: ['doctrine.entity_listener']
+        arguments:
+            - '@Icap\NotificationBundle\Manager\NotificationManager'
+
+    Icap\BlogBundle\Listener\PostListener:
+        tags: ['doctrine.entity_listener']
+        arguments:
+            - '@Icap\NotificationBundle\Manager\NotificationManager'

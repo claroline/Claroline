@@ -12,18 +12,13 @@
 namespace Claroline\PdfPlayerBundle\Listener\File\Type;
 
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Integrates PDF files into Claroline.
- *
- * @DI\Service
  */
 class PdfListener
 {
     /**
-     * @DI\Observe("file.application_pdf.load")
-     *
      * @param LoadFileEvent $event
      */
     public function onLoad(LoadFileEvent $event)

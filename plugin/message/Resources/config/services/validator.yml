@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\MessageBundle\Validator\MessageValidator:
+        tags: ['claroline.validator']
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

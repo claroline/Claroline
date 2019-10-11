@@ -12,18 +12,13 @@
 namespace Claroline\ImagePlayerBundle\Listener\File\Type;
 
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Integrates Image files into Claroline.
- *
- * @DI\Service
  */
 class ImageListener
 {
     /**
-     * @DI\Observe("file.image.load")
-     *
      * @param LoadFileEvent $event
      */
     public function onLoad(LoadFileEvent $event)

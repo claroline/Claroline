@@ -6,11 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service
- */
 class BadgesSource
 {
     /** @var FinderProvider */
@@ -18,10 +14,6 @@ class BadgesSource
 
     /**
      * BadgesSource constructor.
-     *
-     * @DI\InjectParams({
-     *     "finder" = @DI\Inject("Claroline\AppBundle\API\FinderProvider")
-     * })
      *
      * @param FinderProvider $finder
      */
@@ -31,8 +23,6 @@ class BadgesSource
     }
 
     /**
-     * @DI\Observe("data_source.badges.load")
-     *
      * @param GetDataEvent $event
      */
     public function getData(GetDataEvent $event)

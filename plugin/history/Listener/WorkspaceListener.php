@@ -5,7 +5,6 @@ namespace Claroline\HistoryBundle\Listener;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\HistoryBundle\Manager\HistoryManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkspaceListener
@@ -37,8 +36,6 @@ class WorkspaceListener
     }
 
     /**
-     * @DI\Observe("workspace.open")
-     *
      * @param OpenWorkspaceEvent $event
      */
     public function onOpen(OpenWorkspaceEvent $event)

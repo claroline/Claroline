@@ -9,20 +9,11 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\MessageBundle\Entity\Message;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service()
- * @DI\Tag("claroline.validator")
- */
 class MessageValidator implements ValidatorInterface
 {
     /**
      * GroupValidator constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
      *
      * @param ObjectManager $om
      */
