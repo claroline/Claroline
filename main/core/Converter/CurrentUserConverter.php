@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Converter;
 
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,17 +23,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * If anonymous must be allowed add `options={"allowAnonymous" = true}`,
  * in this case the converter will return `null`.
- *
- * @DI\Service
- * @DI\Tag("request.param_converter", attributes={"converter"="current_user"})
  */
 class CurrentUserConverter implements ParamConverterInterface
 {
     private $tokenStorage;
 
     /**
-     * @DI\InjectParams({"tokenStorage" = @DI\Inject("security.token_storage")})
-     *
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)

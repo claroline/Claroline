@@ -14,15 +14,11 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service
- */
 class PlatformListener
 {
     /** @var Kernel */
@@ -54,14 +50,6 @@ class PlatformListener
     /**
      * PlatformListener constructor.
      *
-     * @DI\InjectParams({
-     *     "kernel"        = @DI\Inject("kernel"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "config"        = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "tempManager"   = @DI\Inject("claroline.manager.temp_file"),
-     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager")
-     * })
-     *
      * @param Kernel                       $kernel
      * @param TokenStorageInterface        $tokenStorage
      * @param PlatformConfigurationHandler $config
@@ -85,8 +73,6 @@ class PlatformListener
     /**
      * Sets the platform language.
      *
-     * @DI\Observe("kernel.request", priority = 17)
-     *
      * @param GetResponseEvent $event
      */
     public function setLocale(GetResponseEvent $event)
@@ -104,8 +90,6 @@ class PlatformListener
      *   - Checks are enabled only on productions.
      *   - Administrators are always granted.
      *   - Public routes are still accessible.
-     *
-     * @DI\Observe("kernel.request")
      *
      * @param GetResponseEvent $event
      */
@@ -150,8 +134,6 @@ class PlatformListener
 
     /**
      * Clears all temp files at the end of each request.
-     *
-     * @DI\Observe("kernel.terminate")
      */
     public function clearTemp()
     {

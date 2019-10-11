@@ -12,12 +12,8 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use Doctrine\ORM\EntityManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-/**
- * @DI\Service("claroline.security.utilities")
- */
 class Utilities
 {
     /** @var EntityManager */
@@ -29,10 +25,6 @@ class Utilities
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
-     * })
      */
     public function __construct(EntityManager $em)
     {

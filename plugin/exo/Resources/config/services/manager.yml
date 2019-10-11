@@ -67,7 +67,7 @@ services:
             - '@claroline.manager.resource_manager'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
-            - '@claroline.utilities.misc'
+            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
             - '@ujm_exo.collection.item_definitions'
             - '@event_dispatcher'
 

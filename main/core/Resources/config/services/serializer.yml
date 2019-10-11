@@ -48,8 +48,8 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.resource_manager'
-          - '@claroline.utilities.misc'
-          - '@claroline.utilities.file'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
           - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
@@ -288,7 +288,7 @@ services:
     Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.utilities.file'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
 
     Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer:
         tags: [claroline.serializer]

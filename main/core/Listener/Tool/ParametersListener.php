@@ -18,7 +18,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -70,8 +69,6 @@ class ParametersListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_parameters")
-     *
      * @param DisplayToolEvent $event
      */
     public function onDisplayDesktopParameters(DisplayToolEvent $event)

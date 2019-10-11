@@ -463,7 +463,7 @@ class WorkspaceManager
     public function getFirstOpenableTool(Workspace $workspace)
     {
         $token = $this->container->get('security.token_storage')->getToken();
-        $roles = $this->container->get('claroline.security.utilities')->getRoles($token);
+        $roles = $this->container->get('Claroline\CoreBundle\Library\Security\Utilities')->getRoles($token);
 
         /** @var Tool[] $orderedTools */
         $orderedTools = $this->container->get('claroline.manager.tool_manager')->getDisplayedByRolesAndWorkspace($roles, $workspace);

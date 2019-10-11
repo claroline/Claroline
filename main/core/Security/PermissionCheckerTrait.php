@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Security;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -27,20 +26,6 @@ trait PermissionCheckerTrait
      * @var AuthorizationCheckerInterface
      */
     private $authorization;
-
-    /**
-     * Injects Authorization service.
-     *
-     * @DI\InjectParams({
-     *      "authorization" = @DI\Inject("security.authorization_checker")
-     * })
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     */
-    public function setAuthorization(AuthorizationCheckerInterface $authorization)
-    {
-        $this->authorization = $authorization;
-    }
 
     /**
      * @param mixed $permission

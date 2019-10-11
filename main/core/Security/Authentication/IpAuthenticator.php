@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Security\Authentication;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Claroline\CoreBundle\Security\Authentication\Token\IpToken;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -14,8 +13,6 @@ use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterfa
 
 /**
  * Manages authentication of users with white listed IPs.
- *
- * @DI\Service("claroline.security.authentication.ip_authenticator")
  */
 class IpAuthenticator implements SimplePreAuthenticatorInterface
 {
@@ -27,11 +24,6 @@ class IpAuthenticator implements SimplePreAuthenticatorInterface
 
     /**
      * IpAuthenticator constructor.
-     *
-     * @DI\InjectParams({
-     *     "config"           = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "whiteListManager" = @DI\Inject("claroline.manager.ip_white_list_manager")
-     * })
      *
      * @param PlatformConfigurationHandler $config
      * @param IPWhiteListManager           $whiteListManager

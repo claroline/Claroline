@@ -43,7 +43,7 @@ class DynamicConfigPass implements CompilerPassInterface
         $handler = new Definition();
         $handler->setClass('SessionHandlerInterface');
         $handler->setFactory([
-            new Reference('claroline.session.handler_factory'),
+            new Reference('Claroline\CoreBundle\Library\Session\SessionHandlerFactory'),
             'getHandler', ]
         );
         $container->setDefinition('session.handler', $handler);

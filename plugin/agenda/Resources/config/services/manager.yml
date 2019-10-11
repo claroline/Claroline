@@ -12,5 +12,5 @@ services:
           - '@security.authorization_checker'
           - '@claroline.manager.role_manager'
           - '@translator'
-          - '@claroline.security.utilities'
+          - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@service_container'

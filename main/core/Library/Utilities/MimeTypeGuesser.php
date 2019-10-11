@@ -12,11 +12,7 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.utilities.mime_type_guesser")
- */
 class MimeTypeGuesser extends MimeTypeExtensionGuesser
 {
     public function __construct()

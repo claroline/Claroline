@@ -12,6 +12,6 @@ services:
             - '@security.token_storage'
             - '@claroline.manager.user_manager'
             - '@claroline.manager.registration_manager'
-            - '@claroline.authenticator'
+            - '@Claroline\CoreBundle\Library\Security\Authenticator'
         tags:
             - { name: kernel.event_listener, event: refresh_cache, method: refreshCache }

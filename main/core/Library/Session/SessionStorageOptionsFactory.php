@@ -12,22 +12,12 @@
 namespace Claroline\CoreBundle\Library\Session;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("claroline.session.storage_options_factory")
- */
 class SessionStorageOptionsFactory
 {
     private $configHandler;
     private $defaultOptions;
 
-    /**
-     * @DI\InjectParams({
-     *     "configHandler"  = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "defaultOptions" = @DI\Inject("%session.storage.options%")
-     * })
-     */
     public function __construct(PlatformConfigurationHandler $configHandler, array $defaultOptions)
     {
         $this->configHandler = $configHandler;

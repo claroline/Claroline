@@ -11,15 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use SVG\Nodes\Embedded\SVGImageElement;
 use SVG\SVGImage;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * @DI\Service("claroline.utilities.thumbnail_creator")
- */
 class ThumbnailCreator
 {
     private $webDir;
@@ -29,13 +24,6 @@ class ThumbnailCreator
     private $ut;
     private $fs;
 
-    /**
-     * @DI\InjectParams({
-     *     "kernelRootDir"      = @DI\Inject("%kernel.root_dir%"),
-     *     "thumbnailDirectory" = @DI\Inject("%claroline.param.thumbnails_directory%"),
-     *     "ut"                 = @DI\Inject("claroline.utilities.misc")
-     * })
-     */
     public function __construct($kernelRootDir, $thumbnailDirectory, ClaroUtilities $ut)
     {
         $ds = DIRECTORY_SEPARATOR;

@@ -24,4 +24,4 @@ services:
             - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.copy, method: copy }
             - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.export, method: onExport }
             - { name: kernel.event_listener, event: transfer.claroline_announcement_aggregate.import.after, method: onImport }
-            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.deleter, method: delete }
+            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.delete, method: delete }

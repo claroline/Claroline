@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -25,15 +24,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Updates, installs or uninstalls core and plugin bundles, based
  * on the comparison of packages previously and currently installed
  * by composer (vendor/composer/installed.json and
  * app/config/previous-installed.json).
- *
- * @DI\Service("claroline.command.update_command")
  */
 class PlatformUpdateCommand extends ContainerAwareCommand
 {
@@ -153,17 +149,5 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $output->writeln(
             sprintf('<comment>%s - Platform updated.</comment>', date('H:i:s'))
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        parent::setContainer($container);
     }
 }

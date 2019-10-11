@@ -37,7 +37,7 @@ class Updater120000 extends Updater
         $this->log('Transfer blog banners to resourceNode');
         $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $repo = $om->getRepository('Icap\BlogBundle\Entity\Blog');
-        $fu = $this->container->get('claroline.utilities.file');
+        $fu = $this->container->get('Claroline\CoreBundle\Library\Utilities\FileUtilities');
         $uploadDir = $this->container->getParameter('icap.blog.banner_directory');
 
         $batchSize = 200;

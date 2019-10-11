@@ -16,16 +16,12 @@ use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Service
- */
 class ViewAsListener
 {
     private $tokenStorage;
@@ -34,23 +30,13 @@ class ViewAsListener
     private $tokenUpdater;
     private $userManager;
 
-    /**
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "em"            = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "tokenUpdater"  = @DI\Inject("claroline.security.token_updater"),
-     *     "userManager"   = @DI\Inject("claroline.manager.user_manager")
-     * })
-     */
     public function __construct(
+      AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
         EntityManager $em,
-        UserManager $userManager,
         RoleManager $roleManager,
-        TokenUpdater $tokenUpdater
+        TokenUpdater $tokenUpdater,
+        UserManager $userManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -60,9 +46,6 @@ class ViewAsListener
         $this->userManager = $userManager;
     }
 
-    /**
-     * @DI\Observe("kernel.request")
-     */
     public function onViewAs(GetResponseEvent $event)
     {
         $request = $event->getRequest();

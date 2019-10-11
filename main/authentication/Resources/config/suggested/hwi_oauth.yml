@@ -87,7 +87,7 @@ security:
                     twitter:      /login/check-twitter
                     windows_live: /login/check-windows
                     generic:      /login/check-generic
-                #success_handler:    claroline.security.authentication.success_handler
+                #success_handler:    Claroline\CoreBundle\Listener\AuthenticationSuccessListener
                 failure_handler:    Claroline\AuthenticationBundle\Security\Oauth\FailureHandler
                 login_path: /login
                 failure_path: /login

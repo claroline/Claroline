@@ -185,8 +185,7 @@ class WorkspaceController
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "id", "strictId" = true},
-     *      converter="strict_id"
+     *      options={"id" = "id"}
      * )
      *
      * @param Workspace $workspace

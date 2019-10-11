@@ -22,7 +22,7 @@ class Updater060400 extends Updater
     {
         $this->container = $container;
         $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $this->ut = $this->container->get('claroline.utilities.misc');
+        $this->ut = $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
     }
 
     public function postUpdate()

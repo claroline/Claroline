@@ -267,7 +267,7 @@ class WebResourceManager
             $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
         }
 
-        return $this->container->get('claroline.utilities.misc')->generateGuid().'.'.$mixed;
+        return $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities')->generateGuid().'.'.$mixed;
     }
 
     public function create(UploadedFile $tmpFile, Workspace $workspace)

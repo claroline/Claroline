@@ -48,7 +48,7 @@ class ApiImportCommand extends ContainerAwareCommand
         $file = $input->getArgument('file');
         $action = $input->getArgument('action');
         $consoleLogger = ConsoleLogger::get($output);
-        $this->getContainer()->get('claroline.authenticator')->authenticate($input->getArgument('owner'), null, false);
+        $this->getContainer()->get('Claroline\CoreBundle\Library\Security\Authenticator')->authenticate($input->getArgument('owner'), null, false);
         $this->getContainer()->get('Claroline\AppBundle\API\TransferProvider')->setLogger($consoleLogger);
 
         $this->getContainer()->get('Claroline\AppBundle\API\TransferProvider')->execute(

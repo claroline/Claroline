@@ -12,26 +12,17 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
-/**
- * @DI\Service("claroline.security.token_updater")
- */
 class TokenUpdater
 {
     private $sc;
     private $om;
 
     /**
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "om"           = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager")
-     * })
-     *
      * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage, $om)

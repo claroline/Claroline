@@ -3,27 +3,14 @@
 namespace Claroline\CoreBundle\Library\Security\Evaluator;
 
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @DI\Service
- * @DI\Tag(
- *     name="security.expressions.function_evaluator",
- *     attributes={"function"="canOpenAdminTool"}
- * )
- */
 class AdminToolAccessEvaluator
 {
     private $authorization;
     private $em;
 
     /**
-     * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "em"            = @DI\Inject("doctrine.orm.entity_manager")
-     * })
-     *
      * @param AuthorizationCheckerInterface $authorization
      * @param EntityManagerInterface        $em
      */
@@ -36,8 +23,6 @@ class AdminToolAccessEvaluator
     }
 
     /**
-     * @DI\SecurityFunction("canOpenAdminTool(toolName)")
-     *
      * @param string $toolName
      *
      * @throws \Exception

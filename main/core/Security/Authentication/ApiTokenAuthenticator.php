@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Authentication\Token\ApiToken as SecurityApiToken;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
@@ -17,18 +16,12 @@ use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterfa
 
 /**
  * Manages authentication of users with api tokens.
- *
- * @DI\Service("claroline.security.authentication.apitoken_authenticator")
  */
 class ApiTokenAuthenticator implements SimplePreAuthenticatorInterface
 {
     private $om;
 
     /**
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     * })
-     *
      * @param ObjectManager $om
      */
     public function inject(ObjectManager $om)

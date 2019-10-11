@@ -55,7 +55,7 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
         $consoleLogger = ConsoleLogger::get($output);
         $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $om->setLogger($consoleLogger)->activateLog();
-        $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
+        $this->getContainer()->get('Claroline\CoreBundle\Listener\Doctrine\DebugListener')->setLogger($consoleLogger)
             ->activateLog()
             ->setDebugLevel(DebugListener::DEBUG_ALL)
             ->setVendor('Claroline');

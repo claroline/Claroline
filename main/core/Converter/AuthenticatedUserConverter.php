@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Converter;
 
 use Claroline\CoreBundle\Entity\User;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,9 +20,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service()
- * @DI\Tag("request.param_converter", attributes={"priority" = 500})
- *
  * Adds the current authenticated user in the request attributes.
  */
 class AuthenticatedUserConverter implements ParamConverterInterface
@@ -31,12 +27,6 @@ class AuthenticatedUserConverter implements ParamConverterInterface
     private $tokenStorage;
     private $translator;
 
-    /**
-     * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "translator"   = @DI\Inject("translator")
-     * })
-     */
     public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
         $this->tokenStorage = $tokenStorage;
@@ -57,13 +47,13 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
         $options = $configuration->getOptions();
 
-        if ($options['authenticatedUser'] === true) {
+        if (true === $options['authenticatedUser']) {
             if (($user = $this->tokenStorage->getToken()->getUser()) instanceof User) {
                 $request->attributes->set($parameter, $user);
 
                 return true;
             } else {
-                if (array_key_exists('messageEnabled', $options) && $options['messageEnabled'] === true) {
+                if (array_key_exists('messageEnabled', $options) && true === $options['messageEnabled']) {
                     $messageType = 'warning';
                     if (array_key_exists('messageType', $options)) {
                         $messageType = $options['messageType'];

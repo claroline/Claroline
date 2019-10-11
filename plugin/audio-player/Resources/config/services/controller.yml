@@ -32,7 +32,7 @@ services:
 
     Claroline\AudioPlayerBundle\Controller\API\SectionCommentController:
         arguments:
-          - '@claroline.utilities.misc'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@translator'
 
     Claroline\AudioPlayerBundle\Controller\API\SectionController: ~ 

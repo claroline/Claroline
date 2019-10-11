@@ -19,7 +19,7 @@ services:
     Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@claroline.utilities.file'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
             - '@router'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.organization.organization_manager'

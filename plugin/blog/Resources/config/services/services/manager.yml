@@ -12,7 +12,7 @@ services:
             - '@icap.blog.member_repository'
             - '@event_dispatcher'
             - '@Icap\BlogBundle\Manager\PostManager'
-            - '@claroline.utilities.file'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
 
     Icap\BlogBundle\Manager\BlogTrackingManager:
         arguments:

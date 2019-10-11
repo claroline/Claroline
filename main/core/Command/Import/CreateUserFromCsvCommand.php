@@ -60,7 +60,7 @@ class CreateUserFromCsvCommand extends ContainerAwareCommand
 
         if ($output->isDebug()) {
             $om->setLogger($consoleLogger)->activateLog();
-            $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
+            $this->getContainer()->get('Claroline\CoreBundle\Listener\Doctrine\DebugListener')->setLogger($consoleLogger)
             ->activateLog()
             ->setDebugLevel(DebugListener::DEBUG_ALL)
             ->setVendor('Claroline');

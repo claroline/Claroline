@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: true #change to true
+        autoconfigure: true #change to true
+        public: true #default should be false now
+
+    Claroline\CoreBundle\Security\Authentication\IpAuthenticator:
+        calls:
+          - method: inject
+            arguments:
+                - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+                - '@claroline.manager.ip_white_list_manager'
+
+    Claroline\CoreBundle\Security\Authentication\ApiTokenAuthenticator:
+        calls:
+          - method: inject
+            arguments:
+                - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Library\Security\TokenUpdater:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\CoreBundle\Library\Security\Authenticator:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
+            - '@security.encoder_factory'
+
+    Claroline\CoreBundle\Library\Security\Evaluator\AdminToolAccessEvaluator:
+        arguments:
+            - '@security.authorization_checker'
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: security.expressions.function_evaluator, function: canOpenAdminTool }

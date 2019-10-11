@@ -12,14 +12,10 @@
 namespace Claroline\CoreBundle\Library\Session;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
-/**
- * @DI\Service("claroline.session.handler_factory")
- */
 class SessionHandlerFactory
 {
     private $configHandler;
@@ -28,15 +24,6 @@ class SessionHandlerFactory
     private $dbPassword;
     private $dbName;
 
-    /**
-     * @DI\InjectParams({
-     *     "configHandler"  = @DI\Inject("Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler"),
-     *     "sessionPath"    = @DI\Inject("%session.save_path%"),
-     *     "dbUsername"     = @DI\Inject("%database_user%"),
-     *     "dbPassword"     = @DI\Inject("%database_password%"),
-     *     "dbName"         = @DI\Inject("%database_name%")
-     * })
-     */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
         $sessionPath,

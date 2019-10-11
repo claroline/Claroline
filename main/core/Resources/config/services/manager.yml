@@ -121,8 +121,8 @@ services:
           - '@claroline.manager.rights_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.utilities.misc'
-          - '@claroline.security.utilities'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+          - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@translator'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\API\SerializerProvider'
@@ -142,7 +142,7 @@ services:
           - '@security.token_storage'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.role_manager'
-          - '@claroline.security.authentication.success_handler'
+          - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
 
     claroline.manager.registration_manager:
         alias: Claroline\CoreBundle\Manager\RegistrationManager
@@ -189,7 +189,7 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@translator'
-          - '@claroline.utilities.misc'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
 
     claroline.log.manager:
         alias: Claroline\CoreBundle\Manager\LogManager
@@ -242,7 +242,7 @@ services:
           - '@claroline.manager.role_manager'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.workspace_manager'
-          - '@claroline.utilities.misc'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
 
     claroline.manager.import_csv_manager:
         alias: Claroline\CoreBundle\Manager\ImportCsvManager
@@ -254,7 +254,7 @@ services:
           - '%claroline.param.icon_sets_web_dir%'
           - '%claroline.param.icon_sets_directory%'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.utilities.thumbnail_creator'
+          - '@Claroline\CoreBundle\Library\Utilities\ThumbnailCreator'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     claroline.manager.icon_set_manager:
@@ -263,14 +263,14 @@ services:
 
     Claroline\CoreBundle\Manager\IconManager:
         arguments:
-          - '@claroline.utilities.thumbnail_creator'
+          - '@Claroline\CoreBundle\Library\Utilities\ThumbnailCreator'
           - '%claroline.param.files_directory%'
           - '%claroline.param.thumbnails_directory%'
           - '%kernel.root_dir%'
-          - '@claroline.utilities.misc'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.relative_thumbnail_base_path%'
-          - '@claroline.utilities.file'
+          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '%claroline.param.public_files_directory%'
           - '%claroline.param.web_directory%'
 
@@ -301,7 +301,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.files_directory%'
-          - '@claroline.utilities.misc'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '%claroline.param.uploads_directory%'
@@ -403,7 +403,7 @@ services:
           - '@Claroline\AppBundle\API\TransferProvider'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.utilities.file'
+          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '@Claroline\AppBundle\API\Crud'
 
     claroline.manager.api_manager:
@@ -439,8 +439,8 @@ services:
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.utilities.misc'
-          - '@claroline.security.utilities'
+          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+          - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@service_container'
 
     claroline.manager.workspace_manager:
@@ -457,7 +457,7 @@ services:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
           - '@security.token_storage'
-          - '@claroline.utilities.file'
+          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
 
     claroline.manager.workspace.transfer:
         alias: Claroline\CoreBundle\Manager\Workspace\TransferManager

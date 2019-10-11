@@ -74,7 +74,7 @@ class TranslationDebugCommand extends ContainerAwareCommand
         $mainFile = $this->getContainer()->get('kernel')->locateResource($mainShortPath);
         $filledFile = $this->getContainer()->get('kernel')->locateResource($filledShortPath);
         if ($input->getOption('fill')) {
-            $translationManager = $this->getContainer()->get('claroline.dev_manager.translation_manager');
+            $translationManager = $this->getContainer()->get('Claroline\DevBundle\Manager\TranslationManager');
             $consoleLogger = ConsoleLogger::get($output);
             $translationManager->setLogger($consoleLogger);
             $translationManager->fill($mainFile, $filledFile);

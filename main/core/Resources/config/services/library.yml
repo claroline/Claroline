@@ -91,3 +91,42 @@ services:
         tags: ['claroline.mailing']
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Library\Utilities\ThumbnailCreator:
+        arguments:
+            - '%kernel.root_dir%'
+            - '%claroline.param.thumbnails_directory%'
+            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+
+    Claroline\CoreBundle\Library\Utilities\FileUtilities:
+        arguments:
+            - '%claroline.param.files_directory%'
+            - '@filesystem'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '%claroline.param.public_files_directory%'
+            - '@security.token_storage'
+
+    Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser: ~
+
+    Claroline\CoreBundle\Library\Utilities\ClaroUtilities:
+        arguments:
+            - '@service_container'
+
+    Claroline\CoreBundle\Library\Session\SessionStorageOptionsFactory:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%session.storage.options%'
+
+    Claroline\CoreBundle\Library\Session\SessionHandlerFactory:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '%session.save_path%'
+            - '%database_user%'
+            - '%database_password%'
+            - '%database_name%'
+
+    Claroline\CoreBundle\Library\Session\DatabaseSessionValidator: ~
+
+    Claroline\CoreBundle\Library\Security\Utilities:
+        arguments:
+            - '@doctrine.orm.entity_manager'

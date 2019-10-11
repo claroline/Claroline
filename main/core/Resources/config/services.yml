@@ -13,9 +13,13 @@ imports:
     - { resource: services/controller.yml }
     - { resource: services/listener.yml }
     - { resource: services/library.yml }
+    - { resource: services/security.yml }
+    - { resource: services/converter.yml }
 
 services:
-
+    Claroline\CoreBundle\Listener\AuthenticationFailureHandler:
+        parent: security.authentication.failure_handler
+        
     Claroline\CoreBundle\Routing\ClaroRouter:
         parent: router.default
 
@@ -35,7 +39,7 @@ services:
     # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass
     claroline.session.storage_options:
         class: stdClass
-        factory: ["@claroline.session.storage_options_factory", getOptions]
+        factory: ['@Claroline\CoreBundle\Library\Session\SessionStorageOptionsFactory', 'getOptions']
 
     #notification listeners
     claroline.listener.core.notification_listener:

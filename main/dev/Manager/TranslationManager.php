@@ -11,14 +11,10 @@
 
 namespace Claroline\DevBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @DI\Service("claroline.dev_manager.translation_manager")
- */
 class TranslationManager
 {
     use LoggableTrait;
@@ -43,13 +39,13 @@ class TranslationManager
     private function recursiveFill($mainTranslations, $translations)
     {
         if (!is_array($translations)) {
-            $translations = array();
+            $translations = [];
         }
 
         //this should be recursive
         foreach (array_keys($mainTranslations) as $requiredKey) {
             if (!array_key_exists($requiredKey, $translations)) {
-                $translations[$requiredKey] = array();
+                $translations[$requiredKey] = [];
                 $translations[$requiredKey] = is_array($mainTranslations[$requiredKey]) ?
                     $this->recursiveFill($mainTranslations[$requiredKey], $translations[$requiredKey]) :
                     $requiredKey;
@@ -61,7 +57,7 @@ class TranslationManager
 
     private function recursiveRemove($mainTranslations, $translations)
     {
-        foreach ($translations as $key => $value) {
+        foreach (array_keys($translations) as $key) {
             if (!array_key_exists($key, $mainTranslations)) {
                 unset($translations[$key]);
             }

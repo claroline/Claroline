@@ -114,7 +114,7 @@ from the FileListener. We are going to analyze it.
 
 ```php
 /**
- * @DI\Observe("resource.file.delete")
+ * @Observe("resource.file.delete")
  *
  * @param DeleteResourceEvent $event
  */
@@ -138,7 +138,7 @@ In most case you won't have to do anything.
 
 ```php
 /**
- * @DI\Observe("copy_file")
+ * @Observe("copy_file")
  *
  * @param CopyResourceEvent $event
  */
@@ -156,7 +156,7 @@ In this case, we copy the file from the copied File entity in the /file folder.
 
 ```php
 /**
- * @DI\Observe("download_file")
+ * @Observe("download_file")
  *
  * @param DownloadResourceEvent $event
  */
@@ -180,7 +180,7 @@ The following code comes from the TextListener class:
 
 ```php
 /**
- * @DI\Observe("open_text")
+ * @Observe("open_text")
  *
  * @param OpenResourceEvent $event
  */
@@ -213,7 +213,7 @@ The following code comes from the ActivityListener class:
 
 ```php
 /**
- * @DI\Observe("compose_activity")
+ * @Observe("compose_activity")
  */
 public function onCompose(CustomActionResourceEvent $event)
 {

@@ -11,24 +11,15 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @DI\Service("claroline.utilities.misc")
- */
 class ClaroUtilities
 {
     private $container;
     private $hasIntl;
 
-    /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;

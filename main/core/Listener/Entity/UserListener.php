@@ -4,14 +4,10 @@ namespace Claroline\CoreBundle\Listener\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 /**
  * Manages Life cycle of the User.
- *
- * @DI\Service()
- * @DI\Tag("doctrine.entity_listener")
  *
  * @todo : maybe move in UserCrud. For now there are too many places where users are not created by Crud (eg. Tests).
  */
@@ -22,10 +18,6 @@ class UserListener
 
     /**
      * UserListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "encoderFactory" = @DI\Inject("security.encoder_factory")
-     * })
      *
      * @param EncoderFactory $encoderFactory
      */

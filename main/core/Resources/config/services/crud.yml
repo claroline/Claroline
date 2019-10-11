@@ -104,7 +104,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%claroline.param.public_files_directory%'
             - '@security.token_storage'
-            - '@claroline.utilities.file'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
         tags:
           - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_file_publicfile, method: preCreate }
 

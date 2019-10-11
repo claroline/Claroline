@@ -63,7 +63,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
         );
 
         $zip = new \ZipArchive();
-        $zip->open($this->getContainer()->get('claroline.utilities.file')->getPath($object));
+        $zip->open($this->getContainer()->get('Claroline\CoreBundle\Library\Utilities\FileUtilities')->getPath($object));
         $json = $zip->getFromName('workspace.json');
         $zip->close();
 

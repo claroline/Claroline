@@ -4,15 +4,11 @@ namespace Claroline\CoreBundle\Listener\Doctrine;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
- * @DI\Service("claroline.doctrine.debug")
- * @DI\Tag("doctrine.event_listener", attributes={"event"="onFlush"})
- *
  * @todo merge with logger in Claroline\AppBundle\Persistence\ObjectManager and keep only one implementation
  *  - logging MUST BE enabled inside the Claroline\AppBundle\Persistence\ObjectManager
  *  - printing log MUST BE down through event listening

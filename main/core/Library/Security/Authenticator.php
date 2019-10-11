@@ -12,27 +12,16 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-/**
- * @DI\Service("claroline.authenticator")
- */
 class Authenticator
 {
     private $sc;
     private $encodeFactory;
     private $tokenStorage;
 
-    /**
-     * @DI\InjectParams({
-     *     "om"              = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "encodeFactory"   = @DI\Inject("security.encoder_factory")
-     * })
-     */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,

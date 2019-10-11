@@ -15,7 +15,7 @@ security:
         #   pattern: ^/(api|apiv2)/
         #   stateless: true
         #   simple_preauth:
-        #      authenticator: claroline.security.authentication.apitoken_authenticator
+        #      authenticator: Claroline\CoreBundle\Security\Authentication\ApiTokenAuthenticator
 
         main:
             pattern: ^/
@@ -24,12 +24,12 @@ security:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             # Allows IP authentication
             simple_preauth:
-                authenticator: claroline.security.authentication.ip_authenticator
+                authenticator: Claroline\CoreBundle\Security\Authentication\IpAuthenticator
             # Allows JSON authentication
             json_login:
                 check_path: /login
-                success_handler: claroline.security.authentication.success_handler
-                failure_handler: claroline.security.authentication.failure_handler
+                success_handler: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+                failure_handler: Claroline\CoreBundle\Listener\AuthenticationFailureHandler
 
     access_decision_manager:
         allow_if_all_abstain: false

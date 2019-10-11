@@ -14,14 +14,10 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-/**
- * @DI\Service
- */
 class CliListener
 {
     private $tokenStorage;
@@ -30,12 +26,6 @@ class CliListener
 
     /**
      * CliListener constructor.
-     *
-     * @DI\InjectParams({
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "em"            = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "userManager"   = @DI\Inject("claroline.manager.user_manager")
-     * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManager         $em
@@ -53,8 +43,6 @@ class CliListener
 
     /**
      * Sets claroline default admin for cli because it's very annoying otherwise to do it manually everytime.
-     *
-     * @DI\Observe("console.command", priority = 17)
      *
      * @param ConsoleCommandEvent $event
      */

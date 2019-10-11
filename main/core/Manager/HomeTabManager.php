@@ -41,7 +41,7 @@ class HomeTabManager
     public function importFromCsv($file)
     {
         $data = file_get_contents($file);
-        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $data = $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities')->formatCsvOutput($data);
         $lines = str_getcsv($data, PHP_EOL);
         $this->om->startFlushSuite();
         $i = 0;

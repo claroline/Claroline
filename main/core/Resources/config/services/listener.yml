@@ -150,11 +150,11 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '%claroline.param.files_directory%'
-            - '@claroline.utilities.mime_type_guesser'
+            - '@Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_evaluation_manager'
-            - '@claroline.utilities.file'
+            - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
         tags:
             - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.file.change_file, method: onFileChange }
@@ -257,3 +257,64 @@ services:
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_workspaces, method: onDisplayDesktop }
+
+    Claroline\CoreBundle\Listener\ViewAsListener:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.manager.role_manager'
+            - '@Claroline\CoreBundle\Library\Security\TokenUpdater'
+            - '@claroline.manager.user_manager'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onViewAs }
+
+    Claroline\CoreBundle\Listener\ScheduledTaskListener:
+        arguments:
+            - '@claroline.manager.mail_manager'
+            - '@claroline.manager.scheduled_task_manager'
+        tags:
+            - { name: kernel.event_listener, event: claroline_scheduled_task_execute_email, method: onExecuteMailTask }
+
+    Claroline\CoreBundle\Listener\PlatformListener:
+        arguments:
+            - '@kernel'
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@claroline.manager.temp_file'
+            - '@claroline.manager.locale_manager'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: setLocale, priority: 17 }
+            - { name: kernel.event_listener, event: kernel.request, method: checkAvailability }
+            - { name: kernel.event_listener, event: kernel.terminate, method: clearTemp }
+
+    Claroline\CoreBundle\Listener\CliListener:
+        arguments:
+            - '@security.token_storage'
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.manager.user_manager'
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: setDefaultUser, priority: 17 }
+
+    Claroline\CoreBundle\Listener\AuthenticationSuccessListener:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.manager.user_manager'
+            - '@claroline.manager.connection_message_manager'
+
+    Claroline\CoreBundle\Listener\Entity\UserListener:
+        arguments:
+            - '@security.encoder_factory'
+        tags: ['doctrine.entity_listener']
+
+    Claroline\CoreBundle\Listener\Doctrine\DebugListener:
+        public: true
+        tags:
+            - { name: doctrine.event_listener, event: onFLush }
+
+    Claroline\CoreBundle\Doctrine\EntityListenerResolver:
+        arguments:
+            - '@service_container'

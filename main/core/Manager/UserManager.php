@@ -165,7 +165,7 @@ class UserManager
     public function csvRemove($file)
     {
         $data = file_get_contents($file);
-        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $data = $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities')->formatCsvOutput($data);
         $userNames = str_getcsv($data, PHP_EOL);
         $this->objectManager->startFlushSuite();
         $i = 0;

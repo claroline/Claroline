@@ -14,16 +14,12 @@ namespace Claroline\CoreBundle\Library\Utilities;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\File\PublicFileUse;
-use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @DI\Service("claroline.utilities.file")
- */
 class FileUtilities
 {
     const MAX_FILES = 1000;
@@ -34,15 +30,6 @@ class FileUtilities
     private $publicFilesDir;
     private $tokenStorage;
 
-    /**
-     * @DI\InjectParams({
-     *     "filesDir"       = @DI\Inject("%claroline.param.files_directory%"),
-     *     "fileSystem"     = @DI\Inject("filesystem"),
-     *     "om"             = @DI\Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "publicFilesDir" = @DI\Inject("%claroline.param.public_files_directory%"),
-     *     "tokenStorage"   = @DI\Inject("security.token_storage")
-     * })
-     */
     public function __construct(
         $filesDir,
         SymfonyFileSystem $fileSystem,
