@@ -107,8 +107,9 @@ class WaveformQuestionSerializer
             if (!$section) {
                 $section = new Section();
                 $section->setWaveform($waveformQuestion);
+            } else {
+                $section->setUuid($solutionData['section']['id']);
             }
-            $section->setUuid($solutionData['section']['id']);
             $section->setScore($solutionData['score']);
 
             if (!empty($solutionData['feedback'])) {
