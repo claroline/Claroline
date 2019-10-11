@@ -39,11 +39,13 @@ const HolePopover = props => {
   // It will be positioned just under the edit button
   const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${props.hole.id}"] .edit-hole-btn`)
 
-  let left = btnElement.offsetLeft
-  let top  = btnElement.offsetTop
+  let left = btnElement ? btnElement.offsetLeft : 0
+  let top  = btnElement ? btnElement.offsetTop : 0
 
-  left += btnElement.offsetWidth / 2 // center popover and edit btn
-  top  += btnElement.offsetHeight // position popover below edit btn
+  if (btnElement) {
+    left += btnElement.offsetWidth / 2 // center popover and edit btn
+    top  += btnElement.offsetHeight // position popover below edit btn
+  }
 
   left -= 180 // half size of the popover
   top  += 25 // take into account the form group label
@@ -135,14 +137,24 @@ class MainField extends Component {
       newItem._popover = true
       newItem._holeId = el.dataset.holeId
     } else if (el.classList.contains('delete-hole-btn') || el.classList.contains('delete-hole-btn-icon')) {
+      const holeId = el.dataset.holeId
       const holes = newItem.holes
       const solutions = newItem.solutions
 
       // Remove from holes list
-      holes.splice(holes.findIndex(hole => hole.id === this.props.item._holeId), 1)
+      const holeIndex = holes.findIndex(hole => hole.id === holeId)
+
+      if (-1 < holeIndex) {
+        holes.splice(holeIndex, 1)
+      }
 
       // Remove from solutions
-      const solution = solutions.splice(solutions.findIndex(solution => solution.holeId === el.dataset.holeId), 1)
+      const solutionsIndex = solutions.findIndex(solution => solution.holeId === holeId)
+      let solution
+
+      if (-1 < solutionsIndex) {
+        solution = solutions.splice(solutionsIndex, 1)
+      }
 
       let bestAnswer
       if (solution && 0 !== solution.length) {
@@ -151,16 +163,17 @@ class MainField extends Component {
       }
 
       // Replace hole with the best answer text
-      const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
+      const regex = new RegExp(`(\\[\\[${holeId}\\]\\])`, 'gi')
       newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
       this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions, newItem.hasExpectedAnswers)})
 
-      if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
+      if (newItem._holeId && newItem._holeId === holeId) {
         newItem._popover = false
       }
     }
 
     this.props.update('holes', newItem.holes)
+    this.props.update('solutions', newItem.solutions)
     this.props.update('_popover', newItem._popover || false)
     this.props.update('_holeId', newItem._holeId || null)
     this.props.update('text', newItem.text)
@@ -291,12 +304,11 @@ class MainField extends Component {
               const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
               newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
 
-              if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
-                this.props.update('_popover', false)
-              }
-
+              this.props.update('_popover', false)
+              this.props.update('_holeId', null)
               this.props.update('text', newItem.text)
               this.props.update('holes', newItem.holes)
+              this.props.update('solutions', newItem.solutions)
 
               this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions, newItem.hasExpectedAnswers)})
             }}
