@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/7/15
  */
 
@@ -14,12 +14,9 @@ namespace Icap\SocialmediaBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Entity\NoteAction;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class NoteActionManager.
- *
- * @DI\Service("icap_socialmedia.manager.note_action")
  */
 class NoteActionManager
 {
@@ -39,10 +36,6 @@ class NoteActionManager
     protected $resourceNodeRepository;
 
     /**
-     * @DI\InjectParams({
-     *      "em"                = @DI\Inject("doctrine.orm.entity_manager")
-     * })
-     *
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
@@ -54,10 +47,10 @@ class NoteActionManager
 
     public function getNote($noteId, User $user)
     {
-        return $this->noteActionRepository->findOneBy(array(
+        return $this->noteActionRepository->findOneBy([
             'id' => $noteId,
             'user' => $user,
-        ));
+        ]);
     }
 
     /**

@@ -13,13 +13,10 @@ namespace Icap\SocialmediaBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Entity\LikeAction;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class LikeActionManager.
- *
- * @DI\Service("icap_socialmedia.manager.like_action")
  */
 class LikeActionManager
 {
@@ -41,11 +38,6 @@ class LikeActionManager
     protected $wallItemManager;
 
     /**
-     * @DI\InjectParams({
-     *      "em"                = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "wallItemManager"   = @DI\Inject("icap_socialmedia.manager.wall_item")
-     * })
-     *
      * @param EntityManager   $em
      * @param WallItemManager $wallItemManager
      */

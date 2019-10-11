@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/7/15
  */
 
@@ -14,12 +14,9 @@ namespace Icap\SocialmediaBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Entity\CommentAction;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class CommentActionManager.
- *
- * @DI\Service("icap_socialmedia.manager.comment_action")
  */
 class CommentActionManager
 {
@@ -44,11 +41,6 @@ class CommentActionManager
     protected $wallItemManager;
 
     /**
-     * @DI\InjectParams({
-     *      "em"                = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "wallItemManager"   = @DI\Inject("icap_socialmedia.manager.wall_item")
-     * })
-     *
      * @param EntityManager   $em
      * @param WallItemManager $wallItemManager
      */
@@ -62,10 +54,10 @@ class CommentActionManager
 
     public function getComment($commentId, User $user)
     {
-        return $this->commentActionRepository->findOneBy(array(
+        return $this->commentActionRepository->findOneBy([
             'id' => $commentId,
             'user' => $user,
-        ));
+        ]);
     }
 
     /**
@@ -91,7 +83,7 @@ class CommentActionManager
     public function getHasCommentedUserIds($resourceId)
     {
         $queryResult = $this->commentActionRepository->findHasCommentedUserIds($resourceId);
-        $userIds = array();
+        $userIds = [];
         if (!empty($queryResult) && !empty($queryResult)) {
             foreach ($queryResult as $userId) {
                 $userIds[] = $userId['id'];

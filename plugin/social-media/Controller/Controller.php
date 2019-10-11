@@ -17,18 +17,35 @@ use Icap\SocialmediaBundle\Entity\ShareAction;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaCommentEvent;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaLikeEvent;
 use Icap\SocialmediaBundle\Event\Log\LogSocialmediaShareEvent;
+use Icap\SocialmediaBundle\Manager\CommentActionManager;
+use Icap\SocialmediaBundle\Manager\LikeActionManager;
+use Icap\SocialmediaBundle\Manager\NoteActionManager;
+use Icap\SocialmediaBundle\Manager\ShareActionManager;
+use Icap\SocialmediaBundle\Manager\WallItemManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class Controller extends BaseController
 {
     const MAX_PER_PAGE = 10;
+
+    public function setLikeActionManager(LikeActionManager $likeActionManager)
+    {
+        $this->likeActionManager = $likeActionManager;
+    }
 
     /**
      * @return \Icap\SocialmediaBundle\Manager\LikeActionManager
      */
     protected function getLikeActionManager()
     {
-        return $this->get('icap_socialmedia.manager.like_action');
+        return $this->likeActionManager;
+    }
+
+    public function setShareActionManager(ShareActionManager $shareActionManager)
+    {
+        $this->shareActionManager = $shareActionManager;
     }
 
     /**
@@ -36,7 +53,12 @@ class Controller extends BaseController
      */
     protected function getShareActionManager()
     {
-        return $this->get('icap_socialmedia.manager.share_action');
+        return $this->shareActionManager;
+    }
+
+    public function setCommentActionManger(CommentActionManager $commentActionManager)
+    {
+        $this->commentActionManager = $commentActionManager;
     }
 
     /**
@@ -44,7 +66,15 @@ class Controller extends BaseController
      */
     protected function getCommentActionManager()
     {
-        return $this->get('icap_socialmedia.manager.comment_action');
+        return $this->commentActionManager;
+    }
+
+    /**
+     * @return \Icap\SocialmediaBundle\Manager\NoteActionManager
+     */
+    public function setNoteActionManager(NoteActionManager $noteActionManager)
+    {
+        return $this->noteActionManager = $noteActionManager;
     }
 
     /**
@@ -52,7 +82,15 @@ class Controller extends BaseController
      */
     protected function getNoteActionManager()
     {
-        return $this->get('icap_socialmedia.manager.note_action');
+        return $this->noteActionManager;
+    }
+
+    /**
+     * @return \Icap\SocialmediaBundle\Manager\WallItemManager
+     */
+    public function setWallItemManager(WallItemManager $wallItemManager)
+    {
+        return $this->wallItemManager = $wallItemManager;
     }
 
     /**
@@ -60,17 +98,27 @@ class Controller extends BaseController
      */
     protected function getWallItemManager()
     {
-        return $this->get('icap_socialmedia.manager.wall_item');
+        return $this->wallItemManager;
+    }
+
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
     }
 
     protected function getLoggedUser()
     {
-        return $this->get('security.token_storage')->getToken()->getUser();
+        return $this->tokenStorage->getToken()->getUser();
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     protected function dispatch($event)
     {
-        $this->get('event_dispatcher')->dispatch('log', $event);
+        $this->dispatcher->dispatch('log', $event);
 
         return $this;
     }

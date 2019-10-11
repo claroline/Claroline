@@ -19,4 +19,4 @@ services:
           - '@Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager'
           - '@security.token_storage'
        tags:
-          - { name: kernel.event_listener, event: log, method: onLog }
+          - { name: kernel.event_listener, event: log, method: onLog, priority: 1 }

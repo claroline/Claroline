@@ -12,23 +12,14 @@
 namespace Icap\SocialmediaBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class NotificationListener.
- *
- * @DI\Service
  */
 class NotificationListener
 {
-    /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "router"     = @DI\Inject("router")
-     * })
-     */
     public function __construct(TranslatorInterface $translator, RouterInterface $router)
     {
         $this->translator = $translator;
@@ -37,9 +28,6 @@ class NotificationListener
 
     /**
      * @param NotificationCreateDelegateViewEvent $event
-     * @DI\Observe("create_notification_item_resource-icap_socialmedia-comment_action")
-     * @DI\Observe("create_notification_item_resource-icap_socialmedia-like_action")
-     * @DI\Observe("create_notification_item_resource-icap_socialmedia-share_action")
      */
     public function onCreateNotificationItem(NotificationCreateDelegateViewEvent $event)
     {

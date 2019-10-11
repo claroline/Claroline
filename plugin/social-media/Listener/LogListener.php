@@ -12,23 +12,16 @@
 namespace Icap\SocialmediaBundle\Listener;
 
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Class LogListener.
- *
- * @DI\Service
  */
 class LogListener
 {
     use ContainerAwareTrait;
 
     /**
-     * @DI\InjectParams({
-     *      "container" = @DI\Inject("service_container")
-     * })
-     *
      * @param $container
      */
     public function __construct($container)
@@ -38,10 +31,6 @@ class LogListener
 
     /**
      * @param LogCreateDelegateViewEvent $event
-     *
-     * @DI\Observe("create_log_list_item_resource-icap_socialmedia-like_action")
-     * @DI\Observe("create_log_list_item_resource-icap_socialmedia-share_action")
-     * @DI\Observe("create_log_list_item_resource-icap_socialmedia-comment_action")
      */
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
@@ -56,10 +45,6 @@ class LogListener
 
     /**
      * @param LogCreateDelegateViewEvent $event
-     *
-     * @DI\Observe("create_log_details_resource-icap_socialmedia-like_action")
-     * @DI\Observe("create_log_details_resource-icap_socialmedia-share_action")
-     * @DI\Observe("create_log_details_resource-icap_socialmedia-comment_action")
      */
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {

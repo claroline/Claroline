@@ -13,15 +13,12 @@ namespace Icap\SocialmediaBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Entity\ShareAction;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Router;
 
 /**
  * Class LikeActionManager.
- *
- * @DI\Service("icap_socialmedia.manager.share_action")
  */
 class ShareActionManager
 {
@@ -48,12 +45,6 @@ class ShareActionManager
     protected $router;
 
     /**
-     * @DI\InjectParams({
-     *      "em"                = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "wallItemManager"   = @DI\Inject("icap_socialmedia.manager.wall_item"),
-     *      "router"            = @DI\Inject("router")
-     * })
-     *
      * @param EntityManager                     $em
      * @param WallItemManager                   $wallItemManager
      * @param \Symfony\Component\Routing\Router $router

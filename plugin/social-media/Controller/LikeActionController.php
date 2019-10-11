@@ -14,7 +14,6 @@ namespace Icap\SocialmediaBundle\Controller;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\LikeAction;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,10 +31,6 @@ class LikeActionController extends Controller
 
     /**
      * LikeActionController constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer")
-     * })
      *
      * @param ResourceNodeSerializer $serializer
      */
