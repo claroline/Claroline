@@ -26,7 +26,10 @@ class IPWhiteListManager
 
     public function addIP($ip)
     {
-        $ips = Yaml::parseFile($this->ipFile);
+        $ips = [];
+        if (file_exists($this->ipFile)) {
+            $ips = Yaml::parseFile($this->ipFile);
+        }
 
         if (is_array($ips)) {
             if (!in_array($ip, $ips)) {
