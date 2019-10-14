@@ -227,8 +227,8 @@ services:
 
     Claroline\CoreBundle\Manager\IPWhiteListManager:
         arguments:
-          - '%claroline.ip_range_white_list_file%'
           - '%claroline.ip_white_list_file%'
+          - '%claroline.ip_range_white_list_file%'
 
     claroline.manager.ip_white_list_manager:
         alias: Claroline\CoreBundle\Manager\IPWhiteListManager
