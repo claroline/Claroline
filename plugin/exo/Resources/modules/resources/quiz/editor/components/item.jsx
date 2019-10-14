@@ -53,7 +53,7 @@ const EditorItem = props =>
             embedded={true}
             formName={props.formName}
             path={props.path}
-            disabled={props.item.rights ? !props.item.rights.edit: false}
+            disabled={props.item.meta.protectQuestion && props.item.rights ? !props.item.rights.edit: false}
             enableScores={props.enableScores}
             definition={itemDefinition}
             item={props.item}
