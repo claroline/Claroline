@@ -64,6 +64,8 @@ services:
           - { name: kernel.event_listener, event: merge_users, method: onMerge }
 
     Icap\WikiBundle\Listener\Entity\ContributionListener:
+       public: true
+       #if not public doctrine wont work
+       tags: ['doctrine.entity_listener']
        arguments:
           - '@Icap\NotificationBundle\Manager\NotificationManager'
-       tags: ['doctrine.entity_listener']
