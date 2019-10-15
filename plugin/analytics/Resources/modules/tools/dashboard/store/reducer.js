@@ -5,7 +5,7 @@ import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {LOAD_LOG, RESET_LOG, LOAD_CHART_DATA} from '#/main/core/layout/logs/actions'
-import {LOAD_ANALYTICS} from '#/plugin/analytics/tools/dashboard/store/actions'
+import {LOAD_ANALYTICS, LOAD_REQUIREMENTS} from '#/plugin/analytics/tools/dashboard/store/actions'
 import {selectors} from '#/plugin/analytics/tools/dashboard/store/selectors'
 import {reducer as pathReducer} from '#/plugin/analytics/tools/dashboard/path/store/reducer'
 
@@ -67,7 +67,27 @@ const reducer = combineReducers({
   nbConnections: makeReducer(null, {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.nbConnections
   }),
-  path: pathReducer
+  path: pathReducer,
+  requirements: combineReducers({
+    roles: makeListReducer(selectors.STORE_NAME + '.requirements.roles', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      })
+    }),
+    users: makeListReducer(selectors.STORE_NAME + '.requirements.users', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      })
+    }),
+    current: makeReducer(null, {
+      [LOAD_REQUIREMENTS]: (state, action) => action.data
+    })
+  }),
+  evaluations: makeListReducer(selectors.STORE_NAME + '.evaluations', {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  })
 })
 
 export {

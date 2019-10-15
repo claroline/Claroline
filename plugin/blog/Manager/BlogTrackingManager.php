@@ -2,7 +2,7 @@
 
 namespace Icap\BlogBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
@@ -223,7 +223,7 @@ class BlogTrackingManager
             $node,
             $user,
             $date,
-            ['status' => AbstractResourceEvaluation::STATUS_PARTICIPATED]
+            ['status' => AbstractEvaluation::STATUS_PARTICIPATED]
         );
     }
 }

@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
@@ -360,7 +360,7 @@ class LogListener
                     $event->getResource(),
                     $user,
                     new \DateTime(),
-                    ['status' => AbstractResourceEvaluation::STATUS_OPENED],
+                    ['status' => AbstractEvaluation::STATUS_OPENED],
                     ['status' => true],
                     false
                 );

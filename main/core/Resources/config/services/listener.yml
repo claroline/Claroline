@@ -258,6 +258,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_workspaces, method: onDisplayDesktop }
 
+    Claroline\CoreBundle\Listener\Workspace\EvaluationListener:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
+        tags:
+            - { name: kernel.event_listener, event: resource_evaluation, method: onResourceEvaluation }
+
     Claroline\CoreBundle\Listener\ViewAsListener:
         arguments:
             - '@security.authorization_checker'

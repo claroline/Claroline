@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Manager\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -424,15 +424,15 @@ class PaperManager
 
         if ($finished) {
             if (is_null($successScore) || empty($paper->getTotal())) {
-                $status = AbstractResourceEvaluation::STATUS_COMPLETED;
+                $status = AbstractEvaluation::STATUS_COMPLETED;
             } else {
                 $percentScore = ($score * 100);
                 $status = $percentScore >= $successScore ?
-                    AbstractResourceEvaluation::STATUS_PASSED :
-                    AbstractResourceEvaluation::STATUS_FAILED;
+                    AbstractEvaluation::STATUS_PASSED :
+                    AbstractEvaluation::STATUS_FAILED;
             }
         } else {
-            $status = AbstractResourceEvaluation::STATUS_INCOMPLETE;
+            $status = AbstractEvaluation::STATUS_INCOMPLETE;
         }
 
         $nbQuestions = 0;

@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_resource_evaluation")
  */
-class ResourceEvaluation extends AbstractResourceEvaluation
+class ResourceEvaluation extends AbstractEvaluation
 {
     /**
      * @ORM\ManyToOne(

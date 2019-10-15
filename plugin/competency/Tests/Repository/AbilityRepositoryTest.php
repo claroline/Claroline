@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
@@ -234,11 +234,11 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $a3->linkResource($ac2); // bound to 2 abilities
         $a4->linkResource($ac3); // extra data
 
-        $e1 = $this->persistEvaluation($ac1, $u1, AbstractResourceEvaluation::STATUS_FAILED);
-        $e2 = $this->persistEvaluation($ac1, $u1, AbstractResourceEvaluation::STATUS_PASSED, $e1);
-        $e3 = $this->persistEvaluation($ac2, $u1, AbstractResourceEvaluation::STATUS_PASSED);
-        $this->persistEvaluation($ac3, $u1, AbstractResourceEvaluation::STATUS_PASSED); // extra data
-        $this->persistEvaluation($ac1, $u2, AbstractResourceEvaluation::STATUS_PASSED, null); // extra data
+        $e1 = $this->persistEvaluation($ac1, $u1, AbstractEvaluation::STATUS_FAILED);
+        $e2 = $this->persistEvaluation($ac1, $u1, AbstractEvaluation::STATUS_PASSED, $e1);
+        $e3 = $this->persistEvaluation($ac2, $u1, AbstractEvaluation::STATUS_PASSED);
+        $this->persistEvaluation($ac3, $u1, AbstractEvaluation::STATUS_PASSED); // extra data
+        $this->persistEvaluation($ac1, $u2, AbstractEvaluation::STATUS_PASSED, null); // extra data
 
         $this->om->flush();
 
@@ -250,13 +250,13 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals('a1', $result[0]['abilityName']);
         $this->assertEquals('ac1', $result[0]['resourceName']);
         $this->assertEquals('l1', $result[0]['levelName']);
-        $this->assertEquals(AbstractResourceEvaluation::STATUS_PASSED, $result[0]['status']);
+        $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[0]['status']);
 
         $this->assertEquals($e3->getId(), $result[1]['evaluationId']);
         $this->assertEquals('a2', $result[1]['abilityName']);
         $this->assertEquals('ac2', $result[1]['resourceName']);
         $this->assertEquals('l2', $result[1]['levelName']);
-        $this->assertEquals(AbstractResourceEvaluation::STATUS_PASSED, $result[1]['status']);
+        $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[1]['status']);
 
         // As a resource can be bound to multiple abilities, a same evaluation of
         // a resource can be related to multiple abilities/levels as well. The repo
@@ -266,7 +266,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals('a3', $result[2]['abilityName']);
         $this->assertEquals('ac2', $result[2]['resourceName']);
         $this->assertEquals('l3', $result[2]['levelName']);
-        $this->assertEquals(AbstractResourceEvaluation::STATUS_PASSED, $result[2]['status']);
+        $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[2]['status']);
     }
 
     private function createLink($index)

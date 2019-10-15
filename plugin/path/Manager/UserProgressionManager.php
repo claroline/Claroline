@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -243,8 +243,8 @@ class UserProgressionManager
             }
         }
         $status = $progression >= $progressionMax ?
-            AbstractResourceEvaluation::STATUS_COMPLETED :
-            AbstractResourceEvaluation::STATUS_INCOMPLETE;
+            AbstractEvaluation::STATUS_COMPLETED :
+            AbstractEvaluation::STATUS_INCOMPLETE;
 
         return [
             'progression' => $progression,
@@ -356,13 +356,13 @@ class UserProgressionManager
                 $finished = count($evaluatedSteps) === $nbEvaluatedStepsDone;
                 $success = $finished && $successScore <= ($score * 100) / $scoreTotal;
 
-                if (AbstractResourceEvaluation::STATUS_PASSED !== $resourceUserEvaluation->getStatus()) {
+                if (AbstractEvaluation::STATUS_PASSED !== $resourceUserEvaluation->getStatus()) {
                     $resourceUserEvaluation->setDate(new \DateTime());
                     $resourceUserEvaluation->setScore($finalScore);
                     $resourceUserEvaluation->setScoreMax($total);
 
                     if ($finished) {
-                        $status = $success ? AbstractResourceEvaluation::STATUS_PASSED : AbstractResourceEvaluation::STATUS_FAILED;
+                        $status = $success ? AbstractEvaluation::STATUS_PASSED : AbstractEvaluation::STATUS_FAILED;
                         $resourceUserEvaluation->setStatus($status);
                     }
                 }

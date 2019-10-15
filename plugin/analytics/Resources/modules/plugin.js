@@ -39,7 +39,8 @@ registry.add('ClarolineAnalyticsBundle', {
 
   analytics: {
     resource: {
-      'connections': () => { return import(/* webpackChunkName: "analytics-resource-connections" */ '#/plugin/analytics/analytics/resource/connections') }
+      'connections' : () => { return import(/* webpackChunkName: "analytics-resource-connections" */  '#/plugin/analytics/analytics/resource/connections') },
+      'requirements': () => { return import(/* webpackChunkName: "analytics-resource-requirements" */ '#/plugin/analytics/analytics/resource/requirements') }
     }
   }
 })

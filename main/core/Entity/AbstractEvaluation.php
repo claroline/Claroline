@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Resource;
+namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractResourceEvaluation
+class AbstractEvaluation
 {
     const STATUS_PASSED = 'passed';
     const STATUS_FAILED = 'failed';

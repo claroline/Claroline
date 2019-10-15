@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
@@ -327,7 +327,7 @@ class FileListener
             $this->om->startFlushSuite();
             $tracking = $this->resourceEvalManager->getResourceUserEvaluation($node, $user);
             $tracking->setDate($logs[0]->getDateLog());
-            $tracking->setStatus(AbstractResourceEvaluation::STATUS_OPENED);
+            $tracking->setStatus(AbstractEvaluation::STATUS_OPENED);
             $tracking->setNbOpenings($nbLogs);
             $this->om->persist($tracking);
             $this->om->endFlushSuite();

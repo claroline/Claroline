@@ -3,7 +3,7 @@
 namespace Icap\WikiBundle\Listener\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
@@ -195,7 +195,7 @@ class WikiListener
             $this->om->startFlushSuite();
             $tracking = $this->evaluationManager->getResourceUserEvaluation($node, $user);
             $tracking->setDate($logs[0]->getDateLog());
-            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            $status = AbstractEvaluation::STATUS_UNKNOWN;
             $nbAttempts = 0;
             $nbOpenings = 0;
 
@@ -204,14 +204,14 @@ class WikiListener
                     case 'resource-read':
                         ++$nbOpenings;
 
-                        if (AbstractResourceEvaluation::STATUS_UNKNOWN === $status) {
-                            $status = AbstractResourceEvaluation::STATUS_OPENED;
+                        if (AbstractEvaluation::STATUS_UNKNOWN === $status) {
+                            $status = AbstractEvaluation::STATUS_OPENED;
                         }
                         break;
                     case 'resource-icap_wiki-section_create':
                     case 'resource-icap_wiki-section_update':
                         ++$nbAttempts;
-                        $status = AbstractResourceEvaluation::STATUS_PARTICIPATED;
+                        $status = AbstractEvaluation::STATUS_PARTICIPATED;
                         break;
                 }
             }

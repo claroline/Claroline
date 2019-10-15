@@ -5,7 +5,7 @@ import {select as listSelect} from '#/main/app/content/list/store'
 
 import {selectors as toolSelectors} from  '#/main/core/tool/store'
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
-import {selectors} from '#/plugin/analytics/tools/dashboard/store'
+import {actions, selectors} from '#/plugin/analytics/tools/dashboard/store'
 import {DashboardTool as DashboardToolComponent} from '#/plugin/analytics/tools/dashboard/components/tool'
 
 const DashboardTool = withRouter(connect(
@@ -18,6 +18,12 @@ const DashboardTool = withRouter(connect(
   dispatch => ({
     openLog(id, workspaceId) {
       dispatch(logActions.openLog('apiv2_workspace_tool_logs_get', {id, workspaceId}))
+    },
+    openRequirements(id) {
+      dispatch(actions.openRequirements(id))
+    },
+    resetRequirements() {
+      dispatch(actions.loadRequirements(null))
     }
   })
 )(DashboardToolComponent))

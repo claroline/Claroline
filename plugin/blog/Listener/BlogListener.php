@@ -3,7 +3,7 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
@@ -251,7 +251,7 @@ class BlogListener
             $om->startFlushSuite();
             $tracking = $resourceEvalManager->getResourceUserEvaluation($node, $user);
             $tracking->setDate($logs[0]->getDateLog());
-            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            $status = AbstractEvaluation::STATUS_UNKNOWN;
             $nbAttempts = 0;
             $nbOpenings = 0;
 
@@ -260,15 +260,15 @@ class BlogListener
                     case 'resource-read':
                         ++$nbOpenings;
 
-                        if (AbstractResourceEvaluation::STATUS_UNKNOWN === $status) {
-                            $status = AbstractResourceEvaluation::STATUS_OPENED;
+                        if (AbstractEvaluation::STATUS_UNKNOWN === $status) {
+                            $status = AbstractEvaluation::STATUS_OPENED;
                         }
                         break;
                     case 'resource-icap_blog-post_create':
                     case 'resource-icap_blog-post_update':
                     case 'resource-icap_blog-comment_create':
                         ++$nbAttempts;
-                        $status = AbstractResourceEvaluation::STATUS_PARTICIPATED;
+                        $status = AbstractEvaluation::STATUS_PARTICIPATED;
                         break;
                 }
             }

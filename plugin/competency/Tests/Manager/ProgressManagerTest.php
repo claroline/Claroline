@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
@@ -43,7 +43,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
@@ -62,7 +62,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
@@ -81,8 +81,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED, null, false);
-        $eval2 = $this->createEvaluation('ac2', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
 
@@ -105,7 +105,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
@@ -127,7 +127,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $summaries = $this->competencyProgressRepo->findBy([
@@ -161,11 +161,11 @@ class ProgressManagerTest extends RepositoryTestCase
             ]);
         };
 
-        $eval1 = $this->createEvaluation('ac2', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval1 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->assertEquals('l2', $getSummary()->getLevel()->getName());
 
-        $eval2 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval2 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
         $this->assertEquals('l2', $getSummary()->getLevel()->getName());
     }
@@ -196,15 +196,15 @@ class ProgressManagerTest extends RepositoryTestCase
             ]);
         };
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->assertEquals('l1', $getSummary()->getLevel()->getName());
 
-        $eval2 = $this->createEvaluation('ac2', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
         $this->assertEquals('l1', $getSummary()->getLevel()->getName());
 
-        $eval3 = $this->createEvaluation('ac3', AbstractResourceEvaluation::STATUS_COMPLETED);
+        $eval3 = $this->createEvaluation('ac3', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval3->getResourceUserEvaluation());
         $this->assertEquals('l2', $getSummary()->getLevel()->getName());
     }
@@ -224,8 +224,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED, null, false);
-        $eval2 = $this->createEvaluation('ac2', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
 
@@ -276,8 +276,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED, null, false);
-        $eval2 = $this->createEvaluation('ac4', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac4', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
 
@@ -323,8 +323,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]]);
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED, null, false);
-        $eval2 = $this->createEvaluation('ac6', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac6', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
 
@@ -381,7 +381,7 @@ class ProgressManagerTest extends RepositoryTestCase
            ],
         ]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $o1Summaries = $this->objectiveProgressRepo->findBy([
@@ -422,7 +422,7 @@ class ProgressManagerTest extends RepositoryTestCase
            ],
         ]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $competencySummaries = $this->competencyProgressRepo->findBy([
@@ -460,7 +460,7 @@ class ProgressManagerTest extends RepositoryTestCase
            ],
         ]);
 
-        $eval = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval->getResourceUserEvaluation());
 
         $competencySummaries = $this->competencyProgressRepo->findBy([
@@ -501,8 +501,8 @@ class ProgressManagerTest extends RepositoryTestCase
            ],
         ]);
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED, null, false);
-        $eval2 = $this->createEvaluation('ac2', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
 
@@ -563,8 +563,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ],
         ]);
 
-        $eval1 = $this->createEvaluation('ac1', AbstractResourceEvaluation::STATUS_PASSED, null, false);
-        $eval2 = $this->createEvaluation('ac2', AbstractResourceEvaluation::STATUS_PASSED);
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1->getResourceUserEvaluation());
         $this->manager->handleEvaluation($eval2->getResourceUserEvaluation());
 

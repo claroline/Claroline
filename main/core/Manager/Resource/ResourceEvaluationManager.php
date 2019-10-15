@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -141,7 +141,7 @@ class ResourceEvaluationManager
         $incOpenings = false
     ) {
         $rue = $this->getResourceUserEvaluation($node, $user);
-        $statusPriority = AbstractResourceEvaluation::STATUS_PRIORITY;
+        $statusPriority = AbstractEvaluation::STATUS_PRIORITY;
 
         if (!empty($date)) {
             $rue->setDate($date);
@@ -251,7 +251,7 @@ class ResourceEvaluationManager
         $status = $evaluation->getStatus();
         $rueStatus = $rue->getStatus();
 
-        $statusPriority = AbstractResourceEvaluation::STATUS_PRIORITY;
+        $statusPriority = AbstractEvaluation::STATUS_PRIORITY;
 
         if (isset($forced['duration']) && $forced['duration']) {
             $rue->setDuration($duration);

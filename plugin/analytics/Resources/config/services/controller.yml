@@ -18,7 +18,7 @@ services:
 
     Claroline\AnalyticsBundle\Controller\Resource\LogController:
         arguments:
-          - '@security.token_storage'
+          - '@security.authorization_checker'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.log.manager'

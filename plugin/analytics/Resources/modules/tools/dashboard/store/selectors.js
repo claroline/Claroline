@@ -34,6 +34,16 @@ const analytics = createSelector(
   (store) => store.analytics
 )
 
+const requirements = createSelector(
+  [store],
+  (store) => store.requirements
+)
+
+const currentRequirements = createSelector(
+  [requirements],
+  (requirements) => requirements.current
+)
+
 export const selectors = {
   STORE_NAME,
   store,
@@ -42,5 +52,6 @@ export const selectors = {
   items,
   levelMax,
   nbConnections,
-  analytics
+  analytics,
+  currentRequirements
 }
