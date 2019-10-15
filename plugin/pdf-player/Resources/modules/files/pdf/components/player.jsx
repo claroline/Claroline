@@ -17,6 +17,7 @@ class PdfPlayer extends Component {
   }
 
   componentDidMount() {
+    PDFJS.disableRange = true
     PDFJS.disableWorker = true
     PDFJS.getDocument(this.props.file.url).then((pdf) => {
       this.setState({
