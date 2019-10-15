@@ -111,15 +111,18 @@ function generateStructureByTags(quiz, previousPaper = null) {
     // Pick a new set of items
     // Only pick wanted tags (format : ['tagName', itemCount])
     picking.pick.map(pickedTag => {
-      pickedItems = pickedItems.concat(
+      const taggedItems = pick(
         quiz.steps.reduce((items, step) => {
           if (step.items) {
             return items.concat(step.items.filter(item => item.tags && -1 !== item.tags.indexOf(pickedTag[0])))
           }
 
           return items
-        }, [])
+        }, []),
+        pickedTag[1]
       )
+
+      pickedItems = pickedItems.concat(taggedItems)
     })
   }
 
