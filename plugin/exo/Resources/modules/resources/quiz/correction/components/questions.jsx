@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
+import {LinkButton} from '#/main/app/buttons/link'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
@@ -21,10 +22,12 @@ export const QuestionRow = props =>
         id={props.question.id}
         tip={trans('correct', {}, 'actions')}
       >
-        <a className="btn btn-link-default" href={`${props.path}/correction/${props.question.id}`}>
+        <LinkButton
+          className="btn btn-link"
+          target={`${props.path}/correction/${props.question.id}`}
+        >
           <span className="fa fa-fw fa-check-square-o" />
-          <span className="sr-only">{trans('correct', {}, 'actions')}</span>
-        </a>
+        </LinkButton>
       </TooltipOverlay>
     </td>
   </tr>

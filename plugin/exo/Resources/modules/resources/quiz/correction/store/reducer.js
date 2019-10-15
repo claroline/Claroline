@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep'
+
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {CORRECTION_INIT, QUESTION_CURRENT, SCORE_UPDATE, FEEDBACK_UPDATE, REMOVE_ANSWERS} from '#/plugin/exo/resources/quiz/correction/store/actions'
@@ -9,29 +11,31 @@ const reducer = combineReducers({
   answers: makeReducer([], {
     [CORRECTION_INIT]: (state, action) => action.correction.answers,
 
-    [SCORE_UPDATE]: (state, action) => state.answers.map((answer) => {
-      if (answer.id === action.answerId) {
-        return Object.assign({}, answer, {score: action.score})
-      } else {
-        return answer
+    [SCORE_UPDATE]: (state, action) => {
+      const newState = cloneDeep(state)
+      const idx = newState.findIndex(answer => answer.id === action.answerId)
+
+      if (-1 < idx) {
+        newState[idx]['score'] = action.score
       }
-    }),
 
-    [FEEDBACK_UPDATE]: (state, action) => state.answers.map((answer) => {
-      if (answer.id === action.answerId) {
-        return Object.assign({}, answer, {feedback: action.feedback})
-      } else {
-        return answer
+      return newState
+    },
+
+    [FEEDBACK_UPDATE]: (state, action) => {
+      const newState = cloneDeep(state)
+      const idx = newState.findIndex(answer => answer.id === action.answerId)
+
+      if (-1 < idx) {
+        newState[idx]['feeedback'] = action.feeedback
       }
-    }),
 
-    [REMOVE_ANSWERS]: (state, action) => {
-      const question = state.questions.find(q => q.id === action.questionId)
+      return newState
+    },
 
-      return state.answers.filter(a =>
-        a.questionId !== action.questionId || a.score === undefined || a.score === null || isNaN(a.score) || a.score.trim() === '' || a.score > question.score.max
-      )
-    }
+    [REMOVE_ANSWERS]: (state, action) => state.filter(a => {
+      return a.questionId !== action.questionId || a.score === undefined || a.score === null || isNaN(a.score) || a.score.trim() === ''
+    })
   }),
   currentQuestionId: makeReducer(null, {
     [QUESTION_CURRENT]: (state, action) => action.id
