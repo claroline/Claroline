@@ -137,7 +137,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         // refresh list (I'm not sure I should do that)
         if (ownProps.fetch.autoload) {
           dispatchProps.invalidateData()
-        } {
+        } else {
           dispatchProps.fetchData(ownProps.fetch.url, true)
         }
       }

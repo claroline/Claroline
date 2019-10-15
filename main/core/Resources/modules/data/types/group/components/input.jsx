@@ -82,7 +82,9 @@ const GroupInput = props => {
 }
 
 implementPropTypes(GroupInput, FormFieldTypes, {
-  value: T.arrayOf(T.shape(GroupType.propTypes)),
+  value: T.shape(
+    GroupType.propTypes
+  ),
   picker: T.shape({
     title: T.string
   })
