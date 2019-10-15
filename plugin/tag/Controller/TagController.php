@@ -50,6 +50,48 @@ class TagController extends AbstractCrudController
     }
 
     /**
+     * @param Request $request
+     * @param string  $class
+     *
+     * @return JsonResponse
+     */
+    public function createAction(Request $request, $class)
+    {
+        $query = $request->query->all();
+        $data = $this->decodeRequest($request);
+
+        // Skips creation if a tag already exists with the same name
+        $tag = isset($data['meta']['creator']) ?
+            $this->manager->getUserTagByNameAndUserId($data['name'], $data['meta']['creator']) :
+            $this->manager->getOnePlatformTagByName($data['name']);
+
+        if ($tag) {
+            return new JsonResponse($this->serializer->serialize($tag));
+        } else {
+            $options = $this->options['create'];
+
+            if (isset($query['options'])) {
+                $options = $query['options'];
+            }
+
+            $object = $this->crud->create(
+                $class,
+                $this->decodeRequest($request),
+                $options
+            );
+
+            if (is_array($object)) {
+                return new JsonResponse($object, 400);
+            }
+
+            return new JsonResponse(
+                $this->serializer->serialize($object, $options),
+                201
+            );
+        }
+    }
+
+    /**
      * List all objects linked to a Tag.
      *
      * @EXT\Route("/{id}/object", name="apiv2_tag_list_objects")
