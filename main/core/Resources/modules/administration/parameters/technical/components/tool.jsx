@@ -8,7 +8,6 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {Domain} from '#/main/core/administration/parameters/technical/components/domain'
 import {Limits} from '#/main/core/administration/parameters/technical/components/limits'
 import {Mailing} from '#/main/core/administration/parameters/technical/components/mailing'
-import {Pdf} from '#/main/core/administration/parameters/technical/components/pdf'
 import {Security} from '#/main/core/administration/parameters/technical/components/security'
 import {Sessions} from '#/main/core/administration/parameters/technical/components/sessions'
 import {Javascripts} from '#/main/core/administration/parameters/technical/components/javascripts'
@@ -20,7 +19,6 @@ const TechnicalTool = (props) =>
         path={props.path}
         routes={[
           {path: '/domain',      render: () => trans('internet')},
-          {path: '/pdf',         render: () => trans('pdf')},
           {path: '/limits',      render: () => trans('limits')},
           {path: '/security',    render: () => trans('security')},
           {path: '/mailing',     render: () => trans('email')},
@@ -39,9 +37,6 @@ const TechnicalTool = (props) =>
         {
           path: '/domain',
           component: Domain
-        }, {
-          path: '/pdf',
-          component: Pdf
         }, {
           path: '/limits',
           component: Limits

@@ -81,7 +81,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'platform_url' => 'internet.platform_url',
             'mailer_from' => 'mailer.from',
             'default_workspace_tag' => 'workspace.default_tag',
-            'is_pdf_export_active' => 'pdf.active',
             'google_geocoding_client_id' => 'geolocation.google.geocoding_client_id',
             'google_geocoding_signature' => 'geolocation.google.geocoding_signature',
             'google_geocoding_key' => 'geolocation.google.geocoding_key',

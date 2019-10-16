@@ -151,3 +151,17 @@
         }
     }
 }
+
+// Tabbable tabs
+// used by react-bootstrap Tabs (which shouldn't be used).
+// -------------------------
+
+// Hide tabbable panes to start, show them when `.active`
+.tab-content {
+    > .tab-pane {
+        display: none;
+    }
+    > .active {
+        display: block;
+    }
+}

@@ -14,15 +14,15 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Claroline\CoreBundle\Manager\VersionManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * REST API to manage platform parameters.
  *
- * @Route("/parameters")
+ * @EXT\Route("/parameters")
  */
 class ParametersController
 {
@@ -30,22 +30,25 @@ class ParametersController
      * ParametersController constructor.
      *
      * @param PlatformConfigurationHandler $ch
-     * @param ParametersSerializer         $serializer
      * @param AnalyticsManager             $analyticsManager
+     * @param VersionManager               $versionManager
+     * @param ParametersSerializer         $serializer
      */
     public function __construct(
         PlatformConfigurationHandler $ch,
         AnalyticsManager $analyticsManager,
+        VersionManager $versionManager,
         ParametersSerializer $serializer
     ) {
         $this->ch = $ch;
         $this->serializer = $serializer;
+        $this->versionManager = $versionManager;
         $this->analyticsManager = $analyticsManager;
     }
 
     /**
-     * @Route("", name="apiv2_parameters_list")
-     * @Method("GET")
+     * @EXT\Route("", name="apiv2_parameters_list")
+     * @EXT\Method("GET")
      */
     public function listAction()
     {
@@ -53,8 +56,8 @@ class ParametersController
     }
 
     /**
-     * @Route("", name="apiv2_parameters_update")
-     * @Method("PUT")
+     * @EXT\Route("", name="apiv2_parameters_update")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
@@ -68,15 +71,12 @@ class ParametersController
     }
 
     /**
-     * @Route("/details", name="apiv2_platform_details")
-     * @Method("GET")
+     * @EXT\Route("/info", name="apiv2_platform_info")
+     * @EXT\Method("GET")
      */
-    public function getDetails()
+    public function getAction()
     {
         $parameters = $this->serializer->serialize();
-        $data['workspace'] = $parameters['workspace'];
-        $data['security']['platform_init_date'] = $parameters['security']['platform_init_date'];
-        $data['security']['platform_limit_date'] = $parameters['security']['platform_limit_date'];
 
         $usersCount = $this->analyticsManager->userRolesData(null);
         $totalUsers = array_shift($usersCount)['total'];
@@ -84,14 +84,20 @@ class ParametersController
         $resourceCount = $this->analyticsManager->getResourceTypesCount(null, null);
         $otherResources = $this->analyticsManager->getOtherResourceTypesCount();
 
-        $analytics = ['analytics' => [
-          'resources' => $resourceCount,
-          'workspaces' => $wsCount,
-          'other' => $otherResources,
-          'users' => $usersCount,
-          'totalUsers' => $totalUsers,
-        ]];
-
-        return new JsonResponse(array_merge($analytics, $data));
+        return new JsonResponse([
+            'version' => $this->versionManager->getDistributionVersion(),
+            'workspace' => $parameters['workspace'],
+            'security' => [
+                'platform_init_date' => $parameters['security']['platform_init_date'],
+                'platform_limit_date' => $parameters['security']['platform_limit_date'],
+            ],
+            'analytics' => [
+                'resources' => $resourceCount,
+                'workspaces' => $wsCount,
+                'other' => $otherResources,
+                'users' => $usersCount,
+                'totalUsers' => $totalUsers,
+            ],
+        ]);
     }
 }

@@ -165,10 +165,6 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\FileController: ~
 
-    Claroline\CoreBundle\Controller\APINew\LocaleController:
-        arguments:
-          - '@claroline.manager.locale_manager'
-
     Claroline\CoreBundle\Controller\APINew\LoggerController:
         arguments:
           - '%claroline.param.log_dir%'
@@ -183,6 +179,7 @@ services:
         arguments:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.analytics_manager'
+          - '@Claroline\CoreBundle\Manager\VersionManager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     Claroline\CoreBundle\Controller\APINew\ScheduledTaskController: ~

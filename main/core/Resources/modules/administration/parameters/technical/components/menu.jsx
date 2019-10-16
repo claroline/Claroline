@@ -23,12 +23,6 @@ const TechnicalMenu = (props) =>
           label: trans('internet'),
           target: props.path+'/domain'
         }, {
-          name: 'pdf',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf',
-          label: trans('pdf'),
-          target: props.path+'/pdf'
-        }, {
           name: 'limits',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-database',
