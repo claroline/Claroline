@@ -9,7 +9,7 @@ trait CreatedAt
     /**
      * The creation date of the entity.
      *
-     * @ORM\Column(name="createdAt", type="datetime")
+     * @ORM\Column(name="createdAt", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
