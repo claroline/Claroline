@@ -2,9 +2,9 @@
 
 namespace Claroline\AnalyticsBundle\Controller\Administration;
 
+use Claroline\AppBundle\Controller\SecurityController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,9 +13,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * @Route("/tools/admin/analytics")
- * @SEC\PreAuthorize("canOpenAdminTool('dashboard')")
  */
-class AnalyticsController
+class AnalyticsController extends SecurityController
 {
     /** @var AnalyticsManager */
     private $analyticsManager;
@@ -43,6 +42,7 @@ class AnalyticsController
      */
     public function overviewAction()
     {
+        $this->canOpenAdminTool('dashboard');
         $query = $this->addOrganizationFilter([]);
         $lastMonthActions = $this->analyticsManager->getDailyActions($query);
         $query['limit'] = 5;
@@ -74,6 +74,7 @@ class AnalyticsController
      */
     public function audienceAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         $query = $this->addOrganizationFilter($request->query->all());
         $query['hiddenFilters']['action'] = 'user-login';
         $connections = $this->analyticsManager->getDailyActions($query);
@@ -110,6 +111,7 @@ class AnalyticsController
      */
     public function resourcesAction()
     {
+        $this->canOpenAdminTool('dashboard');
         $organizations = $this->getLoggedUserOrganizations();
         $wsCount = $this->analyticsManager->countNonPersonalWorkspaces($organizations);
         $resourceCount = $this->analyticsManager->getResourceTypesCount(null, $organizations);
@@ -132,6 +134,7 @@ class AnalyticsController
      */
     public function widgetsAction()
     {
+        $this->canOpenAdminTool('dashboard');
         $organizations = $this->getLoggedUserOrganizations();
 
         return new JsonResponse($this->analyticsManager->getWidgetsData($organizations));
@@ -144,6 +147,7 @@ class AnalyticsController
      */
     public function topActionsAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         $query = $this->addOrganizationFilter($request->query->all());
 
         return new JsonResponse($this->analyticsManager->getTopActions($query));
@@ -151,6 +155,8 @@ class AnalyticsController
 
     private function addOrganizationFilter($query)
     {
+        $this->canOpenAdminTool('dashboard');
+
         $organizations = $this->getLoggedUserOrganizations();
         if (null !== $organizations) {
             $query['hiddenFilters']['organization'] = $this->loggedUser->getAdministratedOrganizations();

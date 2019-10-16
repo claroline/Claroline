@@ -8,12 +8,12 @@ use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+ * todo: use firewall instead for security, check if role user for route /my-objectives.
+ *
  * @EXT\Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
  */

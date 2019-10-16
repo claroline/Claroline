@@ -4,10 +4,10 @@ namespace Claroline\AnalyticsBundle\Controller\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\SecurityController;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LogManager;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,9 +18,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * @Route("/tools/admin/logs")
- * @SEC\PreAuthorize("canOpenAdminTool('dashboard')")
  */
-class LogController
+class LogController extends SecurityController
 {
     /** @var FinderProvider */
     private $finder;
@@ -72,6 +71,7 @@ class LogController
      */
     public function listAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         $query = $this->addOrganizationFilter($request->query->all());
 
         return new JsonResponse($this->finder->search(
@@ -90,6 +90,7 @@ class LogController
      */
     public function listCsvAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         // Filter data, but return all of them
         $query = $this->addOrganizationFilter($request->query->all());
         $dateStr = date('YmdHis');
@@ -111,6 +112,7 @@ class LogController
      */
     public function listChartAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         $query = $this->addOrganizationFilter($request->query->all());
         $chartData = $this->logManager->getChartData($query);
 
@@ -126,6 +128,7 @@ class LogController
      */
     public function userActionsListAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         $query = $this->addOrganizationFilter($request->query->all());
         $userList = $this->logManager->getUserActionsList($query);
 
@@ -141,6 +144,7 @@ class LogController
      */
     public function userActionsListCsvAction(Request $request)
     {
+        $this->canOpenAdminTool('dashboard');
         // Filter data, but return all of them
         $query = $this->addOrganizationFilter($request->query->all());
         $dateStr = date('YmdHis');
@@ -164,6 +168,8 @@ class LogController
      */
     public function getAction(Log $log)
     {
+        $this->canOpenAdminTool('dashboard');
+
         return new JsonResponse($this->serializer->serialize($log, ['details' => true]));
     }
 

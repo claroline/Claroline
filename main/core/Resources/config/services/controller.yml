@@ -29,6 +29,15 @@ services:
               - method: setContainer
                 arguments:
                   - '@service_container'
+                  
+        Claroline\AppBundle\Controller\SecurityController:
+            calls:
+              - method: setObjectManager
+                arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+              - method: setAuthorizationChecker
+                arguments:
+                  - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\APINew\Cryptography\ApiTokenController:
         arguments:

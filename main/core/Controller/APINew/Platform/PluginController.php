@@ -2,20 +2,18 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
+use Claroline\AppBundle\Controller\SecurityController;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Manager\PluginManager;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Manages platform plugins.
  *
- * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
- *
  * @EXT\Route("/plugin")
  */
-class PluginController
+class PluginController extends SecurityController
 {
     /** @var PluginManager */
     private $pluginManager;
@@ -37,6 +35,8 @@ class PluginController
      */
     public function listAction()
     {
+        $this->canOpenAdminTool('main_settings');
+
         return new JsonResponse(
             $this->pluginManager->getPluginsData()
         );
@@ -52,6 +52,7 @@ class PluginController
      */
     public function configureAction(Plugin $plugin)
     {
+        $this->canOpenAdminTool('main_settings');
         // TODO : implement
 
         return new JsonResponse(
@@ -69,6 +70,7 @@ class PluginController
      */
     public function enableAction(Plugin $plugin)
     {
+        $this->canOpenAdminTool('main_settings');
         $this->pluginManager->enable($plugin);
 
         return new JsonResponse(
@@ -86,6 +88,7 @@ class PluginController
      */
     public function disableAction(Plugin $plugin)
     {
+        $this->canOpenAdminTool('main_settings');
         $this->pluginManager->disable($plugin);
 
         return new JsonResponse(

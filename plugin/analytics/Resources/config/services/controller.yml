@@ -43,3 +43,13 @@ services:
     Claroline\AnalyticsBundle\Controller\Workspace\ProgressionController:
         arguments:
           - '@claroline.manager.progression_manager'
+          
+    _instanceof:
+        Claroline\AppBundle\Controller\SecurityController:
+            calls:
+              - method: setObjectManager
+                arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+              - method: setAuthorizationChecker
+                arguments:
+                  - '@security.authorization_checker'

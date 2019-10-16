@@ -29,7 +29,6 @@
         "hwi/oauth-bundle": "0.5.3",
         "icap/html-diff": "1.1.0",
         "jdorn/sql-formatter": "1.2.17",
-        "jms/di-extra-bundle": "1.8.2",
         "jms/security-extra-bundle": "1.6.1",
         "claroline/json-quiz": "dev-master",
         "meyfa/php-svg": "0.8.0",
