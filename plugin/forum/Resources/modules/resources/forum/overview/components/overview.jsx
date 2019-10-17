@@ -8,7 +8,7 @@ import {number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
+import {ContentTags} from '#/main/app/content/components/tags'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
@@ -20,83 +20,85 @@ import {LastMessages} from '#/plugin/forum/resources/forum/overview/components/l
 import {ForumInfo} from '#/plugin/forum/resources/forum/overview/components/forum-info'
 
 const OverviewComponent = props =>
-  <div>
-    <section className="resource-section resource-overview">
-      <h2 className="sr-only">{trans('resource_overview')}</h2>
-      <div className="row">
-        <div className="user-column col-md-4">
-          <section className="user-progression">
-            <h3 className="h2">{trans('my_participation', {}, 'forum')}</h3>
-            <div className="panel panel-default">
-              <div className="panel-body">
-                <CountGauge
-                  value={props.myMessages}
-                  displayValue={(value) => number(value, true)}
-                />
-                <h4 className="h5">{trans('my_messages', {}, 'forum')}</h4>
-              </div>
+  <section className="resource-section resource-overview">
+    <h2 className="sr-only">{trans('resource_overview')}</h2>
+    <div className="row">
+      <div className="user-column col-md-4">
+        <section className="user-progression">
+          <h3 className="h2">{trans('my_participation', {}, 'forum')}</h3>
+          <div className="panel panel-default">
+            <div className="panel-body">
+              <CountGauge
+                value={props.myMessages}
+                displayValue={(value) => number(value, true)}
+              />
+              <h4 className="h5">{trans('my_messages', {}, 'forum')}</h4>
             </div>
-          </section>
-          <section className="user-actions">
-            <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
-            <Button
-              label={trans('see_subjects', {}, 'forum')}
-              type={LINK_BUTTON}
-              target={`${props.path}/subjects`}
-              className="btn btn-block"
-              primary={true}
-            />
-            {!props.bannedUser &&
-              <Button
-                label={trans('create_subject', {}, 'forum')}
-                type={LINK_BUTTON}
-                target={`${props.path}/subjects/form`}
-                className="btn btn-block"
-              />
-            }
-          </section>
-          {!isEmpty(props.forum.meta.tags) &&
-            <section>
-              <h3 className="h2">{trans('tags')}</h3>
-              <TagCloud
-                tags={props.tagsCount}
-                minSize={12}
-                maxSize={28}
-                onClick={(tag) => {
-                  const forumTag = props.forum.meta.tags.find(t => t.name === tag)
+          </div>
+        </section>
 
-                  if (forumTag) {
-                    props.goToList(forumTag.id)
-                    props.history.push(`${props.path}/subjects`)
-                  }
-                }}
-              />
-            </section>
-          }
-        </div>
-
-        <div className="resource-column col-md-8">
-          <section className="resource-info">
-            <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
-            {props.forum.display.description &&
-              <div className="panel panel-default">
-                <HtmlText className="panel-body">{props.forum.display.description}</HtmlText>
-              </div>
-            }
-          </section>
-          <ForumInfo
-            forum={props.forum}
+        <section className="user-actions">
+          <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
+          <Button
+            label={trans('see_subjects', {}, 'forum')}
+            type={LINK_BUTTON}
+            target={`${props.path}/subjects`}
+            className="btn btn-block"
+            primary={true}
           />
-          {0 !== props.lastMessages.length &&
-            <LastMessages
-              lastMessages={props.lastMessages}
-              path={props.path}
+          {!props.bannedUser &&
+            <Button
+              label={trans('create_subject', {}, 'forum')}
+              type={LINK_BUTTON}
+              target={`${props.path}/subjects/form`}
+              className="btn btn-block"
             />
           }
-        </div>
+        </section>
+
+        {!isEmpty(props.forum.meta.tags) &&
+          <section>
+            <h3 className="h2">{trans('tags')}</h3>
+            <ContentTags
+              tags={props.tagsCount}
+              minSize={12}
+              maxSize={28}
+              onClick={(tag) => {
+                const forumTag = props.forum.meta.tags.find(t => t.name === tag)
+
+                if (forumTag) {
+                  props.goToList(forumTag.id)
+                  props.history.push(`${props.path}/subjects`)
+                }
+              }}
+            />
+          </section>
+        }
       </div>
-    </section>
-  </div>
+
+      <div className="resource-column col-md-8">
+        <section className="resource-info">
+          <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
+          {props.forum.display.description &&
+            <div className="panel panel-default">
+              <HtmlText className="panel-body">{props.forum.display.description}</HtmlText>
+            </div>
+          }
+        </section>
+
+        <ForumInfo
+          forum={props.forum}
+        />
+
+        {0 !== props.lastMessages.length &&
+          <LastMessages
+            lastMessages={props.lastMessages}
+            path={props.path}
+          />
+        }
+      </div>
+    </div>
+  </section>
 
 OverviewComponent.propTypes = {
   path: T.string.isRequired,

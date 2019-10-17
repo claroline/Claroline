@@ -1,15 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import shuffle from 'lodash/shuffle'
+
 import {scaleLinear} from 'd3-scale'
 
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-// TODO : move in a tag module
-
 // tags is an object with keys=tag and values=count
-const TagCloud = props => {
-
+const ContentTags = props => {
   const fontSizeConverter = scaleLinear()
     .range([props.minSize, props.maxSize])
     .domain([1, Math.max(...Object.values(props.tags))])
@@ -31,14 +29,14 @@ const TagCloud = props => {
 }
 
 
-TagCloud.propTypes = {
+ContentTags.propTypes = {
   minSize: T.number.isRequired,
   maxSize: T.number.isRequired,
   onClick: T.func.isRequired,
-  tags: T.shape({})
+  tags: T.object
 }
 
 
 export {
-  TagCloud
+  ContentTags
 }

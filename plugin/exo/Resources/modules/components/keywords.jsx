@@ -8,7 +8,7 @@ import Popover from 'react-bootstrap/lib/Popover'
 import {trans} from '#/main/app/intl/translation'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
-import {ContentError} from '#/main/app/content/components/error'
+import {DataError} from '#/main/app/data/components/error'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -159,19 +159,19 @@ KeywordItem.defaultProps = {
 const KeywordItems = props =>
   <div className="keyword-items">
     {get(props, '_errors.count') &&
-      <ContentError error={props._errors.count} warnOnly={!props.validating} />
+      <DataError error={props._errors.count} warnOnly={!props.validating} />
     }
     {get(props, '_errors.noValidKeyword') &&
-      <ContentError error={props._errors.noValidKeyword} warnOnly={!props.validating} />
+      <DataError error={props._errors.noValidKeyword} warnOnly={!props.validating} />
     }
     {get(props, '_errors.duplicate') &&
-      <ContentError error={props._errors.duplicate} warnOnly={!props.validating} />
+      <DataError error={props._errors.duplicate} warnOnly={!props.validating} />
     }
     {get(props, '_errors.text') &&
-      <ContentError error={props._errors.text} warnOnly={!props.validating} />
+      <DataError error={props._errors.text} warnOnly={!props.validating} />
     }
     {get(props, '_errors.score') &&
-      <ContentError error={props._errors.score} warnOnly={!props.validating} />
+      <DataError error={props._errors.score} warnOnly={!props.validating} />
     }
     <ul>
       {props.keywords.map((keyword, index) =>
@@ -253,7 +253,7 @@ KeywordItems.propTypes = {
    *
    * @param {object} keyword
    * @param {string} property
-   * @param {mixed}  newValue
+   * @param {*}      newValue
    */
   updateKeyword: T.func.isRequired
 }
@@ -418,7 +418,7 @@ KeywordsPopover.propTypes = {
    * Handles changes in solution properties.
    *
    * @param {string} properties
-   * @param {mixed}  newValue
+   * @param {*}      newValue
    */
   onChange: T.func.isRequired,
 
@@ -439,7 +439,7 @@ KeywordsPopover.propTypes = {
    *
    * @param {object} keyword
    * @param {string} property
-   * @param {mixed}  newValue
+   * @param {*}      newValue
    */
   updateKeyword: T.func.isRequired
 }

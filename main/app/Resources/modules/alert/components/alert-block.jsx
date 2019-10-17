@@ -10,6 +10,7 @@ const AlertBlock = props =>
       'fa-exclamation-triangle': 'warning' === props.type,
       'fa-times-circle':         'danger' === props.type
     })} />
+
     <div className="alert-content">
       {props.title &&
         <b className="alert-title">{props.title}</b>

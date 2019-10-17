@@ -3,8 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {UserMicro} from '#/main/core/user/components/micro'
 import {displayDate} from '#/main/app/intl/date'
+import {UserMicro} from '#/main/core/user/components/micro'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
 // todo use in announces
 // todo use in claco-form
@@ -26,9 +27,9 @@ const ContentMeta = props =>
 
 ContentMeta.propTypes = {
   className: T.string,
-  creator: T.shape({
-    // TODO : use User propTypes
-  }),
+  creator: T.shape(
+    UserTypes.propTypes
+  ),
   created: T.string,
   updated : T.string
 }

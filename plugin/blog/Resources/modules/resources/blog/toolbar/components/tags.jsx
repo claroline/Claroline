@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
-import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
+import {ContentTags} from '#/main/app/content/components/tags'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
@@ -22,40 +22,38 @@ const TagsComponent = props =>
     </div>
 
     <div className="panel-body">
-      {!isEmpty(props.tags) ?
-        <div>
-          {props.tagMode !== constants.TAGCLOUD_TYPE_LIST ?
-            (<TagCloud
-              tags={props.tags}
-              minSize={12}
-              maxSize={22}
-              onClick={(tag) => {
-                props.goHome(props.history, props.path)
-                props.searchByTag(props.history, props.location.search, cleanTag(props.tagMode, tag))
-              }}
-            />)
-            : (
-              <ul>
-                {props.tags && Object.keys(props.tags).sort().map((tag, index) =>(
-                  <li key={index} className={'list-unstyled'}>
-                    <CallbackButton
-                      className='link'
-                      callback={() => {
-                        props.goHome(props.history, props.path)
-                        props.searchByTag(props.history, props.location.search, tag)
-                      }}
-                    >
-                      {tag}
-                    </CallbackButton>
-                  </li>
-                ))}
-              </ul>
-            )
-          }
-        </div>
-        : (
-          trans('no_tags', {}, 'icap_blog')
-        )
+      {!isEmpty(props.tags) && props.tagMode !== constants.TAGCLOUD_TYPE_LIST &&
+        <ContentTags
+          tags={props.tags}
+          minSize={12}
+          maxSize={22}
+          onClick={(tag) => {
+            props.goHome(props.history, props.path)
+            props.searchByTag(props.history, props.location.search, cleanTag(props.tagMode, tag))
+          }}
+        />
+      }
+
+      {!isEmpty(props.tags) && props.tagMode === constants.TAGCLOUD_TYPE_LIST &&
+        <ul>
+          {props.tags && Object.keys(props.tags).sort().map((tag, index) =>(
+            <li key={index} className="list-unstyled">
+              <CallbackButton
+                className="link"
+                callback={() => {
+                  props.goHome(props.history, props.path)
+                  props.searchByTag(props.history, props.location.search, tag)
+                }}
+              >
+                {tag}
+              </CallbackButton>
+            </li>
+          ))}
+        </ul>
+      }
+
+      {isEmpty(props.tags) &&
+        trans('no_tags', {}, 'icap_blog')
       }
     </div>
   </div>
@@ -79,10 +77,10 @@ const Tags = withRouter(connect(
     maxSize: selectors.blog(state).data.options.data.maxTag
   }),
   () => ({
-    searchByTag: (history, querystring, tag) => {
-      history.push(updateQueryParameters(querystring, 'tag', tag))
+    searchByTag(history, queryString, tag) {
+      history.push(updateQueryParameters(queryString, 'tag', tag))
     },
-    goHome: (history, path) => {
+    goHome(history, path) {
       history.push(path)
     }
   })

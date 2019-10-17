@@ -17,7 +17,8 @@ const OrganizationsModal = props => {
   return (
     <Modal
       {...omit(props, 'selected', 'selectAction', 'reset')}
-      icon="fa fa-fw fa-users"
+      icon="fa fa-fw fa-building"
+      className="data-picker-modal"
       bsSize="lg"
       onExiting={props.reset}
     >

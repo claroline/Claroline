@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 
 import {ContentHelp} from '#/main/app/content/components/help'
-import {ContentError} from '#/main/app/content/components/error'
+import {DataError} from '#/main/app/data/components/error'
 
 import {FormGroup as FormGroupTypes} from '#/main/core/layout/form/prop-types'
 
@@ -42,7 +42,7 @@ const FormGroup = props =>
     {props.children}
 
     {!isEmpty(props.error) &&
-      <ContentError error={props.error} warnOnly={props.warnOnly} />
+      <DataError error={props.error} warnOnly={props.warnOnly} />
     }
 
     {!isEmpty(props.help) &&

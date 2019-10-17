@@ -8,7 +8,7 @@ import {param} from '#/main/app/config/parameters'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
-import {ContentMeta} from '#/main/app/content/meta/components/meta'
+import {ContentMeta} from '#/main/app/content/components/meta'
 
 import {route} from '#/main/core/resource/routing'
 import {ResourceType} from '#/main/core/resource/components/type'

@@ -4,9 +4,9 @@ import {
   shallowComponent
 } from '#/main/core/scaffolding/tests'
 
-import {ContentError} from '#/main/app/content/components/error'
+import {DataError} from '#/main/app/data/components/error'
 
-describeComponent('ContentError', ContentError,
+describeComponent('DataError', DataError,
   // required props
   [
     'text'
@@ -24,7 +24,7 @@ describeComponent('ContentError', ContentError,
   // custom tests
   () => {
     it('renders an error text by default', () => {
-      const error = shallowComponent(ContentError, 'ContentError', {
+      const error = shallowComponent(DataError, 'ContentError', {
         text: 'ERROR'
       })
 
@@ -37,7 +37,7 @@ describeComponent('ContentError', ContentError,
     })
 
     it('renders a simple warning if needed', () => {
-      const error = shallowComponent(ContentError, 'ContentError', {
+      const error = shallowComponent(DataError, 'ContentError', {
         text: 'ERROR',
         warnOnly: true
       })

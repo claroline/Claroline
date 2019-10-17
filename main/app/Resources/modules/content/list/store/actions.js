@@ -52,8 +52,6 @@ actions.fetchData = (listName, target, invalidate = false) => (dispatch, getStat
     dispatch(actions.invalidateData(listName))
   }
 
-  // todo use ACTION_REFRESH type if we reload because of invalidation
-
   return dispatch({
     [API_REQUEST]: {
       silent: true,

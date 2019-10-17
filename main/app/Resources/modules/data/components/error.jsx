@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {toKey} from '#/main/core/scaffolding/text'
 
-const ContentError = (props) => Array.isArray(props.error) ?
+const DataError = (props) => Array.isArray(props.error) ?
   <ul className="help-block-list">
     {props.error.map(error =>
       <li key={toKey(error)} className={classes('help-block error-block', {
@@ -24,7 +24,7 @@ const ContentError = (props) => Array.isArray(props.error) ?
     {props.error}
   </div>
 
-ContentError.propTypes = {
+DataError.propTypes = {
   error: T.oneOfType([
     T.string,           // a single error message
     T.arrayOf(T.string) // a list of error messages
@@ -32,10 +32,10 @@ ContentError.propTypes = {
   warnOnly: T.bool
 }
 
-ContentError.defaultProps = {
+DataError.defaultProps = {
   warnOnly: false
 }
 
 export {
-  ContentError
+  DataError
 }

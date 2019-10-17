@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import {toKey} from '#/main/core/scaffolding/text'
 import {Heading} from '#/main/core/layout/components/heading'
-import {ContentMeta} from '#/main/app/content/meta/components/meta'
+import {ContentMeta} from '#/main/app/content/components/meta'
 import {Sections, Section} from '#/main/app/content/components/sections'
 
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/app/content/details/prop-types'
