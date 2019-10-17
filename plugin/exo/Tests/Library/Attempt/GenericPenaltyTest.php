@@ -2,9 +2,10 @@
 
 namespace UJM\ExoBundle\Tests\Library\Attempt;
 
+use PHPUnit\Framework\TestCase;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 
-class GenericPenaltyTest extends \PHPUnit\Framework\TestCase
+class GenericPenaltyTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

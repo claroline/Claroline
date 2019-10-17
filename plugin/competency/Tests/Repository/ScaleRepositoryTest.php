@@ -8,7 +8,7 @@ class ScaleRepositoryTest extends RepositoryTestCase
 {
     private $repo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Scale');
@@ -24,7 +24,7 @@ class ScaleRepositoryTest extends RepositoryTestCase
 
         $c1 = $this->persistCompetency('c1', null, $s1);
         $c2 = $this->persistCompetency('c2', null, $s1);
-        $c3 = $this->persistCompetency('c3', null, $s2);
+        $this->persistCompetency('c3', null, $s2);
 
         $a1 = $this->persistAbility('a1');
         $a2 = $this->persistAbility('a2');

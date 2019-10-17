@@ -17,7 +17,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
 {
     public static $repo;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$repo = self::getRepository('ClarolineCoreBundle:Workspace\Workspace');

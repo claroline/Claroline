@@ -19,7 +19,7 @@ class ProgressManagerTest extends RepositoryTestCase
     private $testUser;
     private $testData;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->manager = $this->client->getContainer()->get('HeVinci\CompetencyBundle\Manager\ProgressManager');

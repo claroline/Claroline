@@ -13,8 +13,9 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Mockery as m;
 use Mockery\Mock;
+use PHPUnit\Framework\TestCase;
 
-abstract class MockeryTestCase extends \PHPUnit\Framework\TestCase
+abstract class MockeryTestCase extends TestCase
 {
     private static $isMockeryInitialized = false;
     private static $nonCloneableClasses = [];
@@ -23,7 +24,7 @@ abstract class MockeryTestCase extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initMockery();
     }
@@ -31,7 +32,7 @@ abstract class MockeryTestCase extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

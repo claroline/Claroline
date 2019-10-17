@@ -37,7 +37,7 @@ class ExerciseSerializerTest extends JsonDataTestCase
      */
     private $exercise;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

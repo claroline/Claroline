@@ -14,7 +14,7 @@ class SerializerProviderTest extends TransactionalTestCase
     /** @var mixed[] */
     private $serializers;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\SerializerProvider');

@@ -44,7 +44,7 @@ class AttemptControllerTest extends TransactionalTestCase
     /** @var Exercise */
     private $ex1;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

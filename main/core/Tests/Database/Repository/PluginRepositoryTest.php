@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class PluginRepositoryTest extends RepositoryTestCase
 {
     public static $repo;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$repo = self::getRepository('ClarolineCoreBundle:Plugin');

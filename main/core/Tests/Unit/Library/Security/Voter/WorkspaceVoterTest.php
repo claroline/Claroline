@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class WorkspaceVoterTest extends MockeryTestCase
 {
@@ -21,7 +21,7 @@ class WorkspaceVoterTest extends MockeryTestCase
     private $translator;
     private $voter;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -40,7 +40,7 @@ class WorkspaceVoterTest extends MockeryTestCase
         $repo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Tool\Tool')->andReturn($repo);
         $repo->shouldReceive('findDisplayedByRolesAndWorkspace')->andReturn($openableTools);
-        $this->ut->shouldReceive('getRoles')->andReturn(array());
+        $this->ut->shouldReceive('getRoles')->andReturn([]);
         $this->assertEquals($canDo, $voter->canDo($workspace, $token, $action));
     }
 
@@ -54,7 +54,7 @@ class WorkspaceVoterTest extends MockeryTestCase
         $workspaceRegistered,
         $canDo
     ) {
-        $voter = $this->getVoter(array('canDo'));
+        $voter = $this->getVoter(['canDo']);
         $workspace = new Workspace();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $manager = $this->mock('Claroline\CoreBundle\Entity\Role');
@@ -75,48 +75,48 @@ class WorkspaceVoterTest extends MockeryTestCase
     {
         $ws = new Workspace();
 
-        return array(
+        return [
             //manager
-            array(
-                'attributes' => array(),
+            [
+                'attributes' => [],
                 'result' => 1,
-                'roles' => array('ROLE_WS_MANAGER'),
+                'roles' => ['ROLE_WS_MANAGER'],
                 'workspaceRegistered' => null,
                 'canDo' => null,
-            ),
+            ],
             //isGranted($workspace) is valid
-            array(
-                'attributes' => array(),
+            [
+                'attributes' => [],
                 'result' => 1,
-                'roles' => array('ROLE_WS_COLLABORATOR'),
+                'roles' => ['ROLE_WS_COLLABORATOR'],
                 'workspaceRegistered' => $ws,
                 'canDo' => null,
-            ),
+            ],
             //isGranted($workspace) is invalid
-            array(
-                'attributes' => array(),
+            [
+                'attributes' => [],
                 'result' => -1,
-                'roles' => array('ROLE_WS_COLLABORATOR'),
+                'roles' => ['ROLE_WS_COLLABORATOR'],
                 'workspaceRegistered' => null,
                 'canDo' => null,
-            ),
+            ],
             //isGranted($workspace, 'home')
-            array(
-                'attributes' => array('home'),
+            [
+                'attributes' => ['home'],
                 'result' => 1,
-                'roles' => array('ROLE_WS_COLLABORATOR'),
+                'roles' => ['ROLE_WS_COLLABORATOR'],
                 'workspaceRegistered' => null,
                 'canDo' => true,
-            ),
+            ],
             //isGranted($workspace, 'home') not valid
-            array(
-                'attributes' => array('home'),
+            [
+                'attributes' => ['home'],
                 'result' => -1,
-                'roles' => array('ROLE_WS_COLLABORATOR'),
+                'roles' => ['ROLE_WS_COLLABORATOR'],
                 'workspaceRegistered' => null,
                 'canDo' => false,
-            ),
-        );
+            ],
+        ];
     }
 
     public function canDoProvider()
@@ -124,35 +124,35 @@ class WorkspaceVoterTest extends MockeryTestCase
         $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $tool->shouldReceive('getName')->andReturn('home');
 
-        return array(
+        return [
             //valid
-            array(
+            [
                 'canDo' => true,
                 'action' => 'open',
-                'openableTools' => array($tool),
-            ),
+                'openableTools' => [$tool],
+            ],
             //valid tool
-            array(
+            [
                 'canDo' => true,
                 'action' => 'home',
-                'openableTools' => array($tool),
-            ),
+                'openableTools' => [$tool],
+            ],
             //invalid tool
-            array(
+            [
                 'canDo' => false,
                 'action' => 'invalid',
-                'openableTools' => array($tool),
-            ),
-        );
+                'openableTools' => [$tool],
+            ],
+        ];
     }
 
-    private function getVoter(array $mockedMethods = array())
+    private function getVoter(array $mockedMethods = [])
     {
         $this->em = $this->mock("Doctrine\ORM\EntityManager");
         $this->ut = $this->mock("Claroline\CoreBundle\Library\Security\Utilities");
         $this->translator = $this->mock("Symfony\Component\Translation\Translator");
 
-        if (count($mockedMethods) === 0) {
+        if (0 === count($mockedMethods)) {
             return new WorkspaceVoter($this->em, $this->translator, $this->ut);
         }
 
@@ -167,7 +167,7 @@ class WorkspaceVoterTest extends MockeryTestCase
 
         return $this->mock(
             'Claroline\CoreBundle\Library\Security\Voter\WorkspaceVoter'.$stringMocked,
-            array($this->em, $this->translator, $this->ut)
+            [$this->em, $this->translator, $this->ut]
         );
     }
 }

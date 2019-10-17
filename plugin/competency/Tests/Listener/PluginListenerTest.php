@@ -16,7 +16,7 @@ class PluginListenerTest extends UnitTestCase
     private $response;
     private $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $kernel = $this->mock('Symfony\Component\HttpKernel\HttpKernelInterface');

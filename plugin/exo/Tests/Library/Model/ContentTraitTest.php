@@ -2,16 +2,17 @@
 
 namespace UJM\ExoBundle\Tests\Library\Model;
 
+use PHPUnit\Framework\TestCase;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 
-class ContentTraitTest extends \PHPUnit\Framework\TestCase
+class ContentTraitTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $mock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

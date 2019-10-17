@@ -6,7 +6,6 @@ use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
-use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
 class CompetencyManagerTest extends UnitTestCase
@@ -20,7 +19,7 @@ class CompetencyManagerTest extends UnitTestCase
     private $competencyAbilityRepo;
     private $manager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');

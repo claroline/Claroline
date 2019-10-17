@@ -17,7 +17,7 @@ class OrderedToolRepositoryTest extends RepositoryTestCase
 {
     public static $repo;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$repo = self::getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -27,13 +27,13 @@ class OrderedToolRepositoryTest extends RepositoryTestCase
         self::createRole('ROLE_2', self::get('ws_1'));
         self::createTool('tool_1');
         self::createTool('tool_2');
-        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), array(self::get('ROLE_1')), 1);
-        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_1'), array(self::get('ROLE_2')), 1);
+        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), [self::get('ROLE_1')], 1);
+        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_1'), [self::get('ROLE_2')], 1);
     }
 
     public function testFindByWorkspaceAndRole()
     {
-        $tools = self::$repo->findByWorkspaceAndRoles(self::get('ws_1'), array('ROLE_1', 'ROLE_2'));
+        $tools = self::$repo->findByWorkspaceAndRoles(self::get('ws_1'), ['ROLE_1', 'ROLE_2']);
         $this->assertEquals(2, count($tools));
     }
 }

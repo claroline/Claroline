@@ -20,7 +20,7 @@ abstract class JsonDataTestCase extends TransactionalTestCase
      */
     private $dataDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

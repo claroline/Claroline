@@ -18,7 +18,7 @@ class ExerciseValidatorTest extends JsonSchemaTestCase
      */
     private $stepValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

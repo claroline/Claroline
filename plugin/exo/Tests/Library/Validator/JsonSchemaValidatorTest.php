@@ -19,7 +19,7 @@ class JsonSchemaValidatorTest extends TransactionalTestCase
      */
     private $jsonSchema;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

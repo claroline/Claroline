@@ -24,7 +24,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
     protected $om;
     private $defaults = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $container = $this->client->getContainer();

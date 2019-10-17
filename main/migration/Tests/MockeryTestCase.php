@@ -16,13 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 abstract class MockeryTestCase extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         m::getConfiguration()->allowMockingNonExistentMethods(false);
         m::getConfiguration()->allowMockingMethodsUnnecessarily(false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

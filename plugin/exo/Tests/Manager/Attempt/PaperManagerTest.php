@@ -18,7 +18,7 @@ class PaperManagerTest extends TestCase
     /** @var PaperManager */
     private $manager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->serializer = $this->mock('UJM\ExoBundle\Serializer\Attempt\PaperSerializer');

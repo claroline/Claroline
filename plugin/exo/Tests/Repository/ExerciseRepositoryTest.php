@@ -23,7 +23,7 @@ class ExerciseRepositoryTest extends TransactionalTestCase
     /** @var Exercise[] */
     private $exercises = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -9,7 +9,7 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
     private $repo;
     private $context;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Objective');

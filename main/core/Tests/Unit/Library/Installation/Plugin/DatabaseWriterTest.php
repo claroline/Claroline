@@ -25,7 +25,7 @@ class DatabaseWriterTest extends MockeryTestCase
     private $kernel;
     private $dbWriter;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

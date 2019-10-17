@@ -35,7 +35,7 @@ class CorrectionManagerTest extends JsonDataTestCase
     /** @var Answer[] */
     private $answers = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

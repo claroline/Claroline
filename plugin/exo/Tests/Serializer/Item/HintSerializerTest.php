@@ -29,7 +29,7 @@ class HintSerializerTest extends JsonDataTestCase
 
     private $hint;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

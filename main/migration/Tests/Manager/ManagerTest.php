@@ -11,10 +11,10 @@
 
 namespace Claroline\MigrationBundle\Manager;
 
-use Mockery as m;
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Migrator\Migrator;
+use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Mockery as m;
 
 class ManagerTest extends MockeryTestCase
 {
@@ -23,7 +23,7 @@ class ManagerTest extends MockeryTestCase
     private $migrator;
     private $manager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->writer = m::mock('Claroline\MigrationBundle\Generator\Writer');
@@ -39,14 +39,14 @@ class ManagerTest extends MockeryTestCase
     {
         $manager = m::mock(
             'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
-            array($this->generator, $this->writer, $this->migrator)
+            [$this->generator, $this->writer, $this->migrator]
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
 
         $manager->shouldReceive('getAvailablePlatforms')
             ->once()
-            ->andReturn(array('driver' => $platform));
+            ->andReturn(['driver' => $platform]);
         $this->generator->shouldReceive('generateMigrationQueries')
             ->once()
             ->with($bundle, $platform)
@@ -98,11 +98,11 @@ class ManagerTest extends MockeryTestCase
     {
         $manager = m::mock(
             'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
-            array($this->generator, $this->writer, $this->migrator)
+            [$this->generator, $this->writer, $this->migrator]
         );
         $manager->shouldReceive('getAvailablePlatforms')
             ->once()
-            ->andReturn(array('driver1' => 'd1', 'driver2' => 'd2'));
+            ->andReturn(['driver1' => 'd1', 'driver2' => 'd2']);
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $this->migrator->shouldReceive('getCurrentVersion')
             ->once()
@@ -119,29 +119,29 @@ class ManagerTest extends MockeryTestCase
 
     public function queriesProvider()
     {
-        return array(
-            array(
-                array(
-                    Generator::QUERIES_UP => array('up queries'),
-                    Generator::QUERIES_DOWN => array('down queries'),
-                ),
+        return [
+            [
+                [
+                    Generator::QUERIES_UP => ['up queries'],
+                    Generator::QUERIES_DOWN => ['down queries'],
+                ],
                 false,
-            ),
-            array(
-                array(
-                    Generator::QUERIES_UP => array(),
-                    Generator::QUERIES_DOWN => array(),
-                ),
+            ],
+            [
+                [
+                    Generator::QUERIES_UP => [],
+                    Generator::QUERIES_DOWN => [],
+                ],
                 true,
-            ),
-        );
+            ],
+        ];
     }
 
     public function migrationProvider()
     {
-        return array(
-            array(Migrator::DIRECTION_UP, 'upgradeBundle'),
-            array(Migrator::DIRECTION_DOWN, 'downgradeBundle'),
-        );
+        return [
+            [Migrator::DIRECTION_UP, 'upgradeBundle'],
+            [Migrator::DIRECTION_DOWN, 'downgradeBundle'],
+        ];
     }
 }

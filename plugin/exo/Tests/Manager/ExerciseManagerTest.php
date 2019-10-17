@@ -24,7 +24,7 @@ class ExerciseManagerTest extends JsonDataTestCase
     /** @var Exercise */
     private $exercise;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -2,10 +2,11 @@
 
 namespace UJM\ExoBundle\Tests\Entity;
 
+use PHPUnit\Framework\TestCase;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
 
-class ExerciseTest extends \PHPUnit\Framework\TestCase
+class ExerciseTest extends TestCase
 {
     public function testUuidInitialized()
     {

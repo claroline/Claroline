@@ -19,7 +19,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     private static $time;
     private static $roleManagerName;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$repo = self::getRepository('ClarolineCoreBundle:Resource\ResourceNode');

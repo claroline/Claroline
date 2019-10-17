@@ -42,7 +42,7 @@ class PaperControllerTest extends TransactionalTestCase
     /** @var Exercise */
     private $exercise;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

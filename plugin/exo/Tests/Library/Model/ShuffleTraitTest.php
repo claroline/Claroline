@@ -2,16 +2,17 @@
 
 namespace UJM\ExoBundle\Tests\Library\Model;
 
+use PHPUnit\Framework\TestCase;
 use UJM\ExoBundle\Library\Model\ShuffleTrait;
 
-class ShuffleTraitTest extends \PHPUnit\Framework\TestCase
+class ShuffleTraitTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $mock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

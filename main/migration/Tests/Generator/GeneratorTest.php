@@ -11,8 +11,8 @@
 
 namespace Claroline\MigrationBundle\Generator;
 
-use Mockery as m;
 use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Mockery as m;
 
 class GeneratorTest extends MockeryTestCase
 {
@@ -24,7 +24,7 @@ class GeneratorTest extends MockeryTestCase
     private $entityAMetadata;
     private $entityBMetadata;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->em = m::mock('Doctrine\ORM\EntityManager');
@@ -33,19 +33,19 @@ class GeneratorTest extends MockeryTestCase
         $this->toSchema = m::mock('Doctrine\DBAL\Schema\Schema');
         $this->entityAMetadata = m::mock('Doctrine\ORM\Mapping\ClassMetadataInfo');
         $this->entityBMetadata = m::mock('Doctrine\ORM\Mapping\ClassMetadataInfo');
-        $this->metadata = array($this->entityAMetadata, $this->entityBMetadata);
+        $this->metadata = [$this->entityAMetadata, $this->entityBMetadata];
     }
 
     public function testGenerateMigrationQueries()
     {
-        $schemas = array(
+        $schemas = [
             'metadata' => $this->metadata,
             'toSchema' => $this->toSchema,
             'fromSchema' => $this->fromSchema,
-        );
+        ];
         $generator = m::mock(
             'Claroline\MigrationBundle\Generator\Generator[getSchemas]',
-            array($this->em, $this->schemaTool)
+            [$this->em, $this->schemaTool]
         );
         $generator->shouldReceive('getSchemas')->once()->andReturn($schemas);
 
@@ -62,8 +62,8 @@ class GeneratorTest extends MockeryTestCase
         $this->entityAMetadata->shouldReceive('getTableName')->andReturn('table_a');
         $this->entityBMetadata->shouldReceive('getTableName')->andReturn('table_b');
 
-        $this->fromSchema->shouldReceive('getTables')->once()->andReturn(array($tableA));
-        $this->toSchema->shouldReceive('getTables')->once()->andReturn(array($tableA, $tableB));
+        $this->fromSchema->shouldReceive('getTables')->once()->andReturn([$tableA]);
+        $this->toSchema->shouldReceive('getTables')->once()->andReturn([$tableA, $tableB]);
 
         // only tables belonging to the target bundle must be kept
         $this->fromSchema->shouldReceive('dropTable')->once()->with('table_a');
@@ -72,17 +72,17 @@ class GeneratorTest extends MockeryTestCase
         $this->fromSchema->shouldReceive('getMigrateToSql')
             ->once()
             ->with($this->toSchema, $platform)
-            ->andReturn(array('CREATE TABLE table_b'));
+            ->andReturn(['CREATE TABLE table_b']);
         $this->fromSchema->shouldReceive('getMigrateFromSql')
             ->once()
             ->with($this->toSchema, $platform)
-            ->andReturn(array('DROP TABLE table_b'));
+            ->andReturn(['DROP TABLE table_b']);
 
         $this->assertEquals(
-            array(
-                Generator::QUERIES_UP => array('CREATE TABLE table_b'),
-                Generator::QUERIES_DOWN => array('DROP TABLE table_b'),
-            ),
+            [
+                Generator::QUERIES_UP => ['CREATE TABLE table_b'],
+                Generator::QUERIES_DOWN => ['DROP TABLE table_b'],
+            ],
             $generator->generateMigrationQueries($bundle, $platform)
         );
     }

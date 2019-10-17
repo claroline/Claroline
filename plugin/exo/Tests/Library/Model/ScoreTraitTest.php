@@ -2,16 +2,17 @@
 
 namespace UJM\ExoBundle\Tests\Library\Model;
 
+use PHPUnit\Framework\TestCase;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
 
-class ScoreTraitTest extends \PHPUnit\Framework\TestCase
+class ScoreTraitTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $mock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

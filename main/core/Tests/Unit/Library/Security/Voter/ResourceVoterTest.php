@@ -32,7 +32,7 @@ class ResourceVoterTest extends MockeryTestCase
     private $restrictionsManager;
     private $voter;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -486,9 +486,11 @@ class ResourceVoterTest extends MockeryTestCase
               $this->em,
               $this->translator,
               $this->ut,
-                $this->maskManager,
+              $this->maskManager,
               $this->resourceManager,
-              $this->workspaceManager
+              $this->workspaceManager,
+              $this->rightsManager,
+              $this->restrictionsManager
             );
         }
 

@@ -21,7 +21,7 @@ class AuthenticatorTest extends MockeryTestCase
     private $encoderFactory;
     private $authenticator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

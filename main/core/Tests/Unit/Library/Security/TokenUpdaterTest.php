@@ -19,7 +19,7 @@ class TokenUpdaterTest extends MockeryTestCase
     private $sc;
     private $om;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

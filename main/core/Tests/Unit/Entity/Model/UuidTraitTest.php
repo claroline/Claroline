@@ -3,15 +3,16 @@
 namespace Claroline\CoreBundle\Tests\Unit\Entity\Model;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use PHPUnit\Framework\TestCase;
 
-class UuidTraitTest extends \PHPUnit\Framework\TestCase
+class UuidTraitTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $mock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

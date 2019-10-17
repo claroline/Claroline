@@ -24,7 +24,7 @@ class StepSerializerTest extends JsonDataTestCase
      */
     private $step;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

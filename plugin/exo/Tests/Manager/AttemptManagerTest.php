@@ -2,7 +2,9 @@
 
 namespace UJM\ExoBundle\Tests\Manager;
 
-class AttemptManagerTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class AttemptManagerTest extends TestCase
 {
     public function testCanPass()
     {

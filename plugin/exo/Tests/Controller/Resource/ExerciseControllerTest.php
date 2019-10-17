@@ -24,7 +24,7 @@ class ExerciseControllerTest extends TransactionalTestCase
     /** @var User */
     private $exerciseCreator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

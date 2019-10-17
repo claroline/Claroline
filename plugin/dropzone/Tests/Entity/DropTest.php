@@ -11,8 +11,9 @@ namespace Icap\DropzoneBundle\Tests\Entity;
 use DateTime;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
+use PHPUnit\Framework\TestCase;
 
-class DropTest extends \PHPUnit\Framework\TestCase
+class DropTest extends TestCase
 {
     public function testgetCalculatedGrade()
     {

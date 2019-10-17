@@ -32,7 +32,7 @@ class ItemRepositoryTest extends TransactionalTestCase
      */
     private $questions = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

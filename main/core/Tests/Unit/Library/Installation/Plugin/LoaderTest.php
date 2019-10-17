@@ -12,14 +12,15 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
+use PHPUnit\Framework\TestCase;
 
-class LoaderTest extends \PHPUnit\Framework\TestCase
+class LoaderTest extends TestCase
 {
     use StubPluginTrait;
 
     private $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loader = new Loader();
     }

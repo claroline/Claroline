@@ -18,7 +18,7 @@ class ItemSerializerTest extends JsonDataTestCase
      */
     private $serializer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

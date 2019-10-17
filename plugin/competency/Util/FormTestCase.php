@@ -19,7 +19,7 @@ abstract class FormTestCase extends TransactionalTestCase
      */
     protected $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->factory = Forms::createFormFactoryBuilder()

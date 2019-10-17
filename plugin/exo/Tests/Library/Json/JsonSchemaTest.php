@@ -17,7 +17,7 @@ class JsonSchemaTest extends TransactionalTestCase
      */
     private $formatDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

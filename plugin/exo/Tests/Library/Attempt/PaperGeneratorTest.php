@@ -52,7 +52,7 @@ class PaperGeneratorTest extends TransactionalTestCase
      */
     private $user;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

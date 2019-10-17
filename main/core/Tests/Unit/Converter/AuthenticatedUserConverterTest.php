@@ -24,7 +24,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     private $translator;
     private $converter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');

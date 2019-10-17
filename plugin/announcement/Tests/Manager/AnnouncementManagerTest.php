@@ -20,7 +20,7 @@ class AnnouncementManagerTest extends MockeryTestCase
     private $announcementRepo;
     private $om;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');

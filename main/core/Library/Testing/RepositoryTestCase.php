@@ -49,7 +49,7 @@ abstract class RepositoryTestCase extends WebTestCase
     private static $persister;
     private static $nodeIdx = 1;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$client = static::createClient();
         self::$om = self::$client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
@@ -60,13 +60,13 @@ abstract class RepositoryTestCase extends WebTestCase
         self::disableTimestampableListener();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         //we don't want to tear down between each tests because we lose the container otherwise
         //and can't shut down everything properly afterwards
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::$om->rollback();
     }

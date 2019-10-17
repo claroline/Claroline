@@ -22,7 +22,7 @@ abstract class TransactionalTestCase extends WebTestCase
     /** @var TransactionalTestClient */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = self::createClient();
@@ -30,7 +30,7 @@ abstract class TransactionalTestCase extends WebTestCase
         $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->beginTransaction();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // we can't simply do "$client->shutdown()" because sometimes
         // when an integration test fails (e.g. due to an error in the

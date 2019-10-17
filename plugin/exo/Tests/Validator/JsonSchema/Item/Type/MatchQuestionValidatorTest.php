@@ -13,7 +13,7 @@ class MatchQuestionValidatorTest extends JsonSchemaTestCase
      */
     private $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -22,7 +22,7 @@ class RoutingCheckerTest extends MockeryTestCase
     private $router;
     private $checker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->router = $this->mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
         $this->checker = new RoutingChecker($this->router, new Parser());

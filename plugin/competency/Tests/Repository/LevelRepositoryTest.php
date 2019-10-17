@@ -8,7 +8,7 @@ class LevelRepositoryTest extends RepositoryTestCase
 {
     private $repo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Level');

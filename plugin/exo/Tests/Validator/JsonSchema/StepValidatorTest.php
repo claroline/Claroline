@@ -24,7 +24,7 @@ class StepValidatorTest extends JsonSchemaTestCase
      */
     private $contentValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

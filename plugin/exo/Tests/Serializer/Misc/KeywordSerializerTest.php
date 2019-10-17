@@ -30,7 +30,7 @@ class KeywordSerializerTest extends JsonDataTestCase
      */
     private $keyword;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
