@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    Icap\DropzoneBundle\DeleteListener:
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: kernel.event_listener, event: resource.icap_dropzone.delete, method: onDelete }
