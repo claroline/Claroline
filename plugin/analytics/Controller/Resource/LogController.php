@@ -7,9 +7,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\LogManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -17,19 +15,16 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/resource/{resourceId}/logs", requirements={"resourceId"="\d+"})
+ * @EXT\Route("/resource/{resourceId}/logs", requirements={"resourceId"="\d+"})
  */
 class LogController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorizationChecker;
-
     /** @var FinderProvider */
     private $finder;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var LogManager */
     private $logManager;
 
@@ -64,22 +59,22 @@ class LogController
     }
 
     /**
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/", name="apiv2_resource_logs_list")
-     * @Method("GET")
-     *
-     * @ParamConverter(
+     * @EXT\Route("/", name="apiv2_resource_logs_list")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
+     *
+     * @param Request      $request
+     * @param ResourceNode $node
+     *
+     * @return JsonResponse
      */
     public function listAction(Request $request, ResourceNode $node)
     {
-        $this->checkLogsAcces($node);
+        $this->checkLogsAccess($node);
 
         return new JsonResponse($this->finder->search(
             $this->getClass(),
@@ -89,22 +84,22 @@ class LogController
     }
 
     /**
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     * @Route("/csv", name="apiv2_resource_logs_list_csv")
-     * @Method("GET")
-     *
-     * @ParamConverter(
+     * @EXT\Route("/csv", name="apiv2_resource_logs_list_csv")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
+     *
+     * @param Request      $request
+     * @param ResourceNode $node
+     *
+     * @return StreamedResponse
      */
     public function listCsvAction(Request $request, ResourceNode $node)
     {
-        $this->checkLogsAcces($node);
+        $this->checkLogsAccess($node);
 
         // Filter data, but return all of them
         $query = $this->getResourceNodeFilteredQuery($request, $node);
@@ -119,22 +114,22 @@ class LogController
     }
 
     /**
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/chart", name="apiv2_resource_logs_list_chart")
-     * @Method("GET")
-     *
-     * @ParamConverter(
+     * @EXT\Route("/chart", name="apiv2_resource_logs_list_chart")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
+     *
+     * @param Request      $request
+     * @param ResourceNode $node
+     *
+     * @return JsonResponse
      */
     public function listChartAction(Request $request, ResourceNode $node)
     {
-        $this->checkLogsAcces($node);
+        $this->checkLogsAccess($node);
 
         $chartData = $this->logManager->getChartData($this->getResourceNodeFilteredQuery($request, $node));
 
@@ -142,44 +137,44 @@ class LogController
     }
 
     /**
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/users", name="apiv2_resource_logs_list_users")
-     * @Method("GET")
-     *
-     * @ParamConverter(
+     * @EXT\Route("/users", name="apiv2_resource_logs_list_users")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
+     *
+     * @param Request      $request
+     * @param ResourceNode $node
+     *
+     * @return JsonResponse
      */
     public function userActionsListAction(Request $request, ResourceNode $node)
     {
-        $this->checkLogsAcces($node);
+        $this->checkLogsAccess($node);
         $userList = $this->logManager->getUserActionsList($this->getResourceNodeFilteredQuery($request, $node));
 
         return new JsonResponse($userList);
     }
 
     /**
-     * @param Request      $request
-     * @param ResourceNode $node
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     * @Route("/users/csv", name="apiv2_resource_logs_list_users_csv")
-     * @Method("GET")
-     *
-     * @ParamConverter(
+     * @EXT\Route("/users/csv", name="apiv2_resource_logs_list_users_csv")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"resourceId": "id"}}
      * )
+     *
+     * @param Request      $request
+     * @param ResourceNode $node
+     *
+     * @return StreamedResponse
      */
     public function userActionsListCsvAction(Request $request, ResourceNode $node)
     {
-        $this->checkLogsAcces($node);
+        $this->checkLogsAccess($node);
 
         // Filter data, but return all of them
         $query = $this->getResourceNodeFilteredQuery($request, $node);
@@ -194,20 +189,20 @@ class LogController
     }
 
     /**
-     * @param Log $log
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"})
-     * @Method("GET")
-     *
-     * @ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log", options={
+     * @EXT\Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"})
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log", options={
      *     "mapping": {"resourceId": "resourceNode",
      *     "id": "id"
      * }})
+     *
+     * @param Log $log
+     *
+     * @return JsonResponse
      */
     public function getAction(Log $log)
     {
-        $this->checkLogsAcces($log->getResourceNode());
+        $this->checkLogsAccess($log->getResourceNode());
 
         return new JsonResponse($this->serializer->serialize($log, ['details' => true]));
     }
@@ -239,7 +234,7 @@ class LogController
      *
      * @param ResourceNode $node
      */
-    private function checkLogsAcces(ResourceNode $node)
+    private function checkLogsAccess(ResourceNode $node)
     {
         if (!$this->authorizationChecker->isGranted('ADMINISTRATE', $node)) {
             throw new AccessDeniedHttpException();

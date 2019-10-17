@@ -6,7 +6,7 @@ const PATHS_DATA_LOAD = 'PATHS_DATA_LOAD'
 
 const actions = {}
 
-actions.loadPathsData = makeActionCreator(PATHS_DATA_LOAD, 'trackings')
+actions.loadPathsData = makeActionCreator(PATHS_DATA_LOAD, 'tracking')
 
 actions.fetchPathsData = (workspaceId) => ({
   [API_REQUEST]: {

@@ -79,7 +79,7 @@ class Modal extends Component {
   }
 
   onExited() {
-    this.on('exit', this.props.onExit)
+    this.on('exit', this.props.onExited)
     this.on('exit', this.props.hideModal)
   }
 

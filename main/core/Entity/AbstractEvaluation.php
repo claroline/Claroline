@@ -55,7 +55,7 @@ class AbstractEvaluation
     /**
      * @ORM\Column(name="evaluation_status", nullable=true)
      */
-    protected $status;
+    protected $status = self::STATUS_NOT_ATTEMPTED;
 
     /**
      * @ORM\Column(type="integer", nullable=true)

@@ -50,6 +50,7 @@ class PathTrackingController
     private $userProgressionManager;
 
     private $userProgressionRepo;
+    private $resourceUserEvaluationRepo;
 
     /**
      * PathTrackingController constructor.
@@ -76,6 +77,7 @@ class PathTrackingController
         $this->userProgressionManager = $userProgressionManager;
 
         $this->userProgressionRepo = $om->getRepository(UserProgression::class);
+        $this->resourceUserEvaluationRepo = $om->getRepository(ResourceUserEvaluation::class);
     }
 
     /**
@@ -109,9 +111,24 @@ class PathTrackingController
             Path::class,
             ['workspace' => $workspace->getUuid()]
         );
-
         $data = [];
+
         foreach ($paths as $path) {
+            // Fetches all users who have to do the path
+            $resourceEvals = $this->resourceUserEvaluationRepo->findBy(['resourceNode' => $path->getResourceNode(), 'required' => true]);
+            $unstartedUsers = [];
+
+            foreach ($resourceEvals as $resourceEval) {
+                $user = $resourceEval->getUser();
+                $unstartedUsers[$user->getUuid()] = [
+                    'id' => $user->getUuid(),
+                    'username' => $user->getUsername(),
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName(),
+                    'name' => $user->getFirstName().' '.$user->getLastName(),
+                ];
+            }
+
             // Reverse steps to proceed the latest steps first as we will only keep the most advanced step the users have done
             /** @var Step[] $steps */
             $steps = array_reverse($path->getSteps()->toArray());
@@ -137,6 +154,10 @@ class PathTrackingController
                                 'name' => $user->getFirstName().' '.$user->getLastName(),
                             ];
                             $usersDone[$userId] = true;
+
+                            if (isset($unstartedUsers[$userId])) {
+                                unset($unstartedUsers[$userId]);
+                            }
                         }
                     }
                 }
@@ -150,6 +171,7 @@ class PathTrackingController
             $data[] = [
                 'path' => $this->serializer->serialize($path->getResourceNode()),
                 'steps' => array_reverse($stepsData),
+                'unstartedUsers' => array_values($unstartedUsers),
             ];
         }
 

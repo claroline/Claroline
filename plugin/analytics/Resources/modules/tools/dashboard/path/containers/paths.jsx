@@ -11,7 +11,7 @@ import {MODAL_STEP_DETAILS} from '#/plugin/analytics/tools/dashboard/path/modals
 const Paths = connect(
   (state) => ({
     workspaceId: toolSelectors.contextData(state).uuid,
-    trackings: selectors.trackings(state)
+    tracking: selectors.tracking(state)
   }),
   (dispatch) => ({
     fetchPathsData(workspaceId) {

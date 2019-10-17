@@ -55,9 +55,9 @@ class RequirementsSerializer
                 null,
         ];
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serialized['resources'] = array_map(function (ResourceNode $resourceNode) {
+            $serialized['resources'] = array_values(array_map(function (ResourceNode $resourceNode) {
                 return $this->resourceNodeSerializer->serialize($resourceNode, [Options::SERIALIZE_MINIMAL]);
-            }, $requirements->getResources()->toArray());
+            }, $requirements->getResources()->toArray()));
         }
 
         return $serialized;

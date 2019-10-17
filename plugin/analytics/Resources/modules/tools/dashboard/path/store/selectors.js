@@ -11,13 +11,13 @@ const path = createSelector(
   (store) => store.path
 )
 
-const trackings = createSelector(
+const tracking = createSelector(
   [path],
-  (path) => path.trackings
+  (path) => path.tracking
 )
 
 export const selectors = {
   STORE_NAME,
   path,
-  trackings
+  tracking
 }
