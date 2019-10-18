@@ -37,7 +37,8 @@ const WikiResource = props =>
             .set({
               filename: pdfContent.name,
               image: { type: 'jpeg', quality: 1 },
-              html2canvas: { scale: 4 }
+              html2canvas: { scale: 4 },
+              enableLinks: true
             })
             .from(pdfContent.content, 'string')
             .save()
