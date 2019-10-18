@@ -86,7 +86,7 @@ class WorkspaceRestrictions extends Component {
                 />
               }
 
-              {!this.props.authenticated && this.props.errors.selfRegistration &&
+              {!this.props.authenticated &&
                 <Button
                   style={{marginTop: 20}}
                   className="btn btn-block btn-emphasis"

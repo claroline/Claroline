@@ -262,32 +262,6 @@ services:
         alias: Claroline\CoreBundle\Manager\IconSetManager
         public: true
 
-    Claroline\CoreBundle\Manager\IconManager:
-        arguments:
-          - '@Claroline\CoreBundle\Library\Utilities\ThumbnailCreator'
-          - '%claroline.param.files_directory%'
-          - '%claroline.param.thumbnails_directory%'
-          - '%kernel.root_dir%'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '%claroline.param.relative_thumbnail_base_path%'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-          - '%claroline.param.public_files_directory%'
-          - '%claroline.param.web_directory%'
-
-    claroline.manager.icon_manager:
-        alias: Claroline\CoreBundle\Manager\IconManager
-        public: true
-
-    Claroline\CoreBundle\Manager\HomeTabManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@service_container'
-
-    claroline.manager.home_tab_manager:
-        alias: Claroline\CoreBundle\Manager\HomeTabManager
-        public: true
-
     Claroline\CoreBundle\Manager\GroupManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
