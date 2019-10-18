@@ -88,7 +88,26 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $query = $this->_em->createQuery($this->builder->getDql());
         $query->setParameters($this->builder->getParameters());
 
-        return $query->getOneOrNullResult();
+        $results = $query->getResult();
+
+        //in case somethign was messed up at some point
+        if (1 === count($results)) {
+            return $results[0];
+        }
+
+        //we find the one with the most children as a restoration trick
+        $maxChildren = 0;
+        $toReturn = $results[0];
+
+        foreach ($results as $result) {
+            $count = count($result->getChildren());
+            if ($count > $maxChildren) {
+                $maxChildren = $count;
+                $toReturn = $result;
+            }
+        }
+
+        return $toReturn;
     }
 
     /**
