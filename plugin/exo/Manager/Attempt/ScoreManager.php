@@ -51,7 +51,9 @@ class ScoreManager
                         0
                     );
 
-                    $score = ($score / $answersTotal) * $scoreRule['total'];
+                    if ($answersTotal) {
+                        $score = ($score / $answersTotal) * $scoreRule['total'];
+                    }
                 }
 
                 break;
