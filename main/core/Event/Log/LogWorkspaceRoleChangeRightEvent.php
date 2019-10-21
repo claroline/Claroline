@@ -35,13 +35,15 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
     {
         $this->role = $role;
         $this->changeSet = $changeSet;
+        $workspace = $this->getResourceWorkspace($resource);
+
         $this->details = [
             'role' => [
                 'name' => $role->getTranslationKey(),
                 'changeSet' => $changeSet,
             ],
             'workspace' => [
-                'name' => $resource->getWorkspace() ? $resource->getWorkspace()->getName() : ' - ',
+                'name' => $workspace ? $workspace->getName() : ' - ',
             ],
             'resource' => [
                 'name' => $resource->getName(),
@@ -149,6 +151,17 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
         $newState = $this->changeSet['mask'][1];
 
         return 0 === $oldState % 2 && 1 === $newState % 2;
+    }
+
+    public function getResourceWorkspace($resource)
+    {
+        if ($resource->getWorkspace()) {
+            return $resource->getWorkspace();
+        }
+
+        if (!$resource->getWorkspace() && $resource->getParent()) {
+            return $this->getResourceWorkspace($resource->getParent());
+        }
     }
 
     /**
