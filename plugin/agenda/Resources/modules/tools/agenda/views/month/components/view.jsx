@@ -15,6 +15,8 @@ import {route} from '#/plugin/agenda/tools/agenda/routing'
 const Day = props => {
   let dayDiv = createRef()
 
+  // use this when day view is implemented
+
   return (
     <div
       ref={dayDiv}
@@ -32,7 +34,7 @@ const Day = props => {
     >
       <LinkButton
         className="day-number"
-        target={route(props.path, 'day', props.current)}
+        target={route(props.path, 'month', props.current)}
       >
         {props.current.format('D')}
       </LinkButton>
