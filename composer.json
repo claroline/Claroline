@@ -4,16 +4,16 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=7.1",
-        "claroline/distribution": "12.x-dev"
+        "claroline/distribution": "12.5.x-dev"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "2.14",
         "mockery/mockery": "0.9.9",
-        "mikey179/vfsStream": "1.6.4",
+        "mikey179/vfsstream": "1.6.4",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "7.1.5",
-        "symfony/phpunit-bridge": "4.0.9",
-        "stefk/md": "dev-master"
+        "phpunit/phpunit": "~8.0",
+        "symfony/phpunit-bridge": "*",
+        "stefk/md": "dev-loose-requirements"
     },
     "scripts": {
         "fast-install" : [
@@ -77,6 +77,12 @@
         "github-protocols": ["https", "git", "ssh"],
         "process-timeout": 3600
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ngodfraind/md.git"
+        }
+    ],
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
