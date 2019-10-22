@@ -21,6 +21,8 @@ use Claroline\CoreBundle\Entity\Log\Connection\LogConnectTool;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
@@ -29,6 +31,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -37,10 +40,11 @@ class LogConnectManager
     /** @var FinderProvider */
     private $finder;
 
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
+
+    /** @var ResourceEvaluationManager */
+    private $resourceEvaluationManager;
 
     /** @var TranslatorInterface */
     private $translator;
@@ -49,6 +53,7 @@ class LogConnectManager
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
     private $adminToolRepo;
+    private $workspaceRepo;
 
     private $logPlatformRepo;
     private $logWorkspaceRepo;
@@ -57,25 +62,32 @@ class LogConnectManager
     private $logAdminToolRepo;
 
     /**
-     * @param FinderProvider      $finder
-     * @param ObjectManager       $om
-     * @param TranslatorInterface $translator
+     * @param FinderProvider            $finder
+     * @param ObjectManager             $om
+     * @param ResourceEvaluationManager $resourceEvaluationManager
+     * @param TranslatorInterface       $translator
      */
-    public function __construct(FinderProvider $finder, ObjectManager $om, TranslatorInterface $translator)
-    {
+    public function __construct(
+        FinderProvider $finder,
+        ObjectManager $om,
+        ResourceEvaluationManager $resourceEvaluationManager,
+        TranslatorInterface $translator
+    ) {
         $this->finder = $finder;
         $this->om = $om;
+        $this->resourceEvaluationManager = $resourceEvaluationManager;
         $this->translator = $translator;
 
-        $this->logRepo = $om->getRepository('ClarolineCoreBundle:Log\Log');
-        $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
-        $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
+        $this->logRepo = $om->getRepository(Log::class);
+        $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
+        $this->adminToolRepo = $om->getRepository(AdminTool::class);
+        $this->workspaceRepo = $om->getRepository(Workspace::class);
 
-        $this->logPlatformRepo = $om->getRepository('ClarolineCoreBundle:Log\Connection\LogConnectPlatform');
-        $this->logWorkspaceRepo = $om->getRepository('ClarolineCoreBundle:Log\Connection\LogConnectWorkspace');
-        $this->logToolRepo = $om->getRepository('ClarolineCoreBundle:Log\Connection\LogConnectTool');
-        $this->logResourceRepo = $om->getRepository('ClarolineCoreBundle:Log\Connection\LogConnectResource');
-        $this->logAdminToolRepo = $om->getRepository('ClarolineCoreBundle:Log\Connection\LogConnectAdminTool');
+        $this->logPlatformRepo = $om->getRepository(LogConnectPlatform::class);
+        $this->logWorkspaceRepo = $om->getRepository(LogConnectWorkspace::class);
+        $this->logToolRepo = $om->getRepository(LogConnectTool::class);
+        $this->logResourceRepo = $om->getRepository(LogConnectResource::class);
+        $this->logAdminToolRepo = $om->getRepository(LogConnectAdminTool::class);
     }
 
     public function manageConnection(Log $log)
@@ -103,13 +115,7 @@ class LogConnectManager
                     $workspaceConnection = $this->getComputableWorkspace($user);
 
                     if (!is_null($workspaceConnection)) {
-                        // Ignores log if previous workspace entering log and this one are associated to the same workspace
-                        // for the current session
-                        if ($workspaceConnection->getWorkspace() === $logWorkspace) {
-                            break;
-                        } else {
-                            $this->computeConnectionDuration($workspaceConnection, $dateLog);
-                        }
+                        $this->computeConnectionDuration($workspaceConnection, $dateLog);
                     }
                     // Creates workspace log for current connection
                     $this->createLogConnectWorkspace($user, $logWorkspace, $dateLog);
@@ -137,7 +143,15 @@ class LogConnectManager
 
                     // Computes last resource duration
                     if (!is_null($resourceConnection)) {
-                        $this->computeConnectionDuration($resourceConnection, $dateLog);
+                        $updatedConnection = $this->computeConnectionDuration($resourceConnection, $dateLog);
+
+                        if ($updatedConnection && $updatedConnection->getDuration()) {
+                            $this->resourceEvaluationManager->addDurationToResourceEvaluation(
+                                $resourceConnection->getResource(),
+                                $user,
+                                $updatedConnection->getDuration()
+                            );
+                        }
                     }
                     // Computes last admin tool duration
                     if (!is_null($adminToolConnection)) {
@@ -187,8 +201,11 @@ class LogConnectManager
                         $toolConnection = $this->getComputableLogTool($user);
                         $adminToolConnection = $this->getComputableLogAdminTool($user);
 
-                        // Computes last workspace tool duration
-                        if (!is_null($toolConnection)) {
+                        // Computes last workspace tool duration, but not the resources tool
+                        if (!is_null($toolConnection) && !(
+                            'resources' === $toolConnection->getToolName() &&
+                            $toolConnection->getWorkspace() === $logResourceNode->getWorkspace()
+                        )) {
                             $this->computeConnectionDuration($toolConnection, $dateLog);
                         }
                         // Computes last admin tool duration
@@ -202,7 +219,14 @@ class LogConnectManager
                             if ($resourceConnection->getResource() === $logResourceNode) {
                                 break;
                             } else {
-                                $this->computeConnectionDuration($resourceConnection, $dateLog);
+                                $updatedConnection = $this->computeConnectionDuration($resourceConnection, $dateLog);
+                            }
+                            if ($updatedConnection && $updatedConnection->getDuration()) {
+                                $this->resourceEvaluationManager->addDurationToResourceEvaluation(
+                                    $resourceConnection->getResource(),
+                                    $user,
+                                    $updatedConnection->getDuration()
+                                );
                             }
                         }
                     }
@@ -235,7 +259,15 @@ class LogConnectManager
                     }
                     // Computes last resource duration
                     if (!is_null($resourceConnection)) {
-                        $this->computeConnectionDuration($resourceConnection, $dateLog);
+                        $updatedConnection = $this->computeConnectionDuration($resourceConnection, $dateLog);
+
+                        if ($updatedConnection && $updatedConnection->getDuration()) {
+                            $this->resourceEvaluationManager->addDurationToResourceEvaluation(
+                                $resourceConnection->getResource(),
+                                $user,
+                                $updatedConnection->getDuration()
+                            );
+                        }
                     }
                     // Computes last tool duration
                     if (!is_null($toolConnection)) {
@@ -260,13 +292,55 @@ class LogConnectManager
         }
     }
 
-    public function computeEmbeddedResourceDuration(User $user, ResourceNode $resource)
+    public function computeWorkspaceDuration(User $user, Workspace $workspace)
     {
-        $resourceConnection = $this->getLogConnectResourceEmbedded($user, $resource);
+        $workspaceConnection = $this->getLogConnectWorkspaceByWorkspace($user, $workspace);
+
+        if (!is_null($workspaceConnection)) {
+            $this->computeConnectionDuration($workspaceConnection, new \DateTime());
+        }
+    }
+
+    public function computeResourceDuration(User $user, ResourceNode $resource, $embedded)
+    {
+        $resourceConnection = $this->getLogConnectResourceByResource($user, $resource, $embedded);
 
         if (!is_null($resourceConnection)) {
-            $now = new \DateTime();
-            $this->computeConnectionDuration($resourceConnection, $now);
+            $updatedConnection = $this->computeConnectionDuration($resourceConnection, new \DateTime());
+
+            if ($updatedConnection && $updatedConnection->getDuration()) {
+                $this->resourceEvaluationManager->addDurationToResourceEvaluation(
+                    $resourceConnection->getResource(),
+                    $user,
+                    $updatedConnection->getDuration()
+                );
+            }
+        }
+    }
+
+    public function computeToolDuration(User $user, $toolName, $context)
+    {
+        $toolConnection = null;
+
+        switch ($context['type']) {
+            case 'administration':
+                $toolConnection = $this->getLogConnectAdminToolByName($user, $toolName);
+                break;
+            case 'desktop':
+                $toolConnection = $this->getLogConnectToolByName($user, $toolName);
+                break;
+            case 'workspace':
+                $workspace = isset($context['data']['uuid']) ?
+                    $this->workspaceRepo->findOneBy(['uuid' => $context['data']['uuid']]) :
+                    null;
+
+                if ($workspace) {
+                    $toolConnection = $this->getLogConnectToolByName($user, $toolName, $workspace);
+                }
+                break;
+        }
+        if (!is_null($toolConnection)) {
+            $this->computeConnectionDuration($toolConnection, new \DateTime());
         }
     }
 
@@ -473,68 +547,110 @@ class LogConnectManager
 
     private function getLogConnectPlatform(User $user)
     {
-        // Fetches connections with no duration
         $openConnections = $this->logPlatformRepo->findBy(
-            ['user' => $user, 'duration' => null],
-            ['connectionDate' => 'DESC']
+            ['user' => $user],
+            ['connectionDate' => 'DESC'],
+            1
         );
 
-        return 0 < count($openConnections) ? $openConnections[0] : null;
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
     }
 
     private function getLogConnectWorkspace(User $user)
     {
-        // Fetches connections with no duration
         $openConnections = $this->logWorkspaceRepo->findBy(
-            ['user' => $user, 'duration' => null],
-            ['connectionDate' => 'DESC']
+            ['user' => $user],
+            ['connectionDate' => 'DESC'],
+            1
         );
 
-        return 0 < count($openConnections) ? $openConnections[0] : null;
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
+    }
+
+    private function getLogConnectWorkspaceByWorkspace(User $user, Workspace $workspace)
+    {
+        $openConnections = $this->logWorkspaceRepo->findBy(
+            ['user' => $user, 'workspace' => $workspace],
+            ['connectionDate' => 'DESC'],
+            1
+        );
+
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
     }
 
     private function getLogConnectTool(User $user)
     {
-        // Fetches connections with no duration
         $openConnections = $this->logToolRepo->findBy(
-            ['user' => $user, 'duration' => null],
-            ['connectionDate' => 'DESC']
+            ['user' => $user],
+            ['connectionDate' => 'DESC'],
+            1
         );
 
-        return 0 < count($openConnections) ? $openConnections[0] : null;
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
+    }
+
+    private function getLogConnectToolByName(User $user, $toolName, Workspace $workspace = null)
+    {
+        $openConnections = $this->logToolRepo->findBy(
+            ['user' => $user, 'toolName' => $toolName, 'workspace' => $workspace],
+            ['connectionDate' => 'DESC'],
+            1
+        );
+
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
     }
 
     private function getLogConnectAdminTool(User $user)
     {
-        // Fetches connections with no duration
         $openConnections = $this->logAdminToolRepo->findBy(
-            ['user' => $user, 'duration' => null],
-            ['connectionDate' => 'DESC']
+            ['user' => $user],
+            ['connectionDate' => 'DESC'],
+            1
         );
 
-        return 0 < count($openConnections) ? $openConnections[0] : null;
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
+    }
+
+    private function getLogConnectAdminToolByName(User $user, $toolName)
+    {
+        $openConnections = $this->logAdminToolRepo->findBy(
+            ['user' => $user, 'toolName' => $toolName],
+            ['connectionDate' => 'DESC'],
+            1
+        );
+
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
     }
 
     private function getLogConnectResource(User $user)
     {
-        // Fetches connections with no duration
         $openConnections = $this->logResourceRepo->findBy(
-            ['user' => $user, 'duration' => null, 'embedded' => false],
-            ['connectionDate' => 'DESC']
+            ['user' => $user, 'embedded' => false],
+            ['connectionDate' => 'DESC'],
+            1
         );
 
-        return 0 < count($openConnections) ? $openConnections[0] : null;
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
     }
 
-    private function getLogConnectResourceEmbedded(User $user, ResourceNode $resourceNode)
+    private function getLogConnectResourceByResource(User $user, ResourceNode $resourceNode, $embedded)
     {
-        // Fetches connections with no duration
         $openConnections = $this->logResourceRepo->findBy(
-            ['user' => $user, 'resource' => $resourceNode, 'duration' => null, 'embedded' => true],
-            ['connectionDate' => 'DESC']
+            ['user' => $user, 'resource' => $resourceNode, 'embedded' => $embedded],
+            ['connectionDate' => 'DESC'],
+            1
         );
 
-        return 0 < count($openConnections) ? $openConnections[0] : null;
+        // Only fetches connection if there is no duration
+        return 0 < count($openConnections) && is_null($openConnections[0]->getDuration()) ? $openConnections[0] : null;
     }
 
     private function getComputableWorkspace(User $user)

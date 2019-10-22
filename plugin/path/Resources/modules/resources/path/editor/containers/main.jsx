@@ -7,7 +7,6 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {EditorMain as EditorMainComponent} from '#/plugin/path/resources/path/editor/components/main'
 import {actions, selectors} from '#/plugin/path/resources/path/editor/store'
-import {actions as pathActions} from '#/plugin/path/resources/path/store'
 import {flattenSteps} from '#/plugin/path/resources/path/utils'
 import {getStepTitle, getStepSlug} from '#/plugin/path/resources/path/editor/utils'
 
@@ -42,10 +41,6 @@ const EditorMain = withRouter(
       },
       moveStep(stepId, position) {
         dispatch(actions.moveStep(stepId, position))
-      },
-
-      computeResourceDuration(resourceId) {
-        dispatch(pathActions.computeResourceDuration(resourceId))
       }
     })
   )(EditorMainComponent)

@@ -60,3 +60,13 @@ actions.fetch = (toolName, context) => (dispatch) => {
     dispatch(menuActions.changeSection('tool'))
   }
 }
+
+actions.closeTool = (toolName, context) => ({
+  [API_REQUEST] : {
+    url: ['apiv2_tool_close'],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({toolName: toolName, context: context})
+    }
+  }
+})

@@ -70,6 +70,15 @@ actions.open = (slug) => (dispatch, getState) => {
   }
 }
 
+actions.closeWorkspace = (slug) => ({
+  [API_REQUEST] : {
+    url: ['apiv2_workspace_close', {slug: slug}],
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+
 actions.checkAccessCode = (workspace, code) => ({
   [API_REQUEST] : {
     url: ['claro_workspace_unlock', {id: workspace.uuid}],

@@ -25,9 +25,6 @@ const PlayerMain = connect(
     },
     disableNavigation() {
       dispatch(actions.disableNavigation())
-    },
-    computeResourceDuration(resourceId) {
-      dispatch(actions.computeResourceDuration(resourceId))
     }
   })
 )(PlayerMainComponent)

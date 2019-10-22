@@ -2,5 +2,8 @@
   "evaluation_requirements": "Conditions d'évaluation",
   "evaluations": "Evaluations",
   "not_started": "Non commencé",
-  "overview": "Vue d'ensemble"
+  "overview": "Vue d'ensemble",
+  "requirements_info_1": "Vous pouvez ici définir les ressources devant être faites dans l'espace d'activités.",
+  "requirements_info_2": "Pour cela, vous devez d'abord ajouter les rôles et/ou les utilisateurs auxquels vous voulez assigner des ressources.",
+  "requirements_info_3": "Sur la page dédiée à ceux-ci, vous pourrez definir la liste des ressources à faire."
 }

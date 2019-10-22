@@ -21,10 +21,12 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -63,6 +65,8 @@ class WorkspaceController extends AbstractCrudController
     private $fileUtils;
     private $toolManager;
     private $tempFileManager;
+    /** @var LogConnectManager */
+    private $logConnectManager;
 
     /**
      * WorkspaceController constructor.
@@ -79,6 +83,7 @@ class WorkspaceController extends AbstractCrudController
      * @param ToolManager                   $toolManager
      * @param TempFileManager               $tempFileManager
      * @param string                        $logDir
+     * @param LogConnectManager             $logConnectManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -92,7 +97,8 @@ class WorkspaceController extends AbstractCrudController
         FileUtilities $fileUtils,
         TransferManager $importer,
         TempFileManager $tempFileManager,
-        $logDir
+        $logDir,
+        LogConnectManager $logConnectManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -106,6 +112,7 @@ class WorkspaceController extends AbstractCrudController
         $this->logDir = $logDir;
         $this->fileUtils = $fileUtils;
         $this->tempFileManager = $tempFileManager;
+        $this->logConnectManager = $logConnectManager;
     }
 
     public function getName()
@@ -688,6 +695,39 @@ class WorkspaceController extends AbstractCrudController
         }, $workspace->getShortcuts()->toArray()));
 
         return new JsonResponse($shortcuts);
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Dispatches all actions that has to be done when closing a workspace.",
+     *     parameters={
+     *         {"name": "id", "type": {"string"}, "description": "The workspace uuid"}
+     *     }
+     * )
+     * @Route(
+     *     "/{slug}/close",
+     *     name="apiv2_workspace_close"
+     * )
+     * @Method("PUT")
+     * @ParamConverter(
+     *     "workspace",
+     *     class = "ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"mapping": {"slug": "slug"}}
+     * )
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     *
+     * @param Workspace $workspace
+     * @param User      $user
+     *
+     * @return JsonResponse
+     */
+    public function closeAction(Workspace $workspace, User $user = null)
+    {
+        if ($user) {
+            $this->logConnectManager->computeWorkspaceDuration($user, $workspace);
+        }
+
+        return new JsonResponse();
     }
 
     public function getClass()

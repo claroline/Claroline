@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -31,21 +32,27 @@ class ResourceNodeController extends AbstractCrudController
     /** @var ResourceActionManager */
     private $actionManager;
 
+    /** @var LogConnectManager */
+    private $logConnectManager;
+
     /**
      * ResourceNodeController constructor.
      *
      * @param ResourceActionManager $actionManager
      * @param ResourceManager       $resourceManager
      * @param RightsManager         $rightsManager
+     * @param LogConnectManager     $logConnectManager
      */
     public function __construct(
         ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
-        RightsManager $rightsManager
+        RightsManager $rightsManager,
+        LogConnectManager $logConnectManager
     ) {
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
+        $this->logConnectManager = $logConnectManager;
     }
 
     /**
@@ -213,5 +220,30 @@ class ResourceNodeController extends AbstractCrudController
             $this->finder->search(ResourceNode::class,
             array_merge($request->query->all(), ['hiddenFilters' => $filters]))
         );
+    }
+
+    /**
+     * @EXT\Route("/{slug}/close", name="claro_resource_close")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     *
+     * @param ResourceNode $resourceNode
+     * @param Request      $request
+     * @param User         $user
+     *
+     * @return JsonResponse
+     */
+    public function closeAction(ResourceNode $resourceNode, Request $request, User $user = null)
+    {
+        if ($user) {
+            $data = $this->decodeRequest($request);
+
+            if (isset($data['embedded'])) {
+                $this->logConnectManager->computeResourceDuration($user, $resourceNode, $data['embedded']);
+            }
+        }
+
+        return new JsonResponse();
     }
 }

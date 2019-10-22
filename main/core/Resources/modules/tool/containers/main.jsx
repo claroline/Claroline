@@ -18,6 +18,9 @@ const ToolMain = withRouter(
       (dispatch) => ({
         open(toolName, context) {
           return dispatch(actions.fetch(toolName, context))
+        },
+        close(toolName, context) {
+          dispatch(actions.closeTool(toolName, context))
         }
       })
     )(ToolMainComponent)

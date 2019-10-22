@@ -64,6 +64,10 @@ class ResourceMain extends Component {
       this.loadApp()
     }
 
+    if (this.props.resourceSlug !== prevProps.resourceSlug) {
+      this.props.close(prevProps.resourceSlug)
+    }
+
     if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
       this.props.open(this.props.resourceSlug)
     }
@@ -74,6 +78,7 @@ class ResourceMain extends Component {
       this.pending.cancel()
       this.pending = null
     }
+    this.props.close(this.props.resourceSlug)
   }
 
   loadApp() {
@@ -137,7 +142,8 @@ ResourceMain.propTypes = {
   resourceType: T.string,
 
   loaded: T.bool.isRequired,
-  open: T.func.isRequired
+  open: T.func.isRequired,
+  close: T.func.isRequired
 }
 
 export {

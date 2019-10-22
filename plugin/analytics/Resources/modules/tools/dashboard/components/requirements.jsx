@@ -14,6 +14,17 @@ import {selectors} from '#/plugin/analytics/tools/dashboard/store'
 
 const Requirements = (props) =>
   <div style={{marginTop: 20}}>
+    <div className="well well-sm">
+      <div>
+        {trans('requirements_info_1', {}, 'analytics')}
+      </div>
+      <div>
+        {trans('requirements_info_2', {}, 'analytics')}
+      </div>
+      <div>
+        {trans('requirements_info_3', {}, 'analytics')}
+      </div>
+    </div>
     <FormSections
       level={3}
       defaultOpened="roles-section"

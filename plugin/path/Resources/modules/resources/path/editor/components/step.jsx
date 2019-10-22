@@ -111,8 +111,7 @@ const EditorStep = props =>
                 showHeader: true,
                 picker: {
                   current : props.resourceParent
-                },
-                onEmbeddedResourceClose: props.onEmbeddedResourceClose
+                }
               }
             }, {
               name: 'evaluated',

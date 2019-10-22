@@ -114,6 +114,16 @@ actions.checkAccessCode = (resourceNode, code, embedded = false) => ({
   }
 })
 
+actions.closeResource = (slug, embedded = false) => ({
+  [API_REQUEST] : {
+    url: ['claro_resource_close', {slug: slug}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({embedded: embedded})
+    }
+  }
+})
+
 // this ones should not be here
 actions.addResourceComment = makeActionCreator(RESOURCE_COMMENT_ADD, 'comment')
 actions.updateResourceComment = makeActionCreator(RESOURCE_COMMENT_UPDATE, 'comment')

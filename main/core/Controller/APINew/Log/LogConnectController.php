@@ -295,30 +295,6 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
-     *     "/embedded/resource/{resource}/compute",
-     *     name="apiv2_log_connect_embedded_resource_compute"
-     * )
-     * @EXT\ParamConverter(
-     *     "resource",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"mapping": {"resource": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param ResourceNode $resource
-     * @param User         $user
-     *
-     * @return JsonResponse
-     */
-    public function embeddedResourceComputeAction(ResourceNode $resource, User $user)
-    {
-        $this->logConnectManager->computeEmbeddedResourceDuration($user, $resource);
-
-        return new JsonResponse();
-    }
-
-    /**
      * @param string $rights
      */
     private function checkAdminToolAccess($rights = 'OPEN')

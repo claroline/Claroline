@@ -199,6 +199,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@claroline.manager.resource_evaluation_manager'
           - '@translator'
 
     claroline.manager.log_connect:

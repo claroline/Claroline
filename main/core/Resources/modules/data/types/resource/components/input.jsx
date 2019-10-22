@@ -75,7 +75,6 @@ const ResourceInput = props => {
 
         <ResourceEmbedded
           resourceNode={props.value}
-          onResourceClose={props.onEmbeddedResourceClose}
         />
       </div>
     )
@@ -130,8 +129,7 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
       name: T.string.isRequired
     }),
     filters: T.array
-  }),
-  onEmbeddedResourceClose: T.func
+  })
 }, {
   value: null,
   picker: {

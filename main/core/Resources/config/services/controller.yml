@@ -68,6 +68,7 @@ services:
           - '@claroline.manager.resource_action'
           - '@claroline.manager.resource_manager'
           - '@claroline.manager.rights_manager'
+          - '@claroline.manager.log_connect'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:
         arguments:
@@ -90,6 +91,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
         arguments:
           - '@claroline.manager.tool_manager'
+          - '@claroline.manager.log_connect'
 
     Claroline\CoreBundle\Controller\APINew\User\GroupController: ~
 
@@ -152,6 +154,7 @@ services:
           - '@claroline.manager.workspace.transfer'
           - '@claroline.manager.temp_file'
           - '%claroline.param.workspace_log_dir%'
+          - '@claroline.manager.log_connect'
 
     Claroline\CoreBundle\Controller\APINew\ConnectionMessageController:
         arguments:

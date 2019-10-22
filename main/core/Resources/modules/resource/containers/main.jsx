@@ -20,6 +20,10 @@ const ResourceMain = withRouter(
       (dispatch) => ({
         open(resourceId) {
           dispatch(actions.fetchNode(resourceId))
+        },
+        close(resourceSlug) {
+          // TODO: identify embedded resource
+          dispatch(actions.closeResource(resourceSlug))
         }
       })
     )(ResourceMainComponent)

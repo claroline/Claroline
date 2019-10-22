@@ -140,7 +140,6 @@ class EditorMain extends Component {
                         numbering={getNumbering(this.props.path.display.numbering, this.props.path.steps, step)}
                         customNumbering={constants.NUMBERING_CUSTOM === this.props.path.display.numbering}
                         stepPath={getFormDataPart(step.id, this.props.path.steps)}
-                        onEmbeddedResourceClose={this.props.computeResourceDuration}
                       />
                     </PathCurrent>
                   )
@@ -183,10 +182,7 @@ EditorMain.propTypes = {
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,
-  removeStep: T.func.isRequired,
-
-  // resource management
-  computeResourceDuration: T.func.isRequired
+  removeStep: T.func.isRequired
 }
 
 export {

@@ -39,6 +39,9 @@ const WorkspaceMain = withRouter(
         },
         selfRegister(workspace) {
           dispatch(actions.selfRegister(workspace))
+        },
+        close(slug) {
+          dispatch(actions.closeWorkspace(slug))
         }
       })
     )(WorkspaceMainComponent)

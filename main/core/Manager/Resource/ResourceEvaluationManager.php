@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -31,6 +32,7 @@ class ResourceEvaluationManager
     private $resourceEvaluationRepo;
     /** @var LogRepository */
     private $logRepo;
+    private $logConnectResource;
 
     /**
      * @param EventDispatcherInterface $eventDispatcher
@@ -44,6 +46,7 @@ class ResourceEvaluationManager
         $this->resourceUserEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
         $this->resourceEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceEvaluation');
         $this->logRepo = $this->om->getRepository('ClarolineCoreBundle:Log\Log');
+        $this->logConnectResource = $this->om->getRepository(LogConnectResource::class);
     }
 
     public function getResourceUserEvaluation(ResourceNode $node, User $user, $withCreation = true)
@@ -243,7 +246,6 @@ class ResourceEvaluationManager
         $rue = $evaluation->getResourceUserEvaluation();
         $rue->setDate($evaluation->getDate());
 
-        $duration = $evaluation->getDuration();
         $score = $evaluation->getScore();
         $scoreMax = $evaluation->getScoreMax();
         $scoreMin = $evaluation->getScoreMin();
@@ -252,14 +254,6 @@ class ResourceEvaluationManager
         $rueStatus = $rue->getStatus();
 
         $statusPriority = AbstractEvaluation::STATUS_PRIORITY;
-
-        if (isset($forced['duration']) && $forced['duration']) {
-            $rue->setDuration($duration);
-        } elseif (!is_null($duration)) {
-            $rueDuration = $rue->getDuration() ? $rue->getDuration() : 0;
-            $rueDuration += $duration;
-            $rue->setDuration($rueDuration);
-        }
 
         if (isset($forced['score']) && $forced['score']) {
             $rue->setScore($score);
@@ -317,5 +311,55 @@ class ResourceEvaluationManager
     public function getLogsForResourceTracking(ResourceNode $node, User $user, array $actions, \DateTime $startDate = null)
     {
         return $this->logRepo->findLogsForResourceTracking($node, $user, $actions, $startDate);
+    }
+
+    /**
+     * Add duration to a resource user evaluation.
+     *
+     * @param ResourceNode $node
+     * @param User         $user
+     * @param int          $duration
+     */
+    public function addDurationToResourceEvaluation(ResourceNode $node, User $user, $duration)
+    {
+        $this->om->startFlushSuite();
+
+        $resUserEval = $this->getResourceUserEvaluation($node, $user);
+        $evaluationDuration = is_null($resUserEval->getDuration()) ?
+            $this->computeDurationForResourceEvaluation($node, $user) :
+            $resUserEval->getDuration();
+        $evaluationDuration += $duration;
+        $resUserEval->setDuration($evaluationDuration);
+        $this->om->persist($resUserEval);
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Compute duration for a resource user evaluation and set it no matter the current duration.
+     *
+     * @param ResourceNode $node
+     * @param User         $user
+     * @param int          $duration
+     */
+    public function computeDurationForResourceEvaluation(ResourceNode $node, User $user)
+    {
+        $this->om->startFlushSuite();
+
+        $resUserEval = $this->getResourceUserEvaluation($node, $user);
+        $resourceLogs = $this->logConnectResource->findBy(['resource' => $node, 'user' => $user]);
+        $duration = 0;
+
+        foreach ($resourceLogs as $log) {
+            if ($log->getDuration()) {
+                $duration += $log->getDuration();
+            }
+        }
+        $resUserEval->setDuration($duration);
+        $this->om->persist($resUserEval);
+
+        $this->om->endFlushSuite();
+
+        return $duration;
     }
 }
