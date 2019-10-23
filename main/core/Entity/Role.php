@@ -418,7 +418,7 @@ class Role extends BaseRole
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
 

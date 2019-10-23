@@ -45,7 +45,9 @@
         "twig/twig": "2.11.2",
         "u01jmg3/ics-parser": "2.1.3",
         "willdurand/js-translation-bundle": "2.6.6",
-        "kriswallsmith/buzz": "^0.13"
+        "kriswallsmith/buzz": "^0.13",
+        "php-http/httplug-bundle": "*",
+        "php-http/guzzle6-adapter":"^1.1"
     },
     "replace": {
         "claroline/distribution-bundle": "*",

@@ -70,6 +70,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         // simple container configuration, same for every environment
         $simpleConfigs = [
             'Symfony\Bundle\TwigBundle\TwigBundle' => 'twig',
+            'Http\HttplugBundle\HttplugBundle' => 'httplug',
             'JMS\DiExtraBundle\JMSDiExtraBundle' => 'jms_di_extra',
             'JMS\SecurityExtraBundle\JMSSecurityExtraBundle' => 'jms_security_extra',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
