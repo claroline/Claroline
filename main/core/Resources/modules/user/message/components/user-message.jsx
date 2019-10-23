@@ -31,7 +31,7 @@ const UserMessage = props => {
   const actions = props.actions.filter(action => action.displayed)
 
   return (
-    <div className={classes('user-message-container', {
+    <div className={classes('user-message-container', props.className, {
       'user-message-left': 'left' === props.position,
       'user-message-right': 'right' === props.position
     })}>
@@ -59,7 +59,7 @@ const UserMessage = props => {
               {actions.map((action) =>
                 <Button
                   key={action.id || toKey(action.label)}
-                  className="btn-link"
+                  className="btn btn-link"
                   tooltip="bottom"
                   {...action}
                 />
@@ -85,6 +85,8 @@ const UserMessage = props => {
 }
 
 UserMessage.propTypes = {
+  className: T.string,
+
   /**
    * The date of the message.
    *

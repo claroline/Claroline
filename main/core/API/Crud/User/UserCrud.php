@@ -160,7 +160,7 @@ class UserCrud
         $userRole = $this->roleManager->getUserRole($user->getUsername());
 
         //soft delete~
-        $user->setIsRemoved(true);
+        $user->setRemoved(true);
         $user->setEmail('email#'.$user->getId());
         $user->setFirstName('firstname#'.$user->getId());
         $user->setLastName('lastname#'.$user->getId());

@@ -13,7 +13,6 @@ const LocationDisplay = (props) => props.data ?
     size="xs"
   /> :
   <EmptyPlaceholder
-    size="lg"
     icon="fa fa-location-arrow"
     title={trans('no_location')}
   />

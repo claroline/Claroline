@@ -4,6 +4,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 export default (users, refresher) => ({
+  name: 'ws-disable',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-book',
   label: trans('disable_personal_ws'),
@@ -21,5 +22,6 @@ export default (users, refresher) => ({
       method: 'DELETE'
     },
     success: (users) => refresher.update(users)
-  }
+  },
+  group: trans('management')
 })

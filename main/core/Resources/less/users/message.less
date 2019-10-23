@@ -24,9 +24,9 @@
 }
 
 .user-message-form-container {
-    .form-group {
-        /*padding: 15px;
-        margin: 0;*/
+    .user-message > .form-group {
+        padding: 15px;
+        margin: 0;
     }
 
     .btn-save {
@@ -111,4 +111,17 @@
 
 .user-message-content {
     padding: @panel-body-padding;
+}
+
+.user-message-highlight {
+    .user-message {
+        border-color: @brand-primary;
+        &:before {
+            border-color: transparent @brand-primary transparent transparent;
+        }
+    }
+
+    .user-message-meta {
+        border-bottom-color: @brand-primary;
+    }
 }

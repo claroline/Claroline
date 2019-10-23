@@ -13,7 +13,6 @@ const OrganizationDisplay = (props) => props.data ?
     size="xs"
   /> :
   <EmptyPlaceholder
-    size="lg"
     icon="fa fa-building"
     title={trans('no_organization')}
   />

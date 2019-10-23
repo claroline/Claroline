@@ -4,6 +4,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/user/routing'
 
 export default (users, refresher, path) => ({
+  name: 'show-profile',
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-address-card',
   label: trans('show_profile'),

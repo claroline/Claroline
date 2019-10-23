@@ -14,12 +14,11 @@ import {MODAL_GROUPS} from '#/main/core/modals/groups'
 
 const GroupsButton = props =>
   <Button
-    className="btn"
+    className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-users"
+    icon="fa fa-fw fa-plus"
     label={trans('add_groups')}
-    primary={true}
     disabled={props.disabled}
     modal={[MODAL_GROUPS, {
       url: ['apiv2_group_list_registerable'],
@@ -89,7 +88,6 @@ const GroupsInput = props => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-users"
       title={trans('no_group')}
     >

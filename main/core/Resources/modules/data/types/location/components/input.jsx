@@ -13,12 +13,11 @@ import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
 
 const LocationsButton = props =>
   <Button
-    className="btn"
+    className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-location-arrow"
+    icon="fa fa-fw fa-plus"
     label={trans('select_a_location')}
-    primary={true}
     disabled={props.disabled}
     modal={[MODAL_LOCATIONS, {
       url: ['apiv2_location_list'],
@@ -67,7 +66,6 @@ const LocationInput = props => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-location-arrow"
       title={trans('no_location')}
     >

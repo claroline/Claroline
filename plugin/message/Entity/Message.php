@@ -151,6 +151,7 @@ class Message
         $this->refreshUuid();
 
         $this->children = new ArrayCollection();
+        $this->userMessages = new ArrayCollection();
     }
 
     public function getObject()
@@ -213,6 +214,18 @@ class Message
     public function getUserMessages()
     {
         return $this->userMessages;
+    }
+
+    public function getUserMessage(User $user)
+    {
+        $found = null;
+        foreach ($this->userMessages as $userMessage) {
+            if ($user->getUuid() === $userMessage->getUser()->getUuid()) {
+                $found = $userMessage;
+            }
+        }
+
+        return $found;
     }
 
     public function getParent()

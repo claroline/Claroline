@@ -7,6 +7,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_USER_PUBLIC_URL} from '#/main/core/user/modals'
 
 export default (users, refresher, path, currentUser) => ({
+  name: 'url-change',
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-link',
   label: trans('change_profile_public_url'),
@@ -17,5 +18,6 @@ export default (users, refresher, path, currentUser) => ({
     onSave: (user) => refresher.update([user])
   }],
   displayed: hasPermission('edit', users[0]) || users[0].id === get(currentUser, 'id'),
-  disabled: users[0].meta.publicUrlTuned
+  disabled: users[0].meta.publicUrlTuned,
+  group: trans('management')
 })

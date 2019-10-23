@@ -1,5 +1,4 @@
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
@@ -31,7 +30,6 @@ const reducer = combineReducers({
     })
   }),
 
-  messageForm : makeFormReducer(`${selectors.STORE_NAME}.messageForm`),
   currentMessage: makeReducer(null, {
     [MESSAGE_LOAD]: (state, action) => action.message
   })

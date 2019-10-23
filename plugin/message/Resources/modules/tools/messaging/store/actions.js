@@ -1,15 +1,9 @@
-import merge from 'lodash/merge'
 
-import {now} from '#/main/app/intl/date'
-import {currentUser} from '#/main/app/security'
-import {makeId} from '#/main/core/scaffolding/id'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as formActions} from '#/main/app/content/form/store'
 
 import {selectors} from '#/plugin/message/tools/messaging/store/selectors'
-import {Message as MessageTypes} from '#/plugin/message/prop-types'
 
 // actions
 export const MESSAGE_LOAD = 'MESSAGE_LOAD'
@@ -27,34 +21,31 @@ actions.addContacts = users => ({
   }
 })
 
-actions.newMessage = (id = null) => {
-  if (id) {
-    return ({
-      [API_REQUEST]: {
-        url: ['apiv2_message_root', {id}],
-        success: (data, dispatch) => {
-          dispatch(formActions.resetForm(
-            `${selectors.STORE_NAME}.messageForm`,
-            merge({}, MessageTypes.defaultProps, {
-              id: makeId(),
-              from: currentUser(),
-              to: data.from.username,
-              object: `Re: ${data.object}`,
-              meta: {date : now()}
-            }),
-            true
-          ))
-        }
+actions.loadMessage = makeActionCreator(MESSAGE_LOAD, 'message')
+actions.openMessage = (id) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    silent: true,
+    url: ['apiv2_message_root', {id}],
+    success: (data) => {
+      dispatch(actions.loadMessage(data))
+      if (!data.meta.read) {
+        dispatch(actions.markedAsReadWhenOpen(data.meta.umuuid))
       }
-    })
+    }
   }
+})
 
-  return formActions.resetForm(`${selectors.STORE_NAME}.messageForm`, merge({}, MessageTypes.defaultProps, {
-    id: makeId(),
-    from: currentUser(),
-    meta: {date : now()}
-  }), true)
-}
+actions.sendMessage = (message) => dispatch => dispatch({
+  [API_REQUEST]: {
+    type: 'send',
+    url: ['apiv2_message_create'],
+    request: {
+      method: 'POST',
+      body: JSON.stringify(message)
+    },
+    success: (response) => dispatch(actions.openMessage(response.id))
+  }
+})
 
 actions.deleteMessages = (messages) => ({
   [API_REQUEST]: {
@@ -86,21 +77,6 @@ actions.restoreMessages = (messages) => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.deletedMessages`))
-    }
-  }
-})
-
-actions.loadMessage = makeActionCreator(MESSAGE_LOAD, 'message')
-
-actions.openMessage = (id) => (dispatch) => dispatch({
-  [API_REQUEST]: {
-    silent: true,
-    url: ['apiv2_message_root', {id}],
-    success: (data) => {
-      dispatch(actions.loadMessage(data))
-      if (!data.meta.read) {
-        dispatch(actions.markedAsReadWhenOpen(data.meta.umuuid))
-      }
     }
   }
 })

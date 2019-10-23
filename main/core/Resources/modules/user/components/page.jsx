@@ -81,13 +81,6 @@ const UserPage = props =>
                 displayed: hasPermission('edit', props.user),
                 primary: true
               }/*, {
-                name: 'add-contact',
-                type: CALLBACK_BUTTON,
-                label: trans('add_contact'),
-                icon: 'fa fa-address-book-o',
-                callback: () => true,
-                displayed: false  // TODO : restore
-              }, {
                 name: 'show-badges',
                 type: URL_BUTTON,
                 icon: 'fa fa-trophy',
@@ -96,23 +89,7 @@ const UserPage = props =>
                 target: '#/badges/'+props.user.id,
                 displayed: false // TODO : restore
               }*/
-            ].concat(actions.map((action, index) => {
-              return {
-                name: `action-${index}`,
-                type: action.type,
-                icon: action.icon,
-                label: action.label,
-                displayed: action.displayed,
-                disabled: action.disabled,
-                dangerous: action.dangerous,
-                primary: action.primary,
-                target: action.target,
-                modal: action.modal,
-                callback: action.callback,
-                request: action.request,
-                confirm: action.confirm
-              }
-            })))
+            ].concat(actions))
         }
         scope="object"
       />

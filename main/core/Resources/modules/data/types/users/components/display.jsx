@@ -25,7 +25,6 @@ const UsersDisplay = (props) => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-user"
       title={trans('no_user')}
     />

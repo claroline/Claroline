@@ -13,12 +13,11 @@ import {MODAL_ROLES} from '#/main/core/modals/roles'
 
 const RoleButton = props =>
   <Button
-    className="btn"
+    className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-id-card"
+    icon="fa fa-fw fa-plus"
     label={trans('add_roles')}
-    primary={true}
     modal={[MODAL_ROLES, {
       url: props.url,
       title: props.title,
@@ -73,7 +72,6 @@ const RoleInput = props => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-id-card"
       title={trans('no_role')}
     >

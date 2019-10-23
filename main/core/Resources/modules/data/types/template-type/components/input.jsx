@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -14,7 +14,7 @@ import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
 const TemplateTypeInput = props => {
   if (props.value) {
     return(
-      <div>
+      <Fragment>
         <TemplateTypeCard
           data={props.value}
           actions={[
@@ -28,10 +28,10 @@ const TemplateTypeInput = props => {
             }
           ]}
         />
+
         <ModalButton
-          className="btn btn-template-types-primary"
+          className="btn btn-block"
           style={{marginTop: 10}}
-          primary={true}
           modal={[MODAL_TEMPLATE_TYPES, {
             title: props.picker.title,
             confirmText: props.picker.confirmText,
@@ -41,22 +41,20 @@ const TemplateTypeInput = props => {
             })
           }]}
         >
-          <span className="fa fa-fw fa-file-alt icon-with-text-right" />
+          <span className="fa fa-fw fa-plus icon-with-text-right" />
           {trans('select_a_template_type', {}, 'template')}
         </ModalButton>
-      </div>
+      </Fragment>
     )
   }
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-file-alt"
       title={trans('no_template_type', {}, 'template')}
     >
       <ModalButton
-        className="btn btn-template-types-primary"
-        primary={true}
+        className="btn btn-block"
         modal={[MODAL_TEMPLATE_TYPES, {
           title: props.picker.title,
           confirmText: props.picker.confirmText,
@@ -66,7 +64,7 @@ const TemplateTypeInput = props => {
           })
         }]}
       >
-        <span className="fa fa-fw fa-file-alt icon-with-text-right" />
+        <span className="fa fa-fw fa-plus icon-with-text-right" />
         {trans('select_a_template_type', {}, 'template')}
       </ModalButton>
     </EmptyPlaceholder>

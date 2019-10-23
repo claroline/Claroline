@@ -83,13 +83,11 @@ const ResourceInput = props => {
     return (
       <EmptyPlaceholder
         id={props.id}
-        size="lg"
         icon="fa fa-folder"
         title={trans('no_resource', {}, 'resource')}
       >
         <ModalButton
-          className="btn"
-          primary={true}
+          className="btn btn-block"
           modal={[MODAL_RESOURCES, {
             title: props.picker.title,
             current: props.picker.current,
@@ -105,7 +103,7 @@ const ResourceInput = props => {
             marginTop: '10px' // todo
           }}
         >
-          <span className="fa fa-fw fa-hand-pointer-o icon-with-text-right" />
+          <span className="fa fa-fw fa-plus icon-with-text-right" />
           {trans('add_resource', {}, 'resource')}
         </ModalButton>
       </EmptyPlaceholder>

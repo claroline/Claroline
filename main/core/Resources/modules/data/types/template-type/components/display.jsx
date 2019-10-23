@@ -12,7 +12,6 @@ const TemplateTypeDisplay = (props) => props.data ?
     data={props.data}
   /> :
   <EmptyPlaceholder
-    size="lg"
     icon="fa fa-file-alt"
     title={trans('no_template_type', {}, 'template')}
   />

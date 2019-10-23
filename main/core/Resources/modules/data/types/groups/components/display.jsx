@@ -25,7 +25,6 @@ const GroupsDisplay = (props) => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-users"
       title={trans('no_group')}
     />

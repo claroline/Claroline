@@ -19,7 +19,6 @@ const GroupDisplay = (props) => !isEmpty(props.data) ?
     )}
   </Fragment> :
   <EmptyPlaceholder
-    size="lg"
     icon="fa fa-users"
     title={trans('no_group')}
   />

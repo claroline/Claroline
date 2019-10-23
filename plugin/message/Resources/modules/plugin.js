@@ -12,6 +12,7 @@ registry.add('ClarolineMessageBundle', {
 
   actions: {
     user: {
+      'add-contact': () => { return import(/* webpackChunkName: "message-action-user-send-message" */ '#/plugin/message/user/actions/add-contact') },
       'send-message': () => { return import(/* webpackChunkName: "message-action-user-send-message" */ '#/plugin/message/user/actions/send-message') }
     }
   }

@@ -4,6 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 export default (users, refresher) => ({
+  name: 'ws-enable',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-book',
   label: trans('enable_personal_ws'),
@@ -16,5 +17,6 @@ export default (users, refresher) => ({
       method: 'POST'
     },
     success: (users) => refresher.update(users)
-  }
+  },
+  group: trans('management')
 })

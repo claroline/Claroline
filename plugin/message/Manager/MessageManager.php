@@ -211,7 +211,7 @@ class MessageManager
         $this->send($message, true, $withMail);
     }
 
-    public function remove(Message $message)
+    public function remove(UserMessage $message)
     {
         $this->om->remove($message);
         $this->om->flush();

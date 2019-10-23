@@ -25,7 +25,6 @@ const RolesDisplay = (props) => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-id-badge"
       title={trans('no_role')}
     />

@@ -17,10 +17,9 @@ import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 const ResourcesButton = props =>
   <Button
     type={MODAL_BUTTON}
-    className="btn"
-    icon="fa fa-fw fa-folder"
+    className="btn btn-block"
+    icon="fa fa-fw fa-plus"
     label={trans('add_resources', {}, 'resource')}
-    primary={true}
     modal={[MODAL_RESOURCES, {
       title: props.title,
       current: props.current,

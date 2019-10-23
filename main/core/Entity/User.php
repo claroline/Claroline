@@ -1214,7 +1214,7 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
         }
     }
 
-    public function setIsRemoved($isRemoved)
+    public function setRemoved($isRemoved)
     {
         $this->isRemoved = $isRemoved;
     }
@@ -1222,7 +1222,7 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     //alias
     public function remove()
     {
-        $this->setIsRemoved(true);
+        $this->setRemoved(true);
     }
 
     public function getIsRemoved()

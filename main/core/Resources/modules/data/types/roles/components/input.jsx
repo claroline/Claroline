@@ -14,12 +14,11 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 const RolesButton = props =>
   <Button
-    className="btn"
+    className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
     label={trans('add_roles')}
-    primary={true}
     modal={[MODAL_ROLES, {
       url: props.url,
       title: props.title,
@@ -93,7 +92,6 @@ const RolesInput = props => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-id-badge"
       title={trans('no_role')}
     >

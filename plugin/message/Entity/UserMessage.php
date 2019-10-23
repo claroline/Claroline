@@ -11,7 +11,9 @@
 
 namespace Claroline\MessageBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,20 +22,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserMessage
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var User
      */
     private $user;
 
@@ -43,53 +41,50 @@ class UserMessage
      *     inversedBy="userMessages"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var Message
      */
     private $message;
 
     /**
      * @ORM\Column(name="is_removed", type="boolean")
+     *
+     * @var bool
      */
-    protected $isRemoved;
+    protected $isRemoved = false;
 
     /**
      * @ORM\Column(name="is_read", type="boolean")
+     *
+     * @var bool
      */
-    protected $isRead;
+    protected $isRead = false;
 
     /**
      * @ORM\Column(name="is_sent", type="boolean")
+     *
+     * @var bool
      */
-    protected $isSent;
+    protected $isSent = false;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="last_open_date", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     protected $lastOpenDate;
 
+    /**
+     * UserMessage constructor.
+     */
     public function __construct()
     {
-        $this->isRead = false;
-        $this->isRemoved = false;
-        $this->isSent = false;
         $this->refreshUuid();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setIsRemoved($removed)
-    {
-        $this->isRemoved = $removed;
-    }
-
-    //alias
     public function setRemoved($removed)
     {
-        $this->setIsRemoved($removed);
+        $this->isRemoved = $removed;
     }
 
     public function setIsRead($isRead)
@@ -133,6 +128,9 @@ class UserMessage
         return $this->message;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -146,11 +144,6 @@ class UserMessage
     public function setUser($user)
     {
         $this->user = $user;
-    }
-
-    public function getUserMessages()
-    {
-        return $this->userMessages;
     }
 
     public function setLastOpenDate(\DateTime $date)

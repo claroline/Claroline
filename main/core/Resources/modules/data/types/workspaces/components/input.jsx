@@ -14,12 +14,11 @@ import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
 const WorkspacesButton = props =>
   <Button
-    className="btn"
+    className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-book"
+    icon="fa fa-fw fa-plus"
     label={trans('add_workspaces')}
-    primary={true}
     disabled={props.disabled}
     modal={[MODAL_WORKSPACES, {
       url: ['apiv2_workspace_list_managed'],
@@ -40,7 +39,7 @@ WorkspacesButton.propTypes = {
 
 const WorkspacesInput = props => {
   if (!isEmpty(props.value)) {
-    return(
+    return (
       <Fragment>
         {props.value.map(workspace =>
           <WorkspaceCard
@@ -91,7 +90,6 @@ const WorkspacesInput = props => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-book"
       title={trans('no_workspace')}
     >

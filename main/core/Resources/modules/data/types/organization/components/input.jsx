@@ -13,12 +13,11 @@ import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
 
 const OrganizationButton = props =>
   <Button
-    className="btn"
+    className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
-    icon="fa fa-fw fa-building"
+    icon="fa fa-fw fa-plus"
     label={trans('select_an_organization')}
-    primary={true}
     modal={[MODAL_ORGANIZATIONS, {
       url: ['apiv2_organization_list'],
       title: props.title,
@@ -65,7 +64,6 @@ const OrganizationInput = props => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
       icon="fa fa-building"
       title={trans('no_organization')}
     >

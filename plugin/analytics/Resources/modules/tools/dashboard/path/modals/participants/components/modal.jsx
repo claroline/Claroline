@@ -34,10 +34,7 @@ const ParticipantsModal = props =>
           label: trans('send-message', {}, 'actions'),
           scope: ['object', 'collection'],
           modal: [MODAL_MESSAGE, {
-            to: rows.map((row) => ({
-              id: row.user.id,
-              name: `${row.user.firstName} ${row.user.lastName}`
-            }))
+            receivers: {users: rows}
           }]
         }
       ]}

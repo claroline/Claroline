@@ -92,11 +92,6 @@ class MessageSerializer
     {
         $userMessage = $this->getUserMessage($message);
 
-        //mainly for tests or if something went wrong
-        if (!$userMessage) {
-            $userMessage = new UserMessage();
-        }
-
         $data = [
             'id' => $message->getUuid(),
             'object' => $message->getObject(),
@@ -117,10 +112,21 @@ class MessageSerializer
         // decode to string
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $receivers = $message->getReceivers();
+
+            $users = $this->userRepo->findByUsernames($receivers['users']);
+            $groups = $this->groupRepo->findByNames($receivers['groups']);
+            $workspaces = $this->workspaceRepo->findByCodes($receivers['workspaces']);
+
             $data['receivers'] = [
-                'users' => $this->userRepo->findByUsernames($receivers['users']),
-                'groups' => $this->groupRepo->findByNames($receivers['groups']),
-                'workspaces' => $this->workspaceRepo->findByCodes($receivers['workspaces']),
+                'users' => array_map(function (User $user) {
+                    return $this->userSerializer->serialize($user, [Options::SERIALIZE_MINIMAL]);
+                }, $users),
+                'groups' => array_map(function (Group $group) {
+                    return $this->groupSerializer->serialize($group, [Options::SERIALIZE_MINIMAL]);
+                }, $groups),
+                'workspaces' => array_map(function (Workspace $workspace) {
+                    return $this->workspaceSerializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+                }, $workspaces),
             ];
         }
 
@@ -149,7 +155,7 @@ class MessageSerializer
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         if (isset($data['parent'])) {
-            $parent = $this->om->getRepository(Message::class)->find($data['parent']['id']);
+            $parent = $this->om->getRepository(Message::class)->findOneBy(['uuid' => $data['parent']['id']]);
             $message->setParent($parent);
         }
 
@@ -185,7 +191,17 @@ class MessageSerializer
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        return $this->om->getRepository(UserMessage::class)->findOneBy(['message' => $message, 'user' => $currentUser]);
+        $userMessage = $message->getUserMessage($currentUser);
+
+        //mainly for tests or if something went wrong
+        if (empty($userMessage)) {
+            $userMessage = new UserMessage();
+            // a little hacky but if it's not found it's most likely because
+            // the message has been ard removed by the current user and we don't want it to pop back
+            $userMessage->setRemoved(true);
+        }
+
+        return $userMessage;
     }
 
     /**

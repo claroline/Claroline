@@ -25,8 +25,7 @@ const WorkspacesDisplay = (props) => {
 
   return (
     <EmptyPlaceholder
-      size="lg"
-      icon="fa fa-books"
+      icon="fa fa-book"
       title={trans('no_workspace')}
     />
   )

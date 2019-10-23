@@ -11,6 +11,17 @@ const Message = {
     from: T.shape(
       User.propTypes
     ),
+    receivers: T.shape({
+      users: T.arrayOf(T.shape({
+
+      })),
+      groups: T.arrayOf(T.shape({
+
+      })),
+      workspaces: T.arrayOf(T.shape({
+
+      }))
+    }),
     meta: T.shape({
       date: T.string.isRequired,
       read: T.bool.isRequired,
@@ -20,7 +31,9 @@ const Message = {
   },
   defaultProps: {
     meta: {
-      removed : false
+      read: false,
+      removed : false,
+      sent: false
     }
   }
 }

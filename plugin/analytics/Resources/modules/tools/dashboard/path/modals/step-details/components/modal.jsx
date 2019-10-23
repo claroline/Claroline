@@ -94,7 +94,7 @@ class StepDetailsModal extends Component {
             primary={true}
             disabled={0 === this.state.selection.length}
             modal={[MODAL_MESSAGE, {
-              to: this.state.selection
+              receivers: {users: this.state.selection}
             }]}
           >
             <span className="fa fa-fw fa-envelope icon-with-text-right" />

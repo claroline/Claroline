@@ -4,6 +4,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 export default (users, refresher) => ({
+  name: 'disable',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-times-circle',
   label: trans('disable_user'),
@@ -21,5 +22,6 @@ export default (users, refresher) => ({
       method: 'PUT'
     },
     success: (users) => refresher.update(users)
-  }
+  },
+  group: trans('management')
 })

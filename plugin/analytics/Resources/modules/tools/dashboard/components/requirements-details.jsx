@@ -90,7 +90,7 @@ const RequirementsDetails = (props) => props.requirements ?
             )}
           </div> :
           <div className="alert alert-warning">
-            {trans('no_resource')}
+            {trans('no_resource', {}, 'resource')}
           </div>
         }
       </FormSection>

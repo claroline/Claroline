@@ -4,6 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 export default (users) => ({
+  name: 'password-reset',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-user-lock',
   label: trans('reset_password'),
@@ -14,5 +15,6 @@ export default (users) => ({
     request: {
       method: 'PUT'
     }
-  }
+  },
+  group: trans('management')
 })

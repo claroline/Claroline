@@ -10,7 +10,7 @@ const PlaceholderWrapper = props =>
 PlaceholderWrapper.propTypes = {
   id: T.string,
   className: T.string.isRequired,
-  size: T.oneOf(['sm', 'lg']),
+  size: T.oneOf(['sm', 'md', 'lg']),
   children: T.node.isRequired
 }
 
@@ -38,13 +38,14 @@ EmptyPlaceholder.propTypes = {
   icon: T.string,
   title: T.string.isRequired,
   help: T.string,
-  size: T.oneOf(['sm', 'lg']),
+  size: T.oneOf(['sm', 'md', 'lg']),
   children: T.node
 }
 
 EmptyPlaceholder.defaultProps = {
   icon: 'fa fa-fw fa-hand-pointer-o',
-  help: null
+  help: null,
+  size: 'md'
 }
 
 export {

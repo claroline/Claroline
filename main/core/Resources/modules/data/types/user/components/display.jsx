@@ -14,8 +14,7 @@ const UserDisplay = (props) => props.data ?
     orientation="col"
   /> :
   <EmptyPlaceholder
-    size="lg"
-    icon="fa fa-books"
+    icon="fa fa-user"
     title={trans('no_user')}
   />
 

@@ -80,9 +80,17 @@ const MessagingTool = (props) =>
           path: '/deleted',
           component: DeletedMessages
         }, {
-          path: '/message/:id?',
-          component: Message,
-          onEnter: (params) => props.openMessage(params.id)
+          path: '/message/:id',
+          onEnter: (params) => props.openMessage(params.id),
+          render(routeProps) {
+            const CurrentMessage = (
+              <Message
+                currentId={routeProps.match.params.id}
+              />
+            )
+
+            return CurrentMessage
+          }
         }
       ]}
     />
