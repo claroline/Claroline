@@ -38,7 +38,7 @@ const ResourcePage = withRouter(
         dispatch(actions.fetchResource(resourceNode, embedded))
       },
       dismissRestrictions() {
-        dispatch(actions.dismissRestrictions())
+        dispatch(actions.dismissRestrictions(true))
       },
       checkAccessCode(resourceNode, code, embedded = false) {
         dispatch(actions.checkAccessCode(resourceNode, code, embedded))

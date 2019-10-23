@@ -71,10 +71,17 @@ actions.fetchResource = (resourceNode, embedded = false) => ({
       dispatch(actions.setResourceLoaded(true))
     },
     error: (response, status, dispatch) => {
+      dispatch(actions.dismissRestrictions(false))
+
       switch(status) {
-        case 403: dispatch(actions.setRestrictionsError(response)); break
-        case 401: dispatch(actions.setRestrictionsError(response)); break
-        default: dispatch(actions.setServerErrors(response))
+        case 403:
+          dispatch(actions.setRestrictionsError(response))
+          break
+        case 401:
+          dispatch(actions.setRestrictionsError(response))
+          break
+        default:
+          dispatch(actions.setServerErrors(response))
       }
       dispatch(actions.setResourceLoaded(true))
     }
@@ -97,7 +104,7 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
 
 actions.updateUserEvaluation = makeActionCreator(USER_EVALUATION_UPDATE, 'userEvaluation')
 
-actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
+actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS, 'dismissed')
 
 actions.checkAccessCode = (resourceNode, code, embedded = false) => ({
   [API_REQUEST] : {

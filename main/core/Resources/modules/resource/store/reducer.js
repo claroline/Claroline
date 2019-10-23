@@ -101,7 +101,7 @@ const reducer = combineReducers({
 
   accessErrors: combineReducers({
     dismissed: makeReducer(false, {
-      [RESOURCE_RESTRICTIONS_DISMISS]: () => true,
+      [RESOURCE_RESTRICTIONS_DISMISS]: (state, action) => action.dismissed,
       [RESOURCE_LOAD]: (state, action) => {
         //+ date check and ips and the hidden flag most likely but I have no example now
         return action.resourceData.resourceNode.permissions.open &&
