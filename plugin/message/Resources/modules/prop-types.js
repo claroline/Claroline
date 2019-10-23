@@ -8,7 +8,9 @@ const Message = {
     content: T.string,
     object: T.string,
     to: T.string,
-    from: T.shape(User.propTypes),
+    from: T.shape(
+      User.propTypes
+    ),
     meta: T.shape({
       date: T.string.isRequired,
       read: T.bool.isRequired,

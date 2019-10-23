@@ -16,7 +16,7 @@ const Tabs = props =>
       <LinkButton
         key={tab.id}
         className={classes('nav-tab', {
-          'nav-tab-hidden': props.editing && tab.restrictions && tab.restrictions.hidden
+          'nav-tab-hidden': get(tab, 'restrictions.hidden')
         })}
         target={`${props.prefix}/${tab.slug}`}
         exact={true}
@@ -46,7 +46,6 @@ const Tabs = props =>
   </nav>
 
 Tabs.propTypes = {
-  editing: T.bool.isRequired,
   prefix: T.string,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes

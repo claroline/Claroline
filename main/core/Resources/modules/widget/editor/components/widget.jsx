@@ -180,7 +180,7 @@ const WidgetEditor = props =>
               }}
               deleteContent={(content) => {
                 const widgets = cloneDeep(props.widget)
-                const contentIndex = widgets.contents.findIndex(widget => widget.id === content.id)
+                const contentIndex = widgets.contents.findIndex(widget => widget && widget.id === content.id)
                 // removes the content to delete and replace by null
                 widgets.contents[contentIndex] = null
                 props.update(widgets)

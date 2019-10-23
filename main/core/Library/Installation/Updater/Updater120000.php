@@ -541,7 +541,6 @@ class Updater120000 extends Updater
             $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
             $desktopHomeTabConfig->setType('admin_desktop');
             $desktopHomeTabConfig->setVisible(true);
-            $desktopHomeTabConfig->setLocked(false);
             $desktopHomeTabConfig->setTabOrder(1);
 
             $this->om->persist($desktopHomeTabConfig);

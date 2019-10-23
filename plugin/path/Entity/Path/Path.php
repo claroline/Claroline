@@ -210,6 +210,8 @@ class Path extends AbstractResource
      * Remove all steps.
      *
      * @return Path
+     *
+     * @deprecated
      */
     public function emptySteps()
     {

@@ -165,14 +165,14 @@ class GroupManager
         return true;
     }
 
-    public function getGroupByName($name, $executeQuery = true)
+    public function getGroupByName($name)
     {
-        return $this->groupRepo->findGroupByName($name, $executeQuery);
+        return $this->groupRepo->findBy(['name' => $name]);
     }
 
     public function getGroupByNameAndScheduledForInsert($name)
     {
-        $group = $this->groupRepo->findGroupByName($name, true);
+        $group = $this->getGroupByName($name);
 
         if (!$group) {
             $group = $this->getGroupByNameScheduledForInsert($name);

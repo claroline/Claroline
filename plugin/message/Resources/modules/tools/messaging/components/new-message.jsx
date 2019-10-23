@@ -62,15 +62,15 @@ const NewMessageComponent = (props) =>
           title: 'message',
           fields:[
             {
-              name: 'toUsers',
+              name: 'receivers.users',
               type: 'users',
               label: trans('message_form_to', {}, 'message')
             }, {
-              name: 'toGroups',
+              name: 'receivers.groups',
               type: 'groups',
               label: trans('message_form_to', {}, 'message')
             }, {
-              name: 'toWorkspaces',
+              name: 'receivers.workspaces',
               type: 'workspaces',
               label: trans('message_form_to', {}, 'message')
             }, {
@@ -95,7 +95,6 @@ NewMessageComponent.propTypes = {
   }).isRequired,
   saveForm: T.func.isRequired,
   path: T.string.isRequired,
-  reply: T.bool.isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired
@@ -104,8 +103,7 @@ NewMessageComponent.propTypes = {
 const NewMessage = withRouter(connect(
   state => ({
     currentUser: securitySelectors.currentUser(state),
-    path: toolSelectors.path(state),
-    reply: selectors.reply(state)
+    path: toolSelectors.path(state)
   }),
   (dispatch) => ({
     saveForm(push, path) {

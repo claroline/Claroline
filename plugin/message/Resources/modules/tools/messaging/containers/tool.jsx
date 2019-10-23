@@ -12,14 +12,8 @@ const MessagingTool = withRouter(
       openMessage(id) {
         dispatch(actions.openMessage(id))
       },
-      newMessage(id) {
-        dispatch(actions.newMessage(id))
-      },
       addContacts(users) {
         dispatch(actions.addContacts(users))
-      },
-      setAsReply() {
-        dispatch(actions.setAsReply())
       }
     })
   )(MessagingToolComponent)

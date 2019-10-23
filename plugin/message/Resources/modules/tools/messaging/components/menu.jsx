@@ -19,7 +19,7 @@ const MessagingMenu = (props) => {
       label: trans('messages_sent', {}, 'message'),
       path: '/sent'
     },  {
-      icon: 'fa fa-fw fa-trash',
+      icon: 'fa fa-fw fa-trash-o',
       label: trans('messages_removed', {}, 'message'),
       path: '/deleted'
     }, {

@@ -6,7 +6,16 @@ import {selectors as homeSelectors} from '#/main/core/tools/home/store/selectors
 
 const FORM_NAME = `${homeSelectors.STORE_NAME}.editor`
 
-const editorTabs = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
+const editorTabs = (state) => {
+  const definedTabs = [].concat(formSelectors.data(formSelectors.form(state, FORM_NAME)) || [])
+    .sort((a, b) => a.position - b.position)
+
+  if (0 === definedTabs.length) {
+    definedTabs.push(homeSelectors.defaultTab(state))
+  }
+
+  return definedTabs
+}
 
 const currentTabIndex = createSelector(
   [editorTabs, homeSelectors.currentTabId],
@@ -42,11 +51,6 @@ const widgets = createSelector(
   (currentTab) => currentTab ? currentTab.widgets : []
 )
 
-const sortedEditorTabs = createSelector(
-  [editorTabs],
-  (editorTabs) => editorTabs.sort((a,b) => a.position - b.position)
-)
-
 const readOnly = createSelector(
   [homeSelectors.context, homeSelectors.administration, currentTab],
   (context, administration, currentTab) => !currentTab || (currentTab.type === 'administration' &&
@@ -55,11 +59,11 @@ const readOnly = createSelector(
 
 export const selectors = {
   FORM_NAME,
+
   editorTabs,
   currentTab,
   currentTabIndex,
   currentTabTitle,
   widgets,
-  sortedEditorTabs,
   readOnly
 }

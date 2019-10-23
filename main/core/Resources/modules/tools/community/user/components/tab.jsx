@@ -42,6 +42,7 @@ const UserTab = props =>
             // select roles to assign to selected users
             modal: [MODAL_ROLES, {
               url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'uuid')}],
+              filters: [],
               title: trans('register_users'),
               subtitle: trans('workspace_register_select_roles'),
               selectAction: (selectedRoles) => ({

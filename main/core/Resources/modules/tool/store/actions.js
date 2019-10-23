@@ -63,6 +63,7 @@ actions.fetch = (toolName, context) => (dispatch) => {
 
 actions.closeTool = (toolName, context) => ({
   [API_REQUEST] : {
+    silent: true,
     url: ['apiv2_tool_close'],
     request: {
       method: 'PUT',

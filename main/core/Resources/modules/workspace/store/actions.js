@@ -72,6 +72,7 @@ actions.open = (slug) => (dispatch, getState) => {
 
 actions.closeWorkspace = (slug) => ({
   [API_REQUEST] : {
+    silent: true,
     url: ['apiv2_workspace_close', {slug: slug}],
     request: {
       method: 'PUT'

@@ -26,13 +26,17 @@ const DeletedMessagesComponent = (props) =>
       {
         name: 'object',
         type: 'string',
-        label: trans('message_form_object'),
+        label: trans('message_form_object', {}, 'message'),
         displayed: true,
         primary: true
       }, {
-        name: 'from.username',
-        alias: 'senderUsername',
-        type: 'string',
+        name: 'content',
+        type: 'html',
+        label: trans('message'),
+        displayed: true
+      }, {
+        name: 'from',
+        type: 'user',
         label: trans('message_from', {}, 'message'),
         displayed: true,
         filterable: false,
@@ -43,9 +47,7 @@ const DeletedMessagesComponent = (props) =>
         type: 'date',
         label: trans('date'),
         displayed: true,
-        searchable: true,
-        filterable: true,
-        option: {
+        options: {
           time: true
         }
       }, {
@@ -53,9 +55,7 @@ const DeletedMessagesComponent = (props) =>
         alias: 'isRead',
         type: 'boolean',
         label: trans('message_read', {}, 'message'),
-        displayed: true,
-        searchable: true,
-        filterable: true
+        displayed: true
       }
     ]}
     actions={(rows) => [

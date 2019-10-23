@@ -11,10 +11,11 @@
 
 namespace Claroline\MessageBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Index;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,31 +24,30 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(
  *     name="claro_message",
  *     indexes={
- *         @Index(name="level_idx", columns={"lvl"}),
- *         @Index(name="root_idx", columns={"root"})
+ *         @ORM\Index(name="level_idx", columns={"lvl"}),
+ *         @ORM\Index(name="root_idx", columns={"root"})
  *     }
  * )
  * @Gedmo\Tree(type="nested")
  */
 class Message
 {
-    use UuidTrait;
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $object;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $content;
 
@@ -59,25 +59,26 @@ class Message
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=true)
+     *
+     * @var User
      */
     protected $user;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
      */
     protected $date;
-
-    /**
-     * @ORM\Column(name="is_removed", type="boolean")
-     */
-    protected $isRemoved;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\MessageBundle\Entity\UserMessage",
      *     mappedBy="message"
      * )
+     *
+     * @var UserMessage[]|ArrayCollection
      */
     protected $userMessages;
 
@@ -112,6 +113,8 @@ class Message
      *     inversedBy="children"
      * )
      * @ORM\JoinColumn(onDelete="SET NULL")
+     *
+     * @var Message
      */
     protected $parent;
 
@@ -121,29 +124,33 @@ class Message
      *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
+     *
+     * @var Message[]|ArrayCollection
      */
     protected $children;
 
     /**
      * @ORM\Column(name="sender_username")
+     *
+     * @var string
      */
     protected $senderUsername = 'claroline-connect';
 
     /**
      * @ORM\Column(name="receiver_string", length=16000)
+     *
+     * @var string
      */
     protected $to;
 
+    /**
+     * Message constructor.
+     */
     public function __construct()
     {
-        $this->isRemoved = false;
-        $this->children = new ArrayCollection();
         $this->refreshUuid();
-    }
 
-    public function getId()
-    {
-        return $this->id;
+        $this->children = new ArrayCollection();
     }
 
     public function getObject()
@@ -166,20 +173,18 @@ class Message
         $this->content = $content;
     }
 
+    /**
+     * @return User|null
+     */
     public function getSender()
     {
         return $this->user;
     }
 
-    public function setSender($sender)
+    public function setSender(User $sender = null)
     {
         $this->user = $sender;
-        $this->senderUsername = ($sender) ? $sender->getUsername() : 'claroline-connect';
-    }
-
-    public function setCreator($sender)
-    {
-        $this->sendSender($sender);
+        $this->senderUsername = $sender ? $sender->getUsername() : 'claroline-connect';
     }
 
     public function getCreator()
@@ -203,21 +208,6 @@ class Message
     public function setDate(\DateTime $date)
     {
         $this->date = $date;
-    }
-
-    public function isRemoved()
-    {
-        return $this->isRemoved;
-    }
-
-    public function markAsRemoved()
-    {
-        $this->isRemoved = true;
-    }
-
-    public function markAsUnremoved()
-    {
-        $this->isRemoved = false;
     }
 
     public function getUserMessages()
@@ -273,5 +263,59 @@ class Message
     public function getSenderUsername()
     {
         return $this->senderUsername;
+    }
+
+    public function getReceivers()
+    {
+        $users = [];
+        $groups = [];
+        $workspaces = [];
+
+        if (!empty($this->to)) {
+            $receivers = explode(';', $this->to);
+            // split the string of target into different array.
+            foreach ($receivers as $receiver) {
+                if (!empty($receiver)) {
+                    if ('{' === substr($receiver, 0, 1)) {
+                        $groups[] = trim($receiver, '{}');
+                    } elseif ('[' === substr($receiver, 0, 1)) {
+                        $workspaces[] = trim($receiver, '[]');
+                    } else {
+                        $users[] = $receiver;
+                    }
+                }
+            }
+        }
+
+        return [
+            'users' => $users,
+            'groups' => $groups,
+            'workspaces' => $workspaces,
+        ];
+    }
+
+    public function setReceivers(array $users = [], array $groups = [], array $workspaces = [])
+    {
+        $receivers = [];
+
+        if (!empty($users)) {
+            $receivers = array_merge($users, $receivers);
+        }
+
+        if (!empty($groups)) {
+            $receivers = array_merge(array_map(function ($group) {
+                return '{'.$group.'}';
+            }, $groups), $receivers);
+        }
+
+        if (!empty($workspaces)) {
+            $receivers = array_merge(array_map(function ($workspace) {
+                return '['.$workspace.']';
+            }, $workspaces), $receivers);
+        }
+
+        $receiversString = implode(';', $receivers);
+
+        $this->setTo($receiversString);
     }
 }

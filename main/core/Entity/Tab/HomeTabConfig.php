@@ -56,36 +56,41 @@ class HomeTabConfig
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTab",
-     *     cascade={"persist"},
+     *     cascade={"persist", "remove"},
      *     inversedBy="homeTabConfigs"
      * )
      * @ORM\JoinColumn(name="home_tab_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var HomeTab
      */
     private $homeTab;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible")
+     *
+     * @var bool
      */
     private $visible = true;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked")
-     */
-    private $locked = false;
-
-    /**
      * @ORM\Column(type="integer", name="tab_order")
+     *
+     * @var int
      */
     private $tabOrder;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @var array
      */
     private $details;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinTable(name="claro_home_tab_roles")
+     *
+     * @var Role[]
      */
     private $roles;
 
@@ -118,9 +123,12 @@ class HomeTabConfig
         $this->color = $color;
     }
 
+    /**
+     * @return Role[]|ArrayCollection
+     */
     public function getRoles()
     {
-        return $this->roles->toArray();
+        return $this->roles;
     }
 
     public function addRole(Role $role)
@@ -145,9 +153,10 @@ class HomeTabConfig
         return $this->homeTab;
     }
 
-    public function setHomeTab($homeTab)
+    public function setHomeTab(HomeTab $homeTab)
     {
         $this->homeTab = $homeTab;
+        $homeTab->addHomeTabConfig($this);
     }
 
     public function isVisible()
@@ -158,16 +167,6 @@ class HomeTabConfig
     public function setVisible($visible)
     {
         $this->visible = $visible;
-    }
-
-    public function isLocked()
-    {
-        return $this->locked;
-    }
-
-    public function setLocked($locked)
-    {
-        $this->locked = $locked;
     }
 
     public function getTabOrder()

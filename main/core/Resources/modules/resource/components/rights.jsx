@@ -16,6 +16,7 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {PopoverButton} from '#/main/app/buttons/popover/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
+import {constants} from '#/main/core/user/constants'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {
   getSimpleAccessRule,
@@ -183,7 +184,7 @@ const AdvancedTab = props => {
           )}
 
           {hasNonStandardPerms &&
-            <td scope="col"></td>
+            <td scope="col" />
           }
         </tr>
       </thead>
@@ -223,6 +224,9 @@ const AdvancedTab = props => {
               className="btn btn-block"
               size="sm"
               modal={[MODAL_ROLES, {
+                filters: [
+                  {property: 'type', value: constants.ROLE_PLATFORM, locked: true}
+                ],
                 selectAction: (selectedRoles) => ({
                   type: CALLBACK_BUTTON,
                   callback: () => props.updatePermissions([].concat(props.permissions, selectedRoles.map(role => ({

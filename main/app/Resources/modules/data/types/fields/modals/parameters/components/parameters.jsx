@@ -61,6 +61,7 @@ class ParametersModal extends Component {
         {...this.props}
         save={fieldData => {
           // generate normalized name for field (c/p from api Entity)
+          // TODO : use stripDiacritics instead (it's much more exhaustive)
           let normalizedName = fieldData.label.replace(new RegExp(' ', 'g'), '-') // Replaces all spaces with hyphens.
           normalizedName = normalizedName.replace(/[^A-Za-z0-9-]/g, '') // Removes special chars.
           normalizedName = normalizedName.replace(/-+/g, '-') // Replaces multiple hyphens with single one.

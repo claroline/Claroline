@@ -25,12 +25,16 @@ class WidgetContainerSerializer
     /** @var WidgetInstanceSerializer */
     private $widgetInstanceSerializer;
 
+    /** @var PublicFileSerializer */
+    private $publicFileSerializer;
+
     /**
      * WidgetContainerSerializer constructor.
      *
      * @param ObjectManager            $om
      * @param WidgetInstanceSerializer $widgetInstanceSerializer
      * @param WidgetInstanceFinder     $widgetInstanceFinder
+     * @param PublicFileSerializer     $publicFileSerializer
      */
     public function __construct(
         ObjectManager $om,
@@ -89,9 +93,10 @@ class WidgetContainerSerializer
         ];
 
         if ('image' === $widgetContainerConfig->getBackgroundType() && $widgetContainerConfig->getBackground()) {
+            /** @var PublicFile $file */
             $file = $this->om
-              ->getRepository(PublicFile::class)
-              ->findOneBy(['url' => $widgetContainerConfig->getBackground()]);
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $widgetContainerConfig->getBackground()]);
 
             if ($file) {
                 $display['background'] = $this->publicFileSerializer->serialize($file);
@@ -105,18 +110,18 @@ class WidgetContainerSerializer
 
     public function deserialize($data, WidgetContainer $widgetContainer, array $options): WidgetContainer
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $widgetContainer);
+        } else {
+            $widgetContainer->refreshUuid();
+        }
+
         $widgetContainerConfig = $this->om->getRepository(WidgetContainerConfig::class)
-          ->findOneBy(['widgetContainer' => $widgetContainer]);
+            ->findOneBy(['widgetContainer' => $widgetContainer]);
 
         if (!$widgetContainerConfig || in_array(Options::REFRESH_UUID, $options)) {
             $widgetContainerConfig = new WidgetContainerConfig();
             $widgetContainerConfig->setWidgetContainer($widgetContainer);
-            $this->om->persist($widgetContainerConfig);
-            $this->om->persist($widgetContainer);
-        }
-
-        if (!in_array(Options::REFRESH_UUID, $options)) {
-            $this->sipe('id', 'setUuid', $data, $widgetContainer);
         }
 
         $this->sipe('name', 'setName', $data, $widgetContainerConfig);
@@ -135,33 +140,36 @@ class WidgetContainerSerializer
             }
         }
 
-        $instanceIds = [];
-
         if (isset($data['contents'])) {
+            /** @var WidgetInstance[] $currentInstances */
+            $currentInstances = $widgetContainer->getInstances()->toArray();
+            $instanceIds = [];
+
+            // updates instances
             foreach ($data['contents'] as $index => $content) {
                 if ($content) {
-                    /* @var WidgetInstance $widgetInstance */
-                    if (isset($content['id']) && !in_array(Options::REFRESH_UUID, $options)) {
-                        $widgetInstance = $this->findInCollection(
-                      $widgetContainer,
-                      'getInstances',
-                       $content['id'],
-                       in_array(Options::NO_FETCH, $options) ? null : WidgetInstance::class
-                    ) ?? new WidgetInstance();
-                    } else {
+                    if (isset($content['id'])) {
+                        $widgetInstance = $widgetContainer->getInstance($content['id']);
+                    }
+
+                    if (empty($widgetInstance)) {
                         $widgetInstance = new WidgetInstance();
                     }
 
                     $this->widgetInstanceSerializer->deserialize($content, $widgetInstance, $options);
                     $widgetInstanceConfig = $widgetInstance->getWidgetInstanceConfigs()[0];
                     $widgetInstanceConfig->setPosition($index);
-                    $widgetInstance->setContainer($widgetContainer);
-
-                    // We either do this or cascade persist ¯\_(ツ)_/¯
-                    $this->om->persist($widgetInstance);
-                    $this->om->persist($widgetInstanceConfig);
+                    $widgetContainer->addInstance($widgetInstance);
 
                     $instanceIds[] = $widgetInstance->getUuid();
+                }
+            }
+
+            // removes instances which no longer exists
+            foreach ($currentInstances as $currentInstance) {
+                if (!in_array($currentInstance->getUuid(), $instanceIds)) {
+                    $widgetContainer->removeInstance($currentInstance);
+                    $this->om->remove($currentInstance);
                 }
             }
         }

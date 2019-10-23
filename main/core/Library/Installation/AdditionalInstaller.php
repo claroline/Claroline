@@ -370,7 +370,6 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         $desktopHomeTabConfig = new HomeTabConfig();
         $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
         $desktopHomeTabConfig->setVisible(true);
-        $desktopHomeTabConfig->setLocked(true);
         $desktopHomeTabConfig->setTabOrder(1);
         $desktopHomeTabConfig->setName($infoName);
         $desktopHomeTabConfig->setLongTitle($infoName);

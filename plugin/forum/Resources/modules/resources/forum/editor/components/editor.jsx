@@ -19,7 +19,6 @@ const EditorComponent = (props) =>
     level={2}
     name={selectors.FORM_NAME}
     title={trans('parameters')}
-    className="content-container"
     buttons={true}
     save={{
       type: CALLBACK_BUTTON,

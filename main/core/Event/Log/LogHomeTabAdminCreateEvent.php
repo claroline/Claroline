@@ -19,18 +19,19 @@ class LogHomeTabAdminCreateEvent extends LogGenericEvent
 
     /**
      * Constructor.
+     *
+     * @param HomeTabConfig $htc
      */
     public function __construct(HomeTabConfig $htc)
     {
         $homeTab = $htc->getHomeTab();
         $details = [];
         $details['tabId'] = $homeTab->getId();
-        $details['tabName'] = $homeTab->getName();
+        $details['tabName'] = $htc->getName();
         $details['tabType'] = $homeTab->getType();
-        $details['tabIcon'] = $homeTab->getIcon();
+        $details['tabIcon'] = $htc->getIcon();
         $details['configId'] = $htc->getId();
-        $details['type'] = $htc->getType();
-        $details['locked'] = $htc->isLocked();
+        $details['type'] = $homeTab->getType();
         $details['visible'] = $htc->isVisible();
         $details['tabOrder'] = $htc->getTabOrder();
         $details['details'] = $htc->getDetails();

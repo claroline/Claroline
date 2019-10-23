@@ -30,22 +30,24 @@ const ReceivedMessagesComponent = (props) =>
         displayed: true,
         primary: true
       }, {
-        name: 'from.username',
-        alias: 'senderUsername',
-        type: 'string',
+        name: 'content',
+        type: 'html',
+        label: trans('message'),
+        displayed: true
+      }, {
+        name: 'from',
+        type: 'user',
         label: trans('message_from', {}, 'message'),
         displayed: true,
         filterable: false,
-        sortable: true
+        sortable: false
       }, {
         name: 'meta.date',
         alias: 'date',
         type: 'date',
         label: trans('date'),
         displayed: true,
-        searchable: true,
-        filterable: true,
-        option: {
+        options: {
           time: true
         }
       }, {
@@ -53,9 +55,7 @@ const ReceivedMessagesComponent = (props) =>
         alias: 'isRead',
         type: 'boolean',
         label: trans('message_read', {}, 'message'),
-        displayed: true,
-        searchable: true,
-        filterable: true
+        displayed: true
       }
     ]}
     actions={(rows) => [

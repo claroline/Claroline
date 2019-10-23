@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -7,42 +7,56 @@ import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import {constants} from '#/main/core/user/constants'
 import {selectors} from '#/main/core/modals/roles/store'
 import {RoleList} from '#/main/core/administration/community/role/components/role-list'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 
-const RolesModal = props => {
-  const selectAction = props.selectAction(props.selected)
+class RolesModal extends Component {
+  constructor(props) {
+    super(props)
 
-  return (
-    <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
-      icon="fa fa-fw fa-id-badge"
-      className="data-picker-modal"
-      bsSize="lg"
-      onEntering={() => props.resetFilters(props.filters)}
-      onExiting={props.reset}
-    >
-      <ListData
-        name={selectors.STORE_NAME}
-        fetch={{
-          url: props.url,
-          autoload: true
+    this.state = {
+      initialized: false
+    }
+  }
+
+  render() {
+    const selectAction = this.props.selectAction(this.props.selected)
+
+    return (
+      <Modal
+        {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
+        icon="fa fa-fw fa-id-badge"
+        className="data-picker-modal"
+        bsSize="lg"
+        onEnter={() => {
+          this.props.resetFilters(this.props.filters)
+          this.setState({initialized: true})
         }}
-        definition={RoleList.definition}
-        card={RoleList.card}
-      />
+        onExited={this.props.reset}
+      >
+        <ListData
+          name={selectors.STORE_NAME}
+          fetch={{
+            url: this.props.url,
+            autoload: this.state.initialized
+          }}
+          definition={RoleList.definition}
+          card={RoleList.card}
+        />
 
-      <Button
-        label={trans('select', {}, 'actions')}
-        {...selectAction}
-        className="modal-btn btn"
-        primary={true}
-        disabled={0 === props.selected.length}
-        onClick={props.fadeModal}
-      />
-    </Modal>
-  )
+        <Button
+          label={trans('select', {}, 'actions')}
+          {...selectAction}
+          className="modal-btn btn"
+          primary={true}
+          disabled={0 === this.props.selected.length}
+          onClick={this.props.fadeModal}
+        />
+      </Modal>
+    )
+  }
 }
 
 RolesModal.propTypes = {
@@ -63,7 +77,9 @@ RolesModal.propTypes = {
 RolesModal.defaultProps = {
   url: ['apiv2_role_list'],
   title: trans('roles'),
-  filters: []
+  filters: [
+    {property: 'type', value: constants.ROLE_PLATFORM}
+  ]
 }
 
 export {

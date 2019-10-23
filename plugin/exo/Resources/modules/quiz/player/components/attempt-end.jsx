@@ -108,7 +108,8 @@ const AttemptEndComponent = props =>
                 icon: 'fa fa-fw fa-home',
                 label: trans('return-home', {}, 'actions'),
                 target: route(props.workspace),
-                displayed: !!props.workspace
+                displayed: !!props.workspace,
+                exact: true
               }
             ]}
           />

@@ -45,6 +45,10 @@ class OrganizationSerializer
             'parent' => !empty($organization->getParent()) ? [
                 'id' => $organization->getParent()->getUuid(),
                 'name' => $organization->getParent()->getName(),
+                'code' => $organization->getParent()->getCode(),
+                'meta' => [
+                    'default' => $organization->getParent()->getDefault(),
+                ],
             ] : null,
             'meta' => [
                 'default' => $organization->getDefault(),

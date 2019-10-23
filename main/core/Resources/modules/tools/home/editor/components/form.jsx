@@ -123,7 +123,7 @@ const EditorForm = props =>
             name: 'restrictByRole',
             type: 'boolean',
             label: trans('restrictions_by_roles', {}, 'widget'),
-            calculated: (tab) => tab.restrictByRole || (tab.restrictions && !isEmpty(tab.restrictions.roles)),
+            calculated: (tab) => tab.restrictByRole || !isEmpty(get(tab, 'restrictions.roles')),
             onChange: (checked) => {
               if (!checked) {
                 props.update(props.currentTabIndex, 'restrictions.roles', [])
@@ -132,19 +132,15 @@ const EditorForm = props =>
             linked: [
               {
                 name: 'restrictions.roles',
-                label: trans('role'),
-                displayed: (tab) => tab.restrictByRole || (tab.restrictions && !isEmpty(tab.restrictions.roles)),
-                type: 'choice',
+                label: trans('roles'),
+                displayed: (tab) => tab.restrictByRole || !isEmpty(get(tab, 'restrictions.roles')),
+                type: 'roles',
                 required: true,
-                options:{
-                  inline: false,
-                  multiple : true,
-                  choices: props.currentContext.type === 'workspace' || props.administration ?
-                    props.roles.reduce((acc, role) => {
-                      acc[role.id] = trans(role.translationKey)
-                      return acc
-                    }, {})
-                    : ''
+                options: {
+                  picker: props.currentContext.type === 'workspace' ? {
+                    url: ['apiv2_workspace_list_roles', {id: get(props.currentContext, 'data.uuid')}],
+                    filters: []
+                  } : undefined
                 }
               }
             ]
@@ -176,11 +172,6 @@ EditorForm.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )).isRequired,
-  roles: T.arrayOf(T.shape({
-    id: T.string,
-    translationKey: T.string
-  })),
-
   created: T.bool,
   readOnly: T.bool,
   currentTabIndex: T.number.isRequired,

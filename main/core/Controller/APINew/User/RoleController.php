@@ -50,7 +50,7 @@ class RoleController extends AbstractCrudController
     /**
      * List platform roles.
      *
-     * @Route("platform", name="apiv2_role_platform_list")
+     * @Route("/platform", name="apiv2_role_platform_list")
      * @Method("GET")
      *
      * @param Request $request
@@ -70,7 +70,7 @@ class RoleController extends AbstractCrudController
     /**
      * List platform roles.
      *
-     * @Route("platform/grantable", name="apiv2_role_platform_grantable_list")
+     * @Route("/platform/grantable", name="apiv2_role_platform_grantable_list")
      * @Method("GET")
      *
      * @param Request $request
@@ -83,29 +83,6 @@ class RoleController extends AbstractCrudController
             $this->finder->search(Role::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['type' => 1, 'grantable' => true]]
-            ))
-        );
-    }
-
-    /**
-     * List loggable platform roles.
-     *
-     * @Route("platform/loggable", name="apiv2_role_platform_loggable_list")
-     * @Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function listLoggablePlatformRolesAction(Request $request)
-    {
-        return new JsonResponse(
-            $this->finder->search(Role::class, array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'type' => 1,
-                    'blacklist' => ['ROLE_ANONYMOUS'],
-                ]]
             ))
         );
     }

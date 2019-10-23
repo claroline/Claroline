@@ -42,6 +42,7 @@ const GroupTab = props =>
             // select roles to assign to selected groups
             modal: [MODAL_ROLES, {
               url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'uuid')}],
+              filters: [],
               title: trans('register_groups'),
               subtitle: trans('workspace_register_select_roles'),
               selectAction: (selectedRoles) => ({

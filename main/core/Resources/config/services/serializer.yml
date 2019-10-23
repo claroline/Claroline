@@ -106,6 +106,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\SimpleWidgetSerializer:

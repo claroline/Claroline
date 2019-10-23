@@ -43,7 +43,6 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
             $desktopHomeTabConfig = new HomeTabConfig();
             $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
             $desktopHomeTabConfig->setVisible(true);
-            $desktopHomeTabConfig->setLocked(false);
             $desktopHomeTabConfig->setTabOrder(1);
             $desktopHomeTabConfig->setName($infoName);
             $desktopHomeTabConfig->setLongTitle($infoName);
@@ -105,7 +104,6 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
                 $workspaceTabConfig = new HomeTabConfig();
                 $workspaceTabConfig->setHomeTab($workspaceTab);
                 $workspaceTabConfig->setVisible(true);
-                $workspaceTabConfig->setLocked(true);
                 $workspaceTabConfig->setTabOrder(1);
                 $workspaceTabConfig->setName($infoName);
                 $workspaceTabConfig->setLongTitle($infoName);

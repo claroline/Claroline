@@ -76,7 +76,7 @@ const DocumentRow = props =>
     {(props.canEdit && !props.document.isManager) || (props.isManager && props.document.isManager) ?
       <td>
         <span
-          className="fa fa-fw fa-trash pointer-hand"
+          className="fa fa-fw fa-trash-o pointer-hand"
           onClick={() => {
             props.showModal(MODAL_CONFIRM, {
               icon: 'fa fa-fw fa-trash-o',

@@ -7,7 +7,7 @@ import {convertTimestampToString} from '#/main/app/intl/date'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {MODAL_USER_MESSAGE} from '#/main/core/user/modals/message'
+import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 import {selectors} from '#/plugin/analytics/tools/dashboard/path/modals/participants/store'
 
@@ -31,9 +31,9 @@ const ParticipantsModal = props =>
         {
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-envelope',
-          label: trans('send_message'),
+          label: trans('send-message', {}, 'actions'),
           scope: ['object', 'collection'],
-          modal: [MODAL_USER_MESSAGE, {
+          modal: [MODAL_MESSAGE, {
             to: rows.map((row) => ({
               id: row.user.id,
               name: `${row.user.firstName} ${row.user.lastName}`

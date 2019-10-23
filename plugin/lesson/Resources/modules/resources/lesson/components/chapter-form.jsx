@@ -136,7 +136,7 @@ const ChapterFormComponent = props =>
         label={trans('delete')}
         title={trans('delete')}
         dangerous={true}
-        icon="fa fa-trash"
+        icon="fa fa-trash-o"
         type={CALLBACK_BUTTON}
         className="btn float-right"
         callback={() => {props.delete(props.lesson.id, props.chapter.slug, props.chapter.title, props.history, props.path)}}

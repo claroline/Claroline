@@ -19,6 +19,13 @@
     .text-movie-subtitles();
 }
 
+.h-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
 .h-numbering {
     display: inline-flex;
     align-items: center;
@@ -37,6 +44,12 @@
     }
 }
 
+.btn.h-back {
+    margin-right: 10px;
+    padding: @padding-base-horizontal;
+    border-radius: 50%;
+}
+
 .h-toolbar {
     margin-left: auto;
     white-space: nowrap;
@@ -45,7 +58,7 @@
 // AVOID USING IT
 // Find a better way to handle it
 .h-first {
-    // otherwise there is to many space when used just after a .page-header
+    // otherwise there is too many space when used just after a .page-header
     // there may be a better way to handle it.
     margin-top: 0;
 }

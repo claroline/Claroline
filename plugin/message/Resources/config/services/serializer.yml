@@ -11,6 +11,8 @@ services:
            - '@security.token_storage'
            - '@Claroline\MessageBundle\Manager\MessageManager'
            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\User\GroupSerializer'
+           - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\MessageBundle\Serializer\Contact\OptionsSerializer:
         tags: [claroline.serializer]

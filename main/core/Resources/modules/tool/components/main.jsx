@@ -1,5 +1,6 @@
 import React, {createElement, Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import invariant from 'invariant'
 
 import {theme} from '#/main/app/config'
 import {withReducer} from '#/main/app/store/components/withReducer'
@@ -106,9 +107,8 @@ class ToolMain extends Component {
               })
             }
           },
-          () => {
-            // TODO : properly handle error
-          }
+          // TODO : properly handle error
+          (error) => console.error(error) /* eslint-disable-line no-console */
         )
         .then(
           () => this.pending = null,

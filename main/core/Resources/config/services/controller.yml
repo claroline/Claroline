@@ -82,7 +82,6 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@translator'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.lock_manager'

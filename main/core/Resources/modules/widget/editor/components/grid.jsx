@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 
+import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -44,7 +45,7 @@ class WidgetGridEditor extends Component {
             startMovingContent={(contentId) => this.startMovingContent(contentId)}
             moveContent={(movingContentId, newParentId, position) => {
               const widgets = cloneDeep(this.props.widgets)
-              let movingContentIndex
+              let movingContentIndex = -1
 
               let oldWidgets = null
               let oldParentTabIndex = null
@@ -61,7 +62,7 @@ class WidgetGridEditor extends Component {
                 })
               })
 
-              if (oldWidgets) {
+              if (oldWidgets && -1 !== movingContentIndex) {
                 if (this.props.currentTabIndex !== oldParentTabIndex) {
                   oldWidgets = cloneDeep(oldWidgets)
                 } else {
@@ -75,7 +76,11 @@ class WidgetGridEditor extends Component {
                 })
 
                 const newParent = widgets.find(widget => widget.id === newParentId)
-                newParent.contents[position] = oldParent.contents[movingContentIndex]
+                // generate a new id for moved content for save simplicity
+                const newContent = cloneDeep(oldParent.contents[movingContentIndex])
+                newContent.id = makeId()
+                newParent.contents[position] = newContent
+
                 // removes the content to delete and replace by null
                 oldParent.contents[movingContentIndex] = null
 

@@ -71,6 +71,12 @@ class WidgetInstanceSerializer
 
     public function deserialize($data, WidgetInstance $widgetInstance, array $options = []): WidgetInstance
     {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $widgetInstance);
+        } else {
+            $widgetInstance->refreshUuid();
+        }
+
         $widgetInstanceConfig = $widgetInstance->getWidgetInstanceConfigs()[0];
 
         if (!$widgetInstanceConfig || in_array(Options::REFRESH_UUID, $options)) {
@@ -78,13 +84,7 @@ class WidgetInstanceSerializer
             $widgetInstanceConfig->setWidgetInstance($widgetInstance);
         }
 
-        if (!in_array(Options::REFRESH_UUID, $options)) {
-            $this->sipe('id', 'setUuid', $data, $widgetInstance);
-        }
-
         $this->sipe('type', 'setType', $data, $widgetInstanceConfig);
-
-        $this->om->persist($widgetInstanceConfig);
 
         /** @var Widget $widget */
         $widget = $this->om

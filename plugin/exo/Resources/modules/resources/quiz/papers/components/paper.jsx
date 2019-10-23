@@ -54,7 +54,7 @@ const PaperStep = props => {
 
   return (
     <Fragment>
-      <h4 className={classes('h3 step-title', 0 === props.index && 'h-first')}>
+      <h4 className={classes('h3 h-title', 0 === props.index && 'h-first')}>
         {numbering &&
           <span className="h-numbering">{numbering}</span>
         }
@@ -119,7 +119,7 @@ PaperStep.propTypes = {
 
 const PaperComponent = props =>
   <div className="paper">
-    <h3 className="h2 paper-title">
+    <h3 className="h2 h-title">
       <div>
         {trans('results', {}, 'quiz')}
         <small style={{display: 'block', marginTop: '5px'}}>
@@ -151,7 +151,9 @@ const PaperComponent = props =>
             icon: 'fa fa-fw fa-trash-o',
             label: trans('delete', {}, 'actions'),
             displayed: props.admin,
-            callback: () => props.delete(props.quizId, props.paper),
+            callback: () => props.delete(props.quizId, props.paper).then(() => {
+              props.history.push(`${props.path}/papers`)
+            }),
             confirm: {
               title: trans('deletion'),
               subtitle: trans('user_attempt', {
@@ -271,11 +273,9 @@ const Paper = withRouter(
         stats: quizSelect.statistics(state)
       })
     },
-    (dispatch, ownProps) => ({
+    (dispatch) => ({
       delete(quizId, paper) {
-        dispatch(actions.deletePapers(quizId, [paper]))
-
-        ownProps.history.push(`${ownProps.path}/papers`)
+        return dispatch(actions.deletePapers(quizId, [paper]))
       }
     })
   )(PaperComponent)

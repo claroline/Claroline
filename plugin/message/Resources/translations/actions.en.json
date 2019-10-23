@@ -1,5 +1,7 @@
 {
   "send-message": "Send a message",
   "new-contact": "Add contacts",
-  "add-contact": "Add to contacts"
+  "add-contact": "Add to contacts",
+  "reply": "Reply",
+  "reply-all": "Reply all"
 }

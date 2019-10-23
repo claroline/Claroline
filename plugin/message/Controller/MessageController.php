@@ -132,7 +132,7 @@ class MessageController extends AbstractCrudController
      * @EXT\Route("/softdelete", name="apiv2_message_soft_delete")
      * @EXT\Method("PUT")
      * @ApiDoc(
-     *     description="Soft delete an array of message",
+     *     description="Soft delete an array of messages.",
      *     queryString={
      *         {"name": "ids", "type": "array", "description": "The message ids list."}
      *     }
@@ -158,6 +158,35 @@ class MessageController extends AbstractCrudController
         return new JsonResponse(array_map(function (UserMessage $message) {
             return $this->serializer->serialize($message->getMessage());
         }, $messages));
+    }
+
+    /**
+     * @EXT\Route("/remove", name="apiv2_message_hard_delete")
+     * @EXT\Method("DELETE")
+     * @ApiDoc(
+     *     description="Hard delete an array of messages.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "The message ids list."}
+     *     }
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function hardDeleteAction(Request $request)
+    {
+        $messages = $this->decodeIdsString($request, UserMessage::class);
+
+        $this->om->startFlushSuite();
+
+        foreach ($messages as $message) {
+            $this->messageManager->remove($message);
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -254,36 +283,6 @@ class MessageController extends AbstractCrudController
         return new JsonResponse(array_map(function (UserMessage $message) {
             return $this->serializer->serialize($message->getMessage());
         }, $messages));
-    }
-
-    /**
-     * @EXT\Route("/remove", name="apiv2_message_user_remove")
-     * @EXT\Method("DELETE")
-     * @ApiDoc(
-     *     description="Delete an array of message for the current user.",
-     *     queryString={
-     *         {"name": "ids", "type": "array", "description": "The message ids list."}
-     *     }
-     * )
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function hardRemoveAction(Request $request)
-    {
-        $ids = $request->query->get('ids');
-
-        $this->om->startFlushSuite();
-
-        foreach ($ids as $id) {
-            $message = $this->find($this->getClass(), $id);
-            $this->container->get('Claroline\MessageBundle\Manager\MessageManager')->remove($message);
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(null, 204);
     }
 
     /**

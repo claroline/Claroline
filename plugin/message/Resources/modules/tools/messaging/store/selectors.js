@@ -9,13 +9,7 @@ const message = createSelector(
   (store) => store.currentMessage
 )
 
-const reply = createSelector(
-  [store],
-  (store) => store.messageForm.reply
-)
-
 export const selectors = {
   STORE_NAME,
-  message,
-  reply
+  message
 }

@@ -33,11 +33,6 @@ const reducer = combineReducers({
     [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME + '.editor')]: (state, action) => action.updatedData,
     [TABS_LOAD]: (state, action) => action.tabs
   }),
-
-  roles: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.roles || []
-  }),
-
   editor: editorReducer
 })
 

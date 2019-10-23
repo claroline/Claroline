@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\AppBundle\Persistence\MissingObjectException;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -262,11 +263,11 @@ class GroupRepository extends EntityRepository
      *
      * @param array $names
      *
-     * @return array[Group]
+     * @return Group[]
      *
      * @throws MissingObjectException if one or more groups cannot be found
      */
-    public function findGroupsByNames(array $names)
+    public function findByNames(array $names)
     {
         $nameCount = count($names);
         $dql = '
@@ -284,36 +285,6 @@ class GroupRepository extends EntityRepository
         }
 
         return $result;
-    }
-
-    public function findNames()
-    {
-        $dql = 'SELECT g.name as name FROM Claroline\CoreBundle\Entity\Group g';
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns a group by its name.
-     *
-     * @param string $name
-     * @param bool   $executeQuery
-     *
-     * @return Group|null
-     */
-    public function findGroupByName($name, $executeQuery = true)
-    {
-        $dql = '
-            SELECT g
-            FROM Claroline\CoreBundle\Entity\Group g
-            WHERE g.name = :name
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('name', $name);
-
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
     public function countGroupsByRole(Role $role)

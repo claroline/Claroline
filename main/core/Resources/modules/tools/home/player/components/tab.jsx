@@ -31,7 +31,6 @@ const PlayerTab = props =>
           prefix={props.path}
           tabs={props.tabs}
           currentContext={props.currentContext}
-          editing={false}
         />
       }
 

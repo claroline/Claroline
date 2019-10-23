@@ -123,6 +123,7 @@ actions.checkAccessCode = (resourceNode, code, embedded = false) => ({
 
 actions.closeResource = (slug, embedded = false) => ({
   [API_REQUEST] : {
+    silent: true,
     url: ['claro_resource_close', {slug: slug}],
     request: {
       method: 'PUT',

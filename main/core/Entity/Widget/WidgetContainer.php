@@ -50,7 +50,7 @@ class WidgetContainer
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig",
      *     mappedBy="widgetContainer",
-     *     cascade={"persist"}
+     *     cascade={"persist", "remove"}
      * )
      *
      * @var WidgetContainerConfig[]
@@ -79,6 +79,25 @@ class WidgetContainer
     }
 
     /**
+     * @param string $instanceId
+     *
+     * @return WidgetInstance|null
+     */
+    public function getInstance($instanceId)
+    {
+        $found = null;
+
+        foreach ($this->instances as $instance) {
+            if ($instance && $instance->getUuid() === $instanceId) {
+                $found = $instance;
+                break;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
      * Add a WidgetInstance into the container.
      *
      * @param WidgetInstance $instance
@@ -100,6 +119,7 @@ class WidgetContainer
     {
         if ($this->instances->contains($instance)) {
             $this->instances->removeElement($instance);
+            $instance->setContainer(null);
         }
     }
 
@@ -129,6 +149,13 @@ class WidgetContainer
     {
         if (!$this->widgetContainerConfigs->contains($config)) {
             $this->widgetContainerConfigs->add($config);
+        }
+    }
+
+    public function removeWidgetContainerConfig(WidgetContainerConfig $config)
+    {
+        if ($this->widgetContainerConfigs->contains($config)) {
+            $this->widgetContainerConfigs->removeElement($config);
         }
     }
 }

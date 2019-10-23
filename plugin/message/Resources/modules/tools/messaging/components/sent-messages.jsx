@@ -30,9 +30,14 @@ const SentMessagesComponent = (props) =>
         displayed: true,
         primary: true
       }, {
+        name: 'content',
+        type: 'html',
+        label: trans('message'),
+        displayed: true
+      }, {
         name: 'to',
         type: 'string',
-        label: trans('to_message', {}, 'message'),
+        label: trans('message_form_to', {}, 'message'),
         displayed: true,
         filterable: false,
         sortable: true

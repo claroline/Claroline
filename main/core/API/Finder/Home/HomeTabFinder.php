@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\API\Finder\Home;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class HomeTabFinder extends AbstractFinder
 {
@@ -38,117 +38,61 @@ class HomeTabFinder extends AbstractFinder
     }
 
     public function configureQueryBuilder(
-      QueryBuilder $qb,
-      array $searches = [],
-      array $sortBy = null,
-      array $options = ['count' => false, 'page' => 0, 'limit' => -1]
+        QueryBuilder $qb,
+        array $searches = [],
+        array $sortBy = null,
+        array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
         $qb = $this->om->createQueryBuilder();
         $qb->select($options['count'] ? 'COUNT(obj)' : 'obj')->from($this->getClass(), 'obj');
         $qb->leftJoin('obj.homeTabConfigs', 'config');
 
-        foreach ($searches as $filterName => $filterValue) {
-            switch ($filterName) {
-                case 'user':
-                    $user = $this->om->find(User::class, $filterValue);
-                    $roles = $user ? $user->getRoles() : [];
+        // only grab tabs accessible by user
+        $roleNames = array_map(function (Role $role) {
+            return $role->getRole();
+        }, $this->tokenStorage->getToken()->getRoles());
 
-                    $qb->leftJoin('obj.user', 'u');
+        $isAdmin = in_array('ROLE_ADMIN', $roleNames) || (isset($searches['workspace']) && in_array('ROLE_MANAGER_'.$searches['workspace'], $roleNames));
+        if (!$isAdmin) {
+            // only get visible tabs for non admin
+            $qb->andWhere('config.visible = true');
 
-                    $expr = [];
-
-                    if (!in_array('ROLE_ADMIN', $roles)) {
-                        $subQuery =
-                          "
-                            SELECT tab from Claroline\CoreBundle\Entity\Tab\HomeTab tab
-                            JOIN tab.homeTabConfigs htc
-                            JOIN htc.roles role
-                            JOIN role.users user
-                            WHERE (user.uuid = :userId OR user.id = :userId)
-                            AND tab.type = :adminDesktop
-                            AND htc.locked = true
-                          ";
-                        $subQuery2 =
-                          "
-                            SELECT tab2 from Claroline\CoreBundle\Entity\Tab\HomeTab tab2
-                            JOIN tab2.homeTabConfigs htc2
-                            LEFT JOIN htc2.roles role2
-                            WHERE tab2.type = :adminDesktop
-                            AND htc2.locked = true
-                            GROUP BY tab2.id
-                            HAVING COUNT(role2.id) = 0
-                          ";
-                        $expr[] = $qb->expr()->orX(
-                            $qb->expr()->in('obj', $subQuery),
-                            $qb->expr()->in('obj', $subQuery2)
-                        );
-                        $qb->setParameter('adminDesktop', HomeTab::TYPE_ADMIN_DESKTOP);
-                    } else {
-                        $expr[] = $qb->expr()->andX(
-                            $qb->expr()->eq('obj.type', ':adminDesktop')
-                          );
-                        $qb->setParameter('adminDesktop', HomeTab::TYPE_ADMIN_DESKTOP);
-                    }
-
-                    $expr[] = $qb->expr()->orX(
-                      $qb->expr()->like('u.uuid', ':userId')
-                    );
-
-                    $qb->andWhere($qb->expr()->orX(...$expr));
-
-                    $qb->setParameter('userId', $filterValue);
-                    break;
-                case 'workspace':
-                    $roleNames = array_map(function ($role) {
-                        return $role->getRole();
-                    }, $this->tokenStorage->getToken()->getRoles());
-
-                    if (in_array('ROLE_ADMIN', $roleNames) || in_array('ROLE_MANAGER_'.$filterValue, $roleNames)) {
-                        $qb->leftJoin('obj.workspace', 'w');
-                        $qb->andWhere("w.uuid = :{$filterName}");
-                        $qb->setParameter($filterName, $filterValue);
-                    } else {
-                        $freeSearch = $workspaceSearch = $searches;
-                        $freeSearch['_workspace_free'] = $filterValue;
-                        $workspaceSearch['_workspace_roles'] = $filterValue;
-                        unset($workspaceSearch['workspace']);
-                        unset($freeSearch['workspace']);
-
-                        return $this->union($freeSearch, $workspaceSearch, $options, $sortBy);
-                    }
-
-                    break;
-                case '_workspace_free':
-                    $qb->join('obj.workspace', '_wf');
-                    $qb->leftJoin('config.roles', '_rr2');
-                    $qb->andWhere("_wf.uuid = :{$filterName}");
-                    $qb->groupBy('obj.id');
-                    $qb->having('COUNT(_rr2.id) = 0');
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case '_workspace_roles':
-                    $roleNames = array_map(function ($role) {
-                        return $role->getRole();
-                    }, $this->tokenStorage->getToken()->getRoles());
-                    $qb->join('obj.workspace', '_wr');
-                    $qb->join('config.roles', '_rr');
-                    $qb->andWhere("_wr.uuid = :{$filterName}");
-                    $qb->andWhere($qb->expr()->in('_rr.name', ':roleNames'));
-                    $qb->setParameter($filterName, $filterValue);
-                    $qb->setParameter('roleNames', $roleNames);
-                    break;
-                case 'type':
-                    $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                default:
-                  $this->setDefaults($qb, $filterName, $filterValue);
+            // only get tabs visible by the current user roles
+            if (!isset($searches['type']) || HomeTab::TYPE_DESKTOP !== $searches['type']) {
+                // no need to check roles for DESKTOP tabs because it's directly linked to the user
+                $qb->leftJoin('config.roles', 'r');
+                $qb->andWhere('(r.id IS NULL OR r.name IN (:roles))');
+                $qb->setParameter('roles', $roleNames);
             }
         }
 
-        if (!array_key_exists('_workspace_free', $searches) && !array_key_exists('_workspace_roles', $searches)) {
-            $qb->orderBy('config.tabOrder', 'ASC');
+        foreach ($searches as $filterName => $filterValue) {
+            switch ($filterName) {
+                case 'type':
+                    $qb->andWhere("obj.type = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    if (HomeTab::TYPE_DESKTOP === $filterValue) {
+                        // only get DESKTOP tabs for the current user
+                        $qb->leftJoin('obj.user', 'u');
+                        $qb->andWhere('u.id = :userId');
+                        $qb->setParameter('userId', $this->tokenStorage->getToken()->getUser()->getId());
+                    }
+
+                    break;
+
+                case 'workspace':
+                    $qb->leftJoin('obj.workspace', 'w');
+                    $qb->andWhere("w.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+
+                    break;
+
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
+            }
         }
+
+        $qb->orderBy('config.tabOrder', 'ASC');
 
         return $qb;
     }

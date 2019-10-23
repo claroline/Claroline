@@ -1,10 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
+import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON} from '#/main/app/buttons'
+
 const HeadingWrapper = props  =>
-  React.createElement(`h${props.level}`, Object.assign({},
+  React.createElement(`h${props.level} h-title`, Object.assign({},
     omit(props, 'level', 'displayLevel', 'displayed', 'align'),
     {
       className: classes(
@@ -34,6 +39,15 @@ const ContentTitle = props =>
   <HeadingWrapper
     {...omit(props, 'numbering', 'title', 'subtitle')}
   >
+    {!isEmpty(props.backAction) &&
+      <Button
+        label={trans('back')}
+        {...props.backAction}
+        icon="fa fa-fw fa-arrow-left"
+        tooltip="bottom"
+      />
+    }
+
     {props.numbering &&
       <span className="h-numbering">{props.numbering}</span>
     }
@@ -44,7 +58,19 @@ const ContentTitle = props =>
       <small>{props.subtitle}</small>
     }
 
-    {props.children}
+    {!isEmpty(props.actions) &&
+      <Button
+        className="h-toolbar"
+        type={MENU_BUTTON}
+        icon="fa fa-fw fa-ellipsis-v"
+        label={trans('show-more-actions', {}, 'actions')}
+        tooltip="bottom"
+        menu={{
+          align: 'right',
+          items: props.actions
+        }}
+      />
+    }
   </HeadingWrapper>
 
 ContentTitle.propTypes = {
@@ -56,7 +82,13 @@ ContentTitle.propTypes = {
   subtitle: T.string,
   displayed: T.bool,
   align: T.oneOf(['left', 'center', 'right']),
-  children: T.any
+  children: T.any,
+  backAction: T.shape({
+    // TODO : action types
+  }),
+  actions: T.arrayOf(T.shape({
+    // TODO : action types
+  }))
 }
 
 export {

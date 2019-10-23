@@ -32,7 +32,10 @@ const ContentHeading = props =>
       {!isEmpty(props.backAction) &&
         <li className="nav-back">
           <Button
+            label={trans('back')}
             {...props.backAction}
+            icon="fa fa-fw fa-arrow-left"
+            tooltip="bottom"
           />
         </li>
       }

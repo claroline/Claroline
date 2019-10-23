@@ -15,7 +15,7 @@ import {selectors} from '#/plugin/path/resources/path/editor/store'
 
 const EditorStep = props =>
   <Fragment>
-    <h3 className="h2 step-title">
+    <h3 className="h2 h-title step-title">
       {props.numbering &&
         <span className="h-numbering">{props.numbering}</span>
       }
@@ -24,7 +24,7 @@ const EditorStep = props =>
 
       <Toolbar
         id={props.id}
-        className="step-toolbar"
+        className="h-toolbar"
         buttonName="btn"
         tooltip="bottom"
         toolbar="more"
@@ -57,6 +57,31 @@ const EditorStep = props =>
               options: {
                 workspace: props.workspace
               }
+            }, {
+              name: 'primaryResource',
+              type: 'resource',
+              label: trans('resource'),
+              options: {
+                embedded: true,
+                showHeader: true,
+                picker: {
+                  current : props.resourceParent
+                }
+              },
+              linked: [
+                {
+                  name: 'evaluated',
+                  type: 'boolean',
+                  label: trans('evaluated', {}, 'path'),
+                  help: trans('evaluated_help', {}, 'path'),
+                  displayed: (step) => !isEmpty(step.primaryResource)
+                }, {
+                  name: 'showResourceHeader',
+                  type: 'boolean',
+                  label: trans('show_resource_header'),
+                  displayed: (step) => !isEmpty(step.primaryResource)
+                }
+              ]
             }
           ]
         }, {
@@ -99,35 +124,6 @@ const EditorStep = props =>
           ]
         }, {
           icon: 'fa fa-fw fa-folder',
-          title: trans('primary_resource', {}, 'path'),
-          fields: [
-            {
-              name: 'primaryResource',
-              type: 'resource',
-              label: trans('resource'),
-              hideLabel: true,
-              options: {
-                embedded: true,
-                showHeader: true,
-                picker: {
-                  current : props.resourceParent
-                }
-              }
-            }, {
-              name: 'evaluated',
-              type: 'boolean',
-              label: trans('evaluated', {}, 'path'),
-              help: trans('evaluated_help', {}, 'path'),
-              displayed: (step) => !isEmpty(step.primaryResource)
-            }, {
-              name: 'showResourceHeader',
-              type: 'boolean',
-              label: trans('show_resource_header'),
-              displayed: (step) => !isEmpty(step.primaryResource)
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-folder-o',
           title: trans('secondary_resources', {}, 'path'),
           fields: [
             {

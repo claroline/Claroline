@@ -1,5 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {PageSimple} from '#/main/app/page/components/simple'
@@ -10,9 +12,10 @@ import {
   PageActions,
   MoreAction
 } from '#/main/core/layout/page'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_WALKTHROUGHS} from '#/main/app/overlays/walkthrough/modals/walkthroughs'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {getWalkthroughs} from '#/main/core/tools/home/walkthroughs'
@@ -22,6 +25,7 @@ import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {Tabs} from '#/main/core/tools/home/components/tabs'
 
 import {EditorForm} from '#/main/core/tools/home/editor/components/form'
+import {selectors} from '#/main/core/tools/home/editor/store/selectors'
 
 const EditorTab = props =>
   <PageSimple
@@ -42,7 +46,6 @@ const EditorTab = props =>
         tabs={props.tabs}
         create={() => props.createTab(props.currentContext, props.administration, props.currentUser, props.tabs.length, (path) => props.history.push(props.path+path))}
         currentContext={props.currentContext}
-        editing={true}
       />
 
       <PageActions>
@@ -87,10 +90,30 @@ const EditorTab = props =>
       }
 
       {props.readOnly &&
-        <WidgetGrid
-          currentContext={props.currentContext}
-          widgets={props.widgets}
-        />
+        <FormData
+          name={selectors.FORM_NAME}
+          dataPart={`[${props.currentTabIndex}]`}
+          buttons={true}
+          lock={props.currentTab ? {
+            id: props.currentTab.id,
+            className: 'Claroline\\CoreBundle\\Entity\\Tab\\HomeTab'
+          } : undefined}
+          target={[props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
+            context: props.currentContext.type,
+            contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.uuid : get(props.currentUser, 'id')
+          }]}
+          sections={[]}
+          cancel={{
+            type: LINK_BUTTON,
+            target: `${props.path}/${props.currentTab ? props.currentTab.slug : ''}`,
+            exact: true
+          }}
+        >
+          <WidgetGrid
+            currentContext={props.currentContext}
+            widgets={props.widgets}
+          />
+        </FormData>
       }
 
       {!props.readOnly &&
@@ -103,7 +126,6 @@ const EditorTab = props =>
           widgets={props.widgets}
           administration={props.administration}
           tabs={props.tabs}
-          roles={props.roles}
 
           update={props.updateTab}
           move={props.moveTab}
@@ -122,7 +144,6 @@ EditorTab.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
-  roles: T.array,
   currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
   currentTabIndex: T.number.isRequired,

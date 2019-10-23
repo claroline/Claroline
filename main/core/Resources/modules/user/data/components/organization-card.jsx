@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/content/card/components/data'
@@ -14,7 +15,7 @@ const OrganizationCard = props =>
     title={props.data.name}
     subtitle={props.data.code}
     flags={[
-      props.data.meta.default && ['fa fa-check', trans('default')]
+      get(props.data, 'meta.default', false) && ['fa fa-check', trans('default')]
     ].filter(flag => !!flag)}
   />
 

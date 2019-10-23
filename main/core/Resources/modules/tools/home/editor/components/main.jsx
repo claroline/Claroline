@@ -31,7 +31,7 @@ const EditorMain = props =>
 
           // tab does not exist
           // let's redirection open the first available
-          routeProps.history.replace(props.path)
+          routeProps.history.replace(props.path+'/edit')
 
           return null
         }

@@ -74,21 +74,6 @@ class RegistrationController
     }
 
     /**
-     * Displays the user self-registration form.
-     *
-     * @EXT\Route("", name="claro_user_registration")
-     * @EXT\Template("ClarolineCoreBundle:user:registration.html.twig")
-     *
-     * @return array
-     */
-    public function indexAction()
-    {
-        $this->checkAccess();
-
-        return [];
-    }
-
-    /**
      * @EXT\Route("/activate/{hash}", name="claro_security_activate_user")
      *
      * @param string $hash

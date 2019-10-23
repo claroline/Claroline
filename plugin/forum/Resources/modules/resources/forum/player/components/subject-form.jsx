@@ -126,7 +126,6 @@ const SubjectFormComponent = (props) => {
             level={3}
             displayLevel={2}
             name={`${selectors.STORE_NAME}.subjects.form`}
-            className="content-container"
             sections={[
               {
                 title: trans('general'),

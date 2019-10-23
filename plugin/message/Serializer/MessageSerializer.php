@@ -5,9 +5,16 @@ namespace Claroline\MessageBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\GroupSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Claroline\MessageBundle\Manager\MessageManager;
@@ -19,34 +26,53 @@ class MessageSerializer
 
     /** @var ObjectManager */
     private $om;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var MessageManager */
     private $manager;
-
     /** @var UserSerializer */
     private $userSerializer;
+    /** @var GroupSerializer */
+    private $groupSerializer;
+    /** @var WorkspaceSerializer */
+    private $workspaceSerializer;
+
+    /** @var GroupRepository */
+    private $groupRepo;
+    /** @var UserRepository */
+    private $userRepo;
+    /** @var WorkspaceRepository */
+    private $workspaceRepo;
 
     /**
      * ParametersSerializer constructor.
      *
      * @param ObjectManager         $om
-     * @param MessageManager        $manager
      * @param TokenStorageInterface $tokenStorage
+     * @param MessageManager        $manager
      * @param UserSerializer        $userSerializer
+     * @param GroupSerializer       $groupSerializer
+     * @param WorkspaceSerializer   $workspaceSerializer
      */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         MessageManager $manager,
-        UserSerializer $userSerializer
+        UserSerializer $userSerializer,
+        GroupSerializer $groupSerializer,
+        WorkspaceSerializer $workspaceSerializer
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->manager = $manager;
+
         $this->userSerializer = $userSerializer;
+        $this->groupSerializer = $groupSerializer;
+        $this->workspaceSerializer = $workspaceSerializer;
+
+        $this->groupRepo = $om->getRepository(Group::class);
+        $this->userRepo = $om->getRepository(User::class);
+        $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
 
     public function getClass()
@@ -72,22 +98,31 @@ class MessageSerializer
         }
 
         $data = [
-          'id' => $message->getUuid(),
-          'object' => $message->getObject(),
-          'content' => $message->getContent(),
-          'to' => $message->getTo(),
-          'meta' => [
-            'date' => DateNormalizer::normalize($message->getDate()),
-            'read' => $userMessage->isRead(),
-            'removed' => $userMessage->isRemoved(),
-            'sent' => $userMessage->isSent(),
-            'umuuid' => $userMessage->getUuid(),
-          ],
+            'id' => $message->getUuid(),
+            'object' => $message->getObject(),
+            'content' => $message->getContent(),
+            'from' => $message->getSender() ?
+                $this->userSerializer->serialize($message->getSender(), [Options::SERIALIZE_MINIMAL]) :
+                ['username' => $message->getSenderUsername()],
+            'to' => $message->getTo(),
+            'meta' => [
+                'date' => DateNormalizer::normalize($message->getDate()),
+                'read' => $userMessage->isRead(),
+                'removed' => $userMessage->isRemoved(),
+                'sent' => $userMessage->isSent(),
+                'umuuid' => $userMessage->getUuid(),
+            ],
         ];
 
-        $data['from'] = $message->getSender() ?
-            $this->userSerializer->serialize($message->getSender(), [Options::SERIALIZE_MINIMAL]) :
-            ['username' => $message->getSenderUsername()];
+        // decode to string
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $receivers = $message->getReceivers();
+            $data['receivers'] = [
+                'users' => $this->userRepo->findByUsernames($receivers['users']),
+                'groups' => $this->groupRepo->findByNames($receivers['groups']),
+                'workspaces' => $this->workspaceRepo->findByCodes($receivers['workspaces']),
+            ];
+        }
 
         if (in_array(Options::IS_RECURSIVE, $options)) {
             $data['children'] = array_map(function (Message $child) use ($options) {
@@ -122,34 +157,25 @@ class MessageSerializer
             $message->setSender($currentUser);
         }
 
-        //build the "to" string here
-        //; is the separator
-        //{} for groups
-        //[] for workspaces
-        $receivers = [];
+        if (isset($data['receivers'])) {
+            $users = isset($data['receivers']['users']) ? $data['receivers']['users'] : [];
+            $groups = isset($data['receivers']['groups']) ? $data['receivers']['groups'] : [];
+            $workspaces = isset($data['receivers']['workspaces']) ? $data['receivers']['workspaces'] : [];
 
-        if (isset($data['toGroups'])) {
-            $receivers = array_merge(array_map(function ($group) {
-                return '{'.$group['name'].'}';
-            }, $data['toGroups']), $receivers);
-        }
-
-        if (isset($data['toUsers'])) {
-            $receivers = array_merge(array_map(function ($user) {
-                return $user['username'];
-            }, $data['toUsers']), $receivers);
-        }
-
-        if (isset($data['toWorkspaces'])) {
-            $receivers = array_merge(array_map(function ($workspace) {
-                return '['.$workspace['code'].']';
-            }, $data['toWorkspaces']), $receivers);
-        }
-
-        $receiversString = implode(';', $receivers);
-
-        if ('' !== $receiversString && !$message->getTo()) {
-            $message->setTo($receiversString);
+            $message->setReceivers(
+                // users
+                array_map(function (array $user) {
+                    return $user['username'];
+                }, $users),
+                // groups
+                array_map(function (array $group) {
+                    return $group['name'];
+                }, $groups),
+                // workspaces
+                array_map(function (array $workspace) {
+                    return $workspace['code'];
+                }, $workspaces)
+            );
         }
 
         return $message;

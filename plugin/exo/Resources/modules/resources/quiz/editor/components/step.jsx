@@ -25,7 +25,7 @@ const EditorStep = props => {
 
   return (
     <Fragment>
-      <h3 className="h2 step-title">
+      <h3 className="h2 h-title">
         {numbering &&
           <span className="h-numbering">{numbering}</span>
         }

@@ -13,7 +13,7 @@ import {
 } from '#/main/core/layout/table/components/table'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
-import {MODAL_USER_MESSAGE} from '#/main/core/user/modals/message'
+import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 class StepDetailsModal extends Component {
   constructor(props) {
@@ -93,12 +93,12 @@ class StepDetailsModal extends Component {
             style={{marginTop: 10}}
             primary={true}
             disabled={0 === this.state.selection.length}
-            modal={[MODAL_USER_MESSAGE, {
+            modal={[MODAL_MESSAGE, {
               to: this.state.selection
             }]}
           >
             <span className="fa fa-fw fa-envelope icon-with-text-right" />
-            {trans('send_message')}
+            {trans('send-message', {}, 'actions')}
           </ModalButton>
         </div>
       </Modal>

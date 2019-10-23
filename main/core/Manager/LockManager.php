@@ -59,7 +59,7 @@ class LockManager
 
     public function isLocked($class, $uuid)
     {
-        $lock = $this->getLock();
+        $lock = $this->getLock($class, $uuid);
 
         return $lock && $lock->isLocked();
     }

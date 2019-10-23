@@ -435,7 +435,7 @@ class WorkspaceRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findWorkspacesByCode(array $codes)
+    public function findByCodes(array $codes)
     {
         $dql = '
             SELECT w

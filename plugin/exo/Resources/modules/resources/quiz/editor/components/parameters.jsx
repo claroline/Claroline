@@ -33,7 +33,7 @@ const EditorParameters = props => {
 
   return (
     <Fragment>
-      <h3 className="h2 step-title">
+      <h3 className="h2 h-title">
         {constants.NUMBERING_NONE !== props.numberingType &&
           <span className="h-numbering">
             <span className="fa fa-cog" />

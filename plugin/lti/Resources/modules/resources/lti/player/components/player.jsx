@@ -54,7 +54,7 @@ class PlayerComponent extends Component {
 
         <div
           id="frameLti"
-          className="content-container claro-iframe-content-container"
+          className="claro-iframe-content-container"
           style={this.props.ltiResource.ratio ?
             {
               position: 'relative',

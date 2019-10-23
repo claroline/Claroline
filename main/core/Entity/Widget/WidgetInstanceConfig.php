@@ -27,7 +27,8 @@ class WidgetInstanceConfig
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance",
-     *     inversedBy="widgetInstanceConfigs"
+     *     inversedBy="widgetInstanceConfigs",
+     *     cascade={"persist", "remove"}
      * )
      * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
      */

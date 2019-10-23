@@ -77,7 +77,7 @@ const Step = props =>
       <img className="step-poster img-responsive" alt={props.title} src={asset(props.poster.url)} />
     }
 
-    <h3 className="h2 step-title">
+    <h3 className="h2 h-title step-title">
       {props.numbering &&
         <span className="h-numbering">{props.numbering}</span>
       }

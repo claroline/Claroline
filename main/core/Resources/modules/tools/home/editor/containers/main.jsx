@@ -13,12 +13,12 @@ const EditorMain = withRouter(
   connect(
     (state) => ({
       path: toolSelectors.path(state),
+      currentContext: toolSelectors.context(state),
       currentUser: securitySelectors.currentUser(state),
-      currentContext: selectors.context(state),
       administration: selectors.administration(state),
+
       readOnly: editorSelectors.readOnly(state),
       tabs: editorSelectors.editorTabs(state),
-      roles: selectors.roles(state),
       widgets: editorSelectors.widgets(state),
       currentTabIndex: editorSelectors.currentTabIndex(state),
       currentTabTitle: editorSelectors.currentTabTitle(state),

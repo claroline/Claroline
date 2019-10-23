@@ -42,6 +42,7 @@ const Requirements = (props) =>
             modal: [MODAL_ROLES, {
               url: ['apiv2_workspace_list_roles', {id: props.workspace.uuid}],
               title: trans('add_roles'),
+              filters: [],
               selectAction: (selectedRoles) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('create', {}, 'actions'),

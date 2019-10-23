@@ -11,7 +11,7 @@ import {selectors} from '#/plugin/path/resources/path/editor/store'
 
 const EditorParameters = props =>
   <Fragment>
-    <h3 className="h2 parameters-title">
+    <h3 className="h2 h-title">
       {constants.NUMBERING_NONE !== get(props.path, 'display.numbering') &&
         <span className="h-numbering">
           <span className="fa fa-cog" />

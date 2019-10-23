@@ -15,24 +15,37 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Repository\GroupRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MessageManager
 {
+    /** @var MailManager */
     private $mailManager;
+    /** @var ObjectManager */
     private $om;
-    private $groupRepo;
-    private $messageRepo;
-    private $userMessageRepo;
-    private $userRepo;
-    private $workspaceRepo;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var GroupRepository */
+    private $groupRepo;
+    /** @var UserRepository */
+    private $userRepo;
+    /** @var WorkspaceRepository */
+    private $workspaceRepo;
+
     /**
-     * Constructor.
+     * MessageManager constructor.
+     *
+     * @param MailManager           $mailManager
+     * @param ObjectManager         $om
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         MailManager $mailManager,
@@ -42,104 +55,74 @@ class MessageManager
         $this->mailManager = $mailManager;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
-        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
-        $this->messageRepo = $om->getRepository('ClarolineMessageBundle:Message');
-        $this->userMessageRepo = $om->getRepository('ClarolineMessageBundle:UserMessage');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+
+        $this->groupRepo = $om->getRepository(Group::class);
+        $this->userRepo = $om->getRepository(User::class);
+        $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
 
     /**
      * Create a message.
      *
-     * @param $content      The message content
-     * @param $object       The message object
-     * @param User[] $users  The users receiving the message
-     * @param null   $sender The user sending the message
-     * @param null   $parent The message parent (is it's a discussion)
+     * @param string $content The message content
+     * @param string $object  The message object
+     * @param User[] $users   The users receiving the message
+     * @param null   $sender  The user sending the message
+     * @param null   $parent  The message parent (is it's a discussion)
      *
      * @return Message
      */
     public function create($content, $object, array $users, $sender = null, $parent = null)
     {
         $message = new Message();
+
         $message->setContent($content);
         $message->setParent($parent);
         $message->setObject($object);
         $message->setSender($sender);
-        $stringTo = '';
 
-        foreach ($users as $user) {
-            $stringTo .= $user->getUsername().';';
-        }
-
-        $message->setTo($stringTo);
+        $message->setReceivers(array_map(function (User $user) {
+            return $user->getUsername();
+        }, $users));
 
         return $message;
     }
 
     /**
-     * @param \Claroline\MessageBundle\Entity\Message $message
-     * @param bool setAsSent
+     * @param Message $message
+     * @param bool    $setAsSent
+     * @param bool    $sendMail
      *
-     * @return \Claroline\MessageBundle\Entity\Message
+     * @return Message
      */
-    public function send(
-        Message $message,
-        $setAsSent = true,
-        $sendMail = true
-    ) {
-        $receiversString = $message->getTo();
-
-        if (';' === substr($receiversString, -1, 1)) {
-            $receiversString = substr_replace($receiversString, '', -1);
-        }
-
-        $receiversNames = explode(';', $receiversString);
-        $usernames = [];
-        $groupNames = [];
-        $workspaceCodes = [];
+    public function send(Message $message, $setAsSent = true, $sendMail = true)
+    {
+        /** @var User[] $userReceivers */
         $userReceivers = [];
+        /** @var Group[] $groupReceivers */
         $groupReceivers = [];
+        /** @var Workspace[] $workspaceReceivers */
         $workspaceReceivers = [];
 
-        //split the string of target into different array.
-        foreach ($receiversNames as $receiverName) {
-            if ('{' === substr($receiverName, 0, 1)) {
-                $groupNames[] = trim($receiverName, '{}');
-            } else {
-                if ('[' === substr($receiverName, 0, 1)) {
-                    $workspaceCodes[] = trim($receiverName, '[]');
-                } else {
-                    $usernames[] = $receiverName;
-                }
-            }
+        $receivers = $message->getReceivers();
+        if (count($receivers['users']) > 0) {
+            $userReceivers = $this->userRepo->findByUsernames($receivers['users']);
         }
 
-        //get the different entities from the freshly created array.
-        if (count($usernames) > 0) {
-            $userReceivers = $this->userRepo->findByUsernames($usernames);
+        if (count($receivers['groups']) > 0) {
+            $groupReceivers = $this->groupRepo->findByNames($receivers['groups']);
         }
 
-        if (count($groupNames) > 0) {
-            $groupReceivers = $this->groupRepo->findGroupsByNames($groupNames);
+        if (count($receivers['workspaces']) > 0) {
+            $workspaceReceivers = $this->workspaceRepo->findByCodes($receivers['workspaces']);
         }
-
-        if (count($workspaceCodes) > 0) {
-            $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
-        }
-
-        if (null !== $message->getParent()) {
-            $message->setParent($message->getParent());
-        }
-
-        $this->om->persist($message);
 
         if ($setAsSent && $message->getSender()) {
             $userMessage = new UserMessage();
             $userMessage->setIsSent(true);
             $userMessage->setUser($message->getSender());
             $userMessage->setMessage($message);
+
             $this->om->persist($userMessage);
         }
 
@@ -165,12 +148,14 @@ class MessageManager
 
         $ids = [];
 
-        $filteredUsers = array_filter($userReceivers, function ($user) use (&$ids) {
+        $filteredUsers = array_filter($userReceivers, function (User $user) use (&$ids) {
             if (!in_array($user->getId(), $ids)) {
                 $ids[] = $user->getId();
 
                 return true;
             }
+
+            return false;
         });
 
         foreach ($filteredUsers as $filteredUser) {
@@ -183,9 +168,10 @@ class MessageManager
                 $mailNotifiedUsers[] = $filteredUser;
             }
         }
-        $replyToMail = !empty($message->getSender()) ? $message->getSender()->getEmail() : null;
 
         if ($sendMail) {
+            $replyToMail = !empty($message->getSender()) ? $message->getSender()->getEmail() : null;
+
             $this->mailManager->send(
                 $message->getObject(),
                 $message->getContent(),
@@ -200,38 +186,6 @@ class MessageManager
         $this->om->flush();
 
         return $message;
-    }
-
-    /**
-     * Generates a string containing the usernames from a list of users.
-     *
-     * @param \Claroline\CoreBundle\Entity\User[]      $receivers
-     * @param \Claroline\CoreBundle\Entity\Group[]     $groups
-     * @param \Claroline\CoreBundle\Entity\Workspace[] $workspaces
-     *
-     * @return string
-     */
-    public function generateStringTo(array $receivers, array $groups, array $workspaces)
-    {
-        $usernames = [];
-
-        foreach ($receivers as $receiver) {
-            $usernames[] = $receiver->getUsername();
-        }
-
-        $string = implode(';', $usernames);
-
-        foreach ($groups as $group) {
-            $el = '{'.$group->getName().'}';
-            $string .= '' === $string ? $el : ';'.$el;
-        }
-
-        foreach ($workspaces as $workspace) {
-            $el = '['.$workspace->getCode().']';
-            $string .= '' === $string ? $el : ';'.$el;
-        }
-
-        return $string;
     }
 
     public function sendMessageToAbstractRoleSubject(

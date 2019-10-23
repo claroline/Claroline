@@ -6,7 +6,7 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
 import {selectors} from '#/plugin/message/tools/messaging/store/selectors'
-import {MESSAGE_LOAD, IS_REPLY} from '#/plugin/message/tools/messaging/store/actions'
+import {MESSAGE_LOAD} from '#/plugin/message/tools/messaging/store/actions'
 
 const reducer = combineReducers({
   contacts: makeListReducer(`${selectors.STORE_NAME}.contacts`, {}, {
@@ -31,12 +31,8 @@ const reducer = combineReducers({
     })
   }),
 
-  messageForm : makeFormReducer(`${selectors.STORE_NAME}.messageForm`, {}, {
-    reply: makeReducer(false, {
-      [IS_REPLY]: () => true
-    })
-  }),
-  currentMessage: makeReducer({}, {
+  messageForm : makeFormReducer(`${selectors.STORE_NAME}.messageForm`),
+  currentMessage: makeReducer(null, {
     [MESSAGE_LOAD]: (state, action) => action.message
   })
 })

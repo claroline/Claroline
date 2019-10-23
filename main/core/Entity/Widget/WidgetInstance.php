@@ -51,7 +51,8 @@ class WidgetInstance
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig",
-     *     mappedBy="widgetInstance"
+     *     mappedBy="widgetInstance",
+     *     cascade={"persist", "remove"}
      * )
      *
      * @var WidgetInstanceConfig[]
@@ -113,7 +114,7 @@ class WidgetInstance
      *
      * @param WidgetContainer $container
      */
-    public function setContainer(WidgetContainer $container)
+    public function setContainer(WidgetContainer $container = null)
     {
         $this->container = $container;
     }

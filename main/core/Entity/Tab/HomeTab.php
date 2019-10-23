@@ -38,6 +38,8 @@ class HomeTab
 
     /**
      * @ORM\Column(nullable=false)
+     *
+     * @var string
      */
     private $type;
 
@@ -46,6 +48,8 @@ class HomeTab
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
+     *
+     * @var User
      */
     private $user;
 
@@ -54,24 +58,30 @@ class HomeTab
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
+     *
+     * @var Workspace
      */
     private $workspace = null;
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="HomeTabConfig",
-     *     mappedBy="homeTab"
+     *     targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTabConfig",
+     *     mappedBy="homeTab",
+     *     cascade={"persist", "remove"}
      * )
+     *
+     * @var HomeTabConfig[]|ArrayCollection
      */
     private $homeTabConfigs;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
-     *     mappedBy="homeTab"
+     *     mappedBy="homeTab",
+     *     cascade={"persist", "remove"}
      * )
      *
-     * @var WidgetContainer[]
+     * @var WidgetContainer[]|ArrayCollection
      */
     private $widgetContainers;
 
@@ -106,6 +116,9 @@ class HomeTab
         $this->user = $user;
     }
 
+    /**
+     * @return Workspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;
@@ -122,6 +135,25 @@ class HomeTab
     public function getWidgetContainers()
     {
         return $this->widgetContainers;
+    }
+
+    /**
+     * @param string $containerId
+     *
+     * @return WidgetContainer|null
+     */
+    public function getWidgetContainer($containerId)
+    {
+        $found = null;
+
+        foreach ($this->widgetContainers as $container) {
+            if ($container->getUuid() === $containerId) {
+                $found = $container;
+                break;
+            }
+        }
+
+        return $found;
     }
 
     public function addWidgetContainer(WidgetContainer $widgetContainer)
@@ -141,5 +173,19 @@ class HomeTab
     public function getHomeTabConfigs()
     {
         return $this->homeTabConfigs;
+    }
+
+    public function addHomeTabConfig(HomeTabConfig $config)
+    {
+        if (!$this->homeTabConfigs->contains($config)) {
+            $this->homeTabConfigs->add($config);
+        }
+    }
+
+    public function removeHomeTabConfig(HomeTabConfig $config)
+    {
+        if ($this->homeTabConfigs->contains($config)) {
+            $this->homeTabConfigs->removeElement($config);
+        }
     }
 }

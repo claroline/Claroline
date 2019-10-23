@@ -1,15 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
 const MessageModal = props =>
   <FormDataModal
-    {...props}
-    icon="fa fa-fw fa-paper-plane-o"
-    title={trans('send_message')}
-    saveButtonText={trans('send')}
+    {...omit(props, 'to', 'send')}
+    icon="fa fa-fw fa-paper-plane"
+    title={trans('new_message', {}, 'message')}
+    saveButtonText={trans('send', {}, 'actions')}
     save={(message) => props.send(props.to, message)}
     sections={[
       {

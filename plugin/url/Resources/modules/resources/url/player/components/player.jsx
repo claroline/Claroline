@@ -25,7 +25,7 @@ class PlayerComponent extends Component {
     if ('iframe' === this.props.url.mode) {
       return (
         <div
-          className="content-container claro-iframe-content-container"
+          className="claro-iframe-content-container"
           style={this.props.url.ratio ?
             {
               position: 'relative',

@@ -11,7 +11,7 @@ const PlayerStep = props => {
 
   return (
     <div className="current-step">
-      <h3 className="h2 step-title">
+      <h3 className="h2 h-title">
         {numbering &&
           <span className="h-numbering">{numbering}</span>
         }

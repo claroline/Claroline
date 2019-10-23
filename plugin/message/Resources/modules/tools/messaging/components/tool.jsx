@@ -3,17 +3,17 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 import {MODAL_MESSAGING_PARAMETERS} from '#/plugin/message/tools/messaging/modals/parameters'
 
 import {Contacts} from '#/plugin/message/tools/messaging/components/contacts'
 import {ReceivedMessages} from '#/plugin/message/tools/messaging/components/received-messages'
 import {SentMessages} from '#/plugin/message/tools/messaging/components/sent-messages'
 import {DeletedMessages} from '#/plugin/message/tools/messaging/components/deleted-messages'
-import {NewMessage} from '#/plugin/message/tools/messaging/components/new-message'
 import {Message} from '#/plugin/message/tools/messaging/components/message'
 
 const MessagingTool = (props) =>
@@ -22,10 +22,10 @@ const MessagingTool = (props) =>
     actions={[
       {
         name: 'send',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-paper-plane',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-plus',
         label: trans('send-message', {}, 'actions'),
-        target: props.path + '/new',
+        modal: [MODAL_MESSAGE],
         primary: true
       }, {
         name: 'add-contact',
@@ -56,8 +56,7 @@ const MessagingTool = (props) =>
           {path: '/received', render: () => trans('messages_received', {}, 'message')},
           {path: '/sent',     render: () => trans('messages_sent', {}, 'message')},
           {path: '/deleted',  render: () => trans('messages_removed', {}, 'message')},
-          {path: '/contacts', render: () => trans('contacts', {}, 'message')},
-          {path: '/new',      render: () => trans('new_message', {}, 'message')}
+          {path: '/contacts', render: () => trans('contacts', {}, 'message')}
         ]}
       />
     }
@@ -81,17 +80,9 @@ const MessagingTool = (props) =>
           path: '/deleted',
           component: DeletedMessages
         }, {
-          path: '/new',
-          component: NewMessage,
-          onEnter: () => props.newMessage()
-        }, {
           path: '/message/:id?',
           component: Message,
-          onEnter: (params) => {
-            props.openMessage(params.id)
-            props.newMessage(params.id)
-            props.setAsReply()
-          }
+          onEnter: (params) => props.openMessage(params.id)
         }
       ]}
     />
@@ -101,9 +92,7 @@ MessagingTool.propTypes = {
   path: T.string.isRequired,
 
   addContacts: T.func.isRequired,
-  openMessage: T.func.isRequired,
-  newMessage: T.func.isRequired,
-  setAsReply: T.func.isRequired
+  openMessage: T.func.isRequired
 }
 
 export {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
@@ -22,7 +22,7 @@ const PathCurrent = props => {
   }
 
   return (
-    <div className="content-container">
+    <Fragment>
       <ProgressBar
         value={Math.floor(((currentIndex+1) / props.all.length) * 100)}
         size="xs"
@@ -60,7 +60,7 @@ const PathCurrent = props => {
           }
         </nav>
       }
-    </div>
+    </Fragment>
   )
 }
 

@@ -13,7 +13,6 @@ import {Message as MessageTypes} from '#/plugin/message/prop-types'
 
 // actions
 export const MESSAGE_LOAD = 'MESSAGE_LOAD'
-export const IS_REPLY = 'IS_REPLY'
 
 // actions creators
 export const actions = {}
@@ -59,7 +58,7 @@ actions.newMessage = (id = null) => {
 
 actions.deleteMessages = (messages) => ({
   [API_REQUEST]: {
-    url: ['apiv2_message_user_remove', {ids: messages.map(message => message.id)}],
+    url: ['apiv2_message_hard_delete', {ids: messages.map(message => message.meta.umuuid)}],
     request: {
       method: 'DELETE'
     },
@@ -91,30 +90,30 @@ actions.restoreMessages = (messages) => ({
   }
 })
 
-actions.setAsReply = makeActionCreator(IS_REPLY)
 actions.loadMessage = makeActionCreator(MESSAGE_LOAD, 'message')
 
-actions.fetchMessage = (id) => ({
+actions.openMessage = (id) => (dispatch) => dispatch({
   [API_REQUEST]: {
+    silent: true,
     url: ['apiv2_message_root', {id}],
-    success: (data, dispatch) => {
+    success: (data) => {
       dispatch(actions.loadMessage(data))
+      if (!data.meta.read) {
+        dispatch(actions.markedAsReadWhenOpen(data.meta.umuuid))
+      }
     }
   }
 })
 
 actions.markedAsReadWhenOpen = (id) => ({
   [API_REQUEST]: {
+    silent: true,
     url: ['apiv2_message_read', {ids: [id]}],
     request: {
       method: 'PUT'
     }
   }
 })
-
-actions.openMessage = (id) => (dispatch) => {
-  dispatch(actions.fetchMessage(id)).then((data) => dispatch(actions.markedAsReadWhenOpen(data.meta.umuuid)))
-}
 
 actions.readMessages = (messages) => ({
   [API_REQUEST]: {

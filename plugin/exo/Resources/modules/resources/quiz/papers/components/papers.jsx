@@ -105,7 +105,7 @@ const Papers = props =>
         {
           name: 'delete',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash',
+          icon: 'fa fa-fw fa-trash-o',
           label: trans('delete', {}, 'actions'),
           displayed: props.admin,
           dangerous: true,

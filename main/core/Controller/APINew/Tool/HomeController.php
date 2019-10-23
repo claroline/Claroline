@@ -17,17 +17,12 @@ use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Manager\LockManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @EXT\Route("/home")
@@ -38,8 +33,6 @@ class HomeController extends AbstractApiController
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var TranslatorInterface */
-    private $translator;
     /** @var FinderProvider */
     private $finder;
     /** @var Crud */
@@ -54,7 +47,6 @@ class HomeController extends AbstractApiController
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om
-     * @param TranslatorInterface           $translator
      * @param FinderProvider                $finder
      * @param Crud                          $crud
      * @param LockManager                   $lockManager
@@ -63,7 +55,6 @@ class HomeController extends AbstractApiController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        TranslatorInterface $translator,
         FinderProvider $finder,
         Crud $crud,
         LockManager $lockManager,
@@ -71,7 +62,6 @@ class HomeController extends AbstractApiController
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
-        $this->translator = $translator;
         $this->finder = $finder;
         $this->crud = $crud;
         $this->lockManager = $lockManager;
@@ -88,41 +78,14 @@ class HomeController extends AbstractApiController
      */
     public function homeAction()
     {
-        $tabs = $this->finder->search(
-            HomeTab::class,
-            ['filters' => ['type' => HomeTab::TYPE_HOME]]
-        );
-
-        $tabs = array_filter($tabs['data'], function ($data) {
-            return $data !== [];
-        });
-        $orderedTabs = [];
-
-        foreach ($tabs as $tab) {
-            $orderedTabs[$tab['position']] = $tab;
-        }
-        ksort($orderedTabs);
-
-        if (0 === count($orderedTabs)) {
-            $defaultTab = new HomeTab();
-            $defaultTab->setType(HomeTab::TYPE_HOME);
-            $this->om->persist($defaultTab);
-            $defaultHomeTabConfig = new HomeTabConfig();
-            $defaultHomeTabConfig->setHomeTab($defaultTab);
-            $defaultHomeTabConfig->setName($this->translator->trans('home', [], 'platform'));
-            $defaultHomeTabConfig->setLongTitle($this->translator->trans('home', [], 'platform'));
-            $defaultHomeTabConfig->setLocked(true);
-            $defaultHomeTabConfig->setTabOrder(0);
-            $this->om->persist($defaultHomeTabConfig);
-            $this->om->flush();
-            $orderedTabs[] = $this->serializer->serialize($defaultTab);
-        }
+        $tabs = $this->finder->search(HomeTab::class, [
+            'filters' => ['type' => HomeTab::TYPE_HOME],
+        ]);
 
         return new JsonResponse([
-            'editable' => $this->authorization->isGranted('ROLE_ADMIN') ||
-                $this->authorization->isGranted('ROLE_HOME_MANAGER'),
+            'editable' => $this->authorization->isGranted('ROLE_ADMIN') || $this->authorization->isGranted('ROLE_HOME_MANAGER'),
             'administration' => false,
-            'tabs' => array_values($orderedTabs),
+            'tabs' => $tabs['data'],
         ]);
     }
 
@@ -142,8 +105,6 @@ class HomeController extends AbstractApiController
         $tabs = $this->decodeRequest($request);
 
         $ids = [];
-        $containerIds = [];
-        $instanceIds = [];
         $updated = [];
 
         foreach ($tabs as $tab) {
@@ -154,13 +115,6 @@ class HomeController extends AbstractApiController
             } else {
                 $updated[] = $this->om->getObject($tab, HomeTab::class);
             }
-
-            foreach ($tab['widgets'] as $container) {
-                $containerIds[] = $container['id'];
-                foreach ($container['contents'] as $instance) {
-                    $instanceIds[] = $instance['id'];
-                }
-            }
         }
 
         // retrieve existing tabs for the context to remove deleted ones
@@ -168,7 +122,7 @@ class HomeController extends AbstractApiController
         $installedTabs = HomeTab::TYPE_HOME === $context ?
             $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_HOME]) :
             $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
-                'user' => $contextId,
+                'type' => HomeTab::TYPE_DESKTOP,
             ] : [
                 $context => $contextId,
             ]);
@@ -178,7 +132,7 @@ class HomeController extends AbstractApiController
             return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getType();
         });
 
-        $this->cleanDatabase($installedTabs, $instanceIds, $containerIds, $ids);
+        $this->cleanDatabase($installedTabs, $ids);
 
         return new JsonResponse(array_values(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);
@@ -200,20 +154,11 @@ class HomeController extends AbstractApiController
         $tabs = $this->decodeRequest($request);
 
         $ids = [];
-        $containerIds = [];
-        $instanceIds = [];
         $updated = [];
 
         foreach ($tabs as $tab) {
             $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
             $ids[] = $tab['id']; // will be used to determine deleted tabs
-
-            foreach ($tab['widgets'] as $container) {
-                $containerIds[] = $container['id'];
-                foreach ($container['contents'] as $instance) {
-                    $instanceIds[] = $instance['id'];
-                }
-            }
         }
 
         // retrieve existing tabs for the context to remove deleted ones
@@ -223,7 +168,7 @@ class HomeController extends AbstractApiController
             ['type' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN]
         );
 
-        $this->cleanDatabase($installedTabs, $instanceIds, $containerIds, $ids);
+        $this->cleanDatabase($installedTabs, $ids);
 
         return new JsonResponse(array_values(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);
@@ -237,42 +182,21 @@ class HomeController extends AbstractApiController
      *     options={"method_prefix"=false}
      * )
      * @EXT\Method("GET")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User $currentUser
      *
      * @return JsonResponse
      */
-    public function userTabsFetchAction(User $currentUser)
+    public function userTabsFetchAction()
     {
-        $allTabs = $this->finder->search(HomeTab::class, ['filters' => ['user' => $currentUser->getUuid()]]);
+        $adminTabs = $this->finder->search(HomeTab::class, [
+            'filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP],
+        ]);
 
-        // Order tabs. We want :
-        //   - Administration tabs to be at first
-        //   - Tabs to be ordered by position
-        // For this, we separate administration tabs and user ones, order them by position
-        // and then concat all tabs with admin in first (I don't have a easier solution to achieve this)
-
-        $adminTabs = [];
-        $userTabs = [];
-
-        foreach ($allTabs['data'] as $tab) {
-            if (!empty($tab)) {
-                // we use the define position for array keys for easier sort
-                if (HomeTab::TYPE_ADMIN_DESKTOP === $tab['type']) {
-                    $adminTabs[$tab['position']] = $tab;
-                } else {
-                    $userTabs[$tab['position']] = $tab;
-                }
-            }
-        }
-
-        // order tabs by position
-        ksort($adminTabs);
-        ksort($userTabs);
+        $userTabs = $this->finder->search(HomeTab::class, [
+            'filters' => ['type' => HomeTab::TYPE_DESKTOP],
+        ]);
 
         // generate the final list of tabs
-        $orderedTabs = array_merge(array_values($adminTabs), array_values($userTabs));
+        $orderedTabs = array_merge(array_values($adminTabs['data']), array_values($userTabs['data']));
 
         // we rewrite tab position because an admin and a user tab may have the same position
         foreach ($orderedTabs as $index => &$tab) {
@@ -311,38 +235,8 @@ class HomeController extends AbstractApiController
         return new JsonResponse(array_values($orderedTabs));
     }
 
-    private function cleanDatabase(array $installedTabs, array $instanceIds, array $containerIds, array $ids)
+    private function cleanDatabase(array $installedTabs, array $ids)
     {
-        //ready to remove instances aswell. We must do it here or we might remove them too early in the serializer
-        //ie: if we move them from the top container to the bottom one
-        $installedInstances = [];
-        $installedContainers = [];
-
-        foreach ($installedTabs as $installedTab) {
-            $installedInstances = array_merge($installedInstances, $this->finder->fetch(
-              WidgetInstance::class, ['homeTab' => $installedTab->getUuid()]
-          ));
-            $installedContainers = array_merge($installedContainers, $this->finder->fetch(
-              WidgetContainer::class, ['homeTab' => $installedTab->getUuid()]
-          ));
-        }
-
-        foreach ($installedInstances as $instance) {
-            if (!in_array($instance->getUuid(), $instanceIds)) {
-                $this->crud->delete($instance);
-            } else {
-                $this->om->refresh($instance);
-            }
-        }
-
-        foreach ($installedContainers as $container) {
-            if (!in_array($container->getUuid(), $containerIds)) {
-                $this->crud->delete($container);
-            } else {
-                $this->om->refresh($container);
-            }
-        }
-
         foreach ($installedTabs as $installedTab) {
             $this->lockManager->unlock(HomeTab::class, $installedTab->getUuid());
 

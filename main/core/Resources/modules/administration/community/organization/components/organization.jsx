@@ -131,7 +131,7 @@ const OrganizationForm = props =>
               selectAction: (users) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addManagers(props.organization.id, users)
+                callback: () => props.addManagers(props.organization.id, users.map(user => user.id))
               })
             }]
           }
@@ -172,7 +172,7 @@ const OrganizationForm = props =>
               selectAction: (workspaces) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addWorkspaces(props.organization.id, workspaces)
+                callback: () => props.addWorkspaces(props.organization.id, workspaces.map(workspace => workspace.uuid))
               })
             }]
           }
@@ -209,7 +209,7 @@ const OrganizationForm = props =>
               selectAction: (users) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addUsers(props.organization.id, users)
+                callback: () => props.addUsers(props.organization.id, users.map(user => user.id))
               })
             }]
           }
@@ -242,7 +242,7 @@ const OrganizationForm = props =>
         actions={[
           {
             name: 'add',
-            type: CALLBACK_BUTTON,
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
             modal: [MODAL_GROUPS, {
@@ -250,7 +250,7 @@ const OrganizationForm = props =>
               selectAction: (groups) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addGroups(props.organization.id, groups)
+                callback: () => props.addGroups(props.organization.id, groups.map(group => group.id))
               })
             }]
           }
