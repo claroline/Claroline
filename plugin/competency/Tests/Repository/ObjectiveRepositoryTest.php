@@ -17,26 +17,6 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $this->om->flush();
     }
 
-    public function testFindByUser()
-    {
-        $objectives = $this->context['objectives'];
-        $users = $this->context['users'];
-
-        $u1Result = $this->repo->findByUser($users['u1']);
-        $u2Result = $this->repo->findByUser($users['u2']);
-        $u3Result = $this->repo->findByUser($users['u3']);
-
-        $this->assertEquals(1, count($u1Result));
-        $this->assertEquals($objectives['o1']->getId(), $u1Result[0]['id']);
-
-        $this->assertEquals(2, count($u2Result));
-        $this->assertEquals($objectives['o1']->getId(), $u1Result[0]['id']);
-        $this->assertEquals($objectives['o2']->getId(), $u2Result[1]['id']);
-
-        $this->assertEquals(1, count($u3Result));
-        $this->assertEquals($objectives['o2']->getId(), $u3Result[0]['id']);
-    }
-
     public function testFindByCompetencyAndUser()
     {
         $comps = $this->context['competencies'];

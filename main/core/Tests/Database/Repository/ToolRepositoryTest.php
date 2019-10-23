@@ -46,17 +46,10 @@ class ToolRepositoryTest extends RepositoryTestCase
         $this->assertEquals('tool_2', $result[0]->getName());
     }
 
-    public function testFindDesktopUndisplayedToolsByUser()
-    {
-        $result = self::$repo->findDesktopUndisplayedToolsByUser(self::get('john'));
-        $this->assertEquals(16, count($result));
-        $this->assertEquals(self::get('tool_1'), $result[0]);
-    }
-
     public function testFindUndisplayedToolsByWorkspace()
     {
         $result = self::$repo->findUndisplayedToolsByWorkspace(self::get('ws_1'));
-        $this->assertEquals(11, count($result));
+        $this->assertEquals(9, count($result));
     }
 
     public function testFindDisplayedToolsByWorkspace()

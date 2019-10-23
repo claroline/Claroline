@@ -1127,7 +1127,9 @@ class RoleManager
         $i = $workspaceIdx;
         $this->om->startFlushSuite();
         for ($batch = 0; $batch < ceil(($totalWs - $workspaceIdx) / $batchSize); ++$batch) {
-            $workspaces = $this->workspaceRepo->findAllPaginated($batch * $batchSize + $workspaceIdx, $batchSize);
+            //I hope it is correct for the offset/limit
+            $workspaces = $this->om->getRepository(Role::class)->findBy([], null, $batch * $batchSize + $workspaceIdx, $batchSize);
+
             $nb = count($workspaces);
             $this->log("Fetched {$nb} workspaces for checking");
             $j = 1;

@@ -289,7 +289,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $workspace->setCreator($user);
 
         $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneByName('activity');
+            ->findOneByName('text');
 
         $node = new ResourceNode();
         $node->setName($name);

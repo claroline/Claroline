@@ -183,6 +183,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $workspace = new Workspace();
         $workspace->setName($name);
         $workspace->setCode($name.'Code');
+        $workspace->setDisplayable(false);
 
         self::create($name, $workspace);
     }

@@ -35,10 +35,7 @@ class Persister
         $user->setEmail($username.'@email.com');
         $this->om->persist($user);
         if (!$this->userRole) {
-            $this->userRole = new Role();
-            $this->userRole->setName('ROLE_USER');
-            $this->userRole->setTranslationKey('user');
-            $this->om->persist($this->userRole);
+            $this->userRole = $this->om->getRepository(Role::class)->findOneByTranslationKey('user');
         }
         $user->addRole($this->userRole);
         $workspace = new Workspace();
@@ -58,9 +55,7 @@ class Persister
     {
         $lesson = new Lesson();
         if (!$this->lessonType) {
-            $this->lessonType = new ResourceType();
-            $this->lessonType->setName('icap_lesson');
-            $this->om->persist($this->lessonType);
+            $this->lessonType = $this->om->getRepository(ResourceType::class)->findOneByName('icap_lesson');
         }
 
         $node = new ResourceNode();
