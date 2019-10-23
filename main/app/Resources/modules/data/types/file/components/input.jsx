@@ -115,10 +115,10 @@ class FileComponent extends Component {
           </div>
         </button>
 
-        {!isEmpty(this.props.value) &&
+        {this.props.value &&
           <div className="file-thumbnails">
             <FileThumbnail
-              type={getType(this.props.value.mimeType)}
+              type={getType(this.props.value.mimeType || this.props.value.type)}
               data={this.props.value}
               canEdit={false}
               canExpand={false}
