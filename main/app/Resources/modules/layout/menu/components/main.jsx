@@ -40,13 +40,22 @@ const MenuMain = props =>
         <Toolbar
           className="list-group"
           buttonName="list-group-item"
-          actions={props.tools.map((tool) => ({
-            name: tool.name,
-            type: LINK_BUTTON,
-            icon: `fa fa-fw fa-${tool.icon}`,
-            label: trans(tool.name, {}, 'tools'),
-            target: tool.path
-          }))}
+          actions={props.tools
+            .map((tool) => ({
+              name: tool.name,
+              type: LINK_BUTTON,
+              icon: `fa fa-fw fa-${tool.icon}`,
+              label: trans(tool.name, {}, 'tools'),
+              target: tool.path
+            }))
+            .sort((a, b) => {
+              if (a.label > b.label) {
+                return 1
+              }
+
+              return -1
+            })
+          }
         />
       </MenuSection>
     }
