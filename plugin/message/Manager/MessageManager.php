@@ -183,6 +183,8 @@ class MessageManager
             );
         }
 
+        $this->om->persist($message);
+
         $this->om->flush();
 
         return $message;
