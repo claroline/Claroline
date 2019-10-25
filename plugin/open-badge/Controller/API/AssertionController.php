@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
+use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -148,9 +149,13 @@ class AssertionController extends AbstractCrudController
         $badge = $assertion->getBadge();
         $user = $assertion->getRecipient();
 
-        return new JsonResponse([
-            'name' => $badge->getName().'_'.$user->getFirstName().$user->getLastName(),
-            'content' => $this->manager->generateCertificate($assertion),
-        ]);
+        $dompdf = new Dompdf();
+        $dompdf->set_option('isHtml5ParserEnabled', true);
+        $dompdf->set_option('isRemoteEnabled', true);
+        $dompdf->loadHtml($this->manager->generateCertificate($assertion));
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream($badge->getName().'_'.$user->getFirstName().$user->getLastName());
     }
 }

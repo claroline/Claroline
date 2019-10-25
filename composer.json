@@ -24,6 +24,7 @@
         "doctrine/doctrine-bundle": "1.9.1",
         "doctrine/migrations": "1.7.2",
         "doctrine/orm": "2.6.3",
+        "dompdf/dompdf": "*",
         "friendsofsymfony/jsrouting-bundle": "2.2.0",
         "gedmo/doctrine-extensions": "2.4.35",
         "hwi/oauth-bundle": "0.5.3",

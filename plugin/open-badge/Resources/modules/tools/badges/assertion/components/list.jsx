@@ -2,9 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -73,17 +70,7 @@ const Assertions = connect(
   }),
   (dispatch) => ({
     download(assertion) {
-      dispatch(actions.download(assertion)).then(pdfContent => {
-        html2pdf()
-          .set({
-            filename:    pdfContent.name,
-            image:       { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 4 },
-            enableLinks: true
-          })
-          .from(pdfContent.content, 'string')
-          .save()
-      })
+      dispatch(actions.download(assertion))
     }
   })
 )(AssertionsList)
