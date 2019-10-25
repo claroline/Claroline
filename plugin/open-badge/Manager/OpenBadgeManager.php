@@ -10,6 +10,7 @@ use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 class OpenBadgeManager
 {
@@ -42,13 +43,15 @@ class OpenBadgeManager
         ObjectManager $om,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
-        $webDir
+        $webDir,
+        EngineInterface $templating
     ) {
         $this->assets = $assets;
         $this->om = $om;
         $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
         $this->webDir = $webDir;
+        $this->templating = $templating;
     }
 
     public function addAssertion(BadgeClass $badge, User $user)
@@ -146,6 +149,8 @@ class OpenBadgeManager
             'issuer_country' => $location ? $location->getCountry() : null,
         ];
 
-        return $this->templateManager->getTemplate('badge_certificate', $placeholders);
+        $content = $this->templateManager->getTemplate('badge_certificate', $placeholders);
+
+        return $this->templating->render('ClarolineOpenBadgeBundle::pdf.html.twig', ['content' => $content]);
     }
 }
