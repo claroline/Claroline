@@ -623,6 +623,7 @@
     "is_visible": "Is visible",
     "keep_me_logged_in": "Keep me logged in",
     "keep_user": "Keep this user",
+    "keywords_help": "List of keywords separated by a comma that is used in the page header.",
     "language": "Language",
     "language_select": "Select a language",
     "lastName": "Last name",

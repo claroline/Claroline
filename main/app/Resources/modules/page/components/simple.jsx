@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from 'classnames'
+import {Helmet} from 'react-helmet'
 
 import {theme} from '#/main/app/config'
 import {implementPropTypes} from '#/main/app/prop-types'
@@ -26,6 +27,21 @@ const PageSimple = props =>
       embedded: props.embedded
     })}
   >
+    <Helmet>
+      {!props.embedded && props.header && props.header.title &&
+        <title>{props.header.title}</title>
+      }
+      {!props.embedded && props.header && props.header.description &&
+        <meta name="description" content={props.header.description} />
+      }
+      {!props.embedded && props.header && props.header.keywords &&
+        <meta name="keywords" content={props.header.keywords} />
+      }
+      {props.styles.map(styleName =>
+        <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
+      )}
+    </Helmet>
+
     {!props.embedded &&
       <PageBreadcrumb
         path={props.path}
@@ -36,10 +52,6 @@ const PageSimple = props =>
     }
 
     {props.children}
-
-    {props.styles.map(styleName =>
-      <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
-    )}
   </PageWrapper>
 
 implementPropTypes(PageSimple, PageSimpleTypes)

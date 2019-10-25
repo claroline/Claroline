@@ -11,6 +11,7 @@ const Workspace = {
     poster: T.string,
     meta: T.shape({
       slug: T.string,
+      description: T.string,
       creator: T.shape({
         // TODO : user types
       }),

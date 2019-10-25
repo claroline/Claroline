@@ -15,6 +15,10 @@ const ToolPage = props =>
     title={trans(props.name, {}, 'tools')}
     showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
     path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
+    header={{
+      title: `${trans(props.name, {}, 'tools')}${'workspace' === props.currentContext.type ? ' - ' + props.currentContext.data.code : ''}`,
+      description: 'workspace' === props.currentContext.type && props.currentContext.data.meta ? props.currentContext.data.meta.description : null
+    }}
 
     {...omit(props, 'name', 'currentContext', 'path')}
   >

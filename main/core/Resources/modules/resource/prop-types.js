@@ -31,7 +31,6 @@ const ResourceNode = {
     id: T.string.isRequired,
     autoId: T.number.isRequired, // for retro-compatibility with old api, will be removed in future.
     name: T.string.isRequired,
-    description: T.string,
     poster: T.shape({
       url: T.string
     }),
@@ -51,6 +50,7 @@ const ResourceNode = {
       type: T.string.isRequired,
       mimeType: T.string.isRequired,
       published: T.bool.isRequired,
+      description: T.string,
       views: T.number,
       creator: T.shape({
 

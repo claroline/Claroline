@@ -84,6 +84,10 @@ class ResourcePage extends Component {
     return (
       <ToolPage
         className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
+        header={{
+          title: this.props.resourceNode.name,
+          description: this.props.resourceNode.meta ? this.props.resourceNode.meta.description : null
+        }}
         styles={this.props.styles}
         embedded={this.props.embedded}
         showHeader={this.props.embedded ? this.props.showHeader : true}

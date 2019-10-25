@@ -634,6 +634,7 @@
     "is_visible": "Visible par les utilisateurs",
     "keep_me_logged_in": "Se souvenir de moi",
     "keep_user": "Conserver cet utilisateur",
+    "keywords_help": "Liste de mots-clés séparés par une virgule utilisée dans l'en-tête de la page.",
     "language": "Langue",
     "language_select": "Sélectionnez une langue",
     "lastName": "Nom",

@@ -20,6 +20,10 @@ const PlayerTab = props =>
       label: props.currentTab.title,
       target: '/' // this don't work but it's never used as current tab is always last for now
     }] : [])}
+    header={{
+      title: `${trans('home', {}, 'tools')}${'workspace' === props.currentContext.type ? ' - ' + props.currentContext.data.code : ''}`,
+      description: 'workspace' === props.currentContext.type && props.currentContext.data.meta ? props.currentContext.data.meta.description : null
+    }}
   >
     <PageHeader
       className={props.currentTab && props.currentTab.centerTitle ? 'text-center' : ''}

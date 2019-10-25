@@ -68,6 +68,11 @@ const ResourceFormComponent = (props) =>
             name: 'meta.published',
             label: trans('publish', {}, 'actions'),
             type: 'boolean'
+          }, {
+            name: 'meta.keywords',
+            type: 'string',
+            label: trans('keywords'),
+            help: trans('keywords_help')
           }
         ]
       }, {
