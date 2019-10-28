@@ -3,9 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import merge from 'lodash/merge'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -40,34 +37,14 @@ const EntriesComponent = props =>
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-print',
             label: trans('print_entry', {}, 'clacoform'),
-            displayed: props.canGeneratePdf,
+            displayed: true,
             callback: () => {
               if (1 < rows.length) {
                 // collection
-                rows.forEach(row => props.downloadEntryPdf(row.id).then(pdfContent => {
-                  html2pdf()
-                    .set({
-                      filename: pdfContent.name,
-                      image: { type: 'jpeg', quality: 1 },
-                      html2canvas: { scale: 2 },
-                      enableLinks: true
-                    })
-                    .from(pdfContent.content, 'string')
-                    .save()
-                }))
+                rows.forEach(row => props.downloadEntryPdf(row.id))
               } else {
                 // object
-                props.downloadEntryPdf(rows[0].id).then(pdfContent => {
-                  html2pdf()
-                    .set({
-                      filename: pdfContent.name,
-                      image: { type: 'jpeg', quality: 1 },
-                      html2canvas: { scale: 2 },
-                      enableLinks: true
-                    })
-                    .from(pdfContent.content, 'string')
-                    .save()
-                })
+                props.downloadEntryPdf(rows[0].id)
               }
             },
             scope: ['object', 'collection'],

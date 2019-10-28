@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Dompdf\Dompdf;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -521,10 +522,17 @@ class ClacoFormController
     {
         $this->clacoFormManager->checkEntryAccess($entry);
 
-        return new JsonResponse([
-            'name' => $entry->getTitle(),
-            'content' => $this->generatePdfForEntry($entry, $user),
-        ]);
+        $name = $entry->getTitle();
+        $content = $this->generatePdfForEntry($entry, $user);
+
+        $dompdf = new Dompdf();
+        $dompdf->set_option('isHtml5ParserEnabled', true);
+        $dompdf->set_option('isRemoteEnabled', true);
+        $dompdf->loadHtml($content);
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $dompdf->stream($name);
     }
 
     /**
