@@ -103,11 +103,6 @@ const WorkspaceFormComponent = (props) =>
               type: 'locale',
               displayed: (workspace) => workspace.meta && workspace.meta.forceLang
             }]
-          }, {
-            name: 'meta.keywords',
-            type: 'string',
-            label: trans('keywords'),
-            help: trans('keywords_help')
           }
         ]
       }, {

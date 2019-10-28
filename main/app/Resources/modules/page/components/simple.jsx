@@ -34,9 +34,6 @@ const PageSimple = props =>
       {!props.embedded && props.header && props.header.description &&
         <meta name="description" content={props.header.description} />
       }
-      {!props.embedded && props.header && props.header.keywords &&
-        <meta name="keywords" content={props.header.keywords} />
-      }
       {props.styles.map(styleName =>
         <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
       )}
