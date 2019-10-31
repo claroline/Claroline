@@ -35,6 +35,11 @@ class CorrectionSerializer
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
+    public function getName()
+    {
+        return 'dropzone_correction';
+    }
+
     /**
      * @param Correction $correction
      *

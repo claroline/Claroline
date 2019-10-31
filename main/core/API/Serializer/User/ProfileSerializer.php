@@ -37,6 +37,11 @@ class ProfileSerializer
         $this->facetSerializer = $facetSerializer;
     }
 
+    public function getName()
+    {
+        return 'profile';
+    }
+
     /**
      * Serializes the profile configuration.
      *

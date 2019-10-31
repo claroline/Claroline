@@ -46,6 +46,11 @@ class ExerciseSerializer
         $this->itemManager = $itemManager;
     }
 
+    public function getName()
+    {
+        return 'exo_exercise';
+    }
+
     /**
      * Converts an Exercise into a JSON-encodable structure.
      *

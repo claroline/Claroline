@@ -11,6 +11,11 @@ class TaggedObjectSerializer
         return TaggedObject::class;
     }
 
+    public function getName()
+    {
+        return 'tagged_object';
+    }
+
     public function serialize(TaggedObject $taggedObject): array
     {
         return [

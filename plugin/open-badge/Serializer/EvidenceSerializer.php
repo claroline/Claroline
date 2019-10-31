@@ -21,6 +21,11 @@ class EvidenceSerializer
         $this->resourceNodeSerializer = $resourceNodeSerializer;
     }
 
+    public function getName()
+    {
+        return 'open_badge_evidence';
+    }
+
     /**
      * Serializes a Assertion entity.
      *

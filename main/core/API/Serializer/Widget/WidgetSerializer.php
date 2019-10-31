@@ -11,6 +11,11 @@ class WidgetSerializer
         return Widget::class;
     }
 
+    public function getName()
+    {
+        return 'widget';
+    }
+
     public function serialize(Widget $widget): array
     {
         return [

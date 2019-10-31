@@ -22,6 +22,11 @@ class PublicFileSerializer
         return PublicFile::class;
     }
 
+    public function getName()
+    {
+        return 'public_file';
+    }
+
     /**
      * Serializes a PublicFile entity.
      *

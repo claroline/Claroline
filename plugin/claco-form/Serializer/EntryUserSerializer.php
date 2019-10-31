@@ -37,6 +37,11 @@ class EntryUserSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'clacoform_entry_user';
+    }
+
     /**
      * @param array     $data
      * @param EntryUser $entryUser

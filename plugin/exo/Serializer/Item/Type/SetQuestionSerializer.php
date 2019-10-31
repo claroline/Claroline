@@ -29,6 +29,11 @@ class SetQuestionSerializer
         $this->contentSerializer = $contentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_set';
+    }
+
     /**
      * Converts a Set question into a JSON-encodable structure.
      *

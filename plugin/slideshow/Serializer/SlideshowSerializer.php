@@ -34,6 +34,11 @@ class SlideshowSerializer
         $this->fileSerializer = $fileSerializer;
     }
 
+    public function getName()
+    {
+        return 'slideshow';
+    }
+
     /**
      * @return string
      */

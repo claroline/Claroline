@@ -35,6 +35,11 @@ class SubjectSerializer
         return Subject::class;
     }
 
+    public function getName()
+    {
+        return 'forum_subject';
+    }
+
     /**
      * @return string
      */

@@ -12,6 +12,11 @@ class HostedBadgeSerializer
     {
     }
 
+    public function getName()
+    {
+        return 'open_badge_hosted_badge';
+    }
+
     public function serialize()
     {
         return [

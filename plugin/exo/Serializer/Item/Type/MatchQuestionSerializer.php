@@ -29,6 +29,11 @@ class MatchQuestionSerializer
         $this->contentSerializer = $contentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_match';
+    }
+
     /**
      * Converts a Match question into a JSON-encodable structure.
      *

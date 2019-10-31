@@ -25,6 +25,11 @@ class ApiTokenSerializer
         $this->om = $om;
     }
 
+    public function getName()
+    {
+        return 'api_token';
+    }
+
     /**
      * @param Options $options
      *

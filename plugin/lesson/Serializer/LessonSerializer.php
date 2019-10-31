@@ -29,6 +29,11 @@ class LessonSerializer
         $this->chapterRepository = $om->getRepository('IcapLessonBundle:Chapter');
     }
 
+    public function getName()
+    {
+        return 'lesson';
+    }
+
     /**
      * @return string
      */

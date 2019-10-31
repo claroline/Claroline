@@ -43,6 +43,11 @@ class NotificationSerializer
         return Notification::class;
     }
 
+    public function getName()
+    {
+        return 'notification';
+    }
+
     public function serialize(Notification $notification)
     {
         /** @var User $user */

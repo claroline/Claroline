@@ -101,6 +101,11 @@ class WorkspaceSerializer
         $this->resNodeSerializer = $resNodeSerializer;
     }
 
+    public function getName()
+    {
+        return 'workspace';
+    }
+
     /**
      * @return string
      */

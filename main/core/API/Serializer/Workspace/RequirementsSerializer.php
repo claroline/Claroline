@@ -35,6 +35,11 @@ class RequirementsSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'workspace_requirements';
+    }
+
     /**
      * Serializes an Requirements entity for the JSON api.
      *

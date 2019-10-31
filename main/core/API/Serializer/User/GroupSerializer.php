@@ -33,6 +33,11 @@ class GroupSerializer
         return Group::class;
     }
 
+    public function getName()
+    {
+        return 'group';
+    }
+
     /**
      * Serializes a Group entity.
      *

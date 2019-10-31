@@ -56,6 +56,11 @@ class SelectionQuestionSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_question_selection';
+    }
+
     /**
      * Converts raw data into a Selection question entity.
      *

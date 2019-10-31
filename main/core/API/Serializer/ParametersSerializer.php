@@ -58,6 +58,11 @@ class ParametersSerializer
         $this->archivePath = $archivePath;
     }
 
+    public function getName()
+    {
+        return 'parameters';
+    }
+
     public function serialize(array $options = [])
     {
         $data = $this->configHandler->getParameters();

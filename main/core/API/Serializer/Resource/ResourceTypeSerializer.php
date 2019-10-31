@@ -21,6 +21,11 @@ class ResourceTypeSerializer
         $this->actionManager = $actionManager;
     }
 
+    public function getName()
+    {
+        return 'resource_type';
+    }
+
     /**
      * Serializes a ResourceType entity for the JSON api.
      *

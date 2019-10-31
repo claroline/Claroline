@@ -19,4 +19,9 @@ class ToolSerializer
           'icon' => $tool->getClass(),
         ];
     }
+
+    public function getName()
+    {
+        return 'tool';
+    }
 }

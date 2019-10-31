@@ -59,6 +59,11 @@ class DocumentSerializer
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
     }
 
+    public function getName()
+    {
+        return 'dropzone_document';
+    }
+
     /**
      * @param Document $document
      * @param array    $options

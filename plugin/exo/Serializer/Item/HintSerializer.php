@@ -35,6 +35,11 @@ class HintSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_hint';
+    }
+
     /**
      * Converts raw data into a Hint entity.
      *

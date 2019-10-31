@@ -28,6 +28,11 @@ class ClozeQuestionSerializer
         $this->keywordSerializer = $keywordSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_cloze';
+    }
+
     /**
      * Converts a Cloze question into a JSON-encodable structure.
      *

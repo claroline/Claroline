@@ -27,6 +27,11 @@ class ChoiceQuestionSerializer
         $this->contentSerializer = $contentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_choice';
+    }
+
     /**
      * Converts a Choice question into a JSON-encodable structure.
      *

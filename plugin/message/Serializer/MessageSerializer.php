@@ -80,6 +80,11 @@ class MessageSerializer
         return Message::class;
     }
 
+    public function getName()
+    {
+        return 'message';
+    }
+
     /**
      * Serializes a Message entity.
      *

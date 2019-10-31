@@ -26,6 +26,11 @@ class OrganizationSerializer
         $this->om = $om;
     }
 
+    public function getName()
+    {
+        return 'organization';
+    }
+
     /**
      * Serializes an Organization entity for the JSON api.
      *

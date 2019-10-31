@@ -337,7 +337,14 @@ class Crud
         $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
         /** @var CrudEvent $specific */
         $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+        $isAllowed = $specific->isAllowed();
+        $serializer = $this->serializer->get(get_class($args[0]));
 
-        return $generic->isAllowed() && $specific->isAllowed();
+        if (method_exists($serializer, 'getName')) {
+            $shortName = 'crud.'.$when.'.'.$action.'.'.$serializer->getName();
+            $specific = $this->dispatcher->dispatch($shortName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+        }
+
+        return $generic->isAllowed() && $specific->isAllowed() && $isAllowed;
     }
 }

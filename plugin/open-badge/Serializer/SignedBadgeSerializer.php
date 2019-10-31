@@ -13,6 +13,11 @@ class SignedBadgeSerializer
     {
     }
 
+    public function getName()
+    {
+        return 'open_badge_signed_badge';
+    }
+
     public function serialize(Assertion $assertion)
     {
         return [

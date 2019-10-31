@@ -21,6 +21,11 @@ class CommentSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'clacoform_comment';
+    }
+
     /**
      * Serializes a Comment entity for the JSON api.
      *

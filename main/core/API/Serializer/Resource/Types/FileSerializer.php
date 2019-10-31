@@ -40,6 +40,11 @@ class FileSerializer
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    public function getName()
+    {
+        return 'file';
+    }
+
     /**
      * Serializes a File resource entity for the JSON api.
      *

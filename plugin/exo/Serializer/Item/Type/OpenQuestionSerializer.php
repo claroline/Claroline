@@ -32,6 +32,11 @@ class OpenQuestionSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_question_open';
+    }
+
     /**
      * Converts raw data into an Open question entity.
      *

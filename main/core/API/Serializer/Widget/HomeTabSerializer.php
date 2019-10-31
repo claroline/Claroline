@@ -70,6 +70,11 @@ class HomeTabSerializer
         $this->publicFileSerializer = $publicFileSerializer;
     }
 
+    public function getName()
+    {
+        return 'home_tab';
+    }
+
     public function getClass()
     {
         return HomeTab::class;

@@ -72,6 +72,11 @@ class TeamSerializer
         $this->workspaceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace');
     }
 
+    public function getName()
+    {
+        return 'team';
+    }
+
     /**
      * @param Team $team
      *

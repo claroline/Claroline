@@ -24,6 +24,11 @@ class ShortcutsSerializer
         $this->roleSerializer = $roleSerializer;
     }
 
+    public function getName()
+    {
+        return 'workspace_shortcut';
+    }
+
     /**
      * Serializes a Workspace Shortcuts entity for the JSON api.
      *

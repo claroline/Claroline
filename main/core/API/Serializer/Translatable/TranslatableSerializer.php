@@ -30,6 +30,11 @@ class TranslatableSerializer
         $this->translations = $om->getRepository('ClarolineCoreBundle:ContentTranslation');
     }
 
+    public function getName()
+    {
+        return 'translatable_content';
+    }
+
     public function serialize(Content $content, array $options = [])
     {
         $translations = [];

@@ -21,6 +21,11 @@ class CriterionSerializer
         $this->dropzoneRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Dropzone');
     }
 
+    public function getName()
+    {
+        return 'dropzone_criterion';
+    }
+
     /**
      * @param Criterion $criterion
      *

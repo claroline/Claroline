@@ -20,6 +20,11 @@ class ObjectLockSerializer
         return ObjectLock::class;
     }
 
+    public function getName()
+    {
+        return 'object_lock';
+    }
+
     public function serialize(ObjectLock $lock): array
     {
         return [

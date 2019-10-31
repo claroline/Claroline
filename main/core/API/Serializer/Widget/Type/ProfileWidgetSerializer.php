@@ -27,6 +27,11 @@ class ProfileWidgetSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'profile_widget';
+    }
+
     /**
      * @return string
      */

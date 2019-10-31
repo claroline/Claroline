@@ -19,6 +19,11 @@ class ResourceWidgetSerializer
     /** @var ResourceNodeSerializer */
     private $nodeSerializer;
 
+    public function getName()
+    {
+        return 'resource_widget';
+    }
+
     /**
      * WidgetInstanceSerializer constructor.
      *

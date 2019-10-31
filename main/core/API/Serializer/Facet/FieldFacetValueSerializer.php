@@ -36,6 +36,11 @@ class FieldFacetValueSerializer
         $this->container = $container;
     }
 
+    public function getName()
+    {
+        return 'field_facet_value';
+    }
+
     /**
      * Serializes a FieldFacetValue entity for the JSON api.
      *

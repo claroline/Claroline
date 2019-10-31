@@ -20,6 +20,11 @@ class BookReferenceSerializer
         return BookReference::class;
     }
 
+    public function getName()
+    {
+        return 'book_reference';
+    }
+
     /**
      * Serializes a Book reference entity.
      *

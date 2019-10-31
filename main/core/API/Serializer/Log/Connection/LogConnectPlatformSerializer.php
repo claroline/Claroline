@@ -26,6 +26,11 @@ class LogConnectPlatformSerializer
         return LogConnectPlatform::class;
     }
 
+    public function getName()
+    {
+        return 'log_connect_platform';
+    }
+
     /**
      * @param LogConnectPlatform $log
      * @param array              $options

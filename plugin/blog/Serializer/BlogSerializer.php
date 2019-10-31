@@ -28,6 +28,11 @@ class BlogSerializer
         return Blog::class;
     }
 
+    public function getName()
+    {
+        return 'blog';
+    }
+
     /**
      * @return string
      */

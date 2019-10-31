@@ -27,6 +27,11 @@ class OrderingQuestionSerializer
         $this->contentSerializer = $contentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_ordering';
+    }
+
     /**
      * Converts an Ordering question into a JSON-encodable structure.
      *

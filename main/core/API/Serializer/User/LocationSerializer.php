@@ -40,6 +40,11 @@ class LocationSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'location';
+    }
+
     /**
      * Serialize a Location Entity.
      *

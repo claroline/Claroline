@@ -34,4 +34,9 @@ class LevelSerializer
 
         return $serialized;
     }
+
+    public function getName()
+    {
+        return 'competency_level';
+    }
 }

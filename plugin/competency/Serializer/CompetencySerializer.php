@@ -42,6 +42,11 @@ class CompetencySerializer
         $this->scaleRepo = $om->getRepository(Scale::class);
     }
 
+    public function getName()
+    {
+        return 'competency';
+    }
+
     /**
      * @return string
      */

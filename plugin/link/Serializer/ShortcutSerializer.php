@@ -38,6 +38,11 @@ class ShortcutSerializer
         return Shortcut::class;
     }
 
+    public function getName()
+    {
+        return 'shortcut';
+    }
+
     /**
      * Serializes a Shortcut resource entity for the JSON api.
      *

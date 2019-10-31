@@ -14,6 +14,11 @@ class SimpleWidgetSerializer
         return SimpleWidget::class;
     }
 
+    public function getName()
+    {
+        return 'simple_widget';
+    }
+
     public function serialize(SimpleWidget $widget, array $options = []): array
     {
         return [

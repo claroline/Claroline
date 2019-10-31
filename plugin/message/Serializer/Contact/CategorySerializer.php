@@ -43,6 +43,11 @@ class CategorySerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'message_contact_category';
+    }
+
     /**
      * @param array         $data
      * @param Category|null $category

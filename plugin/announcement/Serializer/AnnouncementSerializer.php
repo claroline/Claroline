@@ -80,6 +80,11 @@ class AnnouncementSerializer
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
+    public function getName()
+    {
+        return 'announcement';
+    }
+
     /**
      * @param Announcement $announce
      *

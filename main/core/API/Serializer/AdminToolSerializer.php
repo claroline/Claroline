@@ -27,4 +27,9 @@ class AdminToolSerializer
 
         return $serialized;
     }
+
+    public function getName()
+    {
+        return 'admin_tool';
+    }
 }

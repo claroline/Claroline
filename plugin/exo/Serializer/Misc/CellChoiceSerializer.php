@@ -36,6 +36,11 @@ class CellChoiceSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_cell_choice';
+    }
+
     /**
      * Converts raw data into a Keyword entity.
      *

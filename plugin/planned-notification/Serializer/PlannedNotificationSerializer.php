@@ -46,6 +46,11 @@ class PlannedNotificationSerializer
         return '#/plugin/planned-notification/planned-notification.json';
     }
 
+    public function getName()
+    {
+        return 'planned_notification';
+    }
+
     /**
      * @param PlannedNotification $notification
      *

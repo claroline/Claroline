@@ -28,6 +28,11 @@ class ThemeSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'theme';
+    }
+
     /**
      * Serializes a Theme entity for the JSON api.
      *

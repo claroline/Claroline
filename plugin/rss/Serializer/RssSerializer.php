@@ -30,6 +30,11 @@ class RssSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'rss_feed';
+    }
+
     public function getClass()
     {
         return RssFeed::class;

@@ -38,6 +38,11 @@ class ChapterSerializer
         return Chapter::class;
     }
 
+    public function getName()
+    {
+        return 'lesson_chapter';
+    }
+
     /**
      * @return string
      */

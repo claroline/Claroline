@@ -83,6 +83,11 @@ class ResourceNodeSerializer
         $this->serializer = $serializer;
     }
 
+    public function getName()
+    {
+        return 'resource_node';
+    }
+
     /**
      * Serializes a ResourceNode entity for the JSON api.
      *

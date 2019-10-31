@@ -24,6 +24,11 @@ class GradeSerializer
         $this->gradeRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Grade');
     }
 
+    public function getName()
+    {
+        return 'dropzone_grade';
+    }
+
     /**
      * @param Grade $grade
      *

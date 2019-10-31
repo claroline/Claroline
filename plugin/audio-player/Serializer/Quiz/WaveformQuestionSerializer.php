@@ -35,6 +35,11 @@ class WaveformQuestionSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'waveform_question';
+    }
+
     /**
      * Converts raw data into a Waveform question entity.
      *

@@ -45,6 +45,11 @@ class DropSerializer
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
+    public function getName()
+    {
+        return 'dropzone_drop';
+    }
+
     /**
      * @param Drop $drop
      *

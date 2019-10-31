@@ -39,6 +39,11 @@ class SectionSerializer
         $this->userRepo = $om->getRepository(User::class);
     }
 
+    public function getName()
+    {
+        return 'wiki_section';
+    }
+
     /**
      * @return string
      */

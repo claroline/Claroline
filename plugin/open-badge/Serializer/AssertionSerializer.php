@@ -52,6 +52,11 @@ class AssertionSerializer
         $this->identityObjectSerializer = $identityObjectSerializer;
     }
 
+    public function getName()
+    {
+        return 'open_badge_assertion';
+    }
+
     /**
      * Serializes a Assertion entity.
      *

@@ -85,6 +85,11 @@ class EntrySerializer
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
+    public function getName()
+    {
+        return 'clacoform_entry';
+    }
+
     /**
      * Serializes an Entry entity for the JSON api.
      *

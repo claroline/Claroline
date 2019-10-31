@@ -20,6 +20,11 @@ class EvaluationSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'workspace_evaluation';
+    }
+
     /**
      * Serializes an Evaluation entity for the JSON api.
      *

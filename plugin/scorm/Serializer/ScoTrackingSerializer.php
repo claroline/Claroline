@@ -37,6 +37,11 @@ class ScoTrackingSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'sco_tracking';
+    }
+
     /**
      * @param ScoTracking $scoTracking
      *

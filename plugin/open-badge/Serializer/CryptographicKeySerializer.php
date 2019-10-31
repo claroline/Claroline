@@ -27,6 +27,11 @@ class CryptographicKeySerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'open_badge_cryptographic_key';
+    }
+
     public function getClass()
     {
         return CryptographicKey::class;

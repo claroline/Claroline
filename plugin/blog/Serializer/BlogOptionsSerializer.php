@@ -38,6 +38,11 @@ class BlogOptionsSerializer
         return '#/plugin/blog/options.json';
     }
 
+    public function getName()
+    {
+        return 'blog_options';
+    }
+
     /**
      * @param Blog        $blog
      * @param BlogOptions $options

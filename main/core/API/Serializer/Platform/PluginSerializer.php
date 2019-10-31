@@ -32,6 +32,11 @@ class PluginSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'plugin';
+    }
+
     /**
      * Deserializes data into a Plugin entity.
      *

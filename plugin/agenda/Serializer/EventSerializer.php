@@ -57,6 +57,11 @@ class EventSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'event';
+    }
+
     /**
      * @param Event $event
      *

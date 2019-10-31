@@ -44,6 +44,11 @@ class DropCommentSerializer
         $this->userRepo = $om->getRepository(User::class);
     }
 
+    public function getName()
+    {
+        return 'dropzone_drop_comment';
+    }
+
     /**
      * @param DropComment $comment
      * @param array       $options

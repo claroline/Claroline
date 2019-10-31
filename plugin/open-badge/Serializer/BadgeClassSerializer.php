@@ -82,6 +82,11 @@ class BadgeClassSerializer
         $this->ruleSerializer = $ruleSerializer;
     }
 
+    public function getName()
+    {
+        return 'open_badge_badge';
+    }
+
     /**
      * Serializes a Group entity.
      *

@@ -36,6 +36,11 @@ class UserSerializer
         $this->fileSerializer = $fileSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_user';
+    }
+
     /**
      * Converts a User into a JSON-encodable structure.
      *

@@ -33,6 +33,11 @@ class PathSerializer
         return '#/plugin/path/path.json';
     }
 
+    public function getName()
+    {
+        return 'path';
+    }
+
     /**
      * @param Path  $path
      * @param array $options

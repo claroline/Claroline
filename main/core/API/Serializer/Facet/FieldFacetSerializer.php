@@ -28,6 +28,11 @@ class FieldFacetSerializer
         $this->fieldFacetChoiceRepo = $om->getRepository(FieldFacetChoice::class);
     }
 
+    public function getName()
+    {
+        return 'field_facet';
+    }
+
     /**
      * Serializes a FieldFacet entity for the JSON api.
      *

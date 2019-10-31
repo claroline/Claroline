@@ -29,6 +29,11 @@ class PairQuestionSerializer
         $this->contentSerializer = $contentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_pair';
+    }
+
     /**
      * Converts a Match question into a JSON-encodable structure.
      *

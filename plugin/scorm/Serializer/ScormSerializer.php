@@ -41,6 +41,11 @@ class ScormSerializer
         $this->scoRepo = $om->getRepository('Claroline\ScormBundle\Entity\Sco');
     }
 
+    public function getName()
+    {
+        return 'scorm';
+    }
+
     /**
      * @param Scorm $scorm
      *

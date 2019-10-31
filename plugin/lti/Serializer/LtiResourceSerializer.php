@@ -63,6 +63,11 @@ class LtiResourceSerializer
         $this->ltiAppRepo = $om->getRepository(LtiApp::class);
     }
 
+    public function getName()
+    {
+        return 'lesson_resource';
+    }
+
     /**
      * Serializes a LTI resource for the JSON api.
      *

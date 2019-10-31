@@ -39,6 +39,11 @@ class PaperSerializer
         $this->answerSerializer = $answerSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_paper';
+    }
+
     /**
      * Converts a Paper into a JSON-encodable structure.
      *

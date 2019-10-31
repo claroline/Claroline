@@ -19,6 +19,11 @@ class PanelFacetSerializer
         $this->ffSerializer = $ffSerializer;
     }
 
+    public function getName()
+    {
+        return 'panel_facet';
+    }
+
     /**
      * Serializes a FieldFacet entity for the JSON api.
      *

@@ -14,6 +14,11 @@ class ListWidgetSerializer
         return ListWidget::class;
     }
 
+    public function getName()
+    {
+        return 'list_widget';
+    }
+
     public function serialize(ListWidget $widget, array $options = []): array
     {
         // todo : find a way to merge with directory serializer

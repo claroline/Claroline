@@ -24,13 +24,18 @@ class ScheduledTaskSerializer
      * @param SerializerProvider $serializer
      */
     public function __construct(
-        ObjectManager  $om,
+        ObjectManager $om,
         WorkspaceSerializer $workspaceSerializer,
         UserSerializer $userSerializer
     ) {
         $this->om = $om;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
+    }
+
+    public function getName()
+    {
+        return 'scheduled_task';
     }
 
     /**

@@ -26,6 +26,11 @@ class TextSerializer
         return '#/main/core/text.json';
     }
 
+    public function getName()
+    {
+        return 'text';
+    }
+
     /**
      * Serializes a Text resource entity for the JSON api.
      *

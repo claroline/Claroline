@@ -45,6 +45,12 @@ class CompetencyAbilitySerializer
         $this->levelRepo = $om->getRepository(Level::class);
     }
 
+    public function getName()
+    {
+        //yes I know it's weird
+        return 'competency_competency_ability';
+    }
+
     /**
      * @return string
      */

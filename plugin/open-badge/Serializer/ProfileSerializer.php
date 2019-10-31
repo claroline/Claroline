@@ -19,6 +19,11 @@ class ProfileSerializer
         $this->om = $om;
     }
 
+    public function getName()
+    {
+        return 'open_badge_profile';
+    }
+
     public function serialize($el)
     {
         if (is_string($el)) {

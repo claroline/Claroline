@@ -15,6 +15,11 @@ class ImageSerializer
         $this->router = $router;
     }
 
+    public function getName()
+    {
+        return 'open_badge_image';
+    }
+
     public function serialize(PublicFile $file)
     {
         $context = $this->router->getContext();

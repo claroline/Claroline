@@ -109,6 +109,11 @@ class ClientSerializer
         $this->oauthManager = $oauthManager;
     }
 
+    public function getName()
+    {
+        return 'client';
+    }
+
     /**
      * Serializes required information for FrontEnd rendering.
      */

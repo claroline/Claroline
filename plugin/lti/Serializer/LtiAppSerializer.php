@@ -27,6 +27,11 @@ class LtiAppSerializer
         return '#/plugin/lti/app.json';
     }
 
+    public function getName()
+    {
+        return 'lti_app';
+    }
+
     /**
      * @param LtiApp $app
      * @param array  $options

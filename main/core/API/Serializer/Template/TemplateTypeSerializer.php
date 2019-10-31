@@ -31,4 +31,9 @@ class TemplateTypeSerializer
 
         return $serialized;
     }
+
+    public function getName()
+    {
+        return 'template_type';
+    }
 }

@@ -93,6 +93,11 @@ class ItemSerializer
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    public function getName()
+    {
+        return 'exo_item';
+    }
+
     /**
      * Converts a Item into a JSON-encodable structure.
      *

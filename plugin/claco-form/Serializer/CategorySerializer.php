@@ -48,6 +48,11 @@ class CategorySerializer
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
+    public function getName()
+    {
+        return 'clacoform_category';
+    }
+
     /**
      * Serializes a Category entity for the JSON api.
      *

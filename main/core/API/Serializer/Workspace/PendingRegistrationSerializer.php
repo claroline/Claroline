@@ -28,6 +28,11 @@ class PendingRegistrationSerializer
         return 'Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue';
     }
 
+    public function getName()
+    {
+        return 'workspace_registration_queue';
+    }
+
     /**
      * Serialize a user waiting for WS registration.
      *

@@ -28,6 +28,11 @@ class FieldValueSerializer
         $this->fieldFacetValueSerializer = $fieldFacetValueSerializer;
     }
 
+    public function getName()
+    {
+        return 'clacoform_field_value';
+    }
+
     /**
      * Serializes a FieldValue entity for the JSON api.
      *

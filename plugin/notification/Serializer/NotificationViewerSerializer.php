@@ -49,6 +49,11 @@ class NotificationViewerSerializer
         $this->notificationSerializer = $notificationSerializer;
     }
 
+    public function getName()
+    {
+        return 'notification_viewer';
+    }
+
     public function getClass()
     {
         return NotificationViewer::class;

@@ -32,6 +32,11 @@ class ResourceCommentSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'resource_commment';
+    }
+
     /**
      * Serializes a ResourceComment entity for the JSON api.
      *

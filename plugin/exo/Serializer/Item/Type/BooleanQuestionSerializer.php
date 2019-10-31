@@ -27,6 +27,11 @@ class BooleanQuestionSerializer
         $this->contentSerializer = $contentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_boolean';
+    }
+
     /**
      * Converts a Boolean question into a JSON-encodable structure.
      *

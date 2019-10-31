@@ -16,6 +16,11 @@ class AlignementObjectSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'open_badge_alignement_object';
+    }
+
     public function deserialize()
     {
     }

@@ -23,6 +23,11 @@ class DropzoneToolDocumentSerializer
         $this->documentRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Document');
     }
 
+    public function getName()
+    {
+        return 'dropzone_tool_document';
+    }
+
     /**
      * @param DropzoneToolDocument $dropzoneToolDocument
      *

@@ -44,6 +44,11 @@ class RevisionCommentSerializer
         $this->userRepo = $om->getRepository(User::class);
     }
 
+    public function getName()
+    {
+        return 'dropzone_revision_comment';
+    }
+
     /**
      * @param RevisionComment $comment
      * @param array           $options

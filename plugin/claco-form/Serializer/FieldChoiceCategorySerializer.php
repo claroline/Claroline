@@ -32,6 +32,11 @@ class FieldChoiceCategorySerializer
         $this->fieldRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Field');
     }
 
+    public function getName()
+    {
+        return 'clacoform_field_choice_category';
+    }
+
     /**
      * Serializes a FieldChoiceCategory entity for the JSON api.
      *

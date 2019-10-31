@@ -26,6 +26,11 @@ class EndorsementSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'open_badge_endorsement';
+    }
+
     public function getClass()
     {
         return Endorsement::class;

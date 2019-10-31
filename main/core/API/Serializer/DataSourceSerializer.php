@@ -22,4 +22,9 @@ class DataSourceSerializer
             'tags' => $dataSource->getTags(),
         ];
     }
+
+    public function getName()
+    {
+        return 'data_source';
+    }
 }

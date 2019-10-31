@@ -37,6 +37,11 @@ class ItemObjectSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_item_object';
+    }
+
     /**
      * Converts raw data into a ItemObject entity.
      *

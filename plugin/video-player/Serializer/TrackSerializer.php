@@ -52,6 +52,11 @@ class TrackSerializer
         return '#/plugin/video-player/track.json';
     }
 
+    public function getName()
+    {
+        return 'video_track';
+    }
+
     /**
      * @param Track $track
      *

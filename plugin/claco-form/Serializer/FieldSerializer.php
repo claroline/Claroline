@@ -52,6 +52,11 @@ class FieldSerializer
         $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
     }
 
+    public function getName()
+    {
+        return 'clacoform_field';
+    }
+
     /**
      * Serializes a Field entity for the JSON api.
      *

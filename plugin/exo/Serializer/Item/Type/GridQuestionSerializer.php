@@ -28,6 +28,11 @@ class GridQuestionSerializer
         $this->cellChoiceSerializer = $cellChoiceSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_grid';
+    }
+
     /**
      * Converts a Grid question into a JSON-encodable structure.
      *

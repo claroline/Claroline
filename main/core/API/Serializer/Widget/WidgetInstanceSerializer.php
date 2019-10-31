@@ -36,6 +36,11 @@ class WidgetInstanceSerializer
         $this->serializer = $serializer;
     }
 
+    public function getName()
+    {
+        return 'widget_instance';
+    }
+
     public function getClass()
     {
         return WidgetInstance::class;

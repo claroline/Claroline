@@ -18,6 +18,11 @@ class VerificationObjectSerializer
         $this->router = $router;
     }
 
+    public function getName()
+    {
+        return 'open_badge_verification_object';
+    }
+
     public function serialize(Assertion $assertion)
     {
         return [

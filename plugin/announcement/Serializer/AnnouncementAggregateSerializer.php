@@ -27,6 +27,11 @@ class AnnouncementAggregateSerializer
         $this->announcementSerializer = $announcementSerializer;
     }
 
+    public function getName()
+    {
+        return 'announcement_aggregate';
+    }
+
     public function getClass()
     {
         return AnnouncementAggregate::class;

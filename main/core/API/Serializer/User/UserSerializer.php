@@ -103,6 +103,11 @@ class UserSerializer extends GenericSerializer
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
+    public function getName()
+    {
+        return 'user';
+    }
+
     /**
      * @return string
      */

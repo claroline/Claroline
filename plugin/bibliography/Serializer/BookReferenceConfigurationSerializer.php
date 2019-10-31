@@ -30,6 +30,11 @@ class BookReferenceConfigurationSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'book_reference_configuration';
+    }
+
     /**
      * De-serializes a book reference configuration.
      *

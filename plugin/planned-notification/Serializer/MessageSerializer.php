@@ -31,6 +31,11 @@ class MessageSerializer
         return '#/plugin/planned-notification/message.json';
     }
 
+    public function getName()
+    {
+        return 'planned_notification_message';
+    }
+
     /**
      * @param Message $message
      *

@@ -14,6 +14,11 @@ class ProgressionWidgetSerializer
         return ProgressionWidget::class;
     }
 
+    public function getName()
+    {
+        return 'progression_widget';
+    }
+
     public function serialize(ProgressionWidget $widget, array $options = []): array
     {
         return [

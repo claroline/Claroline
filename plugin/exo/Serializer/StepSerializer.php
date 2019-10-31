@@ -31,6 +31,11 @@ class StepSerializer
         $this->itemSerializer = $itemSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_step';
+    }
+
     /**
      * Converts a Step into a JSON-encodable structure.
      *

@@ -64,6 +64,11 @@ class StepSerializer
         return '#/plugin/path/step.json';
     }
 
+    public function getName()
+    {
+        return 'path_step';
+    }
+
     /**
      * @param Step  $step
      * @param array $options

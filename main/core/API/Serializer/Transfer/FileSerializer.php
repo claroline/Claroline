@@ -30,6 +30,11 @@ class FileSerializer
         return File::class;
     }
 
+    public function getName()
+    {
+        return 'public_file';
+    }
+
     /**
      * Serializes a PublicFile entity.
      *

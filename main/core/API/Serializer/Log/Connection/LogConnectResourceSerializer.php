@@ -26,6 +26,11 @@ class LogConnectResourceSerializer
         return LogConnectResource::class;
     }
 
+    public function getName()
+    {
+        return 'log_connect_resource';
+    }
+
     /**
      * @param LogConnectResource $log
      * @param array              $options

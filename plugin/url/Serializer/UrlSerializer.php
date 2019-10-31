@@ -32,4 +32,9 @@ class UrlSerializer
 
         return $url;
     }
+
+    public function getName()
+    {
+        return 'url';
+    }
 }

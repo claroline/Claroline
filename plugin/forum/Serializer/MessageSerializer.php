@@ -58,6 +58,11 @@ class MessageSerializer
         return Message::class;
     }
 
+    public function getName()
+    {
+        return 'forum_message';
+    }
+
     /**
      * @return string
      */

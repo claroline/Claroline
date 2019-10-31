@@ -32,6 +32,11 @@ class ContentItemSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_question_content_item';
+    }
+
     /**
      * Converts raw data into a content item entity.
      *

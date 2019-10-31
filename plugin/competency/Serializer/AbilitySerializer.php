@@ -35,4 +35,9 @@ class AbilitySerializer
 
         return $serialized;
     }
+
+    public function getName()
+    {
+        return 'competency_ability';
+    }
 }

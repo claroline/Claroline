@@ -39,6 +39,11 @@ class FieldFacetChoiceSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'field_facet_choice';
+    }
+
     public function deserialize(array $data, FieldFacetChoice $choice, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $choice);

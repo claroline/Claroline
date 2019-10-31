@@ -53,6 +53,11 @@ class AnswerSerializer
         return $serialized;
     }
 
+    public function getName()
+    {
+        return 'exo_answer';
+    }
+
     /**
      * Converts raw data into a Answer entity.
      *

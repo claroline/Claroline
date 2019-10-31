@@ -34,6 +34,11 @@ class DropzoneToolSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'dropzone_tool';
+    }
+
     /**
      * Deserializes data into a Group entity.
      *

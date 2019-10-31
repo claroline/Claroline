@@ -26,6 +26,11 @@ class ContentSerializer
         $this->resourceContentSerializer = $resourceContentSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_content';
+    }
+
     /**
      * @param mixed $content
      * @param array $options

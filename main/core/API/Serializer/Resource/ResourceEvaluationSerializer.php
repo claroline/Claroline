@@ -18,6 +18,11 @@ class ResourceEvaluationSerializer
         $this->resourceUserEvaluationSerializer = $resourceUserEvaluationSerializer;
     }
 
+    public function getName()
+    {
+        return 'resource_evaluation';
+    }
+
     /**
      * Serializes a ResourceEvaluation entity for the JSON api.
      *

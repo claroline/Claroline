@@ -34,6 +34,11 @@ class ContactSerializer
         $this->userRepo = $om->getRepository(User::class);
     }
 
+    public function getName()
+    {
+        return 'message_contact';
+    }
+
     public function serialize(Contact $contact)
     {
         return [

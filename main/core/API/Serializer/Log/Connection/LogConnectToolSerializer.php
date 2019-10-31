@@ -26,6 +26,11 @@ class LogConnectToolSerializer
         return LogConnectTool::class;
     }
 
+    public function getName()
+    {
+        return 'log_connect_tool';
+    }
+
     /**
      * @param LogConnectTool $log
      * @param array          $options

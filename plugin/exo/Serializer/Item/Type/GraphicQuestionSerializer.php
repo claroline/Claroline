@@ -28,6 +28,11 @@ class GraphicQuestionSerializer
         $this->fileUtils = $fileUtils;
     }
 
+    public function getName()
+    {
+        return 'exo_question_graphic';
+    }
+
     /**
      * Converts a Graphic question into a JSON-encodable structure.
      *

@@ -57,6 +57,11 @@ class ResourceContentSerializer
         $this->resourceManager = $resourceManager;
     }
 
+    public function getName()
+    {
+        return 'exo_resource_content';
+    }
+
     /**
      * @param ResourceNode $node
      * @param array        $options

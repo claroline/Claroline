@@ -38,6 +38,11 @@ class ContributionSerializer
         $this->userSerializer = $userSerializer;
     }
 
+    public function getName()
+    {
+        return 'wiki_contribution';
+    }
+
     /**
      * @return string
      */

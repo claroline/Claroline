@@ -58,6 +58,11 @@ class DirectorySerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'directory';
+    }
+
     /**
      * Deserializes directory data into an Entity.
      *

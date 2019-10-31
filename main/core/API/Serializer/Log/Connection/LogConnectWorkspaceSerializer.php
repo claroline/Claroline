@@ -26,6 +26,11 @@ class LogConnectWorkspaceSerializer
         return LogConnectWorkspace::class;
     }
 
+    public function getName()
+    {
+        return 'log_connect_workspace';
+    }
+
     /**
      * @param LogConnectWorkspace $log
      * @param array               $options

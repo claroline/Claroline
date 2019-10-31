@@ -58,6 +58,11 @@ class RoleSerializer
         $this->userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
     }
 
+    public function getName()
+    {
+        return 'role';
+    }
+
     /**
      * @return string
      */

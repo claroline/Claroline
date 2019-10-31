@@ -31,6 +31,11 @@ class FacetSerializer
         return '#/main/core/facet.json';
     }
 
+    public function getName()
+    {
+        return 'facet';
+    }
+
     /**
      * @param Facet $facet
      * @param array $options

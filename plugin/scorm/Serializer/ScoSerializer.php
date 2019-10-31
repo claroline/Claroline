@@ -53,4 +53,9 @@ class ScoSerializer
             }, is_array($sco->getScoChildren()) ? $sco->getScoChildren() : $sco->getScoChildren()->toArray()),
         ];
     }
+
+    public function getName()
+    {
+        return 'sco';
+    }
 }

@@ -22,6 +22,11 @@ class KeywordSerializer
         $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
     }
 
+    public function getName()
+    {
+        return 'clacoform_keyword';
+    }
+
     /**
      * Serializes a Keyword entity for the JSON api.
      *

@@ -48,6 +48,11 @@ class ForumSerializer
         return Forum::class;
     }
 
+    public function getName()
+    {
+        return 'forum';
+    }
+
     /**
      * @return string
      */

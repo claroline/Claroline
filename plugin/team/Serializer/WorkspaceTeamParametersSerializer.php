@@ -26,6 +26,11 @@ class WorkspaceTeamParametersSerializer
         $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
 
+    public function getName()
+    {
+        return 'workspace_team_parameters';
+    }
+
     /**
      * Serializes a WorkspaceTeamParameters entity for the JSON api.
      *

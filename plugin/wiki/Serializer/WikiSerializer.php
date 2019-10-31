@@ -37,6 +37,11 @@ class WikiSerializer
         ];
     }
 
+    public function getName()
+    {
+        return 'wiki';
+    }
+
     private function getModeStringValue($value)
     {
         switch ($value) {

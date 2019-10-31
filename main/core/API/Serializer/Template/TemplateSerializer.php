@@ -55,6 +55,11 @@ class TemplateSerializer
         $this->templateTypeRepo = $om->getRepository(TemplateType::class);
     }
 
+    public function getName()
+    {
+        return 'template';
+    }
+
     /**
      * @param Template $template
      * @param array    $options

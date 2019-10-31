@@ -49,6 +49,11 @@ class ConnectionMessageSerializer
         return ConnectionMessage::class;
     }
 
+    public function getName()
+    {
+        return 'connection_message';
+    }
+
     /**
      * @return string
      */

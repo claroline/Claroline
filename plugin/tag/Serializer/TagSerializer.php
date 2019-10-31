@@ -40,6 +40,11 @@ class TagSerializer
         $this->taggedObjectRepo = $om->getRepository(TaggedObject::class);
     }
 
+    public function getName()
+    {
+        return 'tag';
+    }
+
     public function getClass()
     {
         return Tag::class;

@@ -49,6 +49,11 @@ class PostSerializer
         $this->nodeSerializer = $nodeSerializer;
     }
 
+    public function getName()
+    {
+        return 'blog_post';
+    }
+
     /**
      * @return string
      */

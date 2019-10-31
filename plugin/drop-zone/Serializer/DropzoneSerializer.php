@@ -39,6 +39,11 @@ class DropzoneSerializer
         $this->om = $om;
     }
 
+    public function getName()
+    {
+        return 'dropzone';
+    }
+
     /**
      * @param Dropzone $dropzone
      *

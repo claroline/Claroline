@@ -48,6 +48,11 @@ class WidgetContainerSerializer
         $this->publicFileSerializer = $publicFileSerializer;
     }
 
+    public function getName()
+    {
+        return 'widget_container';
+    }
+
     public function getClass()
     {
         return WidgetContainer::class;

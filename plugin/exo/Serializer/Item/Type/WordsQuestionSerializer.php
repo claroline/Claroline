@@ -27,6 +27,11 @@ class WordsQuestionSerializer
         $this->keywordSerializer = $keywordSerializer;
     }
 
+    public function getName()
+    {
+        return 'exo_question_words';
+    }
+
     /**
      * Converts a Words question into a JSON-encodable structure.
      *

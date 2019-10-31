@@ -48,6 +48,11 @@ class CommentSerializer
         $this->om = $om;
     }
 
+    public function getName()
+    {
+        return 'blog_comment';
+    }
+
     /**
      * @return string
      */

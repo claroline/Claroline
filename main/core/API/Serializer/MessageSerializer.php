@@ -31,6 +31,11 @@ class MessageSerializer
         return AbstractMessage::class;
     }
 
+    public function getName()
+    {
+        return 'abstract_message';
+    }
+
     /**
      * @return string
      */

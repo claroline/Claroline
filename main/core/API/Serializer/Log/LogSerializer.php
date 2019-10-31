@@ -32,6 +32,11 @@ class LogSerializer
         return Log::class;
     }
 
+    public function getName()
+    {
+        return 'log';
+    }
+
     public function getIdentifiers()
     {
         return ['id'];

@@ -12,6 +12,11 @@ class RevocationListSerializer
     {
     }
 
+    public function getName()
+    {
+        return 'open_badge_revocation_list';
+    }
+
     public function serialize($assertion)
     {
         return [

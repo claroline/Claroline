@@ -16,6 +16,11 @@ class CriteriaSerializer
         $this->router = $router;
     }
 
+    public function getName()
+    {
+        return 'open_badge_criteria';
+    }
+
     public function serialize(BadgeClass $badge)
     {
         return  [

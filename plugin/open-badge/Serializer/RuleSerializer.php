@@ -22,6 +22,11 @@ class RuleSerializer
         $this->om = $om;
     }
 
+    public function getName()
+    {
+        return 'open_badge_rule';
+    }
+
     public function serialize(Rule $rule, array $options = [])
     {
         return [

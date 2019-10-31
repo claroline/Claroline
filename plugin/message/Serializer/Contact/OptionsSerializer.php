@@ -28,6 +28,11 @@ class OptionsSerializer
         $this->userRepo = $om->getRepository(User::class);
     }
 
+    public function getName()
+    {
+        return 'message_options';
+    }
+
     /**
      * @param Options $options
      *

@@ -46,6 +46,11 @@ class RevisionSerializer
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
+    public function getName()
+    {
+        return 'dropzone_revision';
+    }
+
     /**
      * @param Revision $revision
      * @param array    $options
