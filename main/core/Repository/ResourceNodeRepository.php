@@ -97,7 +97,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
 
         //we find the one with the most children as a restoration trick
         $maxChildren = 0;
-        $toReturn = $results[0];
+        $toReturn = 1 < count($results) ? $results[0] : null;
 
         foreach ($results as $result) {
             $count = count($result->getChildren());
