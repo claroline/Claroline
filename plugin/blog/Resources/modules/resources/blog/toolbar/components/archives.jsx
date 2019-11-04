@@ -11,6 +11,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {Section, Sections} from '#/main/app/content/components/sections'
+import {withRouter} from '#/main/app/router'
 
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
@@ -27,6 +28,7 @@ const ArchivesComponent = props =>
                 {props.archives[year] && Object.keys(props.archives[year]).map((month) => (
                   <li className="list-unstyled" key={month}>
                     <CallbackButton callback={() => {
+                      props.goHome(props.history, props.path)
                       props.searchByRange(props.archives[year][month]['monthValue'] - 1, year)
                     }}>
                       {props.archives[year][month]['month']} ({props.archives[year][month]['count']})
@@ -45,11 +47,14 @@ const ArchivesComponent = props =>
   </div>
 
 ArchivesComponent.propTypes = {
+  path: T.string.isRequired,
   archives: T.oneOfType([T.object, T.array]),
-  searchByRange: T.func.isRequired
+  searchByRange: T.func.isRequired,
+  goHome: T.func.isRequired,
+  history: T.object
 }
 
-const Archives = connect(
+const Archives = withRouter(connect(
   state => ({
     archives: selectors.blog(state).data.archives
   }),
@@ -60,8 +65,11 @@ const Archives = connect(
       dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'fromDate', from.format(format)))
       dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'toDate', from.endOf('month').format(format)))
       dispatch(postActions.initDataList())
+    },
+    goHome: (history, path) => {
+      history.push(path)
     }
   })
-)(ArchivesComponent)
+)(ArchivesComponent))
 
 export {Archives}
