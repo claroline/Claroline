@@ -1,2 +1,10 @@
 plugin:
-  has_options: false
+    has_options: false
+
+    resource_icons:
+        - name: res_avi
+          mime_types: [video]
+        - name: res_mp4
+          mime_types: [video/mp4]
+        - name: res_mpeg
+          mime_types: [video/mpeg, audio/mpeg]

@@ -1,2 +1,12 @@
 plugin:
-  has_options: false
+    has_options: false
+
+    resource_icons:
+        - name: res_jpeg
+          mime_types: [image, image/jpeg, image/pjpeg]
+        - name: res_bmp
+          mime_types: [image/bmp, image/x-windows-bmp]
+        - name: res_gif
+          mime_types: [image/gif]
+        - name: res_tiff
+          mime_types: [image/tiff, image/x-tiff]

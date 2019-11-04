@@ -13,7 +13,6 @@
 
 namespace Claroline\CoreBundle\Entity\Icon;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -68,13 +67,6 @@ class IconItem
     private $iconSet;
 
     /**
-     * @var ResourceIcon
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", fetch="LAZY")
-     * @ORM\JoinColumn(name="resource_icon_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
-    private $resourceIcon;
-
-    /**
      * IconItem constructor.
      *
      * @param IconSet $iconSet
@@ -82,25 +74,19 @@ class IconItem
      * @param null $name
      * @param null $mimeType
      * @param null $class
-     * @param bool $isShortcut
-     * @param null $resourceIcon
      */
     public function __construct(
         IconSet $iconSet,
         $relativeUrl,
         $name = null,
         $mimeType = null,
-        $class = null,
-        $isShortcut = false,
-        $resourceIcon = null
+        $class = null
     ) {
         $this->iconSet = $iconSet;
         $this->relativeUrl = $relativeUrl;
         $this->name = $name;
         $this->mimeType = $mimeType;
         $this->class = $class;
-        $this->isShortcut = $isShortcut;
-        $this->resourceIcon = $resourceIcon;
     }
 
     /**
@@ -207,26 +193,6 @@ class IconItem
     public function setRelativeUrl($relativeUrl)
     {
         $this->relativeUrl = $relativeUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return ResourceIcon
-     */
-    public function getResourceIcon()
-    {
-        return $this->resourceIcon;
-    }
-
-    /**
-     * @param ResourceIcon $resourceIcon
-     *
-     * @return $this
-     */
-    public function setResourceIcon($resourceIcon)
-    {
-        $this->resourceIcon = $resourceIcon;
 
         return $this;
     }

@@ -255,7 +255,6 @@ services:
           - '%claroline.param.icon_sets_web_dir%'
           - '%claroline.param.icon_sets_directory%'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Utilities\ThumbnailCreator'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     claroline.manager.icon_set_manager:

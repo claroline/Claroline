@@ -57,8 +57,7 @@ class ResourceQueryBuilder
         $this->bundles = [];
 
         $this->joinRelativesClause = "JOIN node.creator creator{$eol}".
-            "JOIN node.resourceType resourceType{$eol}".
-            "LEFT JOIN node.icon icon{$eol}";
+            "JOIN node.resourceType resourceType{$eol}";
     }
 
     public function setBundles(array $bundles)
@@ -119,7 +118,6 @@ class ResourceQueryBuilder
             "    creator.username as creator_username,{$eol}".
             "    creator.id as creator_id,{$eol}".
             "    resourceType.name as type,{$eol}".
-            "    icon.relativeUrl as large_icon,{$eol}".
             "    node.mimeType as mime_type,{$eol}".
             "    node.index as index_dir,{$eol}".
             "    node.creationDate as creation_date,{$eol}".
@@ -334,8 +332,7 @@ class ResourceQueryBuilder
                      previous.id,
                      next.id,
                      creator.username,
-                     resourceType.name,
-                     icon.relativeUrl
+                     resourceType.name
         '.PHP_EOL;
 
         return $this;
