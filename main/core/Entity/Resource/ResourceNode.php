@@ -19,6 +19,7 @@ use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreFlushEventArgs;
@@ -49,6 +50,7 @@ class ResourceNode
     use Creator;
 
     // restrictions
+    use Hidden;
     use AccessibleFrom;
     use AccessibleUntil;
 
@@ -99,16 +101,6 @@ class ResourceNode
      * @ORM\Column()
      */
     private $name;
-
-    /**
-     * Permits to hide resources.
-     * For now it's only used in widgets. It should be think more globally.
-     *
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $hidden = false;
 
     /**
      * @var ResourceNode
@@ -304,16 +296,6 @@ class ResourceNode
         $this->children = new ArrayCollection();
         $this->logs = new ArrayCollection();
         $this->comments = new ArrayCollection();
-    }
-
-    public function isHidden()
-    {
-        return $this->hidden;
-    }
-
-    public function setHidden($hidden)
-    {
-        $this->hidden = $hidden;
     }
 
     /**

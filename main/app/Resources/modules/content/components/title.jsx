@@ -9,10 +9,11 @@ import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
 
 const HeadingWrapper = props  =>
-  React.createElement(`h${props.level} h-title`, Object.assign({},
+  React.createElement(`h${props.level}`, Object.assign({},
     omit(props, 'level', 'displayLevel', 'displayed', 'align'),
     {
       className: classes(
+        'h-title',
         props.className,
         props.displayLevel && `h${props.displayLevel}`,
         !props.displayed && 'sr-only',

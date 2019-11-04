@@ -29,11 +29,6 @@ class GenericDataEvent extends Event
         return $this->data;
     }
 
-    public function setData($data = null)
-    {
-        $this->data = $data;
-    }
-
     public function getResponse()
     {
         return $this->response;
@@ -41,16 +36,12 @@ class GenericDataEvent extends Event
 
     public function setResponse($response = null)
     {
-        $this->response = $response;
-    }
+        if (!empty($response)) {
+            if (!is_array($this->response)) {
+                $this->response = [];
+            }
 
-    //will override stuff if you set other things than array
-    public function addData($data)
-    {
-        if (!is_array($this->data)) {
-            $this->data = [];
+            $this->response = array_merge($this->response, $response);
         }
-
-        $this->data = array_merge($this->data, $data);
     }
 }

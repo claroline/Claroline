@@ -355,6 +355,7 @@ services:
     Claroline\CoreBundle\Manager\ConnectionMessageManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@event_dispatcher'
           - '@Claroline\AppBundle\API\SerializerProvider'
 
     claroline.manager.connection_message_manager:

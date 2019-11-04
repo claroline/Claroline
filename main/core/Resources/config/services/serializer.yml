@@ -37,7 +37,7 @@ services:
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
 
-    Claroline\CoreBundle\API\Serializer\AdminToolSerializer:
+    Claroline\CoreBundle\API\Serializer\Tool\AdminToolSerializer:
         tags: [claroline.serializer]
 
     Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer:
@@ -139,7 +139,6 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
 
@@ -340,7 +339,7 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\CoreBundle\API\Serializer\ConnectionMessage\ConnectionMessageSerializer:
+    Claroline\CoreBundle\API\Serializer\Platform\ConnectionMessageSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -30,8 +30,8 @@ class ConnectionMessageFinder extends AbstractFinder
     ) {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'messageType':
-                    $qb->andWhere("obj.type = :{$filterName}");
+                case 'restrictions.hidden':
+                    $qb->andWhere("obj.hidden = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 default:

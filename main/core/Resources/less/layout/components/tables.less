@@ -74,7 +74,7 @@
         }
 
         .btn {
-            padding: @table-cell-padding;
+            padding: @table-cell-padding - 1;  // -1 to absorb btn border
         }
     }
 }
@@ -116,7 +116,7 @@
     white-space: nowrap; // avoids buttons to break on multi lines
 
     .btn {
-        padding: @table-cell-padding;
+        padding: @table-cell-padding - 1;  // -1 to absorb btn border
     }
 
     .dropdown-menu {
@@ -135,11 +135,11 @@
 
 
         .btn {
-            padding: @table-condensed-cell-padding;
+            padding: @table-condensed-cell-padding - 1; // -1 to absorb btn border
         }
     }
 
     .actions-cell .btn {
-        padding: @table-condensed-cell-padding;
+        padding: @table-condensed-cell-padding - 1;  // -1 to absorb btn border
     }
 }

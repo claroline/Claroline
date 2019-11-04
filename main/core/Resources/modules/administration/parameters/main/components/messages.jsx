@@ -52,20 +52,12 @@ const Messages = (props) =>
         primary: true
       }, {
         name: 'type',
-        type: 'string',
-        label: trans('type'),
-        calculated: (message) => constants.MESSAGE_TYPES[message.type],
-        displayed: true,
-        filterable: false
-      }, {
-        name: 'messageType',
         type: 'choice',
         label: trans('type'),
         options: {
           choices: constants.MESSAGE_TYPES
         },
-        displayed: false,
-        filterable: true
+        displayed: true
       }, {
         name: 'restrictions.dates[0]',
         alias: 'startDate',
@@ -84,6 +76,10 @@ const Messages = (props) =>
         label: trans('roles'),
         displayed: true,
         filterable: false
+      }, {
+        name: 'restrictions.hidden',
+        type: 'boolean',
+        label: trans('hidden')
       }
     ]}
   />

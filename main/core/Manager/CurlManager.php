@@ -31,7 +31,7 @@ class CurlManager
             case 'PUT':
                 $this->setPutCurl($ch, $payload);
                 break;
-            case 'PUT':
+            case 'DELETE':
                 $this->setDeleteCurl($ch);
                 break;
         }

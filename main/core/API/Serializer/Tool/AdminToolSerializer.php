@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer;
+namespace Claroline\CoreBundle\API\Serializer\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 
@@ -26,10 +26,5 @@ class AdminToolSerializer
         ];
 
         return $serialized;
-    }
-
-    public function getName()
-    {
-        return 'admin_tool';
     }
 }

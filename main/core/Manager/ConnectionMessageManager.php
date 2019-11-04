@@ -15,12 +15,17 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Repository\ConnectionMessage\ConnectionMessageRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConnectionMessageManager
 {
     /** @var ObjectManager */
     private $om;
+
+    /** @var EventDispatcherInterface */
+    private $dispatcher;
 
     /** @var SerializerProvider */
     private $serializer;
@@ -29,12 +34,19 @@ class ConnectionMessageManager
     private $connectionMessageRepo;
 
     /**
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * ConnectionMessageManager constructor.
+     *
+     * @param ObjectManager            $om
+     * @param EventDispatcherInterface $dispatcher
+     * @param SerializerProvider       $serializer
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
-    {
+    public function __construct(
+        ObjectManager $om,
+        EventDispatcherInterface $dispatcher,
+        SerializerProvider $serializer
+    ) {
         $this->om = $om;
+        $this->dispatcher = $dispatcher;
         $this->serializer = $serializer;
 
         $this->connectionMessageRepo = $om->getRepository(ConnectionMessage::class);
@@ -63,10 +75,19 @@ class ConnectionMessageManager
      */
     public function getConnectionMessagesByUser(User $user)
     {
+        // get defined connection messages
         $messages = $this->connectionMessageRepo->findConnectionMessageByUser($user);
-
-        return array_map(function (ConnectionMessage $message) {
+        $storedMessages = array_map(function (ConnectionMessage $message) {
             return $this->serializer->serialize($message);
         }, $messages);
+
+        // grab connection messages from everywhere
+        $event = new GenericDataEvent();
+        $this->dispatcher->dispatch('platform.connection_messages.populate', $event);
+        // TODO : find a way to validate populated data. For now I just expect an array which looks like
+        // the return of ConnectionMessageSerializer
+        $extMessages = $event->getData() ?? [];
+
+        return array_merge($storedMessages, $extMessages);
     }
 }

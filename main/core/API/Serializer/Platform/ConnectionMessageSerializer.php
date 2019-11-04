@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\ConnectionMessage;
+namespace Claroline\CoreBundle\API\Serializer\Platform;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
@@ -49,11 +49,6 @@ class ConnectionMessageSerializer
         return ConnectionMessage::class;
     }
 
-    public function getName()
-    {
-        return 'connection_message';
-    }
-
     /**
      * @return string
      */
@@ -78,10 +73,14 @@ class ConnectionMessageSerializer
             'type' => $message->getType(),
             'locked' => $message->isLocked(),
             'restrictions' => [
+                'hidden' => $message->isHidden(),
                 'dates' => DateRangeNormalizer::normalize(
                     $message->getAccessibleFrom(),
                     $message->getAccessibleUntil()
                 ),
+                'roles' => array_values(array_map(function (Role $role) {
+                    return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                }, $message->getRoles()->toArray())),
             ],
         ];
 
@@ -98,12 +97,7 @@ class ConnectionMessageSerializer
                         ] : null,
                         'order' => $slide->getOrder(),
                     ];
-                }, $message->getSlides()->toArray())),
-                'restrictions' => [
-                    'roles' => array_values(array_map(function (Role $role) {
-                        return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
-                    }, $message->getRoles()->toArray())),
-                ],
+                }, $message->getSlides()->toArray()))
             ]);
         }
 
@@ -126,6 +120,8 @@ class ConnectionMessageSerializer
         $this->sipe('locked', 'setLocked', $data, $message);
 
         if (isset($data['restrictions'])) {
+            $this->sipe('restrictions.hidden', 'setHidden', $data, $message);
+
             if (isset($data['restrictions']['dates'])) {
                 $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 

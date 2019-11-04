@@ -36,7 +36,7 @@ class ClientListener
      */
     public function onConfig(GenericDataEvent $event)
     {
-        $event->setData([
+        $event->setResponse([
             'notifications' => [
                 'enabled' => $this->configHandler->getParameter('is_notification_active'),
                 'refreshDelay' => $this->configHandler->getParameter('notifications_refresh_delay'),

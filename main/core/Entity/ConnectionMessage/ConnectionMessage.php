@@ -6,6 +6,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,8 +20,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ConnectionMessage
 {
+    // identifiers
     use Id;
     use Uuid;
+
+    // restrictions
+    use Hidden;
     use AccessibleFrom;
     use AccessibleUntil;
 

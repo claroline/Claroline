@@ -4,20 +4,19 @@ namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\ToolsOptions;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Tool\ToolRole;
-use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\ToolRightsRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 
 class RoleSerializer
@@ -26,6 +25,12 @@ class RoleSerializer
 
     /** @var ObjectManager */
     private $om;
+
+    /** @var WorkspaceSerializer */
+    private $workspaceSerializer;
+
+    /** @var UserSerializer */
+    private $userSerializer;
 
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
@@ -39,17 +44,16 @@ class RoleSerializer
     /**
      * RoleSerializer constructor.
      *
-     * @param SerializerProvider $serializer
-     * @param ObjectManager      $om
+     * @param ObjectManager       $om
+     * @param WorkspaceSerializer $workspaceSerializer
+     * @param UserSerializer      $userSerializer
      */
     public function __construct(
         ObjectManager $om,
-        OrderedToolFinder $orderedToolFinder,
         WorkspaceSerializer $workspaceSerializer,
         UserSerializer $userSerializer
     ) {
         $this->om = $om;
-        $this->orderedToolFinder = $orderedToolFinder;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
 
@@ -102,10 +106,6 @@ class RoleSerializer
 
             if ($workspace = $role->getWorkspace()) {
                 $serialized['workspace'] = $this->workspaceSerializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
-            }
-
-            if ($role->getShortcuts()) {
-                //$serialized = array_values(array_map(function (Shortcuts $shortcuts)));
             }
 
             if (Role::USER_ROLE === $role->getType()) {
@@ -215,7 +215,7 @@ class RoleSerializer
             }
         }
 
-        return count($tools) > 0 ? $tools : new \stdClass();
+        return $tools;
     }
 
     /**
@@ -246,7 +246,7 @@ class RoleSerializer
             }
         }
 
-        return 0 < count($configs) ? $configs : new \stdClass();
+        return $configs;
     }
 
     /**
@@ -325,8 +325,11 @@ class RoleSerializer
                         }
                     }
                     if ($workspaceId) {
-                        $orderedTool = $this->orderedToolFinder
-                          ->findOneBy(['tool' => $toolName, 'workspace' => $workspaceId]);
+                        /** @var OrderedTool $orderedTool */
+                        $orderedTool = $this->orderedToolRepo->findOneBy([
+                            'tool' => $toolName,
+                            'workspace' => $workspaceId,
+                        ]);
 
                         if ($orderedTool) {
                             $toolRights = $this->om
@@ -358,6 +361,7 @@ class RoleSerializer
         // Sets desktop tools configuration for platform roles
         if (Role::PLATFORM_ROLE === $role->getType() && isset($data['desktopTools'])) {
             foreach ($data['desktopTools'] as $toolName => $toolData) {
+                /** @var Tool $tool */
                 $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $toolName]);
 
                 if ($tool) {

@@ -23,7 +23,8 @@ class ConnectionMessageRepository extends EntityRepository
             SELECT DISTINCT m
             FROM Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage m
             LEFT JOIN m.roles r
-            WHERE (m.accessibleFrom IS NULL OR m.accessibleFrom <= :now)
+            WHERE m.hidden = 0 
+            AND (m.accessibleFrom IS NULL OR m.accessibleFrom <= :now)
             AND (m.accessibleUntil IS NULL OR m.accessibleUntil >= :now)
             AND (r IS NULL OR r.name IN (:roles))
             AND (m.type = :type OR NOT EXISTS (

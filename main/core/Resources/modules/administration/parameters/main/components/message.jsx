@@ -26,7 +26,7 @@ import {
 import {constants} from '#/main/core/administration/parameters/main/constants'
 import {MODAL_SLIDE_FORM} from '#/main/core/administration/parameters/main/modals/slide'
 
-const restrictedByDates = (message) => get(message, 'restrictions.enableDates') || !isEmpty(get(message, 'restrictions.dates'))
+const restrictedByDates = (message) => get(message, 'restrictions.enableDates') || (!isEmpty(get(message, 'restrictions.dates')) && (!isEmpty(get(message, 'restrictions.dates.0')) || !isEmpty(get(message, 'restrictions.dates.1'))))
 const restrictedByRoles = (message) => get(message, 'restrictions.enableRoles') || !isEmpty(get(message, 'restrictions.roles'))
 
 const SlidesForm = (props) =>
@@ -168,6 +168,10 @@ const MessageComponent = (props) => {
           title: trans('access_restrictions'),
           fields: [
             {
+              name: 'restrictions.hidden',
+              type: 'boolean',
+              label: trans('restrict_hidden')
+            }, {
               name: 'restrictions.enableDates',
               label: trans('restrict_by_dates'),
               type: 'boolean',

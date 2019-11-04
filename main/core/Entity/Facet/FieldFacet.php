@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,6 +26,9 @@ class FieldFacet
 {
     use Id;
     use Uuid;
+
+    // Restrictions
+    use Hidden;
 
     /** @var int */
     const STRING_TYPE = 1;
@@ -133,11 +137,6 @@ class FieldFacet
      * @var array
      */
     private $options = [];
-
-    /**
-     * @ORM\Column(name="hidden", type="boolean", options={"default" = 0})
-     */
-    protected $hidden = false;
 
     /**
      * @ORM\Column(name="is_metadata", type="boolean", options={"default" = 0})
@@ -415,22 +414,6 @@ class FieldFacet
     public function setOptions(array $options)
     {
         $this->options = $options;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * @param bool $hidden
-     */
-    public function setHidden($hidden)
-    {
-        $this->hidden = $hidden;
     }
 
     /**
