@@ -65,6 +65,17 @@ const BadgeFormComponent = (props) =>
             type: 'organization',
             label: trans('issuer', {}, 'badge'),
             displayed: 'workspace' !== props.currentContext.type
+          }, {
+            name: 'workspace',
+            type: 'workspace',
+            label: trans('workspace'),
+            options: {
+              picker: {
+                administrated: true,
+                model: false
+              }
+            },
+            displayed: 'workspace' !== props.currentContext.type
           }
         ]
       }, {

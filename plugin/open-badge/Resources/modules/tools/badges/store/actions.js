@@ -3,7 +3,9 @@ import isEmpty from 'lodash/isEmpty'
 
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
+import {actions as listActions} from '#/main/app/content/list/store'
 
+import {selectors} from '#/plugin/open-badge/tools/badges/store/selectors'
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 
 export const actions = {}
@@ -19,6 +21,7 @@ actions.openBadge = (formName, id = null, workspace = null) => {
         },
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
+          dispatch(listActions.invalidateData(selectors.STORE_NAME + '.badges.current.assertions'))
         }
       }
     }
