@@ -69,6 +69,8 @@ class TeamManager
         if (empty($teamParams)) {
             $teamParams = new WorkspaceTeamParameters();
             $teamParams->setWorkspace($workspace);
+            $this->om->persist($teamParams);
+            $this->om->flush();
         }
 
         return $teamParams;
