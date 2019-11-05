@@ -131,8 +131,6 @@ class LogListener
             ->setIsDisplayedInWorkspace($event->getIsDisplayedInWorkspace())
             ->setOtherElementId($event->getOtherElementId());
 
-        //Object properties
-        $log->setOwner($event->getOwner());
         if (!(LogUserDeleteEvent::ACTION === $event->getAction() && $event->getReceiver() === $doer)) {
             //Prevent self delete case
             //Sometimes, the entity manager has been cleared, so we must merge the doer.
@@ -173,21 +171,6 @@ class LogListener
             $log->setRole($event->getRole());
         }
 
-        if (null !== $doer) {
-            $platformRoles = $this->roleManager->getPlatformRoles($doer);
-
-            foreach ($platformRoles as $platformRole) {
-                $log->addDoerPlatformRole($platformRole);
-            }
-
-            if (null !== $event->getWorkspace()) {
-                $workspaceRoles = $this->roleManager->getWorkspaceRolesForUser($doer, $event->getWorkspace());
-
-                foreach ($workspaceRoles as $workspaceRole) {
-                    $log->addDoerWorkspaceRole($workspaceRole);
-                }
-            }
-        }
         if (null !== $event->getResource()) {
             $log->setResourceType($event->getResource()->getResourceType());
         }
@@ -206,16 +189,27 @@ class LogListener
                 'publicUrl' => $doer->getPublicUrl(),
             ];
 
-            if (count($log->getDoerPlatformRoles()) > 0) {
+            $doerPlatformRoles = $this->roleManager->getPlatformRoles($doer);
+
+            if ($event->getWorkspace()) {
+                $doerWorkspaceRoles = $this->roleManager->getWorkspaceRolesForUser($doer, $event->getWorkspace());
+            } else {
+                $doerWorkspaceRoles = [];
+            }
+
+            if (count($doerPlatformRoles) > 0) {
                 $doerPlatformRolesDetails = [];
-                foreach ($log->getDoerPlatformRoles() as $platformRole) {
+
+                foreach ($doerPlatformRoles as $platformRole) {
                     $doerPlatformRolesDetails[] = $platformRole->getTranslationKey();
                 }
+
                 $details['doer']['platformRoles'] = $doerPlatformRolesDetails;
             }
-            if (count($log->getDoerWorkspaceRoles()) > 0) {
+
+            if (count($doerWorkspaceRoles) > 0) {
                 $doerWorkspaceRolesDetails = [];
-                foreach ($log->getDoerWorkspaceRoles() as $workspaceRole) {
+                foreach ($doerWorkspaceRoles as $workspaceRole) {
                     $doerWorkspaceRolesDetails[] = $workspaceRole->getTranslationKey();
                 }
                 $details['doer']['workspaceRoles'] = $doerWorkspaceRolesDetails;

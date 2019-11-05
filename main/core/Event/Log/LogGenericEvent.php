@@ -162,14 +162,6 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     }
 
     /**
-     * Returns the action's target owner (from resource).
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
      * Returns the action's target tool's name.
      */
     public function getToolName()
