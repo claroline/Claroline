@@ -11,23 +11,27 @@ const PageBreadcrumb = props => {
   const items = props.path
     .filter(item => undefined === item.displayed || item.displayed)
 
-  return (
-    <ul className={classes('breadcrumb', props.className)}>
-      {items
-        .filter(item => undefined === item.displayed || item.displayed)
-        .map((item, index) => index !== items.length - 1 ?
-          <li key={toKey(item.label)} role="presentation">
-            <Button
-              type={item.type || URL_BUTTON}
-              {...omit(item, 'displayed')}
-            />
-          </li>
-          :
-          <li key={toKey(item.label)} className="active" role="presentation">{item.label}</li>
-        )
-      }
-    </ul>
-  )
+  if (0 !== items.length) {
+    return (
+      <ul className={classes('breadcrumb', props.className)}>
+        {items
+          .filter(item => undefined === item.displayed || item.displayed)
+          .map((item, index) => index !== items.length - 1 ?
+            <li key={toKey(item.label)} role="presentation">
+              <Button
+                type={item.type || URL_BUTTON}
+                {...omit(item, 'displayed')}
+              />
+            </li>
+            :
+            <li key={toKey(item.label)} className="active" role="presentation">{item.label}</li>
+          )
+        }
+      </ul>
+    )
+  }
+
+  return null
 }
 
 PageBreadcrumb.propTypes = {

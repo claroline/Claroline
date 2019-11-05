@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-
-import {FormStepper} from '#/main/core/layout/form/components/form-stepper'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {FormStepper} from '#/main/app/content/form/components/stepper'
 
 import {Facet} from '#/main/app/security/registration/components/facet'
 import {Required} from '#/main/app/security/registration/components/required'
@@ -67,11 +67,11 @@ class RegistrationMain extends Component {
     return (
       <FormStepper
         path={this.props.path}
-        location={this.props.location}
         submit={{
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-user-plus',
           label: trans('registration_confirm'),
-          action: () => this.props.register(this.props.user, this.props.termOfService, (user) => {
+          callback: () => this.props.register(this.props.user, this.props.termOfService, (user) => {
             this.props.onRegister(user)
             this.props.history.push('/login')
           })

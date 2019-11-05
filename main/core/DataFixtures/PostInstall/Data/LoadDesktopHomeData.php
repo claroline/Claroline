@@ -18,10 +18,10 @@ use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Create a default tab in administration Home and
- * add a widget to display the list of available tools.
+ * Create a default tab in desktop Home and
+ * add a widget to display the list of workspaces of the current user.
  */
-class LoadAdminHomeData implements RequiredFixture
+class LoadDesktopHomeData implements RequiredFixture
 {
     private $container;
     /** @var TranslatorInterface */
@@ -43,12 +43,13 @@ class LoadAdminHomeData implements RequiredFixture
             'title' => $this->translator->trans('informations', [], 'platform'),
             'longTitle' => $this->translator->trans('informations', [], 'platform'),
             'slug' => 'informations',
-            'type' => HomeTab::TYPE_ADMIN,
+            'type' => HomeTab::TYPE_ADMIN_DESKTOP,
             'position' => 1,
             'restrictions' => [
                 'hidden' => false,
             ],
             'widgets' => [[
+                'name' => $this->translator->trans('my_workspaces', [], 'workspace'),
                 'visible' => true,
                 'display' => [
                     'layout' => [1],
@@ -59,7 +60,7 @@ class LoadAdminHomeData implements RequiredFixture
                 'parameters' => [],
                 'contents' => [[
                     'type' => 'list',
-                    'source' => 'admin_tools',
+                    'source' => 'my_workspaces',
                     'parameters' => [
                         'display' => 'tiles-sm',
                         'enableDisplays' => false,
@@ -67,8 +68,8 @@ class LoadAdminHomeData implements RequiredFixture
                         'card' => [
                             'display' => ['icon', 'flags', 'subtitle'],
                         ],
-                        'paginated' => false,
-                        'count' => false,
+                        'paginated' => true,
+                        'count' => true,
                     ],
                 ]],
             ]],

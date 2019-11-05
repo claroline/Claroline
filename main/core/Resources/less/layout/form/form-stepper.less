@@ -7,60 +7,26 @@
 @form-stepper-nav-active-color:  white;
 @form-stepper-nav-active-bg:     @brand-primary;
 @form-stepper-nav-border-radius: 100%;
-@form-stepper-nav-size:          @font-size-large*3; // should be >= @form-stepper-endpoint-size (otherwise calculation is not correct)
+@form-stepper-nav-size:          @font-size-large*3;
 @form-stepper-nav-font-size:     @font-size-large;
-@form-stepper-endpoint-size:     @font-size-large*2;
-@form-stepper-connector-size:    6px;
+@form-stepper-connector-size:    4px;
 @form-stepper-margin-bottom:     @component-margin-bottom;
 
 .form-stepper-footer {
     text-align: right;
 
-    .btn-next,
-    .btn-submit {
-        padding: @padding-large-vertical @padding-large-horizontal;
+    .btn + .btn {
+        margin-left: 5px;
     }
 
     .btn-next {
-        .fa {
-            margin-left: @icon-text-spacer;
-        }
-    }
-
-    .btn-submit {
-        .fa {
-            margin-right: @icon-text-spacer;
-        }
+        min-width: 240px;
     }
 }
 
 .form-stepper-nav {
-    position: relative;
     display: flex;
-    padding: 0 @form-stepper-endpoint-size;
     margin-bottom: @form-stepper-margin-bottom;
-
-    &:before,
-    &:after {
-        position: absolute;
-        z-index: 2;
-        display: block;
-        content: " ";
-        width: @form-stepper-endpoint-size;
-        height: @form-stepper-endpoint-size;
-        background: @form-stepper-nav-bg;
-        top: @form-stepper-nav-size/2 - (@form-stepper-endpoint-size/2);
-        border-radius: @form-stepper-nav-border-radius;
-    }
-
-    &:before {
-        left: 0;
-        background: @brand-primary;
-    }
-
-    &:after {
-        right: 0;
-    }
 }
 
 .form-stepper-link {
@@ -130,7 +96,7 @@
 
         .form-step-badge {
             color: @form-stepper-nav-active-bg;
-            background: @body-bg;
+            background: @panel-bg;
             border: @form-stepper-connector-size solid @form-stepper-nav-active-bg;
         }
     }

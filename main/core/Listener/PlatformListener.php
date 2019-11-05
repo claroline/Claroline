@@ -108,6 +108,7 @@ class PlatformListener
                 }
             }
 
+            // FIXME : new platform date restrictions
             $now = time();
             if (is_int($this->config->getParameter('platform_init_date'))) {
                 $minDate = new \DateTime();

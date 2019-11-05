@@ -86,11 +86,7 @@ class ParametersController
 
         return new JsonResponse([
             'version' => $this->versionManager->getDistributionVersion(),
-            'workspace' => $parameters['workspace'],
-            'security' => [
-                'platform_init_date' => $parameters['security']['platform_init_date'],
-                'platform_limit_date' => $parameters['security']['platform_limit_date'],
-            ],
+            'meta' => $parameters['meta'],
             'analytics' => [
                 'resources' => $resourceCount,
                 'workspaces' => $wsCount,

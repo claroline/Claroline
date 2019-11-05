@@ -93,6 +93,17 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
       }
 
       break
+
+    default:
+      if (toolName) {
+        path.push({
+          type: LINK_BUTTON,
+          label: trans(toolName, {}, 'tools'),
+          target: `/${toolName}`
+        })
+      }
+
+      break
   }
 
   return path

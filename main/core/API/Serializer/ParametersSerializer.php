@@ -25,20 +25,28 @@ class ParametersSerializer
     /** @var FinderProvider */
     private $finder;
 
+    /** @var IconSetManager */
+    private $ism;
+
     /** @var PlatformConfigurationHandler */
     private $configHandler;
 
     /** @var string */
     private $filePath;
 
+    /** @var string */
+    private $archivePath;
+
     /**
      * ParametersSerializer constructor.
      *
      * @param SerializerProvider           $serializer
+     * @param IconSetManager               $ism
      * @param FinderProvider               $finder
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $configHandler
      * @param string                       $filePath
+     * @param string                       $archivePath
      */
     public function __construct(
         SerializerProvider $serializer, // bad
@@ -73,7 +81,7 @@ class ParametersSerializer
 
         $data['javascripts'] = $this->serializeJavascripts($data);
         $data['display']['logo'] = $this->serializeAppearanceLogo($data);
-        //maybe move this somewhere else
+        // TODO : move this somewhere else
         $data['archives'] = $this->serializeArchive($data);
 
         return $data;
@@ -92,12 +100,16 @@ class ParametersSerializer
         $this->deserializeTos($data);
         $data = $this->getJavascriptsData($data);
         $data = $this->getLogoData($data);
-        $data['mailer'] = $this->deserializeMailer($data['mailer']);
+
+        if (isset($data['mailer'])) {
+            $data['mailer'] = $this->deserializeMailer($data['mailer']);
+        }
+
+        // TODO : move this somewhere else
         unset($data['tos']['text']);
-        //maybe move this somewhere else
         unset($data['archives']);
 
-        $data = array_merge($this->serialize([Options::SERIALIZE_MINIMAL]), $data);
+        $data = array_replace_recursive($this->serialize([Options::SERIALIZE_MINIMAL]), $data);
         ksort($data);
         $data = json_encode($data, JSON_PRETTY_PRINT);
 
@@ -136,12 +148,14 @@ class ParametersSerializer
 
     public function getJavascriptsData(array $data)
     {
-        $javascripts = $data['javascripts'];
-        $data['javascripts'] = [];
-        //maybe validate its a real javascript file here
+        if (isset($data['javascripts'])) {
+            $javascripts = $data['javascripts'];
+            $data['javascripts'] = [];
+            //maybe validate its a real javascript file here
 
-        foreach ($javascripts as $javascript) {
-            $data['javascripts'][] = $javascript['url'];
+            foreach ($javascripts as $javascript) {
+                $data['javascripts'][] = $javascript['url'];
+            }
         }
 
         return $data;

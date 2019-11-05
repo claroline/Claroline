@@ -19,17 +19,24 @@ class OrganizationManager
 {
     use LoggableTrait;
 
+    /** @var ObjectManager */
     private $om;
 
+    /**
+     * OrganizationManager constructor.
+     *
+     * @param ObjectManager $om
+     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->repo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
     }
 
     public function getDefault($createIfEmpty = false)
     {
-        $defaultOrganization = $this->repo->findOneByDefault(true);
+        $defaultOrganization = $this->om
+            ->getRepository(Organization::class)
+            ->findOneBy(['default' => true]);
 
         if ($createIfEmpty && null === $defaultOrganization) {
             $defaultOrganization = $this->createDefault(true);
@@ -40,28 +47,22 @@ class OrganizationManager
 
     public function createDefault($force = false)
     {
-        if (!$force && $this->getDefault()) {
-            return;
+        $default = $this->getDefault();
+        if (!$force && $default) {
+            return $default;
         }
+
         $this->log('Adding default organization...');
-        $orga = new Organization();
-        $orga->setName('default');
-        $orga->setDefault(true);
-        $orga->setPosition(1);
-        $orga->setParent(null);
-        $this->om->persist($orga);
+
+        $organization = new Organization();
+        $organization->setName('default');
+        $organization->setDefault(true);
+        $organization->setPosition(1);
+        $organization->setParent(null);
+
+        $this->om->persist($organization);
         $this->om->flush();
 
-        return $orga;
-    }
-
-    public function getOrganizationsByIds(array $ids)
-    {
-        return $this->repo->findOrganizationsByIds($ids);
-    }
-
-    public function getAllOrganizations()
-    {
-        return $this->repo->findAll();
+        return $organization;
     }
 }

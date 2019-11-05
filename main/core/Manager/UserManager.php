@@ -881,9 +881,9 @@ class UserManager
             $user = new User();
 
             $user->setUsername('claroline-connect');
-            $user->setFirstName('claroline-connect');
-            $user->setLastName('claroline-connect');
-            $user->setEmail('claroline-connect');
+            $user->setFirstName('Claroline');
+            $user->setLastName('Connect');
+            $user->setEmail('support@claroline.com');
             $user->setPlainPassword(uniqid('', true));
             $user->setAcceptedTerms(true);
 

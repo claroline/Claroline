@@ -65,6 +65,7 @@ const UserMenu = props =>
           primary={true}
           target="/login"
           onClick={props.closeMenu}
+          active={false}
         />
 
         {props.registration &&
@@ -74,6 +75,7 @@ const UserMenu = props =>
             label={trans('self-register', {}, 'actions')}
             target="/registration"
             onClick={props.closeMenu}
+            active={false}
           />
         }
       </div>

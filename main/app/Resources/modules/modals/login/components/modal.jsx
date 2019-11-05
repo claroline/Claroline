@@ -12,6 +12,7 @@ const LoginModal = props =>
     autoFocus={true}
     enforceFocus={false}
     dialogClassName="login-modal"
+    bsSize="lg"
     onHide={props.fadeModal}
     onExited={() => {
       if (props.onAbort) {

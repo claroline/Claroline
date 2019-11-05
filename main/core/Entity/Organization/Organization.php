@@ -25,7 +25,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Organization\OrganizationRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro__organization")
  * @DoctrineAssert\UniqueEntity("name")
  * @Gedmo\Tree(type="nested")

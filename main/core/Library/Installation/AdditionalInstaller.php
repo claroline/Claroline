@@ -11,15 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\CoreBundle\Entity\DataSource;
-use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
-use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -29,6 +25,11 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
     public function preInstall()
     {
         $this->setLocale();
+    }
+
+    public function postInstall()
+    {
+        $this->setInstallationDate();
     }
 
     public function preUpdate($currentVersion, $targetVersion)
@@ -75,8 +76,6 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
     public function postUpdate($currentVersion, $targetVersion)
     {
-        $this->setLocale();
-
         if (version_compare($currentVersion, '6.3.0', '<')) {
             $updater = new Updater\Updater060300($this->container);
             $updater->setLogger($this->logger);
@@ -284,6 +283,8 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
         $termsOfServiceManager->sendDatas();
+
+        $this->setUpdateDate();
     }
 
     public function end($currentVersion, $targetVersion)
@@ -323,77 +324,38 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         $translator->setLocale($locale);
     }
 
+    private function setInstallationDate()
+    {
+        /** @var PlatformConfigurationHandler $ch */
+        $ch = $this->container->get(PlatformConfigurationHandler::class);
+
+        $ch->setParameter('meta.created', DateNormalizer::normalize(new \DateTime()));
+    }
+
+    private function setUpdateDate()
+    {
+        /** @var PlatformConfigurationHandler $ch */
+        $ch = $this->container->get(PlatformConfigurationHandler::class);
+
+        $ch->setParameter('meta.updated', DateNormalizer::normalize(new \DateTime()));
+    }
+
     private function updateRolesAdmin()
     {
         $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
 
-        /** @var Role $role */
-        $adminOrganization = $om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
+        /** @var Role $adminOrganization */
+        $adminOrganization = $om->getRepository(Role::class)->findOneByName('ROLE_ADMIN_ORGANIZATION');
 
         if (!$adminOrganization) {
             $adminOrganization = $this->container->get('claroline.manager.role_manager')->createBaseRole('ROLE_ADMIN_ORGANIZATION', 'admin_organization');
         }
 
-        /** @var AdminTool $tool */
-        $userManagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('community');
+        /** @var AdminTool $userManagement */
+        $userManagement = $om->getRepository(AdminTool::class)->findOneByName('community');
         $userManagement->addRole($adminOrganization);
 
         $om->persist($userManagement);
         $om->flush();
-    }
-
-    public function postInstall()
-    {
-        $this->buildDefaultHomeTab();
-    }
-
-    private function buildDefaultHomeTab()
-    {
-        $this->log('Build default home tab');
-
-        $manager = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $translator = $this->container->get('translator');
-        $infoName = $translator->trans('informations', [], 'platform');
-
-        $desktopHomeTab = new HomeTab();
-        $desktopHomeTab->setType(HomeTab::TYPE_ADMIN_DESKTOP);
-        $manager->persist($desktopHomeTab);
-
-        $desktopHomeTabConfig = new HomeTabConfig();
-        $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
-        $desktopHomeTabConfig->setVisible(true);
-        $desktopHomeTabConfig->setTabOrder(1);
-        $desktopHomeTabConfig->setName($infoName);
-        $desktopHomeTabConfig->setLongTitle($infoName);
-        $manager->persist($desktopHomeTabConfig);
-
-        $translator = $this->container->get('translator');
-        $infoName = $translator->trans('my_workspaces', [], 'platform');
-
-        $dataSource = $manager->getRepository(DataSource::class)->findOneByName('my_workspaces');
-        $widget = $manager->getRepository(Widget::class)->findOneByName('list');
-
-        $container = new WidgetContainer();
-        $container->setHomeTab($desktopHomeTab);
-        $manager->persist($container);
-
-        $containerConfig = new WidgetContainerConfig();
-        $containerConfig->setLayout([1]);
-        $containerConfig->setName($infoName);
-        $containerConfig->setWidgetContainer($container);
-        $manager->persist($containerConfig);
-
-        $widgetInstance = new WidgetInstance();
-        $widgetInstance->setDataSource($dataSource);
-        $widgetInstance->setWidget($widget);
-        $widgetInstance->setContainer($container);
-        $manager->persist($widgetInstance);
-
-        $widgetInstanceConfig = new WidgetInstanceConfig();
-        $widgetInstanceConfig->setWidgetInstance($widgetInstance);
-        $widgetInstanceConfig->setType('list');
-        $manager->persist($widgetInstanceConfig);
-
-        $manager->flush();
     }
 }

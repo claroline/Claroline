@@ -28,6 +28,7 @@ class PlatformDefaults implements ParameterProviderInterface
     public function getDefaultParameters()
     {
         return [
+            'meta' => [],
             'home' => [
                 'type' => 'none',
                 'data' => null,
@@ -120,8 +121,6 @@ class PlatformDefaults implements ParameterProviderInterface
             'security' => [
                 'form_captcha' => true,
                 'form_honeypot' => false,
-                'platform_limit_date' => null,
-                'platform_init_date' => 1388534461, //1 june 2014
                 'cookie_lifetime' => 3600,
                 'account_duration' => null,
                 'default_root_anon_id' => null,
@@ -154,17 +153,17 @@ class PlatformDefaults implements ParameterProviderInterface
                 'show_terms_of_service' => false,
             ],
             'mailer' => [
-              'enabled' => true,
-              'transport' => 'sendmail',
-              'host' => null,
-              'port' => null,
-              'encryption' => null,
-              'username' => null,
-              'password' => null,
-              'auth_mode' => null,
-              'api_key' => null,
-              'tag' => null,
-              'from' => null,
+                'enabled' => true,
+                'transport' => 'sendmail',
+                'host' => null,
+                'port' => null,
+                'encryption' => null,
+                'username' => null,
+                'password' => null,
+                'auth_mode' => null,
+                'api_key' => null,
+                'tag' => null,
+                'from' => null,
             ],
             'ssl' => [
                 'enabled' => false,
@@ -200,7 +199,6 @@ class PlatformDefaults implements ParameterProviderInterface
             'header' => [
                 'search',
                 'history',
-                'favourites',
                 'favourites',
                 'notifications',
             ],

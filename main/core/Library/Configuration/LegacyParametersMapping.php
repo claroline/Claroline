@@ -51,7 +51,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'form_captcha' => 'security.form_captcha',
             'form_honeypot' => 'security.form_honeypot',
             'platform_limit_date' => 'security.platform_limit_date', //1 june 2019
-            'platform_init_date' => 'security.platform_init_date', //1 june 2014
             'account_duration' => 'security.account_duration',
             'username_regex' => 'registration.username_regex',
             'anonymous_public_profile' => 'security.anonymous_public_profile',
