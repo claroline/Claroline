@@ -497,7 +497,8 @@ class UserManager
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
-        $created = $this->workspaceManager->getOneByCode($user->getUsername());
+        $created = $this->objectManager->getRepository(Workspace::class)->findOneByCode($user->getUsername());
+
         if ($created) {
             $code = $user->getUsername().'~'.uniqid();
         } else {

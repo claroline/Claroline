@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Command\Removal;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,7 +56,7 @@ class RemoveFilesFromUnusedWorkspaceCommand extends ContainerAwareCommand
                 if (strpos('_'.$name, 'WORKSPACE')) {
                     $parts = explode('_', $name);
                     $id = $parts[1];
-                    $workspace = $container->get('claroline.manager.workspace_manager')->getWorkspaceById($id);
+                    $workspace = $container->get(ObjectManager::class)->getRepository(Workspace::class)->find($id);
 
                     if (!$workspace) {
                         $continue = false;

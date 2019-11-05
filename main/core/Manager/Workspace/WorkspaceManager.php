@@ -328,28 +328,6 @@ class WorkspaceManager
         return $this->workspaceRepo->findWorkspacesWithMostResources($max, $organizations);
     }
 
-    /**
-     * @param int $workspaceId
-     *
-     * @return Workspace
-     */
-    public function getWorkspaceById($workspaceId)
-    {
-        return $this->workspaceRepo->find($workspaceId);
-    }
-
-    /**
-     * @param string $code
-     *
-     * @return Workspace
-     */
-    public function getOneByCode($code)
-    {
-        return $this->workspaceRepo->findOneBy([
-            'code' => $code,
-        ]);
-    }
-
     public function addUserQueue(Workspace $workspace, User $user)
     {
         $wksrq = new WorkspaceRegistrationQueue();
@@ -453,28 +431,6 @@ class WorkspaceManager
         }
 
         return $size;
-    }
-
-    /**
-     * @param Workspace $workspace
-     *
-     * @return Tool
-     */
-    public function getFirstOpenableTool(Workspace $workspace)
-    {
-        $token = $this->container->get('security.token_storage')->getToken();
-        $roles = $this->container->get('Claroline\CoreBundle\Library\Security\Utilities')->getRoles($token);
-
-        /** @var Tool[] $orderedTools */
-        $orderedTools = $this->container->get('claroline.manager.tool_manager')->getDisplayedByRolesAndWorkspace($roles, $workspace);
-        //loop through the tools till we can open one !
-        $authorization = $this->container->get('security.authorization_checker');
-
-        foreach ($orderedTools as $tool) {
-            if ($authorization->isGranted($tool->getName(), $workspace)) {
-                return $tool;
-            }
-        }
     }
 
     public function getWorkspaceOptions(Workspace $workspace)
@@ -724,6 +680,7 @@ class WorkspaceManager
 
     /**
      * @param Workspace $workspace
+     *                             Only used in a old updater
      *
      * @return array
      */

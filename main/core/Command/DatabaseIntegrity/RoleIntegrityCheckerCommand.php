@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -53,8 +55,9 @@ class RoleIntegrityCheckerCommand extends ContainerAwareCommand
         } elseif (!empty($workspaceCode)) {
             $workspace = $this
                 ->getContainer()
-                ->get('claroline.manager.workspace_manager')
-                ->getOneByCode($workspaceCode);
+                ->get(ObjectManager::class)
+                ->getRepository(Workspace::class)
+                ->findOneByCode($workspaceCode);
             if (empty($workspace)) {
                 $consoleLogger->warning("Could not find workspace \"{$workspaceCode}\"");
 

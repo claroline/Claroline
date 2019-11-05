@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -528,7 +529,7 @@ class ImportCsvManager
             } else {
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($workspace)) {
                     $logs[] = "[$lineNb] $workspaceTxt [$wsCode] $nonExistentTxt";
@@ -587,7 +588,7 @@ class ImportCsvManager
             } else {
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($workspace)) {
                     $logs[] = "[$lineNb] $workspaceTxt [$wsCode] $nonExistentTxt";
@@ -651,7 +652,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
                 $user = $this->userManager->getOneUserByUsername($username);
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($user) || is_null($workspace)) {
                     if (is_null($user)) {
@@ -721,7 +722,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['workspace_code'];
                 $roleName = $lineDatas['role_name'];
                 $user = $this->userManager->getOneUserByUsername($username);
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($user) || is_null($workspace)) {
                     if (is_null($user)) {
@@ -791,7 +792,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
                 $group = $this->groupManager->getGroupByName($groupName);
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($group) || is_null($workspace)) {
                     if (is_null($group)) {
@@ -862,7 +863,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
                 $group = $this->groupManager->getGroupByName($groupName);
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($group) || is_null($workspace)) {
                     if (is_null($group)) {
@@ -921,7 +922,7 @@ class ImportCsvManager
                 $logs[] = $lineDatas['error'];
             } else {
                 $wsCode = $lineDatas[1];
-                $workspace = $this->workspaceManager->getOneByCode($wsCode);
+                $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($wsCode);
 
                 if (is_null($workspace)) {
                     $workspaces[] = $lineDatas;
