@@ -12,8 +12,8 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 
-import {constants} from '#/main/core/administration/parameters/main/constants'
-import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/administration/parameters/main/prop-types'
+import {constants} from '#/main/core/administration/parameters/constants'
+import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/administration/parameters/prop-types'
 
 class ConnectionModal extends Component {
   constructor(props) {

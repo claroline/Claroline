@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Repository\Icon\IconItemRepository;
 use Claroline\CoreBundle\Repository\Icon\IconSetRepository;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class IconSetManager
@@ -220,6 +221,62 @@ class IconSetManager
                 }
             }
         }
+    }
+
+    public function fetchAllResourcesMimeTypes()
+    {
+        $mimeTypes = [];
+
+        $defaultIconSet = $this->iconSetRepo->findOneBy(['default' => true]);
+
+        if ($defaultIconSet) {
+            foreach ($defaultIconSet->getIcons() as $iconItem) {
+                $mimeType = $iconItem->getMimeType();
+
+                if ($mimeType) {
+                    $mimeTypes[$mimeType] = $mimeType;
+                }
+            }
+        }
+        ksort($mimeTypes);
+
+        return array_values($mimeTypes);
+    }
+
+    public function uploadIcon(IconSet $iconSet, UploadedFile $file)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $iconSetName = $iconSet->getCname();
+
+        if (!$this->fs->exists($this->iconSetsWebDir.$ds.$iconSetName)) {
+            $this->fs->mkdir($this->iconSetsWebDir.$ds.$iconSetName, 0775);
+        }
+        $fileName = $file->getClientOriginalName();
+        $file->move($this->iconSetsWebDir.$ds.$iconSetName, $fileName);
+
+        return $this->fs->makePathRelative($this->iconSetsWebDir, $this->webDir).$iconSetName.$ds.$fileName;
+    }
+
+    public function updateIconItems(IconSet $iconSet, array $mimeTypes, $url)
+    {
+        $iconItems = [];
+
+        $this->om->startFlushSuite();
+
+        foreach ($mimeTypes as $mimeType) {
+            $iconItem = $this->fetchIconItem($iconSet, $mimeType);
+
+            if (!$iconItem) {
+                $iconItem = new IconItem($iconSet, $url, null, $mimeType);
+            }
+            $iconItem->setRelativeUrl($url);
+            $this->om->persist($iconItem);
+            $iconItems[] = $iconItem;
+        }
+
+        $this->om->endFlushSuite();
+
+        return $iconItems;
     }
 
     public function setLogger(LoggerInterface $logger)

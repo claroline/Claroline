@@ -143,12 +143,6 @@ plugin:
         - name: main_settings
           class: cog
 
-        - name: technical_settings
-          class: wrench
-
-        - name: appearance_settings
-          class: drafting-compass
-
         - name: community
           class: user
 

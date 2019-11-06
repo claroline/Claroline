@@ -344,3 +344,11 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+
+    Claroline\CoreBundle\API\Serializer\Icon\IconSetSerializer:
+        tags: [claroline.serializer]
+
+    Claroline\CoreBundle\API\Serializer\Icon\IconItemSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\Icon\IconSetSerializer'

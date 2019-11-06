@@ -302,3 +302,11 @@ services:
           - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.workspace_restrictions'
+
+    Claroline\CoreBundle\Controller\APINew\Icon\IconSetController: ~
+
+    Claroline\CoreBundle\Controller\APINew\Icon\IconItemController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@claroline.manager.icon_set_manager'
+          - '@claroline.manager.tool_manager'

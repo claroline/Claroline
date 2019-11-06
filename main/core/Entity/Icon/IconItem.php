@@ -13,6 +13,7 @@
 
 namespace Claroline\CoreBundle\Entity\Icon;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,6 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IconItem
 {
+    use Uuid;
+
     /**
      * @var int
      *
@@ -82,6 +85,8 @@ class IconItem
         $mimeType = null,
         $class = null
     ) {
+        $this->refreshUuid();
+
         $this->iconSet = $iconSet;
         $this->relativeUrl = $relativeUrl;
         $this->name = $name;

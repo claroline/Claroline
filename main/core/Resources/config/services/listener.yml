@@ -4,13 +4,6 @@ services:
         autoconfigure: false
         public: true #because lazy
 
-    Claroline\CoreBundle\Listener\Administration\AppearanceListener:
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@claroline.manager.icon_set_manager'
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_appearance_settings, method: onDisplayTool }
-
     Claroline\CoreBundle\Listener\Administration\CommunityListener:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
@@ -34,8 +27,10 @@ services:
 
     Claroline\CoreBundle\Listener\Administration\ParametersListener:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@claroline.manager.locale_manager'
+            - '@claroline.manager.icon_set_manager'
         tags:
             - { name: kernel.event_listener, event: administration_tool_main_settings, method: onDisplayTool }
 
@@ -44,13 +39,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
         tags:
             - { name: kernel.event_listener, event: administration_tool_tasks_scheduling, method: onDisplayTool }
-
-    Claroline\CoreBundle\Listener\Administration\TechnicalListener:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_technical_settings, method: onDisplayTool }
 
     Claroline\CoreBundle\Listener\Administration\TemplateListener:
         arguments:

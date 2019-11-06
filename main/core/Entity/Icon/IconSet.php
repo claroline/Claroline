@@ -13,6 +13,7 @@
 
 namespace Claroline\CoreBundle\Entity\Icon;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -24,6 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class IconSet
 {
+    use Uuid;
+
     /**
      * @var int
      *
@@ -75,8 +78,17 @@ class IconSet
      */
     private $icons;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default" = 0})
+     */
+    private $editable = false;
+
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->icons = new ArrayCollection();
     }
 
@@ -204,5 +216,21 @@ class IconSet
     public function getCname()
     {
         return $this->cname;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEditable()
+    {
+        return $this->editable;
+    }
+
+    /**
+     * @param bool $editable
+     */
+    public function setEditable($editable)
+    {
+        $this->editable = $editable;
     }
 }
