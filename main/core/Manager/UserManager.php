@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -43,7 +42,6 @@ class UserManager
     const MAX_EDIT_BATCH_SIZE = 100;
 
     private $container;
-    private $groupManager;
     private $mailManager;
     private $objectManager;
     private $organizationManager;
@@ -61,7 +59,6 @@ class UserManager
      * UserManager Constructor.
      *
      * @param ContainerInterface           $container
-     * @param GroupManager                 $groupManager
      * @param MailManager                  $mailManager
      * @param ObjectManager                $objectManager
      * @param OrganizationManager          $organizationManager
@@ -75,7 +72,6 @@ class UserManager
      */
     public function __construct(
         ContainerInterface $container,
-        GroupManager $groupManager,
         MailManager $mailManager,
         ObjectManager $objectManager,
         OrganizationManager $organizationManager,
@@ -88,7 +84,6 @@ class UserManager
         WorkspaceManager $workspaceManager)
     {
         $this->container = $container;
-        $this->groupManager = $groupManager;
         $this->mailManager = $mailManager;
         $this->objectManager = $objectManager;
         $this->organizationManager = $organizationManager;
@@ -185,306 +180,6 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
-    }
-
-    /**
-     * Import users from an array.
-     * There is the array format:.
-     *
-     * @todo some batch processing
-     *
-     * array(
-     *     array(firstname, lastname, username, pwd, email, code, phone),
-     *     array(firstname2, lastname2, username2, pwd2, email2, code2, phone2),
-     *     array(firstname3, lastname3, username3, pwd3, email3, code3, phone3),
-     * )
-     *
-     * @param array    $users
-     * @param bool     $sendMail
-     * @param \Closure $logger                 an anonymous function allowing to log actions
-     * @param array    $additionalRoles
-     * @param bool     $enableEmailNotifaction
-     * @param array    $options
-     *
-     * @return array
-     *
-     * @throws AddRoleException
-     * @throws \Claroline\CoreBundle\Persistence\NoFlushSuiteStartedException
-     *
-     * @internal param string $authentication an authentication source
-     * @internal param bool $email do the users need to be mailed
-
-     *
-     * @todo use api transfer instead
-     * @todo REMOVE ME
-     */
-    public function importUsers(
-        array $users,
-        $sendMail = true,
-        $logger = null,
-        $additionalRoles = [],
-        $enableEmailNotifaction = false,
-        $options = []
-    ) {
-        //build options
-        if (!isset($options['ignore-update'])) {
-            $options['ignore-update'] = false;
-        }
-
-        if (!isset($options['single-validate'])) {
-            $options['single-validate'] = false;
-        }
-
-        // Return values
-        $created = [];
-        $updated = [];
-        $skipped = [];
-        // Skipped users table
-        $skippedUsers = [];
-        //keep these roles before the clear() will mess everything up. It's not what we want.
-        $tmpRoles = $additionalRoles;
-        $additionalRoles = [];
-        //I need to do that to import roles from models. Please don't ask why, I have no fucking idea.
-        $this->objectManager->clear();
-
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $this->objectManager->merge($roleUser);
-        $this->objectManager->persist($roleUser);
-
-        foreach ($tmpRoles as $role) {
-            if ($role) {
-                $additionalRoles[] = $this->objectManager->merge($role);
-            }
-        }
-
-        $max = $roleUser->getMaxUsers();
-        $total = $this->countUsersByRoleIncludingGroup($roleUser);
-
-        $countUsersToUpdate = $options['ignore-update'] ? 0 : $this->countUsersToUpdate($users);
-
-        if ($total + count($users) - $countUsersToUpdate > $max) {
-            throw new AddRoleException($total, count($users) - $countUsersToUpdate, $max);
-        }
-
-        $lg = $this->platformConfigHandler->getParameter('locale_language');
-        $this->objectManager->startFlushSuite();
-        $i = 1;
-        $j = 0;
-        $countCreated = 0;
-        $countUpdated = 0;
-
-        foreach ($users as $user) {
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $fullName = $firstName.' '.$lastName;
-            $username = $user[2];
-            $pwd = $user[3];
-            $email = trim($user[4]);
-
-            if (isset($user[5])) {
-                $code = '' === trim($user[5]) ? null : $user[5];
-            } else {
-                $code = null;
-            }
-
-            if (isset($user[6])) {
-                $phone = '' === trim($user[6]) ? null : $user[6];
-            } else {
-                $phone = null;
-            }
-
-            if (isset($user[7])) {
-                $authentication = '' === trim($user[7]) ? null : $user[7];
-            } else {
-                $authentication = null;
-            }
-
-            if (isset($user[8])) {
-                $modelName = '' === trim($user[8]) ? null : $user[8];
-            } else {
-                $modelName = null;
-            }
-
-            if (isset($user[9])) {
-                $groupName = '' === trim($user[9]) ? null : $user[9];
-            } else {
-                $groupName = null;
-            }
-
-            if (isset($user[10])) {
-                $organizationName = '' === trim($user[10]) ? null : $user[10];
-            } else {
-                $organizationName = null;
-            }
-
-            $hasPersonalWorkspace = (isset($user[11]) && !is_null($user[11]) && '' !== trim($user[11])) ?
-                (bool) $user[11] : null;
-            $isMailValidated = isset($user[12]) ? (bool) $user[12] : false;
-            $isMailNotified = isset($user[13]) ? (bool) $user[13] : $enableEmailNotifaction;
-
-            if ($modelName) {
-                //TODO MODEL TEST
-                $model = $this->objectManager
-                    ->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')
-                    ->findOneBy(['code' => $modelName]);
-            } else {
-                $model = null;
-            }
-
-            if ($organizationName) {
-                $organizations = [
-                    $this->objectManager
-                        ->getRepository('Claroline\CoreBundle\Entity\Organization\Organization')
-                        ->findOneBy(['name' => $organizationName]),
-                ];
-            } else {
-                $organizations = [];
-            }
-
-            if ($groupName) {
-                $group = $this->groupManager->getGroupByNameAndScheduledForInsert($groupName);
-
-                if (!$group) {
-                    $group = new Group();
-                    $group->setName($groupName);
-                    $group = $this->groupManager->insertGroup($group);
-                }
-            } else {
-                $group = null;
-            }
-
-            $userEntity = $this->getUserByUsernameOrMailOrCode($username, $email, $code);
-
-            if ($userEntity && $options['ignore-update']) {
-                if ($logger) {
-                    $logger(" Skipping  {$userEntity->getUsername()}...");
-                }
-                $skipped[] = $fullName;
-                continue;
-            }
-
-            $isNew = false;
-
-            if (!$userEntity) {
-                $isNew = true;
-                $userEntity = new User();
-                $userEntity->setPlainPassword($pwd);
-                ++$countCreated;
-            } else {
-                if (!empty($pwd)) {
-                    $userEntity->setPlainPassword($pwd);
-                }
-                ++$countUpdated;
-            }
-
-            $userEntity->setUsername($username);
-            $userEntity->setEmail($email);
-            $userEntity->setFirstName($firstName);
-            $userEntity->setLastName($lastName);
-            $userEntity->setAdministrativeCode($code);
-            $userEntity->setPhone($phone);
-            $userEntity->setLocale($lg);
-            $userEntity->setAuthentication($authentication);
-            $userEntity->setIsMailNotified($isMailNotified);
-            $userEntity->setIsMailValidated($isMailValidated);
-
-            if ($options['single-validate']) {
-                $errors = $this->validator->validate($userEntity);
-                if (count($errors) > 0) {
-                    $skippedUsers[$i] = $userEntity;
-                    $skipped[] = $fullName;
-                    if ($isNew) {
-                        --$countCreated;
-                    } else {
-                        --$countUpdated;
-                    }
-                    continue;
-                }
-            }
-
-            if (!$isNew) {
-                if ($logger) {
-                    $logger(" User $j ($username) being updated...");
-                }
-                $this->roleManager->associateRoles($userEntity, $additionalRoles);
-            }
-
-            if ($isNew) {
-                if ($logger) {
-                    $logger(" User $j ($username) being created...");
-                }
-
-                $this->createUser(
-                    $userEntity,
-                    $sendMail,
-                    $additionalRoles,
-                    $model,
-                    $username.uniqid(),
-                    $organizations,
-                    $hasPersonalWorkspace
-                );
-            }
-
-            $this->objectManager->persist($userEntity);
-            if ($isNew) {
-                $created[] = $fullName;
-            } else {
-                $updated[] = $fullName;
-            }
-
-            if ($group) {
-                $this->groupManager->addUsersToGroup($group, [$userEntity]);
-            }
-
-            if ($logger) {
-                $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
-            }
-            ++$i;
-            ++$j;
-
-            if (0 === $i % self::MAX_USER_BATCH_SIZE) {
-                if ($logger) {
-                    $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
-                }
-
-                $this->objectManager->forceFlush();
-
-                if ($logger) {
-                    $logger(' flushing users...');
-                }
-
-                $tmpRoles = $additionalRoles;
-                $this->objectManager->clear();
-                $additionalRoles = [];
-
-                foreach ($tmpRoles as $toAdd) {
-                    if ($toAdd) {
-                        $additionalRoles[] = $this->objectManager->merge($toAdd);
-                    }
-                }
-
-                if ($this->tokenStorage->getToken()) {
-                    $this->objectManager->merge($this->tokenStorage->getToken()->getUser());
-                }
-            }
-        }
-
-        $this->objectManager->endFlushSuite();
-
-        if ($logger) {
-            $logger($countUpdated.' users updated ('.implode(',', $updated).')');
-            $logger($countCreated.' users created ('.implode(',', $created).')');
-        }
-
-        foreach ($skippedUsers as $key => $user) {
-            $logger('The user '.$user.' was skipped at line '.$key.' because it failed the validation pass.');
-        }
-
-        return [
-            'created' => $created,
-            'updated' => $updated,
-            'skipped' => $skipped,
-        ];
     }
 
     /**

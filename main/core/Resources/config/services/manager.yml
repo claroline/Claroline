@@ -34,7 +34,6 @@ services:
     Claroline\CoreBundle\Manager\UserManager:
         arguments:
           - '@service_container'
-          - '@claroline.manager.group_manager'
           - '@claroline.manager.mail_manager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.organization.organization_manager'
@@ -235,20 +234,6 @@ services:
         alias: Claroline\CoreBundle\Manager\IPWhiteListManager
         public: true
 
-    Claroline\CoreBundle\Manager\ImportCsvManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@translator'
-          - '@claroline.manager.group_manager'
-          - '@claroline.manager.role_manager'
-          - '@claroline.manager.user_manager'
-          - '@claroline.manager.workspace_manager'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-
-    claroline.manager.import_csv_manager:
-        alias: Claroline\CoreBundle\Manager\ImportCsvManager
-        public: true
-
     Claroline\CoreBundle\Manager\IconSetManager:
         arguments:
           - '%claroline.param.web_dir%'
@@ -259,16 +244,6 @@ services:
 
     claroline.manager.icon_set_manager:
         alias: Claroline\CoreBundle\Manager\IconSetManager
-        public: true
-
-    Claroline\CoreBundle\Manager\GroupManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.role_manager'
-
-    claroline.manager.group_manager:
-        alias: Claroline\CoreBundle\Manager\GroupManager
         public: true
 
     Claroline\CoreBundle\Manager\FileManager:
@@ -482,7 +457,7 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
-          
+
     #alias is required: todo: use tags
     claroline.transfer.home:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\Home
