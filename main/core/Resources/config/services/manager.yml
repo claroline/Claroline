@@ -509,7 +509,6 @@ services:
         arguments:
           - '@security.token_storage'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.role_manager'
           - '@claroline.manager.mask_manager'
           - '@service_container'
@@ -559,8 +558,10 @@ services:
         public: true
 
     Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager:
+        public: true
         arguments:
           - '@doctrine.dbal.default_connection'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     claroline.manager.optimized_rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager

@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Connection;
 
@@ -23,9 +25,10 @@ class OptimizedRightsManager
 {
     use LoggableTrait;
 
-    public function __construct(Connection $conn)
+    public function __construct(Connection $conn, StrictDispatcher $dispatcher)
     {
         $this->conn = $conn;
+        $this->dispatcher = $dispatcher;
     }
 
     public function update(ResourceNode $node, Role $role, $mask = 1, $types = [], $recursive = false)
@@ -33,6 +36,8 @@ class OptimizedRightsManager
         $recursive ?
             $this->recursiveUpdate($node, $role, $mask, $types) :
             $this->singleUpdate($node, $role, $mask, $types);
+
+        $this->logUpdate($node, $role, $mask, $types);
     }
 
     private function singleUpdate(ResourceNode $node, Role $role, $mask = 1, $types = [])
@@ -64,7 +69,7 @@ class OptimizedRightsManager
         }
 
         $typeList = array_map(function ($type) {
-            return $type->getName();
+            return $type instanceof ResourceType ? $type->getName() : $type;
         }, $types);
 
         $sql = "
@@ -169,5 +174,20 @@ class OptimizedRightsManager
           [$node->getPath().'%', $typeList],
           [\PDO::PARAM_STR, Connection::PARAM_STR_ARRAY]
       );
+    }
+
+    /**
+     * @param ResourceRights $rights
+     */
+    public function logUpdate(ResourceNode $node, Role $role, $mask, $types)
+    {
+        $this->dispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceRoleChangeRight',
+            [$role, $node, [
+                'mask' => $mask,
+                'types' => $types,
+            ]]
+        );
     }
 }

@@ -401,25 +401,17 @@ class ResourceNodeSerializer
             }
 
             if ($role) {
-                //if we update (we need the id anyway)
-                if ($resourceNode->getId()) {
-                    $this->newRightsManager->update(
+                if (!$resourceNode->getId()) {
+                    $this->om->save($resourceNode);
+                }
+
+                $this->newRightsManager->update(
                       $resourceNode,
                       $role,
                       $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
                       $creationPerms,
                       $recursive
                   );
-                //otherwise the old one will do the trick
-                } else {
-                    $this->rightsManager->editPerms(
-                      $right['permissions'],
-                      $role->getName(),
-                      $resourceNode,
-                      false,
-                      $creationPerms
-                  );
-                }
             } else {
                 //role not found ... how to retrieve it ?
             }
