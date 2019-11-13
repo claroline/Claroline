@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Organization\OrganizationRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="user_organization")
  */
 class UserOrganizationReference

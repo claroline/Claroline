@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Repository\Organization\OrganizationRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -59,7 +58,6 @@ class UserSerializer extends GenericSerializer
     /** @var StrictDispatcher */
     private $eventDispatcher;
 
-    /** @var OrganizationRepository */
     private $organizationRepo;
     /** @var RoleRepository */
     private $roleRepo;
@@ -212,7 +210,7 @@ class UserSerializer extends GenericSerializer
             $fields = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
                 ->findPlatformValuesByUser($user);
-            $serializedUser['facets'] = [];
+            $serializedUser['profile'] = [];
 
             /** @var FieldFacetValue $field */
             foreach ($fields as $field) {

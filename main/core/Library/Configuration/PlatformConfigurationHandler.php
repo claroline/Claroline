@@ -94,7 +94,8 @@ class PlatformConfigurationHandler
         if (!is_writable($this->configFile)) {
             throw new \RuntimeException('Platform options is not writable');
         }
-        $this->parameters[$parameter] = $value;
+
+        ArrayUtils::set($this->parameters, $parameter, $value);
 
         ksort($this->parameters);
         $parameters = json_encode($this->parameters, JSON_PRETTY_PRINT);
