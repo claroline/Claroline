@@ -25,7 +25,7 @@ const OrganizationsList = (props) =>
     }}
     delete={{
       url: ['apiv2_organization_delete_bulk'],
-      disabled: (rows) => 0 !== rows.filter(organization => !organization.meta.default).length
+      disabled: (rows) => 0 === rows.filter(organization => !organization.meta.default).length
     }}
     definition={OrganizationList.definition}
     actions={(rows) => [
