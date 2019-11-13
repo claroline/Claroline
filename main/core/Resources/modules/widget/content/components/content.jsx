@@ -1,7 +1,9 @@
 import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {Helmet} from 'react-helmet'
 import isEqual from 'lodash/isEqual'
 
+import {theme} from '#/main/app/config'
 import {mount, unmount} from '#/main/app/dom/mount'
 
 import {getWidget} from '#/main/core/widget/types'
@@ -44,6 +46,13 @@ class WidgetContent extends Component {
 
         const WidgetAppComponent = () =>
           <div className="widget-content">
+            {WidgetApp.styles && 0 !== WidgetApp.styles.length &&
+              <Helmet>
+                {WidgetApp.styles.map(styleName =>
+                  <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
+                )}
+              </Helmet>
+            }
             {createElement(WidgetApp.component)}
           </div>
 
