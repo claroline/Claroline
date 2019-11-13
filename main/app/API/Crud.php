@@ -7,6 +7,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -24,6 +25,9 @@ class Crud
     const PROPERTY_SET = 'set';
     /** @var string */
     const NO_VALIDATE = 'no_validate';
+    // TODO : remove me. only for retro compatibility it should be always the case
+    // but I don't know if it will break things if I do it now
+    const THROW_EXCEPTION = 'throw_exception';
 
     /** @var ObjectManager */
     private $om;
@@ -73,6 +77,8 @@ class Crud
      * @param array  $options - additional creation options
      *
      * @return object|array
+     *
+     * @throws InvalidDataException
      */
     public function create($class, $data, array $options = [])
     {
@@ -81,7 +87,12 @@ class Crud
             $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
 
             if (count($errors) > 0) {
-                return $errors; // todo : it should throw an Exception otherwise it makes return inconsistent
+                // TODO : it should always throw exception
+                if (in_array(self::THROW_EXCEPTION, $options)) {
+                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
+                } else {
+                    return $errors;
+                }
             }
         }
 
@@ -109,7 +120,9 @@ class Crud
      * @param mixed  $data    - the serialized data of the object to create
      * @param array  $options - additional update options
      *
-     * @return object|array
+     * @return array|object
+     *
+     * @throws InvalidDataException
      */
     public function update($class, $data, array $options = [])
     {
@@ -118,7 +131,12 @@ class Crud
             $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
 
             if (count($errors) > 0) {
-                return $errors; // todo : it should throw an Exception otherwise it makes return inconsistent
+                // TODO : it should always throw exception
+                if (in_array(self::THROW_EXCEPTION, $options)) {
+                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
+                } else {
+                    return $errors;
+                }
             }
         }
 
