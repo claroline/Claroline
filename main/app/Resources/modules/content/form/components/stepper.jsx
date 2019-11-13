@@ -3,10 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import merge from 'lodash/merge'
 
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {Button} from '#/main/app/action'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {Route as RouteTypes, Redirect as RedirectTypes} from '#/main/app/router/prop-types'
 import {withRouter, Routes, NavLink} from '#/main/app/router'
 
@@ -46,7 +47,7 @@ FormStepperNav.propTypes = {
   steps: T.arrayOf(T.shape(
     merge({
       icon: T.string,
-      title: T.string.isRequired,
+      title: T.string.isRequired
     }, RouteTypes.propTypes))
   ).isRequired
 }
@@ -110,6 +111,12 @@ const FormStepperComponent = props => {
         activeIndex={activeIndex}
       />
 
+      <ContentTitle
+        level={props.level}
+        displayLevel={props.displayLevel}
+        title={props.steps[activeIndex].title}
+      />
+
       <Routes
         path={props.path}
         routes={props.steps}
@@ -131,6 +138,8 @@ const FormStepper = withRouter(FormStepperComponent)
 FormStepper.propTypes = {
   path: T.string,
   className: T.string,
+  level: T.number,
+  displayLevel: T.number,
   location: T.shape({
     pathname: T.string
   }),
@@ -149,7 +158,8 @@ FormStepper.propTypes = {
 }
 
 FormStepper.defaultProps = {
-  path: ''
+  path: '',
+  level: 2
 }
 
 export {

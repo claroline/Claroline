@@ -17,7 +17,7 @@ const HeadingWrapper = props  =>
         props.className,
         props.displayLevel && `h${props.displayLevel}`,
         !props.displayed && 'sr-only',
-        `text-${props.align}`
+        props.align && `text-${props.align}`
       )
     }
   ), props.children)
@@ -90,6 +90,11 @@ ContentTitle.propTypes = {
   actions: T.arrayOf(T.shape({
     // TODO : action types
   }))
+}
+
+ContentTitle.defaultProps = {
+  align: 'left',
+  displayed: true
 }
 
 export {
