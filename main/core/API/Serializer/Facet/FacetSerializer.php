@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Facet;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
@@ -14,11 +14,21 @@ class FacetSerializer
 {
     use SerializerTrait;
 
+    /** @var ObjectManager */
+    private $om;
+    /** @var RoleSerializer */
+    private $roleSerializer;
+    /** @var PanelFacetSerializer */
+    private $pfSerializer;
+
     /**
-     * @param SerializerProvider $serializer
+     * @param ObjectManager        $om
+     * @param RoleSerializer       $roleSerializer
+     * @param PanelFacetSerializer $pfSerializer
      */
-    public function __construct(RoleSerializer $roleSerializer, PanelFacetSerializer $pfSerializer)
+    public function __construct(ObjectManager $om, RoleSerializer $roleSerializer, PanelFacetSerializer $pfSerializer)
     {
+        $this->om = $om;
         $this->roleSerializer = $roleSerializer;
         $this->pfSerializer = $pfSerializer;
     }
@@ -81,7 +91,7 @@ class FacetSerializer
 
             foreach ($data['sections'] as $section) {
                 //check if section exists first
-                $panelFacet = $this->_om->getObject($section, PanelFacet::class) ?? new PanelFacet();
+                $panelFacet = $this->om->getObject($section, PanelFacet::class) ?? new PanelFacet();
                 $this->pfSerializer->deserialize($section, $panelFacet, $options);
                 $panelFacet->setFacet($facet);
             }

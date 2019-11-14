@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Facet;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
@@ -13,8 +14,21 @@ class PanelFacetSerializer
 {
     use SerializerTrait;
 
-    public function __construct(RoleSerializer $roleSerializer, FieldFacetSerializer $ffSerializer)
+    /** @var ObjectManager */
+    private $om;
+    /** @var RoleSerializer */
+    private $roleSerializer;
+    /** @var FieldFacetSerializer */
+    private $ffSerializer;
+
+    /**
+     * @param ObjectManager        $om
+     * @param RoleSerializer       $roleSerializer
+     * @param FieldFacetSerializer $ffSerializer
+     */
+    public function __construct(ObjectManager $om, RoleSerializer $roleSerializer, FieldFacetSerializer $ffSerializer)
     {
+        $this->om = $om;
         $this->roleSerializer = $roleSerializer;
         $this->ffSerializer = $ffSerializer;
     }
@@ -87,7 +101,7 @@ class PanelFacetSerializer
                     $field['restrictions']['order'] = $i;
                 }
                 ++$i;
-                $fieldFacet = $this->_om->getObject($field, FieldFacet::class) ?? new FieldFacet();
+                $fieldFacet = $this->om->getObject($field, FieldFacet::class) ?? new FieldFacet();
                 $fieldFacet = $this->ffSerializer->deserialize($field, $fieldFacet, $options);
                 $fieldFacet->setPanelFacet($panel);
             }
