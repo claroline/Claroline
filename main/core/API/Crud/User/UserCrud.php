@@ -10,11 +10,15 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\UserCreatedEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UserCrud
 {
+    /** @var UserManager */
+    private $userManager;
+
     /**
      * @param ContainerInterface $container
      */
@@ -57,13 +61,7 @@ class UserCrud
     {
         $this->om->startFlushSuite();
 
-        if (in_array(Options::FORCE_RANDOM_PUBLIC_URL, $options)) {
-            $publicUrl = $user->getFirstName().'.'.$user->getLastName();
-            $publicUrl = strtolower(str_replace(' ', '-', $publicUrl)).uniqid();
-            $user->setPublicUrl($publicUrl);
-        } else {
-            $user->setPublicUrl($this->userManager->generatePublicUrl($user));
-        }
+        $user->setPublicUrl($this->userManager->generatePublicUrl($user));
 
         $addedTools = $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);

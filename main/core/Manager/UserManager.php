@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -292,23 +293,6 @@ class UserManager
         return $this->userRepo->findAll();
     }
 
-    /**
-     * @param string $firstName
-     * @param string $lastName
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return User[]
-     */
-    public function getUsersByFirstNameAndLastName($firstName, $lastName)
-    {
-        return $this->userRepo->findBy([
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-        ]);
-    }
-
     public function countUsersForPlatformRoles($organizations = null)
     {
         $roles = $this->roleManager->getAllPlatformRoles();
@@ -471,15 +455,10 @@ class UserManager
      */
     public function generatePublicUrl(User $user)
     {
-        $publicUrl = $user->getFirstName().'.'.$user->getLastName();
+        $publicUrl = $user->getUsername();
         $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
-        $searchedUsers = $this->userRepo->findOneBy(['publicUrl' => $publicUrl]);
 
-        if (!empty($searchedUsers)) {
-            $publicUrl .= '_'.uniqid();
-        }
-
-        return $publicUrl;
+        return TextNormalizer::stripDiacritics($publicUrl);
     }
 
     public function countUsersByRoleIncludingGroup(Role $role)

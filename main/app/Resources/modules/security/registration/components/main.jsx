@@ -22,7 +22,6 @@ class RegistrationMain extends Component {
 
     if (!this.props.options.allowWorkspace && this.props.defaultWorkspaces) {
       steps.push({
-        path: '/registration',
         title: 'Registration',
         component: Registration
       })
@@ -30,16 +29,13 @@ class RegistrationMain extends Component {
 
     steps = steps.concat([
       {
-        path: '/account',
         title: 'Compte utilisateur',
         component: Required
       }, {
-        path: '/options',
         title: 'Configuration',
         component: Optional
       }
     ], this.props.facets.map(facet => ({
-      path: `/${facet.id}`,
       title: facet.title,
       component: () => {
         const currentFacet = <Facet facet={facet}/>
@@ -50,7 +46,6 @@ class RegistrationMain extends Component {
 
     if (this.props.options.forceOrganizationCreation) {
       steps.push({
-        path: '/organization',
         title: 'Organization',
         component: Organization
       })
@@ -58,7 +53,6 @@ class RegistrationMain extends Component {
 
     if (this.props.options.allowWorkspace) {
       steps.push({
-        path: '/workspace',
         title: 'Workspace',
         component: Workspace
       })
@@ -66,7 +60,6 @@ class RegistrationMain extends Component {
 
     return (
       <FormStepper
-        path={this.props.path}
         submit={{
           type: CALLBACK_BUTTON,
           icon: 'fa fa-user-plus',
@@ -77,9 +70,6 @@ class RegistrationMain extends Component {
           })
         }}
         steps={steps}
-        redirect={[
-          {from: '/', exact: true, to: !this.props.options.allowWorkspace && this.props.defaultWorkspaces ? '/registration' : '/account'}
-        ]}
       />
     )
   }

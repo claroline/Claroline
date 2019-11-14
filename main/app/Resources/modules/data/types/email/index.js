@@ -1,5 +1,5 @@
-import {trans} from '#/main/app/intl/translation'
-import {chain, string, email} from '#/main/app/data/types/validators'
+import {trans, tval} from '#/main/app/intl/translation'
+import {chain, string, email, notExist} from '#/main/app/data/types/validators'
 
 import {EmailDisplay} from '#/main/app/data/types/email/components/display'
 import {EmailInput} from '#/main/app/data/types/email/components/input'
@@ -12,7 +12,13 @@ const dataType = {
     description: trans('email_desc', {}, 'data'),
     creatable: true
   },
-  validate: (value) => chain(value, {}, [string, email]),
+  validate: (value, options) => {
+    if (options.unique && !options.unique.error) {
+      options.unique.error = tval('This email already exists.')
+    }
+
+    return chain(value, options, [string, email, notExist])
+  },
   components: {
     input: EmailInput,
     details: EmailDisplay,

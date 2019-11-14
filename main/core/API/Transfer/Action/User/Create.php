@@ -26,7 +26,7 @@ class Create extends AbstractAction
     public function execute(array $data, &$successData = [])
     {
         $hasWs = false;
-        $options = [Options::FORCE_RANDOM_PUBLIC_URL];
+        $options = [];
 
         if (isset($data['meta']) && isset($data['meta']['personalWorkspace'])) {
             $hasWs = $data['meta']['personalWorkspace'];
