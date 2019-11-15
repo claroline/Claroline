@@ -115,7 +115,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
           displayable: false,
           displayed: false,
           sortable: false,
-          filterable: !!currentUser,
+          filterable: true,
           type: 'choice',
           options: {
             choices: Object.assign({
