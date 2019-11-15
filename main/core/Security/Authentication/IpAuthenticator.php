@@ -50,7 +50,7 @@ class IpAuthenticator implements SimplePreAuthenticatorInterface
 
         // initialize a new token for the user
         return new IpToken(
-            $this->config->getParameter('default_root_anon_id'),
+            $this->config->getParameter('security.default_root_anon_id'),
             null,
             $providerKey
         );
