@@ -55,7 +55,7 @@ const PlayerTab = props =>
               dangerous={true}
               callback={() => {
                 props.setAdministration(false)
-                props.fetchTabs(false)
+                props.fetchTabs(props.currentContext, false)
               }}
             />
           }
@@ -66,7 +66,7 @@ const PlayerTab = props =>
               icon="fa fa-fw fa-exchange"
               callback={() => {
                 props.setAdministration(true)
-                props.fetchTabs(true)
+                props.fetchTabs(props.currentContext, true)
               }}
             />
           }

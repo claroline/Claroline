@@ -28,8 +28,8 @@ const PlayerMain = withRouter(
       setAdministration(administration) {
         dispatch(actions.setAdministration(administration))
       },
-      fetchTabs(administration) {
-        dispatch(actions.fetchTabs(administration))
+      fetchTabs(context, administration) {
+        dispatch(actions.fetchTabs(context, administration))
       }
     })
   )(PlayerMainComponent)

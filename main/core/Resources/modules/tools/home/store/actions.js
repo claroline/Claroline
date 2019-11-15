@@ -9,16 +9,16 @@ const actions = {}
 
 actions.setCurrentTab = makeActionCreator(CURRENT_TAB, 'tab')
 actions.setAdministration = makeActionCreator(ADMINISTRATION_SET, 'administration')
-actions.loadTabs = makeActionCreator(TABS_LOAD, 'tabs')
+actions.loadTabs = makeActionCreator(TABS_LOAD, 'context', 'tabs')
 
-actions.fetchTabs = (administration) => ({
+actions.fetchTabs = (context, administration) => ({
   [API_REQUEST]: {
     url: [administration ? 'apiv2_home_admin_fetch' : 'apiv2_home_user_fetch'],
     request: {
       method: 'GET'
     },
     success: (data, dispatch) => {
-      dispatch(actions.loadTabs(data))
+      dispatch(actions.loadTabs(context, data))
     }
   }
 })

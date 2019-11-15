@@ -7,14 +7,8 @@ import {selectors as homeSelectors} from '#/main/core/tools/home/store/selectors
 const FORM_NAME = `${homeSelectors.STORE_NAME}.editor`
 
 const editorTabs = (state) => {
-  const definedTabs = [].concat(formSelectors.data(formSelectors.form(state, FORM_NAME)) || [])
+  return [].concat(formSelectors.data(formSelectors.form(state, FORM_NAME)) || [])
     .sort((a, b) => a.position - b.position)
-
-  if (0 === definedTabs.length) {
-    definedTabs.push(homeSelectors.defaultTab(state))
-  }
-
-  return definedTabs
 }
 
 const currentTabIndex = createSelector(
