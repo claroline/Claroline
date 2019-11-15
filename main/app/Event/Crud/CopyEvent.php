@@ -24,11 +24,12 @@ class CopyEvent extends CrudEvent
      * @param array $options - An array of options
      * @param mixed $copy    - The copied entity
      */
-    public function __construct($object, array $options, $copy)
+    public function __construct($object, array $options, $copy, $extra)
     {
         parent::__construct($object, $options);
 
         $this->copy = $copy;
+        $this->extra = $extra;
     }
 
     /**
@@ -37,5 +38,13 @@ class CopyEvent extends CrudEvent
     public function getCopy()
     {
         return $this->copy;
+    }
+
+    /**
+     * @return mixed $object
+     */
+    public function getExtra()
+    {
+        return $this->extra;
     }
 }

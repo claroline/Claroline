@@ -39,3 +39,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: create_notification_item_forum_message, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
+
+    Claroline\ForumBundle\Listener\CrudListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\API\Finder\User\UserFinder'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.create.forum_message, method: onPostCreate, priority: -1 }
+            - { name: kernel.event_listener, event: crud.post.update.forum_message, method: onPostUpdate }
+            - { name: kernel.event_listener, event: crud.pre.delete.forum_message, method: onPostDelete }
+            - { name: kernel.event_listener, event: crud.post.create.forum_subject, method: onSubjectCreate, priority: -1 }
+            - { name: kernel.event_listener, event: crud.post.update.forum_subject, method: onSubjectUpdate }
+            - { name: kernel.event_listener, event: crud.pre.delete.forum_subject, method: onSubjectDelete }

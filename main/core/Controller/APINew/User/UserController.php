@@ -216,7 +216,7 @@ class UserController extends AbstractCrudController
             $personalWorkspace = $user->getPersonalWorkspace();
 
             if ($personalWorkspace) {
-                $this->container->get('claroline.manager.workspace_manager')->deleteWorkspace($personalWorkspace);
+                $this->container->get('Claroline\AppBundle\API\Crud')->delete($personalWorkspace);
             }
         }
         $this->om->endFlushSuite();

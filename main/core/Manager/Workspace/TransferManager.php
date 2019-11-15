@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Ramsey\Uuid\Uuid;
@@ -69,7 +70,8 @@ class TransferManager
       FinderProvider $finder,
       Crud $crud,
       TokenStorage $tokenStorage,
-      FileUtilities $fileUts
+      FileUtilities $fileUts,
+      LogListener $logListener
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -80,6 +82,7 @@ class TransferManager
         $this->tokenStorage = $tokenStorage;
         $this->ots = $ots;
         $this->fileUts = $fileUts;
+        $this->logListener = $logListener;
     }
 
     /**
@@ -93,7 +96,6 @@ class TransferManager
         $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
         // gets entity from raw data.
         $workspace = $this->deserialize($data, $workspace, $options);
-
         // creates the entity if allowed
         $this->checkPermission('CREATE', $workspace, [], true);
 
@@ -105,17 +107,9 @@ class TransferManager
         return $workspace;
     }
 
-    //copied from crud
     public function dispatch($action, $when, array $args)
     {
-        $name = 'crud_'.$when.'_'.$action.'_object';
-        $eventClass = ucfirst($action);
-        $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-        $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($args[0]))->getName();
-        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
-        $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-
-        return $generic->isAllowed() && $specific->isAllowed();
+        return $this->crud->dispatch($action, $when, $args);
     }
 
     public function export(Workspace $workspace)
@@ -201,6 +195,7 @@ class TransferManager
      */
     public function deserialize(array $data, Workspace $workspace, array $options = [], FileBag $bag = null)
     {
+        $this->logListener->disable();
         $data = $this->replaceResourceIds($data);
 
         $defaultRole = $data['registration']['defaultRole'];
@@ -256,6 +251,8 @@ class TransferManager
         if (!$workspace->getCreator() && $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
             $workspace->setCreator($this->tokenStorage->getToken()->getUser());
         }
+
+        $this->logListener->enable();
 
         return $workspace;
     }

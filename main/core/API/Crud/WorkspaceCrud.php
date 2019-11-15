@@ -2,13 +2,18 @@
 
 namespace Claroline\CoreBundle\API\Crud;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -30,7 +35,10 @@ class WorkspaceCrud
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         OrganizationManager $orgaManager,
-        ObjectManager $om
+        ObjectManager $om,
+        Crud $crud,
+        StrictDispatcher $dispatcher,
+        LogListener $logListener
     ) {
         $this->manager = $manager;
         $this->userManager = $userManager;
@@ -39,6 +47,9 @@ class WorkspaceCrud
         $this->organizationManager = $orgaManager;
         $this->roleManager = $roleManager;
         $this->om = $om;
+        $this->crud = $crud;
+        $this->dispatcher = $dispatcher;
+        $this->logListener = $logListener;
     }
 
     /**
@@ -46,7 +57,37 @@ class WorkspaceCrud
      */
     public function preDelete(DeleteEvent $event)
     {
-        $this->manager->deleteWorkspace($event->getObject());
+        $workspace = $event->getObject();
+        $this->logListener->disable();
+        // Log action
+        $this->om->startFlushSuite();
+        $roots = $this->om->getRepository(ResourceNode::class)->findBy(['workspace' => $workspace, 'parent' => null]);
+
+        //in case 0 or multiple due to errors
+        foreach ($roots as $root) {
+            $children = $root->getChildren();
+
+            if ($children) {
+                foreach ($children as $node) {
+                    $this->resourceManager->delete($node);
+                }
+            }
+        }
+
+        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['workspace' => $workspace]);
+
+        foreach ($tabs as $tab) {
+            $this->crud->delete($tab);
+        }
+
+        $this->dispatcher->dispatch(
+            'claroline_workspaces_delete',
+            'GenericData',
+            [[$workspace]]
+        );
+        $this->om->remove($workspace);
+        $this->om->endFlushSuite();
+        $this->logListener->enable();
     }
 
     /**
@@ -94,6 +135,7 @@ class WorkspaceCrud
      */
     public function preCopy(CopyEvent $event)
     {
+        $this->logListener->disable();
         $workspace = $event->getObject();
         $options = $event->getOptions();
 
@@ -101,12 +143,13 @@ class WorkspaceCrud
         $new->refreshUuid();
 
         $this->manager->copy($workspace, $new, in_array(Options::WORKSPACE_MODEL, $options));
+        $this->logListener->enable();
     }
 
     /**
      * @param UpdateEvent $event
      */
-    public function postUpdate(UpdateEvent $event)
+    public function endUpdate(UpdateEvent $event)
     {
         $workspace = $event->getObject();
         $root = $this->resourceManager->getWorkspaceRoot($workspace);

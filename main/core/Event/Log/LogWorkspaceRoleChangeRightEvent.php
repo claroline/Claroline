@@ -43,7 +43,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
                 'changeSet' => $changeSet,
             ],
             'workspace' => [
-                'name' => $workspace ? $workspace->getName() : ' - ',
+                'name' => $workspace ? $workspace->getName() : ' [introuvable] ',
             ],
             'resource' => [
                 'name' => $resource->getName(),

@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Connection;
@@ -25,19 +27,39 @@ class OptimizedRightsManager
 {
     use LoggableTrait;
 
-    public function __construct(Connection $conn, StrictDispatcher $dispatcher)
+    public function __construct(Connection $conn, StrictDispatcher $dispatcher, ObjectManager $om)
     {
         $this->conn = $conn;
         $this->dispatcher = $dispatcher;
+        $this->om = $om;
     }
 
-    public function update(ResourceNode $node, Role $role, $mask = 1, $types = [], $recursive = false)
+    public function update(ResourceNode $node, Role $role, $mask = 1, $types = [], $recursive = false, $log = true)
     {
+        if (!$node->getId()) {
+            $this->om->save($node);
+            //we really need it
+            $this->om->forceFlush();
+        }
+
+        if (!$role->getId()) {
+            $this->om->save($role);
+        }
+
+        $logUpdate = true;
+        $right = $this->om->getRepository(ResourceRights::class)->findOneBy(['role' => $role, 'resourceNode' => $node]);
+
+        if ($right) {
+            $logUpdate = $right->getMask() !== $mask;
+        }
+
         $recursive ?
             $this->recursiveUpdate($node, $role, $mask, $types) :
             $this->singleUpdate($node, $role, $mask, $types);
 
-        $this->logUpdate($node, $role, $mask, $types);
+        if ($logUpdate && $log) {
+            $this->logUpdate($node, $role, $mask, $types);
+        }
     }
 
     private function singleUpdate(ResourceNode $node, Role $role, $mask = 1, $types = [])

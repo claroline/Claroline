@@ -253,5 +253,9 @@
     "log_admin-home-tab-edit_sentence": "has updated tab %tabName%",
     "log_admin-user-home-tab-edit_filter": "Tab update",
     "log_admin-user-home-tab-edit_shortname": "User tab updated (desktop)",
-    "log_admin-user-home-tab-edit_sentence": "has updated tab %tabName%"
+    "log_admin-user-home-tab-edit_sentence": "has updated tab %tabName%",
+    "log_admin-tool-read_sentence": "opened tool %tool%",
+    "log_desktop-tool-read_sentence": "opened tool %tool%",
+    "log_admin-tool-read_shortname": "Desktop tool opened",
+    "log_desktop-tool-read_shortname": "Admin tool opened"
 }

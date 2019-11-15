@@ -21,7 +21,7 @@ class Dropzone
     /**
      * @param UpdateEvent $event
      */
-    public function postUpdate(UpdateEvent $event)
+    public function endUpdate(UpdateEvent $event)
     {
         $dropzone = $event->getObject();
         $oldDatas = $event->getOldData();

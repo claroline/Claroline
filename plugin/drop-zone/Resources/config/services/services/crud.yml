@@ -8,4 +8,4 @@ services:
         arguments:
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
         tags:
-            - { name: kernel.event_listener, event: crud_post_update_object_claroline_dropzonebundle_entity_dropzone, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_end_update_object_claroline_dropzonebundle_entity_dropzone, method: endUpdate }

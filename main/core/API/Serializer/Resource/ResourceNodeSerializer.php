@@ -369,7 +369,7 @@ class ResourceNodeSerializer
         }
     }
 
-    private function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
+    public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
     {
         // additional data might be required later (recursive)
         foreach ($rights as $right) {
@@ -389,22 +389,22 @@ class ResourceNodeSerializer
 
             $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
 
-            if (isset($right['name'])) {
+            if (isset($right['name']) && in_array(OPTIONS::REFRESH_UUID, $options)) {
                 $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
             } else {
+                $workspace = $resourceNode->getWorkspace() ?
+                    $resourceNode->getWorkspace() :
+                    $this->om->getRepository(Workspace::class)->findOneByCode($right['workspace']['code']);
+
                 $role = $this->om->getRepository(Role::class)->findOneBy(
                   [
                     'translationKey' => $right['translationKey'],
-                    'workspace' => $resourceNode->getWorkspace()->getId(),
+                    'workspace' => $workspace,
                   ]
                 );
             }
 
-            if ($role) {
-                if (!$resourceNode->getId()) {
-                    $this->om->save($resourceNode);
-                }
-
+            if ($role && !in_array(OPTIONS::IGNORE_RIGHTS, $options)) {
                 $this->newRightsManager->update(
                       $resourceNode,
                       $role,

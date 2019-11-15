@@ -254,5 +254,9 @@
     "log_admin-home-tab-edit_sentence": "a modifié l'onglet %tabName%",
     "log_admin-user-home-tab-edit_filter": "Modification d'un onglet",
     "log_admin-user-home-tab-edit_shortname": "Onglet utilisateur modifié (bureau)",
-    "log_admin-user-home-tab-edit_sentence": "a modifié l'onglet %tabName%"
+    "log_admin-user-home-tab-edit_sentence": "a modifié l'onglet %tabName%",
+    "log_admin-tool-read_sentence": "a ouvert l'outil %tool%",
+    "log_desktop-tool-read_sentence": "a ouvert l'outil %tool%",
+    "log_admin-tool-read_shortname": "Ouverture d'un outil d'administration",
+    "log_desktop-tool-read_shortname": "Ouverture d'un outil du bureau"
 }

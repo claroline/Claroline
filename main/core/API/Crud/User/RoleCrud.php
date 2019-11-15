@@ -3,22 +3,13 @@
 namespace Claroline\CoreBundle\API\Crud\User;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Event\Crud\PatchEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Driver\Connection;
 
 class RoleCrud
 {
-    /**
-     * @param StrictDispatcher $dispatcher
-     */
-    public function __construct(
-        StrictDispatcher $dispatcher,
-        Connection $conn
-    ) {
-        //too many dependencies, simplify this when we can
-        $this->dispatcher = $dispatcher;
+    public function __construct(Connection $conn)
+    {
         $this->conn = $conn;
     }
 
@@ -52,20 +43,6 @@ class RoleCrud
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-        }
-    }
-
-    /**
-     * @param PatchEvent $event
-     */
-    public function prePatch(PatchEvent $event)
-    {
-        /** @var Role $role */
-        $role = $event->getObject();
-        $user = $event->getValue();
-
-        if (!$user->hasRole($role->getName())) {
-            $this->dispatcher->dispatch('log', 'Log\LogRoleSubscribe', [$role, $user]);
         }
     }
 }

@@ -87,7 +87,16 @@ class ArrayUtils
 
         foreach ($keys as $key) {
             if (is_array($object[$key]) && is_string($key)) {
-                $titles = static::getPropertiesName($object[$key], $titles, is_int($key) ? null : $key);
+                if (is_int($key)) {
+                    $newPos = null;
+                } else {
+                    if (null === $currentPos) {
+                        $newPos = $key;
+                    } else {
+                        $newPos = $currentPos.'.'.$key;
+                    }
+                }
+                $titles = static::getPropertiesName($object[$key], $titles, is_int($key) ? null : $newPos);
             } else {
                 if (is_string($key)) {
                     $displayName = $currentPos ? $currentPos.'.'.$key : $key;

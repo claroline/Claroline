@@ -130,3 +130,7 @@ services:
     Claroline\CoreBundle\Library\Security\Utilities:
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    Claroline\CoreBundle\Library\RoutingHelper:
+       arguments:
+          - '@router'

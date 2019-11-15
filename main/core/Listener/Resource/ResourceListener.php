@@ -183,18 +183,12 @@ class ResourceListener
     public function delete(ResourceActionEvent $event)
     {
         $options = $event->getOptions();
-
-        if (isset($options['hard']) && is_string($options['hard'])) {
-            $hard = 'true' === $options['hard'] ? true : false;
+        if (isset($options['hard']) && 'false' === $options['hard']) {
+            $options = [Options::SOFT_DELETE];
         } else {
-            if (isset($options['hard'])) {
-                $hard = $options['hard'];
-            } else {
-                $hard = false;
-            }
+            $options = [];
         }
-
-        $this->manager->delete($event->getResourceNode(), false, !$hard);
+        $this->crud->delete($event->getResourceNode(), $options);
 
         $event->setResponse(
             new JsonResponse(null, 204)

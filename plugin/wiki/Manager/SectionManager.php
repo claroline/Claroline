@@ -76,6 +76,7 @@ class SectionManager
         $this->om->flush();
 
         $this->dispatch(new LogSectionUpdateEvent($section->getWiki(), $section, []));
+
         if ($section->hasMoved()) {
             $this->dispatch(new LogSectionMoveEvent($section->getWiki(), $section, []));
         }

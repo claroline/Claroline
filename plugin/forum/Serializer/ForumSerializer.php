@@ -172,7 +172,7 @@ class ForumSerializer
                 $event
             );
 
-            $tags = $event->getResponse();
+            $tags = $event->getResponse() ?? [];
             $availables = array_merge($availables, $tags);
         }
 

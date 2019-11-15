@@ -355,11 +355,18 @@ class ObjectManager extends ObjectManagerDecorator
 
         foreach ($stack as $call) {
             if ('endFlushSuite' === $call['function'] || 'startFlushSuite' === $call['function']) {
-                $this->log('Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.', LogLevel::DEBUG);
+                if (method_exists($this, 'log')) {
+                    $this->log('Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.', LogLevel::DEBUG);
+                } else {
+                    echo 'Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.';
+                }
             }
         }
 
-        $this->log('Flush level: '.$this->flushSuiteLevel.'.');
+        if (method_exists($this, 'log')) {
+            $this->log('Flush level: '.$this->flushSuiteLevel.'.');
+        } else {
+        }
     }
 
     public function save($object, $options = [], $log = true)

@@ -63,7 +63,7 @@ class ResourceManager implements ToolImporterInterface
     {
         $node = $this->serializer->serialize($root, array_merge($options, [Options::SERIALIZE_MINIMAL]));
         $resSerializer = $this->serializer->get($root->getClass());
-        $resSerializeOptions = method_exists($resSerializer, 'getCopyOptions') ? $resSerializer->getCopyOptions()['serialize'] : [];
+        $resSerializeOptions = method_exists($resSerializer, 'getCopyOptions') ? $resSerializer->getCopyOptions() : [];
         $res = $this->om->getRepository($root->getClass())->findOneBy(['resourceNode' => $root]);
 
         if ($res) {

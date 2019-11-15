@@ -11,6 +11,7 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
+use UJM\ExoBundle\Event\Log\LogExerciseEvent;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Manager\Attempt\AnswerManager;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
@@ -206,6 +207,13 @@ class AttemptManager
             $this->om->flush();
         }
 
+        $user = $paper->getUser();
+        $event = new LogExerciseEvent('resource-ujm_exercise-paper-start-or-continue', $paper->getExercise(), [
+          'user' => $user ?
+           ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
+        ]);
+        $this->eventDispatcher->dispatch('log', $event);
+
         return $paper;
     }
 
@@ -305,6 +313,14 @@ class AttemptManager
         $this->paperManager->checkPaperEvaluated($paper);
 
         if ($generateEvaluation) {
+            $user = $paper->getUser();
+
+            $event = new LogExerciseEvent('resource-ujm_exercise-paper-end', $paper->getExercise(), [
+              'user' => $user ?
+               ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
+            ]);
+            $this->eventDispatcher->dispatch('log', $event);
+
             $event = new GenericDataEvent($evaluation);
             $this->eventDispatcher->dispatch('resource.score_evaluation.created', $event);
         }

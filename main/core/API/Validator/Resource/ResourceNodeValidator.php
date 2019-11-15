@@ -49,7 +49,7 @@ class ResourceNodeValidator implements ValidatorInterface
         }
 
         // validates the resource type exists
-        if ($data['meta'] && $data['meta']['type']) {
+        if (isset($data['meta']) && isset($data['meta']['type'])) {
             $resourceType = $this->om
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                 ->findOneBy(['name' => $data['meta']['type']]);

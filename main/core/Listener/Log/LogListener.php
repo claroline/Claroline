@@ -91,6 +91,7 @@ class LogListener
         $doerIp = null;
         $doerSessionId = null;
         $doerType = null;
+        $details = [];
 
         //Event can override the doer
         if (null === $event->getDoer()) {

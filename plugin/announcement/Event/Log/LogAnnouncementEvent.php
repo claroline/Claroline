@@ -4,20 +4,21 @@ namespace Claroline\AnnouncementBundle\Event\Log;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 
-class LogAnnouncementEditEvent extends AbstractLogResourceEvent
+class LogAnnouncementEvent extends LogGenericEvent
 {
-    const ACTION = 'resource-claroline_announcement_aggregate-edit';
-
     /**
      * @param AnnouncementAggregate $aggregate
      * @param Announcement          $announcement
      */
     public function __construct(
-        AnnouncementAggregate $aggregate,
-        Announcement $announcement
+        Announcement $announcement,
+        $action
     ) {
+        $aggregate = $announcement->getAggregate();
+        $node = $aggregate->getResourceNode();
+
         $details = [
             'announcement' => [
                 'aggregate' => $aggregate->getId(),
@@ -26,7 +27,7 @@ class LogAnnouncementEditEvent extends AbstractLogResourceEvent
             ],
         ];
 
-        parent::__construct($aggregate->getResourceNode(), $details);
+        parent::__construct($action, $details, null, null, $node, null, $node->getWorkspace(), $announcement->getCreator());
     }
 
     /**

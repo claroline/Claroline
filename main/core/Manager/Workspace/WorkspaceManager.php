@@ -17,9 +17,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
@@ -101,6 +99,7 @@ class WorkspaceManager
         $this->container = $container;
         $this->importData = [];
         $this->templateDirectory = $container->getParameter('claroline.param.templates_directory');
+        $this->crud = $container->get('Claroline\AppBundle\API\Crud');
         $this->shortcutsRepo = $om->getRepository(Shortcuts::class);
     }
 
@@ -154,48 +153,6 @@ class WorkspaceManager
         $this->om->flush();
 
         return $workspace;
-    }
-
-    /**
-     * Delete a workspace.
-     *
-     * @param Workspace $workspace
-     */
-    public function deleteWorkspace(Workspace $workspace)
-    {
-        // Log action
-        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$workspace]);
-
-        $this->om->startFlushSuite();
-        $roots = $this->om->getRepository(ResourceNode::class)->findBy(['workspace' => $workspace, 'parent' => null]);
-
-        //in case 0 or multiple due to errors
-        foreach ($roots as $root) {
-            $this->log('Removing root directory '.$root->getName().'[id:'.$root->getId().']');
-            $children = $root->getChildren();
-            $this->log('Looping through '.count($children).' children...');
-
-            if ($children) {
-                foreach ($children as $node) {
-                    $this->resourceManager->delete($node);
-                }
-            }
-        }
-
-        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['workspace' => $workspace]);
-        $crud = $this->container->get('Claroline\AppBundle\API\Crud');
-
-        foreach ($tabs as $tab) {
-            $crud->delete($tab);
-        }
-
-        $this->dispatcher->dispatch(
-            'claroline_workspaces_delete',
-            'GenericData',
-            [[$workspace]]
-        );
-        $this->om->remove($workspace);
-        $this->om->endFlushSuite();
     }
 
     /**
@@ -651,7 +608,7 @@ class WorkspaceManager
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);
 
         if ($root) {
-            $this->resourceManager->createRights($root);
+            $this->resourceManager->createRights($root, [], true, false);
         }
 
         // Copy workspace shortcuts
@@ -674,6 +631,8 @@ class WorkspaceManager
 
         $this->om->persist($workspaceCopy);
         $this->om->flush();
+
+        $transferManager->dispatch('create', 'post', [$workspaceCopy]);
 
         return $workspaceCopy;
     }

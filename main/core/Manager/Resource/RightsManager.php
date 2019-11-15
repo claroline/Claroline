@@ -98,9 +98,9 @@ class RightsManager
      *
      * @todo remove me. This does the same thing than editPerms, this is just written a different way
      */
-    public function create($permissions, Role $role, ResourceNode $node, $isRecursive, array $creations = [])
+    public function create($permissions, Role $role, ResourceNode $node, $isRecursive, array $creations = [], $log = true)
     {
-        $this->editPerms($permissions, $role, $node, $isRecursive, $creations);
+        $this->editPerms($permissions, $role, $node, $isRecursive, $creations, $log);
     }
 
     /**
@@ -109,11 +109,10 @@ class RightsManager
      * @param ResourceNode $node
      * @param bool         $isRecursive
      * @param array        $creations
-     * @param bool         $mergePerms  - do we want to merge the permissions (only work for integers perm)
      *
      * @return ResourceRights[]
      */
-    public function editPerms($permissions, $role, ResourceNode $node, $isRecursive = false, array $creations = [], $mergePerms = false)
+    public function editPerms($permissions, $role, ResourceNode $node, $isRecursive = false, array $creations = [], $log = true)
     {
         $newRightsManager = $this->container->get('Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager');
         $resourceType = $node->getResourceType();
@@ -122,7 +121,7 @@ class RightsManager
           $this->maskManager->encodeMask($permissions, $resourceType) :
           $permissions;
 
-        $newRightsManager->update($node, $role, $mask, $creations, $isRecursive);
+        $newRightsManager->update($node, $role, $mask, $creations, $isRecursive, $log);
     }
 
     /**

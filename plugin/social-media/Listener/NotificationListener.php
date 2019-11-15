@@ -33,12 +33,11 @@ class NotificationListener
     {
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
+        $slug = isset($notification->getDetails()['resource']['slug']) ? $notification->getDetails()['resource']['slug'] : $notification->getDetails()['id'];
 
         $primaryAction = [
-          'url' => 'claro_resource_open_short',
-          'parameters' => [
-            'node' => $notification->getDetails()['resource']['id'],
-          ],
+          'url' => 'claro_index',
+          'parameters' => ['#' => '/desktop/open/'.$slug.'/resources/'.$slug],
         ];
 
         $text = '';

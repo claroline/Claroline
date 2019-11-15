@@ -108,6 +108,7 @@ services:
           - '@translator'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.template_manager'
+          - '@Claroline\AppBundle\API\Crud'
 
     claroline.manager.role_manager:
         alias: Claroline\CoreBundle\Manager\RoleManager
@@ -126,6 +127,7 @@ services:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.resource_lifecycle'
+          - '@Claroline\AppBundle\API\Crud'
 
     claroline.manager.resource_manager:
         alias: Claroline\CoreBundle\Manager\ResourceManager
@@ -408,6 +410,7 @@ services:
           - '@Claroline\AppBundle\API\Crud'
           - '@security.token_storage'
           - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
+          - '@Claroline\CoreBundle\Listener\Log\LogListener'
 
     claroline.manager.workspace.transfer:
         alias: Claroline\CoreBundle\Manager\Workspace\TransferManager
@@ -562,6 +565,7 @@ services:
         arguments:
           - '@doctrine.dbal.default_connection'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     claroline.manager.optimized_rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager

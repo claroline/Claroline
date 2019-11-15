@@ -11,61 +11,39 @@
 
 namespace Claroline\ForumBundle\Event;
 
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Claroline\ForumBundle\Entity\Message;
 
-class LogPostMessageEvent extends LogGenericEvent implements NotifiableInterface
+class LogMessageEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
-    const ACTION = 'forum_message-create';
-
     /**
      * Constructor.
      */
-    public function __construct(Message $message, array $usersToNotify = [])
+    public function __construct($action, Message $message, array $usersToNotify = [])
     {
         $this->usersToNotify = $usersToNotify;
         $this->message = $message;
         $node = $message->getForum()->getResourceNode();
+        $this->action = $action;
 
-        parent::__construct(
-            self::ACTION,
-            [
-                'resource' => [
-                    'name' => $node->getName(),
-                    'path' => $node->getPathForCreationLog(),
-                    'id' => $node->getId(),
-                    'guid' => $node->getGuid(),
-                    'resourceType' => $node->getResourceType()->getName(),
-                ],
-                'forum' => [
-                    'id' => $message->getForum()->getId(),
-                    'uuid' => $message->getForum()->getUuid(),
-                ],
-                'subject' => [
-                  'title' => $message->getSubject()->getTitle(),
-                  'id' => $message->getSubject()->getId(),
-                  'uuid' => $message->getSubject()->getUuid(),
-                ],
-                'owner' => [
-                    'id' => $message->getCreator()->getId(),
-                    'uuid' => $message->getCreator()->getUuid(),
-                    'lastName' => $message->getCreator()->getLastName(),
-                    'firstName' => $message->getCreator()->getFirstName(),
-                ],
-                'workspace' => [
-                    'id' => $node->getWorkspace()->getId(),
-                    'name' => $node->getWorkspace()->getName(),
-                    'code' => $node->getWorkspace()->getCode(),
-                ],
-            ],
-            null,
-            null,
-            $node,
-            null,
-            $node->getWorkspace(),
-            $message->getCreator()
-        );
+        $details = ['forum' => [
+            'id' => $message->getForum()->getId(),
+            'uuid' => $message->getForum()->getUuid(),
+        ],
+        'subject' => [
+          'title' => $message->getSubject()->getTitle(),
+          'id' => $message->getSubject()->getId(),
+          'uuid' => $message->getSubject()->getUuid(),
+        ],
+        'owner' => [
+            'id' => $message->getCreator()->getId(),
+            'uuid' => $message->getCreator()->getUuid(),
+            'lastName' => $message->getCreator()->getLastName(),
+            'firstName' => $message->getCreator()->getFirstName(),
+        ], ];
+
+        parent::__construct($node, $details);
     }
 
     public function setUsersToNotify(array $usersToNotify)
@@ -124,7 +102,7 @@ class LogPostMessageEvent extends LogGenericEvent implements NotifiableInterface
      */
     public function getActionKey()
     {
-        return $this::ACTION;
+        return $this->action;
     }
 
     /**

@@ -134,6 +134,7 @@ class AnnouncementManager
         $message = $this->getMessage($announcement, $users);
 
         $announcementSend = new AnnouncementSend();
+
         $data = $message;
         $data['receivers'] = array_map(function (User $receiver) {
             return $receiver->getUsername();
@@ -155,6 +156,11 @@ class AnnouncementManager
                 $message['receivers'],
             ]
         );
+
+        //it's kind of a hack because this is not using the crud... but wathever.
+        $this->eventDispatcher->dispatch('crud.post.create.announcement_send', 'Claroline\\AppBundle\\Event\\Crud\\CreateEvent', [
+          $announcementSend, [], [],
+        ]);
     }
 
     public function scheduleMessage(Announcement $announcement, \DateTime $scheduledDate, array $roles = [])

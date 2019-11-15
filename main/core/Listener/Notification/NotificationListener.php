@@ -29,6 +29,7 @@ class NotificationListener
         $translator = $this->container->get('translator');
         $authStorage = $this->container->get('security.token_storage');
         $current = $authStorage->getToken()->getUser();
+        $helper = $this->container->get('Claroline\CoreBundle\Library\RoutingHelper');
 
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
@@ -39,11 +40,8 @@ class NotificationListener
           case LogWorkspaceRoleChangeRightEvent::ACTION:
             if (isset($notification->getDetails()['resource']['id']) && '' !== $notification->getDetails()['resource']['id']) {
                 $event->setPrimaryAction([
-                  'url' => 'claro_resource_open',
-                  'parameters' => [
-                    'node' => $notification->getDetails()['resource']['id'],
-                    'resourceType' => $notification->getDetails()['resource']['resourceType'],
-                  ],
+                  'url' => 'claro_index',
+                  'parameters' => ['#' => $helper->resourceFragment($notification->getDetails()['resource'])],
                 ]);
             }
 
@@ -124,11 +122,8 @@ class NotificationListener
                   ]);
                 } else {
                     $event->setPrimaryAction([
-                    'url' => 'claro_resource_open',
-                    'parameters' => [
-                      'node' => $notification->getDetails()['resource']['guid'],
-                      'resourceType' => $notification->getDetails()['resource']['resourceType'],
-                    ],
+                    'url' => 'claro_index',
+                    'parameters' => ['#' => $helper->resourceFragment($notification->getDetails()['resource'])],
                   ]);
                 }
             }
@@ -154,11 +149,8 @@ class NotificationListener
                   ]);
                 } else {
                     $event->setPrimaryAction([
-                    'url' => 'claro_resource_open',
-                    'parameters' => [
-                      'node' => $notification->getDetails()['resource']['guid'],
-                      'resourceType' => $notification->getDetails()['resource']['resourceType'],
-                    ],
+                    'url' => 'claro_index',
+                    'parameters' => ['#' => $helper->resourceFragment($notification->getDetails()['resource'])],
                   ]);
                 }
             }
@@ -190,22 +182,19 @@ class NotificationListener
             $event->setText($text);
             break;
           case LogEditResourceTextEvent::ACTION:
-            if (isset($notification->getDetails()['resource']['guid'])) {
+            if (isset($notification->getDetails()['resource']['slug'])) {
                 $event->setPrimaryAction([
-                'url' => 'claro_resource_open',
-                'parameters' => [
-                  'node' => $notification->getDetails()['resource']['guid'],
-                  'resourceType' => $notification->getDetails()['resource']['resourceType'],
-                ],
+                'url' => 'claro_index',
+                'parameters' => ['#' => $helper->resourceFragment($notification->getDetails()['resource'])],
               ]);
             } else {
                 if (isset($notification->getDetails()['workspace']['id']) && '' !== $notification->getDetails()['workspace']['id'] && null !== $notification->getDetails()['workspace']['id']) {
                     $event->setPrimaryAction([
-                  'url' => 'claro_workspace_open',
-                  'parameters' => [
-                    'workspaceId' => $notification->getDetails()['workspace']['id'],
-                  ],
-                ]);
+                      'url' => 'claro_workspace_open',
+                      'parameters' => [
+                        'workspaceId' => $notification->getDetails()['workspace']['id'],
+                      ],
+                    ]);
                 }
             }
 

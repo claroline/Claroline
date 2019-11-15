@@ -126,6 +126,7 @@ services:
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_action'
             - '@claroline.manager.rights_manager'
+            - '@Claroline\CoreBundle\Listener\Log\LogListener'
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
@@ -311,3 +312,45 @@ services:
     Claroline\CoreBundle\Doctrine\EntityListenerResolver:
         arguments:
             - '@service_container'
+
+    Claroline\CoreBundle\Listener\Log\GroupListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.create.group, method: onGroupCreate }
+            - { name: kernel.event_listener, event: crud.post.update.group, method: onGroupUpdate }
+            - { name: kernel.event_listener, event: crud.post.delete.group, method: onGroupDelete }
+            - { name: kernel.event_listener, event: crud.post.patch.group, method: onGroupPatch }
+
+    Claroline\CoreBundle\Listener\Log\ResourceListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.create.resource_node, method: onResourceCreate }
+            - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: onResourceDelete }
+            - { name: kernel.event_listener, event: crud.post.copy.resource_node, method: onResourceCopy }
+            - { name: kernel.event_listener, event: crud.end.update.resource_node, method: onResourceUpdate }
+
+    Claroline\CoreBundle\Listener\Log\WorkspaceListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Listener\Log\LogListener'
+        tags:
+            - { name: kernel.event_listener, event: crud.pre.create.workspace, method: onWorkspacePreCreate }
+            - { name: kernel.event_listener, event: crud.post.create.workspace, method: onWorkspacePostCreate }
+            - { name: kernel.event_listener, event: crud.pre.delete.workspace, method: onWorkspacePreDelete, priority: 1 }
+
+    Claroline\CoreBundle\Listener\Log\UserListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.create.user, method: onUserCreate }
+            - { name: kernel.event_listener, event: crud.pre.delete.user, method: onUserDelete, priority: 1 }
+            - { name: kernel.event_listener, event: crud.post.patch.user, method: onUserPatch }
+
+    Claroline\CoreBundle\Listener\Log\RoleListener:
+        arguments:
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud.post.patch.role, method: onRolePatch }

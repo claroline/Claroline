@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
@@ -74,7 +75,8 @@ class RoleManager
         Container $container,
         TranslatorInterface $translator,
         PlatformConfigurationHandler $configHandler,
-        TemplateManager $templateManager
+        TemplateManager $templateManager,
+        Crud $crud
     ) {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
@@ -87,6 +89,7 @@ class RoleManager
         $this->translator = $translator;
         $this->configHandler = $configHandler;
         $this->templateManager = $templateManager;
+        $this->crud = $crud;
     }
 
     /**
@@ -268,16 +271,7 @@ class RoleManager
             throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
         }
 
-        $hasRole = $ars->hasRole($role->getName());
-        $ars->addRole($role);
-        $this->om->startFlushSuite();
-
-        if ($dispatch && !$hasRole) {
-            $this->dispatcher->dispatch('log', 'Log\LogRoleSubscribe', [$role, $ars]);
-        }
-
-        $this->om->persist($ars);
-        $this->om->endFlushSuite();
+        $this->crud->patch($ars, 'role', Crud::COLLECTION_ADD, [$role]);
 
         $withMail = $this->configHandler->getParameter('send_mail_at_workspace_registration');
 
@@ -293,17 +287,7 @@ class RoleManager
     public function dissociateRole(AbstractRoleSubject $ars, Role $role)
     {
         if ($ars->hasRole($role->getName())) {
-            $ars->removeRole($role);
-            $this->om->startFlushSuite();
-
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleUnsubscribe',
-                [$role, $ars]
-            );
-
-            $this->om->persist($ars);
-            $this->om->endFlushSuite();
+            $this->crud->patch($ars, 'role', Crud::COLLECTION_REMOVE, [$role]);
         }
     }
 

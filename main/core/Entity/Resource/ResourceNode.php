@@ -383,6 +383,21 @@ class ResourceNode
     }
 
     /**
+     * Unmapped field so we don't have to force flush and fetch the database at node copy for the momoent.
+     *
+     * @param ResourceType
+     */
+    public function setResource(AbstractResource $resource)
+    {
+        $this->resource = $resource;
+    }
+
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
      * Returns the children resource instances.
      *
      * @return ArrayCollection|ResourceNode[]

@@ -4,10 +4,8 @@ namespace Claroline\AnnouncementBundle\Crud;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
-use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 
@@ -36,28 +34,6 @@ class AnnouncementCrud
         $announcement = $event->getObject();
         $options = $event->getOptions();
         $announcement->setAggregate($options['announcement_aggregate']);
-
-        if (!in_array(Options::NO_LOG, $options)) {
-            $this->eventDispatcher->dispatch(
-                'log',
-                'Claroline\\AnnouncementBundle\\Event\\Log\\LogAnnouncementCreateEvent',
-                [$announcement->getAggregate(), $announcement]
-            );
-        }
-    }
-
-    /**
-     * @param CreateEvent $event
-     */
-    public function postUpdate(UpdateEvent $event)
-    {
-        $announcement = $event->getObject();
-
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Claroline\\AnnouncementBundle\\Event\\Log\\LogAnnouncementEditEvent',
-            [$announcement->getAggregate(), $announcement]
-        );
     }
 
     /**
@@ -74,11 +50,5 @@ class AnnouncementCrud
 
         // delete scheduled task is any
         $this->manager->unscheduleMessage($announcement);
-
-        $this->eventDispatcher->dispatch(
-            'log',
-            'Claroline\\AnnouncementBundle\\Event\\Log\\LogAnnouncementDeleteEvent',
-            [$announcement->getAggregate(), $announcement]
-        );
     }
 }

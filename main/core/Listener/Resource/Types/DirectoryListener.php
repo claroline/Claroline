@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -60,7 +61,8 @@ class DirectoryListener
         Crud $crud,
         ResourceManager $resourceManager,
         ResourceActionManager $actionManager,
-        RightsManager $rightsManager
+        RightsManager $rightsManager,
+        LogListener $logListener
     ) {
         $this->om = $om;
         $this->serializer = $serializer;
@@ -68,6 +70,7 @@ class DirectoryListener
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
+        $this->logListener = $logListener;
     }
 
     /**
@@ -93,7 +96,7 @@ class DirectoryListener
     {
         $data = $event->getData();
         $parent = $event->getResourceNode();
-
+        $this->logListener->disable();
         $add = $this->actionManager->get($parent, 'add');
 
         // checks if the current user can add
@@ -129,7 +132,7 @@ class DirectoryListener
         } else {
             // todo : initialize default rights
         }
-
+        $this->logListener->enable();
         $this->crud->dispatch('create', 'post', [$resource, $options]);
         $this->om->persist($resource);
         $this->om->persist($resourceNode);
@@ -137,6 +140,8 @@ class DirectoryListener
         // todo : dispatch creation event
 
         $this->om->flush();
+
+        $this->crud->dispatch('create', 'post', [$resourceNode]);
 
         // todo : dispatch get/load action instead
         $event->setResponse(new JsonResponse(

@@ -346,13 +346,7 @@ class ExerciseSerializer
 
     public function getCopyOptions()
     {
-        return [
-          'serialize' => [Transfer::INCLUDE_SOLUTIONS],
-          'deserialize' => [
-              Transfer::NO_FETCH,
-              Transfer::PERSIST_TAG,
-          ],
-        ];
+        return [Transfer::INCLUDE_SOLUTIONS,   Transfer::NO_FETCH, Transfer::PERSIST_TAG];
     }
 
     /**

@@ -2,5 +2,11 @@
     "log_resource-ujm_exercise-exercise_evaluated_filter": "Get the evaluation of a quiz",
     "log_resource-ujm_exercise-exercise_evaluated_sentence": "has been evaluated on the quiz %resource%",
     "log_resource-ujm_exercise-exercise_evaluated_shortname": "Evaluation of a quiz",
-    "log_resource-ujm_exercise-exercise_evaluated_title": "Get an evaluation of a quiz"
+    "log_resource-ujm_exercise-exercise_evaluated_title": "Get an evaluation of a quiz",
+    "log_resource-ujm_exercise-exercise_updated_sentence": "updated exercise %resource%",
+    "log_resource-ujm_exercise-paper-end_sentence": "ended exercise %resource",
+    "log_resource-ujm_exercise-paper-start-or-continue_sentence": "started or continued exercise %resource%",
+    "log_resource-ujm_exercise-exercise_updated_shortname": "Exercise updated",
+    "log_resource-ujm_exercise-paper-end_shortname": "Exercise ended",
+    "log_resource-ujm_exercise-paper-start-or-continue_shortname": "Exercise launched"
 }
