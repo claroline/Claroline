@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -9,6 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
+import {Alert} from '#/main/app/alert/components/alert'
 
 import resourcesSource from '#/main/core/data/sources/resources'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -40,46 +41,51 @@ function transformAction(action, resourceNodes, embedded = false) {
 }
 
 const PlayerMain = props =>
-  <ListSource
-    name={props.listName}
-    fetch={{
-      url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],
-      autoload: true
-    }}
-    customActions={[
-      {
-        name: 'back',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-arrow-left',
-        label: get(props.currentNode, 'parent') ?
-          trans('back_to', {target: get(props.currentNode, 'parent.name')}) :
-          trans('back'),
-        disabled: !isEmpty(props.rootNode) && props.currentNode.slug === props.rootNode.slug,
-        target: `${props.path}/${get(props.currentNode, 'parent.slug', '')}`,
-        exact: true
-      }
-    ]}
-    source={merge({}, resourcesSource, {
-      // adds actions to source
-      parameters: {
-        primaryAction: (resourceNode) => getDefaultAction(resourceNode, {
-          update: props.updateNodes,
-          delete: props.deleteNodes
-        }, props.path, props.currentUser).then((action) => {
-          if (action) {
-            return transformAction(action, [resourceNode], props.embedded)
-          }
+  <Fragment>
+    {props.storageLock &&
+      <Alert type="warning" message={trans('storage_limit_reached_resources')} />
+    }
+    <ListSource
+      name={props.listName}
+      fetch={{
+        url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],
+        autoload: true
+      }}
+      customActions={[
+        {
+          name: 'back',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-arrow-left',
+          label: get(props.currentNode, 'parent') ?
+            trans('back_to', {target: get(props.currentNode, 'parent.name')}) :
+            trans('back'),
+          disabled: !isEmpty(props.rootNode) && props.currentNode.slug === props.rootNode.slug,
+          target: `${props.path}/${get(props.currentNode, 'parent.slug', '')}`,
+          exact: true
+        }
+      ]}
+      source={merge({}, resourcesSource, {
+        // adds actions to source
+        parameters: {
+          primaryAction: (resourceNode) => getDefaultAction(resourceNode, {
+            update: props.updateNodes,
+            delete: props.deleteNodes
+          }, props.path, props.currentUser).then((action) => {
+            if (action) {
+              return transformAction(action, [resourceNode], props.embedded)
+            }
 
-          return null
-        }),
-        actions: (resourceNodes) => getActions(resourceNodes, {
-          update: props.updateNodes,
-          delete: props.deleteNodes
-        }, props.path, props.currentUser).then((actions) => actions.map(action => transformAction(action, resourceNodes, props.embedded)))
-      }
-    })}
-    parameters={props.listConfiguration}
-  />
+            return null
+          }),
+          actions: (resourceNodes) => getActions(resourceNodes, {
+            update: props.updateNodes,
+            delete: props.deleteNodes
+          }, props.path, props.currentUser).then((actions) => actions.map(action => transformAction(action, resourceNodes, props.embedded)))
+        }
+      })}
+      parameters={props.listConfiguration}
+    />
+  </Fragment>
 
 PlayerMain.propTypes = {
   path: T.string,
@@ -96,6 +102,7 @@ PlayerMain.propTypes = {
   listConfiguration: T.shape(
     ListParametersTypes.propTypes
   ),
+  storageLock: T.bool.isRequired,
 
   updateNodes: T.func.isRequired,
   deleteNodes: T.func.isRequired

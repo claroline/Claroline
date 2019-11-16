@@ -213,6 +213,14 @@ class PlatformDefaults implements ParameterProviderInterface
             'notifications_refresh_delay' => 0, // in ms
             'is_cron_configured' => false,
             'javascripts' => [],
+            'restrictions' => [
+                'users' => false,
+                'storage' => false,
+                'max_users' => null,
+                'max_storage_size' => null,
+                'max_storage_reached' => false,
+                'used_storage' => null,
+            ],
         ];
     }
 }

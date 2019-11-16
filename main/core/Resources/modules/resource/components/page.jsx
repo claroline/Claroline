@@ -142,7 +142,7 @@ class ResourcePage extends Component {
               this.props.history.push(redirect)
             }
           }
-        }, this.props.basePath, this.props.currentUser).then((actions) => [].concat(this.props.customActions || [], actions, [
+        }, this.props.basePath, this.props.currentUser, false, this.props.disabledActions).then((actions) => [].concat(this.props.customActions || [], actions, [
           {
             name: 'fullscreen',
             type: 'callback',
@@ -242,12 +242,14 @@ ResourcePage.propTypes = {
     to: T.string.isRequired,
     exact: T.bool
   })),
-  children: T.node
+  children: T.node,
+  disabledActions: T.arrayOf(T.string)
 }
 
 ResourcePage.defaultProps = {
   path: [],
-  routes: []
+  routes: [],
+  disabledActions: []
 }
 
 export {

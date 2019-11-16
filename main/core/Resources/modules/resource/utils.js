@@ -81,7 +81,7 @@ function loadActions(resourceNodes, actions, nodesRefresher, path, currentUser) 
  *
  * @return {Promise.<Array>}
  */
-function getActions(resourceNodes, nodesRefresher, path, currentUser = null, withDefault = false) {
+function getActions(resourceNodes, nodesRefresher, path, currentUser = null, withDefault = false, disabledActions = []) {
   const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
 
   const collectionActions = resourceTypes
@@ -95,7 +95,7 @@ function getActions(resourceNodes, nodesRefresher, path, currentUser = null, wit
             (withDefault || undefined === action.default || !action.default)
             // filter by permissions (the user must have perms on AT LEAST ONE node in the collection)
             && !!resourceNodes.find(resourceNode => hasPermission(action.permission, resourceNode))
-          )
+          ).map(action => -1 < disabledActions.findIndex(da => da === action.name) ? Object.assign({}, action, {disabled: true}) : action)
 
         return uniqBy(accumulator.concat(typeActions), 'name')
       }

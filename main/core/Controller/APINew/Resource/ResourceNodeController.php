@@ -2,8 +2,10 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -17,6 +19,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/resource")
@@ -35,6 +38,9 @@ class ResourceNodeController extends AbstractCrudController
     /** @var LogConnectManager */
     private $logConnectManager;
 
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
+
     /**
      * ResourceNodeController constructor.
      *
@@ -42,17 +48,20 @@ class ResourceNodeController extends AbstractCrudController
      * @param ResourceManager       $resourceManager
      * @param RightsManager         $rightsManager
      * @param LogConnectManager     $logConnectManager
+     * @param ParametersSerializer  $parametersSerializer
      */
     public function __construct(
         ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
-        LogConnectManager $logConnectManager
+        LogConnectManager $logConnectManager,
+        ParametersSerializer $parametersSerializer
     ) {
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
         $this->logConnectManager = $logConnectManager;
+        $this->parametersSerializer = $parametersSerializer;
     }
 
     /**
@@ -141,6 +150,15 @@ class ResourceNodeController extends AbstractCrudController
      */
     public function resourceFilesCreateAction(ResourceNode $parent, User $user, Request $request)
     {
+        $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
+
+        if (isset($parameters['restrictions']['storage']) &&
+            isset($parameters['restrictions']['max_storage_reached']) &&
+            $parameters['restrictions']['storage'] &&
+            $parameters['restrictions']['max_storage_reached']
+        ) {
+            throw new AccessDeniedException();
+        }
         $attributes['type'] = 'file';
         $collection = new ResourceCollection([$parent]);
         $collection->setAttributes($attributes);

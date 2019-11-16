@@ -147,4 +147,15 @@ class FileManager
         return $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\File')
             ->findDirectoryChildren($parent);
     }
+
+    public function computeUsedStorage()
+    {
+        $filesDirSize = 0;
+
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->fileDir)) as $file) {
+            $filesDirSize += $file->getSize();
+        }
+
+        return $filesDirSize;
+    }
 }

@@ -74,6 +74,9 @@ const reducer = combineReducers({
         [makeInstanceAction(TOOL_LOAD, 'community')]: () => true
       })
     })
+  }),
+  limitReached: makeReducer(false, {
+    [makeInstanceAction(TOOL_LOAD, 'community')]: (state, action) => action.toolData.usersLimitReached
   })
 })
 

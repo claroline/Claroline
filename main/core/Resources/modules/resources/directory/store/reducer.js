@@ -123,6 +123,9 @@ const reducer = combineReducers({
         return sortBy
       }
     })
+  }),
+  storageLock: makeReducer(false, {
+    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.storageLock
   })
 })
 

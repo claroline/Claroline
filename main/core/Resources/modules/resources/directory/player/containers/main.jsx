@@ -7,6 +7,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {PlayerMain as PlayerMainComponent} from '#/main/core/resources/directory/player/components/main'
 import {selectors} from '#/main/core/resources/directory/player/store'
+import {selectors as directorySelectors} from '#/main/core/resources/directory/store'
 
 const PlayerMain = connect(
   (state) => ({
@@ -16,7 +17,8 @@ const PlayerMain = connect(
     rootNode: resourcesToolSelectors.root(state),
     currentNode: resourceSelectors.resourceNode(state),
     listName: selectors.LIST_NAME,
-    listConfiguration: selectors.listConfiguration(state)
+    listConfiguration: selectors.listConfiguration(state),
+    storageLock: directorySelectors.storageLock(state)
   }),
   (dispatch) => ({
     updateNodes() {

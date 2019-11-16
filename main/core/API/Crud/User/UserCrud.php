@@ -2,22 +2,54 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\UserCreatedEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
+use Claroline\CoreBundle\Manager\CryptographyManager;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserCrud
 {
+    /** @var ContainerInterface */
+    private $container;
+    /** @var ObjectManager */
+    private $om;
+    /** @var FinderProvider */
+    private $finder;
+    /** @var RoleManager */
+    private $roleManager;
+    /** @var ToolManager */
+    private $toolManager;
+    /** @var MailManager */
+    private $mailManager;
     /** @var UserManager */
     private $userManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var PlatformConfigurationHandler */
+    private $config;
+    /** @var CryptographyManager */
+    private $cryptoManager;
+    /** @var array */
+    private $parameters;
+    /** @var UserRepository */
+    private $userRepo;
 
     /**
      * @param ContainerInterface $container
@@ -35,6 +67,9 @@ class UserCrud
         $this->dispatcher = $container->get('Claroline\AppBundle\Event\StrictDispatcher');
         $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->cryptoManager = $container->get('claroline.manager.cryptography_manager');
+        $this->parameters = $container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize();
+
+        $this->userRepo = $this->om->getRepository(User::class);
     }
 
     /**
@@ -42,6 +77,18 @@ class UserCrud
      */
     public function preCreate(CreateEvent $event)
     {
+        if (isset($this->parameters['restrictions']['users']) &&
+            isset($this->parameters['restrictions']['max_users']) &&
+            $this->parameters['restrictions']['users'] &&
+            $this->parameters['restrictions']['max_users']
+        ) {
+            $usersCount = $this->userRepo->countAllEnabledUsers();
+
+            if ($usersCount >= $this->parameters['restrictions']['max_users']) {
+                throw new AccessDeniedException();
+            }
+        }
+
         $user = $this->create($event->getObject(), $event->getOptions());
 
         $data = $event->getData();

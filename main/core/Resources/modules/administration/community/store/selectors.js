@@ -16,6 +16,7 @@ const selected = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  store,
   selected,
   platformRoles
 }

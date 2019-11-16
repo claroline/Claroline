@@ -127,6 +127,17 @@ class ClientSerializer
                 'url' => $this->config->getParameter('logo'),
             ]);
         }
+        $usersLimitReached = false;
+
+        if ($this->config->getParameter('restrictions.users') && $this->config->getParameter('restrictions.max_users')) {
+            $maxUsers = $this->config->getParameter('restrictions.max_users');
+            $userRepo = $this->om->getRepository(User::class);
+            $usersCount = $userRepo->countAllEnabledUsers();
+
+            if ($usersCount >= $maxUsers) {
+                $usersLimitReached = true;
+            }
+        }
 
         $data = [
             'logo' => $logo ? $logo->getUrl() : null,
@@ -136,7 +147,7 @@ class ClientSerializer
             'version' => $this->versionManager->getDistributionVersion(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
-            'selfRegistration' => $this->config->getParameter('registration.self'),
+            'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
             'asset' => $this->assets->getUrl(''),
             'server' => [
                 'protocol' => $request->isSecure() || $this->config->getParameter('ssl_enabled') ? 'https' : 'http',

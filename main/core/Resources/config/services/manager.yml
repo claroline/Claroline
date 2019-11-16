@@ -555,6 +555,7 @@ services:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.resource_manager'
+          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     claroline.manager.resource_action:
         alias: Claroline\CoreBundle\Manager\Resource\ResourceActionManager

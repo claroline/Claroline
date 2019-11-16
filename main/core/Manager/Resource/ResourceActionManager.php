@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -22,6 +24,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceActionRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * ResourceActionManager.
@@ -46,6 +49,9 @@ class ResourceActionManager
     /** @var ResourceManager */
     private $resourceManager;
 
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
+
     /**
      * @var MenuAction[]
      */
@@ -58,17 +64,20 @@ class ResourceActionManager
      * @param AuthorizationCheckerInterface $authorization
      * @param StrictDispatcher              $dispatcher
      * @param ResourceManager               $resourceManager
+     * @param ParametersSerializer          $parametersSerializer
      */
     public function __construct(
         ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
         StrictDispatcher $dispatcher,
-        ResourceManager $resourceManager)
-    {
+        ResourceManager $resourceManager,
+        ParametersSerializer $parametersSerializer
+    ) {
         $this->om = $om;
         $this->authorization = $authorization;
         $this->dispatcher = $dispatcher;
         $this->resourceManager = $resourceManager;
+        $this->parametersSerializer = $parametersSerializer;
 
         $this->repository = $this->om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
     }
@@ -106,6 +115,17 @@ class ResourceActionManager
      */
     public function execute(ResourceNode $resourceNode, string $actionName, array $options = [], array $content = null, array $files = null): Response
     {
+        if ('add' === $actionName) {
+            $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
+
+            if (isset($parameters['restrictions']['storage']) &&
+                isset($parameters['restrictions']['max_storage_reached']) &&
+                $parameters['restrictions']['storage'] &&
+                $parameters['restrictions']['max_storage_reached']
+            ) {
+                throw new AccessDeniedException();
+            }
+        }
         $resourceAction = $this->get($resourceNode, $actionName);
         $resource = $this->resourceManager->getResourceFromNode($resourceNode);
 

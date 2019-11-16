@@ -9,10 +9,10 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
-import {User}       from '#/main/core/administration/community/user/components/user'
-import {Users}      from '#/main/core/administration/community/user/components/users'
+import {User} from '#/main/core/administration/community/user/components/user'
+import {Users} from '#/main/core/administration/community/user/components/users'
 import {UsersMerge} from '#/main/core/administration/community/user/components/users-merge'
-import {actions}    from '#/main/core/administration/community/user/store'
+import {actions, selectors} from '#/main/core/administration/community/user/store'
 
 const UserTabComponent = props =>
   <ToolPage
@@ -29,7 +29,8 @@ const UserTabComponent = props =>
         icon: 'fa fa-plus',
         label: trans('add_user'),
         target: `${props.path}/users/form`,
-        primary: true
+        primary: true,
+        disabled: props.limitReached
       }
     ]}
   >
@@ -56,6 +57,7 @@ const UserTabComponent = props =>
 
 UserTabComponent.propTypes = {
   path: T.string.isRequired,
+  limitReached: T.bool.isRequired,
   openForm: T.func.isRequired,
   closeForm: T.func.isRequired,
   compare: T.func.isRequired
@@ -63,7 +65,8 @@ UserTabComponent.propTypes = {
 
 const UserTab = connect(
   (state) => ({
-    path: toolSelectors.path(state)
+    path: toolSelectors.path(state),
+    limitReached: selectors.limitReached(state)
   }),
   dispatch => ({
     openForm(id = null) {

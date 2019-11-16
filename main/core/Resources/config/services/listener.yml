@@ -127,6 +127,7 @@ services:
             - '@claroline.manager.resource_action'
             - '@claroline.manager.rights_manager'
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }

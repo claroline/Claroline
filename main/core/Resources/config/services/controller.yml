@@ -69,6 +69,7 @@ services:
           - '@claroline.manager.resource_manager'
           - '@claroline.manager.rights_manager'
           - '@claroline.manager.log_connect'
+          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:
         arguments:

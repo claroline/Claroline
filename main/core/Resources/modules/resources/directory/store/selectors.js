@@ -21,10 +21,16 @@ const directory = (dirs, directoryId) => {
   return null
 }
 
+const storageLock = createSelector(
+  [resource],
+  (resource) => resource.storageLock
+)
+
 export const selectors = {
   STORE_NAME,
 
   resource,
   directories,
-  directory
+  directory,
+  storageLock
 }
