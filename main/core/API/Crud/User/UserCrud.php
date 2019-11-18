@@ -28,6 +28,7 @@ class UserCrud
 {
     /** @var ContainerInterface */
     private $container;
+
     /** @var ObjectManager */
     private $om;
     /** @var FinderProvider */
@@ -108,7 +109,15 @@ class UserCrud
     {
         $this->om->startFlushSuite();
 
-        $user->setPublicUrl($this->userManager->generatePublicUrl($user));
+        if (empty($user->getPublicUrl())) {
+            $user->setPublicUrl($this->userManager->generatePublicUrl($user));
+        }
+
+        if (empty($user->getLocale())) {
+            $user->setLocale(
+                $this->config->getParameter('locales.default')
+            );
+        }
 
         $addedTools = $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);

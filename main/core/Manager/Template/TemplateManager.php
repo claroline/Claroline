@@ -22,8 +22,6 @@ class TemplateManager
     /** @var ObjectManager */
     private $om;
 
-    private $parameters;
-
     private $templateTypeRepo;
     private $templateRepo;
 
