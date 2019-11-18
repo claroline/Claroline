@@ -45,7 +45,9 @@ abstract class AbstractRoleSubject
      */
     public function removeRole(Role $role)
     {
-        $this->roles->removeElement($role);
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+        }
     }
 
     /**

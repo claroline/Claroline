@@ -84,6 +84,7 @@ class OrganizationCrud
             $roleAdminOrga = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
             if (Crud::COLLECTION_ADD === $action) {
                 if (is_array($users)) {
+                    /** @var User $user */
                     foreach ($users as $user) {
                         $user->addRole($roleAdminOrga);
                         $this->om->persist($user);
@@ -94,17 +95,14 @@ class OrganizationCrud
                 }
             } elseif (Crud::COLLECTION_REMOVE === $action) {
                 if (is_array($users)) {
+                    /** @var User $user */
                     foreach ($users as $user) {
-                        if (0 === count($user->getAdministratedOrganizations())) {
-                            $user->removeRole($roleAdminOrga);
-                            $this->om->persist($user);
-                        }
+                        $user->removeRole($roleAdminOrga);
+                        $this->om->persist($user);
                     }
                 } else {
-                    if (0 === count($user->getAdministratedOrganizations())) {
-                        $user->removeRole($roleAdminOrga);
-                        $this->om->persist($users);
-                    }
+                    $users->removeRole($roleAdminOrga);
+                    $this->om->persist($users);
                 }
             }
         }
