@@ -150,8 +150,13 @@ class EntryFinder extends AbstractFinder
                     $qb->leftJoin('obj.user', 'u');
                     $qb->leftJoin('obj.entryUsers', 'eu');
                     $qb->leftJoin('eu.user', 'euu');
-                    $qb->andWhere('u.id = :userId');
-                    $qb->orWhere('(euu.id = :userId AND eu.shared = true)');
+                    $qb->andWhere($qb->expr()->orX(
+                        $qb->expr()->eq('u.id', ':userId'),
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('euu.id', ':userId'),
+                            $qb->expr()->eq('eu.shared', true)
+                        )
+                    ));
                     $qb->setParameter('userId', $currentUser->getId());
                     $this->usedJoin['user'] = true;
                 }

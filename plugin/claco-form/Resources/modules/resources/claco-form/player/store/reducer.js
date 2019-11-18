@@ -49,6 +49,9 @@ const reducer = combineReducers({
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.entries.current']: () => true,
       [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: () => true
+    }),
+    filters: makeReducer([], {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.clacoForm.list.filters || []
     })
   }),
   current: makeFormReducer(selectors.STORE_NAME+'.entries.current', {}, {
