@@ -150,6 +150,11 @@ class AnalyticsManager
         return $this->userManager->countUsersForPlatformRoles($organizations);
     }
 
+    public function countEnabledUsers()
+    {
+        return $this->userManager->getCountAllEnabledUsers();
+    }
+
     public function countNonPersonalWorkspaces($organizations = null)
     {
         return $this->workspaceManager->getNbNonPersonalWorkspaces($organizations);

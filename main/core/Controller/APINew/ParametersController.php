@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +27,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ParametersController
 {
+    /** @var PlatformConfigurationHandler */
+    private $ch;
+    /** @var AnalyticsManager */
+    private $analyticsManager;
+    /** @var VersionManager */
+    private $versionManager;
+    /** @var ParametersSerializer */
+    private $serializer;
+    /** @var FileManager */
+    private $fileManager;
+
     /**
      * ParametersController constructor.
      *
@@ -33,17 +45,20 @@ class ParametersController
      * @param AnalyticsManager             $analyticsManager
      * @param VersionManager               $versionManager
      * @param ParametersSerializer         $serializer
+     * @param FileManager                  $fileManager
      */
     public function __construct(
         PlatformConfigurationHandler $ch,
         AnalyticsManager $analyticsManager,
         VersionManager $versionManager,
-        ParametersSerializer $serializer
+        ParametersSerializer $serializer,
+        FileManager $fileManager
     ) {
         $this->ch = $ch;
         $this->serializer = $serializer;
         $this->versionManager = $versionManager;
         $this->analyticsManager = $analyticsManager;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -78,11 +93,19 @@ class ParametersController
     {
         $parameters = $this->serializer->serialize();
 
-        $usersCount = $this->analyticsManager->userRolesData(null);
+        $usersCount = $this->analyticsManager->countEnabledUsers();
+        $usersRolesCount = $this->analyticsManager->userRolesData(null);
         $totalUsers = array_shift($usersCount)['total'];
         $wsCount = $this->analyticsManager->countNonPersonalWorkspaces(null);
         $resourceCount = $this->analyticsManager->getResourceTypesCount(null, null);
         $otherResources = $this->analyticsManager->getOtherResourceTypesCount();
+
+        $usedStorage = $this->fileManager->computeUsedStorage();
+        $parameters['restrictions']['used_storage'] = $usedStorage;
+        $parameters['restrictions']['max_storage_reached'] = isset($parameters['restrictions']['max_storage_size']) &&
+            $parameters['restrictions']['max_storage_size'] &&
+            $usedStorage >= $parameters['restrictions']['max_storage_size'];
+        $this->serializer->deserialize($parameters);
 
         return new JsonResponse([
             'version' => $this->versionManager->getDistributionVersion(),
@@ -92,7 +115,9 @@ class ParametersController
                 'workspaces' => $wsCount,
                 'other' => $otherResources,
                 'users' => $usersCount,
+                'usersRoles' => $usersRolesCount,
                 'totalUsers' => $totalUsers,
+                'storage' => $usedStorage,
             ],
         ]);
     }

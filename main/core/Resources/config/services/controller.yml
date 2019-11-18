@@ -184,6 +184,7 @@ services:
           - '@claroline.manager.analytics_manager'
           - '@Claroline\CoreBundle\Manager\VersionManager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+          - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CoreBundle\Controller\APINew\ScheduledTaskController: ~
 
