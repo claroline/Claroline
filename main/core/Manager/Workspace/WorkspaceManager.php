@@ -542,22 +542,6 @@ class WorkspaceManager
         return $this->roleManager->getWorkspaceRoleWithToolAccess($workspace);
     }
 
-    //used for cli copy debug tool
-    public function copyFromCode(Workspace $workspace, $code)
-    {
-        if ($this->logger) {
-            $this->container->get('Claroline\AppBundle\API\SerializerProvider')->setLogger($this->logger);
-        }
-
-        $newWorkspace = new Workspace();
-        $newWorkspace->setCode($code);
-        $newWorkspace->setName($code);
-        $this->copy($workspace, $newWorkspace);
-        //override code & name
-
-        return $newWorkspace;
-    }
-
     /**
      * Copies a Workspace.
      *
@@ -591,7 +575,7 @@ class WorkspaceManager
         $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
         // gets entity from raw data.
 
-        /** @var Workspace $workspace */
+        /** @var Workspace $workspaceCopy */
         $workspaceCopy = $transferManager->deserialize($data, $newWorkspace, $options, $fileBag);
 
         $workspaceCopy->setModel($model);

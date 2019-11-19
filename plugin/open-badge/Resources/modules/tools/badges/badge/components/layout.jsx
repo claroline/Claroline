@@ -56,7 +56,7 @@ class BadgeLayoutComponent extends Component {
         <ContentLoader
           className="row"
           size="lg"
-          description="Nous chargeons le badge"
+          description="Nous chargeons le badge..."
         />
       )
     }

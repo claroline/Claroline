@@ -2,23 +2,30 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
+import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentNotFound} from '#/main/app/content/components/not-found'
 
 import {ToolMain} from '#/main/core/tool/containers/main'
+import {route as toolRoute} from '#/main/core/tool/routing'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {WorkspaceRestrictions} from '#/main/core/workspace/components/restrictions'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 class WorkspaceMain extends Component {
   componentDidUpdate(prevProps) {
-    if (prevProps.workspace && this.props.workspace && this.props.workspace.slug !== prevProps.workspace.slug) {
+    if (!this.props.notFound && prevProps.workspace && this.props.workspace && this.props.workspace.slug !== prevProps.workspace.slug) {
       this.props.close(prevProps.workspace.slug)
     }
   }
 
   componentWillUnmount() {
-    this.props.close(this.props.workspace.slug)
+    if (!this.props.notFound) {
+      this.props.close(this.props.workspace.slug)
+    }
   }
 
   render() {
@@ -26,8 +33,27 @@ class WorkspaceMain extends Component {
       return (
         <ContentLoader
           size="lg"
-          description="Nous chargeons votre espace d'activités"
+          description={trans('loading', {}, 'workspace')}
         />
+      )
+    }
+
+    if (this.props.notFound) {
+      return (
+        <ContentNotFound
+          size="lg"
+          title={trans('not_found', {}, 'workspace')}
+          description={trans('not_found_desc', {}, 'workspace')}
+        >
+          <Button
+            className="btn btn-emphasis"
+            type={LINK_BUTTON}
+            label={trans('browse-workspaces', {}, 'actions')}
+            target={toolRoute('workspaces')}
+            exact={true}
+            primary={true}
+          />
+        </ContentNotFound>
       )
     }
 
@@ -83,6 +109,7 @@ WorkspaceMain.propTypes = {
     replace: T.func.isRequired
   }).isRequired,
   loaded: T.bool.isRequired,
+  notFound: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   managed: T.bool.isRequired,
   workspace: T.shape(

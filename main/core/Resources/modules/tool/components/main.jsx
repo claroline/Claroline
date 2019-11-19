@@ -26,7 +26,7 @@ const Tool = props => {
   return (
     <ContentLoader
       size="lg"
-      description="Nous chargeons votre outil"
+      description="Nous chargeons votre outil..."
     />
   )
 }
@@ -129,7 +129,7 @@ class ToolMain extends Component {
       return (
         <ContentLoader
           size="lg"
-          description="Nous chargeons votre outil"
+          description="Nous chargeons votre outil..."
         />
       )
     }

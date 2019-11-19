@@ -22,10 +22,18 @@
 // sizing
 .content-loader-sm {
     .content-loader-sizing-variant(80px);
+
+    .content-loader-description {
+        max-width: 320px;
+    }
 }
 
 .content-loader-lg {
     .content-loader-sizing-variant(160px);
+
+    .content-loader-description {
+        max-width: 640px;
+    }
 }
 
 .content-loader-animation {
@@ -45,6 +53,7 @@
     font-size: 14px;
     font-weight: normal;
     font-style: italic;
+    margin-bottom: @component-margin-bottom;
 }
 
 .hourglass {

@@ -13,7 +13,7 @@ const AdministrationMain = (props) =>
     placeholder={
       <ContentLoader
         size="lg"
-        description="Nous chargeons l'administration"
+        description="Nous chargeons l'administration..."
       />
     }
     then={() => {

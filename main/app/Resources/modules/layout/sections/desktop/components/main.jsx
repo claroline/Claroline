@@ -13,7 +13,7 @@ const DesktopMain = (props) =>
     placeholder={
       <ContentLoader
         size="lg"
-        description="Nous chargeons votre bureau"
+        description="Nous chargeons votre bureau..."
       />
     }
     then={() => (

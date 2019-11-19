@@ -405,8 +405,6 @@ class ResourceController
      * @param string $slug - the slug or UUID of the target node (we don't use ParamConverter to support slug and UUID)
      *
      * @return JsonResponse
-     *
-     * @throws ResourceNotFoundException
      */
     public function getAction($slug)
     {
@@ -414,7 +412,7 @@ class ResourceController
         $resourceNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $slug]);
 
         if (!$resourceNode) {
-            throw new ResourceNotFoundException('Resource not found');
+            return new JsonResponse(['resource_not_found'], 404);
         }
 
         return new JsonResponse(

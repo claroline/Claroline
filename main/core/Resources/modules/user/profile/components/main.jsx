@@ -15,7 +15,7 @@ const ProfileComponent = props => {
     return (
       <ContentLoader
         size="lg"
-        description="Nous chargeons votre utilisateur"
+        description="Nous chargeons votre utilisateur..."
       />
     )
   }

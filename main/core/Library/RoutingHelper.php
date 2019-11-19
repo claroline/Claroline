@@ -13,7 +13,13 @@ class RoutingHelper
         $this->router = $router;
     }
 
-    public function resourcePath(ResourceNode $resource)
+    public function desktopPath($toolName = null)
+    {
+        return $this->router->generate('claro_index')
+            .'#/desktop/'.$toolName;
+    }
+
+    public function resourcePath($resource)
     {
         return $this->router->generate('claro_index')
           .'#'.$this->resourceFragment($resource);
@@ -21,6 +27,7 @@ class RoutingHelper
 
     public function resourceFragment($resource)
     {
+        $slug = null;
         $wsSlug = null;
 
         if ($resource instanceof ResourceNode) {
@@ -41,13 +48,34 @@ class RoutingHelper
         }
 
         if ($wsSlug) {
-            return '/desktop/open/workspaces/'.$wsSlug.'/resources/'.$slug;
+            return $this->workspaceFragment($wsSlug, 'resources').'/'.$slug;
         } else {
             return '/desktop/resources/'.$slug;
         }
     }
 
-    public function workspacePath(Workspace $workspace)
+    public function workspacePath($workspace, $toolName = null)
     {
+        return $this->router->generate('claro_index')
+            .'#'.$this->workspaceFragment($workspace, $toolName);
+    }
+
+    public function workspaceFragment($workspace, $toolName = null)
+    {
+        $slug = null;
+        if ($workspace instanceof Workspace) {
+            $slug = $workspace->getSlug();
+        } elseif (is_array($workspace) && isset($workspace['slug'])) {
+            $slug = $workspace['slug'];
+        } elseif (is_string($workspace)) {
+            $slug = $workspace;
+        }
+
+        $fragment = '/desktop/workspaces/open/'.$slug;
+        if ($toolName) {
+            $fragment .= '/'.$toolName;
+        }
+
+        return $fragment;
     }
 }

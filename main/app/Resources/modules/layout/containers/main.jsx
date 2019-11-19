@@ -19,7 +19,7 @@ const LayoutMain = withRouter(
     }),
     (dispatch) => ({
       openWorkspace(workspaceId) {
-        dispatch(workspaceActions.open(workspaceId))
+        dispatch(workspaceActions.fetch(workspaceId))
       },
 
       /**

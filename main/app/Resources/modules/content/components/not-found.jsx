@@ -13,17 +13,21 @@ const ContentNotFound = (props) =>
       <Compass />
     </div>
 
-    {trans('Contenu non existant')}
+    {props.title || trans('not_found')}
 
     {props.description &&
       <p className="content-not-found-description">{props.description}</p>
     }
+
+    {props.children}
   </div>
 
 ContentNotFound.propTypes = {
   className: T.string,
   size: T.oneOf(['sm', 'lg']),
-  description: T.string
+  title: T.string,
+  description: T.string,
+  children: T.node
 }
 
 export {

@@ -63,7 +63,7 @@ class MessageComponent extends Component {
       return (
         <ContentLoader
           size="lg"
-          description="Nous chargeons la conversation"
+          description="Nous chargeons la conversation..."
         />
       )
     }

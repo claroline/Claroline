@@ -184,13 +184,14 @@ class WorkspaceSerializer
 
             // TODO : remove me. Used by ViewAs modal in UI and workspace transfer
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
+                $workspaceRoles = array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray())));
                 if (in_array(Options::REFRESH_UUID, $options)) {
                     $serialized['roles'] = array_map(function (Role $role) {
                         return [
                           'translationKey' => $role->getTranslationKey(),
                           'type' => $role->getType(),
                         ];
-                    }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
+                    }, $workspaceRoles);
                 } else {
                     $serialized['roles'] = array_map(function (Role $role) {
                         return [
@@ -199,7 +200,7 @@ class WorkspaceSerializer
                             'type' => $role->getType(), // TODO : should be a string for better data readability
                             'translationKey' => $role->getTranslationKey(),
                         ];
-                    }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
+                    }, $workspaceRoles);
                 }
             }
         }

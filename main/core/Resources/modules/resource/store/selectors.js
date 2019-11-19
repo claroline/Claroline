@@ -57,6 +57,11 @@ const loaded = createSelector(
   (store) => store.loaded
 )
 
+const notFound = createSelector(
+  [store],
+  (store) => store.notFound
+)
+
 // lifecycle selectors
 const resourceLifecycle = createSelector(
   [store],
@@ -153,6 +158,7 @@ export const selectors = {
   managed,
   nodeLoaded,
   loaded,
+  notFound,
   // lifecycle
   resourceLifecycle,
   // access restrictions

@@ -14,6 +14,11 @@ const loaded = createSelector(
   (store) => store.loaded
 )
 
+const notFound = createSelector(
+  [store],
+  (store) => store.notFound
+)
+
 const impersonated = createSelector(
   [store],
   (store) => store.impersonated
@@ -101,6 +106,7 @@ export const selectors = {
   root,
   loaded,
   impersonated,
+  notFound,
   workspace,
   managed,
   tools,

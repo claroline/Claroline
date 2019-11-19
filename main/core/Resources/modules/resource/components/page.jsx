@@ -60,7 +60,7 @@ class ResourcePage extends Component {
       return (
         <ContentLoader
           size="lg"
-          description="Nous chargeons le contenu de votre ressource"
+          description="Nous chargeons le contenu de votre ressource..."
         />
       )
     }

@@ -15,7 +15,9 @@ const ResourceMain = withRouter(
         path: selectors.path(state),
         resourceSlug: selectors.slug(state),
         resourceType: selectors.resourceType(state),
-        loaded: selectors.nodeLoaded(state)
+        embedded: selectors.embedded(state),
+        loaded: selectors.nodeLoaded(state),
+        notFound: selectors.notFound(state)
       }),
       (dispatch) => ({
         open(resourceId) {

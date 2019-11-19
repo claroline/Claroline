@@ -15,5 +15,8 @@
   "workspace_manager_registration": "Les inscriptions sont gérées par les gestionnaires.",
   "workspace_public_registration": "Les inscriptions sont publiques.",
   "workspace_manager_unregistration": "Les désinscriptions sont gérées par les gestionnaires.",
-  "workspace_public_unregistration": "Les désinscriptions sont publiques."
+  "workspace_public_unregistration": "Les désinscriptions sont publiques.",
+  "not_found": "Espace d'activités non trouvé",
+  "not_found_desc": "Nous sommes désolés, nous n'avons pas pu trouver votre espace d'activités. Il est possible qu'il n'existe pas (ou plus) ou que l'URL utilisée soit incorrecte.",
+  "loading": "Nous chargeons votre espace d'activités..."
 }

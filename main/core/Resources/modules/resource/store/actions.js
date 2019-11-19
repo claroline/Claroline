@@ -14,6 +14,7 @@ export const RESOURCE_SERVER_ERRORS         = 'RESOURCE_SERVER_ERRORS'
 export const RESOURCE_RESTRICTIONS_DISMISS  = 'RESOURCE_RESTRICTIONS_DISMISS'
 export const RESOURCE_RESTRICTIONS_ERROR    = 'RESOURCE_RESTRICTIONS_ERROR'
 export const RESOURCE_RESTRICTIONS_UNLOCKED = 'RESOURCE_RESTRICTIONS_UNLOCKED'
+export const RESOURCE_NOT_FOUND             = 'RESOURCE_NOT_FOUND'
 
 // this ones should not be here
 export const RESOURCE_COMMENT_ADD           = 'RESOURCE_COMMENT_ADD'
@@ -26,6 +27,7 @@ export const actions = {}
 actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED, 'loaded')
 actions.setRestrictionsError = makeActionCreator(RESOURCE_RESTRICTIONS_ERROR, 'errors')
 actions.setServerErrors = makeActionCreator(RESOURCE_SERVER_ERRORS, 'errors')
+actions.setNotFound = makeActionCreator(RESOURCE_NOT_FOUND)
 actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
 actions.loadNode = makeActionCreator(RESOURCE_LOAD_NODE, 'resourceNode')
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
@@ -51,7 +53,13 @@ actions.fetchNode = (slug) => (dispatch, getState) => {
     [API_REQUEST]: {
       silent: true,
       url: ['claro_resource_get', {slug}],
-      success: (response, dispatch) => dispatch(actions.loadNode(response))
+      success: (response) => dispatch(actions.loadNode(response)),
+      error: (response, responseStatus) => {
+        if (404 === responseStatus) {
+          dispatch(actions.setResourceLoaded(true))
+          dispatch(actions.setNotFound())
+        }
+      }
     }
   })
 }

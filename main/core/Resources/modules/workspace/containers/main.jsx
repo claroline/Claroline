@@ -17,6 +17,7 @@ const WorkspaceMain = withRouter(
       (state) => ({
         authenticated: securitySelectors.isAuthenticated(state),
         loaded: selectors.loaded(state),
+        notFound: selectors.notFound(state),
         managed: selectors.managed(state),
         workspace: selectors.workspace(state),
         accessErrors: selectors.accessErrors(state),

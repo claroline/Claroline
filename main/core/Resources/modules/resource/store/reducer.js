@@ -14,6 +14,7 @@ import {
   RESOURCE_RESTRICTIONS_DISMISS,
   RESOURCE_RESTRICTIONS_ERROR,
   RESOURCE_SERVER_ERRORS,
+  RESOURCE_NOT_FOUND,
   RESOURCE_RESTRICTIONS_UNLOCKED,
   RESOURCE_COMMENT_ADD,
   RESOURCE_COMMENT_UPDATE,
@@ -33,6 +34,11 @@ const reducer = combineReducers({
     [SECURITY_USER_CHANGE]: () => false,
     [RESOURCE_OPEN]: () => false,
     [RESOURCE_SET_LOADED]: (state, action) => action.loaded
+  }),
+  notFound: makeReducer(false, {
+    [SECURITY_USER_CHANGE]: () => false,
+    [RESOURCE_OPEN]: () => false,
+    [RESOURCE_NOT_FOUND]: () => true
   }),
 
   embedded: makeReducer(false), // this can not be changed at runtime

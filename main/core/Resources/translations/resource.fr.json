@@ -44,5 +44,8 @@
     "video": "Vidéo",
     "resources_delete_confirm": "{1} Suppression d'une ressource | [2,Inf[ Suppression de ressources",
     "resources_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette ressource ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% ressources ?",
-    "all_resources": "Toutes les ressources"
+    "all_resources": "Toutes les ressources",
+    "not_found": "Ressource non trouvée",
+    "not_found_desc": "Nous sommes désolés, nous n'avons pas pu trouver votre ressource. Il est possible qu'elle n'existe pas (ou plus) ou que l'URL utilisée soit incorrecte.",
+    "loading": "Nous chargeons votre ressource..."
 }

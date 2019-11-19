@@ -39,6 +39,11 @@ services:
                 arguments:
                   - '@security.authorization_checker'
 
+    Claroline\CoreBundle\Controller\LegacyController:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\RoutingHelper'
+
     Claroline\CoreBundle\Controller\APINew\Cryptography\ApiTokenController:
         arguments:
           - '@security.token_storage'

@@ -13,7 +13,7 @@ const IntegrationTool = props =>
     placeholder={
       <ContentLoader
         size="lg"
-        description="Nous chargeons votre outil"
+        description="Nous chargeons votre outil..."
       />
     }
     then={(apps) => (

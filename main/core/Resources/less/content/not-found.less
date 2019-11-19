@@ -22,10 +22,18 @@
 // sizing
 .content-not-found-sm {
     .content-not-found-sizing-variant(80px);
+
+    .content-not-found-description {
+        max-width: 320px;
+    }
 }
 
 .content-not-found-lg {
     .content-not-found-sizing-variant(160px);
+
+    .content-not-found-description {
+        max-width: 640px;
+    }
 }
 
 .content-not-found-animation {
@@ -45,6 +53,7 @@
     font-size: 14px;
     font-weight: normal;
     font-style: italic;
+    margin-bottom: @component-margin-bottom;
 }
 
 .compass {

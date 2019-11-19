@@ -2,11 +2,16 @@ import React, {Fragment, Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {theme} from '#/main/app/config'
+import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {makeCancelable} from '#/main/app/api'
+import {route as toolRoute} from '#/main/core/tool/routing'
 import {getResource} from '#/main/core/resources'
 
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentNotFound} from '#/main/app/content/components/not-found'
 
 const Resource = props => {
   if (props.loaded) {
@@ -24,7 +29,7 @@ const Resource = props => {
   return (
     <ContentLoader
       size="lg"
-      description="Nous chargeons votre ressource"
+      description={trans('loading', {}, 'resource')}
     />
   )
 }
@@ -64,7 +69,7 @@ class ResourceMain extends Component {
       this.loadApp()
     }
 
-    if (this.props.resourceSlug !== prevProps.resourceSlug) {
+    if (!this.props.notFound && this.props.resourceSlug !== prevProps.resourceSlug) {
       this.props.close(prevProps.resourceSlug)
     }
 
@@ -78,7 +83,10 @@ class ResourceMain extends Component {
       this.pending.cancel()
       this.pending = null
     }
-    this.props.close(this.props.resourceSlug)
+
+    if (!this.props.notFound) {
+      this.props.close(this.props.resourceSlug)
+    }
   }
 
   loadApp() {
@@ -115,11 +123,32 @@ class ResourceMain extends Component {
   }
 
   render() {
+    if (this.props.notFound) {
+      return (
+        <ContentNotFound
+          size="lg"
+          title={trans('not_found', {}, 'resource')}
+          description={trans('not_found_desc', {}, 'resource')}
+        >
+          {!this.props.embedded &&
+            <Button
+              className="btn btn-emphasis"
+              type={LINK_BUTTON}
+              label={trans('browse-resources', {}, 'actions')}
+              target={toolRoute('resources')}
+              exact={true}
+              primary={true}
+            />
+          }
+        </ContentNotFound>
+      )
+    }
+
     if (!this.props.loaded || !this.state.appLoaded) {
       return (
         <ContentLoader
           size="lg"
-          description="Nous chargeons votre ressource"
+          description={trans('loading', {}, 'resource')}
         />
       )
     }
@@ -141,7 +170,9 @@ ResourceMain.propTypes = {
   resourceSlug: T.string.isRequired,
   resourceType: T.string,
 
+  embedded: T.bool.isRequired,
   loaded: T.bool.isRequired,
+  notFound: T.bool.isRequired,
   open: T.func.isRequired,
   close: T.func.isRequired
 }

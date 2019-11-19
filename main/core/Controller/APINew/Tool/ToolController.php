@@ -65,7 +65,7 @@ class ToolController extends AbstractApiController
 
     /**
      * @EXT\Route(
-     *     "/tool/close",
+     *     "/close",
      *     name="apiv2_tool_close"
      * )
      * @EXT\Method("PUT")

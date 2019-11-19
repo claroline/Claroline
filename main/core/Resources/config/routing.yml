@@ -18,6 +18,10 @@ claro_user_registration:
     type: annotation
     options: { expose: true }
 
+claro_legacy:
+    resource: "@ClarolineCoreBundle/Controller/LegacyController.php"
+    type: annotation
+
 claro_desktop:
     resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
     type: annotation
