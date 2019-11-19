@@ -12,21 +12,16 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MailManager
 {
-    /** @var CacheManager */
-    private $cacheManager;
-
     /** @var ContainerInterface */
     private $container;
 
@@ -39,35 +34,24 @@ class MailManager
     /** @var TemplateManager */
     private $templateManager;
 
-    /** @var TwigEngine */
-    private $templating;
-
-    private $parameters;
-
     /**
-     * @param CacheManager          $cacheManager
      * @param ContainerInterface    $container
      * @param Mailer                $mailer
      * @param ParametersSerializer  $parametersSerializer
      * @param UrlGeneratorInterface $router
      * @param TemplateManager       $templateManager
-     * @param TwigEngine            $templating
      */
     public function __construct(
-        CacheManager $cacheManager,
         ContainerInterface $container,
         Mailer $mailer,
         ParametersSerializer $parametersSerializer,
         UrlGeneratorInterface $router,
-        TemplateManager $templateManager,
-        TwigEngine $templating
+        TemplateManager $templateManager
     ) {
-        $this->cacheManager = $cacheManager;
         $this->container = $container;
         $this->mailer = $mailer;
         $this->router = $router;
         $this->templateManager = $templateManager;
-        $this->templating = $templating;
         $this->serializer = $parametersSerializer;
     }
 
@@ -111,10 +95,10 @@ class MailManager
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(
-            'claro_security_reset_password',
-            ['hash' => $hash],
+            'claro_index',
+            [],
             UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        )."#/newpassword/{$hash}";
         $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
@@ -151,6 +135,7 @@ class MailManager
 
     public function sendValidateEmail($hash)
     {
+        /** @var User $user */
         $user = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
         $url = $this->router->generate(
             'claro_security_validate_email',

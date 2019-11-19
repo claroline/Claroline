@@ -172,13 +172,11 @@ services:
 
     Claroline\CoreBundle\Manager\MailManager:
         arguments:
-          - '@claroline.manager.cache_manager'
           - '@service_container'
           - '@Claroline\CoreBundle\Library\Mailing\Mailer'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
           - '@router'
           - '@claroline.manager.template_manager'
-          - '@templating'
 
     claroline.manager.mail_manager:
         alias: Claroline\CoreBundle\Manager\MailManager
