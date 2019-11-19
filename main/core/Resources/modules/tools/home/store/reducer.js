@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
@@ -29,9 +31,25 @@ const reducer = combineReducers({
   }),
 
   tabs: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.tabs,
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => {
+      if (!isEmpty(action.toolData.tabs)) {
+        return action.toolData.tabs
+      }
+
+      return [
+        selectors.defaultTab({tool: {currentContext: action.context}})
+      ]
+    },
     [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME + '.editor')]: (state, action) => action.updatedData,
-    [TABS_LOAD]: (state, action) => action.tabs
+    [TABS_LOAD]: (state, action) => {
+      if (!isEmpty(action.tabs)) {
+        return action.tabs
+      }
+
+      return [
+        selectors.defaultTab({tool: {currentContext: action.context}})
+      ]
+    }
   }),
   editor: editorReducer
 })

@@ -4,15 +4,9 @@ import {trans} from '#/main/app/intl/translation'
 import {selectors as homeSelectors} from '#/main/core/tools/home/store/selectors'
 
 const tabs = (state) => {
-  const definedTabs = [].concat(homeSelectors.store(state).tabs)
+  return [].concat(homeSelectors.store(state).tabs)
     .filter(tab => !tab.restrictions || !tab.restrictions.hidden)
     .sort((a,b) => a.position - b.position)
-
-  if (0 === definedTabs.length) {
-    definedTabs.push(homeSelectors.defaultTab(state))
-  }
-
-  return definedTabs
 }
 
 const currentTab = createSelector(

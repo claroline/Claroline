@@ -11,7 +11,7 @@ import {selectors} from '#/main/core/tools/home/editor/store/selectors'
 
 const reducer = makeFormReducer(selectors.FORM_NAME, {data: [], originalData: []}, {
   data: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'home')]: (state, action) => {
+    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => {
       if (!isEmpty(action.toolData.tabs)) {
         return action.toolData.tabs
       }
@@ -20,10 +20,18 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {data: [], originalData: []
         baseSelectors.defaultTab({tool: {currentContext: action.context}})
       ]
     },
-    [TABS_LOAD]: (state, action) => action.tabs
+    [TABS_LOAD]: (state, action) => {
+      if (!isEmpty(action.tabs)) {
+        return action.tabs
+      }
+
+      return [
+        baseSelectors.defaultTab({tool: {currentContext: action.context}})
+      ]
+    }
   }),
   originalData: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'home')]: (state, action) => {
+    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => {
       if (!isEmpty(action.toolData.tabs)) {
         return action.toolData.tabs
       }
