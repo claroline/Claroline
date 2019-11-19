@@ -95,35 +95,57 @@ AvailableFilterFlag.propTypes = {
   isValid: T.bool.isRequired
 }
 
-const AvailableFilterContent = props => {
-  const isValidSearch = !isEmpty(props.currentSearch) && (!props.definition.validate || !props.definition.validate(props.currentSearch, props.options))
+class AvailableFilterContent extends Component {
+  constructor(props) {
+    super(props)
 
-  return (
-    <li role="presentation">
-      {React.createElement(
-        isValidSearch ? AvailableFilterActive : AvailableFilterDisabled,
-        isValidSearch ? {onSelect: () => props.onSelect(props.definition.parse(props.currentSearch, props.options))} : {}, [
-          <span key="available-filter-prop" className="available-filter-prop">
-            <AvailableFilterFlag id={`${props.name}-filter-flag`} isValid={isValidSearch} />
-            {props.label} <small>({props.type})</small>
-          </span>,
-          <span key="available-filter-form" className="available-filter-form">
-            {!props.definition.components.search &&
-              <span className="available-filter-value">{isValidSearch ? props.currentSearch : '-'}</span>
-            }
+    this.state = {
+      isValidSearch: false
+    }
+  }
 
-            {props.definition.components.search &&
-              React.createElement(props.definition.components.search, merge({}, props.options, {
-                search: props.currentSearch,
-                isValid: isValidSearch,
-                updateSearch: props.onSelect
-              }))
-            }
-          </span>
-        ]
-      )}
-    </li>
-  )
+  componentDidMount() {
+    if (!isEmpty(this.props.currentSearch) && (this.props.definition.validate)) {
+      Promise.resolve(this.props.definition.validate(this.props.currentSearch, this.props.options)).then((result) => {
+        this.setState({isValidSearch: !result})
+      })
+    } else {
+      this.setState({isValidSearch: !isEmpty(this.props.currentSearch)})
+    }
+  }
+
+  render() {
+    //const isValidSearch = !isEmpty(this.props.currentSearch) && (!this.props.definition.validate || !this.props.definition.validate(this.props.currentSearch, this.props.options))
+
+    //console.log(isValidSearch)
+
+    return (
+      <li role="presentation">
+        {React.createElement(
+          this.state.isValidSearch ? AvailableFilterActive : AvailableFilterDisabled,
+          this.state.isValidSearch ? {onSelect: () => this.props.onSelect(this.props.definition.parse(this.props.currentSearch, this.props.options))} : {}, [
+            <span key="available-filter-prop" className="available-filter-prop">
+              <AvailableFilterFlag id={`${this.props.name}-filter-flag`} isValid={this.state.isValidSearch} />
+              {this.props.label} <small>({trans(this.props.type, {}, 'data')})</small>
+            </span>,
+            <span key="available-filter-form" className="available-filter-form">
+              {!this.props.definition.components.search &&
+                <span className="available-filter-value">{this.state.isValidSearch ? this.props.currentSearch : '-'}</span>
+              }
+
+              {this.props.definition.components.search &&
+                React.createElement(this.props.definition.components.search, merge({}, this.props.options, {
+                  search: this.props.currentSearch,
+                  isValid: this.state.isValidSearch,
+                  updateSearch: this.props.onSelect
+                }))
+              }
+            </span>
+          ]
+        )}
+      </li>
+    )
+  }
 }
 
 AvailableFilterContent.propTypes = {

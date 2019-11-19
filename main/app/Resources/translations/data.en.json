@@ -1,3 +1,18 @@
 {
+  "boolean": "Boolean",
+  "choice": "Choice",
+  "collection": "Collection",
+  "color": "Color",
+  "country": "Country",
+  "currency": "Currency",
+  "date": "Date",
+  "date-range": "Period",
+  "email": "Email",
+  "file": "File",
+  "html": "Rich text",
+  "image": "Image",
+  "ip": "IP address",
+  "number": "Number",
+  "string": "Text",
   "url": "URL"
 }

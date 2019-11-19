@@ -5,6 +5,8 @@ import {chain, array, string, notBlank, unique} from '#/main/app/data/types/vali
 import {EnumGroup} from '#/main/app/data/types/enum/components/group'
 import {EnumInput} from '#/main/app/data/types/enum/components/input'
 
+// TODO : try to replace by collection
+
 const dataType = {
   name: 'enum',
   validate: (value, options) => chain(value, options, [array, (value) => {
