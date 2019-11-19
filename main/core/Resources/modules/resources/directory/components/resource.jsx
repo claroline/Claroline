@@ -9,7 +9,7 @@ import {EditorMain} from '#/main/core/resources/directory/editor/containers/main
 const DirectoryResource = (props) =>
   <ResourcePage
     primaryAction="add"
-    disabledActions={props.storageLock ? ['add', 'add_files'] : []}
+    disabledActions={props.storageLock ? ['add', 'add_files', 'copy'] : []}
     routes={[
       {
         path: '/:all(all)?',

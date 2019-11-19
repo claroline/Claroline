@@ -115,7 +115,7 @@ class ResourceActionManager
      */
     public function execute(ResourceNode $resourceNode, string $actionName, array $options = [], array $content = null, array $files = null): Response
     {
-        if ('add' === $actionName) {
+        if (in_array($actionName, ['add', 'copy'])) {
             $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
             if (isset($parameters['restrictions']['storage']) &&

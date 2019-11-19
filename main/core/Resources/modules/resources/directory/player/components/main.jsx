@@ -80,7 +80,9 @@ const PlayerMain = props =>
           actions: (resourceNodes) => getActions(resourceNodes, {
             update: props.updateNodes,
             delete: props.deleteNodes
-          }, props.path, props.currentUser).then((actions) => actions.map(action => transformAction(action, resourceNodes, props.embedded)))
+          }, props.path, props.currentUser).then((actions) => actions
+            .filter(action => !props.storageLock || 'copy' !== action.name)
+            .map(action => transformAction(action, resourceNodes, props.embedded)))
         }
       })}
       parameters={props.listConfiguration}

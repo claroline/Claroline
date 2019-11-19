@@ -1087,6 +1087,11 @@ class ClacoFormManager
         $newField->setLocked($field->isLocked());
         $newField->setLockedEditionOnly($field->getLockedEditionOnly());
         $newField->setHidden($field->isHidden());
+        $newField->setDetails($field->getDetails());
+        $newField->setFileTypes($field->getFileTypes());
+        $newField->setHelp($field->getHelp());
+        $newField->setNbFilesMax($field->getNbFilesMax());
+        $newField->setOrder($field->getOrder());
 
         $fieldFacet = $field->getFieldFacet();
         $newFieldFacet = new FieldFacet();
