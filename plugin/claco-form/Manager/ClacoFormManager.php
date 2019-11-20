@@ -1009,6 +1009,29 @@ class ClacoFormManager
         return $data;
     }
 
+    public function refactorTemplateWithUuid(ClacoForm $clacoForm)
+    {
+        $template = $clacoForm->getTemplate();
+
+        if ($template) {
+            $matches = [];
+
+            if (preg_match_all('#%field_[0-9]+%#', $template, $matches) && 0 < count($matches)) {
+                foreach ($matches[0] as $match) {
+                    $id = trim($match, '%field_');
+                    $field = $this->fieldRepo->findOneBy(['id' => $id]);
+
+                    if ($field) {
+                        $template = str_replace($match, '%field_'.$field->getUuid().'%', $template);
+                    }
+                }
+            }
+            $clacoForm->setTemplate($template);
+            $this->om->persist($clacoForm);
+            $this->om->flush();
+        }
+    }
+
     public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm)
     {
         $categoryLinks = [];
@@ -1040,6 +1063,14 @@ class ClacoFormManager
         }
         foreach ($entries as $entry) {
             $this->copyEntry($newClacoForm, $entry, $categoryLinks, $keywordLinks, $fieldLinks, $fieldFacetLinks);
+        }
+        $template = $clacoForm->getTemplate();
+
+        if ($template) {
+            foreach ($fieldLinks as $key => $value) {
+                $template = str_replace("%field_$key%", '%field_'.$value->getUuid().'%', $template);
+            }
+            $newClacoForm->setTemplate($template);
         }
 
         return $newClacoForm;
@@ -1104,7 +1135,7 @@ class ClacoFormManager
         $links['fieldFacets'][$fieldFacet->getId()] = $newFieldFacet;
         $newField->setFieldFacet($newFieldFacet);
         $this->om->persist($newField);
-        $links['fields'][$field->getId()] = $newField;
+        $links['fields'][$field->getUuid()] = $newField;
 
         $fieldFacetChoices = $fieldFacet->getFieldFacetChoices()->toArray();
 
@@ -1198,7 +1229,7 @@ class ClacoFormManager
 
     private function copyFieldValue(Entry $newEntry, FieldValue $fieldValue, array $fieldLinks, array $fieldFacetLinks)
     {
-        $fieldId = $fieldValue->getField()->getId();
+        $fieldId = $fieldValue->getField()->getUuid();
         $fieldFacetValue = $fieldValue->getFieldFacetValue();
         $fieldFacetId = $fieldFacetValue->getFieldFacet()->getId();
 

@@ -45,6 +45,14 @@ class EntryVoter extends AbstractVoter
             ($clacoForm->isEditionEnabled() && 'anon.' !== $user && $entry->getUser()->getUuid() === $token->getUser()->getUuid())
         ) {
             return VoterInterface::ACCESS_GRANTED;
+        } elseif ($clacoForm->isEditionEnabled() && 'anon.' !== $user) {
+            $entryUsers = $entry->getEntryUsers();
+
+            foreach ($entryUsers as $entryUser) {
+                if ($entryUser->isShared() && $entryUser->getUser()->getUuid() === $token->getUser()->getUuid()) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+            }
         }
 
         return VoterInterface::ACCESS_DENIED;

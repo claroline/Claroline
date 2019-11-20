@@ -121,6 +121,21 @@ const isCurrentEntryOwner = createSelector(
   }
 )
 
+const isCurrentEntrySharedUser = createSelector(
+  [authenticatedUser, isAnon, currentEntry, entryUser],
+  (authenticatedUser, isAnon, currentEntry, entryUser) => {
+    return !isAnon &&
+      authenticatedUser &&
+      currentEntry &&
+      entryUser.shared &&
+      entryUser.entry &&
+      currentEntry.id &&
+      currentEntry.id === entryUser.entry.id &&
+      entryUser.user &&
+      entryUser.user.id === authenticatedUser.id
+  }
+)
+
 const isCurrentEntryManager = createSelector(
   [authenticatedUser, isAnon, currentEntry],
   (authenticatedUser, isAnon, currentEntry) => {
@@ -171,8 +186,9 @@ const canEditCurrentEntry = createSelector(
   params,
   isCurrentEntryOwner,
   canManageCurrentEntry,
-  (canAdministrate, params, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return canAdministrate || (params && params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
+  isCurrentEntrySharedUser,
+  (canAdministrate, params, isCurrentEntryOwner, canManageCurrentEntry, isCurrentEntrySharedUser) => {
+    return canAdministrate || (params && params['edition_enabled'] && (isCurrentEntryOwner || isCurrentEntrySharedUser)) || canManageCurrentEntry
   }
 )
 
@@ -276,6 +292,7 @@ export const selectors = {
   useTemplate,
   entries,
   isCurrentEntryOwner,
+  isCurrentEntrySharedUser,
   isCurrentEntryManager,
   canManageCurrentEntry,
   canEditCurrentEntry,

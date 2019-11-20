@@ -14,6 +14,7 @@ namespace Claroline\ClacoFormBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -51,6 +52,7 @@ class ClacoFormController
     private $configHandler;
     private $filesDir;
     private $locationManager;
+    private $om;
     private $request;
     private $templating;
     private $translator;
@@ -69,6 +71,7 @@ class ClacoFormController
         PlatformConfigurationHandler $configHandler,
         $filesDir,
         LocationManager $locationManager,
+        ObjectManager $om,
         RequestStack $request,
         TwigEngine $templating,
         TranslatorInterface $translator,
@@ -84,6 +87,7 @@ class ClacoFormController
         $this->configHandler = $configHandler;
         $this->filesDir = $filesDir;
         $this->locationManager = $locationManager;
+        $this->om = $om;
         $this->request = $request->getMasterRequest();
         $this->templating = $templating;
         $this->translator = $translator;
@@ -159,7 +163,9 @@ class ClacoFormController
      *
      * Deletes entries
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function entriesDeleteAction(Request $request)
     {
@@ -469,7 +475,10 @@ class ClacoFormController
      *
      * Saves entry options for current user
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param User  $user
+     * @param Entry $entry
+     *
+     * @return JsonResponse
      */
     public function entryUserSaveAction(User $user, Entry $entry)
     {
@@ -781,7 +790,8 @@ class ClacoFormController
      *
      * Switches lock of entries
      *
-     * @param int $locked
+     * @param int     $locked
+     * @param Request $request
      *
      * @return JsonResponse
      */

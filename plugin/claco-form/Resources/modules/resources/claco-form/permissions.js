@@ -21,7 +21,7 @@ function isEntryOwner(entry, currentUser) {
 }
 
 function canEditEntry(entry, clacoForm, currentUser) {
-  return canManageEntry(entry, false, currentUser) || (clacoForm.details.editionEnabled && isEntryOwner(entry, currentUser))
+  return canManageEntry(entry, false, currentUser) || (clacoForm.details.edition_enabled && isEntryOwner(entry, currentUser))
 }
 
 function canManageEntry(entry, canEdit = false, currentUser = null) {
