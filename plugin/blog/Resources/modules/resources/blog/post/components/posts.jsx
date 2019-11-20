@@ -28,7 +28,8 @@ class PostsComponent extends Component {
     if (!this.state.ignoreUpdate) {
       if (prevProps.filters !== this.props.filters) {
         this.setState({ignoreUpdate: true})
-        this.props.history.push(buildQueryParameters(this.props.filters))
+        const queryParams = buildQueryParameters(this.props.filters) ? '?' + buildQueryParameters(this.props.filters) : ''
+        this.props.history.push(this.props.path + queryParams)
       }
 
       if (this.props.location.search !== prevProps.location.search) {

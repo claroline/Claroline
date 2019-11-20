@@ -9,7 +9,7 @@ export default {
   parameters: {
     primaryAction: (post) => ({
       type: URL_BUTTON,
-      target: `#${route(post.meta.resource)}/${post.id}`
+      target: `#${route(post.meta.resource)}/${post.slug}`
     }),
     definition: [
       {
