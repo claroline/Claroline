@@ -144,7 +144,7 @@ function now(local = true) {
 }
 
 function computeElapsedTime(startDate) {
-  return getTimeDiff(startDate, now(false))
+  return getTimeDiff(startDate, now())
 }
 
 function getTimeDiff(startDate, endDate) {
