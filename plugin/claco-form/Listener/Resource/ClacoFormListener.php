@@ -28,9 +28,11 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ClacoFormListener
 {
@@ -41,15 +43,17 @@ class ClacoFormListener
     private $roleManager;
     private $serializer;
     private $tokenStorage;
+    private $authorization;
 
     /**
-     * @param ClacoFormManager             $clacoFormManager
-     * @param ObjectManager                $om
-     * @param FinderProvider               $finder
-     * @param PlatformConfigurationHandler $platformConfigHandler
-     * @param RoleManager                  $roleManager,
-     * @param SerializerProvider           $serializer
-     * @param TokenStorageInterface        $tokenStorage
+     * @param ClacoFormManager              $clacoFormManager
+     * @param ObjectManager                 $om
+     * @param FinderProvider                $finder
+     * @param PlatformConfigurationHandler  $platformConfigHandler
+     * @param RoleManager                   $roleManager,
+     * @param SerializerProvider            $serializer
+     * @param TokenStorageInterface         $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ClacoFormManager $clacoFormManager,
@@ -58,7 +62,8 @@ class ClacoFormListener
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
         SerializerProvider $serializer,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->clacoFormManager = $clacoFormManager;
         $this->om = $om;
@@ -67,6 +72,7 @@ class ClacoFormListener
         $this->roleManager = $roleManager;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -98,9 +104,20 @@ class ClacoFormListener
             $roles[] = $this->serializer->serialize($workspaceRole, [Options::SERIALIZE_MINIMAL]);
         }
         $myRoles = $isAnon ? [$roleAnonymous->getName()] : $user->getRoles();
+        $serializedClacoForm = $this->serializer->serialize($clacoForm);
+        $canEdit = $isAnon ?
+            false :
+            $this->authorization->isGranted('EDIT', new ResourceCollection([$clacoForm->getResourceNode()]));
+
+        if ($canEdit) {
+            foreach ($serializedClacoForm['list']['filters'] as $key => $filter) {
+                $filter['locked'] = false;
+                $serializedClacoForm['list']['filters'][$key] = $filter;
+            }
+        }
 
         $event->setData([
-            'clacoForm' => $this->serializer->serialize($clacoForm),
+            'clacoForm' => $serializedClacoForm,
             'canGeneratePdf' => $canGeneratePdf,
             'cascadeLevelMax' => $cascadeLevelMax,
             'myEntriesCount' => count($myEntries),

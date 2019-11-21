@@ -27,7 +27,7 @@ const reducer = combineReducers({
       const idx = newState.findIndex(answer => answer.id === action.answerId)
 
       if (-1 < idx) {
-        newState[idx]['feeedback'] = action.feeedback
+        newState[idx]['feedback'] = action.feedback
       }
 
       return newState

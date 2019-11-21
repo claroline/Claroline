@@ -13,6 +13,7 @@ services:
             - '@claroline.manager.role_manager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
+            - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_claco_form.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.claroline_claco_form.copy, method: onCopy }
