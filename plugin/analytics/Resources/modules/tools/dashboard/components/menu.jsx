@@ -67,11 +67,17 @@ const DashboardMenu = (props) =>
           target: `${props.path}/requirements`
         }
       ]}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 DashboardMenu.propTypes = {
-  path: T.string
+  path: T.string,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

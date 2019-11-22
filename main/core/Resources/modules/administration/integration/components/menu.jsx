@@ -24,11 +24,17 @@ const IntegrationMenu = (props) =>
         label: trans(app.default.name, {}, 'integration'),
         target: `${props.path}/${app.default.name}`
       })))}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 IntegrationMenu.propTypes = {
-  path: T.string
+  path: T.string,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

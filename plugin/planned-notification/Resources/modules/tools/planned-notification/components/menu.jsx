@@ -30,11 +30,17 @@ const PlannedNotificationMenu = (props) =>
           target: props.path+'/messages'
         }
       ]}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 PlannedNotificationMenu.propTypes = {
-  path: T.string
+  path: T.string,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

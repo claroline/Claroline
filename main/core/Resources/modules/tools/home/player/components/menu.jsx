@@ -20,6 +20,7 @@ const PlayerMenu = (props) => {
             activeStyle={{
               borderColor: get(tab, 'display.color')
             }}
+            onClick={props.autoClose}
           />
         )}
       </div>
@@ -33,7 +34,8 @@ PlayerMenu.propTypes = {
   path: T.string,
   tabs: T.arrayOf(T.shape({
     // TODO : tab types
-  }))
+  })),
+  autoClose: T.func.isRequired
 }
 
 PlayerMenu.defaultProps = {

@@ -30,11 +30,17 @@ const TransferMenu = (props) =>
           target: `${props.path}/history`
         }
       ]}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 TransferMenu.propTypes = {
-  path: T.string
+  path: T.string,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

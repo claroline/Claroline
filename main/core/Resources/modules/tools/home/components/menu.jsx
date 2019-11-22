@@ -19,11 +19,23 @@ const HomeMenu = props =>
       routes={[
         {
           path: '/edit',
-          component: EditorMenu,
-          disabled: !props.editable
+          disabled: !props.editable,
+          render() {
+            const Menu = (
+              <EditorMenu autoClose={props.autoClose} />
+            )
+
+            return Menu
+          }
         }, {
           path: '/',
-          component: PlayerMenu
+          render() {
+            const Menu = (
+              <PlayerMenu autoClose={props.autoClose} />
+            )
+
+            return Menu
+          }
         }
       ]}
     />
@@ -35,7 +47,8 @@ HomeMenu.propTypes = {
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

@@ -20,8 +20,16 @@ const QuizMenu = props =>
       routes={[
         {
           path: '/edit',
-          component: EditorMenu,
-          disabled: !props.editable
+          disabled: !props.editable,
+          render() {
+            const Menu = (
+              <EditorMenu
+                autoClose={props.autoClose}
+              />
+            )
+
+            return Menu
+          }
         }
       ]}
     />
@@ -33,7 +41,8 @@ QuizMenu.propTypes = {
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

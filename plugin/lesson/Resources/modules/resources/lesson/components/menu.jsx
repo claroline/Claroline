@@ -23,7 +23,12 @@ LessonMenu.propTypes = {
   path: T.string.isRequired,
   editable: T.bool.isRequired,
   lesson: T.object.isRequired,
-  tree: T.any.isRequired
+  tree: T.any.isRequired,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

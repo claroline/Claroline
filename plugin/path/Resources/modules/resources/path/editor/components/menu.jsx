@@ -19,6 +19,7 @@ const EditorMenu = props => {
       label: step.title,
       target: `${props.basePath}/edit/${step.slug}`,
       active: !!matchPath(props.location.pathname, {path: `${props.basePath}/edit/${step.slug}`}),
+      onClick: props.autoClose,
       additional: [
         {
           name: 'add',
@@ -29,6 +30,7 @@ const EditorMenu = props => {
             const newSlug = props.addStep(props.path.steps, step)
             props.history.push(`${props.basePath}/edit/${newSlug}`)
           },
+          onClick: props.autoClose,
           group: trans('management')
         }, {
           name: 'copy',
@@ -46,6 +48,7 @@ const EditorMenu = props => {
               callback: () => props.copyStep(step.id, position)
             })
           }],
+          onClick: props.autoClose,
           group: trans('management')
         }, {
           name: 'move',
@@ -63,6 +66,7 @@ const EditorMenu = props => {
               callback: () => props.moveStep(step.id, position)
             })
           }],
+          onClick: props.autoClose,
           group: trans('management')
         }, {
           name: 'delete',
@@ -81,6 +85,7 @@ const EditorMenu = props => {
             message: trans('step_delete_confirm', {}, 'path')
           },
           dangerous: true,
+          onClick: props.autoClose,
           group: trans('management')
         }
       ],
@@ -94,7 +99,8 @@ const EditorMenu = props => {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-cog',
         label: trans('parameters'),
-        target: `${props.basePath}/edit/parameters`
+        target: `${props.basePath}/edit/parameters`,
+        onClick: props.autoClose
       }].concat(props.path.steps.map(getStepSummary), [{
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-plus',
@@ -102,7 +108,8 @@ const EditorMenu = props => {
         callback: () => {
           const newSlug = props.addStep(props.path.steps)
           props.history.push(`${props.basePath}/edit/${newSlug}`)
-        }
+        },
+        onClick: props.autoClose
       }])}
     />
   )
@@ -125,7 +132,8 @@ EditorMenu.propTypes = {
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,
-  removeStep: T.func.isRequired
+  removeStep: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 EditorMenu.defaultProps = {

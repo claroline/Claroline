@@ -13,6 +13,36 @@ import {MODAL_USERS} from '#/main/core/modals/users'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 
+const DesktopShortcuts = props =>
+  <Toolbar
+    id="app-menu-shortcuts"
+    className="app-menu-shortcuts"
+    buttonName="btn btn-link"
+    tooltip="bottom"
+    actions={props.shortcuts}
+    onClick={props.autoClose}
+  />
+
+const DesktopProgression = () =>
+  <section className="app-menu-progression">
+    <h2 className="sr-only">
+      Ma progression
+    </h2>
+
+    <LiquidGauge
+      id="desktop-progression"
+      type="user"
+      value={25}
+      displayValue={(value) => number(value) + '%'}
+      width={70}
+      height={70}
+    />
+
+    <div className="app-menu-progression-info">
+      {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
+    </div>
+  </section>
+
 const DesktopMenu = props => {
   const actions = [
     {
@@ -51,7 +81,6 @@ const DesktopMenu = props => {
         target: '/',
         exact: true
       }}
-
       tools={props.tools.map(tool => ({
         name: tool.name,
         icon: tool.icon,
@@ -60,39 +89,18 @@ const DesktopMenu = props => {
       actions={actions}
     >
       {props.showProgression &&
-        <section className="app-menu-progression">
-          <h2 className="sr-only">
-            Ma progression
-          </h2>
-
-          <LiquidGauge
-            id="desktop-progression"
-            type="user"
-            value={25}
-            displayValue={(value) => number(value) + '%'}
-            width={70}
-            height={70}
-          />
-
-          <div className="app-menu-progression-info">
-            {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
-          </div>
-        </section>
+        <DesktopProgression />
       }
 
       {!isEmpty(props.shortcuts) &&
-        <Toolbar
-          id="shortcuts-desktop"
-          className="app-menu-shortcuts"
-          buttonName="btn btn-link"
-          tooltip="bottom"
-          toolbar={props.shortcuts.join(' ')}
-          actions={props.shortcuts
+        <DesktopShortcuts
+          shortcuts={props.shortcuts
             .map(shortcut => {
               if ('tool' === shortcut.type) {
                 const tool = props.tools.find(tool => tool.name === shortcut.name)
                 if (tool) {
                   return {
+                    name: shortcut.name,
                     type: LINK_BUTTON,
                     icon: `fa fa-fw fa-${tool.icon}`,
                     label: trans('open-tool', {tool: trans(tool.name, {}, 'tools')}, 'actions'),
@@ -104,7 +112,8 @@ const DesktopMenu = props => {
                 return actions.find(action => action.name === shortcut.name)
               }
             })
-            .filter(link => !!link)}
+            .filter(link => !!link)
+          }
         />
       }
 
@@ -133,6 +142,7 @@ DesktopMenu.propTypes = {
 
 DesktopMenu.defaultProps = {
   showProgression: false,
+  shortcuts: [],
   tools: []
 }
 

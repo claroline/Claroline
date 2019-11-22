@@ -17,9 +17,13 @@ const AgendaMenu = props =>
     <Calendar
       light={true}
       selected={props.selected}
-      onChange={(selected) => props.history.push(
-        route(props.path, props.view, selected)
-      )}
+      onChange={(selected) => {
+        props.history.push(
+          route(props.path, props.view, selected)
+        )
+
+        props.autoClose()
+      }}
       time={false}
       showCurrent={false}
     />
@@ -80,7 +84,12 @@ AgendaMenu.propTypes = {
   ]).isRequired,
   types: T.arrayOf(T.oneOf(['event', 'task'])).isRequired,
   changeTypes: T.func.isRequired,
-  selected: T.string.isRequired
+  selected: T.string.isRequired,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

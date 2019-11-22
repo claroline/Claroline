@@ -20,6 +20,7 @@ const EditorMenu = (props) => {
             activeStyle={{
               borderColor: get(tab, 'display.color')
             }}
+            onClick={props.autoClose}
           />
         )}
       </div>
@@ -41,7 +42,8 @@ EditorMenu.propTypes = {
   path: T.string,
   tabs: T.arrayOf(T.shape({
     // TODO : tab types
-  }))
+  })),
+  autoClose: T.func.isRequired
   //create: T.func.isRequired
 }
 

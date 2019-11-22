@@ -61,6 +61,7 @@ const CommunityMenu = (props) => {
             displayed: props.contextType === toolConstants.TOOL_WORKSPACE && permLevel !== constants.READ_ONLY
           }
         ]}
+        onClick={props.autoClose}
       />
     </MenuSection>
   )
@@ -72,7 +73,12 @@ CommunityMenu.propTypes = {
   currentUser: T.shape(
     UserType.propTypes
   ),
-  workspace: T.object
+  workspace: T.object,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

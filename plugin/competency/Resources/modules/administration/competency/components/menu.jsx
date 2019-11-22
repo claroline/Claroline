@@ -30,11 +30,17 @@ const CompetencyMenu = (props) =>
           target: props.path + '/scales'
         }
       ]}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 CompetencyMenu.propTypes = {
-  path: T.string.isRequired
+  path: T.string.isRequired,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

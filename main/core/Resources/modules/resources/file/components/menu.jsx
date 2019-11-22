@@ -13,9 +13,11 @@ const FileMenu = props =>
 
 FileMenu.propTypes = {
   path: T.string.isRequired,
+
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

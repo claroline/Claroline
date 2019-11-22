@@ -48,13 +48,19 @@ const WorkspacesMenu = (props) =>
           displayed: props.creatable
         }
       ]}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 WorkspacesMenu.propTypes = {
   path: T.string,
   authenticated: T.bool.isRequired,
-  creatable: T.bool.isRequired
+  creatable: T.bool.isRequired,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

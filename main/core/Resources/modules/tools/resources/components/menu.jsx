@@ -12,16 +12,15 @@ const RootMenu = props =>
   <MenuSection
     {...omit(props, 'path')}
     title={trans('resources', {}, 'tools')}
-  >
-
-  </MenuSection>
+  />
 
 RootMenu.propTypes = {
   path: T.string,
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 const ResourcesMenu = (props) =>
@@ -56,7 +55,8 @@ ResourcesMenu.propTypes = {
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

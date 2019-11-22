@@ -23,7 +23,8 @@ const EditorMenu = props =>
         type: 'text',
         status: props.validating ? 'danger' : 'warning',
         value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock-o': !props.validating})} />
-      } : undefined
+      } : undefined,
+      onClick: props.autoClose
     }].concat(props.steps.map((step, index) => ({
       type: LINK_BUTTON,
       label: step.title || trans('step', {number: index + 1}, 'quiz'),
@@ -34,6 +35,7 @@ const EditorMenu = props =>
         status: props.validating ? 'danger' : 'warning',
         value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock-o': !props.validating})} />
       } : undefined,
+      onClick: props.autoClose,
       additional: [
         {
           name: 'copy',
@@ -57,6 +59,7 @@ const EditorMenu = props =>
               callback: () => props.copyStep(step.id, props.steps, position)
             })
           }],
+          onClick: props.autoClose,
           group: trans('management')
         }, {
           name: 'move',
@@ -80,6 +83,7 @@ const EditorMenu = props =>
               callback: () => props.moveStep(step.id, position)
             })
           }],
+          onClick: props.autoClose,
           group: trans('management')
         }, {
           name: 'delete',
@@ -98,6 +102,7 @@ const EditorMenu = props =>
             message: trans('remove_step_confirm_message', {}, 'quiz')
           },
           dangerous: true,
+          onClick: props.autoClose,
           group: trans('management')
         }
       ]
@@ -108,7 +113,8 @@ const EditorMenu = props =>
       callback: () => {
         const newSlug = props.addStep(props.steps)
         props.history.push(`${props.path}/edit/${newSlug}`)
-      }
+      },
+      onClick: props.autoClose
     }])}
   />
 
@@ -128,7 +134,8 @@ EditorMenu.propTypes = {
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,
-  removeStep: T.func.isRequired
+  removeStep: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 EditorMenu.defaultProps = {

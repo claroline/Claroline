@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {Fragment, Component, Children, cloneElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
+import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
+
+import {getWindowSize} from '#/main/app/dom/size/utils'
+import {constants} from '#/main/app/dom/size/constants'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -10,74 +14,134 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-const MenuMain = props =>
-  <aside className="app-menu">
-    <header className="app-menu-header">
-      {props.backAction &&
-        <Button
-          {...props.backAction}
-          className="app-menu-back"
-          icon="fa fa-arrow-left"
-          tooltip="right"
-        />
-      }
+class MenuMain extends Component {
+  constructor(props) {
+    super(props)
 
-      {props.title &&
-        <h1 className="app-menu-title h5">{props.title}</h1>
-      }
-    </header>
+    this.state = {
+      computedSize: getWindowSize()
+    }
 
-    {props.children}
+    this.resize = this.resize.bind(this)
+    this.autoClose = this.autoClose.bind(this)
+  }
 
-    {0 !== props.tools.length &&
-      <MenuSection
-        className="tools"
-        icon="fa fa-fw fa-tools"
-        title={trans('tools')}
-        opened={'tools' === props.section}
-        toggle={() => props.changeSection('tools')}
+  componentDidMount() {
+    window.addEventListener('resize', this.resize)
+
+    if (this.props.untouched) {
+      this.autoClose()
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
+
+  resize() {
+    const newSize = getWindowSize()
+    if (newSize !== this.state.computedSize) {
+      this.setState({computedSize: newSize})
+
+      this.autoClose()
+    }
+  }
+
+  autoClose() {
+    // only auto close on small windows
+    if (constants.SIZE_SM === this.state.computedSize || constants.SIZE_XS === this.state.computedSize) {
+      this.props.close()
+    }
+  }
+
+  render() {
+    return (
+      <RootCloseWrapper
+        disabled={constants.SIZE_SM !== this.state.computedSize && constants.SIZE_XS !== this.state.computedSize}
+        onRootClose={() => this.props.close()}
       >
-        <Toolbar
-          className="list-group"
-          buttonName="list-group-item"
-          actions={props.tools
-            .map((tool) => ({
-              name: tool.name,
-              type: LINK_BUTTON,
-              icon: `fa fa-fw fa-${tool.icon}`,
-              label: trans(tool.name, {}, 'tools'),
-              target: tool.path
-            }))
-            .sort((a, b) => {
-              if (a.label > b.label) {
-                return 1
+        <Fragment>
+          <aside className="app-menu">
+            <header className="app-menu-header">
+              {this.props.backAction &&
+                <Button
+                  {...this.props.backAction}
+                  className="app-menu-back"
+                  icon="fa fa-arrow-left"
+                  tooltip="right"
+                  onClick={this.autoClose}
+                />
               }
 
-              return -1
-            })
+              {this.props.title &&
+                <h1 className="app-menu-title h5">{this.props.title}</h1>
+              }
+            </header>
+
+            {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
+              autoClose: this.autoClose
+            }))}
+
+            {0 !== this.props.tools.length &&
+              <MenuSection
+                className="tools"
+                icon="fa fa-fw fa-tools"
+                title={trans('tools')}
+                opened={'tools' === this.props.section}
+                toggle={() => this.props.changeSection('tools')}
+              >
+                <Toolbar
+                  className="list-group"
+                  buttonName="list-group-item"
+                  actions={this.props.tools
+                    .map((tool) => ({
+                      name: tool.name,
+                      type: LINK_BUTTON,
+                      icon: `fa fa-fw fa-${tool.icon}`,
+                      label: trans(tool.name, {}, 'tools'),
+                      target: tool.path
+                    }))
+                    .sort((a, b) => {
+                      if (a.label > b.label) {
+                        return 1
+                      }
+
+                      return -1
+                    })
+                  }
+                  onClick={this.autoClose}
+                />
+              </MenuSection>
+            }
+
+            {(!isEmpty(this.props.actions) || typeof this.props.actions === 'object') &&
+              <MenuSection
+                className="actions"
+                icon="fa fa-fw fa-ellipsis-v"
+                title={trans('more')}
+                opened={'actions' === this.props.section}
+                toggle={() => this.props.changeSection('actions')}
+              >
+                <Toolbar
+                  id="app-menu-actions"
+                  className="list-group"
+                  buttonName="list-group-item"
+                  actions={this.props.actions}
+                  onClick={this.autoClose}
+                />
+              </MenuSection>
+            }
+          </aside>
+
+          {(constants.SIZE_SM === this.state.computedSize || constants.SIZE_XS === this.state.computedSize) &&
+            <div className="app-menu-backdrop" />
           }
-        />
-      </MenuSection>
-    }
-
-    {(!isEmpty(props.actions) || typeof props.actions === 'object') &&
-      <MenuSection
-        className="actions"
-        icon="fa fa-fw fa-ellipsis-v"
-        title={trans('more')}
-        opened={'actions' === props.section}
-        toggle={() => props.changeSection('actions')}
-      >
-        <Toolbar
-          id="app-menu-actions"
-          className="list-group"
-          buttonName="list-group-item"
-          actions={props.actions}
-        />
-      </MenuSection>
-    }
-  </aside>
-
+        </Fragment>
+      </RootCloseWrapper>
+    )
+  }
+}
+  
 
 MenuMain.propTypes = {
   title: T.string,
@@ -101,8 +165,10 @@ MenuMain.propTypes = {
 
   children: T.node,
 
+  untouched: T.bool.isRequired,
   section: T.oneOf(['tool', 'history', 'tools', 'actions']),
-  changeSection: T.func.isRequired
+  changeSection: T.func.isRequired,
+  close: T.func.isRequired
 }
 
 MenuMain.defaultProps = {

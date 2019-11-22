@@ -40,6 +40,12 @@ const StaticToolbar = props => {
             className={classes(`${props.className}-btn`, props.buttonName, action.className)}
             tooltip={props.tooltip}
             size={props.size}
+            onClick={action.onClick ? () => {
+              action.onClick()
+              if (props.onClick) {
+                props.onClick()
+              }
+            } : props.onClick}
           />
         )
       ])}
@@ -67,7 +73,7 @@ const PromisedToolbar = props =>
       </div>
     }
     then={(resolvedActions) => (
-      <StaticToolbar {...props} actions={resolvedActions} />
+      <StaticToolbar {...props} actions={resolvedActions} onClick={props.onClick} />
     )}
   />
 

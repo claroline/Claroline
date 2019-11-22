@@ -140,7 +140,8 @@ const Toolbar = {
       T.shape(
         PromisedAction.propTypes
       )
-    ]).isRequired
+    ]).isRequired,
+    onClick: T.func
   },
   defaultProps: {
     className: 'toolbar',

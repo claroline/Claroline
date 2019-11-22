@@ -43,6 +43,7 @@ const MessagingMenu = (props) => {
             icon={link.icon}
             label={link.label}
             target={`${props.path}${link.path}`}
+            onClick={props.autoClose}
           />
         )}
       </div>
@@ -51,11 +52,12 @@ const MessagingMenu = (props) => {
 }
 
 MessagingMenu.propTypes = {
-  path: T.string.isRequired
-}
+  path: T.string.isRequired,
 
-MessagingMenu.defaultProps = {
-
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

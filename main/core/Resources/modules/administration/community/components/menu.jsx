@@ -63,12 +63,18 @@ const CommunityMenu = (props) =>
           displayed: props.isAdmin
         }
       ]}
+      onClick={props.autoClose}
     />
   </MenuSection>
 
 CommunityMenu.propTypes = {
   path: T.string,
-  isAdmin: T.bool.isRequired
+  isAdmin: T.bool.isRequired,
+
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

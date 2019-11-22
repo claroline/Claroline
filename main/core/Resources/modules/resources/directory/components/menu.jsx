@@ -33,7 +33,8 @@ class DirectoryMenu extends Component {
       toggleCollapse: (collapsed) => this.props.toggleDirectoryOpen(directory.id, !collapsed),
       target: `${this.props.basePath}/${directory.slug}`,
       active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${directory.slug}`}),
-      children: directory.children ? directory.children.map(this.getDirectorySummary) : []
+      children: directory.children ? directory.children.map(this.getDirectorySummary) : [],
+      onClick: this.props.autoClose
     }
   }
 
@@ -53,13 +54,15 @@ class DirectoryMenu extends Component {
                 trans('back'),
               displayed: isEmpty(this.props.rootNode) || this.props.currentNode.slug !== this.props.rootNode.slug,
               target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug', '')}`,
-              exact: true
+              exact: true,
+              onClick: this.props.autoClose
             }, {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-list-ul',
               label: trans('all_resources', {}, 'resource'),
               active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.slug}/all`}),
-              target: `${this.props.basePath}/${this.props.currentNode.slug}/all`
+              target: `${this.props.basePath}/${this.props.currentNode.slug}/all`,
+              onClick: this.props.autoClose
             }
           ].concat(this.props.directories.map(this.getDirectorySummary))}
         />
@@ -87,7 +90,8 @@ DirectoryMenu.propTypes = {
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

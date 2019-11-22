@@ -14,7 +14,8 @@ const ResourceMenu = props => {
             return createElement(module.default.menu, {
               path: props.path,
               opened: props.opened,
-              toggle: props.toggle
+              toggle: props.toggle,
+              autoClose: props.autoClose
             })
           }
 
@@ -35,7 +36,8 @@ ResourceMenu.propTypes = {
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {

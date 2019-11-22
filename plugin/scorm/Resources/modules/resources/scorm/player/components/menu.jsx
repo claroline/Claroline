@@ -17,6 +17,7 @@ const PlayerMenu = props => {
         target: `${props.path}/play/${sco.id}`,
         active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${sco.id}`}),
         disabled: isEmpty(sco.data.entryUrl),
+        onClick: props.autoClose,
         children: sco.children && sco.children.length > 0 ? generateSummary(sco.children) : []
       }))
   }
@@ -42,7 +43,8 @@ PlayerMenu.propTypes = {
   ),
   scos: T.arrayOf(T.shape(
     ScoTypes.propTypes
-  )).isRequired
+  )).isRequired,
+  autoClose: T.func.isRequired
 }
 
 

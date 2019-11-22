@@ -18,7 +18,14 @@ const ScormMenu = props =>
       routes={[
         {
           path: '/play',
-          component: PlayerMenu
+          component: PlayerMenu,
+          render() {
+            const Menu = (
+              <PlayerMenu autoClose={props.autoClose} />
+            )
+
+            return Menu
+          }
         }
       ]}
     />
@@ -29,7 +36,8 @@ ScormMenu.propTypes = {
 
   // from menu
   opened: T.bool.isRequired,
-  toggle: T.func.isRequired
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {
