@@ -389,7 +389,7 @@ class ResourceNodeSerializer
 
             $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
 
-            if (isset($right['name']) && in_array(OPTIONS::REFRESH_UUID, $options)) {
+            if (isset($right['name'])) {
                 $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
             } else {
                 $workspace = $resourceNode->getWorkspace() ?
