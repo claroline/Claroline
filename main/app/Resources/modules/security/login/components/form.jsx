@@ -81,6 +81,7 @@ class LoginForm extends Component {
               <Button
                 className="btn btn-block btn-emphasis"
                 type={CALLBACK_BUTTON}
+                htmlType="submit"
                 label={trans('login')}
                 callback={() => this.props.login(this.props.onLogin)}
                 primary={true}

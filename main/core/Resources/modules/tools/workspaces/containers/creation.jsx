@@ -11,7 +11,6 @@ const WorkspaceCreation = withRouter(
   connect(
     (state) => ({
       path: toolSelectors.path(state),
-      models: state.models || [],
       workspace: formSelectors.data(formSelectors.form(state, 'workspaces.creation')),
       logData: selectors.creationLogs(state)
     }),

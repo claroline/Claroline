@@ -20,6 +20,7 @@ const FormActions = props =>
       className="btn btn-save"
       tooltip="top"
       primary={true}
+      htmlType="submit"
     />
 
     {props.cancel &&

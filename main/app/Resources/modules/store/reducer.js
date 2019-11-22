@@ -1,5 +1,7 @@
 import {combineReducers} from 'redux'
 
+import {withReducer} from '#/main/app/store/components/withReducer'
+
 /**
  * Creates a new reducer.
  * Syntax sugar to avoid writing reducers as big switches.
@@ -75,6 +77,7 @@ function reduceReducers(...reducers) {
 
 export {
   combineReducers, // reexported from redux
+  withReducer,
   makeReducer,
   makeInstanceReducer,
   reduceReducers

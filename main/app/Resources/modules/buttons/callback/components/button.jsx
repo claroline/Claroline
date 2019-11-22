@@ -34,8 +34,8 @@ class CallbackButton extends Component {
   render() {
     return (
       <button
-        {...omit(this.props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass')}
-        type="button"
+        {...omit(this.props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass', 'htmlType')}
+        type={this.props.htmlType}
         role="button"
         tabIndex={this.props.tabIndex}
         disabled={this.props.disabled}
@@ -56,7 +56,10 @@ class CallbackButton extends Component {
 }
 
 implementPropTypes(CallbackButton, ButtonTypes, {
-  callback: T.func.isRequired
+  callback: T.func.isRequired,
+  htmlType: T.oneOf(['button', 'submit'])
+}, {
+  htmlType: 'button'
 })
 
 export {

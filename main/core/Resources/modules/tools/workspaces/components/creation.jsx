@@ -97,7 +97,6 @@ WorkspaceCreation.propTypes = {
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired,
-  models: T.object.isRequired,
   logData: T.object,
 
   loadLog: T.func.isRequired,
