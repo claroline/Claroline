@@ -12,6 +12,9 @@
 namespace Icap\SocialmediaBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
+use Icap\SocialmediaBundle\Event\Log\LogSocialmediaCommentEvent;
+use Icap\SocialmediaBundle\Event\Log\LogSocialmediaLikeEvent;
+use Icap\SocialmediaBundle\Event\Log\LogSocialmediaShareEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
