@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 
+import {selectors as listSelectors} from '#/main/app/content/list/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors as communitySelectors} from '#/main/core/tools/community/store'
@@ -9,6 +10,7 @@ import {actions, selectors} from '#/main/core/tools/community/user/store'
 const UserTab = connect(
   state => ({
     path: toolSelectors.path(state),
+    listQueryString: listSelectors.queryString(listSelectors.list(state, selectors.LIST_NAME)),
     contextData: toolSelectors.contextData(state),
     canCreate: communitySelectors.canCreate(state),
     canRegister: communitySelectors.canRegister(state),

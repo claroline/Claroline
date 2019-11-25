@@ -56,7 +56,9 @@ class SerializerProvider
      *
      * @param mixed $serializer
      *
-     * @return $string
+     * @return string
+     *
+     * @throws \Exception
      */
     public function getSerializerHandledClass($serializer)
     {
@@ -103,8 +105,6 @@ class SerializerProvider
                 return $serializer;
             }
         }
-
-        $className = is_object($object) ? get_class($object) : $object;
 
         throw new \Exception(
             sprintf('No serializer found for class "%s" Maybe you forgot to add the "claroline.serializer" tag to your serializer.', is_string($object) ? $object : get_class($object))
@@ -171,9 +171,9 @@ class SerializerProvider
     /**
      * Serializes an object.
      *
-     * @param string $class   - the class of the object to deserialize
-     * @param mixed  $data    - the data to deserialize
-     * @param array  $options - the deserialization options
+     * @param mixed $data    - the data to deserialize
+     * @param mixed $object
+     * @param array $options - the deserialization options
      *
      * @return mixed - the resulting entity of deserialization
      */

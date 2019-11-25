@@ -2,10 +2,10 @@ import {url} from '#/main/app/api'
 import {makeInstanceActionCreator} from '#/main/app/store/actions'
 
 import {API_REQUEST} from '#/main/app/api'
-import {select as listSelect} from '#/main/app/content/list/store/selectors'
-
 import {actions as paginationActions} from '#/main/app/content/pagination/store/actions'
 import {actions as searchActions} from '#/main/app/content/search/store/actions'
+
+import {selectors} from '#/main/app/content/list/store/selectors'
 
 export const actions = {}
 
@@ -46,7 +46,7 @@ export const LIST_DATA_INVALIDATE = 'LIST_DATA_INVALIDATE'
 actions.loadData = makeInstanceActionCreator(LIST_DATA_LOAD, 'data', 'total')
 actions.invalidateData = makeInstanceActionCreator(LIST_DATA_INVALIDATE)
 actions.fetchData = (listName, target, invalidate = false) => (dispatch, getState) => {
-  const listState = listSelect.list(getState(), listName)
+  const listState = selectors.list(getState(), listName)
 
   if (invalidate) {
     dispatch(actions.invalidateData(listName))
@@ -55,9 +55,9 @@ actions.fetchData = (listName, target, invalidate = false) => (dispatch, getStat
   return dispatch({
     [API_REQUEST]: {
       silent: true,
-      url: url(target) + listSelect.queryString(listState),
+      url: url(target) + selectors.queryString(listState),
       success: (response, dispatch) => {
-        if (listSelect.currentPage(listState) !== response.page) {
+        if (selectors.currentPage(listState) !== response.page) {
           // we reset current page because if we request a non existing page,
           // finder will return us the last existing one
           dispatch(actions.changePage(listName, response.page))

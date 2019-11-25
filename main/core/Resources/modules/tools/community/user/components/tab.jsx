@@ -2,9 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_USERS} from '#/main/core/modals/users'
@@ -21,9 +22,10 @@ const UserTab = props =>
       target: `${props.path}/users`
     }]}
     subtitle={trans('users')}
+    toolbar="register create | more"
     actions={[
       {
-        name: 'register_users',
+        name: 'register',
         type: MODAL_BUTTON,
         label: trans('register_users'),
         icon: 'fa fa-plus',
@@ -54,12 +56,20 @@ const UserTab = props =>
           })
         }]
       }, {
-        name: 'create_user',
+        name: 'create',
         type: LINK_BUTTON,
         label: trans('create_user'),
         icon: 'fa fa-pencil',
         target: `${props.path}/users/form`,
         displayed: props.canCreate
+      }, {
+        name: 'export',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export', {}, 'actions'),
+        target: url(['apiv2_user_csv'])+props.listQueryString+'&filters[workspace]='+get(props.contextData, 'uuid', null)
+          +'&columns[]=firstName&columns[]=lastName&columns[]=username&columns[]=email',
+        group: trans('transfer')
       }
     ]}
   >
@@ -82,6 +92,7 @@ const UserTab = props =>
 UserTab.propTypes = {
   path: T.string.isRequired,
   contextData: T.object,
+  listQueryString: T.string,
 
   canCreate: T.bool.isRequired,
   canRegister: T.bool.isRequired,
