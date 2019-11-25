@@ -185,7 +185,11 @@ class WebResourceListener
         /** @var File $resource */
         $resource = $event->getResource();
 
-        $event->setItem($this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName());
+        $name = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
+          DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
+          DIRECTORY_SEPARATOR.$resource->getHashName();
+
+        $event->setItem($name);
         $event->stopPropagation();
     }
 
@@ -214,14 +218,23 @@ class WebResourceListener
      */
     private function copy(File $resource, File $file)
     {
-        $ds = DIRECTORY_SEPARATOR;
         $hash = $this->getHash($resource);
+        $fs = new Filesystem();
 
         $file->setSize($resource->getSize());
         $file->setName($resource->getName());
         $file->setMimeType($resource->getMimeType());
         $file->setHashName($hash);
-        copy($this->filesDir.$ds.$resource->getHashName(), $this->filesDir.$ds.$hash);
+
+        $name = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
+          DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
+          DIRECTORY_SEPARATOR.$resource->getHashName();
+
+        $newName = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
+          DIRECTORY_SEPARATOR.$file->getResourceNode()->getWorkspace()->getUuid().
+          DIRECTORY_SEPARATOR.$file->getHashName();
+
+        $fs->copy($name, $newName);
 
         return $file;
     }
