@@ -66,7 +66,6 @@ class SectionSerializer
      */
     public function deserialize($data, Section $section, array $options = [])
     {
-        $this->sipe('id', 'setUuid', $data, $section);
         $this->sipe('type', 'setType', $data, $section);
         $this->sipe('title', 'setTitle', $data, $section);
         $this->sipe('start', 'setStart', $data, $section);

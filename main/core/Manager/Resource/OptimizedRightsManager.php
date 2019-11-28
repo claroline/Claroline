@@ -44,6 +44,7 @@ class OptimizedRightsManager
 
         if (!$role->getId()) {
             $this->om->save($role);
+            $this->om->forceFlush();
         }
 
         $logUpdate = true;
