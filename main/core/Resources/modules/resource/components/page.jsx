@@ -168,7 +168,7 @@ class ResourcePage extends Component {
           <ServerErrors errors={this.props.serverErrors}/>
         }
 
-        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) && !isEmpty(routes) &&
+        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) && !isEmpty(routes) && this.props.loaded &&
           <Routes
             path={`${this.props.basePath}/${this.props.resourceNode.slug}`}
             routes={routes}

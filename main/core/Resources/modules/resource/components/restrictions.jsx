@@ -89,10 +89,12 @@ class ResourceRestrictions extends Component {
             }}
             fail={{
               title: 'L\'accès requiert un code.',
-              help: 'Veuillez saisir le code qui vous a été remis afin d\'accéder à la ressource'
+              help: this.props.errors.locked && !(this.props.errors.noRights || this.props.errors.notPublished || this.props.errors.deleted || this.props.errors.notStarted || this.props.errors.ended) ?
+                'Veuillez saisir le code qui vous a été remis afin d\'accéder à la ressource' :
+                ''
             }}
           >
-            {this.props.errors.locked &&
+            {this.props.errors.locked && !(this.props.errors.noRights || this.props.errors.notPublished || this.props.errors.deleted || this.props.errors.notStarted || this.props.errors.ended) &&
               <Fragment>
                 <PasswordInput
                   id="access-code"
