@@ -1,7 +1,7 @@
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, number, chain} from '#/main/app/data/types/validators'
+import {notBlank, number} from '#/main/app/data/types/validators'
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
@@ -70,7 +70,7 @@ export default {
     // at least one solution
     if (item.solutions.length === 0) {
       errors.solutions = trans('match_no_solution', {}, 'quiz')
-    } else if (undefined !== item.solutions.find(solution => chain(solution.score, {}, [notBlank, number]))) {
+    } else if (undefined !== item.solutions.find(solution => notBlank(solution.score) || number(solution.score))) {
       // each solution should have a valid score
       errors.solutions = trans('match_score_not_valid', {}, 'quiz')
     } else if (undefined === item.solutions.find(solution => solution.score > 0)) {
@@ -84,7 +84,7 @@ export default {
     }
 
     // empty penalty
-    if (chain(item.penalty, {}, [notBlank, number])) {
+    if (notBlank(item.penalty) || number(item.penalty)) {
       errors.items = trans('match_penalty_not_valid', {}, 'quiz')
     }
 
