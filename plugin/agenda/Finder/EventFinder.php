@@ -188,6 +188,8 @@ class EventFinder extends AbstractFinder
            }
         }
 
+        $qb->andWhere($qb->expr()->gte('obj.end', 'obj.start'));
+
         return $qb;
     }
 }
