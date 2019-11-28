@@ -30,6 +30,13 @@ export default {
         label: trans('start_date'),
         displayed: true
       }, {
+        name: 'afterToday',
+        type: 'boolean',
+        label: trans('after_today', {}, 'agenda'),
+        displayed: false,
+        filterable: true,
+        sortable: false
+      }, {
         name: 'meta.done',
         alias: 'isTaskDone',
         type: 'boolean',

@@ -40,6 +40,13 @@ export default {
         label: trans('end_date'),
         displayed: true
       }, {
+        name: 'afterToday',
+        type: 'boolean',
+        label: trans('after_today', {}, 'agenda'),
+        displayed: false,
+        filterable: true,
+        sortable: false
+      }, {
         name: 'workspace',
         type: 'workspace',
         label: trans('workspace'),

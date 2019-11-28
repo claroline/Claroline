@@ -11,5 +11,6 @@
     "task": "Task",
     "tasks": "Tasks",
     "display_modes": "View modes",
-    "new_event": "New event"
+    "new_event": "New event",
+    "after_today": "After today"
 }
