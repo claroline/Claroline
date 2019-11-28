@@ -324,11 +324,15 @@ class RoleSerializer
                             break;
                         }
                     }
+
                     if ($workspaceId) {
                         /** @var OrderedTool $orderedTool */
+                        $workspace = $this->om->getRepository(Workspace::class)->findOneByUuid($workspaceId);
+                        $tool = $this->om->getRepository(Tool::class)->findOneByName($toolName);
+
                         $orderedTool = $this->orderedToolRepo->findOneBy([
-                            'tool' => $toolName,
-                            'workspace' => $workspaceId,
+                            'tool' => $tool,
+                            'workspace' => $workspace,
                         ]);
 
                         if ($orderedTool) {
