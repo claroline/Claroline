@@ -1022,4 +1022,21 @@ class UserManager
         $this->objectManager->flush();
         $this->mailManager->sendForgotPassword($user);
     }
+
+    public function hasReachedLimit()
+    {
+        $usersLimitReached = false;
+
+        if ($this->platformConfigHandler->getParameter('restrictions.users') &&
+            $this->platformConfigHandler->getParameter('restrictions.max_users')
+        ) {
+            $usersCount = $this->getCountAllEnabledUsers();
+
+            if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.max_users')) {
+                $usersLimitReached = true;
+            }
+        }
+
+        return $usersLimitReached;
+    }
 }

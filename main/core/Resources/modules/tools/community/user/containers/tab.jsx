@@ -14,7 +14,8 @@ const UserTab = connect(
     contextData: toolSelectors.contextData(state),
     canCreate: communitySelectors.canCreate(state),
     canRegister: communitySelectors.canRegister(state),
-    defaultRole: communitySelectors.defaultRole(state)
+    defaultRole: communitySelectors.defaultRole(state),
+    limitReached: selectors.limitReached(state)
   }),
   dispatch => ({
     open(id = null, defaultRole) {

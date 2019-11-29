@@ -61,7 +61,7 @@ const UserTab = props =>
         label: trans('create_user'),
         icon: 'fa fa-pencil',
         target: `${props.path}/users/form`,
-        displayed: props.canCreate
+        displayed: props.canCreate && !props.limitReached
       }, {
         name: 'export',
         type: URL_BUTTON,
@@ -93,6 +93,7 @@ UserTab.propTypes = {
   path: T.string.isRequired,
   contextData: T.object,
   listQueryString: T.string,
+  limitReached: T.bool.isRequired,
 
   canCreate: T.bool.isRequired,
   canRegister: T.bool.isRequired,

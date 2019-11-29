@@ -62,29 +62,14 @@ class CommunityListener
      */
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
-        $parameters = $this->parametersSerializer->serialize();
-        $usersLimitReached = false;
-
-        if (isset($parameters['restrictions']['users']) &&
-            isset($parameters['restrictions']['max_users']) &&
-            $parameters['restrictions']['users'] &&
-            $parameters['restrictions']['max_users']
-        ) {
-            $usersCount = $this->userManager->getCountAllEnabledUsers();
-
-            if ($usersCount >= $parameters['restrictions']['max_users']) {
-                $usersLimitReached = true;
-            }
-        }
-
         $event->setData([
             // todo : put it in the async load of form
-            'parameters' => $parameters,
+            'parameters' => $this->parametersSerializer->serialize(),
             'profile' => $this->profileSerializer->serialize(),
             'platformRoles' => $this->finder->search('Claroline\CoreBundle\Entity\Role', [
                 'filters' => ['type' => Role::PLATFORM_ROLE],
             ]),
-            'usersLimitReached' => $usersLimitReached,
+            'usersLimitReached' => $this->userManager->hasReachedLimit(),
         ]);
         $event->stopPropagation();
     }

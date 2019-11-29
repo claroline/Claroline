@@ -192,6 +192,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
+            - '@claroline.manager.user_manager'
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_community, method: onDisplayWorkspace }
             - { name: kernel.event_listener, event: open_tool_desktop_community, method: onDisplayDesktop }
