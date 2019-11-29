@@ -86,7 +86,7 @@ class WorkspaceMain extends Component {
                   // tool is disabled (or does not exist) for the desktop
                   // let's go to the default opening of the desktop
                   if (this.props.workspace.opening.type === 'tool') {
-                    this.props.openTool(this.props.workspace.opening.target)
+                    this.props.openTool(this.props.workspace.opening.target, this.props.workspace)
                   }
                 }
               },
