@@ -52,6 +52,7 @@ const HeaderMain = props =>
         isAdmin={props.isAdmin}
         registration={props.registration}
         locale={props.locale}
+        sendValidationEmail={props.sendValidationEmail}
         actions={[
           {
             type: CALLBACK_BUTTON,
@@ -121,6 +122,7 @@ HeaderMain.propTypes = {
   helpUrl: T.string,
   registration: T.bool,
   startWalkthrough: T.func.isRequired,
+  sendValidationEmail: T.func.isRequired,
   toggleMenu: T.func.isRequired
 }
 

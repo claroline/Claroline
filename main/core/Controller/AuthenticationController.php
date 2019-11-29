@@ -160,25 +160,26 @@ class AuthenticationController
             ->getFlashBag()
             ->add('success', $this->translator->trans('email_validated', [], 'platform'));
 
-        return new RedirectResponse($this->router->generate('claro_desktop_open'));
+        return new RedirectResponse($this->router->generate('claro_index'));
     }
 
     /**
      * @EXT\Route(
-     *     "/send/email/validation/{hash}",
+     *     "/send/email/validation",
      *     name="claro_security_validate_email_send",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param User $currentUser
+     *
+     * @return JsonResponse
      */
-    public function sendEmailValidationAction($hash)
+    public function sendEmailValidationAction(User $currentUser)
     {
-        $this->mailManager->sendValidateEmail($hash);
-        $user = $this->userManager->getByEmailValidationHash($hash);
-        $this->request->getSession()
-            ->getFlashBag()
-            ->add('success', $this->translator->trans('email_sent', ['%email%' => $user->getEmail()], 'platform'));
+        $this->mailManager->sendValidateEmail($currentUser->getEmailValidationHash());
 
-        return new RedirectResponse($this->router->generate('claro_desktop_open'));
+        return new JsonResponse();
     }
 
     /**

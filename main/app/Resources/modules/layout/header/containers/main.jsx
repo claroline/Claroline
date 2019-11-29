@@ -5,7 +5,7 @@ import {actions as walkthroughActions} from '#/main/app/overlays/walkthrough/sto
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
-import {selectors, reducer} from '#/main/app/layout/header/store'
+import {actions, selectors, reducer} from '#/main/app/layout/header/store'
 import {HeaderMain as HeaderMainComponent} from '#/main/app/layout/header/components/main'
 
 const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
@@ -32,6 +32,9 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       startWalkthrough(steps, additional, documentation) {
         dispatch(walkthroughActions.start(steps, additional, documentation))
+      },
+      sendValidationEmail() {
+        dispatch(actions.sendValidationEmail())
       }
     })
   )(HeaderMainComponent)

@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 
@@ -53,6 +53,27 @@ const UserMenu = props =>
       <div className="alert alert-warning">
         <span className="fa fa-fw fa-mask" />
         {trans('impersonation_mode_alert')}
+      </div>
+    }
+
+    {props.authenticated && props.currentUser && props.currentUser.meta && !props.currentUser.meta.mailValidated && !props.currentUser.meta.mailWarningHidden &&
+      <div className="alert alert-warning">
+        <div>
+          {trans('email_not_validated', {email: props.currentUser.email})}
+        </div>
+        <div>
+          {trans('email_not_validated_help')}
+        </div>
+        <div>
+          {trans('email_not_validated_send')}
+        </div>
+        <Button
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-envelope"
+          className="btn btn-block"
+          label={trans('email_validation_send')}
+          callback={() => props.sendValidationEmail()}
+        />
       </div>
     }
 
@@ -149,9 +170,14 @@ UserMenu.propTypes = {
     id: T.string,
     name: T.string,
     username: T.string,
+    email: T.string,
     publicUrl: T.string,
     picture: T.shape({
       url: T.string.isRequired
+    }),
+    meta: T.shape({
+      mailValidated: T.bool,
+      mailWarningHidden: T.bool
     }),
     roles: T.array
   }).isRequired,
@@ -159,7 +185,8 @@ UserMenu.propTypes = {
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
   }).isRequired,
-  closeMenu: T.func.isRequired
+  closeMenu: T.func.isRequired,
+  sendValidationEmail: T.func.isRequired
 }
 
 class HeaderUser extends Component {
@@ -206,6 +233,7 @@ class HeaderUser extends Component {
             locale={this.props.locale}
             actions={this.props.actions.filter(action => undefined === action.displayed || action.displayed)}
             closeMenu={() => this.setOpened(false)}
+            sendValidationEmail={this.props.sendValidationEmail}
           />
         }
       />
@@ -226,16 +254,22 @@ HeaderUser.propTypes = {
     id: T.string,
     name: T.string,
     username: T.string,
+    email: T.string,
     publicUrl: T.string,
     picture: T.shape({
       url: T.string.isRequired
+    }),
+    meta: T.shape({
+      mailValidated: T.bool,
+      mailWarningHidden: T.bool
     }),
     roles: T.array
   }).isRequired,
   locale: T.shape({
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
-  }).isRequired
+  }).isRequired,
+  sendValidationEmail: T.func.isRequired
 }
 
 HeaderUser.defaultProps = {
