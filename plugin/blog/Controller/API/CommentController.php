@@ -174,7 +174,7 @@ class CommentController
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         if ($blog->isCommentsAuthorized() && ($blog->isAuthorizeAnonymousComment() || null !== $user)) {
             $data = [];
-            $data['message'] = $request->get('comment', false);
+            $data['message'] = $this->decodeRequest($request)['comment'];
             $forcePublication = $this->authorization->isGranted('EDIT', new ObjectCollection([$blog]))
                 || $this->authorization->isGranted('MODERATE', new ObjectCollection([$blog]));
             $comment = $this->commentManager->createComment($blog, $post, $this->commentSerializer->deserialize($data, null, $user), $forcePublication);

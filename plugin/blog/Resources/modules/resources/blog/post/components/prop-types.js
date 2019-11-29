@@ -8,7 +8,8 @@ const PostType = {
     creationDate: T.string,
     author: T.Object,
     viewCounter: T.number,
-    isPublished: T.bool
+    isPublished: T.bool,
+    commentsNumber: T.number
   }
 }
 

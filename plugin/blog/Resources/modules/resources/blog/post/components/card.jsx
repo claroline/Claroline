@@ -174,9 +174,9 @@ const CardFooter = props =>
       </li>
 
       <li>
-        <LinkButton target={`/${props.post.slug}`}>
-          {props.commentNumber > 0 ?
-            transChoice('comments_number', props.commentNumber, {'%count%': props.commentNumber}, 'icap_blog') :
+        <LinkButton target={`${props.path}/${props.post.slug}`}>
+          {props.post.commentsNumber > 0 ?
+            transChoice('comments_number', props.post.commentsNumber, {'%count%': props.post.commentsNumber}, 'icap_blog') :
             trans('no_comment', {}, 'icap_blog')
           }
 
@@ -190,7 +190,7 @@ const CardFooter = props =>
   </div>
 
 CardFooter.propTypes = {
-  commentNumber: T.number,
+  path: T.string.isRequired,
   canEdit:T.bool,
   getPostsByTag:T.func.isRequired,
   post: T.shape(
@@ -262,8 +262,7 @@ PostCardComponent.propTypes = {
   getPostsByAuthor: T.func.isRequired,
   publishPost: T.func.isRequired,
   pinPost: T.func.isRequired,
-  deletePost: T.func.isRequired,
-  commentNumber: T.number
+  deletePost: T.func.isRequired
 }
 
 const PostCard = withRouter(
@@ -274,8 +273,7 @@ const PostCard = withRouter(
       canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
       canModerate: hasPermission('moderate', resourceSelect.resourceNode(state)),
       displayViews: selectors.blog(state).data.options.data.displayPostViewCounter,
-      commentsLoaded: !selectors.comments(state).invalidated,
-      commentNumber: selectors.countPostComments(state)
+      commentsLoaded: !selectors.comments(state).invalidated
     }),
     (dispatch) => ({
       publishPost: (blogId, postId) => {
