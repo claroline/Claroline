@@ -13,6 +13,11 @@ class RoutingHelper
         $this->router = $router;
     }
 
+    public function indexPath()
+    {
+        return $this->router->generate('claro_index');
+    }
+
     public function desktopPath($toolName = null)
     {
         return $this->router->generate('claro_index')
