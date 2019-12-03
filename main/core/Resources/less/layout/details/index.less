@@ -1,4 +1,12 @@
 
+// FIXME: this is ugly to do it like it
+// if there are additional containers, I'm fucked and it may be required by some other components too
+.page-content > .data-details {
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
+}
+
 .data-details-empty {
     color: @input-color-placeholder;
     font-style: italic;
@@ -10,7 +18,6 @@
         box-shadow: none;
         border: none;
         border-radius: 0;
-        //background: @modal-content-bg;
         margin-bottom: 0;
     }
 

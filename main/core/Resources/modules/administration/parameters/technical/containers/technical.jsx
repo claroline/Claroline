@@ -9,7 +9,6 @@ import {Technical as TechnicalComponent} from '#/main/core/administration/parame
 const Technical = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    toolChoices: selectors.toolChoices(state),
     mailer: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)).mailer
   })
 )(TechnicalComponent)

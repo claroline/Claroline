@@ -24,9 +24,9 @@ const DesktopShortcuts = props =>
   />
 
 const DesktopProgression = () =>
-  <section className="app-menu-progression">
+  <section className="app-menu-status">
     <h2 className="sr-only">
-      Ma progression
+      {trans('my_progression')}
     </h2>
 
     <LiquidGauge
@@ -38,7 +38,7 @@ const DesktopProgression = () =>
       height={70}
     />
 
-    <div className="app-menu-progression-info">
+    <div className="app-menu-status-info">
       {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
     </div>
   </section>

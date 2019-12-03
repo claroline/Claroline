@@ -48,13 +48,9 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'session_db_dsn' => 'session.db_dsn',
             'session_db_user' => 'session.db_user',
             'session_db_password' => 'session.db_password',
-            'form_captcha' => 'security.form_captcha',
-            'form_honeypot' => 'security.form_honeypot',
             'platform_limit_date' => 'security.platform_limit_date', //1 june 2019
             'account_duration' => 'security.account_duration',
             'username_regex' => 'registration.username_regex',
-            'anonymous_public_profile' => 'security.anonymous_public_profile',
-            'home_menu' => 'display.home_menu',
             'footer_login' => 'display.footer_login',
             'footer_workspaces' => 'display.footer_workspaces',
             'header_locale' => 'footer.show_locale',

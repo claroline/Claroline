@@ -12,18 +12,26 @@
 namespace Claroline\CoreBundle\Controller\APINew\Tool;
 
 use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\ConfigureToolEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/tool")
  */
 class ToolController extends AbstractApiController
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ToolManager */
     private $toolManager;
     /** @var LogConnectManager */
@@ -32,55 +40,76 @@ class ToolController extends AbstractApiController
     /**
      * ToolController constructor.
      *
-     * @param ToolManager       $toolManager
-     * @param LogConnectManager $logConnectManager
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ToolManager                   $toolManager
+     * @param LogConnectManager             $logConnectManager
      */
-    public function __construct(ToolManager $toolManager, LogConnectManager $logConnectManager)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ToolManager $toolManager,
+        LogConnectManager $logConnectManager
+    ) {
+        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
         $this->logConnectManager = $logConnectManager;
     }
 
     /**
-     * @EXT\Route(
-     *     "/desktop/tool/configure",
-     *     name="apiv2_desktop_tools_configure",
-     *     options={"expose"=true}
-     * )
+     * @EXT\Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure")
      * @EXT\Method("PUT")
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param Request $request
-     * @param User    $user
+     * @param string  $name
+     * @param string  $context
+     * @param string  $contextId
      *
      * @return JsonResponse
      */
-    public function configureUserOrderedToolsAction(Request $request, User $user)
+    public function configureAction(Request $request, $name, $context, $contextId = null)
     {
-        $toolsConfig = $this->decodeRequest($request);
-        $this->toolManager->saveUserOrderedTools($user, $toolsConfig);
+        /** @var Tool|AdminTool $tool */
+        $tool = null;
+        switch ($context) {
+            case Tool::ADMINISTRATION:
+                $tool = $this->toolManager->getAdminToolByName($name);
+                break;
+            default:
+                $tool = $this->toolManager->getToolByName($name);
+                break;
+        }
 
-        return new JsonResponse($toolsConfig);
+        if (!$tool) {
+            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $name));
+        }
+
+        if (!$this->authorization->isGranted('EDIT', $tool)) {
+            throw new AccessDeniedException();
+        }
+
+        /** @var ConfigureToolEvent $event */
+        $event = $this->eventDispatcher->dispatch($context.'.'.$name.'.configure', new ConfigureToolEvent($this->decodeRequest($request)));
+
+        return new JsonResponse(
+            $event->getUpdated()
+        );
     }
 
     /**
-     * @EXT\Route(
-     *     "/close",
-     *     name="apiv2_tool_close"
-     * )
+     * @EXT\Route("/close/{name}/{context}/{contextId}", name="apiv2_tool_close")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Request $request
-     * @param User    $user
+     * @param User   $user
+     * @param string $name
+     * @param string $context
+     * @param string $contextId
      *
      * @return JsonResponse
      */
-    public function closeAction(Request $request, User $user = null)
+    public function closeAction(User $user = null, $name, $context, $contextId = null)
     {
         if ($user) {
-            $data = $this->decodeRequest($request);
-            $this->logConnectManager->computeToolDuration($user, $data['toolName'], $data['context']);
+            $this->logConnectManager->computeToolDuration($user, $name, $context, $contextId);
         }
 
         return new JsonResponse();

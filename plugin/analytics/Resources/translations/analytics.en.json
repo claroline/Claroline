@@ -1,4 +1,10 @@
 {
+  "range_week": "Week",
+  "range_month": "Month",
+  "range_year": "Year",
+  "range_next_week": "Next week",
+  "range_next_month": "Next month",
+  "range_next_year": "Next year",
   "evaluation_requirements": "Requirements for evaluation",
   "evaluations": "Evaluations",
   "not_started": "Not started",

@@ -11,7 +11,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\UserCreatedEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Manager\CryptographyManager;
@@ -194,10 +193,6 @@ class UserCrud
             $this->userManager->setPersonalWorkspace($user);
         }
 
-        //we need this line for the log system
-        //dispatch some events but they should be listening the same as we are imo.
-        //something should be done for event listeners
-        $this->dispatcher->dispatch('user_created_event', UserCreatedEvent::class, ['user' => $user]);
         $this->om->endFlushSuite();
 
         return $user;

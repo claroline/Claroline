@@ -10,11 +10,15 @@
 // FIXME: this is ugly to do it like it
 // if there are additional containers, I'm fucked and it may be required by some other components too
 .page-content > .data-list {
-    margin-top: @component-margin-bottom;
-    margin-bottom: @component-margin-bottom;
-
     .content-loader {
         margin-bottom: 0;
+    }
+
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
+    &:last-child {
+        margin-bottom: @component-margin-bottom;
     }
 }
 

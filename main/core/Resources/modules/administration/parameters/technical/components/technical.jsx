@@ -38,7 +38,6 @@ const mailers = [
         name: 'mailer.encryption',
         type: 'choice',
         label: trans('encryption'),
-        required: false,
         options: {
           choices: {
             'none': 'none',
@@ -49,8 +48,7 @@ const mailers = [
       }, {
         name: 'mailer.port',
         type: 'string',
-        label: trans('port'),
-        required: false
+        label: trans('port')
       }, {
         name: 'mailer.auth_mode',
         type: 'choice',
@@ -131,13 +129,11 @@ const Technical = props =>
             name: 'internet.domain_name',
             type: 'string',
             label: trans('domain_name'),
-            required: false,
             linked: [
               {
                 name: 'ssl.enabled',
                 type: 'boolean',
-                label: trans('ssl_enabled'),
-                required: false
+                label: trans('ssl_enabled')
               }, {
                 name: 'ssl.version',
                 type: 'string',
@@ -148,8 +144,7 @@ const Technical = props =>
           }, {
             name: 'internet.google_meta_tag',
             type: 'string',
-            label: trans('google_tag_validation'),
-            required: false
+            label: trans('google_tag_validation')
           }
         ]
       }, {
@@ -158,21 +153,16 @@ const Technical = props =>
         fields: [
           {
             name: 'workspace.max_storage_size',
-            label: trans('max_storage_size'),
-            type: 'string',
-            displayed: true
-          },
-          {
+            label: trans('available_storage'),
+            type: 'string'
+          }, {
             name: 'workspace.max_upload_resources',
             label: trans('count_resources'),
-            type: 'number',
-            displayed: true
-          },
-          {
+            type: 'number'
+          }, {
             name: 'workspace.max_workspace_users',
             label: trans('workspaces_max_users'),
-            type: 'number',
-            displayed: true
+            type: 'number'
           }
         ]
       }, {
@@ -182,32 +172,15 @@ const Technical = props =>
           {
             name: 'security.platform_init_date',
             type: 'date',
-            label: trans('platform_init_date'),
-            required: false
-          },
-          {
+            label: trans('platform_init_date')
+          }, {
             name: 'security.platform_limit_date',
             type: 'date',
-            label: trans('platform_expiration_date'),
-            required: false
-          },
-          {
+            label: trans('platform_expiration_date')
+          }, {
             name: 'security.default_root_anon_id',
             type: 'string',
-            label: trans('default_admin'),
-            required: false
-          },
-          {
-            name: 'security.disabled_admin_tools',
-            type: 'choice',
-            label: trans('disabled_admin_tools'),
-            required: false,
-            options: {
-              choices: props.toolChoices,
-              multiple: true,
-              condensed: false,
-              inline: false
-            }
+            label: trans('default_admin')
           }
         ]
       }, {
@@ -236,14 +209,7 @@ const Technical = props =>
             name: 'security.cookie_lifetime',
             type: 'number',
             label: trans('cookie_lifetime'),
-            required: true,
-            options: {
-              choices: {
-                'native': 'native',
-                'claro_pdo': 'claro_pdo',
-                'pdo': 'pdo'
-              }
-            }
+            required: true
           }, {
             name: 'session.storage_type',
             type: 'choice',
@@ -255,43 +221,40 @@ const Technical = props =>
                 'claro_pdo': 'claro_pdo',
                 'pdo': 'pdo'
               }
-            }
-          }, {
-            name: 'session.db_table',
-            type: 'string',
-            label: trans('db_table'),
-            required: false,
-            displayed: parameters => display(parameters.session.storage_type, 'session.db_table')
-          }, {
-            name: 'session.db_id_col',
-            type: 'string',
-            label: trans('id_col'),
-            required: false,
-            displayed: parameters => display(parameters.session.storage_type, 'session.db_id_col')
-          }, {
-            name: 'session.db_data_col',
-            type: 'string',
-            label: trans('data_col'),
-            required: false,
-            displayed: parameters => display(parameters.session.storage_type, 'session.db_data_col')
-          }, {
-            name: 'session.db_dsn',
-            type: 'string',
-            label: trans('DSN'),
-            required: false,
-            displayed: parameters => display(parameters.session.storage_type, 'session.db_dsn')
-          }, {
-            name: 'session.db_user',
-            type: 'string',
-            label: trans('user'),
-            required: false,
-            displayed: parameters => display(parameters.session.storage_type, 'session.db_user')
-          }, {
-            name: 'session.db_password',
-            type: 'string',
-            label: trans('password'),
-            required: false,
-            displayed: parameters => display(parameters.session.storage_type, 'session.db_password')
+            },
+            linked: [
+              {
+                name: 'session.db_table',
+                type: 'string',
+                label: trans('db_table'),
+                displayed: parameters => display(parameters.session.storage_type, 'session.db_table')
+              }, {
+                name: 'session.db_id_col',
+                type: 'string',
+                label: trans('id_col'),
+                displayed: parameters => display(parameters.session.storage_type, 'session.db_id_col')
+              }, {
+                name: 'session.db_data_col',
+                type: 'string',
+                label: trans('data_col'),
+                displayed: parameters => display(parameters.session.storage_type, 'session.db_data_col')
+              }, {
+                name: 'session.db_dsn',
+                type: 'string',
+                label: trans('DSN'),
+                displayed: parameters => display(parameters.session.storage_type, 'session.db_dsn')
+              }, {
+                name: 'session.db_user',
+                type: 'string',
+                label: trans('user'),
+                displayed: parameters => display(parameters.session.storage_type, 'session.db_user')
+              }, {
+                name: 'session.db_password',
+                type: 'string',
+                label: trans('password'),
+                displayed: parameters => display(parameters.session.storage_type, 'session.db_password')
+              }
+            ]
           }
         ]
       }, {
@@ -313,7 +276,6 @@ const Technical = props =>
 
 Technical.propTypes = {
   path: T.string.isRequired,
-  toolChoices: T.object.isRequired,
   mailer: T.shape({
     transport: T.string
   })

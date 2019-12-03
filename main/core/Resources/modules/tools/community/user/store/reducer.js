@@ -18,7 +18,7 @@ const reducer = combineReducers({
     sortBy: {property: 'created', direction: -1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.users.current']: () => true, // todo : find better
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.users.current']: () => true,
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),

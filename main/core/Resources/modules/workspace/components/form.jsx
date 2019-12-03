@@ -326,7 +326,7 @@ const WorkspaceFormComponent = (props) =>
           }, {
             name: 'restrictions.enableMaxUsers',
             type: 'boolean',
-            label: trans('restrict_max_users'),
+            label: trans('restrict_users_count'),
             calculated: restrictUsers,
             displayed: props.isAdmin,
             onChange: activated => {
@@ -339,7 +339,7 @@ const WorkspaceFormComponent = (props) =>
               {
                 name: 'restrictions.maxUsers',
                 type: 'number',
-                label: trans('maxUsers'),
+                label: trans('users_count'),
                 displayed: restrictUsers,
                 required: true,
                 options: {
@@ -374,7 +374,7 @@ const WorkspaceFormComponent = (props) =>
           }, {
             name: 'restrictions.enableMaxStorage',
             type: 'boolean',
-            label: trans('restrict_max_storage'),
+            label: trans('restrict_storage'),
             calculated: restrictStorage,
             displayed: props.isAdmin,
             onChange: activated => {
@@ -387,7 +387,7 @@ const WorkspaceFormComponent = (props) =>
               {
                 name: 'restrictions.maxStorage',
                 type: 'storage',
-                label: trans('max_storage_size'),
+                label: trans('available_storage'),
                 displayed: restrictStorage,
                 required: true,
                 options: {

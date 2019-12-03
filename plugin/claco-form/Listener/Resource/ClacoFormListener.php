@@ -87,9 +87,7 @@ class ClacoFormListener
         $user = $this->tokenStorage->getToken()->getUser();
         $isAnon = 'anon.' === $user;
         $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
-        $canGeneratePdf = !$isAnon &&
-            $this->platformConfigHandler->hasParameter('knp_pdf_binary_path') &&
-            file_exists($this->platformConfigHandler->getParameter('knp_pdf_binary_path'));
+        $canGeneratePdf = !$isAnon;
         $cascadeLevelMax = $this->platformConfigHandler->hasParameter('claco_form_cascade_select_level_max') ?
             $this->platformConfigHandler->getParameter('claco_form_cascade_select_level_max') :
             2;

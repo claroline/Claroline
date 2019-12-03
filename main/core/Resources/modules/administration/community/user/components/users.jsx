@@ -20,8 +20,9 @@ import {getActions} from '#/main/core/user/utils'
 const UsersList = props =>
   <Fragment>
     {props.limitReached &&
-      <Alert type="warning" message={trans('users_limit_reached')} />
+      <Alert type="warning">{trans('users_limit_reached')}</Alert>
     }
+
     <ListData
       name={`${baseSelectors.STORE_NAME}.users.list`}
       fetch={{

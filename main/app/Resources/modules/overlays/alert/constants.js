@@ -11,6 +11,7 @@ const ALERT_STATUS_ERROR        = 'error'
 const ALERT_STATUS_INFO         = 'info'
 const ALERT_STATUS_PENDING      = 'pending'
 const ALERT_STATUS_UNAUTHORIZED = 'unauthorized'
+const ALERT_STATUS_UNAVAILABLE  = 'unavailable'
 const ALERT_STATUS_FORBIDDEN    = 'forbidden'
 
 const ALERT_STATUS = {
@@ -36,20 +37,26 @@ const ALERT_STATUS = {
     removable: true,
     timeout: ALERT_DISPLAY_TIMEOUT
   },
-  [ALERT_STATUS_WARNING]: {
+  [ALERT_STATUS_UNAVAILABLE]: {
     order: 5,
+    icon: 'fa-power-off',
+    removable: true,
+    timeout: ALERT_DISPLAY_TIMEOUT
+  },
+  [ALERT_STATUS_WARNING]: {
+    order: 6,
     icon: 'fa-exclamation',
     removable: true,
     timeout: ALERT_DISPLAY_TIMEOUT
   },
   [ALERT_STATUS_SUCCESS]: {
-    order: 6,
+    order: 7,
     icon: 'fa-check',
     removable: true,
     timeout: ALERT_DISPLAY_TIMEOUT
   },
   [ALERT_STATUS_INFO]: {
-    order: 7,
+    order: 8,
     icon: 'fa-info',
     removable: true,
     timeout: ALERT_DISPLAY_TIMEOUT
@@ -92,6 +99,10 @@ const ALERT_ACTIONS = {
     [ALERT_STATUS_FORBIDDEN]: {
       title: trans('generic.forbidden.title', {}, 'alerts'),
       message: trans('generic.forbidden.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_FORBIDDEN]: {
+      title: trans('generic.unavailable.title', {}, 'alerts'),
+      message: trans('generic.unavailable.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
       title: trans('generic.error.title', {}, 'alerts'),
@@ -266,6 +277,7 @@ export const constants = {
   ALERT_STATUS_PENDING,
   ALERT_STATUS_UNAUTHORIZED,
   ALERT_STATUS_FORBIDDEN,
+  ALERT_STATUS_UNAVAILABLE,
 
   ALERT_ACTIONS
 }

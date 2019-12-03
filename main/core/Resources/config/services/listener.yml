@@ -274,7 +274,6 @@ services:
 
     Claroline\CoreBundle\Listener\PlatformListener:
         arguments:
-            - '@kernel'
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@claroline.manager.temp_file'

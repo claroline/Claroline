@@ -8,7 +8,9 @@
 // FIXME: this is ugly to do it like it
 // if there are additional containers, I'm fucked and it may be required by some other components too
 .page-content > .data-form {
-    //margin-top: @component-margin-bottom;
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
 }
 
 .form-mode {

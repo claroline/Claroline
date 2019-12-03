@@ -320,11 +320,6 @@ class WorkspaceManager
     {
         $role = $workspace->getDefaultRole();
         $this->roleManager->associateRole($user, $role);
-        $this->dispatcher->dispatch(
-            'claroline_workspace_register_user',
-            'WorkspaceAddUser',
-            [$role, $user]
-        );
 
         if ($user->getUuid() === $this->container->get('security.token_storage')->getToken()->getUser()->getUuid()) {
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());

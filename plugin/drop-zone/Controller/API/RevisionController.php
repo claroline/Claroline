@@ -217,7 +217,7 @@ class RevisionController extends AbstractCrudController
 
         //array map is not even needed; objects are fine here
         /** @var Revision[] $data */
-        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false);
         $next = null;
 
         foreach ($data as $position => $value) {
@@ -260,7 +260,7 @@ class RevisionController extends AbstractCrudController
 
         //array map is not even needed; objects are fine here
         /** @var Revision[] $data */
-        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false);
         $previous = null;
 
         foreach ($data as $position => $value) {

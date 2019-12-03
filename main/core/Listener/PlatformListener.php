@@ -16,14 +16,10 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PlatformListener
 {
-    /** @var Kernel */
-    private $kernel;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -43,27 +39,30 @@ class PlatformListener
      * @var array
      */
     const PUBLIC_ROUTES = [
-        'claro_index',
+        // to let admin log in
         'claro_security_login',
+        // to be able to render client UI
+        'claro_index',
+        'fos_js_routing_js',
+        // to have access to debug tools
+        '_wdt',
+        '_profiler',
     ];
 
     /**
      * PlatformListener constructor.
      *
-     * @param Kernel                       $kernel
      * @param TokenStorageInterface        $tokenStorage
      * @param PlatformConfigurationHandler $config
      * @param TempFileManager              $tempManager
      * @param LocaleManager                $localeManager
      */
     public function __construct(
-        Kernel $kernel,
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
         TempFileManager $tempManager,
         LocaleManager $localeManager)
     {
-        $this->kernel = $kernel;
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
         $this->tempManager = $tempManager;
@@ -87,17 +86,38 @@ class PlatformListener
 
     /**
      * Checks the app availability before displaying the platform.
-     *   - Checks are enabled only on productions.
-     *   - Administrators are always granted.
-     *   - Public routes are still accessible.
      *
      * @param GetResponseEvent $event
      */
     public function checkAvailability(GetResponseEvent $event)
     {
-        if ('prod' === $this->kernel->getEnvironment() && $event->isMasterRequest()) {
-            $isAdmin = false;
+        if (!$event->isMasterRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
+            return;
+        }
 
+        $disabled = false;
+
+        // checks platform restrictions
+        if ($this->config->getParameter('restrictions.disabled')) {
+            $disabled = true;
+        }
+
+        $dates = $this->config->getParameter('restrictions.dates');
+        if (!empty($dates)) {
+            $now = new \DateTime();
+            if (!empty($dates[0]) && $now->format('Y-m-d') < $dates[0]) {
+                $disabled = true;
+            }
+
+            if (!empty($dates[1]) && $now->format('Y-m-d') > $dates[1]) {
+                $disabled = true;
+            }
+        }
+
+        // checks platform maintenance
+        if ($this->config->getParameter('maintenance.enable')) {
+            // only disable for non admin
+            $isAdmin = false;
             $token = $this->tokenStorage->getToken();
             if ($token) {
                 foreach ($token->getRoles() as $role) {
@@ -108,28 +128,11 @@ class PlatformListener
                 }
             }
 
-            // FIXME : new platform date restrictions
-            $now = time();
-            if (is_int($this->config->getParameter('platform_init_date'))) {
-                $minDate = new \DateTime();
-                $minDate->setTimestamp($this->config->getParameter('platform_init_date'));
-            } else {
-                $minDate = new \DateTime($this->config->getParameter('platform_init_date'));
-            }
+            $disabled = !$isAdmin;
+        }
 
-            if (is_int($this->config->getParameter('platform_limit_date'))) {
-                $expirationDate = new \DateTime();
-                $expirationDate->setTimestamp($this->config->getParameter('platform_limit_date'));
-            } else {
-                $expirationDate = new \DateTime($this->config->getParameter('platform_limit_date'));
-            }
-
-            if (!$isAdmin &&
-                !in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES) &&
-                ($minDate->getTimeStamp() > $now || $now > $expirationDate->getTimeStamp() || $this->config->getParameter('maintenance.enable'))
-            ) {
-                throw new HttpException(503, 'Platform is not available.');
-            }
+        if ($disabled) {
+            throw new HttpException(503, 'Platform is not available.');
         }
     }
 

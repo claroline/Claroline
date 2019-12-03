@@ -1,0 +1,11 @@
+{
+  "maintenance_mode": "Maintenance mode",
+  "maintenance_mode_activation": "The maintenance mode allows you to temporarily disable access to your platform. The user interface and the API will no longer be accessible.",
+  "maintenance_mode_deactivation": "All users will be able to access the platform again.",
+  "customize_maintenance_message": "Customize the message displayed to users",
+  "maintenance_allowed_users": "Users with the role %role% will still be able to log in and access the entire platform.",
+
+  "platform_offline": "Offline",
+  "platform_online": "Online",
+  "platform_maintenance": "Under maintenance"
+}

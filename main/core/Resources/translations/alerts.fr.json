@@ -20,6 +20,10 @@
       "title": "Accès interdit",
       "message": "Vous n'avez pas accès à cette fonctionnalité."
     },
+    "unavailable": {
+      "title": "Plateforme temporairement indisponible",
+      "message": "Veuillez réessayer plus tard ou contacter un administrateur."
+    },
     "error": {
       "title": "Erreur",
       "message": "Veuillez contacter un administrateur."

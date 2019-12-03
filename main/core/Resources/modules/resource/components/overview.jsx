@@ -156,7 +156,7 @@ const ResourceOverview = props =>
                 })}
               /> :
               action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
-                <Alert key={messageIndex} type="warning" message={message} />
+                <Alert key={messageIndex} type="warning">{message}</Alert>
               )
             )}
           </section>

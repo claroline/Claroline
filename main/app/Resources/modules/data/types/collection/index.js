@@ -2,6 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 import {chain, array, lengthInRange} from '#/main/app/data/types/validators'
 import {validateProp} from '#/main/app/content/form/validator'
 
+import {CollectionDisplay} from '#/main/app/data/types/collection/components/display'
 import {CollectionGroup} from '#/main/app/data/types/collection/components/group'
 import {CollectionInput} from '#/main/app/data/types/collection/components/input'
 
@@ -29,8 +30,13 @@ const dataType = {
   },
 
   components: {
+    // old api
+    details: CollectionDisplay,
+
+    // new api
     group: CollectionGroup,
-    input: CollectionInput
+    input: CollectionInput,
+    display: CollectionDisplay
   }
 }
 

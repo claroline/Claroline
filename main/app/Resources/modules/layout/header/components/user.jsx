@@ -44,14 +44,14 @@ const UserMenu = props =>
 
     {props.maintenance &&
       <div className="alert alert-warning">
-        <span className="fa fa-fw fa-exclamation-triangle" />
+        <span className="fa fa-fw fa-hard-hat icon-with-text-right" />
         {trans('maintenance_mode_alert')}
       </div>
     }
 
     {props.impersonated &&
       <div className="alert alert-warning">
-        <span className="fa fa-fw fa-mask" />
+        <span className="fa fa-fw fa-mask icon-with-text-right" />
         {trans('impersonation_mode_alert')}
       </div>
     }
@@ -60,19 +60,15 @@ const UserMenu = props =>
       <div className="alert alert-warning">
         <div>
           {trans('email_not_validated', {email: props.currentUser.email})}
-        </div>
-        <div>
           {trans('email_not_validated_help')}
-        </div>
-        <div>
           {trans('email_not_validated_send')}
         </div>
         <Button
           type={CALLBACK_BUTTON}
           icon="fa fa-fw fa-envelope"
-          className="btn btn-block"
           label={trans('email_validation_send')}
           callback={() => props.sendValidationEmail()}
+          tooltip="bottom"
         />
       </div>
     }
@@ -225,6 +221,7 @@ class HeaderUser extends Component {
         } : undefined}
         menu={
           <UserMenu
+            maintenance={this.props.maintenance}
             authenticated={this.props.authenticated}
             impersonated={this.props.impersonated}
             isAdmin={this.props.isAdmin}

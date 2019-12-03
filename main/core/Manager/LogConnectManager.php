@@ -318,11 +318,11 @@ class LogConnectManager
         }
     }
 
-    public function computeToolDuration(User $user, $toolName, $context)
+    public function computeToolDuration(User $user, $toolName, $context, $contextId = null)
     {
         $toolConnection = null;
 
-        switch ($context['type']) {
+        switch ($context) {
             case 'administration':
                 $toolConnection = $this->getLogConnectAdminToolByName($user, $toolName);
                 break;
@@ -330,8 +330,8 @@ class LogConnectManager
                 $toolConnection = $this->getLogConnectToolByName($user, $toolName);
                 break;
             case 'workspace':
-                $workspace = isset($context['data']['uuid']) ?
-                    $this->workspaceRepo->findOneBy(['uuid' => $context['data']['uuid']]) :
+                $workspace = !empty($contextId) ?
+                    $this->workspaceRepo->findOneBy(['uuid' => $contextId]) :
                     null;
 
                 if ($workspace) {

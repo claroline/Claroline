@@ -2,6 +2,8 @@ import {trans} from '#/main/app/intl/translation'
 import {currency} from '#/main/app/intl/currency'
 import {chain, number, inRange} from '#/main/app/data/types/validators'
 
+import {NumberInput} from '#/main/app/data/types/number/components/input'
+
 /**
  * Currency definition.
  * Manages currency values.
@@ -30,7 +32,14 @@ const dataType = {
    *
    * @return {string} - the first error message if any
    */
-  validate: (value, options) => chain(value, options, [number, inRange])
+  validate: (value, options) => chain(value, options, [number, inRange]),
+
+  /**
+   * Custom components for numbers rendering.
+   */
+  components: {
+    input: NumberInput
+  }
 }
 
 export {

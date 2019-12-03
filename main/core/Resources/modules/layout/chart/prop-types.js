@@ -13,7 +13,7 @@ const Chart = {
     }).isRequired
   },
   defaultProps: {
-    responsive: false,
+    responsive: true,
     width: 400,
     height: 400,
     margin: {
@@ -29,12 +29,12 @@ const AxisChart = {
   propTypes: Object.assign({}, Chart.propTypes, {
     xAxisLabel: T.shape({
       show: T.bool.isRequired,
-      text: T.string.isRequired,
+      text: T.string,
       grid: T.bool
     }),
     yAxisLabel: T.shape({
       show: T.bool.isRequired,
-      text: T.string.isRequired,
+      text: T.string,
       grid: T.bool
     }),
     ticksAsYValues: T.bool,
@@ -56,7 +56,7 @@ const AxisChart = {
     }),
     ticksAsYValues: false,
     minMaxAsYDomain: false,
-    color: '#337ab7',
+    color: '#3182bd',
     altColor: 'brown'
   })
 }
@@ -72,7 +72,7 @@ const DataSeries = {
     showArea: T.bool
   },
   defaultProps: {
-    color: '#337ab7',
+    color: '#3182bd',
     altColor: 'brown',
     showArea: false
   }

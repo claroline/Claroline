@@ -1,4 +1,7 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -8,7 +11,11 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {route as adminRoute} from '#/main/core/administration/routing'
 import {selectors} from '#/main/core/administration/parameters/store'
 
-const Meta = () =>
+const restrictedByDates = (parameters) => get(parameters, 'restrictions.enableDates') || !isEmpty(get(parameters, 'restrictions.dates'))
+const restrictedUsersCount = (parameters) => get(parameters, 'restrictions.enableUsers') || !isEmpty(get(parameters, 'restrictions.users'))
+const restrictedStorage = (parameters) => get(parameters, 'restrictions.enableStorage') || !isEmpty(get(parameters, 'restrictions.storage'))
+
+const Meta = (props) =>
   <FormData
     level={2}
     name={selectors.FORM_NAME}
@@ -36,6 +43,7 @@ const Meta = () =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-home',
         title: trans('home'),
         fields: [
           {
@@ -66,6 +74,7 @@ const Meta = () =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-hard-hat',
         title: trans('maintenance'),
         fields: [
           {
@@ -83,9 +92,83 @@ const Meta = () =>
             }
           }
         ]
+      }, {
+        icon: 'fa fa-fw fa-key',
+        title: trans('access_restrictions'),
+        fields: [
+          {
+            name: 'restrictions.disabled',
+            type: 'boolean',
+            label: trans('disable')
+          }, {
+            name: 'restrictions.enableDates',
+            label: trans('restrict_by_dates'),
+            type: 'boolean',
+            calculated: restrictedByDates,
+            onChange: activated => {
+              if (!activated) {
+                props.updateProp('restrictions.dates', [])
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.dates',
+                type: 'date-range',
+                label: trans('access_dates'),
+                displayed: restrictedByDates,
+                required: true,
+                options: {
+                  time: true
+                }
+              }
+            ]
+          }, {
+            name: 'restrictions.enableUsers',
+            label: trans('restrict_users_count'),
+            type: 'boolean',
+            calculated: restrictedUsersCount,
+            onChange: activated => {
+              if (!activated) {
+                props.updateProp('restrictions.users', null)
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.users',
+                type: 'number',
+                label: trans('users_count'),
+                displayed: restrictedUsersCount,
+                required: true
+              }
+            ]
+          }, {
+            name: 'restrictions.enableStorage',
+            label: trans('restrict_storage'),
+            type: 'boolean',
+            calculated: restrictedStorage,
+            onChange: activated => {
+              if (!activated) {
+                props.updateProp('restrictions.storage', null)
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.storage',
+                type: 'number',
+                label: trans('available_storage'),
+                displayed: restrictedStorage,
+                required: true
+              }
+            ]
+          }
+        ]
       }
     ]}
   />
+
+Meta.propTypes = {
+  updateProp: T.func.isRequired
+}
 
 export {
   Meta

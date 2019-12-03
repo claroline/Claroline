@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\ToolsOptions;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
@@ -234,14 +233,12 @@ class RoleSerializer
         foreach ($toolsRole as $toolRole) {
             $toolName = $toolRole->getTool()->getName();
 
-            if (!in_array($toolName, ToolsOptions::EXCLUDED_TOOLS)) {
-                $configs[$toolName] = $toolRole->getDisplay();
-            }
+            $configs[$toolName] = $toolRole->getDisplay();
         }
         foreach ($desktopTools as $desktopTool) {
             $toolName = $desktopTool->getName();
 
-            if (!in_array($toolName, ToolsOptions::EXCLUDED_TOOLS) && !isset($configs[$toolName])) {
+            if (!isset($configs[$toolName])) {
                 $configs[$toolName] = null;
             }
         }

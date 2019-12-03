@@ -16,8 +16,9 @@ import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-
 const EditorMain = (props) =>
   <Fragment>
     {props.storageLock &&
-      <Alert type="warning" message={trans('storage_limit_reached_resources')} />
+      <Alert type="warning">{trans('storage_limit_reached_resources')}</Alert>
     }
+
     <FormData
       level={2}
       title={trans('parameters')}

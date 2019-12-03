@@ -149,7 +149,7 @@ class ClientSerializer
             'helpUrl' => $this->config->getParameter('help_url'),
             'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
             'asset' => $this->assets->getUrl(''),
-            'server' => [
+            'server' => [ // TODO : maybe only expose final URL
                 'protocol' => $request->isSecure() || $this->config->getParameter('ssl_enabled') ? 'https' : 'http',
                 'host' => $this->config->getParameter('domain_name') ? $this->config->getParameter('domain_name') : $request->getHost(),
                 'path' => $request->getBasePath(),
@@ -159,6 +159,7 @@ class ClientSerializer
             'display' => [
                 'breadcrumb' => $this->config->getParameter('display.breadcrumb'),
             ],
+            'restrictions' => $this->config->getParameter('restrictions'),
             'openGraph' => [
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],

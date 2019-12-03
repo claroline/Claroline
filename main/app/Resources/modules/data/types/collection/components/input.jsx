@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
@@ -35,7 +35,20 @@ const CollectionInput = props =>
         {props.value.map((value, index) => {
           let customInput
           if (props.component) {
-            customInput = props.component
+            customInput = createElement(props.component, Object.assign({}, props.options, {
+              disabled: props.disabled,
+              validating: props.validating,
+              error: props.error instanceof Object ? props.error[index] : undefined,
+              value: value,
+              onChange: (newValue) => {
+                const newCollection = cloneDeep(props.value)
+
+                // replace current item by updated one
+                newCollection[index] = newValue
+
+                props.onChange(newCollection)
+              }
+            }))
           } else if (props.render) {
             customInput = props.render(value, props.error instanceof Object ? props.error[index] : undefined, index)
           }
@@ -113,7 +126,7 @@ implementPropTypes(CollectionInput, FormFieldTypes, {
   // items def
   type: T.string,
   render: T.func,
-  component: T.element,
+  component: T.any,
   options: T.object // depends on the type of items
 }, {
   value: [],

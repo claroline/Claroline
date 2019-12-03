@@ -2,12 +2,11 @@
 
 namespace HeVinci\CompetencyBundle\Listener;
 
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -66,6 +65,7 @@ class PluginListener
      */
     public function onOpenMyLearningObjectivesTool(DisplayToolEvent $event)
     {
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $objectives = 'anon.' !== $user ? $this->objectiveManager->loadSubjectObjectives($user) : [];
         $objectivesCompetencies = [];
@@ -98,36 +98,6 @@ class PluginListener
             'objectivesCompetencies' => $objectivesCompetencies,
             'competencies' => $competencies,
         ]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param CustomActionResourceEvent $event
-     */
-    public function onOpenResourceCompetencies(CustomActionResourceEvent $event)
-    {
-        $this->forward('HeVinciCompetencyBundle:Resource:competencies', $event, true);
-    }
-
-    private function forward($controller, Event $event, $withNode = false)
-    {
-        $attributes = ['_controller' => $controller];
-
-        if ($event instanceof CustomActionResourceEvent) {
-            $attributes['id'] = $withNode ?
-                $event->getResource()->getResourceNode()->getId() :
-                $event->getResource()->getId();
-        }
-
-        $subRequest = $this->request->duplicate([], null, $attributes);
-        $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        if ($event instanceof DisplayToolEvent) {
-            $event->setContent($response->getContent());
-        } else {
-            $event->setResponse($response);
-        }
-
         $event->stopPropagation();
     }
 }

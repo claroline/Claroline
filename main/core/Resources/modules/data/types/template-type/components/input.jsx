@@ -54,6 +54,7 @@ const TemplateTypeInput = props => {
       title={trans('no_template_type', {}, 'template')}
     >
       <ModalButton
+        style={{marginTop: 10}}
         className="btn btn-block"
         modal={[MODAL_TEMPLATE_TYPES, {
           title: props.picker.title,

@@ -190,22 +190,6 @@ const Parameters = (props) => {
               }
             ]
           }, {
-            id: 'anonymous',
-            icon: 'fa fa-fw fa-user-secret',
-            title: trans('anonymous_users'),
-            displayed: false, // FIXME
-            fields: [
-              {
-                name: 'security.form_captcha',
-                type: 'boolean',
-                label: trans('display_captcha')
-              }, {
-                name: 'security.anonymous_public_profile',
-                type: 'boolean',
-                label: trans('show_profile_for_anonymous')
-              }
-            ]
-          }, {
             icon: 'fa fa-fw fa-copyright',
             title: trans('term_of_service'),
             fields: [

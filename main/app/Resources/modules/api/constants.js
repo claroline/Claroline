@@ -29,7 +29,8 @@ const HTTP_ALERT_STATUS = {
   403: alertConstants.ALERT_STATUS_FORBIDDEN,
   422: alertConstants.ALERT_STATUS_WARNING,
   // error
-  500: alertConstants.ALERT_STATUS_ERROR
+  500: alertConstants.ALERT_STATUS_ERROR,
+  503: alertConstants.ALERT_STATUS_UNAVAILABLE
 }
 
 export const constants = {

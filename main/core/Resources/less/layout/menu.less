@@ -30,7 +30,7 @@
         margin: 0;
     }
 
-    .app-menu-progression {
+    .app-menu-status {
         background: @toolbar-link-hover-bg;
         padding: floor(@grid-gutter-width / 2);
         display: flex;
@@ -41,7 +41,7 @@
             flex-shrink: 0;
         }
 
-        .app-menu-progression-info {
+        .app-menu-status-info {
             margin-left: floor(@grid-gutter-width / 2);
             font-style: italic;
             font-size: @font-size-small;
@@ -51,6 +51,8 @@
                 margin-top: 0;
                 font-style: normal;
                 color: @toolbar-color;
+                display: flex;
+                justify-content: space-between;
             }
         }
 

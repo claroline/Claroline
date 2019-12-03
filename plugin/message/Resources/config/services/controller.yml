@@ -32,7 +32,6 @@ services:
 
     Claroline\MessageBundle\Controller\Contact\ContactController:
         arguments:
-          - '@claroline.manager.api_manager'
           - '@Claroline\MessageBundle\Manager\ContactManager'
           - '@claroline.serializer.contact'
           - '@Claroline\AppBundle\API\FinderProvider'

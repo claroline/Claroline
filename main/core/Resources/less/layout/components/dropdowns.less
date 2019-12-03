@@ -175,7 +175,8 @@
     }
 }
 
-.dropdown-menu .data-card {
+.data-cards-stacked .data-card,
+.dropdown-menu .data-card { // TODO : replace by data-cards-stacked
     border-radius: 0;
     border: none;
     box-shadow: none;
@@ -187,5 +188,12 @@
 
     + .data-card {
         border-top: 1px solid @data-card-border;
+    }
+}
+
+.data-cards-striped .data-card:nth-of-type(odd) {
+    background-color: @table-bg-accent;
+    .data-card-header {
+        background-color: #f0f0f0;
     }
 }

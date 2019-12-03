@@ -5,13 +5,11 @@ namespace UJM\ExoBundle\Listener\Resource;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -145,26 +143,6 @@ class ExerciseListener
             $event->enableSoftDelete();
         }
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param CustomActionResourceEvent $event
-     */
-    public function onDocimology(CustomActionResourceEvent $event)
-    {
-        /** @var Exercise $exercise */
-        $exercise = $event->getResource();
-
-        $content = $this->templating->render(
-            'UJMExoBundle:exercise:docimology.html.twig', [
-                '_resource' => $exercise,
-                'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
-                'statistics' => $this->docimologyManager->getStatistics($exercise, 100),
-            ]
-        );
-
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 }

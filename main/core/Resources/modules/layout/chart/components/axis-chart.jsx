@@ -1,5 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isArray from 'lodash/isArray'
+import {schemeCategory20c} from 'd3-scale'
 
 import { implementPropTypes } from '#/main/app/prop-types'
 import {AxisChart as ChartTypes} from '#/main/core/layout/chart/prop-types'
@@ -21,7 +23,8 @@ import {
  * }
  */
 const AxisChart = props => {
-  const formattedData = formatData(props.data)
+  // TODO : allowing only one data serie is only for retro compatibility
+  const formattedData = formatData(isArray(props.data) ? props.data[0] : props.data)
   const width = props.width - props.margin.left - props.margin.right
   const height = props.height - props.margin.top - props.margin.bottom
 
@@ -59,10 +62,11 @@ const AxisChart = props => {
       />
 
       {React.createElement(props.dataSeries, {
-        data: formattedData,
+        data: isArray(props.data) ? props.data : [props.data],
         height: height,
         yScale: yScale,
         xScale: xScale,
+        colors: props.colors,
         color: props.color,
         altColor: props.altColor,
         showArea: props.showArea,
@@ -75,6 +79,7 @@ const AxisChart = props => {
 implementPropTypes(AxisChart, ChartTypes, {
   dataSeries: T.func.isRequired
 }, {
+  colors: schemeCategory20c, // TODO : only for retro compatibility. Should be defined by caller
   width: 550,
   height: 400,
   margin: {

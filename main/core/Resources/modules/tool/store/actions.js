@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
@@ -64,10 +65,20 @@ actions.fetch = (toolName, context) => (dispatch) => {
 actions.closeTool = (toolName, context) => ({
   [API_REQUEST] : {
     silent: true,
-    url: ['apiv2_tool_close'],
+    url: ['apiv2_tool_close', {name: toolName, context: context.type, contextId: get(context, 'data.id', null)}],
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+
+actions.configure = (toolName, context, parameters) => ({
+  [API_REQUEST] : {
+    silent: true,
+    url: ['apiv2_tool_configure', {name: toolName, context: context.type, contextId: get(context, 'data.id', null)}],
     request: {
       method: 'PUT',
-      body: JSON.stringify({toolName: toolName, context: context})
+      body: JSON.stringify(parameters)
     }
   }
 })

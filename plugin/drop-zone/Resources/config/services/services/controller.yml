@@ -34,7 +34,6 @@ services:
 
     Claroline\DropZoneBundle\Controller\API\DropController:
         arguments:
-            - '@claroline.manager.api_manager'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

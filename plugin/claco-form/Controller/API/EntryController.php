@@ -162,7 +162,7 @@ class EntryController extends AbstractCrudController
 
         //array map is not even needed; objects are fine here
         /** @var Entry[] $data */
-        $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false);
         $next = null;
 
         foreach ($data as $position => $value) {
@@ -207,7 +207,7 @@ class EntryController extends AbstractCrudController
 
         //array map is not even needed; objects are fine here
         /** @var Entry[] $data */
-        $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false/*, [Options::SQL_ARRAY_MAP]*/);
+        $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false);
         $prev = null;
 
         foreach ($data as $position => $value) {

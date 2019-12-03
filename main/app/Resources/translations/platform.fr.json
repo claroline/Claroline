@@ -1,4 +1,6 @@
 {
+  "activation": "Activation",
+  "deactivation": "Désactivation",
   "currency": {
     "value": "%value% %unit%",
     "euro": "EUR",

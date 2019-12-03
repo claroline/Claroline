@@ -10,10 +10,11 @@ const Path = (props) =>
         style={{fillOpacity: 0.1}}
       />
     }
+
     <path
       stroke={props.strokeColor}
       strokeWidth={props.strokeWidth}
-      strokeDasharray={props.strokeDasharray.join(', ')}
+      strokeLinejoin="round"
       d={props.line}
       fill="none"
     />
@@ -23,13 +24,11 @@ Path.propTypes = {
   strokeColor: T.string.isRequired,
   line: T.string.isRequired,
   area: T.oneOfType([T.string, T.bool]).isRequired,
-  strokeWidth: T.number,
-  strokeDasharray: T.array
+  strokeWidth: T.number
 }
 
 Path.defaultProps = {
   strokeWidth: 2,
-  strokeDasharray: ['none'],
   line: '',
   area: ''
 }

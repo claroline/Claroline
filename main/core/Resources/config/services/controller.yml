@@ -95,6 +95,7 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
         arguments:
+          - '@security.authorization_checker'
           - '@claroline.manager.tool_manager'
           - '@claroline.manager.log_connect'
 

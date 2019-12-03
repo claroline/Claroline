@@ -12,29 +12,22 @@
 namespace Claroline\CoreBundle\Event;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\EventDispatcher\Event;
 
-class ConfigureWorkspaceToolEvent extends Event implements DataConveyorEventInterface
+class OpenToolEvent extends Event implements DataConveyorEventInterface
 {
-    private $content;
-    private $tool;
     private $workspace;
+
+    /** @var array */
+    private $data = [];
+
+    /** @var bool */
     private $isPopulated = false;
 
-    /**
-     * Constructor.
-     */
-    public function __construct(Tool $tool, Workspace $workspace)
+    public function __construct(Workspace $workspace = null)
     {
-        $this->tool = $tool;
         $this->workspace = $workspace;
-    }
-
-    public function getTool()
-    {
-        return $this->tool;
     }
 
     public function getWorkspace()
@@ -42,15 +35,21 @@ class ConfigureWorkspaceToolEvent extends Event implements DataConveyorEventInte
         return $this->workspace;
     }
 
-    public function setContent($content)
+    /**
+     * Sets data to return in the api.
+     * NB. It MUST contain serialized structures.
+     *
+     * @param array $data
+     */
+    public function setData(array $data)
     {
+        $this->data = $data;
         $this->isPopulated = true;
-        $this->content = $content;
     }
 
-    public function getContent()
+    public function getData()
     {
-        return $this->content;
+        return $this->data;
     }
 
     public function isPopulated()

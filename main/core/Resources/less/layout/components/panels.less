@@ -5,15 +5,6 @@
     .panel-heading {
         position: relative; // used to create an absolute button bar in the right corner
 
-        .panel-actions {
-            position: absolute; // TODO : use flex design instead
-            right: 0;
-            top: 0;
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-
         small {
             margin-left: 5px;
         }
@@ -23,6 +14,15 @@
         .icon-with-text-right {
             margin-right: @panel-heading-padding-h;
         }
+    }
+
+    .panel-actions {
+        position: absolute; // TODO : use flex design instead
+        right: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     .panel-body img {

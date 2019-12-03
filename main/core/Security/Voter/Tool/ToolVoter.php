@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security\Voter\Tool\Home;
+namespace Claroline\CoreBundle\Security\Voter\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;

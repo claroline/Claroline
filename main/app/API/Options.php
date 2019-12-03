@@ -100,7 +100,6 @@ final class Options
     const IGNORE_CRUD_POST_EVENT = 'ignore_crud_post_event';
 
     //finder options
-    const SQL_ARRAY_MAP = 'sql_array_map';
     const SQL_QUERY = 'sql_query';
 
     //transfer_options

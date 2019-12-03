@@ -11,7 +11,6 @@
 
 namespace Icap\SocialmediaBundle\Listener;
 
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -38,7 +37,7 @@ class ResourceActionsListener
         $this->httpKernel = $httpKernel;
     }
 
-    public function onLikeAction(CustomActionResourceEvent $event)
+    public function onLikeAction($event)
     {
         $this->redirect(
             [
@@ -49,7 +48,7 @@ class ResourceActionsListener
         );
     }
 
-    public function onShareAction(CustomActionResourceEvent $event)
+    public function onShareAction($event)
     {
         $this->redirect(
             [
@@ -60,7 +59,7 @@ class ResourceActionsListener
         );
     }
 
-    public function onCommentAction(CustomActionResourceEvent $event)
+    public function onCommentAction($event)
     {
         $this->redirect(
             [
@@ -71,7 +70,7 @@ class ResourceActionsListener
         );
     }
 
-    public function onNoteAction(CustomActionResourceEvent $event)
+    public function onNoteAction($event)
     {
         $this->redirect(
             [

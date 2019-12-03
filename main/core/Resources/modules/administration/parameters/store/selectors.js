@@ -1,6 +1,5 @@
 import {createSelector} from 'reselect'
 
-import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 const STORE_NAME = 'main_settings'
@@ -28,13 +27,6 @@ const archives = createSelector(
 const plugins = createSelector(
   [store],
   (store) => store.plugins
-)
-
-const toolChoices = createSelector(
-  [store],
-  (store) => store.tools.reduce((acc, current) => Object.assign(acc, {
-    [current]: trans(current, {}, 'tools')
-  }), {})
 )
 
 const theme = createSelector(
@@ -68,7 +60,6 @@ export const selectors = {
   locales,
   plugins,
   archives,
-  toolChoices,
   theme,
   iconSetChoices,
   mimeTypes

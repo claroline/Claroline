@@ -91,7 +91,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'max_workspace_users' => 10000,
                 'enable_rich_text_file_import' => false,
                 'send_mail_at_registration' => true,
-                'users_csv_by_full_name' => false, //is it still used ?
                 'default_tag' => null,
                 'list' => [
                     'default_mode' => 'tiles-sm',
@@ -119,13 +118,9 @@ class PlatformDefaults implements ParameterProviderInterface
                 'force_organization_creation' => false,
             ],
             'security' => [
-                'form_captcha' => true,
-                'form_honeypot' => false,
                 'cookie_lifetime' => 3600,
                 'account_duration' => null,
                 'default_root_anon_id' => null,
-                'anonymous_public_profile' => false,
-                'disabled_admin_tools' => [],
             ],
             'session' => [
                 'storage_type' => 'native',

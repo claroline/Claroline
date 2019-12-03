@@ -115,15 +115,11 @@ class Updater120118 extends Updater
                     'default' => $this->getParameter($parameters, 'locale_language'),
                 ],
                 'security' => [
-                    'form_captcha' => $this->getParameter($parameters, 'form_captcha'),
-                    'form_honeypot' => $this->getParameter($parameters, 'form_honeypot'),
                     'platform_limit_date' => '2119-06-30T03:01:01',
                     'platform_init_date' => DateNormalizer::normalize($platformInitDate),
                     'cookie_lifetime' => $this->getParameter($parameters, 'cookie_lifetime'),
                     'account_duration' => $this->getParameter($parameters, 'account_duration'),
                     'default_root_anon_id' => $this->getParameter($parameters, 'default_root_anon_id'),
-                    'anonymous_public_profile' => $this->getParameter($parameters, 'anonymous_public_profile'),
-                    'disabled_admin_tools' => ['technical_settings'],
                 ],
                 'tos' => [
                     'enabled' => $this->getParameter($parameters, 'terms_of_service'),
@@ -149,7 +145,6 @@ class Updater120118 extends Updater
                     'max_upload_resources' => $this->getParameter($parameters, 'max_upload_resources'),
                     'max_workspace_users' => $this->getParameter($parameters, 'max_workspace_users'),
                     'default_tag' => $this->getParameter($parameters, 'default_workspace_tag'),
-                    'users_csv_by_full_name' => $this->getParameter($parameters, 'workspace_users_csv_import_by_full_name'),
                     'send_mail_at_registration' => $this->getParameter($parameters, 'send_mail_at_workspace_registration'),
                     'enable_rich_text_file_import' => $this->getParameter($parameters, 'enable_rich_text_file_import'),
                     'list' => $this->getParameter($parameters, 'workspace.list'),
@@ -201,7 +196,7 @@ class Updater120118 extends Updater
                 ],
                 'maintenance' => [
                     'enable' => false,
-                    'message' => 'change me',
+                    'message' => null,
                 ],
             ];
 

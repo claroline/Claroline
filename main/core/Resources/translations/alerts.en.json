@@ -20,6 +20,10 @@
       "title": "Access forbidden",
       "message": "You don't have access to this feature."
     },
+    "unavailable": {
+      "title": "Platform temporarily unavailable",
+      "message": "Please try again later or contact an administrator."
+    },
     "error": {
       "title": "Error",
       "message": "Please contact an administrator."

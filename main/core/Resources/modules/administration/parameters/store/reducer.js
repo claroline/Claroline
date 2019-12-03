@@ -33,9 +33,6 @@ const reducer = combineReducers({
     }),
     current: makeFormReducer(selectors.STORE_NAME+'.messages.current')
   }),
-  tools: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.tools
-  }),
   iconSetChoices: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.iconSetChoices
   }),

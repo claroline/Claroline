@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Icon\IconSet;
 use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
@@ -57,9 +56,6 @@ class ParametersListener
         $event->setData([
             'parameters' => $this->serializer->serialize(),
             'availableLocales' => array_keys($this->localeManager->getImplementedLocales()),
-            'tools' => array_map(function (AdminTool $tool) {
-                return $tool->getName();
-            }, $this->om->getRepository(AdminTool::class)->findAll()),
             'iconSetChoices' => array_map(function (IconSet $iconSet) {
                 return $iconSet->getName(); // TODO : create a serializer
             }, $iconSets),

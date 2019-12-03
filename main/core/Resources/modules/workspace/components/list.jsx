@@ -73,7 +73,7 @@ const Workspaces = (props) => {
           alias: 'selfUnregistration'
         }, {
           name: 'restrictions.maxStorage',
-          label: trans('max_storage_size'),
+          label: trans('available_storage'),
           alias: 'maxStorage'
         }, {
           name: 'restrictions.maxResources',

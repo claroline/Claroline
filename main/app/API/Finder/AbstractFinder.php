@@ -16,6 +16,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query;
@@ -71,8 +72,17 @@ abstract class AbstractFinder implements FinderInterface
      * @param array        $searches
      * @param array|null   $sortBy
      * @param array        $options
+     *
+     * @return QueryBuilder
      */
-    abstract public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1]);
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
+    {
+        foreach ($searches as $filterName => $filterValue) {
+            $this->setDefaults($qb, $filterName, $filterValue);
+        }
+
+        return $qb;
+    }
 
     /**
      * Might not be fully functional with the unions.
@@ -151,10 +161,6 @@ abstract class AbstractFinder implements FinderInterface
             return $query;
         }
 
-        if (in_array(Options::SQL_ARRAY_MAP, $options)) {
-            return $query->getArrayResult();
-        }
-
         return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
     }
 
@@ -182,7 +188,16 @@ abstract class AbstractFinder implements FinderInterface
             $queryOrder = $qb->getDQLPart('orderBy');
             if (!$queryOrder) {
                 // no order by defined
-                $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                $property = $sortBy['property'];
+                if (array_key_exists($sortBy['property'], $this->getExtraFieldMapping())) {
+                    $property = $this->getExtraFieldMapping()[$sortBy['property']];
+                }
+
+                if (!property_exists($this->getClass(), $property)) {
+                    return;
+                }
+
+                $qb->orderBy('obj.'.$property, 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
             }
         }
     }
@@ -354,21 +369,27 @@ abstract class AbstractFinder implements FinderInterface
 
     public function setDefaults(QueryBuilder $qb, $filterName, $filterValue)
     {
-        if (!property_exists($this->getClass(), $filterName)) {
+        $property = $filterName;
+        if (array_key_exists($filterName, $this->getExtraFieldMapping())) {
+            $property = $this->getExtraFieldMapping()[$filterName];
+        }
+
+        if (!property_exists($this->getClass(), $property)) {
             return;
         }
 
         if (is_string($filterValue)) {
-            $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-            $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+            $qb->andWhere("UPPER(obj.{$property}) LIKE :{$property}");
+            $qb->setParameter($property, '%'.strtoupper($filterValue).'%');
         } else {
-            $qb->andWhere("obj.{$filterName} = :{$filterName}");
-            $qb->setParameter($filterName, $filterValue);
+            $qb->andWhere("obj.{$property} = :{$property}");
+            $qb->setParameter($property, $filterValue);
         }
     }
 
     private function getSqlPropertyFromMapping($property)
     {
+        /** @var ClassMetadata $metadata */
         $metadata = $this->om->getClassMetadata($this->getClass());
 
         return $metadata->getColumnName($property);

@@ -7,7 +7,7 @@ import {Routes} from '#/main/app/router'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {Archive} from '#/main/core/administration/parameters/archive/containers/archive'
-import {Meta} from '#/main/core/administration/parameters/main/components/meta'
+import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
 import {I18n} from '#/main/core/administration/parameters/language/containers/i18n'
 import {Plugins} from '#/main/core/administration/parameters/plugin/containers/plugins'
 import {Messages} from '#/main/core/administration/parameters/message/components/messages'

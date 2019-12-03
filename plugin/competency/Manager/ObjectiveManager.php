@@ -309,7 +309,7 @@ class ObjectiveManager
      *
      * @param int $objectiveId
      *
-     * @return Objecttive|null
+     * @return Objective|null
      */
     public function getObjectiveById($objectiveId)
     {

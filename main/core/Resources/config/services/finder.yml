@@ -70,7 +70,6 @@ services:
     Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
         arguments:
           - '@claroline.manager.plugin_manager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\API\Finder\Template\TemplateFinder: ~
 

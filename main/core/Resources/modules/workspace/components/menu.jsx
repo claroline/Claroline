@@ -28,7 +28,7 @@ const WorkspaceShortcuts = props =>
   />
 
 const WorkspaceProgression = props =>
-  <section className="app-menu-progression">
+  <section className="app-menu-status">
     <h2 className="sr-only">
       {trans('my_progression')}
     </h2>
@@ -42,7 +42,7 @@ const WorkspaceProgression = props =>
       height={70}
     />
 
-    <div className="app-menu-progression-info">
+    <div className="app-menu-status-info">
       <h3 className="h4">
         {!isEmpty(props.roles) ?
           props.roles.map(role => trans(role.translationKey)).join(', ') :

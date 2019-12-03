@@ -14,7 +14,6 @@ import {
 } from '#/main/core/layout/chart/enums'
 
 class Axis extends Component {
-
   componentDidUpdate() {
     this.renderAxis()
   }
@@ -48,26 +47,31 @@ class Axis extends Component {
     switch (this.props.type) {
       case AXIS_TYPE_X: {
         let axis = axisBottom(this.props.scale)
+
         switch (this.props.dataType) {
           case DATE_DATA_TYPE: {
             axis.tickFormat(dateToDisplayFormat)
             let dist = Math.floor(this.props.values.length/10)
+
             return this.props.values.length > 10 ?
               axis.ticks(timeDay.filter(d => timeDay.count(0, d) % dist === Math.min(2, dist - 1))) :
               axis.tickValues(this.props.values)
           }
           case NUMBER_DATA_TYPE: {
-            return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(10)
+            return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(5)
           }
-          case STRING_DATA_TYPE: {
+
+          case STRING_DATA_TYPE:
+          default: {
             return axis.tickValues(this.props.values)
           }
         }
-        return axisBottom(this.props.scale).tickValues(this.props.values)
       }
+
       case AXIS_TYPE_Y: {
         let axis = axisLeft(this.props.scale)
-        return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(Math.min(10, this.props.height/20))
+
+        return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(5)
       }
 
     }
@@ -83,12 +87,12 @@ class Axis extends Component {
       }
     }
   }
-  
+
   axisLabelRotate() {
     if (this.props.type === AXIS_TYPE_Y || this.props.values.length === 0 ) {
       return ''
     }
-    
+
     switch (this.props.dataType) {
       case DATE_DATA_TYPE:
         return this.props.values.length > 10 ? 'rotate(-20)' : ''
@@ -97,7 +101,7 @@ class Axis extends Component {
         return maxLength > 10 && this.props.values.length > 5 ? 'rotate(-20)' : ''
       }
     }
-    
+
     return ''
   }
 
@@ -116,9 +120,9 @@ class Axis extends Component {
     }
 
     return (
-      <g className="axis" ref={(node) => {this.axisNode = node}} transform={transform}>
+      <g className="axis" ref={(node) => {this.axisNode = node}} transform={transform} vectorEffect="non-scaling-stroke">
         {this.props.label.show &&
-          <text className="axis-label" fill="#000" transform={labelTransform}>{this.props.label.text}</text>
+        <text className="axis-label" fill="#000" transform={labelTransform}>{this.props.label.text}</text>
         }
       </g>
     )
@@ -135,7 +139,7 @@ Axis.propTypes = {
   dataType: T.oneOf([DATE_DATA_TYPE, NUMBER_DATA_TYPE, STRING_DATA_TYPE]).isRequired,
   label: T.shape({
     show: T.bool.isRequired,
-    text: T.string.isRequired,
+    text: T.string,
     grid: T.bool
   }),
   margin: T.shape({

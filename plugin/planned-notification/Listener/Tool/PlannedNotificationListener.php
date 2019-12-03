@@ -16,7 +16,6 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\WorkspaceCopyToolEvent;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -66,9 +65,9 @@ class PlannedNotificationListener
     }
 
     /**
-     * @param WorkspaceCopyToolEvent $event
+     * @todo : restore using new system
      */
-    public function onWorkspaceToolCopy(WorkspaceCopyToolEvent $event)
+    public function onWorkspaceToolCopy($event)
     {
         $oldWs = $event->getOldWorkspace();
         $workspace = $event->getNewWorkspace();

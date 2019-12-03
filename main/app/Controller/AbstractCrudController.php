@@ -201,7 +201,11 @@ abstract class AbstractCrudController extends AbstractApiController
     {
         $objects = $this->om->getRepository($class)->findBy([$field => $value]);
 
-        return new JsonResponse(count($objects) > 0);
+        if (count($objects) > 0) {
+            return new JsonResponse(true);
+        }
+
+        return new JsonResponse(false, 204);
     }
 
     /**

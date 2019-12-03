@@ -20,7 +20,7 @@ services:
 
     Claroline\CoreBundle\Security\Voter\Tool\Home\HomeTabVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\Tool\Home\ToolVoter: ~
+    Claroline\CoreBundle\Security\Voter\Tool\ToolVoter: ~
 
     Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetContainerVoter: ~
 
