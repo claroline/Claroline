@@ -1065,7 +1065,8 @@ class ClacoFormController
                     $file = $fieldFacetValue->getValue();
 
                     if (!empty($file) && is_array($file)) {
-                        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$file['url'];
+                        $fileUrl = preg_replace('#^\.\.\/files\/#', '', $file['url']);
+                        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$fileUrl;
                         $fileParts = explode('/', $file['url']);
                         $fileName = count($fileParts) > 0 ? $fileParts[count($fileParts) - 1] : $file['name'];
                         $archive->addFile(
