@@ -2,5 +2,43 @@ version: '2'
 services:
   web:
     build: .docker/web/
+    ports:
+       - "80:80"
     volumes:
       - .:/var/www/html/claroline # This is where the symfony files are stored
+    environment:
+      APP_URL: caroline.exemple.com
+      ENV: PROD
+      DB_HOST: claroline_db_1
+      DB_NAME: claroline
+      DB_USER: claroline
+      DB_PASSWORD: claroline
+      SECRET: 'secret-claroline'
+      ADMIN_FIRSTNAME: John
+      ADMIN_LASTNAME: Doe
+      ADMIN_USERNAME: root
+      ADMIN_PASSWORD: claroline
+      ADMIN_EMAIL: claroline@example.com
+    networks:
+       app_net_caro:
+         ipv4_address: 172.22.9.6
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: claroline
+      MYSQL_USER: claroline
+      MYSQL_PASSWORD: claroline
+      MYSQL_DATABASE: claroline
+    image: mysql:5.6
+    ports:
+       - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+       app_net_caro:
+         ipv4_address: 172.22.9.5
+networks:
+  app_net_caro:
+    ipam:
+      driver: bridge
+      config:
+       - subnet: 172.22.9.0/24
