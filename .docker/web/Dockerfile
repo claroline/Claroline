@@ -1,7 +1,8 @@
-FROM php:7.0.7-apache
+FROM php:7.1.0-apache
 
 MAINTAINER Donovan Tengblad
 
+RUN curl -sL https://deb.nodesource.com/setup_13.x | bash
 RUN a2enmod rewrite expires ssl headers
 
 RUN apt-get update && apt-get install -y \
@@ -25,7 +26,7 @@ RUN apt-get update && apt-get install -y \
   g++ \
   ssl-cert \
   curl \
-  npm \
+  nodejs\
   && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install -j$(nproc) xml mcrypt mysqli curl zip mbstring gettext pdo_mysql gd exif mbstring
@@ -33,14 +34,10 @@ RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
 RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && docker-php-ext-install ldap
 
-RUN npm cache clean -f \
-    && npm install -g n \
-    && n 5.11.1
-
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 
-RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
+RUN wget http://downloads.wkhtmltopdf.org/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
 RUN tar -xf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
 
 RUN mv wkhtmltox/bin/wkhtmltopdf /usr/bin/wkhtmltopdf.sh
