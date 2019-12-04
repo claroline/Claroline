@@ -1,21 +1,16 @@
-import {createSelector} from 'reselect'
+import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 
 const STORE_NAME = 'templates_management'
 
 const store = (state) => state[STORE_NAME]
 
-const locales = createSelector(
-  [store],
-  (store) => store.locales
-)
+const locales = (state) => configSelectors.param(state, 'locale.available')
 
-const defaultLocale = createSelector(
-  [store],
-  (store) => store.defaultLocale
-)
+const defaultLocale = (state) => configSelectors.param(state, 'locale.default')
 
 export const selectors = {
   STORE_NAME,
+
   store,
   locales,
   defaultLocale

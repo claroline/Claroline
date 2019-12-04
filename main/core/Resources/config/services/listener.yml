@@ -41,11 +41,6 @@ services:
             - { name: kernel.event_listener, event: administration_tool_tasks_scheduling, method: onDisplayTool }
 
     Claroline\CoreBundle\Listener\Administration\TemplateListener:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@templating'
-            - '@claroline.manager.tool_manager'
         tags:
             - { name: kernel.event_listener, event: administration_tool_templates_management, method: onAdministrationToolOpen }
 

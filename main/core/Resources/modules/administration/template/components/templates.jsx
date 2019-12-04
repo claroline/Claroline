@@ -48,13 +48,11 @@ const TemplatesComponent = (props) =>
         displayed: true,
         primary: true
       }, {
-        name: 'type.name',
-        alias: 'typeName',
-        type: 'string',
+        name: 'type',
+        type: 'template_type',
         label: trans('type'),
         displayed: true,
-        filterable: true,
-        calculated: (row) => trans(row.type.name, {}, 'template')
+        filterable: true
       }, {
         name: 'title',
         type: 'string',

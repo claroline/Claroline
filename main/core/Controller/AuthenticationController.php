@@ -149,18 +149,14 @@ class AuthenticationController
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
-     * @EXT\Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function validateEmailAction($hash)
     {
         $this->userManager->validateEmailHash($hash);
 
-        $this->request->getSession()
-            ->getFlashBag()
-            ->add('success', $this->translator->trans('email_validated', [], 'platform'));
-
-        return new RedirectResponse($this->router->generate('claro_index'));
+        return new RedirectResponse(
+            $this->router->generate('claro_index')
+        );
     }
 
     /**

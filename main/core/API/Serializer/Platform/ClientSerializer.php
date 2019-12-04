@@ -209,17 +209,18 @@ class ClientSerializer
         }
 
         // retrieve the current platform locale
-        $locale = $this->config->getParameter('locale_language');
+        $defaultLocale = $this->config->getParameter('locales.default');
         if ($currentUser instanceof User) {
             // Get the locale for the logged user
             $locale = $currentUser->getLocale();
-        } elseif (!empty($this->config->getParameter('locales')) && array_key_exists($request->getLocale(), $this->config->getParameter('locales'))) {
+        } elseif (!empty($this->config->getParameter('locales.available')) && array_key_exists($request->getLocale(), $this->config->getParameter('locales.available'))) {
             // The current request locale is implemented so we use it
             $locale = $request->getLocale();
         }
 
         return [
-            'current' => $locale,
+            'default' => $defaultLocale,
+            'current' => $locale ?? $defaultLocale,
             'available' => $this->config->getParameter('locales.available'),
         ];
     }

@@ -2,6 +2,8 @@ import {trans} from '#/main/app/intl/translation'
 
 import {TemplateTypeDisplay} from '#/main/core/data/types/template-type/components/display'
 import {TemplateTypeInput} from '#/main/core/data/types/template-type/components/input'
+import {TemplateTypeCell} from '#/main/core/data/types/template-type/components/cell'
+import {TemplateTypeFilter} from '#/main/core/data/types/template-type/components/filter'
 
 const dataType = {
   name: 'template_type',
@@ -12,7 +14,9 @@ const dataType = {
   },
   components: {
     details: TemplateTypeDisplay,
-    input: TemplateTypeInput
+    input: TemplateTypeInput,
+    search: TemplateTypeFilter,
+    table: TemplateTypeCell
   }
 }
 

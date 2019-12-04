@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,6 +56,7 @@ class RegistrationController
      * @param ProfileSerializer     $profileSerializer
      * @param UserManager           $userManager
      * @param ParametersSerializer  $parametersSerializer
+     * @param RoutingHelper         $routingHelper
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -62,15 +64,16 @@ class RegistrationController
         TranslatorInterface $translator,
         ProfileSerializer $profileSerializer,
         UserManager $userManager,
-        ParametersSerializer $parametersSerializer
+        ParametersSerializer $parametersSerializer,
+        RoutingHelper $routingHelper
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->translator = $translator;
         $this->profileSerializer = $profileSerializer;
         $this->userManager = $userManager;
-
         $this->parameters = $parametersSerializer->serialize();
+        $this->routingHelper = $routingHelper;
     }
 
     /**
@@ -91,13 +94,17 @@ class RegistrationController
                 $this->translator->trans('link_outdated', [], 'platform')
             );
 
-            return new RedirectResponse($this->generateUrl('claro_security_login'));
+            return new RedirectResponse(
+                $this->routingHelper->indexPath()
+            );
         }
 
         $this->userManager->activateUser($user);
         $this->userManager->logUser($user);
 
-        return new RedirectResponse($this->generateUrl('claro_desktop_open'));
+        return new RedirectResponse(
+            $this->routingHelper->desktopPath('home')
+        );
     }
 
     /**
