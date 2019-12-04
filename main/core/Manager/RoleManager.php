@@ -1112,7 +1112,7 @@ class RoleManager
         $this->om->startFlushSuite();
         for ($batch = 0; $batch < ceil(($totalWs - $workspaceIdx) / $batchSize); ++$batch) {
             //I hope it is correct for the offset/limit
-            $workspaces = $this->om->getRepository(Role::class)->findBy([], null, $batch * $batchSize + $workspaceIdx, $batchSize);
+            $workspaces = $this->om->getRepository(Role::class)->findBy([], null, $batchSize, $batch * $batchSize + $workspaceIdx);
 
             $nb = count($workspaces);
             $this->log("Fetched {$nb} workspaces for checking");
@@ -1226,7 +1226,7 @@ class RoleManager
         if (!$manager) {
             $this->log('Adding manager role for workspace '.$workspace->getCode().'...', LogLevel::DEBUG);
             $manager = $this->createWorkspaceRole(
-                'ROLE_WS_MANAGER_'.$workspace->getGuid(),
+                'ROLE_WS_MANAGER_'.$workspace->getUuid(),
                 'manager',
                 $workspace,
                 true
