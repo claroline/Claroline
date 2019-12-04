@@ -14,13 +14,7 @@ const reducer = combineReducers({
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
     })
   }),
-  template: makeFormReducer(selectors.STORE_NAME + '.template'),
-  locales:makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.locales || []
-  }),
-  defaultLocale:makeReducer(null, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.defaultLocale || null
-  })
+  template: makeFormReducer(selectors.STORE_NAME + '.template')
 })
 
 export {

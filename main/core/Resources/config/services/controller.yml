@@ -234,6 +234,7 @@ services:
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
           - '@claroline.manager.user_manager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+          - '@Claroline\CoreBundle\Library\RoutingHelper'
 
     Claroline\CoreBundle\Controller\AdministrationController:
         arguments:

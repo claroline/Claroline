@@ -121,4 +121,35 @@ class LegacyController
             $this->routingHelper->desktopPath('home')
         );
     }
+
+    /**
+     * Pre SPA desktop reset password route.
+     *
+     * @EXT\Route("/login")
+     * @EXT\Method("GET")
+     *
+     * @return RedirectResponse
+     */
+    public function loginAction()
+    {
+        return new RedirectResponse(
+            $this->routingHelper->indexPath().'#/login'
+        );
+    }
+
+    /**
+     * Pre SPA reset password route.
+     *
+     * @EXT\Route("/reset")
+     * @EXT\Method("GET")
+     *
+     * @return RedirectResponse
+     */
+    public function resetPasswordAction()
+    {
+        return new RedirectResponse(
+        // go to desktop main home tab
+            $this->routingHelper->indexPath().'#/reset_password'
+        );
+    }
 }
