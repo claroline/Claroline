@@ -1,12 +1,13 @@
-import {trans} from '#/main/app/intl/translation'
+import isEmpty from 'lodash/isEmpty'
+
+import {trans, tval} from '#/main/app/intl/translation'
+import {chain, date, string} from '#/main/app/data/types/validators'
 import {displayDate, apiDate} from '#/main/app/intl/date'
 
 import {DateRangeInput} from '#/main/app/data/types/date-range/components/input'
+import {DateRangeGroup} from '#/main/app/data/types/date-range/components/group'
 
 // todo implements Search
-// todo implements render()
-// todo implements parse()
-// todo implements validate()
 
 const dataType = {
   name: 'date-range',
@@ -55,17 +56,32 @@ const dataType = {
    * Validates input value for a date range.
    *
    * @param {string} value
+   * @param {object} options
    *
    * @return {boolean}
    */
-  validate: () => {
+  validate: (value, options = {}) => {
     // it's an array of strings
     // it contains two valid dates or null
     // start < end
+
+    return Promise.all([
+      value[0] ? chain(value[0], options, [string, date]) : Promise.resolve(undefined),
+      value[1] ? chain(value[1], options, [string, date]) : Promise.resolve(undefined)
+    ]).then(errors => {
+      if (isEmpty(errors) || (isEmpty(errors[0]) && isEmpty(errors[1]))) {
+        if (value[0] && value[0] > value[1]) {
+          return [null, tval('invalid_date_range')]
+        }
+      } else {
+        return errors
+      }
+    })
   },
 
   components: {
-    input: DateRangeInput
+    input: DateRangeInput,
+    group: DateRangeGroup
   }
 }
 

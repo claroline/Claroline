@@ -9,7 +9,7 @@ import {route} from '#/main/core/workspace/routing'
 const WorkspaceCell = props => {
   if (!isEmpty(props.data)) {
     return (
-      <UrlButton target={route(props.data)}>
+      <UrlButton target={'#/'+route(props.data)}>
         {props.data.name}
       </UrlButton>
     )

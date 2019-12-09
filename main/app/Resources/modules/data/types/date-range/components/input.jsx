@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
+import get from 'lodash/get'
+import isArray from 'lodash/isArray'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataError} from '#/main/app/data/components/error'
 
 import {DateInput} from '#/main/app/data/types/date/components/input'
-
-// todo : fix responsive (incorrect margin bottom)
-// todo : manages errors
 
 class DateRangeInput extends Component {
   constructor(props) {
@@ -28,7 +28,10 @@ class DateRangeInput extends Component {
   render() {
     return (
       <div className={classes('row', this.props.className)}>
-        <div className="col-md-6 col-xs-12">
+        <div className={classes('form-group col-md-6 col-xs-12', {
+          'has-error'  : isArray(this.props.error) && get(this.props, 'error[0]') && this.props.validating,
+          'has-warning': isArray(this.props.error) && get(this.props, 'error[0]') && !this.props.validating
+        })}>
           <DateInput
             id={`${this.props.id}-start`}
             calendarIcon="fa fa-fw fa-calendar-check-o"
@@ -41,9 +44,16 @@ class DateRangeInput extends Component {
             minTime={this.props.minTime}
             maxTime={this.props.maxTime}
           />
+
+          {isArray(this.props.error) && get(this.props, 'error[0]') &&
+            <DataError error={get(this.props, 'error[0]')} warnOnly={!this.props.validating} />
+          }
         </div>
 
-        <div className="col-md-6 col-xs-12">
+        <div className={classes('form-group col-md-6 col-xs-12', {
+          'has-error'  : isArray(this.props.error) && get(this.props, 'error[1]') && this.props.validating,
+          'has-warning': isArray(this.props.error) && get(this.props, 'error[1]') && !this.props.validating
+        })}>
           <DateInput
             id={`${this.props.id}-end`}
             calendarIcon="fa fa-fw fa-calendar-times-o"
@@ -56,6 +66,10 @@ class DateRangeInput extends Component {
             minTime={this.props.minTime}
             maxTime={this.props.maxTime}
           />
+
+          {isArray(this.props.error) && get(this.props, 'error[1]') &&
+            <DataError error={get(this.props, 'error[1]')} warnOnly={!this.props.validating} />
+          }
         </div>
       </div>
     )

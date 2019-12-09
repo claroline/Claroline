@@ -1,8 +1,4 @@
 {
-    "2047_characters_max": "",
-    "Each row requires 2 parameters.": "",
-    "Each row requires at least 2 parameters.": "",
-    "Each row requires at least 5 parameters.": "",
     "The code {{ code }} is already assigned to another workspace.": "",
     "The name {{ name }} is already in use.": "",
     "The user or group {{ name }} does not exist.": "",

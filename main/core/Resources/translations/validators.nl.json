@@ -1,10 +1,4 @@
 {
-    "2047_characters_max": "U bent niet toegelaten de limiet van 2047 tekens te overschrijden.",
-    "6_parameters_min_msg": "Elke regel moet 6 instelligen bevatten (gescheiden door een puntkomma).",
-    "7_parameters_min_msg": "Elke regel moet 7 instelligen bevatten (gescheiden door een puntkomma).",
-    "Each row requires 2 parameters.": "Elke regel moet 2 instelligen bevatten (gescheiden door een puntkomma).",
-    "Each row requires at least 2 parameters.": "Elke regel moet tenminste 2 instelligen bevatten (gescheiden door een puntkomma).",
-    "Each row requires at least 5 parameters.": "Elke regel moet tenminste 5 instelligen bevatten (gescheiden door een puntkomma).",
     "The code {{ code }} is already assigned to another workspace.": "De code {{ code }} is al toegewezen aan een andere werkruimte.",
     "The name {{ name }} is already in use.": "De naam {{ name }} is al gebruikt.",
     "The user or group {{ name }} does not exist.": "De gebruiker of de groep [{{ name }}] bestaat niet.",

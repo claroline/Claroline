@@ -1,9 +1,5 @@
 {
-    "2047_characters_max": "You may not exceed 2047 characters.",
     "date_after": "This date must be defined after %limit%.",
-    "Each row requires 2 parameters.": "Every row requires 2 parameters (separated by semicolons).",
-    "Each row requires at least 2 parameters.": "Every row requires at least 2 parameters (separated by semicolons).",
-    "Each row requires at least 5 parameters.": "Every row requires at least 5 parameters (separated by semicolons).",
     "The code {{ code }} is already assigned to another workspace.": "The code {{ code }} is already assigned to another workspace.",
     "The name {{ name }} is already in use.": "The name {{ name }} is already used.",
     "The user or group {{ name }} does not exist.": "User or group [{{ name }}] does not exist.",
