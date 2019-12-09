@@ -10,12 +10,11 @@ import {now, getApiFormat} from '#/main/app/intl/date'
 
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
 import {EventMicro} from '#/plugin/agenda/event/components/micro'
+import {sortEvents} from '#/plugin/agenda/event/utils'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
 
 const Day = props => {
   let dayDiv = createRef()
-
-  // use this when day view is implemented
 
   return (
     <div
@@ -39,7 +38,7 @@ const Day = props => {
         {props.current.format('D')}
       </LinkButton>
 
-      {props.events.map(event => (
+      {sortEvents(props.events).map(event => (
         <EventMicro
           key={event.id}
           event={event}

@@ -8,6 +8,7 @@ const Event = {
     title: T.string,
     start: T.string,
     end: T.string,
+    allDay: T.bool,
     description: T.string,
     thumbnail: T.shape({
       url: T.string

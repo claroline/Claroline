@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {AgendaViewMonth} from '#/plugin/agenda/tools/agenda/views/month/components/view'
 
 export default {
-  label: trans('Mois'),
+  label: trans('agenda_month', {}, 'agenda'),
   component: AgendaViewMonth,
 
   display: (referenceDate) => referenceDate.format('MMMM YYYY'),

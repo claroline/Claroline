@@ -4,9 +4,7 @@
     flex-direction: column;
     margin: 0 -(floor(@grid-gutter-width / 2)); // absorb .page-content padding
     max-height: 100%;
-
     background: @agenda-bg;
-    border-top: 1px solid @agenda-grid-border;
 
     // rows
     .calendar-row {
@@ -60,6 +58,7 @@
             color: @agenda-color;
             background: transparent;
             border: 1px solid transparent;
+            font-weight: bold;
         }
 
         &.now .day-number {

@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {AgendaViewWeek} from '#/plugin/agenda/tools/agenda/views/week/components/view'
 
 export default {
-  label: trans('Semaine'),
+  label: trans('agenda_week', {}, 'agenda'),
   component: AgendaViewWeek,
 
   display: (referenceDate) => referenceDate.format('MMMM YYYY'),

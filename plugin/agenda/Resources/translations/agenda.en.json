@@ -12,5 +12,10 @@
     "tasks": "Tasks",
     "display_modes": "View modes",
     "new_event": "New event",
-    "after_today": "After today"
+    "after_today": "After today",
+    "agenda_day": "Day",
+    "agenda_week": "Week",
+    "agenda_month": "Month",
+    "agenda_year": "Year",
+    "agenda_schedule": "Schedule"
 }
