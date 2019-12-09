@@ -33,7 +33,7 @@ class Route extends Component {
 
   componentWillUnmount() {
     if (this.props.onLeave) {
-      this.props.onLeave(this.props.computedMatch)
+      this.props.onLeave(this.props.computedMatch.params)
     }
   }
 

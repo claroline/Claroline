@@ -14,7 +14,7 @@ function withReducer(key, reducer) {
     const WithReducer = (props) => (
       <ReactReduxContext.Consumer>
         {({ store }) => {
-          // this will mount the request reducer into the current redux store
+          // this will mount the requested reducer into the current redux store
           store.injectReducer(key, reducer)
 
           // just render the original component and forward its props
