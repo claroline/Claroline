@@ -41,9 +41,9 @@ class RoleController extends AbstractCrudController
     {
         return [
             'list' => [Options::SERIALIZE_COUNT_USER],
-            'get' => [Options::SERIALIZE_COUNT_USER, Options::SERIALIZE_ROLE_DESKTOP_TOOLS],
-            'create' => [Options::SERIALIZE_COUNT_USER, Options::SERIALIZE_ROLE_DESKTOP_TOOLS],
-            'update' => [Options::SERIALIZE_COUNT_USER, Options::SERIALIZE_ROLE_DESKTOP_TOOLS],
+            'get' => [Options::SERIALIZE_COUNT_USER],
+            'create' => [Options::SERIALIZE_COUNT_USER],
+            'update' => [Options::SERIALIZE_COUNT_USER],
         ];
     }
 

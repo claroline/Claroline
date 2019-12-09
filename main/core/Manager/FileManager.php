@@ -153,7 +153,9 @@ class FileManager
         $filesDirSize = 0;
 
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->fileDir)) as $file) {
-            $filesDirSize += $file->getSize();
+            if ('..' !== $file->getFilename()) {
+                $filesDirSize += $file->getSize();
+            }
         }
 
         return $filesDirSize;

@@ -12,8 +12,6 @@ use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Event\Resource\PublicationChangeEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
 
 /**
@@ -67,22 +65,6 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function rights(ResourceNode $resourceNode, $data)
-    {
-    }
-
-    public function open(ResourceNode $resourceNode)
-    {
-        /** @var OpenResourceEvent $event */
-        $event = $this->dispatcher->dispatch(
-            static::eventName('open', $resourceNode),
-            OpenResourceEvent::class,
-            [$this->getResourceFromNode($resourceNode)]
-        );
-
-        return $event;
-    }
-
     public function edit(ResourceNode $resourceNode)
     {
         // fixme : wrong event. Use crud instead ?
@@ -109,10 +91,6 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function move()
-    {
-    }
-
     /**
      * @param ResourceNode $resourceNode
      *
@@ -136,18 +114,6 @@ class ResourceLifecycleManager
         $event = $this->dispatcher->dispatch(
             static::eventName('delete', $resourceNode), // old download
             DeleteResourceEvent::class,
-            [$this->getResourceFromNode($resourceNode)]
-        );
-
-        return $event;
-    }
-
-    public function togglePublication(ResourceNode $resourceNode)
-    {
-        /** @var PublicationChangeEvent $event */
-        $event = $this->dispatcher->dispatch(
-            static::eventName('publication_change', $resourceNode),
-            PublicationChangeEvent::class,
             [$this->getResourceFromNode($resourceNode)]
         );
 

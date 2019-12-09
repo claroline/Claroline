@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Tool\ToolRole;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRightsRepository;
@@ -116,16 +117,6 @@ class RoleSerializer
                 }
             }
 
-            // easier request than count users which will go into mysql cache so I'm not too worried about looping here.
-            $adminTools = [];
-
-            /** @var AdminTool $adminTool */
-            foreach ($this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll() as $adminTool) {
-                $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
-            }
-
-            $serialized['adminTools'] = $adminTools;
-
             // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
             if (in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
                 $workspaceId = null;
@@ -140,7 +131,16 @@ class RoleSerializer
                     $serialized['tools'] = $this->serializeTools($role, $workspaceId);
                 }
             }
-            if (Role::PLATFORM_ROLE === $role->getType() && in_array(Options::SERIALIZE_ROLE_DESKTOP_TOOLS, $options)) {
+            if (Role::PLATFORM_ROLE === $role->getType()) {
+                // easier request than count users which will go into mysql cache so I'm not too worried about looping here.
+                $adminTools = [];
+
+                /** @var AdminTool $adminTool */
+                foreach ($this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll() as $adminTool) {
+                    $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
+                }
+
+                $serialized['adminTools'] = $adminTools;
                 $serialized['desktopTools'] = $this->serializeDesktopToolsConfig($role);
             }
         }
@@ -277,17 +277,24 @@ class RoleSerializer
 
         // we should test role type before trying to set the workspace
         if (!empty($data['workspace']) && !empty($data['workspace']['uuid'])) {
-            if (isset($data['workspace']['uuid'])) {
-                $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-                    ->findOneBy(['uuid' => $data['workspace']['uuid']]);
+            $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+                ->findOneBy(['uuid' => $data['workspace']['uuid']]);
 
-                if (!$role->getName()) {
-                    $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['uuid']);
-                }
+            if (!$role->getName()) {
+                $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['uuid']);
+            }
 
-                if ($workspace) {
-                    $role->setWorkspace($workspace);
-                }
+            if ($workspace) {
+                $role->setWorkspace($workspace);
+            }
+        }
+
+        if (!empty($data['user']) && !empty($data['user']['id'])) {
+            /** @var User $user */
+            $user = $this->om->getRepository(User::class)
+                ->findOneBy(['uuid' => $data['user']['id']]);
+            if ($user) {
+                $role->addUser($user);
             }
         }
 

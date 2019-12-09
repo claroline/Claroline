@@ -77,7 +77,6 @@ final class Options
     const SERIALIZE_ROLES = 'serialize_roles';
     const SERIALIZE_COUNT_USER = 'serialize_count_user';
     const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';
-    const SERIALIZE_ROLE_DESKTOP_TOOLS = 'serialize_role_desktop_tools';
 
     //for serialize, do we want to (de)serialize objects in subtrees ?
     const DEEP_SERIALIZE = 'deep_serialize';

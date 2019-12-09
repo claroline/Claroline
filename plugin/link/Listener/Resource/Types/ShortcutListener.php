@@ -14,7 +14,6 @@ namespace Claroline\LinkBundle\Listener\Resource\Types;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 
@@ -49,22 +48,6 @@ class ShortcutListener
         $shortcut = $event->getResource();
 
         $targetEvent = $this->resourceLifecycle->load($shortcut->getTarget());
-
-        $event->setData($targetEvent->getData());
-    }
-
-    /**
-     * Opens a shortcut.
-     * It forwards the event to the target of the shortcut.
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function open(OpenResourceEvent $event)
-    {
-        /** @var Shortcut $shortcut */
-        $shortcut = $event->getResource();
-
-        $targetEvent = $this->resourceLifecycle->open($shortcut->getTarget());
 
         $event->setData($targetEvent->getData());
     }

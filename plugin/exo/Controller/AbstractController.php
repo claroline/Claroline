@@ -4,6 +4,9 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated use AbstractApiController
+ */
 class AbstractController
 {
     /**
