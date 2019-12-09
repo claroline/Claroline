@@ -77,7 +77,7 @@ const FormData = (props) => {
     hDisplay = props.displayLevel + (props.title ? 1 : 0)
   }
 
-  const sections = createFormDefinition(props.mode, props.sections, props.data)
+  const sections = createFormDefinition(props.mode, props.sections, props.locked, props.data)
 
   const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
   const otherSections = 1 !== sections.length ? sections.filter(section => !section.primary) : []
@@ -215,6 +215,7 @@ FormData.propTypes = {
   sections: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   )).isRequired,
+  locked: T.arrayOf(T.string), // a list of inputs to be locked in form
 
   lock: T.shape({
     id: T.string.isRequired,

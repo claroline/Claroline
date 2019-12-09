@@ -88,7 +88,7 @@ actions.updateUserEvaluation = makeActionCreator(USER_EVALUATION_UPDATE, 'userEv
 
 actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS, 'dismissed')
 
-actions.checkAccessCode = (resourceNode, code, embedded = false) => (dispatch) => dispatch({
+actions.checkAccessCode = (resourceNode, code) => (dispatch) => dispatch({
   [API_REQUEST] : {
     url: ['claro_resource_unlock', {id: resourceNode.id}],
     request: {

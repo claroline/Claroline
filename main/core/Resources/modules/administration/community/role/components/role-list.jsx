@@ -1,7 +1,4 @@
-import React from 'react'
-
 import {trans} from '#/main/app/intl/translation'
-import {url} from '#/main/app/api'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/main/core/user/constants'

@@ -113,10 +113,18 @@ class PlatformStatus extends Component {
   }
 }
 
-
 PlatformStatus.propTypes = {
   disabled: T.bool.isRequired,
-  maintenance: T.bool.isRequired
+  maintenance: T.bool.isRequired,
+  usages: T.shape({
+    users: T.number,
+    storage: T.number
+  }),
+  restrictions: T.shape({
+    users: T.number,
+    storage: T.number,
+    dates: T.arrayOf(T.string)
+  })
 }
 
 const AdministrationMenu = props =>
@@ -184,6 +192,7 @@ const AdministrationMenu = props =>
     ]}
   >
     <PlatformStatus
+      disabled={props.disabled}
       maintenance={props.maintenance}
     />
 
@@ -201,6 +210,17 @@ AdministrationMenu.propTypes = {
   })),
   changeSection: T.func.isRequired,
 
+  usages: T.shape({
+    users: T.number,
+    storage: T.number
+  }),
+  restrictions: T.shape({
+    users: T.number,
+    storage: T.number,
+    dates: T.arrayOf(T.string)
+  }),
+
+  disabled: T.bool.isRequired,
   maintenance: T.bool.isRequired,
   enableMaintenance: T.func.isRequired,
   disableMaintenance: T.func.isRequired

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -74,9 +75,16 @@ class ParametersController
     {
         $parametersData = $this->decodeRequest($request);
 
-        // easy way to protect locked parameters
-        unset($parametersData['lockedParameters']);
+        // easy way to protect locked parameters (this may be done elsewhere)
+        // avoid replacing locked parameters
+        ArrayUtils::remove($parametersData, 'lockedParameters');
+        // removes locked parameters values if any
+        $locked = $this->config->getParameter('lockedParameters') ?? [];
+        foreach ($locked as $lockedParam) {
+            ArrayUtils::remove($parametersData, $lockedParam);
+        }
 
+        // save updated parameters
         $parameters = $this->serializer->deserialize($parametersData);
 
         return new JsonResponse($parameters);

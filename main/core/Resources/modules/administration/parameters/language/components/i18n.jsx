@@ -5,7 +5,6 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {route as adminRoute} from '#/main/core/administration/routing'
 import {selectors} from '#/main/core/administration/parameters/store'
 
 const I18n = (props) =>
@@ -16,9 +15,10 @@ const I18n = (props) =>
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
-      target: adminRoute('main_settings'),
+      target: props.path,
       exact: true
     }}
+    locked={props.lockedParameters}
     sections={[
       {
         title: trans('general'),
@@ -47,11 +47,9 @@ const I18n = (props) =>
   />
 
 I18n.propTypes = {
-  availableLocales: T.arrayOf(T.string).isRequired,
-  locales: T.shape({
-    available: T.arrayOf(T.string),
-    default: T.string
-  })
+  path: T.string.isRequired,
+  lockedParameters: T.arrayOf(T.string).isRequired,
+  availableLocales: T.arrayOf(T.string).isRequired
 }
 
 export {

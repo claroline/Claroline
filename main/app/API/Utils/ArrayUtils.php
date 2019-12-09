@@ -32,6 +32,21 @@ class ArrayUtils
         }
     }
 
+    public static function remove(array &$object, $keys)
+    {
+        $keys = explode('.', $keys);
+        $depth = count($keys);
+        $key = array_shift($keys);
+
+        if (1 === $depth) {
+            unset($object[$key]);
+        } else {
+            if (isset($object[$key])) {
+                static::remove($object[$key], implode('.', $keys));
+            }
+        }
+    }
+
     /**
      * This is more or less the equivalent of lodash get for array.
      *

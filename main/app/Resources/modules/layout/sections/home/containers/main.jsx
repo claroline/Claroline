@@ -16,7 +16,7 @@ const HomeMain = connect(
     hasHome: selectors.hasHome(state),
     homeType: selectors.homeType(state),
     homeData: selectors.homeData(state),
-    isAuthenticated: securitySelectors.isAuthenticated(state),
+    authenticated: securitySelectors.isAuthenticated(state),
     selfRegistration: configSelectors.param(state, 'selfRegistration')
   }),
   (dispatch) => ({

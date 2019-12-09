@@ -45,7 +45,7 @@ const HeaderMain = props =>
       ))}
 
       <HeaderUser
-        maintenance={props.maintenance}
+        unavailable={props.unavailable}
         currentUser={props.currentUser}
         authenticated={props.authenticated}
         impersonated={props.impersonated}
@@ -87,7 +87,7 @@ const HeaderMain = props =>
   </header>
 
 HeaderMain.propTypes = {
-  maintenance: T.bool.isRequired,
+  unavailable: T.bool.isRequired,
 
   menus: T.arrayOf(T.string),
   locale: T.shape({

@@ -5,6 +5,9 @@
   "customize_maintenance_message": "Personnaliser le message affiché aux utilisateurs",
   "maintenance_allowed_users": "Les utilisateurs ayant le rôle %role% pourront toujours se connecter et accéder à l'intégralité de la plateforme.",
 
+  "platform_unavailable_alert": "La plateforme n'est pas disponible pour le moment.",
+  "only_admin_login_help": "Seuls les administrateurs peuvent se connecter.",
+
   "platform_offline": "Hors ligne",
   "platform_online": "En ligne",
   "platform_maintenance": "En maintenance"

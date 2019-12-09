@@ -12,6 +12,11 @@ const availableLocales = createSelector(
   (store) => store.availableLocales
 )
 
+const lockedParameters = createSelector(
+  [store],
+  (store) => store.lockedParameters
+)
+
 const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
 const locales = createSelector(
@@ -56,6 +61,7 @@ export const selectors = {
   FORM_NAME,
 
   availableLocales,
+  lockedParameters,
   parameters,
   locales,
   plugins,

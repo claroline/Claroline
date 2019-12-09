@@ -7,7 +7,7 @@ import get from 'lodash/get'
 
 import {LinkButton} from '#/main/app/buttons/link'
 import {ModalButton} from '#/main/app/buttons'
-import {now, getApiFormat} from '#/main/app/intl/date'
+import {now} from '#/main/app/intl/date'
 
 import {constants} from '#/plugin/agenda/event/constants'
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'

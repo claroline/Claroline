@@ -14,7 +14,8 @@ const AdministrationMenu = withRouter(
       (state) => ({
         section: menuSelectors.openedSection(state),
         tools: selectors.tools(state),
-        maintenance: layoutSelectors.maintenance(state)
+        maintenance: layoutSelectors.maintenance(state),
+        disabled: layoutSelectors.disabled(state)
       }),
       (dispatch) => ({
         changeSection(section) {

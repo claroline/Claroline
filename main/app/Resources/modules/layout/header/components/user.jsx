@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {trans} from '#/main/app/intl/translation'
@@ -7,15 +8,13 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ContentHelp} from '#/main/app/content/components/help'
 
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 
 import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {constants as roleConstants} from '#/main/core/user/constants'
-
-// TODO : add email validation warning
-// TODO : add user poster when available
 
 const UserMenu = props =>
   <div className="app-header-dropdown app-current-user dropdown-menu dropdown-menu-right">
@@ -42,21 +41,21 @@ const UserMenu = props =>
       </em>
     </div>
 
-    {props.maintenance &&
-      <div className="alert alert-warning">
-        <span className="fa fa-fw fa-hard-hat icon-with-text-right" />
-        {trans('maintenance_mode_alert')}
+    {props.unavailable &&
+      <div className="alert alert-danger">
+        <span className="fa fa-fw fa-power-off icon-with-text-right" />
+        {trans('platform_unavailable_alert', {}, 'administration')}
       </div>
     }
 
-    {props.impersonated &&
+    {props.authenticated && props.impersonated &&
       <div className="alert alert-warning">
         <span className="fa fa-fw fa-mask icon-with-text-right" />
         {trans('impersonation_mode_alert')}
       </div>
     }
 
-    {props.authenticated && props.currentUser && props.currentUser.meta && !props.currentUser.meta.mailValidated && !props.currentUser.meta.mailWarningHidden &&
+    {props.authenticated && !get(props.currentUser, 'meta.mailValidated') && !get(props.currentUser, 'meta.mailWarningHidden') &&
       <div className="alert alert-warning">
         <div>
           {trans('email_not_validated', {email: props.currentUser.email})}
@@ -85,7 +84,11 @@ const UserMenu = props =>
           active={false}
         />
 
-        {props.registration &&
+        {props.unavailable &&
+          <ContentHelp help={trans('only_admin_login_help', {}, 'administration')} />
+        }
+
+        {!props.unavailable && props.registration &&
           <Button
             type={LINK_BUTTON}
             className="btn btn-block"
@@ -156,7 +159,7 @@ const UserMenu = props =>
   </div>
 
 UserMenu.propTypes = {
-  maintenance: T.bool,
+  unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
   isAdmin: T.bool.isRequired,
@@ -221,7 +224,7 @@ class HeaderUser extends Component {
         } : undefined}
         menu={
           <UserMenu
-            maintenance={this.props.maintenance}
+            unavailable={this.props.unavailable}
             authenticated={this.props.authenticated}
             impersonated={this.props.impersonated}
             isAdmin={this.props.isAdmin}
@@ -243,7 +246,7 @@ HeaderUser.propTypes = {
     ActionTypes.propTypes
   )),
   registration: T.bool,
-  maintenance: T.bool,
+  unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
   isAdmin: T.bool.isRequired,

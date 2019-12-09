@@ -52,9 +52,11 @@ class ParametersListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $iconSets = $this->iconSetManager->listIconSetsByType(IconSetTypeEnum::RESOURCE_ICON_SET);
+        $parameters = $this->serializer->serialize();
 
         $event->setData([
-            'parameters' => $this->serializer->serialize(),
+            'lockedParameters' => $parameters['lockedParameters'] ?? [],
+            'parameters' => $parameters,
             'availableLocales' => array_keys($this->localeManager->getImplementedLocales()),
             'iconSetChoices' => array_map(function (IconSet $iconSet) {
                 return $iconSet->getName(); // TODO : create a serializer

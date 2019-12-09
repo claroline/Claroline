@@ -12,7 +12,7 @@ import {actions as workspaceActions} from '#/main/core/workspace/store'
 const LayoutMain = withRouter(
   connect(
     (state) => ({
-      maintenance: selectors.maintenance(state),
+      unavailable: selectors.unavailable(state),
       authenticated: securitySelectors.isAuthenticated(state),
       menuOpened: menuSelectors.opened(state),
       sidebar: selectors.sidebar(state)

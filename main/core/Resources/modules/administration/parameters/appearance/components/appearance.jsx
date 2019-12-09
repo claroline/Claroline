@@ -36,6 +36,7 @@ class Appearance extends Component {
           target: this.props.path,
           exact: true
         }}
+        locked={this.props.lockedParameters}
         sections={[
           {
             icon: 'fa fa-fw fa-heading',
@@ -110,6 +111,7 @@ class Appearance extends Component {
 
 Appearance.propTypes = {
   path: T.string.isRequired,
+  lockedParameters: T.arrayOf(T.string).isRequired,
   iconSetChoices: T.object.isRequired
 }
 

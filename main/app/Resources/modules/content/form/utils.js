@@ -18,21 +18,24 @@ function isDisplayed(element, data) {
   return typeof element.displayed === 'function' ? element.displayed(data) : element.displayed
 }
 
-function createFieldDefinition(mode, field, data) {
+function createFieldDefinition(mode, field, locked = [], data) {
   const defaultedField = merge({}, DataFormProperty.defaultProps, field)
+  if (-1 !== locked.indexOf(field.name)) {
+    defaultedField.disabled = true
+  }
 
   // adds default to linked fields if any
   if (defaultedField.linked && 0 !== defaultedField.linked.length) {
-    defaultedField.linked = createFieldsetDefinition(mode, defaultedField.linked, data)
+    defaultedField.linked = createFieldsetDefinition(mode, defaultedField.linked, locked, data)
   }
 
   return defaultedField
 }
 
-function createFieldsetDefinition(mode, fields, data) {
+function createFieldsetDefinition(mode, fields, locked = [], data) {
   return fields
     // adds default to fields
-    .map(field => createFieldDefinition(mode, field, data))
+    .map(field => createFieldDefinition(mode, field, locked, data))
     // filters hidden fields
     .filter(field => isInMode(field, mode) && isDisplayed(field, data))
 }
@@ -43,18 +46,19 @@ function createFieldsetDefinition(mode, fields, data) {
  *
  * @param {string} mode
  * @param {Array}  sections
+ * @param {Array}  locked
  * @param {object} data
  *
  * @return {Array} - the defaulted definition
  */
-function createFormDefinition(mode, sections, data) {
+function createFormDefinition(mode, sections, locked = [], data) {
   return sections
     .map(section => {
       // adds defaults to the section configuration
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
       if (isInMode(defaultedSection, mode) && isDisplayed(defaultedSection, data)) {
         // section has fields and is displayed keep it
-        defaultedSection.fields = createFieldsetDefinition(mode, defaultedSection.fields, data)
+        defaultedSection.fields = createFieldsetDefinition(mode, defaultedSection.fields, locked, data)
 
         if (0 !== defaultedSection.fields.length || defaultedSection.component || defaultedSection.render) {
           return defaultedSection

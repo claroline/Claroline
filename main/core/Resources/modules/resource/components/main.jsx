@@ -7,7 +7,6 @@ import {theme} from '#/main/app/config'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {withReducer} from '#/main/app/store/components/withReducer'
 import {makeCancelable} from '#/main/app/api'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {getResource} from '#/main/core/resources'
@@ -143,8 +142,6 @@ class ResourceMain extends Component {
               }
             </Fragment>
           )
-
-          return
         }}
       </ReactReduxContext.Consumer>
     )

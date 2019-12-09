@@ -69,7 +69,6 @@ class ResourceListener
         $resourceNode = $event->getResourceNode();
 
         //I have no idea if it is correct to do this
-        $userEvaluation = null;
         if ('anon.' !== $this->tokenStorage->getToken()->getUser()) {
             $this->evaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
                 'status' => ResourceEvaluation::STATUS_PARTICIPATED,

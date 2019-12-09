@@ -1,7 +1,5 @@
 {
     "404": "Página no encontrada",
-    "6_parameters_min_msg": "El archivo csv  debe incluir, al menos, 6 elementos por línea.",
-    "7_parameters_min_msg": "El archivo csv  debe incluir, al menos, 7 elementos por línea.",
     "accept": "Aceptar",
     "accessible_from": "Accesible desde",
     "accessible_until": "Accessible hasta",
@@ -847,7 +845,6 @@
     "select_a_group": "Seleccione un grupo",
     "select_a_role": "Seleccione un role",
     "select_a_template": "Seleccione un modelo",
-    "select_a_workspace": "Seleccione un espacio de actividades",
     "select_all": "Seleccionar todo",
     "select_category": "Seleccionar una categoría",
     "select_contacts_title": "Seleccionar receptores",

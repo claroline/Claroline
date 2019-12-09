@@ -102,7 +102,16 @@ const mailers = [
 const displayFields = {
   'native': [],
   'claro_pdo': [],
-  'pdo': ['session.db_table', 'session.db_id_col', 'session.db_data_col', 'session.db_data_col', 'session.db_time_col', 'session.db_dsn', 'session.db_user', 'session.db_password']
+  'pdo': [
+    'session.db_table',
+    'session.db_id_col',
+    'session.db_data_col',
+    'session.db_data_col',
+    'session.db_time_col',
+    'session.db_dsn',
+    'session.db_user',
+    'session.db_password'
+  ]
 }
 
 const display = (transport, property) => {
@@ -119,6 +128,7 @@ const Technical = props =>
       target: props.path,
       exact: true
     }}
+    locked={props.lockedParameters}
     sections={[
       {
         icon: 'fa fa-fw fa-internet-explorer',
@@ -276,6 +286,7 @@ const Technical = props =>
 
 Technical.propTypes = {
   path: T.string.isRequired,
+  lockedParameters: T.arrayOf(T.string).isRequired,
   mailer: T.shape({
     transport: T.string
   })

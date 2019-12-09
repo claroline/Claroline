@@ -1,7 +1,5 @@
 {
     "404": "Seite nicht gefunden",
-    "6_parameters_min_msg": "Die CSV Datei muss 6 Spalten pro Zeile haben.",
-    "7_parameters_min_msg": "Die CSV Datei muss 7 Spalten pro Zeile haben.",
     "accept": "Akzeptieren",
     "accessible_from": "",
     "accessible_until": "",
@@ -842,7 +840,6 @@
     "select_a_filter_type": "",
     "select_a_group": "",
     "select_a_role": "",
-    "select_a_workspace": "",
     "select_all": "",
     "select_category": "",
     "select_contacts_title": "",

@@ -1,7 +1,5 @@
 import {connect} from 'react-redux'
 
-import {selectors as formSelectors} from '#/main/app/content/form/store'
-
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
 import {Technical as TechnicalComponent} from '#/main/core/administration/parameters/technical/components/technical'
@@ -9,7 +7,8 @@ import {Technical as TechnicalComponent} from '#/main/core/administration/parame
 const Technical = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    mailer: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)).mailer
+    lockedParameters: selectors.lockedParameters(state),
+    mailer: selectors.parameters(state).mailer
   })
 )(TechnicalComponent)
 

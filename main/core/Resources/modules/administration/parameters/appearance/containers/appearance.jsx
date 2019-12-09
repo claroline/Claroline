@@ -7,6 +7,7 @@ import {Appearance as AppearanceComponent} from '#/main/core/administration/para
 const Appearance = connect(
   (state) => ({
     path: toolSelectors.path(state),
+    lockedParameters: selectors.lockedParameters(state),
     iconSetChoices: selectors.iconSetChoices(state)
   })
 )(AppearanceComponent)

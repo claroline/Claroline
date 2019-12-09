@@ -8,12 +8,11 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {constants} from '#/main/app/layout/sections/home/constants'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {route as adminRoute} from '#/main/core/administration/routing'
 import {selectors} from '#/main/core/administration/parameters/store'
 
 const restrictedByDates = (parameters) => get(parameters, 'restrictions.enableDates') || !isEmpty(get(parameters, 'restrictions.dates'))
-const restrictedUsersCount = (parameters) => get(parameters, 'restrictions.enableUsers') || !isEmpty(get(parameters, 'restrictions.users'))
-const restrictedStorage = (parameters) => get(parameters, 'restrictions.enableStorage') || !isEmpty(get(parameters, 'restrictions.storage'))
+const restrictedUsersCount = (parameters) => get(parameters, 'restrictions.enableUsers') || get(parameters, 'restrictions.users')
+const restrictedStorage = (parameters) => get(parameters, 'restrictions.enableStorage') || get(parameters, 'restrictions.storage')
 
 const Meta = (props) =>
   <FormData
@@ -23,9 +22,10 @@ const Meta = (props) =>
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
-      target: adminRoute('main_settings'),
+      target: props.path,
       exact: true
     }}
+    locked={props.lockedParameters}
     sections={[
       {
         title: trans('general'),
@@ -105,6 +105,7 @@ const Meta = (props) =>
             label: trans('restrict_by_dates'),
             type: 'boolean',
             calculated: restrictedByDates,
+            disabled: -1 !== props.lockedParameters.indexOf('restrictions.dates'), // I need to do it manually because it's a virtual field
             onChange: activated => {
               if (!activated) {
                 props.updateProp('restrictions.dates', [])
@@ -127,6 +128,7 @@ const Meta = (props) =>
             label: trans('restrict_users_count'),
             type: 'boolean',
             calculated: restrictedUsersCount,
+            disabled: -1 !== props.lockedParameters.indexOf('restrictions.users'), // I need to do it manually because it's a virtual field
             onChange: activated => {
               if (!activated) {
                 props.updateProp('restrictions.users', null)
@@ -146,6 +148,7 @@ const Meta = (props) =>
             label: trans('restrict_storage'),
             type: 'boolean',
             calculated: restrictedStorage,
+            disabled: -1 !== props.lockedParameters.indexOf('restrictions.storage'), // I need to do it manually because it's a virtual field
             onChange: activated => {
               if (!activated) {
                 props.updateProp('restrictions.storage', null)
@@ -167,6 +170,8 @@ const Meta = (props) =>
   />
 
 Meta.propTypes = {
+  path: T.string.isRequired,
+  lockedParameters: T.arrayOf(T.string).isRequired,
   updateProp: T.func.isRequired
 }
 

@@ -10,6 +10,9 @@ import {selectors} from '#/main/core/administration/parameters/store/selectors'
 import {reducer as iconsReducer} from '#/main/core/administration/parameters/icon/store/reducer'
 
 const reducer = combineReducers({
+  lockedParameters: makeReducer([], {
+    [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.lockedParameters
+  }),
   parameters: makeFormReducer(selectors.FORM_NAME, {}, {
     originalData: makeReducer({}, {
       [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.parameters

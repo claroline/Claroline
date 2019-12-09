@@ -1,7 +1,5 @@
 {
     "404": "De pagina die u zoekt bestaat niet.",
-    "6_parameters_min_msg": "Het CSV-bestand moet tenminste 6 elementen per regel bevatten.",
-    "7_parameters_min_msg": "Het CSV-bestand moet tenminste 7 elementen per regel bevatten.",
     "accept": "Aanvaarden",
     "accessible_from": "Toegankelijk vanaf",
     "accessible_until": "Toegankelijk tot",
@@ -986,7 +984,6 @@
     "select_a_group": "Kies een groep",
     "select_a_role": "Kies een  rol",
     "select_a_template": "Kies een  sjabloon",
-    "select_a_workspace": "Kies een  werkruimte",
     "select_all": "Alles kiezen",
     "select_category": "Een categorie liezen",
     "select_contacts_title": "De geadesseerden kiezen",
