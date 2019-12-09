@@ -28,6 +28,8 @@ import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
+// TODO : merge with main/core/administration/community/role/components/role
+
 const ToolRightsRow = props =>
   <div className="tool-rights-row list-group-item">
     <div className="tool-rights-title">

@@ -28,7 +28,8 @@ const RoleTabComponent = props =>
         icon: 'fa fa-plus',
         label: trans('add_role'),
         target: `${props.path}/roles/form`,
-        primary: true
+        primary: true,
+        exact: true
       }
     ]}
   >

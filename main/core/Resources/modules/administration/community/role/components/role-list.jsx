@@ -43,7 +43,16 @@ const RoleList = {
       type: 'workspace',
       label: trans('workspace'),
       displayed: true,
-      filterable: false
+      filterable: true
+    }, {
+      name: 'user',
+      type: 'user',
+      label: trans('user'),
+      displayed: true,
+      filterable: false,
+      options: {
+        placeholder: false
+      }
     }
   ],
 

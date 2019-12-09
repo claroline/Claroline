@@ -24,6 +24,8 @@ import {actions} from '#/main/core/administration/community/role/store'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
 
+// TODO : merge with main/core/tools/community/role/components/role
+
 const RoleForm = props =>
   <FormData
     level={3}
@@ -53,12 +55,38 @@ const RoleForm = props =>
             name: 'type',
             type: 'choice',
             label: trans('type'),
-            disabled: true,
-            displayed: !props.new,
+            disabled: !props.new,
+            required: true,
             options: {
               condensed: true,
               choices: constants.ROLE_TYPES
-            }
+            },
+            onChange: (value) => {
+              if (constants.ROLE_WORKSPACE !== value) {
+                props.updateProp('workspace', null)
+              }
+
+              if (constants.ROLE_USER !== props.role.type) {
+                props.updateProp('user', null)
+              }
+            },
+            linked: [
+              {
+                name: 'workspace',
+                type: 'workspace',
+                label: trans('workspace'),
+                required: true,
+                disabled: !props.new,
+                displayed: constants.ROLE_WORKSPACE === props.role.type
+              }, {
+                name: 'user',
+                type: 'user',
+                label: trans('user'),
+                required: true,
+                disabled: !props.new,
+                displayed: constants.ROLE_USER === props.role.type
+              }
+            ]
           }
         ]
       }, {
