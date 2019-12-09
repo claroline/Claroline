@@ -1187,10 +1187,7 @@ class ResourceManager
 
     public function load(ResourceNode $resourceNode, $embedded = false)
     {
-        // maybe use a specific log ?
-        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$resourceNode, $embedded]);
         $resource = $this->getResourceFromNode($resourceNode);
-
         if ($resource) {
             /** @var LoadResourceEvent $event */
             $event = $this->dispatcher->dispatch(

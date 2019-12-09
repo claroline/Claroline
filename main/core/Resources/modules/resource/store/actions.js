@@ -4,32 +4,24 @@ import {API_REQUEST} from '#/main/app/api'
 import {selectors} from '#/main/core/resource/store/selectors'
 
 // actions
-export const RESOURCE_UPDATE_NODE           = 'RESOURCE_UPDATE_NODE'
-export const USER_EVALUATION_UPDATE         = 'USER_EVALUATION_UPDATE'
-export const RESOURCE_OPEN                  = 'RESOURCE_OPEN'
-export const RESOURCE_LOAD                  = 'RESOURCE_LOAD'
-export const RESOURCE_LOAD_NODE             = 'RESOURCE_LOAD_NODE'
-export const RESOURCE_SET_LOADED            = 'RESOURCE_SET_LOADED'
-export const RESOURCE_SERVER_ERRORS         = 'RESOURCE_SERVER_ERRORS'
-export const RESOURCE_RESTRICTIONS_DISMISS  = 'RESOURCE_RESTRICTIONS_DISMISS'
-export const RESOURCE_RESTRICTIONS_ERROR    = 'RESOURCE_RESTRICTIONS_ERROR'
-export const RESOURCE_RESTRICTIONS_UNLOCKED = 'RESOURCE_RESTRICTIONS_UNLOCKED'
-export const RESOURCE_NOT_FOUND             = 'RESOURCE_NOT_FOUND'
+export const RESOURCE_UPDATE_NODE          = 'RESOURCE_UPDATE_NODE'
+export const USER_EVALUATION_UPDATE        = 'USER_EVALUATION_UPDATE'
+export const RESOURCE_OPEN                 = 'RESOURCE_OPEN'
+export const RESOURCE_LOAD                 = 'RESOURCE_LOAD'
+export const RESOURCE_SET_LOADED           = 'RESOURCE_SET_LOADED'
+export const RESOURCE_RESTRICTIONS_DISMISS = 'RESOURCE_RESTRICTIONS_DISMISS'
+export const RESOURCE_NOT_FOUND            = 'RESOURCE_NOT_FOUND'
 
 // this ones should not be here
-export const RESOURCE_COMMENT_ADD           = 'RESOURCE_COMMENT_ADD'
-export const RESOURCE_COMMENT_UPDATE        = 'RESOURCE_COMMENT_UPDATE'
-export const RESOURCE_COMMENT_REMOVE        = 'RESOURCE_COMMENT_REMOVE'
+export const RESOURCE_COMMENT_ADD          = 'RESOURCE_COMMENT_ADD'
+export const RESOURCE_COMMENT_UPDATE       = 'RESOURCE_COMMENT_UPDATE'
+export const RESOURCE_COMMENT_REMOVE       = 'RESOURCE_COMMENT_REMOVE'
 
 // action creators
 export const actions = {}
 
 actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED, 'loaded')
-actions.setRestrictionsError = makeActionCreator(RESOURCE_RESTRICTIONS_ERROR, 'errors')
-actions.setServerErrors = makeActionCreator(RESOURCE_SERVER_ERRORS, 'errors')
 actions.setNotFound = makeActionCreator(RESOURCE_NOT_FOUND)
-actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
-actions.loadNode = makeActionCreator(RESOURCE_LOAD_NODE, 'resourceNode')
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.openResource = (resourceSlug) => (dispatch, getState) => {
@@ -42,56 +34,38 @@ actions.openResource = (resourceSlug) => (dispatch, getState) => {
   }
 }
 
-actions.fetchNode = (slug) => (dispatch, getState) => {
-  const resourceNode = selectors.resourceNode(getState())
-
-  if (resourceNode && resourceNode.meta && resourceNode.slug === slug) {
-    return Promise.resolve(resourceNode)
-  }
-
-  return dispatch({
-    [API_REQUEST]: {
-      silent: true,
-      url: ['claro_resource_get', {slug}],
-      success: (response) => dispatch(actions.loadNode(response)),
-      error: (response, responseStatus) => {
-        if (404 === responseStatus) {
-          dispatch(actions.setResourceLoaded(true))
-          dispatch(actions.setNotFound())
-        }
-      }
-    }
-  })
-}
-
-actions.fetchResource = (resourceNode, embedded = false) => ({
+actions.fetchResource = (slug, embedded = false, loadApp) => ({
   [API_REQUEST]: {
     silent: true,
-    url: ['claro_resource_load_embedded', {id: resourceNode.id, embedded: embedded ? 1 : 0}],
+    url: ['claro_resource_load_embedded', {id: slug, embedded: embedded ? 1 : 0}],
     success: (response, dispatch) => {
-      dispatch(actions.loadResource(response))
-      // load resource data inside the store
-      dispatch(actions.loadResourceType(resourceNode.meta.type, response))
+      // weird time : I need to mount the correct resource type app before continuing loading data in store
+      // in order to have the custom store of the resource mounted
+      loadApp(response.resourceNode.meta.type).then(() => {
+        dispatch(actions.loadResource(response))
 
-      // mark the resource as loaded
-      // it's done through another action (not RESOURCE_LOAD) to be sure all reducers have been resolved
-      // and store is up-to-date
-      dispatch(actions.setResourceLoaded(true))
+        // load resource data inside the store
+        dispatch(actions.loadResourceType(response.resourceNode.meta.type, response))
+
+        // mark the resource as loaded
+        // it's done through another action (not RESOURCE_LOAD) to be sure all reducers have been resolved
+        // and store is up-to-date
+        dispatch(actions.setResourceLoaded(true))
+      })
     },
     error: (response, status, dispatch) => {
-      dispatch(actions.dismissRestrictions(false))
-
       switch(status) {
-        case 403:
-          dispatch(actions.setRestrictionsError(response))
+        case 404:
+          dispatch(actions.setNotFound())
           break
         case 401:
-          dispatch(actions.setRestrictionsError(response))
+        case 403:
+          loadApp(response.resourceNode.meta.type).then(() => {
+            dispatch(actions.loadResource(response))
+            dispatch(actions.setResourceLoaded(true))
+          })
           break
-        default:
-          dispatch(actions.setServerErrors(response))
       }
-      dispatch(actions.setResourceLoaded(true))
     }
   }
 })
@@ -121,12 +95,7 @@ actions.checkAccessCode = (resourceNode, code, embedded = false) => (dispatch) =
       method: 'POST',
       body: JSON.stringify({code: code})
     },
-    success: () => {
-      dispatch(actions.setResourceLoaded(false))
-      dispatch(actions.unlockResource())
-      dispatch(actions.fetchResource(resourceNode, embedded))
-    },
-    error: () => dispatch(actions.fetchResource(resourceNode, embedded))
+    success: () => dispatch(actions.setResourceLoaded(false)) // force reload the resource
   }
 })
 

@@ -16,7 +16,6 @@ import {AnnounceSend} from '#/plugin/announcement/resources/announcement/compone
 
 const AnnouncementResource = props =>
   <ResourcePage
-    styles={['claroline-distribution-plugin-announcement-announcement-resource']}
     primaryAction="create-announce"
     customActions={[
       {

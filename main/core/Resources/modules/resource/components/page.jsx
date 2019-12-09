@@ -9,7 +9,6 @@ import {Routes} from '#/main/app/router/components/routes'
 import {Route as RouteTypes} from '#/main/app/router/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
@@ -23,7 +22,6 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {constants as toolConst} from '#/main/core/tool/constants'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
-import {ServerErrors} from '#/main/core/resource/components/errors'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
 // FIXME
@@ -39,32 +37,11 @@ class ResourcePage extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.loadResource(this.props.resourceNode, this.props.embedded)
-  }
-
-  componentDidUpdate(prevProps) {
-    // the resource has changed
-    if (this.props.resourceNode.id !== prevProps.resourceNode.id) {
-      // load the new one
-      this.props.loadResource(this.props.resourceNode, this.props.embedded)
-    }
-  }
-
   toggleFullscreen() {
     this.setState({fullscreen: !this.state.fullscreen})
   }
 
   render() {
-    if (!this.props.loaded) {
-      return (
-        <ContentLoader
-          size="lg"
-          description="Nous chargeons le contenu de votre ressource..."
-        />
-      )
-    }
-
     // remove workspace root from path (it's already known by the breadcrumb)
     // find a better way to handle this
     let ancestors
@@ -88,7 +65,6 @@ class ResourcePage extends Component {
           title: this.props.resourceNode.name,
           description: this.props.resourceNode.meta ? this.props.resourceNode.meta.description : null
         }}
-        styles={this.props.styles}
         embedded={this.props.embedded}
         showHeader={this.props.embedded ? this.props.showHeader : true}
         fullscreen={this.state.fullscreen}
@@ -113,15 +89,14 @@ class ResourcePage extends Component {
         toolbar={getToolbar(this.props.primaryAction, true)}
         actions={getActions([this.props.resourceNode], {
           add: () => {
-            this.props.loadResource(this.props.resourceNode, this.props.embedded)
+            this.props.reload()
           },
           update: (resourceNodes) => {
             // checks if the action have modified the current node
             const currentNode = resourceNodes.find(node => node.id === this.props.resourceNode.id)
             if (currentNode) {
               // grabs updated data
-              this.props.updateNode(currentNode)
-              this.props.loadResource(this.props.resourceNode, this.props.embedded)
+              this.props.reload()
             }
           },
           delete: (resourceNodes) => {
@@ -164,11 +139,7 @@ class ResourcePage extends Component {
           />
         }
 
-        {!isEmpty(this.props.serverErrors) &&
-          <ServerErrors errors={this.props.serverErrors}/>
-        }
-
-        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) && !isEmpty(routes) && this.props.loaded &&
+        {isEmpty(this.props.accessErrors) && !isEmpty(routes) &&
           <Routes
             path={`${this.props.basePath}/${this.props.resourceNode.slug}`}
             routes={routes}
@@ -176,7 +147,7 @@ class ResourcePage extends Component {
           />
         }
 
-        {isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) &&
+        {isEmpty(this.props.accessErrors) &&
           this.props.children
         }
       </ToolPage>
@@ -192,7 +163,6 @@ ResourcePage.propTypes = {
   basePath: T.string,
   contextType: T.string.isRequired,
   currentUser: T.object,
-  loaded: T.bool.isRequired,
   embedded: T.bool,
   showHeader: T.bool,
   managed: T.bool.isRequired,
@@ -210,10 +180,8 @@ ResourcePage.propTypes = {
   ).isRequired,
 
   accessErrors: T.object,
-  serverErrors: T.array,
 
-  updateNode: T.func.isRequired,
-  loadResource: T.func.isRequired,
+  reload: T.func.isRequired,
   dismissRestrictions: T.func.isRequired,
   checkAccessCode: T.func,
 
@@ -230,7 +198,6 @@ ResourcePage.propTypes = {
   customActions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
-  styles: T.arrayOf(T.string),
 
   // resource content
   routes: T.arrayOf(

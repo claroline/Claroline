@@ -17,22 +17,42 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Repository\UserRepository;
 
 class ResourceListener
 {
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var UserRepository */
+    private $userRepo;
+
     public function __construct(StrictDispatcher $dispatcher, ObjectManager $om)
     {
         $this->dispatcher = $dispatcher;
         $this->om = $om;
+
+        $this->userRepo = $this->om->getRepository(User::class);
+    }
+
+    public function onResourceLoad(LoadResourceEvent $event)
+    {
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$event->getResourceNode(), $event->isEmbedded()]);
     }
 
     public function onResourceCreate(CreateEvent $event)
     {
+        /** @var ResourceNode $node */
         $node = $event->getObject();
         $workspace = $node->getWorkspace();
-        $usersToNotify = $workspace && $workspace->getId() ?
-            $this->om->getRepository(User::class)->findUsersByWorkspaces([$workspace]) :
+        $usersToNotify = $workspace ?
+            $this->userRepo->findUsersByWorkspaces([$workspace]) :
             [];
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', [$node, $usersToNotify]);

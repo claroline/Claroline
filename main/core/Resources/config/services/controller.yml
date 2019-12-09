@@ -292,7 +292,6 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
           - '@claroline.event.manager'
-          - '@claroline.manager.resource_evaluation_manager'
 
     Claroline\CoreBundle\Controller\SearchController:
         arguments:

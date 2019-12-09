@@ -47,11 +47,6 @@ const managed = createSelector(
   (store) => store.managed
 )
 
-const nodeLoaded = createSelector(
-  [store],
-  (store) => store.nodeLoaded
-)
-
 const loaded = createSelector(
   [store],
   (store) => store.loaded
@@ -110,11 +105,6 @@ const accessErrors = createSelector(
   (store) => !store.accessErrors.dismissed && !isEmpty(store.accessErrors.details) ? store.accessErrors.details : {}
 )
 
-const serverErrors = createSelector(
-  [store],
-  (store) => !isEmpty(store.serverErrors) ? store.serverErrors : []
-)
-
 // evaluation selectors
 const resourceEvaluation = createSelector(
   [store],
@@ -156,14 +146,12 @@ export const selectors = {
   embedded,
   showHeader,
   managed,
-  nodeLoaded,
   loaded,
   notFound,
   // lifecycle
   resourceLifecycle,
   // access restrictions
   accessErrors,
-  serverErrors,
   // node
   resourceNode,
   slug,

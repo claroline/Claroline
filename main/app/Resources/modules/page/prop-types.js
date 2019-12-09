@@ -18,7 +18,6 @@ const PageSection = {
 const PageSimple = {
   propTypes: {
     className: T.string,
-    styles: T.arrayOf(T.string),
     size: T.oneOf(['sm', 'lg']),
 
     /**
@@ -59,8 +58,7 @@ const PageSimple = {
   defaultProps: {
     embedded: false,
     fullscreen: false,
-    showBreadcrumb: true,
-    styles: []
+    showBreadcrumb: true
   }
 }
 

@@ -1,5 +1,6 @@
 import React, {createElement, Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {Helmet} from 'react-helmet'
 
 import {theme} from '#/main/app/config'
 import {withReducer} from '#/main/app/store/components/withReducer'
@@ -16,9 +17,13 @@ const Tool = props => {
       <Fragment>
         {props.children}
 
-        {props.styles && props.styles.map(style =>
-          <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
-        )}
+        {0 !== props.styles.length &&
+          <Helmet>
+            {props.styles.map(style =>
+              <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+            )}
+          </Helmet>
+        }
       </Fragment>
     )
   }
@@ -35,6 +40,10 @@ Tool.propTypes = {
   loaded: T.bool.isRequired,
   styles: T.arrayOf(T.string),
   children: T.node
+}
+
+Tool.defaultProps = {
+  styles: []
 }
 
 class ToolMain extends Component {

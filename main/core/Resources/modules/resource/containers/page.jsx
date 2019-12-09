@@ -18,24 +18,21 @@ import {actions, selectors} from '#/main/core/resource/store'
 const ResourcePage = withRouter(
   connect(
     (state) => ({
+      currentUser: securitySelectors.currentUser(state),
+      // tool params
       basePath: selectors.basePath(state),
       contextType: toolSelectors.contextType(state),
-      currentUser: securitySelectors.currentUser(state),
-      loaded: selectors.loaded(state),
+      // resource params
       embedded: selectors.embedded(state),
       showHeader: selectors.showHeader(state),
       managed: selectors.managed(state),
       resourceNode: selectors.resourceNode(state),
       userEvaluation: selectors.resourceEvaluation(state),
-      accessErrors: selectors.accessErrors(state),
-      serverErrors: selectors.serverErrors(state)
+      accessErrors: selectors.accessErrors(state)
     }),
     (dispatch) => ({
-      updateNode(resourceNode) {
-        dispatch(actions.updateNode(resourceNode))
-      },
-      loadResource(resourceNode, embedded = false) {
-        dispatch(actions.fetchResource(resourceNode, embedded))
+      reload() {
+        dispatch(actions.setResourceLoaded(false))
       },
       dismissRestrictions() {
         dispatch(actions.dismissRestrictions(true))

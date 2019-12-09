@@ -2,7 +2,6 @@ import React from 'react'
 import classes from 'classnames'
 import {Helmet} from 'react-helmet'
 
-import {theme} from '#/main/app/config'
 import {implementPropTypes} from '#/main/app/prop-types'
 
 import {PageSimple as PageSimpleTypes} from '#/main/app/page/prop-types'
@@ -13,10 +12,6 @@ import {PageWrapper} from '#/main/app/page/components/wrapper'
 
 /**
  * Root of the current page.
- *
- * For now, overlays are managed here.
- * In future version, when the layout will be in React,
- * it'll be moved in higher level.
  */
 const PageSimple = props =>
   <PageWrapper
@@ -34,9 +29,6 @@ const PageSimple = props =>
       {!props.embedded && props.header && props.header.description &&
         <meta name="description" content={props.header.description} />
       }
-      {props.styles.map(styleName =>
-        <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
-      )}
     </Helmet>
 
     {!props.embedded &&

@@ -16,7 +16,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
-use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
@@ -26,7 +25,6 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -81,9 +79,6 @@ class ResourceController
     /** @var EventManager */
     private $eventManager;
 
-    /** @var ResourceEvaluationManager */
-    private $resourceEvaluationManager;
-
     /**
      * ResourceController constructor.
      *
@@ -97,7 +92,6 @@ class ResourceController
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param EventManager                  $eventManager
-     * @param ResourceEvaluationManager     $resourceEvaluationManager
      * @param FinderProvider                $finder
      */
     public function __construct(
@@ -111,8 +105,7 @@ class ResourceController
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
-        EventManager $eventManager,
-        ResourceEvaluationManager $resourceEvaluationManager
+        EventManager $eventManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -126,7 +119,6 @@ class ResourceController
         $this->authorization = $authorization;
         $this->eventManager = $eventManager;
         $this->finder = $finder;
-        $this->resourceEvaluationManager = $resourceEvaluationManager;
     }
 
     /**
@@ -136,7 +128,7 @@ class ResourceController
      * @EXT\Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
      * @EXT\Method("GET")
      *
-     * @param int|string $id       - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     * @param int|string $id       - the id or slug of the target node (we don't use ParamConverter to support ID and UUID)
      * @param int        $embedded
      *
      * @return JsonResponse
@@ -144,7 +136,7 @@ class ResourceController
     public function openAction($id, $embedded = 0)
     {
         /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->om->find(ResourceNode::class, $id);
+        $resourceNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $id]);
         if (!$resourceNode) {
             return new JsonResponse(['resource_not_found'], 404);
         }
@@ -152,31 +144,32 @@ class ResourceController
         // gets the current user roles to check access restrictions
         $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
+        $isManager = $this->manager->isManager($resourceNode);
 
-        if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
+        if (empty($accessErrors) || $isManager) {
             try {
                 $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
-                //I have no idea if it is correct to do this
-                if ('anon.' !== $this->tokenStorage->getToken()->getUser()) {
-                    $this->resourceEvaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
-                        'status' => ResourceEvaluation::STATUS_PARTICIPATED,
-                    ]);
-                }
             } catch (ResourceNotFoundException $e) {
                 // Not a 404 because we should not have ResourceNode without a linked AbstractResource
                 return new JsonResponse(['resource_not_found'], 500);
             }
 
             return new JsonResponse(
-                array_merge([
+                array_merge($loaded, [
+                    'managed' => $isManager,
+                    'resourceNode' => $this->serializer->serialize($resourceNode),
                     // append access restrictions to the loaded node if any
                     // to let the manager knows that other users can not enter the resource
                     'accessErrors' => $accessErrors,
-                ], $loaded)
+                ])
             );
         }
 
-        return new JsonResponse($accessErrors, 403);
+        return new JsonResponse([
+            'managed' => $isManager,
+            'resourceNode' => $this->serializer->serialize($resourceNode, [Options::SERIALIZE_MINIMAL]),
+            'accessErrors' => $accessErrors,
+        ], 403);
     }
 
     /**
@@ -394,30 +387,6 @@ class ResourceController
             '_resource' => $resource,
             'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
         ];
-    }
-
-    /**
-     * Gets a resource node.
-     *
-     * @EXT\Route("/{slug}", name="claro_resource_get")
-     * @EXT\Method("GET")
-     *
-     * @param string $slug - the slug or UUID of the target node (we don't use ParamConverter to support slug and UUID)
-     *
-     * @return JsonResponse
-     */
-    public function getAction($slug)
-    {
-        /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $slug]);
-
-        if (!$resourceNode) {
-            return new JsonResponse(['resource_not_found'], 404);
-        }
-
-        return new JsonResponse(
-            $this->serializer->serialize($resourceNode, [Options::SERIALIZE_MINIMAL])
-        );
     }
 
     /**

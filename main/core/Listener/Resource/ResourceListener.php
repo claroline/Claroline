@@ -5,9 +5,11 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,27 +32,33 @@ class ResourceListener
     /** @var ResourceLifecycleManager */
     private $lifecycleManager;
 
+    /** @var ResourceEvaluationManager */
+    private $evaluationManager;
+
     /**
      * ResourceListener constructor.
      *
-     * @param TokenStorageInterface    $tokenStorage
-     * @param Crud                     $crud
-     * @param SerializerProvider       $serializer
-     * @param ResourceManager          $manager
-     * @param ResourceLifecycleManager $lifecycleManager
+     * @param TokenStorageInterface     $tokenStorage
+     * @param Crud                      $crud
+     * @param SerializerProvider        $serializer
+     * @param ResourceManager           $manager
+     * @param ResourceLifecycleManager  $lifecycleManager
+     * @param ResourceEvaluationManager $evaluationManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         Crud $crud,
         SerializerProvider $serializer,
         ResourceManager $manager,
-        ResourceLifecycleManager $lifecycleManager
+        ResourceLifecycleManager $lifecycleManager,
+        ResourceEvaluationManager $evaluationManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->manager = $manager;
         $this->lifecycleManager = $lifecycleManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     /**
@@ -60,16 +68,19 @@ class ResourceListener
     {
         $resourceNode = $event->getResourceNode();
 
+        //I have no idea if it is correct to do this
+        $userEvaluation = null;
+        if ('anon.' !== $this->tokenStorage->getToken()->getUser()) {
+            $this->evaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
+                'status' => ResourceEvaluation::STATUS_PARTICIPATED,
+            ]);
+        }
+
         // propagate event to resource type
         $subEvent = $this->lifecycleManager->load($resourceNode);
 
         $event->setData(array_merge([
-            // we need the full workspace object for some rendering config
-            // (we only have access to the minimal version of the WS in the node)
-            'workspace' => $resourceNode->getWorkspace() ? $this->serializer->serialize($resourceNode->getWorkspace()) : null,
-            'resourceNode' => $this->serializer->serialize($resourceNode),
-            'managed' => $this->manager->isManager($resourceNode),
-            'userEvaluation' => null, // todo flag evaluated resource types and auto load Evaluation if any
+            'userEvaluation' => null, // TODO : find a way to get current user evaluation here
         ], $subEvent->getData()));
     }
 
@@ -80,15 +91,6 @@ class ResourceListener
     {
         // forward to the resource type
         $this->lifecycleManager->create($event->getResourceNode());
-    }
-
-    /**
-     * @param ResourceActionEvent $event
-     */
-    public function open(ResourceActionEvent $event)
-    {
-        // forward to the resource type
-        $this->lifecycleManager->open($event->getResourceNode());
     }
 
     /**
@@ -130,7 +132,6 @@ class ResourceListener
 
         $data = $event->getData();
         $this->crud->update(ResourceNode::class, $data, $options);
-        $this->lifecycleManager->rights($event->getResourceNode(), $event->getData());
 
         $event->setResponse(new JsonResponse(
             $this->serializer->serialize($event->getResourceNode())
