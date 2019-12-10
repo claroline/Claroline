@@ -93,6 +93,7 @@ implementPropTypes(DateInput, FormFieldTypes, {
   maxTime: T.string
 }, {
   value: '',
+  time: false,
   calendarIcon: 'fa fa fa-fw fa-calendar'
 })
 

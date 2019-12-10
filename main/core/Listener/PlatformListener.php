@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -105,11 +106,11 @@ class PlatformListener
         $dates = $this->config->getParameter('restrictions.dates');
         if (!empty($dates)) {
             $now = new \DateTime();
-            if (!empty($dates[0]) && $now->format('Y-m-d') < $dates[0]) {
+            if (!empty($dates[0]) && DateNormalizer::normalize($now) < $dates[0]) {
                 $disabled = true;
             }
 
-            if (!empty($dates[1]) && $now->format('Y-m-d') > $dates[1]) {
+            if (!empty($dates[1]) && DateNormalizer::normalize($now) > $dates[1]) {
                 $disabled = true;
             }
         }

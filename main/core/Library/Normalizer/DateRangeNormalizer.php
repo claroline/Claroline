@@ -18,7 +18,7 @@ class DateRangeNormalizer
      * @param \DateTime|null $startDate
      * @param \DateTime|null $endDate
      *
-     * @return array
+     * @return string[]
      */
     public static function normalize(\DateTime $startDate = null, \DateTime $endDate = null)
     {
@@ -35,9 +35,9 @@ class DateRangeNormalizer
     /**
      * Denormalizes an array of date strings into DateTime objects.
      *
-     * @param array $dateRange
+     * @param string[] $dateRange
      *
-     * @return array
+     * @return \DateTime[]
      */
     public static function denormalize($dateRange = [])
     {

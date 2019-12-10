@@ -89,7 +89,8 @@ implementPropTypes(DateRangeInput, FormFieldTypes, {
   minTime: T.string,
   maxTime: T.string
 }, {
-  value: [null, null]
+  value: [null, null],
+  time: false
 })
 
 export {
