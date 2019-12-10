@@ -96,28 +96,27 @@ class PlatformListener
             return;
         }
 
-        $disabled = false;
-
         // checks platform restrictions
         if ($this->config->getParameter('restrictions.disabled')) {
-            $disabled = true;
+            throw new HttpException(503, 'Platform is not available (Platform is disabled).');
         }
 
         $dates = $this->config->getParameter('restrictions.dates');
         if (!empty($dates)) {
             $now = new \DateTime();
             if (!empty($dates[0]) && DateNormalizer::normalize($now) < $dates[0]) {
-                $disabled = true;
+                throw new HttpException(503, 'Platform is not available (Platform start date not reached).');
             }
 
             if (!empty($dates[1]) && DateNormalizer::normalize($now) > $dates[1]) {
-                $disabled = true;
+                throw new HttpException(503, 'Platform is not available (Platform end date reached).');
             }
         }
 
         // checks platform maintenance
         if ($this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
+            // TODO : it may break the impersonation mode
             $isAdmin = false;
             $token = $this->tokenStorage->getToken();
             if ($token) {
@@ -129,11 +128,9 @@ class PlatformListener
                 }
             }
 
-            $disabled = !$isAdmin;
-        }
-
-        if ($disabled) {
-            throw new HttpException(503, 'Platform is not available.');
+            if (!$isAdmin) {
+                throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');
+            }
         }
     }
 
