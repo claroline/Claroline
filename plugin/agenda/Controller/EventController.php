@@ -70,8 +70,7 @@ class EventController extends AbstractCrudController
         $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
 
         // get start & end date and add them to the hidden filters list
-        $query['hiddenFilters']['createdAfter'] = $query['start'];
-        $query['hiddenFilters']['endBefore'] = $query['end'];
+        $query['hiddenFilters']['inRange'] = [$query['start'] ?? null, $query['end'] ?? null];
 
         if (!isset($query['filters']['workspaces'])) {
             $user = $this->tokenStorage->getToken()->getUser();
@@ -84,7 +83,7 @@ class EventController extends AbstractCrudController
             $this->options['list']
         );
 
-        return new JsonResponse($data['data']);
+        return new JsonResponse($data);
     }
 
     /**

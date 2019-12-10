@@ -80,7 +80,8 @@ AgendaMenu.propTypes = {
     'week',
     'month',
     'year',
-    'schedule'
+    'schedule',
+    'list'
   ]).isRequired,
   types: T.arrayOf(T.oneOf(['event', 'task'])).isRequired,
   changeTypes: T.func.isRequired,

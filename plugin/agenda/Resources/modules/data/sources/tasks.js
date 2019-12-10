@@ -34,6 +34,7 @@ export default {
         type: 'boolean',
         label: trans('after_today', {}, 'agenda'),
         displayed: false,
+        displayable: false,
         filterable: true,
         sortable: false
       }, {
@@ -42,14 +43,6 @@ export default {
         type: 'boolean',
         label: trans('task_done', {}, 'agenda'),
         displayed: true
-      }, {
-        name: 'notDoneYet',
-        type: 'boolean',
-        label: trans('not_done_yet'),
-        displayed: false,
-        displayable: false,
-        filterable: true,
-        sortable: false
       }, {
         name: 'workspace',
         type: 'workspace',

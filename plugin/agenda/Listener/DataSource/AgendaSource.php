@@ -22,14 +22,18 @@ class AgendaSource
     /** @var FinderProvider */
     private $finder;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /**
      * AgendaSource constructor.
      *
-     * @param FinderProvider $finder
+     * @param FinderProvider        $finder
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
-      FinderProvider $finder,
-      TokenStorageInterface $tokenStorage
+        FinderProvider $finder,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;

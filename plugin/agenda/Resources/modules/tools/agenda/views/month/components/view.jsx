@@ -8,6 +8,7 @@ import {withRouter} from '#/main/app/router'
 import {LinkButton} from '#/main/app/buttons/link'
 import {now, getApiFormat} from '#/main/app/intl/date'
 
+import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
 import {EventMicro} from '#/plugin/agenda/event/components/micro'
 import {sortEvents} from '#/plugin/agenda/event/utils'
@@ -112,49 +113,56 @@ class AgendaViewMonthComponent extends Component {
     }
 
     return (
-      <div className="agenda-month" onWheel={this.onWheel}>
-        <div className="calendar-row day-names">
-          {times(7, (dayNum) =>
-            <div key={`day-${dayNum}`} className="calendar-cell day-name">
-              {moment().weekday(dayNum).format('ddd')}
+      <CalendarView
+        loaded={this.props.loaded}
+        referenceDate={this.props.referenceDate}
+        view={this.props.view}
+        loadEvents={this.props.loadEvents}
+      >
+        <div className="agenda-month" onWheel={this.onWheel}>
+          <div className="calendar-row day-names">
+            {times(7, (dayNum) =>
+              <div key={`day-${dayNum}`} className="calendar-cell day-name">
+                {moment().weekday(dayNum).format('ddd')}
+              </div>
+            )}
+          </div>
+
+          {times(monthWeeks, (weekNum) =>
+            <div key={`week-${weekNum}`} className="calendar-row week">
+              {times(7, (dayNum) => {
+                const current = moment(this.props.range[0])
+                  .week(this.props.range[0].week()+weekNum)
+                  .weekday(dayNum)
+
+                // get events for the current day
+                const events = this.props.events.filter((event) => {
+                  const start = moment(event.start)
+                  const end = moment(event.end)
+
+                  return start.isSameOrBefore(current, 'day') && end.isSameOrAfter(current, 'day')
+                })
+
+                return (
+                  <Day
+                    key={`day-${weekNum}-${dayNum}`}
+                    path={this.props.path}
+                    className={classes({
+                      now:      current.isSame(nowDate, 'day'),
+                      selected: current.isSame(this.props.referenceDate, 'day'),
+                      fill:     this.props.range[0].get('month') !== current.get('month')
+                    })}
+                    current={current}
+                    events={events}
+                    create={this.props.create}
+                    eventActions={this.props.eventActions}
+                  />
+                )
+              })}
             </div>
           )}
         </div>
-
-        {times(monthWeeks, (weekNum) =>
-          <div key={`week-${weekNum}`} className="calendar-row week">
-            {times(7, (dayNum) => {
-              const current = moment(this.props.range[0])
-                .week(this.props.range[0].week()+weekNum)
-                .weekday(dayNum)
-
-              // get events for the current day
-              const events = this.props.events.filter((event) => {
-                const start = moment(event.start)
-                const end = moment(event.end)
-
-                return start.isSameOrBefore(current, 'day') && end.isSameOrAfter(current, 'day')
-              })
-
-              return (
-                <Day
-                  key={`day-${weekNum}-${dayNum}`}
-                  path={this.props.path}
-                  className={classes({
-                    now:      current.isSame(nowDate, 'day'),
-                    selected: current.isSame(this.props.referenceDate, 'day'),
-                    fill:     this.props.range[0].get('month') !== current.get('month')
-                  })}
-                  current={current}
-                  events={events}
-                  create={this.props.create}
-                  eventActions={this.props.eventActions}
-                />
-              )
-            })}
-          </div>
-        )}
-      </div>
+      </CalendarView>
     )
   }
 }
@@ -171,6 +179,7 @@ AgendaViewMonthComponent.propTypes = {
   previous: T.func.isRequired,
   next: T.func.isRequired,
 
+  loadEvents: T.func.isRequired,
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )).isRequired,

@@ -4,7 +4,6 @@ import moment from 'moment'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {now} from '#/main/app/intl/date'
@@ -16,34 +15,6 @@ import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
 import {MODAL_AGENDA_PARAMETERS} from '#/plugin/agenda/tools/agenda/modals/parameters'
 import {constants} from '#/plugin/agenda/event/constants'
 import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
-
-class CalendarComponent extends Component {
-  componentDidMount() {
-    if (!this.props.loaded) {
-      this.loadEvents()
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.loaded !== this.props.loaded && !this.props.loaded) {
-      this.loadEvents()
-    }
-  }
-
-  loadEvents() {
-    // load events list
-    const reference = moment(this.props.referenceDate)
-    const view = AGENDA_VIEWS[this.props.view]
-
-    this.props.loadEvents(view.range(reference))
-  }
-
-  render() {
-    return this.props.children
-  }
-}
-
-const Calendar = withRouter(CalendarComponent)
 
 class AgendaTool extends Component {
   render() {
@@ -153,57 +124,50 @@ class AgendaTool extends Component {
                 this.props.changeView(newView, newReference)
               },
               render: () => {
-                const CurrentView = (
-                  <Calendar
-                    loaded={this.props.loaded}
-                    referenceDate={this.props.referenceDate}
-                    view={this.props.view}
-                    loadEvents={this.props.load}
-                  >
-                    {createElement(currentView.component, {
-                      path: this.props.path,
-                      loaded: this.props.loaded,
-                      view: this.props.view,
-                      referenceDate: this.props.referenceDate,
-                      range: currentRange,
-                      previous: currentView.previous,
-                      next: currentView.next,
-                      create: (event) => this.props.create(event, this.props.contextData, this.props.currentUser),
-                      events: this.props.events,
-                      eventActions: (event) => [
-                        {
-                          name: 'mark-done',
-                          type: CALLBACK_BUTTON,
-                          label: trans('mark-as-done', {}, 'actions'),
-                          callback: () => this.props.markDone(event),
-                          displayed: constants.EVENT_TYPE_TASK === event.meta.type && !event.meta.done
-                        }, {
-                          name: 'mark-todo',
-                          type: CALLBACK_BUTTON,
-                          label: trans('mark-as-todo', {}, 'actions'),
-                          callback: () => this.props.markTodo(event),
-                          displayed: constants.EVENT_TYPE_TASK === event.meta.type && event.meta.done
-                        }, {
-                          name: 'edit',
-                          type: MODAL_BUTTON,
-                          label: trans('edit', {}, 'actions'),
-                          modal: [MODAL_EVENT_PARAMETERS, {
-                            event: event,
-                            onSave: this.props.update
-                          }],
-                          displayed: event.permissions.edit
-                        }, {
-                          name: 'delete',
-                          type: CALLBACK_BUTTON,
-                          label: trans('delete', {}, 'actions'),
-                          callback: () => this.props.delete(event),
-                          dangerous: true,
-                          displayed: event.permissions.edit
-                        }
-                      ]
-                    })}
-                  </Calendar>
-                )
+                const CurrentView = createElement(currentView.component, {
+                  path: this.props.path,
+                  loaded: this.props.loaded,
+                  loadEvents: this.props.load,
+                  view: this.props.view,
+                  referenceDate: this.props.referenceDate,
+                  range: currentRange,
+                  previous: currentView.previous,
+                  next: currentView.next,
+                  create: (event) => this.props.create(event, this.props.contextData, this.props.currentUser),
+                  events: this.props.events,
+                  eventActions: (event) => [
+                    {
+                      name: 'mark-done',
+                      type: CALLBACK_BUTTON,
+                      icon: 'fa fa-fw fa-check',
+                      label: trans('mark-as-done', {}, 'actions'),
+                      callback: () => this.props.markDone(event),
+                      displayed: constants.EVENT_TYPE_TASK === event.meta.type && !event.meta.done
+                    }, {
+                      name: 'mark-todo',
+                      type: CALLBACK_BUTTON,
+                      label: trans('mark-as-todo', {}, 'actions'),
+                      callback: () => this.props.markTodo(event),
+                      displayed: constants.EVENT_TYPE_TASK === event.meta.type && event.meta.done
+                    }, {
+                      name: 'edit',
+                      type: MODAL_BUTTON,
+                      label: trans('edit', {}, 'actions'),
+                      modal: [MODAL_EVENT_PARAMETERS, {
+                        event: event,
+                        onSave: this.props.update
+                      }],
+                      displayed: event.permissions.edit
+                    }, {
+                      name: 'delete',
+                      type: CALLBACK_BUTTON,
+                      label: trans('delete', {}, 'actions'),
+                      callback: () => this.props.delete(event),
+                      dangerous: true,
+                      displayed: event.permissions.edit
+                    }
+                  ]
+                })
 
                 return CurrentView
               }
@@ -229,7 +193,8 @@ AgendaTool.propTypes = {
     'week',
     'month',
     'year',
-    'schedule'
+    'schedule',
+    'list'
   ]).isRequired,
   referenceDate: T.object.isRequired,// moment date object
   changeView: T.func.isRequired,

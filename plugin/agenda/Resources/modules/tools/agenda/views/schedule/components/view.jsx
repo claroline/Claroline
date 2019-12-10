@@ -9,6 +9,7 @@ import {LinkButton} from '#/main/app/buttons/link'
 import {ModalButton} from '#/main/app/buttons'
 import {now} from '#/main/app/intl/date'
 
+import {CalendarView} from '#/plugin/agenda/tools/agenda/views/components/calendar'
 import {constants} from '#/plugin/agenda/event/constants'
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
 import {sortEvents, eventDuration} from '#/plugin/agenda/event/utils'
@@ -105,28 +106,35 @@ const AgendaViewSchedule = (props) => {
   })
 
   return (
-    <div className="agenda-schedule">
-      {Object.keys(schedule)
-        .sort((a, b) => a < b ? -1 : 1)
-        .map(date => {
-          const current = moment(date)
+    <CalendarView
+      loaded={props.loaded}
+      referenceDate={props.referenceDate}
+      view={props.view}
+      loadEvents={props.loadEvents}
+    >
+      <div className="agenda-schedule">
+        {Object.keys(schedule)
+          .sort((a, b) => a < b ? -1 : 1)
+          .map(date => {
+            const current = moment(date)
 
-          return (
-            <ScheduleDay
-              key={date}
-              path={props.path}
-              className={classes({
-                now:      current.isSame(nowDate, 'day'),
-                selected: current.isSame(props.referenceDate, 'day')
-              })}
-              current={current}
-              events={schedule[date]}
-              eventActions={props.eventActions}
-            />
-          )
-        })
-      }
-    </div>
+            return (
+              <ScheduleDay
+                key={date}
+                path={props.path}
+                className={classes({
+                  now:      current.isSame(nowDate, 'day'),
+                  selected: current.isSame(props.referenceDate, 'day')
+                })}
+                current={current}
+                events={schedule[date]}
+                eventActions={props.eventActions}
+              />
+            )
+          })
+        }
+      </div>
+    </CalendarView>
   )
 }
 
@@ -139,6 +147,7 @@ AgendaViewSchedule.propTypes = {
   previous: T.func.isRequired,
   next: T.func.isRequired,
 
+  loadEvents: T.func.isRequired,
   events: T.arrayOf(T.shape(
     EventTypes.propTypes
   )).isRequired,

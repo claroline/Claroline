@@ -5,6 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {AgendaViewDay} from '#/plugin/agenda/tools/agenda/views/day/components/view'
 
 export default {
+  autoload: true,
   label: trans('agenda_day', {}, 'agenda'),
   component: AgendaViewDay,
 

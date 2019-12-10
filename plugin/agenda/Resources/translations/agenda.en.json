@@ -1,4 +1,5 @@
 {
+    "all_events": "All events",
     "all_day": "the whole day",
     "event": "Event",
     "events": "Events",
@@ -17,5 +18,6 @@
     "agenda_week": "Week",
     "agenda_month": "Month",
     "agenda_year": "Year",
-    "agenda_schedule": "Schedule"
+    "agenda_schedule": "Schedule",
+    "agenda_list": "List"
 }

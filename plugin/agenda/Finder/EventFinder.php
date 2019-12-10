@@ -44,41 +44,26 @@ class EventFinder extends AbstractFinder
                             $qb->andWhere('obj.isTask = false');
                         }
                     }
+                    break;
+                case 'inRange':
+                    if (!empty($filterValue[0])) {
+                        $qb->andWhere('obj.start >= :startRange OR obj.end >= :startRange2');
+                        $qb->setParameter('startRange', $filterValue[0]);
+                        $qb->setParameter('startRange2', $filterValue[0]);
+                    }
 
-                    break;
-                case 'createdBefore':
-                    $qb->andWhere("obj.start <= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'createdAfter':
-                    $qb->andWhere("obj.start >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'endBefore':
-                    $qb->andWhere("obj.end <= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'endAfter':
-                    $qb->andWhere("obj.end >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
+                    if (!empty($filterValue[1])) {
+                        $qb->andWhere('obj.start <= :endRange OR obj.end <= :endRange2');
+                        $qb->setParameter('endRange', $filterValue[1]);
+                        $qb->setParameter('endRange2', $filterValue[1]);
+                    }
+
                     break;
                 case 'afterToday':
                     if ($filterValue) {
                         $qb->andWhere("obj.start >= :{$filterName}");
                         $qb->setParameter($filterName, new \DateTime());
                     }
-                    break;
-                case 'notDoneYet':
-                    //includes today
-                    $now = new \DateTime();
-                    $interval = new \DateInterval('P1D');
-                    $now->sub($interval);
-                    if ($filterValue) {
-                        $qb->andWhere("obj.start >= :{$filterName}");
-                    } else {
-                        $qb->andWhere("obj.start <= :{$filterName}");
-                    }
-                    $qb->setParameter($filterName, $now);
                     break;
                 case 'userId':
                     $qb->leftJoin('obj.user', 'u');

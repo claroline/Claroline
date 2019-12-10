@@ -6,13 +6,15 @@
 import ViewMonth from '#/plugin/agenda/tools/agenda/views/month'
 //import ViewYear from '#/plugin/agenda/tools/agenda/views/year'
 import ViewSchedule from '#/plugin/agenda/tools/agenda/views/schedule'
+//import ViewList from '#/plugin/agenda/tools/agenda/views/list'
 
 const AGENDA_VIEWS = {
   //day: ViewDay,
   //week: ViewWeek,
   month: ViewMonth,
   //year: ViewYear,
-  schedule: ViewSchedule
+  schedule: ViewSchedule/*,*/
+  //list: ViewList
 }
 
 export {

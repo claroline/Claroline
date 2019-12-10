@@ -35,7 +35,7 @@ actions.fetch = (rangeDates) => (dispatch, getState) => {
         end: rangeDates[1].format(getApiFormat()),
         filters: filters
       }),
-      success: (response, dispatch) => dispatch(actions.load(response))
+      success: (response, dispatch) => dispatch(actions.load(response.data))
     }
   })
 }
