@@ -52,7 +52,7 @@ class AgendaSource
         } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
             $options['hiddenFilters']['anonymous'] = true;
         } else {
-            $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+            $options['hiddenFilters']['desktop'] = $this->tokenStorage->getToken()->getUser()->getUuid();
         }
 
         $event->setData(
@@ -74,7 +74,10 @@ class AgendaSource
             $options['hiddenFilters']['workspaces'] = [$event->getWorkspace()->getUuid()];
         } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
             $options['hiddenFilters']['anonymous'] = true;
+        } else {
+            $options['hiddenFilters']['desktop'] = $this->tokenStorage->getToken()->getUser()->getUuid();
         }
+
         $event->setData(
             $this->finder->search(Event::class, $options)
         );

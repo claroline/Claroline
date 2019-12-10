@@ -2,7 +2,8 @@ import {URL_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {route} from '#/main/core/workspace/routing'
+import {route} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {EventCard} from '#/plugin/agenda/data/components/event-card'
 
 export default {
@@ -10,7 +11,7 @@ export default {
   parameters: {
     primaryAction: (task) => ({
       type: URL_BUTTON,
-      target: `#${route(task.workspace, 'agenda')}`
+      target: `#${task.workspace ? workspaceRoute(task.workspace, 'agenda') : route('agenda')}`
     }),
     definition: [
       {
