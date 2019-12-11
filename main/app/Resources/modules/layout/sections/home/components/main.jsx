@@ -91,6 +91,7 @@ const HomeMain = (props) =>
 
 HomeMain.propTypes = {
   unavailable: T.bool.isRequired,
+  disabled: T.bool.isRequired,
   maintenance: T.bool.isRequired,
   maintenanceMessage: T.string,
   authenticated: T.bool.isRequired,

@@ -173,7 +173,7 @@ class ParametersController
             $event = $this->dispatcher->dispatch('platform.extend', ExtendEvent::class, [
                 // by default extend for 1 week
                 // event listener can override it
-                DateNormalizer::denormalize($dates[1])->add(new \DateInterval('P7D'))
+                DateNormalizer::denormalize($dates[1])->add(new \DateInterval('P7D')),
             ]);
 
             if ($event->isCanceled()) {

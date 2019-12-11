@@ -51,7 +51,7 @@ class PlatformListener
 
         // open reactivation routes
         'apiv2_platform_extend',
-        'apiv2_platform_enable'
+        'apiv2_platform_enable',
     ];
 
     /**

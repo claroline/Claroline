@@ -4,7 +4,6 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {now, displayDate} from '#/main/app/intl/date'
-import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Toolbar} from '#/main/app/action/components/toolbar'

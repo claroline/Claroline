@@ -3,8 +3,6 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -22,7 +20,7 @@ use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 
 /**
- * @service("claroline.library.testing.persister")
+ * @Service("claroline.library.testing.persister")
  */
 class Persister
 {
