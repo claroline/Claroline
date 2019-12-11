@@ -11,7 +11,7 @@
 
 namespace Claroline\AppBundle\Manager;
 
-use Claroline\AppBundle\Event\App\RefreshCacheEvent;
+use Claroline\AppBundle\Event\Platform\RefreshCacheEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Parser\IniParser;
 

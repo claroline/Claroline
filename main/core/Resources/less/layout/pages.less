@@ -33,6 +33,11 @@
     // this is to make box shadow appear over content with bg. I should find a better way to handle it (without z-index)
     z-index: 1;
 
+    .page-title {
+        order: 1;
+        flex: 1;
+    }
+
     .page-header-content { // todo : remove me (old pages)
         flex: 3;
         display: flex;
@@ -83,8 +88,6 @@
 }
 
 .page-title {
-    order: 1;
-    flex: 1;
     font-size: @page-header-font-size;
     font-weight: @page-header-weight;
     margin: floor(@grid-gutter-width / 2) 0;

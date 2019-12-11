@@ -48,6 +48,10 @@ class PlatformListener
         // to have access to debug tools
         '_wdt',
         '_profiler',
+
+        // open reactivation routes
+        'apiv2_platform_extend',
+        'apiv2_platform_enable'
     ];
 
     /**

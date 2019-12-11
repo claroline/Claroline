@@ -26,10 +26,13 @@ const DesktopMain = (props) =>
               if (-1 !== props.tools.findIndex(tool => tool.name === params.toolName)) {
                 // tool is enabled for the desktop
                 props.openTool(params.toolName)
-              } else {
+              } else if (0 !== props.tools.length) {
                 // tool is disabled (or does not exist) for the desktop
                 // let's go to the default opening of the desktop
                 props.history.replace('/desktop')
+              } else {
+                // user has access to no desktop tool send him back to home
+                props.history.replace('/')
               }
             },
             component: ToolMain

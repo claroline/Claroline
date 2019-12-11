@@ -158,8 +158,8 @@ const Technical = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-database',
-        title: trans('limits'),
+        icon: 'fa fa-fw fa-book',
+        title: trans('workspaces'),
         fields: [
           {
             name: 'workspace.max_storage_size',
@@ -180,14 +180,6 @@ const Technical = props =>
         title: trans('security'),
         fields: [
           {
-            name: 'security.platform_init_date',
-            type: 'date',
-            label: trans('platform_init_date')
-          }, {
-            name: 'security.platform_limit_date',
-            type: 'date',
-            label: trans('platform_expiration_date')
-          }, {
             name: 'security.default_root_anon_id',
             type: 'string',
             label: trans('default_admin')

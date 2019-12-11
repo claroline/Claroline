@@ -97,10 +97,6 @@ const Meta = (props) =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.disabled',
-            type: 'boolean',
-            label: trans('disable')
-          }, {
             name: 'restrictions.enableDates',
             label: trans('restrict_by_dates'),
             type: 'boolean',

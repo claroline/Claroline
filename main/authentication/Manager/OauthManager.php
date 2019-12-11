@@ -11,7 +11,7 @@
 
 namespace Claroline\AuthenticationBundle\Manager;
 
-use Claroline\AppBundle\Event\App\RefreshCacheEvent;
+use Claroline\AppBundle\Event\Platform\RefreshCacheEvent;
 use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;

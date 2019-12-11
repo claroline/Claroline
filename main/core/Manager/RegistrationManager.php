@@ -12,9 +12,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -26,83 +24,25 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class RegistrationManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var PlatformConfigurationHandler */
-    private $platformConfigHandler;
-
-    /** @var LocaleManager */
-    private $localeManager;
-
-    /** @var TermsOfServiceManager */
-    private $termsManager;
-
-    /** @var FacetManager */
-    private $facetManager;
-
     /** @var TokenStorage */
     private $tokenStorage;
-
-    /** @var UserManager */
-    private $userManager;
-
-    /** @var RoleManager */
-    private $roleManager;
 
     /** @var AuthenticationSuccessListener */
     private $authenticationHandler;
 
     /**
-     * @param ObjectManager                 $om
-     * @param PlatformConfigurationHandler  $platformConfigHandler
-     * @param LocaleManager                 $localeManager
-     * @param TermsOfServiceManager         $termsManager
-     * @param FacetManager                  $facetManager
      * @param TokenStorageInterface         $tokenStorage
-     * @param UserManager                   $userManager
-     * @param RoleManager                   $roleManager
      * @param AuthenticationSuccessListener $authenticationHandler
      */
     public function __construct(
-        ObjectManager $om,
-        PlatformConfigurationHandler $platformConfigHandler,
-        LocaleManager $localeManager,
-        TermsOfServiceManager $termsManager,
-        FacetManager $facetManager,
         TokenStorageInterface $tokenStorage,
-        UserManager $userManager,
-        RoleManager $roleManager,
         AuthenticationSuccessListener $authenticationHandler
     ) {
-        $this->om = $om;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->localeManager = $localeManager;
-        $this->termsManager = $termsManager;
-        $this->facetManager = $facetManager;
         $this->tokenStorage = $tokenStorage;
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
         $this->authenticationHandler = $authenticationHandler;
     }
 
-    public function registerNewUser($user, $form)
-    {
-        /** @var Facet[] $facets */
-        $facets = $this->facetManager->findForcedRegistrationFacet();
-        $user = $this->userManager->createUser($user);
-        $this->roleManager->setRoleToRoleSubject($user, $this->platformConfigHandler->getParameter('default_role'));
-        //then we add the different values for facets.
-        foreach ($facets as $facet) {
-            foreach ($facet->getPanelFacets() as $panel) {
-                foreach ($panel->getFieldsFacet() as $field) {
-                    $this->facetManager->setFieldValue($user, $field, $form->get($field->getName())->getData(), true);
-                }
-            }
-        }
-    }
-
-    public function login($user)
+    public function login(User $user)
     {
         //this is bad but I don't know any other way (yet)
         $providerKey = 'main';

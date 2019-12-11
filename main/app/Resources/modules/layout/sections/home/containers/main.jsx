@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {actions as securityActions, selectors as securitySelectors} from '#/main/app/security/store'
-import {selectors as layoutSelectors} from '#/main/app/layout/store'
+import {actions as layoutActions, selectors as layoutSelectors} from '#/main/app/layout/store'
 
 import {actions as toolActions} from '#/main/core/tool/store'
 
@@ -12,7 +12,11 @@ import {constants} from '#/main/app/layout/sections/home/constants'
 
 const HomeMain = connect(
   (state) => ({
+    unavailable: layoutSelectors.unavailable(state),
     maintenance: layoutSelectors.maintenance(state),
+    disabled: layoutSelectors.disabled(state),
+    restrictions: configSelectors.param(state, 'restrictions'),
+    maintenanceMessage: layoutSelectors.maintenanceMessage(state),
     hasHome: selectors.hasHome(state),
     homeType: selectors.homeType(state),
     homeData: selectors.homeData(state),
@@ -31,6 +35,9 @@ const HomeMain = connect(
     },
     linkExternalAccount(service, username, onSuccess) {
       return dispatch(securityActions.linkExternalAccount(service, username, onSuccess))
+    },
+    reactivate() {
+      return dispatch(layoutActions.extend())
     }
   })
 )(HomeMainComponent)

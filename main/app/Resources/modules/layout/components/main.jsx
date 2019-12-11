@@ -31,16 +31,23 @@ const LayoutMain = props =>
 
       {props.menuOpened &&
         <Routes
+          redirect={[
+            {from: '/desktop', to: '/', disabled: !props.unavailable},
+            {from: '/admin',   to: '/', disabled: !props.unavailable}
+          ]}
           routes={[
             {
               path: '/desktop/workspaces/open/:slug',
-              component: WorkspaceMenu
+              component: WorkspaceMenu,
+              disabled: props.unavailable
             }, {
               path: '/desktop',
-              component: DesktopMenu
+              component: DesktopMenu,
+              disabled: props.unavailable
             }, {
               path: '/admin',
-              component: AdministrationMenu
+              component: AdministrationMenu,
+              disabled: props.unavailable
             }
           ]}
         />

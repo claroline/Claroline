@@ -135,14 +135,7 @@ services:
 
     Claroline\CoreBundle\Manager\RegistrationManager:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.locale_manager'
-          - '@claroline.common.terms_of_service_manager'
-          - '@claroline.manager.facet_manager'
           - '@security.token_storage'
-          - '@claroline.manager.user_manager'
-          - '@claroline.manager.role_manager'
           - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
 
     claroline.manager.registration_manager:
@@ -271,15 +264,6 @@ services:
 
     claroline.manager.facet_manager:
         alias: Claroline\CoreBundle\Manager\FacetManager
-        public: true
-
-    Claroline\CoreBundle\Manager\ExporterManager:
-        arguments:
-          - '@translator'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    claroline.manager.exporter_manager:
-        alias: Claroline\CoreBundle\Manager\ExporterManager
         public: true
 
     Claroline\CoreBundle\Manager\EventManager:

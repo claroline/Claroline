@@ -33,7 +33,7 @@ const HeaderMain = props =>
         />
       }
 
-      {props.menus.map((menu) => (
+      {!props.unavailable && props.menus.map((menu) => (
         <Await
           key={menu}
           for={getMenu(menu)}

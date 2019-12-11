@@ -13,8 +13,12 @@ namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Event\Platform\EnableEvent;
+use Claroline\AppBundle\Event\Platform\ExtendEvent;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\VersionManager;
@@ -29,6 +33,8 @@ class ParametersController
 {
     use RequestDecoderTrait;
 
+    /** @var StrictDispatcher */
+    private $dispatcher;
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var AnalyticsManager */
@@ -43,6 +49,7 @@ class ParametersController
     /**
      * ParametersController constructor.
      *
+     * @param StrictDispatcher             $dispatcher
      * @param PlatformConfigurationHandler $ch
      * @param AnalyticsManager             $analyticsManager
      * @param VersionManager               $versionManager
@@ -50,12 +57,14 @@ class ParametersController
      * @param FileManager                  $fileManager
      */
     public function __construct(
+        StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $ch,
         AnalyticsManager $analyticsManager,
         VersionManager $versionManager,
         ParametersSerializer $serializer,
         FileManager $fileManager
     ) {
+        $this->dispatcher = $dispatcher;
         $this->config = $ch;
         $this->serializer = $serializer;
         $this->versionManager = $versionManager;
@@ -125,6 +134,63 @@ class ParametersController
     }
 
     /**
+     * Enables the platform.
+     *
+     * @EXT\Route("/enable", name="apiv2_platform_enable")
+     * @EXT\Method("PUT")
+     *
+     * @return JsonResponse
+     */
+    public function enableAction()
+    {
+        /** @var EnableEvent $event */
+        $event = $this->dispatcher->dispatch('platform.enable', EnableEvent::class);
+        if ($event->isCanceled()) {
+            return new JsonResponse($event->getCancellationMessage(), 422); // not sure it's the correct status
+        }
+
+        $this->config->setParameter('restrictions.disabled', false);
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Extends the period of availability of the platform.
+     *
+     * @EXT\Route("/extend", name="apiv2_platform_extend")
+     * @EXT\Method("PUT")
+     *
+     * @return JsonResponse
+     */
+    public function extendAction()
+    {
+        $newEnd = null;
+
+        $dates = $this->config->getParameter('restrictions.dates');
+        if (!empty($dates) && !empty($dates[1])) {
+            // only do something if there is an end date
+            /** @var ExtendEvent $event */
+            $event = $this->dispatcher->dispatch('platform.extend', ExtendEvent::class, [
+                // by default extend for 1 week
+                // event listener can override it
+                DateNormalizer::denormalize($dates[1])->add(new \DateInterval('P7D'))
+            ]);
+
+            if ($event->isCanceled()) {
+                return new JsonResponse($event->getCancellationMessage(), 422); // not sure it's the correct status
+            }
+
+            $newEnd = $event->getEnd();
+
+            // replace date in config
+            $dates[1] = DateNormalizer::normalize($newEnd);
+            $this->config->setParameter('restrictions.dates', $dates);
+        }
+
+        return new JsonResponse($newEnd, 204);
+    }
+
+    /**
      * @EXT\Route("/disable", name="apiv2_platform_disable")
      * @EXT\Method("PUT")
      *
@@ -132,6 +198,8 @@ class ParametersController
      */
     public function disableAction()
     {
+        $this->config->setParameter('restrictions.disabled', true);
+
         return new JsonResponse(null, 204);
     }
 

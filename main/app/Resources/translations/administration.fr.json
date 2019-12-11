@@ -6,9 +6,19 @@
   "maintenance_allowed_users": "Les utilisateurs ayant le rôle %role% pourront toujours se connecter et accéder à l'intégralité de la plateforme.",
 
   "platform_unavailable_alert": "La plateforme n'est pas disponible pour le moment.",
+  "platform_unavailable_title": "La plateforme n'est pas disponible pour le moment",
+  "platform_unavailable_help": "Veuillez revenir plus tard ou contacter un administrateur pour savoir quand la plateforme sera de nouveau accessible.",
   "only_admin_login_help": "Seuls les administrateurs peuvent se connecter.",
 
   "platform_offline": "Hors ligne",
   "platform_online": "En ligne",
-  "platform_maintenance": "En maintenance"
+  "platform_maintenance": "En maintenance",
+
+  "why_platform_disabled": "Pourquoi ma plateforme n'est-elle plus accessible ?",
+  "platform_disabled_alert": "La plateforme a été désactivée.",
+  "platform_disabled_desc": "La plateforme a été désactivée manuellement par un administrateur.",
+  "platform_not_started_alert": "La plateforme n'est pas encore accessible.",
+  "platform_not_started_desc": "La plateforme sera ouverte à partir du %date%.",
+  "platform_ended_alert": "La plateforme n'est plus accessible.",
+  "platform_ended_desc": "La plateforme est fermée depuis le %date%."
 }

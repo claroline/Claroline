@@ -1,5 +1,5 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {API_REQUEST} from '#/main/app/api'
+import {API_REQUEST, url} from '#/main/app/api'
 
 // actions
 export const SIDEBAR_OPEN  = 'SIDEBAR_OPEN'
@@ -34,6 +34,16 @@ actions.disableMaintenance = () => ({
       method: 'PUT'
     },
     success: (response, dispatch) => dispatch(actions.setMaintenance(false))
+  }
+})
+
+actions.extend = () => ({
+  [API_REQUEST]: {
+    url: ['apiv2_platform_extend'],
+    request: {
+      method: 'PUT'
+    },
+    success: () => window.location.href = url(['claro_index'])
   }
 })
 

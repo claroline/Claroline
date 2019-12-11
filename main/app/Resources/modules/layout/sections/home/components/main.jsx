@@ -16,22 +16,26 @@ import {HomeExternalAccount} from '#/main/app/layout/sections/home/components/ex
 const HomeMain = (props) =>
   <Routes
     redirect={[
-      {from: '/', exact: true, to: '/home',        disabled: (props.maintenance && !props.authenticated) || !props.hasHome},
-      {from: '/', exact: true, to: '/unavailable', disabled: !props.maintenance || props.authenticated},
-      {from: '/', exact: true, to: '/login',       disabled: props.hasHome || props.authenticated},
-      {from: '/', exact: true, to: '/desktop',     disabled: props.hasHome || !props.authenticated}
+      {from: '/', exact: true, to: '/unavailable', disabled: !props.unavailable},
+      {from: '/home', to: '/unavailable', disabled: !props.unavailable},
+
+      {from: '/', exact: true, to: '/login',   disabled: props.hasHome || props.authenticated},
+      {from: '/', exact: true, to: '/home',    disabled: props.unavailable || !props.hasHome},
+      {from: '/', exact: true, to: '/desktop', disabled: props.unavailable || props.hasHome || !props.authenticated}
     ]}
     routes={[
       {
         path: '/unavailable',
-        component: HomeDisabled,
-        disabled: !props.maintenance && !props.disabled,
+        disabled: !props.unavailable,
         render: () => {
           const Disabled = (
             <HomeDisabled
               disabled={props.disabled}
               maintenance={props.maintenance}
+              maintenanceMessage={props.maintenanceMessage}
               authenticated={props.authenticated}
+              restrictions={props.restrictions}
+              reactivate={props.reactivate}
             />
           )
 
@@ -39,9 +43,11 @@ const HomeMain = (props) =>
         }
       }, {
         path: '/reset_password',
+        disabled: props.authenticated,
         component: SendPassword
       }, {
         path: '/newpassword/:hash',
+        disabled: props.authenticated,
         component: NewPassword
       }, {
         path: '/login',
@@ -49,7 +55,7 @@ const HomeMain = (props) =>
         component: HomeLogin
       }, {
         path: '/registration',
-        disabled: !props.selfRegistration || props.authenticated || props.maintenance,
+        disabled: props.unavailable || !props.selfRegistration || props.authenticated,
         component: HomeRegistration
       }, { // TODO : disable if no sso
         path: '/external/:app',
@@ -67,7 +73,7 @@ const HomeMain = (props) =>
         }
       }, {
         path: '/home',
-        disabled: (props.maintenance && !props.authenticated) || !props.hasHome,
+        disabled: props.unavailable || !props.hasHome,
         onEnter: () => props.openHome(props.homeType),
         render: () => {
           const Home = (
@@ -84,15 +90,21 @@ const HomeMain = (props) =>
   />
 
 HomeMain.propTypes = {
-  disabled: T.bool,
+  unavailable: T.bool.isRequired,
   maintenance: T.bool.isRequired,
+  maintenanceMessage: T.string,
   authenticated: T.bool.isRequired,
   selfRegistration: T.bool.isRequired,
   hasHome: T.bool.isRequired,
   homeType: T.string.isRequired,
   homeData: T.string,
   openHome: T.func.isRequired,
-  linkExternalAccount: T.func.isRequired
+  linkExternalAccount: T.func.isRequired,
+  restrictions: T.shape({
+    disabled: T.bool,
+    dates: T.arrayOf(T.string)
+  }),
+  reactivate: T.func.isRequired
 }
 
 export {

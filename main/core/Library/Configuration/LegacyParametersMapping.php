@@ -48,7 +48,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'session_db_dsn' => 'session.db_dsn',
             'session_db_user' => 'session.db_user',
             'session_db_password' => 'session.db_password',
-            'platform_limit_date' => 'security.platform_limit_date', //1 june 2019
             'account_duration' => 'security.account_duration',
             'username_regex' => 'registration.username_regex',
             'footer_login' => 'display.footer_login',

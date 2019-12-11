@@ -31,8 +31,6 @@
     "create_a_keyword": "Créer un mot-clé",
     "deactivate_notifications": "Désactiver les notifications",
     "default_display_mode": "Mode d'affichage par défaut",
-    "delete_category": "Supprimer la catégorie",
-    "delete_category_confirm_message": "Êtes-vous sûr de vouloir supprimer cette catégorie [%name%] ?",
     "delete_comment": "Supprimer le commentaire",
     "delete_comment_confirm_message": "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
     "delete_entry": "Supprimer la fiche",

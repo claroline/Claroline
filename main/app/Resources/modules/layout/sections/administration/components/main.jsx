@@ -27,10 +27,13 @@ const AdministrationMain = (props) =>
                 if (-1 !== props.tools.findIndex(tool => tool.name === params.toolName)) {
                   // tool is enabled for the admin
                   props.openTool(params.toolName)
-                } else {
+                } else if (0 !== props.tools.length) {
                   // tool is disabled (or does not exist) for the desktop
                   // let's go to the default opening of the desktop
                   props.history.replace('/admin')
+                } else {
+                  // user has access to no admin tool send him back to desktop
+                  props.history.replace('/desktop')
                 }
               },
               component: ToolMain

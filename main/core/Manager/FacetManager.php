@@ -16,10 +16,8 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -54,76 +52,6 @@ class FacetManager
         $this->panelRoleRepo = $om->getRepository('ClarolineCoreBundle:Facet\PanelFacetRole');
         $this->facetRepo = $om->getRepository('ClarolineCoreBundle:Facet\Facet');
         $this->container = $container;
-    }
-
-    /**
-     * used by clacoForm Manager.
-     *
-     * @deprecated
-     *
-     * @todo remove me
-     */
-    public function createField($name, $isRequired, $type, ResourceNode $resourceNode = null)
-    {
-        $fieldFacet = new FieldFacet();
-        $fieldFacet->setLabel($name);
-        $fieldFacet->setType($type);
-        $fieldFacet->setRequired($isRequired);
-        $fieldFacet->setResourceNode($resourceNode);
-        $this->om->persist($fieldFacet);
-        $this->om->flush();
-
-        return $fieldFacet;
-    }
-
-    /**
-     * Creates a new field for a facet.
-     *
-     * @param PanelFacet $facet
-     * @param string     $name
-     * @param int        $type
-     *
-     * @deprecated
-     *
-     * @todo remove me
-     *
-     * Used by claco form widget config
-     */
-    public function addField(PanelFacet $panelFacet, $name, $isRequired, $type)
-    {
-        $this->om->startFlushSuite();
-        $position = $this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet');
-        $fieldFacet = $this->createField($name, $isRequired, $type);
-        $fieldFacet->setPanelFacet($panelFacet);
-        $fieldFacet->setPosition($position);
-        $this->om->persist($fieldFacet);
-        $this->om->endFlushSuite();
-
-        return $fieldFacet;
-    }
-
-    /**
-     * Adds a panel in a facet.
-     * Used by persister and Updater04000
-     * Can be removed.
-     *
-     * @param Facet  $facet
-     * @param string $name
-     *
-     * @return PanelFacet
-     */
-    public function addPanel(Facet $facet, $name, $collapse = false, $autoEditable = false)
-    {
-        $panelFacet = new PanelFacet();
-        $panelFacet->setName($name);
-        $panelFacet->setFacet($facet);
-        $panelFacet->setIsDefaultCollapsed($collapse);
-        $panelFacet->setIsEditable($autoEditable);
-        $panelFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\PanelFacet'));
-        $this->om->persist($panelFacet);
-        $this->om->flush();
-
-        return $panelFacet;
     }
 
     /**
@@ -249,71 +177,6 @@ class FacetManager
         }
 
         return $data;
-    }
-
-    public function getVisibleFieldForCurrentUserFacets()
-    {
-        $roles = $this->tokenStorage->getToken()->getUser()->getEntityRoles();
-
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findByRoles($roles);
-    }
-
-    public function getDisplayedValue(FieldFacetValue $ffv)
-    {
-        switch ($ffv->getFieldFacet()->getType()) {
-            case FieldFacet::NUMBER_TYPE:
-                return $ffv->getFloatValue();
-            case FieldFacet::DATE_TYPE:
-                return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', [], 'platform'));
-            case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::EMAIL_TYPE:
-                return $ffv->getStringValue();
-            case FieldFacet::CHOICE_TYPE:
-                $options = $ffv->getFieldFacet()->getOptions();
-
-                if (isset($options['multiple']) && $options['multiple']) {
-                    return $ffv->getArrayValue();
-                } else {
-                    return $ffv->getStringValue();
-                }
-                // no break
-            case FieldFacet::CASCADE_TYPE:
-                return $ffv->getArrayValue();
-            default:
-                return 'error';
-        }
-    }
-
-    public function setProfilePreference(
-        $baseData,
-        $email,
-        $phone,
-        $sendMail,
-        $sendMessage,
-        Role $role
-    ) {
-        $profilePref = $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')
-            ->findOneByRole($role);
-
-        $profilePref = null === $profilePref ? new GeneralFacetPreference() : $profilePref;
-        $profilePref->setBaseData($baseData);
-        $profilePref->setEmail($email);
-        $profilePref->setPhone($phone);
-        $profilePref->setSendMail($sendMail);
-        $profilePref->setSendMessage($sendMessage);
-        $profilePref->setRole($role);
-
-        $this->om->persist($profilePref);
-        $this->om->flush();
-    }
-
-    public function getProfilePreferences()
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
-    }
-
-    public function getFacetsByUser(User $user)
-    {
-        return $this->facetRepo->findByUser($user, $this->authorization->isGranted('ROLE_ADMIN'));
     }
 
     public function getVisiblePublicPreference()

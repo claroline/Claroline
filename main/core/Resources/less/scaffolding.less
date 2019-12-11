@@ -90,3 +90,25 @@ body {
     from {left: -50%;}
     to   {left: 100%;}
 }
+
+// TODO : merge with other security pages styles
+.app-disabled {
+    max-width: 960px;
+    margin: 0 auto;
+
+    .page-title {
+        .fa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            background: white;
+            margin: 0 auto 15px;
+
+            .box-shadow(@thumbnail-box-shadow);
+        }
+    }
+}
