@@ -92,7 +92,6 @@ class EventFinder extends AbstractFinder
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->andX(
                             $qb->expr()->eq('ott.name', ':agenda'),
-                            $qb->expr()->eq('otrr.workspace', 'w'),
                             $qb->expr()->eq('otrru.uuid', ':roleUserId'),
                             $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
                         ),
