@@ -410,9 +410,12 @@ class DropzoneController
                 readfile($path);
             }
         );
+
+        $filename = str_replace(' ', '-', $data['name'] ?? 'document');
+
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$data['name']);
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->headers->set('Content-Type', $data['mimeType']);
         $response->headers->set('Connection', 'close');
 

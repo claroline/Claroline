@@ -7,8 +7,8 @@ use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/tools/workspace/{workspaceId}/dashboard", requirements={"workspaceId"="\d+"})
@@ -90,7 +90,7 @@ class DashboardController
     private function checkDashboardToolAccess(Workspace $workspace)
     {
         if (!$this->authorizationChecker->isGranted('dashboard', $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
     }
 }

@@ -72,7 +72,7 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
         $workspaces = $workspaceManager->getNonPersonalByCodeAndName($code, $name);
 
         foreach ($workspaces as $workspace) {
-            $roles = $roleManager->getRolesByWorkspace($workspace);
+            $roles = $roleManager->getWorkspaceRoles($workspace);
 
             $roleNames = array_map(function ($role) {
                 return $role->getTranslationKey();

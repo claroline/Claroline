@@ -570,17 +570,11 @@ abstract class AbstractCrudController extends AbstractApiController
         return [];
     }
 
-    /**
-     * Should replace ApiMeta.
-     */
     public function getClass()
     {
         return null;
     }
 
-    /**
-     * Should replace ApiMeta.
-     */
     public function getIgnore()
     {
         return [];

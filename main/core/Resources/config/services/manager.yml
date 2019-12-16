@@ -105,7 +105,6 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@service_container'
-          - '@translator'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.template_manager'
           - '@Claroline\AppBundle\API\Crud'

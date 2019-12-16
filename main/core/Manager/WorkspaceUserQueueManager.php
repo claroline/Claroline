@@ -48,11 +48,7 @@ class WorkspaceUserQueueManager
      */
     public function validateRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
     {
-        $this->roleManager->associateRolesToSubjects(
-            [$workspaceRegistration->getUser()],
-            [$workspaceRegistration->getRole()],
-            true
-        );
+        $this->roleManager->associateRole($workspaceRegistration->getUser(), $workspaceRegistration->getRole());
 
         $this->om->remove($workspaceRegistration);
         $this->om->flush();

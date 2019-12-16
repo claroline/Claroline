@@ -128,8 +128,9 @@ class RemoveUsersCommand extends ContainerAwareCommand
             $userManager->getUsersByRolesWithGroups($rolesSearch);
 
         if (count($usersToDelete) > 0) {
-            $this->confirmDeleteUsers($usersToDelete);
-            $this->deleteUsers($all, $rolesSearch);
+            if ($this->confirmDeleteUsers($usersToDelete)) {
+                $this->deleteUsers($all, $rolesSearch);
+            }
         }
     }
 
@@ -156,9 +157,10 @@ class RemoveUsersCommand extends ContainerAwareCommand
 
             $om->endFlushSuite();
             $om->clear();
-        } else {
-            //stop script here
-            exit(0);
+
+            return true;
         }
+
+        return false;
     }
 }

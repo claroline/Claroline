@@ -102,11 +102,6 @@ class PlatformConfigurationHandler
         file_put_contents($this->configFile, $parameters);
     }
 
-    public function isRedirectOption($option)
-    {
-        return $this->getParameter('authentication.redirect_after_login_option') === $option;
-    }
-
     public function addDefaultParameters(ParameterProviderInterface $config)
     {
         $newDefault = $config->getDefaultParameters();
@@ -127,6 +122,11 @@ class PlatformConfigurationHandler
         $this->parameters = array_merge($newDefault, $this->parameters);
     }
 
+    public function getDefaultParameters()
+    {
+        return $this->parameters;
+    }
+
     protected function mergeParameters()
     {
         $defaults = new PlatformDefaults();
@@ -138,33 +138,9 @@ class PlatformConfigurationHandler
         $parameters = json_decode(file_get_contents($this->configFile), true);
 
         if ($parameters) {
-            return $this->arrayMerge($parameters, $defaults->getDefaultParameters());
+            return array_replace_recursive($defaults->getDefaultParameters(), $parameters);
         }
 
         return $this->parameters;
-    }
-
-    public function getDefaultParameters()
-    {
-        return $this->parameters;
-    }
-
-    public function arrayMerge(array $array1, array $array2)
-    {
-        foreach ($array2 as $key => $value) {
-            if (!array_key_exists($key, $array1) && !in_array($value, $array1)) {
-                $array1[$key] = $value;
-            } else {
-                if (is_array($value)) {
-                    if (array_key_exists($key, $array1)) {
-                        $array1[$key] = $this->arrayMerge($array1[$key], $array2[$key]);
-                    } else {
-                        $array1[$key] = $value;
-                    }
-                }
-            }
-        }
-
-        return $array1;
     }
 }

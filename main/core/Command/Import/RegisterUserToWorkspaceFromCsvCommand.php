@@ -141,7 +141,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
                     if (1 === count($roles)) {
                         if ('register' === $action) {
-                            $roleManager->associateRole($ars, $roles[0], false, false);
+                            $roleManager->associateRole($ars, $roles[0], false);
                             $output->writeln(
                                 "<info> Line $i: {User [$name] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
                             );
@@ -151,7 +151,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                                 "<info> Line $i: {User [$name] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
                             );
                         } elseif ('register_group' === $action) {
-                            $roleManager->associateRole($ars, $roles[0], false, false);
+                            $roleManager->associateRole($ars, $roles[0], false);
                             $output->writeln(
                                 "<info> Line $i: {Group [$name] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
                             );

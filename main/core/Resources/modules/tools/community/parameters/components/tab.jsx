@@ -83,7 +83,7 @@ const ParametersTab = props => {
                   'registration.defaultRole',
                   props.workspace.roles.find(role => role.id === roleId)
                 ),
-                calculated: () => get(props.workspace, 'registration.defaultRole.id', null)
+                calculated: (parameters) => get(parameters, 'registration.defaultRole.id', null)
               }
             ]
           }, {

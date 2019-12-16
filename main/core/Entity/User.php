@@ -826,31 +826,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     }
 
     /**
-     * Replace the old platform roles of a user by a new array.
-     *
-     * @param $platformRoles
-     */
-    public function setPlatformRoles($platformRoles)
-    {
-        $roles = $this->getEntityRoles();
-        $removedRoles = [];
-
-        foreach ($roles as $role) {
-            if (Role::WS_ROLE !== $role->getType()) {
-                $removedRoles[] = $role;
-            }
-        }
-
-        foreach ($removedRoles as $removedRole) {
-            $this->roles->removeElement($removedRole);
-        }
-
-        foreach ($platformRoles as $platformRole) {
-            $this->roles->add($platformRole);
-        }
-    }
-
-    /**
      * @return OrderedTool[]|ArrayCollection
      *
      * @deprecated

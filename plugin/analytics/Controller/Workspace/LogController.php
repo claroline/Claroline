@@ -22,8 +22,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/tools/workspace/{workspaceId}/logs", requirements={"workspaceId"="\d+"})
@@ -243,7 +243,7 @@ class LogController
     private function checkLogToolAccess(Workspace $workspace)
     {
         if (!$this->authorizationChecker->isGranted('dashboard', $workspace)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
     }
 }

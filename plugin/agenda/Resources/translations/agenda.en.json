@@ -19,5 +19,6 @@
     "agenda_month": "Month",
     "agenda_year": "Year",
     "agenda_schedule": "Schedule",
-    "agenda_list": "List"
+    "agenda_list": "List",
+    "no_event": "No events planned."
 }

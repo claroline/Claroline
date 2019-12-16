@@ -18,6 +18,7 @@ const HomeMain = (props) =>
     redirect={[
       {from: '/', exact: true, to: '/unavailable', disabled: !props.unavailable},
       {from: '/home', to: '/unavailable', disabled: !props.unavailable},
+      {from: '/unavailable', to: '/', disabled: props.unavailable},
 
       {from: '/', exact: true, to: '/login',   disabled: props.hasHome || props.authenticated},
       {from: '/', exact: true, to: '/home',    disabled: props.unavailable || !props.hasHome},

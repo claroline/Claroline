@@ -11,8 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/resource/{resourceId}/logs", requirements={"resourceId"="\d+"})
@@ -237,7 +237,7 @@ class LogController
     private function checkLogsAccess(ResourceNode $node)
     {
         if (!$this->authorizationChecker->isGranted('ADMINISTRATE', $node)) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
     }
 }

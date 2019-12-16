@@ -15,13 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity( repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRegistrationQueueRepository")
+ * @ORM\Entity()
  * @ORM\Table(
- * 		name="claro_workspace_registration_queue",
- * 		uniqueConstraints={
+ *      name="claro_workspace_registration_queue",
+ *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="user_role_unique", columns={"role_id", "user_id"})
  *      }
- * 		)
  * )
  * @DoctrineAssert\UniqueEntity({"role", "user"})
  */
