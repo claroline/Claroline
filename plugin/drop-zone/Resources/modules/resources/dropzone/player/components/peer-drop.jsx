@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 
+import {withRouter} from '#/main/app/router'
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -87,24 +88,21 @@ PeerDrop.propTypes = {
   }).isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    user: selectors.user(state),
-    dropzone: selectors.dropzone(state),
-    drop: selectors.peerDrop(state),
-    myTeamId: selectors.myTeamId(state)
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    saveCorrection: (correction) => dispatch(correctionActions.saveCorrection(correction)),
-    submitCorrection: (correctionId, navigate, path) => dispatch(actions.submitCorrection(correctionId, navigate, path)).then(() => {
-      navigate(path)
+const ConnectedPeerDrop = withRouter(
+  connect(
+    (state) => ({
+      user: selectors.user(state),
+      dropzone: selectors.dropzone(state),
+      drop: selectors.peerDrop(state),
+      myTeamId: selectors.myTeamId(state)
+    }),
+    (dispatch) => ({
+      saveCorrection: (correction) => dispatch(correctionActions.saveCorrection(correction)),
+      submitCorrection: (correctionId, navigate, path) => dispatch(actions.submitCorrection(correctionId, navigate, path)).then(() => {
+        navigate(path)
+      })
     })
-  }
-}
-
-const ConnectedPeerDrop = connect(mapStateToProps, mapDispatchToProps)(PeerDrop)
+  )(PeerDrop)
+)
 
 export {ConnectedPeerDrop as PeerDrop}
