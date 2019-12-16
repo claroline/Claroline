@@ -19,7 +19,7 @@ import {MODAL_EVENT_ABOUT} from '#/plugin/agenda/event/modals/about'
 const ScheduleDay = (props) =>
   <div className={classes('day', props.className)}>
     <LinkButton
-      className="day-number"
+      className="day-number btn-link"
       target={route(props.path, 'month', props.current)}
     >
       {props.current.format('D')}

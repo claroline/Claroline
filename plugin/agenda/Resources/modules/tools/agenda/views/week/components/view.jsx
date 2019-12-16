@@ -14,7 +14,7 @@ const Day = props =>
       {props.current.format('ddd')}
 
       <LinkButton
-        className="day-number"
+        className="day-number btn-link"
         target={route(props.path, 'day', props.current)}
       >
         {props.current.format('D')}

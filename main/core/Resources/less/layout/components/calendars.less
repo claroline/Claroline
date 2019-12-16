@@ -10,6 +10,14 @@
 @datepicker-padding:       15px;
 @datepicker-grid-border:   @dropdown-divider-bg; // #eee
 
+// text height + padding height + border height
+@day-names-row-computed-height: @line-height-small*10px + 2px + 1px; // 18
+@day-btn-computed-height: (@line-height-small*@font-size-small) + 2*(1px+3px); // 26
+// btn height + padding height + border height
+@week-row-computed-height: @day-btn-computed-height + 2px + 1px; // 29
+// table head height + nbRows * row height + padding top
+@days-grid-computed-height: @day-names-row-computed-height + 6*@week-row-computed-height + 10px; // 203
+
 .calendar-container {
     position: relative;
     display: inline-flex;
@@ -72,200 +80,40 @@
         flex: 2; // ratio : 2/3
         max-width: 100%;
         padding: @datepicker-padding;
-
-        .calendar-nav {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-
-            .btn {
-                padding: 0 @padding-base-horizontal;
-
-                .fa {
-                    margin: 0;
-                }
-            }
-        }
-
-        .calendar-current {
-            color: @datepicker-color;
-            font-family: @headings-font-family;
-            font-size: @font-size-large;
-        }
-
-        .calendar-previous,
-        .calendar-next {
-            color: fadeOut(@datepicker-color, 50%);
-
-            &.disabled {
-                opacity: 0;
-            }
-
-            &:hover,
-            &:focus {
-                color: @datepicker-color;
-            }
-        }
     }
 
-    // text height + padding height + border height
-    @day-names-row-computed-height: @line-height-small*10px + 2px + 1px; // 18
-    @day-btn-computed-height: (@line-height-small*@font-size-small) + 2*(1px+3px); // 26
-    // btn height + padding height + border height
-    @week-row-computed-height: @day-btn-computed-height + 2px + 1px; // 29
-    // table head height + nbRows * row height + padding top
-    @days-grid-computed-height: @day-names-row-computed-height + 6*@week-row-computed-height + 10px; // 203
-
-    .calendar-grid {
+    .calendar-nav {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
-        min-height: @days-grid-computed-height;
 
         .btn {
-            padding: 3px 7px;
-            font-size: @font-size-small;
-            line-height: @line-height-small;
-            border-radius: @border-radius-small;
+            padding: 0 @padding-base-horizontal;
 
-            &.now {
-                color: @datepicker-alt-bg !important;
-                border: 1px solid @datepicker-alt-bg !important;
-                background: transparent !important;
-            }
-
-            &.in-range {
-                color: white;
-                background: #46bcf9; // todo I think it's not accessible
-            }
-
-            &.selected {
-                color: @datepicker-alt-color !important;
-                background: @datepicker-alt-bg !important;
-            }
-
-            &.fill {
-                color: #BBBBBB;
-            }
-
-            &.disabled {
-
-            }
-
-            &:not(.disabled):hover,
-            &:not(.disabled):focus {
-                color: @dropdown-link-hover-color;
-                background-color: @dropdown-link-hover-bg;
+            .fa {
+                margin: 0;
             }
         }
     }
 
-    .calendar-days {
-        padding-top: 10px;
-        .btn {
-            // fill cell
-            display: block;
-            width: 100%;
-        }
-
-        .day-name,
-        .week-num {
-            font-size: 10px;
-            font-weight: normal;
-        }
-
-        .day-name {
-            color: @datepicker-alt-bg;
-            text-transform: uppercase; // todo : use a var
-        }
-
-        .week-num {
-            color: @text-muted;
-            min-width: 15px;
-        }
-
-        table {
-            margin: 0 auto;
-
-            th,
-            td {
-                padding: 1px;
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            th {
-                border: 1px solid transparent;
-                line-height: @line-height-small;
-            }
-
-            td {
-                border: 1px solid @datepicker-grid-border;
-            }
-
-            // removes outside border
-            tbody {
-                tr {
-                    th + td {
-                        border-left: transparent;
-                    }
-
-                    td:last-child {
-                        border-right: transparent;
-                    }
-
-                    &:first-child td {
-                        border-top: transparent;
-                    }
-
-                    &:last-child td {
-                        border-bottom: transparent;
-                    }
-                }
-            }
-
-
-        }
+    .calendar-current {
+        color: @datepicker-color;
+        font-family: @headings-font-family;
+        font-size: @font-size-large;
     }
 
-    .calendar-years,
-    .calendar-months {
-        .btn {
-            position: relative;
-            flex: 1;
-            min-width: 60px; // todo temp fix to avoid too huge resize on view changes
-            margin: 1px 1px 1px 2px;
+    .calendar-previous,
+    .calendar-next {
+        color: fadeOut(@datepicker-color, 50%);
 
-            &:first-child {
-                margin-left: 0;
-            }
-
-            &:not(:last-child):after {
-                position: absolute;
-                display: block;
-                content: " ";
-                width: 1px;
-                right: -3px;
-                top: -2px;
-                bottom: -2px;
-                background: @datepicker-grid-border;
-            }
+        &.disabled {
+            opacity: 0;
         }
 
-        .calendar-row {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            border-bottom: 1px solid @datepicker-grid-border;
-
-            &:last-child {
-                border-bottom: none;
-            }
+        &:hover,
+        &:focus {
+            color: @datepicker-color;
         }
     }
 
@@ -306,6 +154,157 @@
     }
 }
 
+.calendar-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: @days-grid-computed-height;
+
+    .btn {
+        padding: 3px 7px;
+        font-size: @font-size-small;
+        line-height: @line-height-small;
+        border-radius: @border-radius-small;
+
+        &.now {
+            color: @datepicker-alt-bg !important;
+            border: 1px solid @datepicker-alt-bg !important;
+            background: transparent !important;
+        }
+
+        &.selected {
+            color: @datepicker-alt-color !important;
+            background: @datepicker-alt-bg !important;
+        }
+
+        &.fill {
+            color: #BBBBBB;
+        }
+
+        &:not(.disabled):hover,
+        &:not(.disabled):focus {
+            color: @dropdown-link-hover-color;
+            background-color: @dropdown-link-hover-bg;
+        }
+    }
+}
+
+
+// -
+// Calendar views
+// ---
+
+.calendar-days {
+    padding-top: 10px;
+    .btn {
+        // fill cell
+        display: block;
+        width: 100%;
+    }
+
+    .day-name,
+    .week-num {
+        font-size: 10px;
+        font-weight: normal;
+    }
+
+    .day-name {
+        color: @datepicker-alt-bg;
+        text-transform: uppercase; // todo : use a var
+    }
+
+    .week-num {
+        color: @text-muted;
+        min-width: 15px;
+    }
+
+    table {
+        margin: 0 auto;
+
+        th,
+        td {
+            padding: 1px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            border: 1px solid transparent;
+            line-height: @line-height-small;
+        }
+
+        td {
+            border: 1px solid @datepicker-grid-border;
+        }
+
+        // removes outside border
+        tbody {
+            tr {
+                th + td {
+                    border-left: transparent !important;
+                }
+
+                td:last-child {
+                    border-right: transparent !important;
+                }
+
+                &:first-child td {
+                    border-top: transparent !important;
+                }
+
+                &:last-child td {
+                    border-bottom: transparent !important;
+                }
+            }
+        }
+    }
+}
+
+.calendar-years,
+.calendar-months {
+    .btn {
+        position: relative;
+        flex: 1;
+        min-width: 60px; // todo temp fix to avoid too huge resize on view changes
+        margin: 1px 1px 1px 2px;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        &:not(:last-child):after {
+            position: absolute;
+            display: block;
+            content: " ";
+            width: 1px;
+            right: -3px;
+            top: -2px;
+            bottom: -2px;
+            background: @datepicker-grid-border;
+        }
+    }
+
+    .calendar-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        border-bottom: 1px solid @datepicker-grid-border;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+
+// -
+// Calendar variants
+// ---
+
 .calendar-container.dark {
     color: @datepicker-color;
 
@@ -315,19 +314,41 @@
 }
 
 .calendar-container.light {
-    color: #ededed;
+    color: @toolbar-color;
 
     .calendar-current {
-        color: #ededed;
+        color: @toolbar-link-color;
     }
 
     .calendar-previous,
     .calendar-next {
-        color: fadeOut(#ededed, 50%);
+        color: fadeOut(@toolbar-color, 50%);
 
         &:hover,
         &:focus {
-            color: #ededed;
+            color: @toolbar-color;
+        }
+    }
+
+    .calendar-grid {
+        .btn {
+            color: @toolbar-link-color;
+
+            &.fill {
+                color: @toolbar-link-disabled-color;
+            }
+
+            &:not(.disabled):hover,
+            &:not(.disabled):focus {
+                color: @toolbar-link-hover-color;
+                background-color: @toolbar-link-hover-bg;
+            }
+        }
+
+        table {
+            td {
+                border: 1px solid @toolbar-link-hover-bg;
+            }
         }
     }
 }
@@ -337,9 +358,10 @@
 }
 
 
-/*
- * Calendar picker.
- */
+// -
+// Calendar picker
+// ---
+
 .dropdown-menu {
     .calendar-container {
         margin: -@dropdown-menu-padding-v -@dropdown-menu-padding-h;

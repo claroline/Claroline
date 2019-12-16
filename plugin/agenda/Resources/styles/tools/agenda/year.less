@@ -1,0 +1,91 @@
+.agenda-year {
+    .month-name {
+        display: inline-block;
+        margin-top: @component-margin-bottom;
+        color: @brand-primary;
+    }
+
+    .day-name {
+        font-size: 10px;
+        font-weight: normal;
+        color: @text-muted;
+        text-transform: uppercase; // todo : use a var
+    }
+
+    .day-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid transparent;
+
+        &.now {
+            color: @brand-primary;
+            background: transparent;
+            border-color: @brand-primary;
+        }
+
+        &.selected {
+            color: white;
+            background: @brand-primary;
+            border-color: @brand-primary;
+        }
+
+        &.fill {
+            color: @text-muted;
+        }
+    }
+
+    table {
+        th,
+        td {
+            padding: 1px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+}
+
+.day-popover {
+    width: 100%;
+
+    .popover-title {
+        color: @gray-light;
+        font-family: @headings-font-family;
+        font-size: @font-size-small;
+        text-align: center;
+        text-transform: uppercase; // todo : use a var
+
+        .day-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px auto 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: @font-size-large;
+            font-weight: bold;
+
+            //color: @agenda-color;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+    }
+
+    &.now .day-number {
+        color: @brand-primary;
+        background: transparent;
+        border-color: @brand-primary;
+    }
+
+    &.selected .day-number {
+        color: white;
+        background: @brand-primary;
+        border-color: @brand-primary;
+    }
+}

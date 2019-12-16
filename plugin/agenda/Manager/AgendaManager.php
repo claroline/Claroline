@@ -110,22 +110,6 @@ class AgendaManager
         $dispatcher->dispatch('claroline_message_sending_to_users', $message);
     }
 
-    public function desktopEvents(User $usr, $allDay = false)
-    {
-        $desktopEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, $allDay);
-        $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
-        $invitationEvents = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findBy([
-            'user' => $usr,
-            'status' => [EventInvitation::JOIN, EventInvitation::MAYBE],
-        ]);
-
-        return array_merge(
-            $this->convertEventsToArray($workspaceEventsAndTasks),
-            $this->convertEventsToArray($desktopEvents),
-            $this->convertInvitationsToArray($invitationEvents)
-        );
-    }
-
     /**
      * @param $workspaceId
      *
@@ -152,8 +136,8 @@ class AgendaManager
     }
 
     /**
-     * @param $text it's the calendar text formatted in ics structure
-     * @param $workspaceId
+     * @param string    $text it's the calendar text formatted in ics structure
+     * @param Workspace $workspace
      *
      * @return string $fileName path to the file in web/upload folder
      */
@@ -198,17 +182,6 @@ class AgendaManager
         }
 
         return $entities;
-    }
-
-    public function convertInvitationsToArray(array $invitations)
-    {
-        $data = [];
-
-        foreach ($invitations as $invitation) {
-            $data[] = $invitation->getEvent()->jsonSerialize($this->tokenStorage->getToken()->getUser());
-        }
-
-        return $data;
     }
 
     /**
