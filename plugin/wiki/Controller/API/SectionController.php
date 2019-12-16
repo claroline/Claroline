@@ -12,8 +12,8 @@ use Icap\WikiBundle\Manager\SectionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/wiki")
@@ -121,7 +121,7 @@ class SectionController
         $this->checkPermission('OPEN', $resourceNode, [], true);
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
         if (Wiki::READ_ONLY_MODE === $wiki->getMode() && !$isAdmin) {
-            throw new AccessDeniedHttpException('Cannot edit section in READ ONLY wiki');
+            throw new AccessDeniedException('Cannot edit section in READ ONLY wiki');
         }
         $newSection = $this->sectionManager->createSection($wiki, $section, $user, $isAdmin, json_decode($request->getContent(), true));
 
@@ -153,7 +153,7 @@ class SectionController
         $this->checkPermission('OPEN', $resourceNode, [], true);
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
         if (Wiki::READ_ONLY_MODE === $wiki->getMode() && !$isAdmin) {
-            throw new AccessDeniedHttpException('Cannot edit section in READ ONLY wiki');
+            throw new AccessDeniedException('Cannot edit section in READ ONLY wiki');
         }
         $this->sectionManager->updateSection($section, $user, json_decode($request->getContent(), true));
 

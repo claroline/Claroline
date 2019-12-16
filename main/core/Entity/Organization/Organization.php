@@ -51,7 +51,6 @@ class Organization
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-
      *
      * @var int
      */

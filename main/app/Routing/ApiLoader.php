@@ -107,16 +107,7 @@ class ApiLoader extends Loader
                     $routeNamePrefix = '';
                     $ignore = [];
 
-                    //Find via ApiMeta annotation
-                    //this deprecated
                     foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
-                        //If we defined api meta, we get all the free stuff fro the api
-                        if ($annotation instanceof ApiMeta) {
-                            $found = true;
-                            $class = $annotation->class;
-                            $ignore = $annotation->ignore;
-                        }
-
                         //The route prefix is defined with the sf2 annotations
                         if ($annotation instanceof RouteConfig) {
                             $prefix = $annotation->getPath();
@@ -131,7 +122,6 @@ class ApiLoader extends Loader
                             }
                         }
                     }
-                    //end deprecated
 
                     //Find via getClass method of AbstractCrudController
 

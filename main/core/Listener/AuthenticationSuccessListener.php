@@ -101,12 +101,13 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($this->config->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['LAST'])) {
+        $redirect = $this->config->getParameter('authentication.redirect_after_login_option');
+        if (PlatformDefaults::$REDIRECT_OPTIONS['LAST'] === $redirect) {
             return [
                 'type' => 'last',
             ];
         } elseif (
-            $this->config->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['WORKSPACE_TAG'])
+            PlatformDefaults::$REDIRECT_OPTIONS['WORKSPACE_TAG'] === $redirect
             && null !== $defaultWorkspaceTag = $this->config->getParameter('workspace.default_tag')
         ) {
             /** @var GenericDataEvent $event */
@@ -132,7 +133,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 ];
             }
         } elseif (
-            $this->config->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['URL'])
+            PlatformDefaults::$REDIRECT_OPTIONS['URL'] === $redirect
             && null !== $url = $this->config->getParameter('redirect_after_login_url')
         ) {
             return [

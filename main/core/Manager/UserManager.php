@@ -907,44 +907,6 @@ class UserManager
         return $user;
     }
 
-    public function restoreUsersMailParameter()
-    {
-        $users = $this->getAll();
-        $i = 0;
-        $this->objectManager->startFlushSuite();
-        $count = (count($users));
-        $this->log("{$count} users to update...");
-
-        foreach ($users as $user) {
-            ++$i;
-
-            $this->restoreUserMailParameter($user);
-            $this->log("{$i}/{$count} user done...");
-
-            if (0 === $i % 500) {
-                $this->objectManager->forceFlush();
-                $this->log('Flushing...');
-            }
-        }
-
-        $this->log('Flushing...');
-        $this->objectManager->endFlushSuite();
-    }
-
-    public function restoreUserMailParameter(User $user)
-    {
-        $emailValidted = $this->platformConfigHandler->getParameter('auto_validate_email');
-        $emailRedirect = $this->platformConfigHandler->getParameter('auto_enable_email_redirect');
-        $notifications = $this->platformConfigHandler->getParameter('auto_enable_notifications');
-
-        $user->setIsMailValidated($emailValidted);
-        $user->setIsMailNotified($emailRedirect);
-        $nManager = $this->container->get('Icap\NotificationBundle\Manager\NotificationUserParametersManager');
-        $nManager->processUpdate($notifications, $user);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-    }
-
     public function checkPersonalWorkspaceIntegrity()
     {
         // Get all users having problem seeing their personal workspace

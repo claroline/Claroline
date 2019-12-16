@@ -174,8 +174,9 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
             $workspaceManager->getPersonalWorkspaceByRolesIncludingGroups($rolesSearch, $includeOrphans, $empty, null, self::BATCH_SIZE);
 
         if (count($workspacesToDelete) > 0) {
-            $this->confirmWorkspaceDelete($workspacesToDelete);
-            $this->deletePersonalWorkspace($all, $rolesSearch, $includeOrphans);
+            if ($this->confirmWorkspaceDelete($workspacesToDelete)) {
+                $this->deletePersonalWorkspace($all, $rolesSearch, $includeOrphans);
+            }
         }
     }
 
@@ -209,9 +210,10 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
 
             $this->getOutput()->writeln('<comment> Flushing... </comment>');
             $om->endFlushSuite();
-        } else {
-            //stop script here
-            exit(0);
+
+            return true;
         }
+
+        return false;
     }
 }

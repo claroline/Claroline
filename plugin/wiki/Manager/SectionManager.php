@@ -15,7 +15,7 @@ use Icap\WikiBundle\Event\Log\LogSectionRestoreEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
 use Icap\WikiBundle\Serializer\SectionSerializer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SectionManager
 {
@@ -126,7 +126,7 @@ class SectionManager
         User $user = null
     ) {
         if (!$isAdmin && $permanently) {
-            throw new AccessDeniedHttpException('You cannot delete permanently any wiki sections');
+            throw new AccessDeniedException('You cannot delete permanently any wiki sections');
         }
 
         $sections = $this->sectionRepository->findSectionsBy([
@@ -140,7 +140,7 @@ class SectionManager
             if ($isAdmin || (!$section->getDeleted() && $section->getAuthor()->getId() === $user->getId())) {
                 $this->deleteSection($section, $withChildren);
             } else {
-                throw new AccessDeniedHttpException('You cannot delete this section');
+                throw new AccessDeniedException('You cannot delete this section');
             }
         }
     }

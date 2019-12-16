@@ -6,7 +6,7 @@ use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,19 +15,19 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
 {
     private $em;
-    /** @var Session */
+    /** @var SessionInterface */
     private $session;
     /** @var PlatformConfigurationHandler */
     private $platformConfigHandler;
 
     /**
      * @param $em
-     * @param Session                      $session
+     * @param SessionInterface             $session
      * @param PlatformConfigurationHandler $platformConfigHandler
      */
     public function __construct(
         $em,
-        Session $session,
+        SessionInterface $session,
         PlatformConfigurationHandler $platformConfigHandler
     ) {
         $this->em = $em;
