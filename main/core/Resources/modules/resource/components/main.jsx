@@ -31,6 +31,8 @@ class ResourceMain extends Component {
   componentDidMount() {
     if (!this.props.loaded) {
       this.props.open(this.props.resourceSlug, this.props.embedded, this.loadApp)
+    } else {
+      this.loadApp(this.props.resourceType)
     }
   }
 
