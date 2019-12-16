@@ -267,6 +267,7 @@ class SearchUnified extends Component {
           label={trans('filters')}
           tooltip="bottom"
           callback={() => this.setState({opened : !this.state.opened})}
+          disabled={this.props.disabled}
         />
 
         <div className="search-filters">
