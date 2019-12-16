@@ -241,21 +241,6 @@ class UserManager
     }
 
     /**
-     * Sets an array of platform role to a user.
-     *
-     * @todo use crud instead
-     * @todo REMOVE ME
-     *
-     * @param User   $user
-     * @param Role[] $roles
-     */
-    public function setPlatformRoles(User $user, $roles)
-    {
-        $this->roleManager->resetRoles($user);
-        $this->roleManager->associateRoles($user, $roles);
-    }
-
-    /**
      * @param string $username
      *
      * @todo use finder instead

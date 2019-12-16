@@ -8,7 +8,6 @@ import {Router} from '#/main/app/router'
 import {OverlayStack} from '#/main/app/overlays/containers/stack'
 import {ModalOverlay} from '#/main/app/overlays/modal/containers/overlay'
 
-import {Main} from '#/main/app/components/main'
 import {Popover} from '#/main/app/overlays/popover/components/popover'
 
 // TODO : find a better way to give access to the app store and router (It uses a portal which is not mounted in the current tree)

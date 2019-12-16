@@ -624,7 +624,7 @@ class WorkspaceManager
     {
         $workspaceRoles = [];
         $uow = $this->om->getUnitOfWork();
-        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $wRoles = $this->roleManager->getWorkspaceRoles($workspace);
         $scheduledForInsert = $uow->getScheduledEntityInsertions();
 
         foreach ($scheduledForInsert as $entity) {

@@ -42,12 +42,6 @@ class RoleRepositoryTest extends RepositoryTestCase
         $this->assertEquals(5, count($roles));
     }
 
-    public function testFindVisitorRole()
-    {
-        $role = self::$repo->findVisitorRole(self::get('ws_1'));
-        $this->assertEquals('ROLE_WS_VISITOR_'.self::get('ws_1')->getGuid(), $role->getName());
-    }
-
     public function testFindCollaboratorRole()
     {
         $role = self::$repo->findCollaboratorRole(self::get('ws_1'));

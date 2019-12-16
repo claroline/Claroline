@@ -1,13 +1,11 @@
-import React, {Component, Fragment} from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import moment from 'moment'
 import times from 'lodash/times'
 
-import {makeCancelable, url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {now} from '#/main/app/intl/date'
-import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {PopoverButton} from '#/main/app/buttons/popover/components/button'
 import {UrlButton} from '#/main/app/buttons/url/components/button'
@@ -22,7 +20,7 @@ const DayPopover = props =>
     id={props.id}
     type="callback"
     className={classes('btn-link day-number', props.className)}
-    onClick={(e) => {
+    onClick={() => {
       props.loadEvents([
         moment(props.current).hour(0).minute(0).second(0),
         moment(props.current).hour(23).minute(59).second(59)
@@ -125,8 +123,11 @@ const Month = props =>
 
 Month.propTypes = {
   path: T.string.isRequired,
+  now: T.object,
   referenceDate: T.object,
+  currentRange: T.arrayOf(T.object),
 
+  loaded: T.bool.isRequired,
   loadEvents: T.func.isRequired,
   events: T.arrayOf(T.shape(
     EventTypes.propTypes

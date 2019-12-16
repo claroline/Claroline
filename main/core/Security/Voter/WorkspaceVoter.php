@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -51,6 +52,7 @@ class WorkspaceVoter extends AbstractVoter
             $attributes[0] :
             null;
 
+        /** @var WorkspaceManager $wm */
         $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
 
         $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';

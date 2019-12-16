@@ -136,7 +136,7 @@ class AgendaManager
     }
 
     /**
-     * @param string    $text it's the calendar text formatted in ics structure
+     * @param string    $text      it's the calendar text formatted in ics structure
      * @param Workspace $workspace
      *
      * @return string $fileName path to the file in web/upload folder

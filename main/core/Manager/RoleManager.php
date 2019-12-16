@@ -19,22 +19,20 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\RoleOptions;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
+use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class RoleManager
 {
@@ -43,21 +41,27 @@ class RoleManager
 
     use LoggableTrait;
 
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var ObjectManager */
+    private $om;
+    /** @var Container */
+    private $container;
+    /** @var PlatformConfigurationHandler */
+    private $configHandler;
+    /** @var TemplateManager */
+    private $templateManager;
+    /** @var Crud */
+    private $crud;
+
+    /** @var WorkspaceRepository */
+    private $workspaceRepo;
     /** @var RoleRepository */
     private $roleRepo;
-    /** @var RoleOptionsRepository */
-    private $roleOptionsRepo;
     /** @var UserRepository */
     private $userRepo;
     /** @var GroupRepository */
     private $groupRepo;
-    private $dispatcher;
-    private $om;
-    private $container;
-    private $translator;
-    private $configHandler;
-    /** @var TemplateManager */
-    private $templateManager;
 
     /**
      * Constructor.
@@ -65,40 +69,38 @@ class RoleManager
      * @param ObjectManager                $om
      * @param StrictDispatcher             $dispatcher
      * @param Container                    $container
-     * @param TranslatorInterface          $translator
      * @param PlatformConfigurationHandler $configHandler
      * @param TemplateManager              $templateManager
+     * @param Crud                         $crud
      */
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         Container $container,
-        TranslatorInterface $translator,
         PlatformConfigurationHandler $configHandler,
         TemplateManager $templateManager,
         Crud $crud
     ) {
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-        $this->roleOptionsRepo = $om->getRepository('ClarolineCoreBundle:RoleOptions');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->container = $container;
-        $this->translator = $translator;
         $this->configHandler = $configHandler;
         $this->templateManager = $templateManager;
         $this->crud = $crud;
+
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
     }
 
     /**
-     * @param string                                           $name
-     * @param string                                           $translationKey
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param bool                                             $isReadOnly
+     * @param string    $name
+     * @param string    $translationKey
+     * @param Workspace $workspace
+     * @param bool      $isReadOnly
      *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function createWorkspaceRole(
         $name,
@@ -125,8 +127,9 @@ class RoleManager
      * @param string $name
      * @param string $translationKey
      * @param bool   $isReadOnly
+     * @param bool   $makeGroup
      *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function createBaseRole($name, $translationKey, $isReadOnly = true, $makeGroup = false)
     {
@@ -152,30 +155,9 @@ class RoleManager
     }
 
     /**
-     * @param string $name
-     * @param string $translationKey
-     * @param bool   $isReadOnly
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
-     */
-    public function createCustomRole($name, $translationKey, $isReadOnly = false)
-    {
-        $role = new Role();
-        $role->setName($name);
-        $role->setTranslationKey($translationKey);
-        $role->setReadOnly($isReadOnly);
-        $role->setType(Role::CUSTOM_ROLE);
-
-        $this->om->persist($role);
-        $this->om->flush();
-
-        return $role;
-    }
-
-    /**
      * @param User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function createUserRole(User $user)
     {
@@ -214,61 +196,20 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param string                                           $roleName
+     * @param AbstractRoleSubject $ars
+     * @param Role                $role
+     * @param bool                $sendMail
      *
-     * @throws \Exception
+     * @throws AddRoleException
      */
-    public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName, $validate = true)
-    {
-        $role = $this->roleRepo->findOneBy(['name' => $roleName]);
-
-        if ($validate) {
-            $validated = $this->validateRoleInsert($ars, $role);
-        } else {
-            $validated = true;
-        }
-
-        if (!$validated) {
-            throw new Exception\AddRoleException();
-        }
-
-        if ('Claroline\CoreBundle\Entity\Group' === get_class($ars) && 'ROLE_USER' === $role->getName()) {
-            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
-        }
-
-        if (!is_null($role)) {
-            $ars->addRole($role);
-            $this->om->persist($ars);
-            $this->om->flush();
-        }
-    }
-
-    /**
-     * @param int $roleId
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
-     */
-    public function getRole($roleId)
-    {
-        return $this->roleRepo->find($roleId);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role                $role
-     * @param bool                                             $sendMail
-     *
-     * @throws Exception\AddRoleException
-     */
-    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false, $dispatch = true)
+    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
     {
         if (!$this->validateRoleInsert($ars, $role)) {
-            throw new Exception\AddRoleException('Role cannot be added');
+            throw new AddRoleException('Role cannot be added');
         }
 
         if ('Claroline\CoreBundle\Entity\Group' === get_class($ars) && 'ROLE_USER' === $role->getName()) {
-            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+            throw new AddRoleException('ROLE_USER cannot be added to groups');
         }
 
         $this->crud->patch($ars, 'role', Crud::COLLECTION_ADD, [$role]);
@@ -281,8 +222,8 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role                $role
+     * @param AbstractRoleSubject $ars
+     * @param Role                $role
      */
     public function dissociateRole(AbstractRoleSubject $ars, Role $role)
     {
@@ -292,9 +233,9 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param array                                            $roles
-     * @param bool                                             $sendMail
+     * @param AbstractRoleSubject $ars
+     * @param array               $roles
+     * @param bool                $sendMail
      */
     public function associateRoles(AbstractRoleSubject $ars, $roles, $sendMail = false)
     {
@@ -306,8 +247,8 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject[]
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param AbstractRoleSubject[] $subjects
+     * @param Role                  $role
      */
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
@@ -317,93 +258,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     */
-    public function resetRoles(User $user)
-    {
-        $userRole = $this->roleRepo->findOneByName('ROLE_USER');
-        $roles = $this->roleRepo->findPlatformRoles($user);
-
-        foreach ($roles as $role) {
-            if ($role !== $userRole) {
-                $user->removeRole($role);
-            }
-        }
-        $this->om->persist($user);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $subject
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role                $role
-     */
-    public function dissociateWorkspaceRole(AbstractRoleSubject $subject, Workspace $workspace, Role $role)
-    {
-        $this->checkWorkspaceRoleEditionIsValid([$subject], $workspace, [$role]);
-        $this->dissociateRole($subject, $role);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $subject
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function resetWorkspaceRolesForSubject(AbstractRoleSubject $subject, Workspace $workspace)
-    {
-        $roles = $subject instanceof Group ?
-            $this->roleRepo->findByGroupAndWorkspace($subject, $workspace) :
-            $this->roleRepo->findByUserAndWorkspace($subject, $workspace);
-
-        $this->checkWorkspaceRoleEditionIsValid([$subject], $workspace, $roles);
-        $this->om->startFlushSuite();
-
-        foreach ($roles as $role) {
-            $this->dissociateRole($subject, $role);
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject[] $subjects
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace   $workspace
-     */
-    public function resetWorkspaceRoleForSubjects(array $subjects, $workspace)
-    {
-        $this->om->startFlushSuite();
-
-        foreach ($subjects as $subject) {
-            $this->resetWorkspaceRolesForSubject($subject, $workspace);
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param array                                            $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return array
-     */
-    public function initWorkspaceBaseRole(array $roles, Workspace $workspace)
-    {
-        $this->om->startFlushSuite();
-        $entityRoles = [];
-
-        $entityRoles['ROLE_WS_MANAGER'] = $this->createWorkspaceRole(
-            "ROLE_WS_MANAGER_{$workspace->getGuid()}",
-            'manager',
-            $workspace,
-            true
-        );
-
-        $this->om->endFlushSuite();
-
-        return $entityRoles;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param Role $role
      *
      * @throws RoleReadOnlyException
      */
@@ -418,54 +273,9 @@ class RoleManager
     }
 
     /**
-     * @param array|\Claroline\CoreBundle\Entity\AbstractRoleSubject $subjects
-     * @param \Claroline\CoreBundle\Entity\Role[]                    $roles
-     * @param bool                                                   $sendMail
-     */
-    public function associateRolesToSubjects(array $subjects, array $roles, $sendMail = false)
-    {
-        $this->om->startFlushSuite();
-
-        foreach ($subjects as $subject) {
-            $this->associateRoles($subject, $roles);
-        }
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param AbstractRoleSubject[]                            $subjects
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role[]              $roles
+     * @param Workspace $workspace
      *
-     * @throws Exception\LastManagerDeleteException
-     */
-    public function checkWorkspaceRoleEditionIsValid(array $subjects, Workspace $workspace, array $roles)
-    {
-        $managerRole = $this->getManagerRole($workspace);
-        $groupsManagers = $this->groupRepo->findByRoles([$managerRole]);
-        $usersManagers = $this->userRepo->findByRoles([$managerRole]);
-
-        $removedGroupsManager = 0;
-        $removedUsersManager = 0;
-
-        foreach ($subjects as $subject) {
-            if ($subject->hasRole($managerRole->getName()) && in_array($managerRole, $roles)) {
-                $subject instanceof Group ?
-                    $removedGroupsManager++ :
-                    $removedUsersManager++;
-            }
-        }
-
-        if ($removedGroupsManager >= count($groupsManagers) && $removedUsersManager >= count($usersManagers)) {
-            throw new LastManagerDeleteException("You can't remove every managers");
-        }
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Role[]
+     * @return Role[]
      */
     public function getWorkspaceRoles(Workspace $workspace)
     {
@@ -475,15 +285,16 @@ class RoleManager
     /**
      * @param Workspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Role[]
+     * @return Role[]
      */
     public function getWorkspaceConfigurableRoles(Workspace $workspace)
     {
+        /** @var Role[] $roles */
         $roles = $this->roleRepo->findByWorkspace($workspace);
         $configurableRoles = [];
 
         foreach ($roles as $role) {
-            if ($role->getName() !== 'ROLE_WS_MANAGER_'.$workspace->getGuid()) {
+            if ($role->getName() !== 'ROLE_WS_MANAGER_'.$workspace->getUuid()) {
                 $configurableRoles[] = $role;
             }
         }
@@ -501,32 +312,9 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param Workspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getRolesByWorkspace(
-        Workspace $workspace,
-        $search = '',
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
-        if (empty($search)) {
-            return $this->roleRepo->findByWorkspace($workspace, $orderedBy, $order);
-        } else {
-            return $this->roleRepo->findByWorkspaceAndSearch(
-                $workspace,
-                $search,
-                $orderedBy,
-                $order
-            );
-        }
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function getCollaboratorRole(Workspace $workspace)
     {
@@ -534,19 +322,9 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param Workspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Role
-     */
-    public function getVisitorRole(Workspace $workspace)
-    {
-        return $this->roleRepo->findVisitorRole($workspace);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function getManagerRole(Workspace $workspace)
     {
@@ -554,9 +332,9 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Role[]
+     * @return Role[]
      */
     public function getPlatformRoles(User $user)
     {
@@ -564,10 +342,10 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User                $user
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param User      $user
+     * @param Workspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Role[]
+     * @return Role[]
      */
     public function getWorkspaceRolesForUser(User $user, Workspace $workspace)
     {
@@ -575,105 +353,48 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Role[]
+     * @return Role[]
      */
-    public function getWorkspaceRolesByUser(User $user, $executeQuery = true)
+    public function getWorkspaceRolesByUser(User $user)
     {
-        return $this->roleRepo->findWorkspaceRolesByUser($user, $executeQuery);
-    }
-
-    /**
-     * @param string $search
-     *
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getRolesBySearchOnWorkspaceAndTag($search)
-    {
-        return $this->roleRepo->findByWorkspaceCodeTag($search);
-    }
-
-    /**
-     * @param int $roleId
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
-     */
-    public function getRoleById($roleId)
-    {
-        return $this->roleRepo->find($roleId);
-    }
-
-    /**
-     * @param int[] $ids
-     *
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getRolesByIds(array $ids)
-    {
-        return $this->om->findByIds('Claroline\CoreBundle\Entity\Role', $ids);
+        return $this->roleRepo->findWorkspaceRolesByUser($user);
     }
 
     /**
      * @param string $name
      *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function getRoleByName($name)
     {
-        return $this->roleRepo->findOneByName($name);
+        /** @var Role $role */
+        $role = $this->roleRepo->findOneBy(['name' => $name]);
+
+        return $role;
     }
 
     /**
-     * @param string $name
+     * @return \Claroline\CoreBundle\Entity\Role[]
+     */
+    public function getAllPlatformRoles()
+    {
+        return $this->roleRepo->findAllPlatformRoles();
+    }
+
+    /**
+     * @param string    $key       The translation key
+     * @param Workspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getRolesByName($name)
-    {
-        return $this->roleRepo->findByName($name);
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getAllRoles()
-    {
-        return $this->roleRepo->findAll();
-    }
-
-    public function getAllWhereWorkspaceIsDisplayable()
-    {
-        return $this->roleRepo->findAllWhereWorkspaceIsDisplayable();
-    }
-
-    public function getAllWhereWorkspaceIsDisplayableAndInList(array $workspaces)
-    {
-        return $this->roleRepo->findAllWhereWorkspaceIsDisplayableAndInList($workspaces);
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getAllPlatformRoles($includeRoleUser = true)
-    {
-        return $this->roleRepo->findAllPlatformRoles($includeRoleUser);
-    }
-
-    public function getAllPlatformRoleNamesAndKeys($includeRoleUser = true)
-    {
-        return $this->roleRepo->findAllPlatformRoleNamesAndKeys($includeRoleUser);
-    }
-
-    /**
-     * @param string                                           $key       The translation key
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function getRoleByTranslationKeyAndWorkspace($key, Workspace $workspace)
     {
-        return $this->roleRepo->findOneBy(['translationKey' => $key, 'workspace' => $workspace]);
+        /** @var Role $role */
+        $role = $this->roleRepo->findOneBy(['translationKey' => $key, 'workspace' => $workspace]);
+
+        return $role;
     }
 
     /**
@@ -683,47 +404,6 @@ class RoleManager
     {
         $this->om->persist($role);
         $this->om->flush();
-    }
-
-    /**
-     * Returns the roles (an array of string) of the $token.
-     *
-     * @todo remove this $method
-     *
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     *
-     * @return array
-     */
-    public function getStringRolesFromToken(TokenInterface $token)
-    {
-        $roles = [];
-
-        foreach ($token->getRoles() as $role) {
-            $roles[] = $role->getRole();
-        }
-
-        return $roles;
-    }
-
-    /**
-     * @param string $roleName
-     *
-     * @return string
-     */
-    public function getRoleBaseName($roleName)
-    {
-        if ('ROLE_ANONYMOUS' === $roleName) {
-            return $roleName;
-        }
-
-        $substr = explode('_', $roleName);
-        $roleName = array_shift($substr);
-
-        for ($i = 0, $countSubstr = count($substr) - 1; $i < $countSubstr; ++$i) {
-            $roleName .= '_'.$substr[$i];
-        }
-
-        return $roleName;
     }
 
     private function sendInscriptionMessage(AbstractRoleSubject $ars, Role $role, $withMail = true)
@@ -759,25 +439,6 @@ class RoleManager
             'SendMessage',
             [$sender, $content, $object, $ars, [], $withMail]
         );
-    }
-
-    public function getPlatformNonAdminRoles($includeAnonymous = false)
-    {
-        return $this->roleRepo->findPlatformNonAdminRoles($includeAnonymous);
-    }
-
-    public function createPlatformRoleAction($translationKey)
-    {
-        $role = new Role();
-        $role->setType($translationKey);
-        $role->setName('ROLE_'.strtoupper($translationKey));
-        $role->setTranslationKey($translationKey);
-        $role->setReadOnly(false);
-        $role->setType(Role::PLATFORM_ROLE);
-        $this->om->persist($role);
-        $this->om->flush();
-
-        return $role;
     }
 
     /**
@@ -842,27 +503,6 @@ class RoleManager
         return false;
     }
 
-    public function validateNewUserRolesInsert(array $roles)
-    {
-        $unavailableRoles = [];
-
-        foreach ($roles as $role) {
-            $isAvailable = $this->validateRoleInsert(new User(), $role);
-
-            if (!$isAvailable) {
-                $unavailableRoles[] = $role;
-            }
-        }
-        $roleUser = $this->getRoleByName('ROLE_USER');
-        $isAvailable = $this->validateRoleInsert(new User(), $roleUser);
-
-        if (!$isAvailable) {
-            $unavailableRoles[] = $roleUser;
-        }
-
-        return array_unique($unavailableRoles);
-    }
-
     /**
      * @param Role $role
      *
@@ -870,45 +510,15 @@ class RoleManager
      */
     public function countUsersByRoleIncludingGroup(Role $role)
     {
-        return $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
-    }
-
-    public function getRolesWithRightsByResourceNode(
-        ResourceNode $resourceNode,
-        $executeQuery = true
-    ) {
-        return $this->roleRepo
-            ->findRolesWithRightsByResourceNode($resourceNode, $executeQuery);
-    }
-
-    /**
-     * This functions sets the role limit equal to the current number of users having that role.
-     *
-     * @param Role $role
-     */
-    public function initializeLimit(Role $role)
-    {
-        $count = $this->countUsersByRoleIncludingGroup($role);
-        $role->setMaxUsers($count);
-        $this->om->persist($role);
-        $this->om->flush();
-    }
-
-    /**
-     * @param Role $role
-     * @param $limit
-     */
-    public function increaseRoleMaxUsers(Role $role, $limit)
-    {
-        $role->setMaxUsers($role->getMaxUsers() + $limit);
-        $this->om->persist($role);
-        $this->om->flush();
+        return $this->userRepo->countUsersByRoleIncludingGroup($role);
     }
 
     /**
      * @param string $workspaceCode
      * @param string $translationKey
      * @param bool   $executeQuery
+     *
+     * @return Role[]
      */
     public function getRoleByWorkspaceCodeAndTranslationKey(
         $workspaceCode,
@@ -926,6 +536,8 @@ class RoleManager
      * @param string $workspaceCode
      * @param string $translationKey
      * @param bool   $executeQuery
+     *
+     * @return Role[]
      */
     public function getRolesByWorkspaceCodeAndTranslationKey(
         $workspaceCode,
@@ -940,39 +552,6 @@ class RoleManager
     }
 
     /**
-     * Returns all non-platform roles of a user.
-     *
-     * @param User $user The subject of the role
-     *
-     * @return array[Role]|query
-     */
-    public function getNonPlatformRolesForUser(User $user, $executeQuery = true)
-    {
-        return $this->roleRepo->findNonPlatformRolesForUser($user, $executeQuery);
-    }
-
-    public function getWorkspaceRoleBaseName(Role $role)
-    {
-        if ($role->getWorkspace()) {
-            return substr($role->getName(), 0, strrpos($role->getName(), '_'));
-        }
-
-        return $role->getName();
-    }
-
-    public function getAllUserRoles($executeQuery = true)
-    {
-        return $this->roleRepo->findAllUserRoles($executeQuery);
-    }
-
-    public function getUserRolesByTranslationKeys(array $keys, $executeQuery = true)
-    {
-        return 0 === count($keys) ?
-            [] :
-            $this->roleRepo->findUserRolesByTranslationKeys($keys, $executeQuery);
-    }
-
-    /**
      * @param Workspace $workspace
      *
      * @return Role[]
@@ -980,11 +559,6 @@ class RoleManager
     public function getWorkspaceRoleWithToolAccess(Workspace $workspace)
     {
         return $this->roleRepo->findWorkspaceRoleWithToolAccess($workspace);
-    }
-
-    public function getRoleByUserAndRoleName(User $user, $roleName, $executeQuery = true)
-    {
-        return $this->roleRepo->findRoleByUserAndRoleName($user, $roleName, $executeQuery);
     }
 
     public function getWorkspaceRoleByNameOrTranslationKey(
@@ -997,101 +571,6 @@ class RoleManager
             $translationKey,
             $executeQuery
         );
-    }
-
-    public function invertWorkspaceCreation(Role $role)
-    {
-        $role->setPersonalWorkspaceCreationEnabled(!$role->isPersonalWorkspaceCreationEnabled());
-        $this->om->persist($role);
-        $this->om->flush();
-    }
-
-    public function associateWorkspaceRolesByImport(Workspace $workspace, array $datas)
-    {
-        $this->om->startFlushSuite();
-        $i = 1;
-
-        foreach ($datas as $data) {
-            $username = $data[0];
-            $roleName = $data[1];
-            $firstName = isset($data[2]) ? $data[2] : null;
-            $lastName = isset($data[3]) ? $data[3] : null;
-
-            $user = null;
-            if (!empty($username)) {
-                $user = $this->userRepo->findOneUserByUsername($username);
-            } elseif (!empty($firstName) && !empty($lastName)) {
-                $user = $this->userRepo->findOneBy([
-                    'firstName' => $firstName,
-                    'lastName' => $lastName,
-                ]);
-            }
-
-            $roles = $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
-                $workspace->getCode(),
-                $roleName
-            );
-
-            if (!is_null($user) && count($roles) > 0) {
-                $this->associateRoles($user, $roles);
-            }
-
-            if (0 === $i % 100) {
-                $this->om->forceFlush();
-            }
-            ++$i;
-        }
-        $this->om->endFlushSuite();
-    }
-
-    public function getRoleOptions(Role $role)
-    {
-        $roleOptions = $this->roleOptionsRepo->findOneByRole($role);
-
-        if (is_null($roleOptions)) {
-            $roleOptions = new RoleOptions();
-            $roleOptions->setRole($role);
-            $roleOptions->setDetails(['home_lock' => false]);
-            $this->om->persist($roleOptions);
-            $this->om->flush();
-        }
-
-        return $roleOptions;
-    }
-
-    public function persistRoleOptions(RoleOptions $roleOptions)
-    {
-        $this->om->persist($roleOptions);
-        $this->om->flush();
-    }
-
-    public function isHomeLocked(User $user)
-    {
-        $adminRole = $this->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
-        $isLocked = is_null($adminRole);
-
-        if ($isLocked) {
-            $roles = $this->getPlatformRoles($user);
-            $rolesOptions = $this->getRoleOptionsByRoles($roles);
-
-            foreach ($rolesOptions as $options) {
-                $details = $options->getDetails();
-
-                if (!isset($details['home_lock']) || !$details['home_lock']) {
-                    $isLocked = false;
-                    break;
-                }
-            }
-        }
-
-        return $isLocked;
-    }
-
-    public function getRoleOptionsByRoles(array $roles)
-    {
-        return count($roles) > 0 ?
-            $this->roleOptionsRepo->findRoleOptionsByRoles($roles) :
-            [];
     }
 
     public function setLogger(LoggerInterface $logger)
@@ -1111,8 +590,8 @@ class RoleManager
         $i = $workspaceIdx;
         $this->om->startFlushSuite();
         for ($batch = 0; $batch < ceil(($totalWs - $workspaceIdx) / $batchSize); ++$batch) {
-            //I hope it is correct for the offset/limit
-            $workspaces = $this->om->getRepository(Workspace::class)->findBy([], null, $batchSize, $batch * $batchSize + $workspaceIdx);
+            /** @var Workspace[] $workspaces */
+            $workspaces = $this->workspaceRepo->findBy([], null, $batchSize, $batch * $batchSize + $workspaceIdx);
 
             $nb = count($workspaces);
             $this->log("Fetched {$nb} workspaces for checking");
@@ -1180,10 +659,11 @@ class RoleManager
 
     public function checkUserIntegrity(User $user, $i = 1, $totalUsers = 1)
     {
-        $userRole = $role = $this->roleRepo->findOneByName('ROLE_USER');
+        /** @var Role $userRole */
+        $userRole = $role = $this->roleRepo->findOneBy(['name' => 'ROLE_USER']);
         $this->log('Checking personal role for '.$user->getUsername()." ($i/$totalUsers)");
         $roleName = 'ROLE_USER_'.strtoupper($user->getUsername());
-        $role = $this->roleRepo->findOneByName($roleName);
+        $role = $this->roleRepo->findOneBy(['name' => $roleName]);
         $user->addRole($userRole);
         $this->om->persist($user);
 
@@ -1202,8 +682,6 @@ class RoleManager
         $this->log('Checking roles integrity for workspace '.$workspace->getCode()." ($i/$totalWs)");
         $this->log('Setting workspace to roles for uuid '.$workspace->getUuid().'...');
 
-        $operationExecuted = false;
-
         $collaborator = $this->getCollaboratorRole($workspace);
         $manager = $this->getManagerRole($workspace);
 
@@ -1211,7 +689,7 @@ class RoleManager
             // Create collaborator role
             $this->log('Adding collaborator role for workspace '.$workspace->getCode().'...', LogLevel::DEBUG);
             $role = $this->createWorkspaceRole(
-                'ROLE_WS_COLLABORATOR_'.$workspace->getGuid(),
+                'ROLE_WS_COLLABORATOR_'.$workspace->getUuid(),
                 'collaborator',
                 $workspace,
                 true
@@ -1238,7 +716,8 @@ class RoleManager
             $creator->addRole($manager);
         }
 
-        $roles = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch('Claroline\CoreBundle\Entity\Role', ['name' => $workspace->getUuid()]);
+        /** @var Role[] $roles */
+        $roles = $this->container->get('Claroline\AppBundle\API\FinderProvider')->fetch(Role::class, ['name' => $workspace->getUuid()]);
 
         foreach ($roles as $role) {
             if (!$role->getWorkspace()) {
@@ -1283,6 +762,7 @@ class RoleManager
     {
         $operationExecuted = false;
         try {
+            /** @var ResourceNode $root */
             $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
 
             if ($root) {

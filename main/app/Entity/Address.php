@@ -59,7 +59,7 @@ trait Address
             $this->addressCity ?? '',
             $this->addressState ?? '',
             $this->addressPostalCode ?? '',
-            $this->addressCountry ?? ''
+            $this->addressCountry ?? '',
         ]));
     }
 

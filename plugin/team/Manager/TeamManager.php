@@ -354,7 +354,7 @@ class TeamManager
         $resourceNode = !is_null($team->getDirectory()) ? $team->getDirectory()->getResourceNode() : null;
 
         if (!is_null($resourceNode)) {
-            $workspaceRoles = $this->roleManager->getRolesByWorkspace($workspace);
+            $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
             $rights = [];
 
             foreach ($workspaceRoles as $role) {
@@ -385,7 +385,7 @@ class TeamManager
             $workspace = $team->getWorkspace();
             $teamRole = $team->getRole();
             $teamManagerRole = $team->getTeamManagerRole();
-            $workspaceRoles = $this->roleManager->getRolesByWorkspace($workspace);
+            $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
 
             foreach ($workspaceRoles as $role) {
                 if (!in_array($role->getUuid(), [$teamRole->getUuid(), $teamManagerRole->getUuid()])) {
