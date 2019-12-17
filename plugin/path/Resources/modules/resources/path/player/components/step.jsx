@@ -6,7 +6,7 @@ import {asset} from '#/main/app/config/asset'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {MENU_BUTTON, CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {MENU_BUTTON, CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
@@ -50,9 +50,9 @@ const SecondaryResources = props =>
         size="sm"
         orientation="row"
         primaryAction={{
-          type: LINK_BUTTON,
+          type: URL_BUTTON,
           label: trans('open', {}, 'actions'),
-          target: resourceRoute(resource),
+          target: '#'+resourceRoute(resource),
           open: props.target
         }}
         data={resource}
