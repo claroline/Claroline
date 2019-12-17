@@ -48,7 +48,6 @@ const HomeMain = (props) =>
         component: SendPassword
       }, {
         path: '/newpassword/:hash',
-        disabled: props.authenticated,
         component: NewPassword
       }, {
         path: '/login',
