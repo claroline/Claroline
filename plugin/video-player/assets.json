@@ -7,7 +7,7 @@
 
   "styles": {
     "entry": {
-      "subtitles": "video/subtitles.less"
+      "video-file": "files/video.less"
     }
   }
 }
