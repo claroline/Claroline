@@ -114,14 +114,14 @@ Some assets of the platform are managed by [webpack][webpack]. In a
 development environment, they require the webpack dev server to be
 running. You can start it with:
 
-    npm run watch
+    npm run webpack:dev
 
 Obviously, you'll also need a PHP-enabled web server to serve the application.
 Two alternatives are available.
 
 ### 1. Using PHP's built-in web server
 
-This is the simplest and recommended way of serving the application during
+This is the simplest way of serving the application during
 development. To start the server, use the command provided by the symfony
 framework (more details [here][symfo-server]):
 
@@ -129,7 +129,7 @@ framework (more details [here][symfo-server]):
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
 
-### 2. Using a standalone web server
+### 2. Using a standalone web server (recommended)
 
 If you want to use Apache or Nginx during development, make them serve the
 *web* directory, and access the application at
