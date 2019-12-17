@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
@@ -24,17 +24,15 @@ const PlayerMain = (props) => {
       then={module => {
         if (get(module, 'fileType.components.player')) {
           return (
-            <div>
-              <div>
-                {React.createElement(get(module, 'fileType.components.player'), {
-                  file: props.file,
-                  path: props.path
-                })}
+            <Fragment>
+              {React.createElement(get(module, 'fileType.components.player'), {
+                file: props.file,
+                path: props.path
+              })}
 
-                {get(module, 'fileType.styles') &&
-                  <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
-                }
-              </div>
+              {get(module, 'fileType.styles') &&
+                <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
+              }
 
               {props.file && props.file.commentsActivated &&
                 <Comments
@@ -48,9 +46,10 @@ const PlayerMain = (props) => {
                   canManage={props.canEdit}
                 />
               }
-            </div>
+            </Fragment>
           )
         }
+
         props.download(props.resourceNode)
       }}
     />
