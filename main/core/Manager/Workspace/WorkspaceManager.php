@@ -615,8 +615,9 @@ class WorkspaceManager
     }
 
     /**
+     * Only used in a old updater.
+     *
      * @param Workspace $workspace
-     *                             Only used in a old updater
      *
      * @return array
      */
@@ -630,7 +631,7 @@ class WorkspaceManager
         foreach ($scheduledForInsert as $entity) {
             if ('Claroline\CoreBundle\Entity\Role' === get_class($entity)) {
                 if ($entity->getWorkspace()) {
-                    if ($entity->getWorkspace()->getGuid() === $workspace->getGuid()) {
+                    if ($entity->getWorkspace()->getUuid() === $workspace->getUuid()) {
                         $wRoles[] = $entity;
                     }
                 }

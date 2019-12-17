@@ -368,17 +368,14 @@ class UserManager
      *
      * @param string $resetPassword
      *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
      * @return User
      */
     public function getByResetPasswordHash($resetPassword)
     {
         /** @var User $user */
-        $user = $this->userRepo->findBy(['resetPasswordHash' => $resetPassword]);
+        $user = $this->userRepo->findOneBy(['resetPasswordHash' => $resetPassword]);
 
-        return end($user);
+        return $user;
     }
 
     /**

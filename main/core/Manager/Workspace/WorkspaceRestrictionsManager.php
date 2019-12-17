@@ -76,6 +76,7 @@ class WorkspaceRestrictionsManager
             ];
 
             if ($user) {
+                $errors['registered'] = $this->workspaceManager->isRegistered($workspace, $user);
                 $errors['pendingRegistration'] = $this->workspaceManager->isUserInValidationQueue($workspace, $user);
             }
 

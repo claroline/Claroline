@@ -233,6 +233,7 @@ WorkspaceRestrictions.propTypes = {
   managed: T.bool.isRequired,
   errors: T.shape({
     noRights: T.bool.isRequired,
+    registered: T.bool,
     pendingRegistration: T.bool,
     selfRegistration: T.bool,
     locked: T.bool,
