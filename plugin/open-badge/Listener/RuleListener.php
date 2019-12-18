@@ -154,7 +154,7 @@ class RuleListener
           'badge'
         ));
         $evidence->setRule($rule);
-        $evidence->setName(Rule::RULE_RESOURCE_PASSED);
+        $evidence->setName(Rule::RESOURCE_PASSED);
         $evidence->setResourceEvidence($evaluation);
         $evidence->setUser($user);
         $this->om->persist($evidence);
