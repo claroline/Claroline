@@ -84,8 +84,7 @@ const EditorComponent = props =>
                 name: 'details.new_keywords_enabled',
                 type: 'boolean',
                 label: trans('label_new_keywords_enabled', {}, 'clacoform'),
-                displayed: (clacoForm) => get(clacoForm, 'details.keywords_enabled'),
-                required: true
+                displayed: (clacoForm) => get(clacoForm, 'details.keywords_enabled')
               }
             ]
           }
@@ -137,7 +136,8 @@ const EditorComponent = props =>
           }, {
             name: 'details.display_categories',
             type: 'boolean',
-            label: trans('label_display_categories', {}, 'clacoform')
+            label: trans('label_display_categories', {}, 'clacoform'),
+            help: trans('display_categories_help', {}, 'clacoform'),
           }, {
             name: 'details.display_keywords',
             type: 'boolean',
@@ -270,7 +270,6 @@ const EditorComponent = props =>
             name: 'random.enabled',
             type: 'boolean',
             label: trans('label_random_enabled', {}, 'clacoform'),
-            required: true,
             linked: [
               {
                 name: 'random.categories',
@@ -302,8 +301,7 @@ const EditorComponent = props =>
           {
             name: 'details.search_enabled',
             type: 'boolean',
-            label: trans('label_search_enabled', {}, 'clacoform'),
-            required: true
+            label: trans('label_search_enabled', {}, 'clacoform')
           }, {
             name: 'details.display_title',
             type: 'choice',

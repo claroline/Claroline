@@ -178,5 +178,6 @@
     "disable_edition_notification": "Désactiver les notifications des changements",
     "enable_edition_notification": "Activer les notifications des changements",
     "disable_comments_notification": "Désactiver les notifications des commentaires",
-    "enable_comments_notification": "Activer les notifications des commentaires"
+    "enable_comments_notification": "Activer les notifications des commentaires",
+    "display_categories_help": "Les catégories restent toujours accessible aux gestionnaires."
 }
