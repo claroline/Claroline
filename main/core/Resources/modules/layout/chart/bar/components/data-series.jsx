@@ -2,17 +2,21 @@ import React from 'react'
 import { implementPropTypes } from '#/main/app/prop-types'
 import {DataSeries as DataSeriesTypes} from '#/main/core/layout/chart/prop-types'
 
+import {formatData} from '#/main/core/layout/chart/utils'
 import {Bar} from '#/main/core/layout/chart/bar/components/bar.jsx'
 
 /**
  * Represents data on a Bar chart.
+ *
+ * @todo allow multiple DataSeries
  */
 const DataSeries = props => {
-  const hasNegativeValues = props.data.y.values.some(val => val < 0)
+  const data = formatData(props.data[0])
+  const hasNegativeValues = data.y.values.some(val => val < 0)
 
   return (
     <g>
-      {props.data.pairs.map((pair, i) => {
+      {data.pairs.map((pair, i) => {
         const isNegativeValue = pair.y < 0
         return (
           <Bar

@@ -137,7 +137,7 @@ const EditorComponent = props =>
             name: 'details.display_categories',
             type: 'boolean',
             label: trans('label_display_categories', {}, 'clacoform'),
-            help: trans('display_categories_help', {}, 'clacoform'),
+            help: trans('display_categories_help', {}, 'clacoform')
           }, {
             name: 'details.display_keywords',
             type: 'boolean',
