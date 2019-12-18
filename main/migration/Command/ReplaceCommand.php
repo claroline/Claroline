@@ -11,9 +11,10 @@
 
 namespace Claroline\MigrationBundle\Command;
 
+use Claroline\MigrationBundle\Migrator\InvalidVersionException;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ReplaceCommand extends AbstractMigrateCommand
 {

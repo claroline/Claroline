@@ -33,7 +33,7 @@ actions.disableMaintenance = () => ({
     request: {
       method: 'PUT'
     },
-    success: (response, dispatch) => dispatch(actions.setMaintenance(false))
+    success: (response, dispatch) => dispatch(actions.setMaintenance(false, null))
   }
 })
 

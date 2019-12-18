@@ -782,40 +782,6 @@ class UserManager
         return $this->logger;
     }
 
-    public function getResourceManagerDisplayMode($index)
-    {
-        $displayMode = 'default';
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' !== $user) {
-            $options = $this->getUserOptions($user);
-            $details = $options->getDetails();
-
-            if (!is_null($details) && isset($details['resourceManagerDisplayMode']) && isset($details['resourceManagerDisplayMode'][$index])) {
-                $displayMode = $details['resourceManagerDisplayMode'][$index];
-            }
-        }
-
-        return $displayMode;
-    }
-
-    public function registerResourceManagerDisplayModeByUser(User $user, $index, $displayMode)
-    {
-        $options = $this->getUserOptions($user);
-        $details = $options->getDetails();
-
-        if (is_null($details)) {
-            $details = [];
-        }
-
-        if (!isset($details['resourceManagerDisplayMode'])) {
-            $details['resourceManagerDisplayMode'] = [];
-        }
-        $details['resourceManagerDisplayMode'][$index] = $displayMode;
-        $options->setDetails($details);
-        $this->persistUserOptions($options);
-    }
-
     public function enable(User $user)
     {
         $user->enable();

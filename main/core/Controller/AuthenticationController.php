@@ -128,7 +128,7 @@ class AuthenticationController
 
         if ($data['password'] !== $data['confirm']) {
             $error = [
-              'error' => ['password' => 'password_value_missmatch'],
+              'error' => ['password' => 'password_value_mismatch'],
             ];
 
             return new JsonResponse($error, 400);

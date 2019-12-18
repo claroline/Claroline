@@ -20,6 +20,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
+use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
@@ -130,6 +131,7 @@ class ClacoFormListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();
         $copy = $event->getCopy();
         $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
@@ -165,6 +167,8 @@ class ClacoFormListener
     public function onImportAfter(ImportObjectEvent $event)
     {
         $data = $event->getData();
+
+        /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getObject();
 
         foreach ($data['categories'] as $dataCategory) {

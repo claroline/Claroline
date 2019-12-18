@@ -7,10 +7,9 @@ use Claroline\AppBundle\API\Transfer\Adapter\AdapterInterface;
 use Claroline\AppBundle\Logger\JsonLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Symfony\Component\Filesystem\Filesystem;
 //should not be here because it's a corebundle dependency
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class TransferProvider
@@ -27,6 +26,8 @@ class TransferProvider
     private $serializer;
     /** @var string */
     private $logDir;
+    /** @var SchemaProvider */
+    private $schema;
     /** @var TranslatorInterface */
     private $translator;
 
@@ -35,6 +36,7 @@ class TransferProvider
      *
      * @param ObjectManager       $om
      * @param SerializerProvider  $serializer
+     * @param SchemaProvider      $schema
      * @param string              $logDir
      * @param TranslatorInterface $translator
      */
@@ -75,7 +77,10 @@ class TransferProvider
      * @param string      $action
      * @param string      $mimeType
      * @param string|null $logFile
-     * @param mixed       $options  (currently used to pass the workspace so it' an entity but we might improve it later with an array of parameters)
+     * @param array       $options  (currently used to pass the workspace so it' an entity but we might improve it later with an array of parameters)
+     * @param array       $extra
+     *
+     * @return array
      */
     public function execute($data, $action, $mimeType, $logFile = null, array $options = [], array $extra = [])
     {
@@ -293,6 +298,8 @@ class TransferProvider
 
     /**
      * @param AdapterInterface|AbstractAction $dependency
+     *
+     * @throws \Exception
      */
     public function add($dependency)
     {
@@ -328,6 +335,8 @@ class TransferProvider
      *
      * @param string $actionName
      * @param string $format
+     * @param array  $options
+     * @param array  $extra
      *
      * @return mixed|array
      */
@@ -446,7 +455,7 @@ class TransferProvider
                     $result = $item;
                     break;
                 }
-            } catch (ContextErrorException $e) {
+            } catch (\Exception $e) {
                 unset($e);
             }
         }

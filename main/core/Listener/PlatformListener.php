@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -118,7 +119,7 @@ class PlatformListener
         }
 
         // checks platform maintenance
-        if ($this->config->getParameter('maintenance.enable')) {
+        if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
             // TODO : it may break the impersonation mode
             $isAdmin = false;

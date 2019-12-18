@@ -22,14 +22,15 @@ const LoginPage = (props) =>
             case constants.LOGIN_REDIRECT_LAST:
               props.history.goBack()
               break
-            case constants.LOGIN_REDIRECT_DESKTOP:
-              props.history.push('/desktop')
-              break
             case constants.LOGIN_REDIRECT_WORKSPACE:
               props.history.push(workspaceRoute(response.redirect.data))
               break
             case constants.LOGIN_REDIRECT_URL:
               window.location = response.redirect.data
+              break
+            case constants.LOGIN_REDIRECT_DESKTOP:
+            default:
+              props.history.push('/desktop')
               break
           }
         }

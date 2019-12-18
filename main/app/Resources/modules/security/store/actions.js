@@ -1,7 +1,10 @@
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {API_REQUEST} from '#/main/app/api'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
+import {MODAL_CONNECTION} from '#/main/app/modals/connection'
 import {selectors} from '#/main/app/security/store/selectors'
 
 // actions
@@ -36,9 +39,19 @@ actions.login = (username, password, rememberMe) => ({
         remember_me: rememberMe
       })
     },
-    success: (response, dispatch) => dispatch(actions.changeUser(response.user, false))
+    success: (response, dispatch) => dispatch(actions.onLogin(response))
   }
 })
+
+actions.onLogin = (response) => (dispatch) => {
+  dispatch(actions.changeUser(response.user, false))
+
+  if (!isEmpty(response.messages)) {
+    dispatch(modalActions.showModal(MODAL_CONNECTION, {
+      messages: response.messages
+    }))
+  }
+}
 
 actions.logout = () => ({
   [API_REQUEST]: {

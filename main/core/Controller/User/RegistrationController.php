@@ -82,8 +82,6 @@ class RegistrationController
      * @param string $hash
      *
      * @return RedirectResponse
-     *
-     * @todo move this to the api
      */
     public function activateUserAction($hash)
     {
@@ -123,6 +121,7 @@ class RegistrationController
             'termOfService' => $this->parameters['tos']['text'] ? $this->parameters['tos']['text'] : null,
             'options' => [
                 'autoLog' => $this->parameters['registration']['auto_logging'],
+                'validation' => $this->parameters['registration']['validation'],
                 'localeLanguage' => $this->parameters['locales']['default'],
                 'defaultRole' => $this->parameters['registration']['default_role'],
                 'userNameRegex' => $this->parameters['registration']['username_regex'],

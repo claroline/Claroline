@@ -184,5 +184,23 @@
       "title": "Echec de la dépublication",
       "message": "Nous n'avons pas réussi à dépublier votre contenu."
     }
+  },
+  "register": {
+    "pending": {
+      "title": "Inscription en cours",
+      "message": "Veuillez patienter pendant que nous créons votre compte."
+    },
+    "success": {
+      "title": "Inscription réussie",
+      "message": "Votre compte a correctement été créé."
+    },
+    "warning": {
+      "title": "Echec de l'inscription",
+      "message": "Veuillez corriger les erreurs de votre formulaire d'inscription et réessayer."
+    },
+    "error": {
+      "title": "Echec de l'inscription",
+      "message": "Nous n'avons pas réussi à créer votre compte."
+    }
   }
 }

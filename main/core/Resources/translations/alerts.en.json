@@ -180,5 +180,23 @@
       "title": "Unpublish failure",
       "message": "We were unable to unpublish your content."
     }
+  },
+  "register": {
+    "pending": {
+      "title": "Registraion in progress",
+      "message": "Please wait while we create your account."
+    },
+    "success": {
+      "title": "Successful registration",
+      "message": "Your account has been correctly created."
+    },
+    "warning": {
+      "title": "Registration failure",
+      "message": "Please correct the errors on your registration form and try again."
+    },
+    "error": {
+      "title": "Registration failure",
+      "message": "We are unable to create your account."
+    }
   }
 }

@@ -11,7 +11,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
-import {constants} from '#/main/core/administration/community/parameters/constants'
+import {constants as registrationConst} from '#/main/app/security/registration/constants'
 
 const Parameters = (props) => {
   const roleEnum = {}
@@ -69,6 +69,11 @@ const Parameters = (props) => {
                     type: 'boolean',
                     label: trans('allow_workspace_registration'),
                     displayed: props.parameters.registration && props.parameters.registration.self
+                  }, {
+                    name: 'registration.auto_logging',
+                    type: 'boolean',
+                    label: trans('auto_logging_after_registration'),
+                    displayed: props.parameters.registration && props.parameters.registration.self
                   }
                 ]
               }, {
@@ -89,7 +94,7 @@ const Parameters = (props) => {
                 options: {
                   noEmpty: true,
                   condensed: true,
-                  choices: constants.registrationValidationTypes
+                  choices: registrationConst.registrationValidationTypes
                 }
               }
             ]

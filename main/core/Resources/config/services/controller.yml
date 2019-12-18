@@ -115,10 +115,13 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\User\UserController:
         arguments:
+          - '@security.token_storage'
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.mail_manager'
+          - '@claroline.manager.registration_manager'
 
     Claroline\CoreBundle\Controller\APINew\User\UserTrackingController: ~
 

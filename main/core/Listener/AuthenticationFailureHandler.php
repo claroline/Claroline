@@ -24,7 +24,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($exception->getMessage(), 400);
+            return new JsonResponse($exception->getMessage(), 422);
         }
 
         return parent::onAuthenticationFailure($request, $exception);

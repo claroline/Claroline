@@ -12,7 +12,7 @@ actions.loadRegistrationData = makeActionCreator(REGISTRATION_DATA_LOAD, 'data')
 
 actions.createUser = (user, onCreated = () => {}) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_create_and_login'],
+    url: ['apiv2_user_register'],
     messages: constants.ALERT_REGISTRATION,
     request: {
       method: 'POST',
@@ -20,7 +20,7 @@ actions.createUser = (user, onCreated = () => {}) => ({
     },
     success: (response, dispatch) => {
       if (response) {
-        dispatch(securityActions.changeUser(response))
+        dispatch(securityActions.onLogin(response))
       }
 
       onCreated(response)

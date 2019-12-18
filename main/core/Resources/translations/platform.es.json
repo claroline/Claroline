@@ -3,8 +3,6 @@
     "accept": "Aceptar",
     "accessible_from": "Accesible desde",
     "accessible_until": "Accessible hasta",
-    "account_created": "Cuenta creada.",
-    "account_created_awaiting_validation": "Su cuenta ha sido creada con éxito. Sin embargo, sería posible tener acceso al área de trabajo después de la validación por un administrador.",
     "account_duration_label": "Duración de la vida de una cuentas (días)",
     "account_general_statistics": "Estadísticas generales de las cuentas",
     "action": "Acción",

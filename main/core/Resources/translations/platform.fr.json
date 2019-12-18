@@ -3,8 +3,6 @@
     "accept": "Accepter",
     "accessible_from": "Accessible à partir du",
     "accessible_until": "Accessible jusqu'au",
-    "account_created": "Les informations de votre compte vous ont été envoyées par courriel. (Il est possible qu'elles arrivent dans votre dossier dédié aux pourriels).",
-    "account_created_awaiting_validation": "Votre compte a été crée avec succès. Toutefois, il ne sera possible d'accéder à l'espace de travail qu'après la validation par un administrateur.",
     "account_duration_label": "Durée de vie des comptes (jours)",
     "account_general_statistics": "Statistiques générales sur les comptes",
     "action": "Action",
@@ -1701,7 +1699,7 @@
     "email_not_exist": "L'adresse email n'existe pas",
     "hash_invalid": "Le hash de changement de mot de passe n'existe pas ou est expiré",
     "password_invalid": "Ce mot de passe n'est pas valide",
-    "password_value_missmatch": "Les valeurs des champs mot de passe ne correspondent pas",
+    "password_value_mismatch": "Les valeurs des champs mot de passe ne correspondent pas",
     "password_changed": "Mot de passe modifié avec succès",
     "activity": "Activité",
     "enabled": "Actif",
@@ -1719,5 +1717,7 @@
     "value": "Valeur",
     "chart": "Graphique",
     "web": "Web",
-    "period": "Période"
+    "period": "Période",
+    "registration_mail_help": "Les informations de votre compte vont vous être envoyées par courriel. (Il est possible qu'elles arrivent dans votre dossier dédié aux pourriels).",
+    "registration_validation_help": "Votre compte ne sera accessible qu'une fois que vous l'aurez activé en cliquant sur le lien qui vous a été envoyé par courriel."
 }

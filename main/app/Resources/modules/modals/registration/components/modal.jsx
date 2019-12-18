@@ -19,11 +19,11 @@ const RegistrationModal = props =>
         <RegistrationMain
           path="/"
           onRegister={(user) => {
+            props.fadeModal()
+
             if (props.onRegister) {
               props.onRegister(user)
             }
-
-            props.fadeModal()
           }}
         />
       </Router>

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -102,6 +103,7 @@ class Update1205Command extends ContainerAwareCommand
             $this->log('Replacing old urls for '.$class.'...');
             foreach ($properties as $property) {
                 $this->log('Looking for property '.$property.'...');
+                /** @var EntityManager $em */
                 $em = $this->getContainer()->get('doctrine.orm.entity_manager');
                 $metadata = $em->getClassMetadata($class);
 

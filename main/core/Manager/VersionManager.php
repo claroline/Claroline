@@ -153,41 +153,4 @@ class VersionManager
 
         return $repo;
     }
-
-    public function findInstalledPackage(PluginBundleInterface $bundle)
-    {
-        //look for something in the database
-        $package = $this->getLatestUpgraded($bundle);
-
-        if ($package) {
-            return $package;
-        }
-
-        $previous = $this->openRepository($this->previousRepoFile, true);
-
-        if (!$previous) {
-            return;
-        }
-
-        foreach ($previous->getCanonicalPackages() as $package) {
-            $extra = $package->getExtra();
-
-            if ($extra && array_key_exists('bundles', $extra)) {
-                //Otherwise convert the name in a dirty little way
-                //If it's a metapackage, check in the bundle list
-                foreach ($extra['bundles'] as $installedBundle) {
-                    if ($installedBundle === $bundle) {
-                        return new Package($package->getName(), $package->getVersion());
-                    }
-                }
-            } else {
-                $bundleParts = explode('\\', $bundle);
-
-                //magic !
-                if (preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName()) === strtolower($bundleParts[2])) {
-                    return new Package($package->getName(), $package->getVersion());
-                }
-            }
-        }
-    }
 }

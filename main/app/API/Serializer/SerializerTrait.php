@@ -20,10 +20,11 @@ trait SerializerTrait
      * SetIfPropertyExists.
      * Sets an entity prop from an array data source.
      *
-     * @param $prop   - the property path
-     * @param $setter - the setter to use
-     * @param $data   - the data array
-     * @param $object - the object to use the setter on
+     * @param string $prop   - the property path
+     * @param string $setter - the setter to use
+     * @param mixed  $data   - the data array
+     * @param mixed  $object - the object to use the setter on
+     * @param bool   $trim
      */
     public function sipe($prop, $setter, $data = [], $object, $trim = true)
     {
@@ -46,21 +47,5 @@ trait SerializerTrait
         return in_array(Options::REFRESH_UUID, $options) ?
             $object->generateUuid() :
             $object->getUuid();
-    }
-
-    /**
-     * alias method.
-     */
-    public function findInCollection($object, $method, $id, $class = null)
-    {
-        foreach ($object->$method() as $el) {
-            if ($el->getId() === $id || $el->getUuid() === $id) {
-                return $el;
-            }
-        }
-
-        if ($class) {
-            return $this->om->getObject(['id' => $id], $class);
-        }
     }
 }

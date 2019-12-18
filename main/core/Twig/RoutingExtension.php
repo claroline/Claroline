@@ -13,11 +13,15 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\RoutingHelper;
 
 //Maybe it'll be usefull to have that in a real service and not a twig one
 class RoutingExtension extends \Twig_Extension
 {
+    /** @var RoutingHelper */
+    private $helper;
+
     public function __construct(RoutingHelper $helper)
     {
         $this->helper = $helper;

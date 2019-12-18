@@ -167,7 +167,7 @@ const AdministrationMenu = props =>
         group: trans('management')
       }, {
         name: 'disable-maintenance',
-        type: MODAL_BUTTON,
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-hard-hat',
         label: trans('disable-maintenance', {}, 'actions'),
         callback: () => props.disableMaintenance(),

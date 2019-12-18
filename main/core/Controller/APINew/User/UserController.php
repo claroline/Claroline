@@ -20,20 +20,21 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/user")
+ * @EXT\Route("/user")
  */
 class UserController extends AbstractCrudController
 {
@@ -41,11 +42,17 @@ class UserController extends AbstractCrudController
     use HasOrganizationsTrait;
     use HasGroupsTrait;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
 
     /** @var StrictDispatcher */
     private $eventDispatcher;
+
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     /** @var UserManager */
     private $manager;
@@ -53,29 +60,46 @@ class UserController extends AbstractCrudController
     /** @var MailManager */
     private $mailManager;
 
+    /** @var RegistrationManager */
+    private $registrationManager;
+
     /**
      * UserController constructor.
      *
+     * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authChecker
      * @param StrictDispatcher              $eventDispatcher
+     * @param PlatformConfigurationHandler  $config
      * @param MailManager                   $mailManager
      * @param UserManager                   $manager
+     * @param RegistrationManager           $registrationManager
      */
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authChecker,
         StrictDispatcher $eventDispatcher,
+        PlatformConfigurationHandler $config,
         UserManager $manager,
-        MailManager $mailManager
+        MailManager $mailManager,
+        RegistrationManager $registrationManager
     ) {
+        $this->tokenStorage = $tokenStorage;
         $this->authChecker = $authChecker;
         $this->eventDispatcher = $eventDispatcher;
+        $this->config = $config;
         $this->manager = $manager;
         $this->mailManager = $mailManager;
+        $this->registrationManager = $registrationManager;
     }
 
     public function getName()
     {
         return 'user';
+    }
+
+    public function getClass()
+    {
+        return User::class;
     }
 
     /**
@@ -128,34 +152,10 @@ class UserController extends AbstractCrudController
     public function listAction(Request $request, $class)
     {
         if (!$this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException('You need to authenticate first');
+            throw new AccessDeniedException();
         }
 
         return parent::listAction($request, $class);
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="List the objects of class $class.",
-     *     response={"$object"}
-     * )
-     * @Route("/current", name="apiv2_users_current")
-     * @Method("GET")
-     *
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
-     */
-    public function currentAction(Request $request)
-    {
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-
-        if ('anon.' === $user) {
-            throw new \Exception('No user authentified');
-        }
-
-        return new JsonResponse($this->serializer->serialize($user));
     }
 
     /**
@@ -165,8 +165,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/pws/create", name="apiv2_users_pws_create")
-     * @Method("POST")
+     * @EXT\Route("/pws", name="apiv2_users_pws_create")
+     * @EXT\Method("POST")
      *
      * @param Request $request
      *
@@ -181,7 +181,7 @@ class UserController extends AbstractCrudController
 
         foreach ($users as $user) {
             if (!$user->getPersonalWorkspace()) {
-                $this->container->get('claroline.manager.user_manager')->setPersonalWorkspace($user);
+                $this->manager->setPersonalWorkspace($user);
             }
         }
         $this->om->endFlushSuite();
@@ -198,8 +198,8 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/pws/delete", name="apiv2_users_pws_delete")
-     * @Method("DELETE")
+     * @EXT\Route("/pws", name="apiv2_users_pws_delete")
+     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *
@@ -216,7 +216,7 @@ class UserController extends AbstractCrudController
             $personalWorkspace = $user->getPersonalWorkspace();
 
             if ($personalWorkspace) {
-                $this->container->get('Claroline\AppBundle\API\Crud')->delete($personalWorkspace);
+                $this->crud->delete($personalWorkspace);
             }
         }
         $this->om->endFlushSuite();
@@ -233,38 +233,30 @@ class UserController extends AbstractCrudController
      *         "schema":"$schema"
      *     }
      * )
-     * @Route("/user/login", name="apiv2_user_create_and_login")
-     * @Method("POST")
+     * @EXT\Route("/register", name="apiv2_user_register")
+     * @EXT\Method("POST")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function createAndLoginAction(Request $request)
+    public function registerAction(Request $request)
     {
-        //there is a little bit of computation involved here (ie, do we need to validate the account or stuff like this)
-        //but keep it easy for now because an other route could be relevant
-        $selfLog = true;
-        $autoOrganization = $this->container
-            ->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler')
-            ->getParameter('force_organization_creation');
-
-        $organizationRepository = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager')
-            ->getRepository('ClarolineCoreBundle:Organization\Organization');
-
-        //step one: creation the organization if it's here. If it exists, we fetch it.
         $data = $this->decodeRequest($request);
 
-        $organization = null;
+        $organizationRepository = $this->om->getRepository(Organization::class);
 
+        $organization = null;
+        $autoOrganization = $this->config->getParameter('registration.force_organization_creation');
+        // step one: creation the organization if it's here. If it exists, we fetch it.
         if ($autoOrganization) {
-            //try to find orga first
-            //first find by vat
+            // try to find orga first
+            // first find by vat
             if (isset($data['mainOrganization'])) {
                 if (isset($data['mainOrganization']['vat']) && null !== $data['mainOrganization']['vat']) {
                     $organization = $organizationRepository
                       ->findOneBy(['vat' => $data['mainOrganization']['vat']]);
-                //then by code
+                // then by code
                 } else {
                     $organization = $organizationRepository
                       ->findOneBy(['code' => $data['mainOrganization']['code']]);
@@ -272,58 +264,39 @@ class UserController extends AbstractCrudController
             }
 
             if (!$organization && isset($data['mainOrganization'])) {
-                $organization = $this->crud->create(
-                    'Claroline\CoreBundle\Entity\Organization\Organization',
-                    $data['mainOrganization']
-                );
+                $organization = $this->crud->create(Organization::class, $data['mainOrganization']);
             }
 
-            //error handling
+            // error handling
             if (is_array($organization)) {
-                return new JsonResponse($organization, 400);
+                return new JsonResponse($organization, 422);
             }
         }
 
+        /** @var array|User $user */
         $user = $this->crud->create(
             User::class,
             $this->decodeRequest($request),
             array_merge($this->options['create'], [Options::VALIDATE_FACET])
         );
 
-        //error handling
+        // error handling
         if (is_array($user)) {
-            return new JsonResponse($user, 400);
+            return new JsonResponse($user, 422);
         }
 
         if ($organization) {
             $this->crud->replace($user, 'mainOrganization', $organization);
         }
 
-        if ($selfLog && 'anon.' === $this->container->get('security.token_storage')->getToken()->getUser()) {
-            $this->manager->logUser($user);
+        $selfLog = $this->config->getParameter('registration.auto_logging');
+        $validation = $this->config->getParameter('registration.validation');
+        // auto log user if option is set and account doesn't need to be validated
+        if ($selfLog && PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL !== $validation && 'anon.' === $this->tokenStorage->getToken()->getUser()) {
+            return $this->registrationManager->loginUser($user, $request);
         }
 
-        return new JsonResponse(
-            $this->serializer->serialize($user, $this->options['get']),
-            201
-        );
-    }
-
-    public function getOptions()
-    {
-        $create = [
-            //maybe move these options in an other class
-            Options::SEND_EMAIL,
-            Options::ADD_NOTIFICATIONS,
-            Options::WORKSPACE_VALIDATE_ROLES,
-        ];
-
-        return [
-            'deleteBulk' => [Options::SOFT_DELETE],
-            'create' => $create,
-            'get' => [Options::SERIALIZE_FACET],
-            'update' => [Options::SERIALIZE_FACET],
-        ];
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -336,12 +309,9 @@ class UserController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route(
-     *    "/list/registerable",
-     *    name="apiv2_user_list_registerable"
-     * )
-     * @Method({"GET", "POST"})
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @EXT\Route("/list/registerable", name="apiv2_user_list_registerable")
+     * @EXT\Method({"GET", "POST"})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param User    $user
      * @param Request $request
@@ -350,7 +320,7 @@ class UserController extends AbstractCrudController
      */
     public function listRegisterableAction(User $user, Request $request)
     {
-        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
+        $filters = $this->authChecker->isGranted('ROLE_ADMIN') ?
           [] :
           ['recursiveOrXOrganization' => array_map(function (Organization $organization) {
               return $organization->getUuid();
@@ -385,12 +355,9 @@ class UserController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route(
-     *    "/list/managed/organization",
-     *    name="apiv2_user_list_managed_organization"
-     * )
-     * @Method("GET")
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @EXT\Route("/list/managed/organization", name="apiv2_user_list_managed_organization")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param User    $user
      * @param Request $request
@@ -399,7 +366,7 @@ class UserController extends AbstractCrudController
      */
     public function listManagedOrganizationAction(User $user, Request $request)
     {
-        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
+        $filters = $this->authChecker->isGranted('ROLE_ADMIN') ?
           [] :
           [
             'recursiveOrXOrganization' => array_map(function (Organization $organization) {
@@ -413,19 +380,11 @@ class UserController extends AbstractCrudController
         ));
     }
 
-    public function getClass()
-    {
-        return User::class;
-    }
-
     /**
-     * @Route(
-     *    "/{keep}/{remove}/merge",
-     *    name="apiv2_user_merge"
-     * )
-     * @Method("PUT")
-     * @ParamConverter("keep", options={"mapping": {"keep": "uuid"}})
-     * @ParamConverter("remove", options={"mapping": {"remove": "uuid"}})
+     * @EXT\Route("/{keep}/{remove}/merge", name="apiv2_user_merge")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("keep", options={"mapping": {"keep": "uuid"}})
+     * @EXT\ParamConverter("remove", options={"mapping": {"remove": "uuid"}})
      *
      * @param User $keep
      * @param User $remove
@@ -459,65 +418,19 @@ class UserController extends AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Get the list of managed workspaces for the current user.",
-     *     queryString={
-     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!isManager",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
-     * )
-     * @Route(
-     *    "/list/managed/workspace",
-     *    name="apiv2_user_list_managed_workspace"
-     * )
-     * @Method("GET")
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
-     *
-     * @todo move in workspace api
-     */
-    public function listManagedWorkspaceAction(User $user, Request $request)
-    {
-        $managedWorkspaces = $this->finder->fetch(
-            'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            ['user' => $user->getId(), 'isManager' => true]
-        );
-
-        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
-          [] :
-          ['workspace' => array_map(function (Workspace $workspace) {
-              return $workspace->getUuid();
-          }, $managedWorkspaces)];
-
-        return new JsonResponse($this->finder->search(
-            User::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters])
-        ));
-    }
-
-    /**
-     * @ApiDoc(
      *     description="Enable a list of users.",
      *     queryString={
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route(
-     *    "/users/enable",
-     *    name="apiv2_users_enable"
-     * )
-     * @Method("PUT")
+     * @EXT\Route("/enable", name="apiv2_users_enable")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function usersEnableAction(Request $request)
+    public function enableUsersAction(Request $request)
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
@@ -542,17 +455,14 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route(
-     *    "/users/disable",
-     *    name="apiv2_users_disable"
-     * )
-     * @Method("PUT")
+     * @EXT\Route("/disable", name="apiv2_users_disable")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function usersDisableAction(Request $request)
+    public function disableUsersAction(Request $request)
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
@@ -577,17 +487,14 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route(
-     *    "/password/reset",
-     *    name="apiv2_users_password_reset"
-     * )
-     * @Method("PUT")
+     * @EXT\Route("/password/reset", name="apiv2_users_password_reset")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function passwordResetAction(Request $request)
+    public function resetPasswordAction(Request $request)
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
@@ -606,6 +513,21 @@ class UserController extends AbstractCrudController
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $users));
+    }
+
+    public function getOptions()
+    {
+        return [
+            'deleteBulk' => [Options::SOFT_DELETE],
+            'create' => [
+                //maybe move these options in an other class
+                Options::SEND_EMAIL,
+                Options::ADD_NOTIFICATIONS,
+                Options::WORKSPACE_VALIDATE_ROLES,
+            ],
+            'get' => [Options::SERIALIZE_FACET],
+            'update' => [Options::SERIALIZE_FACET],
+        ];
     }
 
     /**

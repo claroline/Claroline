@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Controller\API;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
@@ -32,9 +33,10 @@ class CommentController
     /**
      * postController constructor.
      *
-     * @param commentSerializer   $commentSerializer
-     * @param CommentManager      $commentManager
-     * @param BlogTrackingManager $trackingManager
+     * @param commentSerializer             $commentSerializer
+     * @param CommentManager                $commentManager
+     * @param BlogTrackingManager           $trackingManager
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         CommentSerializer $commentSerializer,
@@ -56,10 +58,12 @@ class CommentController
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\Method("GET")
      *
-     * @param Blog $blog
-     * @param Post $post
+     * @param Request $request
+     * @param Blog    $blog
+     * @param Post    $post
+     * @param User    $user
      *
-     * @return array
+     * @return JsonResponse
      */
     public function listAction(Request $request, Blog $blog, Post $post, User $user = null)
     {
@@ -69,7 +73,7 @@ class CommentController
         //if no edit rights, list only published comments and current user ones
         $canEdit = $this->authorization->isGranted('EDIT', new ObjectCollection([$blog]))
             || $this->authorization->isGranted('MODERATE', new ObjectCollection([$blog]));
-        $comments = [];
+
         $parameters = $request->query->all();
         $comments = $this->commentManager->getComments(
             $blog->getId(),
@@ -87,9 +91,10 @@ class CommentController
      * @EXT\Route("/moderation/reported", name="apiv2_blog_comment_reported")
      * @EXT\Method("GET")
      *
-     * @param Blog $blog
+     * @param Request $request
+     * @param Blog    $blog
      *
-     * @return array
+     * @return JsonResponse
      */
     public function listCommentReportedAction(Request $request, Blog $blog)
     {
@@ -113,9 +118,10 @@ class CommentController
      * @EXT\Route("/moderation/unpublished", name="apiv2_blog_comment_unpublished")
      * @EXT\Method("GET")
      *
-     * @param Blog $blog
+     * @param Request $request
+     * @param Blog    $blog
      *
-     * @return array
+     * @return JsonResponse
      */
     public function listCommentUnpublishedAction(Request $request, Blog $blog)
     {
@@ -141,9 +147,9 @@ class CommentController
      *
      * @param Blog $blog
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function listTrustedUsersAction(Request $request, Blog $blog)
+    public function listTrustedUsersAction(Blog $blog)
     {
         if ($this->checkPermission('MODERATE', $blog->getResourceNode())
             || $this->checkPermission('EDIT', $blog->getResourceNode())) {
@@ -163,11 +169,12 @@ class CommentController
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
+     * @param Request $request
+     * @param Blog    $blog
+     * @param Post    $post
+     * @param User    $user
      *
-     * @return Comment
+     * @return JsonResponse
      */
     public function createCommentAction(Request $request, Blog $blog, Post $post, User $user = null)
     {
@@ -193,11 +200,12 @@ class CommentController
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
+     * @param Request $request
      * @param Blog    $blog
      * @param Comment $comment
      * @param User    $user
      *
-     * @return array
+     * @return JsonResponse
      */
     public function updateCommentAction(Request $request, Blog $blog, Comment $comment, User $user = null)
     {
@@ -228,9 +236,9 @@ class CommentController
      * @param Comment $comment
      * @param User    $user
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function publishCommentAction(Request $request, Blog $blog, Comment $comment, User $user)
+    public function publishCommentAction(Blog $blog, Comment $comment, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
         $comment = $this->commentManager->publishComment($blog, $comment);
@@ -250,9 +258,9 @@ class CommentController
      * @param Comment $comment
      * @param User    $user
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function unpublishCommentAction(Request $request, Blog $blog, Comment $comment, User $user)
+    public function unpublishCommentAction(Blog $blog, Comment $comment, User $user)
     {
         $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
         $comment = $this->commentManager->unpublishComment($blog, $comment);
@@ -272,9 +280,9 @@ class CommentController
      * @param Comment $comment
      * @param User    $user
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function reportCommentAction(Request $request, Blog $blog, Comment $comment, User $user)
+    public function reportCommentAction(Blog $blog, Comment $comment, User $user)
     {
         $comment = $this->commentManager->reportComment($blog, $comment);
 
@@ -293,9 +301,9 @@ class CommentController
      * @param Comment $comment
      * @param User    $user
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function deleteCommentAction(Request $request, Blog $blog, Comment $comment, User $user)
+    public function deleteCommentAction(Blog $blog, Comment $comment, User $user)
     {
         //original author or admin can edit, anon cant edit
         if ($blog->isCommentsAuthorized() && $this->isLoggedIn($user)) {
@@ -316,6 +324,8 @@ class CommentController
     /**
      * Is the user logged in or not ?
      *
+     * @param User $user
+     *
      * @return bool
      */
     private function isLoggedIn(User $user)
@@ -329,6 +339,8 @@ class CommentController
      * @param Request $request
      *
      * @return mixed $data
+     *
+     * @throws InvalidDataException
      */
     protected function decodeRequest(Request $request)
     {
