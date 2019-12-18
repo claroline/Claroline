@@ -125,7 +125,7 @@ class TagInput extends Component {
     })
       .then(response => response.json())
       .then(tag => {
-        this.props.onChange([].concat(this.props.value, [tag.name]))
+        this.props.onChange([].concat(this.props.value || [], [tag.name]))
 
         this.setState({
           listOpened: false,
@@ -135,7 +135,7 @@ class TagInput extends Component {
   }
 
   select(tags = []) {
-    const newValue = this.props.value.slice()
+    const newValue = this.props.value ? this.props.value.slice() : []
 
     tags.map(tag => {
       if (-1 === newValue.indexOf(tag.name)) {
@@ -220,7 +220,7 @@ class TagInput extends Component {
           <div className={classes('form-control', {
             focus: this.state.inputFocus
           })}>
-            {this.props.value.map(tag =>
+            {this.props.value && this.props.value.map(tag =>
               <span key={toKey(tag)} className="tag label label-info">
                 {tag}
 
