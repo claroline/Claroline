@@ -48,7 +48,8 @@ const Path = (props) =>
     />
     <div className="path-tracking-current">
       <BarChart
-        height={160}
+        height={200}
+        width={1400}
         data={props.steps.reduce((acc, stepData) => {
           acc[stepData.step.id] = {
             xData: stepData.step.title,
@@ -71,6 +72,12 @@ const Path = (props) =>
           } else if (props.steps[idx - 1] && props.steps[idx - 1].users) {
             props.showStepDetails(props.steps[idx - 1].users)
           }
+        }}
+        margin={{
+          left: 50,
+          top: 5,
+          right: 1,
+          bottom: 50
         }}
       />
     </div>
@@ -102,6 +109,10 @@ Path.propTypes = {
   })),
   invalidateEvaluations: T.func.isRequired,
   showStepDetails: T.func.isRequired
+}
+
+Path.defaultProps = {
+  steps: []
 }
 
 export {

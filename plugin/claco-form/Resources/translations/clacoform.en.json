@@ -178,5 +178,6 @@
     "disable_edition_notification": "Disable notifications on updates",
     "enable_edition_notification": "Enable notifications on updates",
     "disable_comments_notification": "Disable notifications on comments",
-    "enable_comments_notification": "Enable notifications on comments"
+    "enable_comments_notification": "Enable notifications on comments",
+    "display_categories_help": "The categories are always accessible to managers."
 }
