@@ -93,7 +93,7 @@ class EntryController extends AbstractCrudController
 
             foreach ($params['filters'] as $key => $value) {
                 if (!in_array($key, $excludedFilters)) {
-                    $filters['field_'.$key] = $value;
+                    $filters[$key] = $value;
                 }
             }
             $params['filters'] = $filters;

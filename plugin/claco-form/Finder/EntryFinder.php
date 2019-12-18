@@ -221,6 +221,7 @@ class EntryFinder extends AbstractFinder
                     $this->usedJoin['keywords'] = true;
                     break;
                 default:
+                    $filterName = str_replace('values.', '', $filterName);
                     $field = $fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $filterName]);
                     $this->filterField($qb, $filterName, $filterValue, $field);
             }
