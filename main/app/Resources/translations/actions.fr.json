@@ -1,4 +1,5 @@
 {
+  "accept": "Accepter",
   "add": "Ajouter",
   "administrate": "Administrer",
   "archive": "Archiver",
@@ -14,6 +15,7 @@
   "copy-model": "Copier comme modèle",
   "correct": "Corriger",
   "create": "Créer",
+  "decline": "Refuser",
   "delete": "Supprimer",
   "deselect": "Déselectionner",
   "disable": "Désactiver",

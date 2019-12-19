@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 class UserVoter extends AbstractVoter
 {
@@ -104,10 +105,34 @@ class UserVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        // we can only add platform roles to users if we have that platform role
-        // require dedicated unit test imo
         if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\Role')) {
-            $currentRoles = array_map(function ($role) {
+            // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
+            $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
+                if ($role->getWorkspace() && $this->isGranted(['users', 'edit'], $role->getWorkspace())) {
+                    $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+                    // If user is workspace manager then grant access
+                    if ($workspaceManager->isManager($role->getWorkspace(), $token)) {
+                        return false;
+                    }
+
+                    // If role to be removed is not an administrate role then grant access
+                    $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
+                    $wsRoles = $roleManager->getWorkspaceNonAdministrateRoles($role->getWorkspace());
+                    if (in_array($role, $wsRoles)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            if (0 === count($nonAuthorized)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
+            // we can only add platform roles to users if we have that platform role
+            // require dedicated unit test imo
+            $currentRoles = array_map(function (BaseRole $role) {
                 return $role->getRole();
             }, $token->getRoles());
             if (count(array_filter($collection->toArray(), function (Role $role) use ($currentRoles) {

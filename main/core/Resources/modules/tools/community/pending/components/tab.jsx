@@ -36,7 +36,7 @@ const PendingTab = props =>
       actions={(rows) => [{
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-check',
-        label: trans('validate', {}, 'actions'),
+        label: trans('accept', {}, 'actions'),
         callback: () => props.register(rows, props.workspace),
         confirm: {
           title: trans('user_registration'),
@@ -45,7 +45,7 @@ const PendingTab = props =>
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-ban',
-        label: trans('delete', {}, 'actions'),
+        label: trans('decline', {}, 'actions'),
         callback: () => props.remove(rows, props.workspace),
         confirm: {
           title: trans('user_remove'),
