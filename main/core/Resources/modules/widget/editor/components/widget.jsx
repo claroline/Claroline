@@ -20,7 +20,7 @@ import {
   computeStyles,
   computeTitleStyles
 } from '#/main/core/widget/utils'
-import {WidgetContent} from '#/main/core/widget/content/components/content'
+import {WidgetContent} from '#/main/core/widget/content/containers/content'
 import {MODAL_WIDGET_CONTENT} from '#/main/core/widget/content/modals/creation'
 import {MODAL_CONTENT_PARAMETERS} from '#/main/core/widget/content/modals/parameters'
 

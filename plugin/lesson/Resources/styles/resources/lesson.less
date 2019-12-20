@@ -1,41 +1,62 @@
-.lesson-container {
+/*
+ * Path resource styles.
+ */
 
-  .btn.float-right {
-    float: right;
+// Claroline & bootstrap mixins
+@import "../../../../../main/core/Resources/less/mixins";
+
+// Plugin vars
+@import "../variables";
+
+.icap_lesson-page {
+  .content-loader {
+    margin-left: -(floor(@grid-gutter-width / 2));
+    margin-right: -(floor(@grid-gutter-width / 2));
   }
-
-  .summary .summary-link {
-    a span.sr-only {
-      position: relative !important;
-      width: auto !important;
-      height: auto !important;
-    }
-
-    .btn-summary {
-      float: left;
-    }
-
-    .step-actions span.sr-only {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-    }
-  }
-
-  .lesson-page-content {
-    .lesson-bottom-buttons {
-      .back-to-top {
-        text-align: center;
-      }
-
-      .navigation {
-        border-top: 1px solid rgb(221, 221, 221);
-      }
-    }
-  }
-
 }
 
-.editor-content {
-  margin-top: 20px;
+// c/c from PathBundle
+.chapter-poster,
+.chapter-title {
+  margin-top: @line-height-computed - 4px; // 4px is to absorb progress bar height
+}
+
+.chapter-poster {
+  border-radius: @chapter-poster-border-radius;
+
+  + .chapter-title {
+    margin-top: @line-height-computed; // restore default margin
+  }
+}
+
+.current-chapter {
+  flex: 1;
+}
+
+.lesson-navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin-bottom: @component-margin-bottom;
+
+  .btn-previous,
+  .btn-next {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .btn-previous {
+    text-align: left;
+    margin-right: floor(@grid-gutter-width / 2);
+  }
+
+  .btn-next {
+    font-weight: bold;
+    text-align: right;
+    margin-left: floor(@grid-gutter-width / 2);
+
+    &:first-child {
+      margin-left: auto;
+    }
+  }
 }

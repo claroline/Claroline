@@ -1,7 +1,7 @@
 // this is a big c/c from .resource-type
 .item-type {
     border-radius: @border-radius-base;
-    background: #F5F5F5; // todo : use a var (same than modal footer)
+    background: @gray-lightest;
     border: 1px solid transparent;
     padding: 5px;
     display: flex;
@@ -73,7 +73,7 @@
 .item-feedback {
     display: flex;
     text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
-    background: #f5f5f5; // todo : add var
+    background: @panel-footer-bg;
     border-top: 1px solid #e5e5e5; // todo : add var
     margin: 20px -15px -15px; // todo : add var
     padding: 15px; // todo : add var
@@ -94,7 +94,7 @@
     white-space: nowrap;
     border-radius: @label-border-radius;
     font-size: @label-font-size;
-    background: #777;
+    background: @gray-light;
     color: #eee;
     padding: 4px 6px;
     margin-left: 5px;

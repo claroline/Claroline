@@ -47,7 +47,6 @@ const reducer = combineReducers({
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lesson
   }),
   chapter: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.chapter,
     [CHAPTER_LOAD]: (state, action) => action.chapter,
     [CHAPTER_RESET]: () => ({}),
     [CHAPTER_DELETED]: () => null
@@ -61,14 +60,14 @@ const reducer = combineReducers({
         data.position = action.isRoot ? 'subchapter' : data.position
         return data
       },
-      [FORM_RESET + '/' + selectors.STORE_NAME + '.chapter_form']: (state) => ({
+      [FORM_RESET + '/' + selectors.STORE_NAME + '.chapter_form']: (state, action) => Object.assign({
         position: 'subchapter',
         order: {
           sibling: 'before',
           subchapter: 'first'
         },
         parentSlug: state.parentSlug
-      })
+      }, action.data || {})
     })
   }),
   tree: combineReducers({

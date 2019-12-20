@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
-
+import {actions as resourceActions} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
 
 export const SUMMARY_PIN_TOGGLE  = 'SUMMARY_PIN_TOGGLE'
@@ -29,10 +29,26 @@ actions.positionSelected = makeActionCreator(POSITION_SELECTED, 'isRoot')
 
 actions.loadChapter = (lessonId, chapterSlug) => dispatch => {
   dispatch(actions.chapterReset())
-  return dispatch({[API_REQUEST]: {
-    url:['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
-    success: (response, dispatch) => dispatch(actions.chapterLoad(response))
-  }})
+
+  return dispatch({
+    [API_REQUEST]: {
+      url:['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
+      silent: true,
+      success: (response) => {
+        dispatch(actions.chapterLoad(response))
+
+        if (!response.previousSlug) {
+          // first chapter
+          dispatch(resourceActions.triggerLifecycleAction('play'))
+        }
+
+        if (!response.nextSlug) {
+          // last chapter
+          dispatch(resourceActions.triggerLifecycleAction('end'))
+        }
+      }
+    }
+  })
 }
 
 actions.editChapter = (formName, lessonId, chapterSlug) => dispatch => {
