@@ -1,70 +1,6 @@
-import cloneDeep from 'lodash/cloneDeep'
 import {trans} from '#/main/app/intl/translation'
 
-import {LINK_BUTTON} from '#/main/app/buttons'
-
-/**
- * Transforme l'arbre du cours provenant de l'API pour que le composant Summary puisse l'utiliser
- *
- * @param tree
- */
-export const normalizeTree = (tree, lessonId, canEdit, path) => {
-  const copy = cloneDeep(tree)
-
-  let elems = normalizeTreeNode(copy.children, lessonId, canEdit, path)
-
-  if (canEdit) {
-    elems.push({
-      label: trans('chapter_creation', {}, 'icap_lesson'),
-      target: `${path}/new`,
-      icon: 'fa fa-fw fa-plus',
-      type: LINK_BUTTON
-    })
-  }
-
-  return {
-    id: tree.id,
-    slug: tree.slug,
-    children: elems
-  }
-}
-
-const normalizeTreeNode = (node, lessonId, canEdit, path) => {
-
-  return node.map((elem) => {
-
-    const element = {
-      type: LINK_BUTTON,
-      target: `${path}/${elem['slug']}`,
-      label: elem['title'],
-      additional: [
-        {
-          type: LINK_BUTTON,
-          target: `${path}/${elem['slug']}/edit`,
-          label: trans('edit', {}, 'actions'),
-          icon: 'fa fa-pencil',
-          displayed: canEdit,
-          group: trans('management')
-        }, {
-          type: LINK_BUTTON,
-          target: `${path}/${elem['slug']}/copy`,
-          label: trans('copy', {}, 'actions'),
-          icon: 'fa fa-clone',
-          displayed: canEdit,
-          group: trans('management')
-        }
-      ]
-    }
-
-    if (elem.children.length > 0) {
-      element.children = normalizeTreeNode(elem.children, lessonId, canEdit, path)
-    }
-
-    return element
-  })
-}
-
-export const buildParentChapterChoices = (tree, chapter) => {
+const buildParentChapterChoices = (tree, chapter) => {
   let chapterSlug = chapter ? chapter.slug : null
 
   let flattenedChapters = {}
@@ -91,4 +27,41 @@ const buildFlattenedChapterChoices = (items, chapterSlug) => {
   })
 
   return flattenedChapters
+}
+
+/**
+ * Flattens a tree of steps into a one-level array.
+ *
+ * @param {Array}  chapters
+ */
+function flattenChapters(chapters) {
+  function flatten(step, parent = null) {
+    const children = step.children
+    const flatStep = Object.assign({}, step)
+
+    delete flatStep.children
+    if (parent) {
+      flatStep.parent = {
+        id: parent.id,
+        title: parent.title
+      }
+    }
+
+    let flattened = [flatStep]
+
+    if (children) {
+      children.map((child) => {
+        flattened = flattened.concat(flatten(child, flatStep))
+      })
+    }
+
+    return flattened
+  }
+
+  return chapters.reduce((acc, step) => acc.concat(flatten(step)), [])
+}
+
+export {
+  flattenChapters,
+  buildParentChapterChoices
 }

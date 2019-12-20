@@ -70,13 +70,11 @@ class LessonListener
     {
         /** @var Lesson $lesson */
         $lesson = $event->getResource();
-        $firstChapter = $this->chapterRepository->getFirstChapter($lesson);
         $root = $this->chapterRepository->findOneBy(['lesson' => $lesson, 'level' => 0, 'parent' => null]);
 
         $event->setData([
             'lesson' => $this->serializer->serialize($lesson),
             'tree' => $this->chapterManager->serializeChapterTree($lesson),
-            'chapter' => $firstChapter ? $this->serializer->serialize($firstChapter) : null,
             'root' => $root ? $this->serializer->serialize($root) : null,
         ]);
 

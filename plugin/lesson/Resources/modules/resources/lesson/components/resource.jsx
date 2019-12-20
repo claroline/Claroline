@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Alert} from '#/main/app/alert/components/alert'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
@@ -37,13 +39,6 @@ class LessonResource extends Component {
         primaryAction="chapter"
         customActions={[
           {
-            type: LINK_BUTTON,
-            icon: 'fa fa-home',
-            label: trans('show_overview'),
-            target: this.props.path,
-            exact: true
-          },
-          {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-file-pdf-o',
             displayed: this.props.canExport,
@@ -61,19 +56,16 @@ class LessonResource extends Component {
             })
           }
         ]}
+        redirect={[
+          {from: '/', exact: true, to: '/'+get(this.props.tree, 'children[0].slug'), disabled: !get(this.props.tree, 'children[0]')}
+        ]}
         routes={[
           {
-            path: '/',
-            component: ChapterResource,
-            exact: true
-          }, {
             path: '/edit',
-            component: Editor,
-            exact: true
+            component: Editor
           }, {
             path: '/new',
             component: ChapterForm,
-            exact: true,
             onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
           }, {
             path: '/:slug',
@@ -83,16 +75,20 @@ class LessonResource extends Component {
           }, {
             path: '/:slug/edit',
             component: ChapterForm,
-            exact: true,
             onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
           }, {
             path: '/:slug/copy',
             component: ChapterForm,
-            exact: true,
             onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
           }
         ]}
-      />
+      >
+        {0 === get(this.props.tree, 'children', []).length &&
+          <Alert type="info">
+            {trans('empty_lesson_message', {}, 'icap_lesson')}
+          </Alert>
+        }
+      </ResourcePage>
     )
   }
 }

@@ -2,27 +2,32 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 
-// todo : remove me
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
-
 import {trans} from '#/main/app/intl/translation'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/utils'
 import {actions as lessonActions, selectors} from '#/plugin/lesson/resources/lesson/store'
-import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/modals/chapter'
-
-// todo : use standard form buttons
 
 const ChapterFormComponent = props =>
   <FormData
     name={selectors.CHAPTER_EDIT_FORM_NAME}
+    buttons={true}
+    save={{
+      type: CALLBACK_BUTTON,
+      callback: () => props.save(selectors.CHAPTER_EDIT_FORM_NAME, !props.isNew ?
+        ['apiv2_lesson_chapter_update', {lessonId: props.lesson.id, slug: props.slug}] :
+        ['apiv2_lesson_chapter_create', {lessonId: props.lesson.id, slug: props.parentSlug}]
+      ).then((response) => props.history.push(props.path+'/'+response.slug))
+    }}
+    cancel={{
+      type: LINK_BUTTON,
+      target: props.path,
+      exact: true
+    }}
     sections={[
       {
         id: 'chapter',
@@ -34,14 +39,12 @@ const ChapterFormComponent = props =>
             type: 'string',
             label: trans('title'),
             required: true
-          },
-          {
+          }, {
             name: 'move',
             type: 'boolean',
             label: trans('move_chapter', {}, 'icap_lesson'),
             displayed: !props.isNew
-          },
-          {
+          }, {
             name: 'parentSlug',
             type: 'choice',
             label: trans('move_destination', {}, 'icap_lesson'),
@@ -53,8 +56,7 @@ const ChapterFormComponent = props =>
               choices: buildParentChapterChoices(props.tree, props.chapter)
             },
             onChange: value => props.positionChange(value)
-          },
-          {
+          }, {
             name: 'position',
             type: 'choice',
             label: trans('move_relation', {}, 'icap_lesson'),
@@ -69,8 +71,7 @@ const ChapterFormComponent = props =>
                 sibling: trans('sibling', {}, 'icap_lesson')
               }
             }
-          },
-          {
+          }, {
             name: 'order.subchapter',
             type: 'choice',
             label: trans('options'),
@@ -84,8 +85,7 @@ const ChapterFormComponent = props =>
                 last: trans('last', {}, 'icap_lesson')
               }
             }
-          },
-          {
+          }, {
             name: 'order.sibling',
             type: 'choice',
             label: trans('options'),
@@ -99,50 +99,20 @@ const ChapterFormComponent = props =>
                 after: trans('after', {}, 'icap_lesson')
               }
             }
-          },
-          {
+          }, {
             name: 'text',
             type: 'html',
             label: trans('text'),
             required: true,
             options: {
-              workspace: props.workspace
+              workspace: props.workspace,
+              minRows: 10
             }
           }
         ]
       }
     ]}
-  >
-    <ButtonToolbar>
-      <Button
-        disabled={!props.saveEnabled}
-        primary={true}
-        label={trans(props.isNew ? 'create' : 'save')}
-        icon="fa fa-save"
-        type={CALLBACK_BUTTON}
-        className="btn"
-        callback={() => {
-          props.save(props.isNew, props.lesson.id, props.isNew ? props.parentSlug : props.chapter.slug, props.history, props.path)
-        }}
-      />
-      <Button
-        label={trans('cancel')}
-        title={trans('cancel')}
-        type={CALLBACK_BUTTON}
-        className="btn"
-        callback={() => {props.cancel(props.history, props.chapter.slug || props.lesson.firstChapterSlug || '', props.path)}}
-      />
-      {!props.isNew && <Button
-        label={trans('delete')}
-        title={trans('delete')}
-        dangerous={true}
-        icon="fa fa-trash-o"
-        type={CALLBACK_BUTTON}
-        className="btn float-right"
-        callback={() => {props.delete(props.lesson.id, props.chapter.slug, props.chapter.title, props.history, props.path)}}
-      />}
-    </ButtonToolbar>
-  </FormData>
+  />
 
 const ChapterForm = withRouter(connect(
   state => ({
@@ -151,39 +121,21 @@ const ChapterForm = withRouter(connect(
     lesson: selectors.lesson(state),
     chapter: selectors.chapter(state),
     tree: selectors.treeData(state),
-    mode: selectors.mode(state),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)),
-    isNew: formSelect.isNew(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)),
-    parentSlug: formSelect.data(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,
-    hasParentSlug: !!formSelect.data(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug,
-    isRootSelected: formSelect.data(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug === selectors.treeData(state).slug,
-    isSubchapterSelected: formSelect.data(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).position === 'subchapter',
-    isSiblingSelected: formSelect.data(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).position === 'sibling',
-    chapterWillBeMoved: !!formSelect.data(formSelect.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).move
+    isNew: formSelectors.isNew(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)),
+    slug: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).slug || null,
+    parentSlug: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,
+    hasParentSlug: !!formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug,
+    isRootSelected: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug === selectors.treeData(state).slug,
+    isSubchapterSelected: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).position === 'subchapter',
+    isSiblingSelected: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).position === 'sibling',
+    chapterWillBeMoved: !!formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).move
   }),
   dispatch => ({
-    save: (isNew, lessonId, slug, history, path) => {
-      dispatch(formActions.saveForm(selectors.CHAPTER_EDIT_FORM_NAME, [isNew ? 'apiv2_lesson_chapter_create' : 'apiv2_lesson_chapter_update', {lessonId, slug}]))
-        .then(
-          (success) => {
-            history.push(`${path}/${success['slug']}`)
-          }
-        )
-    },
-    cancel: (history, slug, path) => {
-      dispatch(formActions.cancelChanges(selectors.CHAPTER_EDIT_FORM_NAME))
-      history.push(`${path}/${slug}`)
+    save(formName, target) {
+      return dispatch(formActions.save(formName, target))
     },
     positionChange: value => {
       dispatch(lessonActions.positionChange(value))
-    },
-    delete: (lessonId, chapterSlug, chapterTitle, history, path) => {
-      dispatch(modalActions.showModal(MODAL_LESSON_CHAPTER_DELETE, {
-        deleteChapter: (deleteChildren) => dispatch(lessonActions.deleteChapter(lessonId, chapterSlug, deleteChildren)).then((success) => {
-          history.push(success.slug ? `${path}/${success.slug}` : path)
-        }),
-        chapterTitle: chapterTitle
-      }))
     }
   })
 )(ChapterFormComponent))
