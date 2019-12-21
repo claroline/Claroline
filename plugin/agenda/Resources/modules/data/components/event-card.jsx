@@ -14,7 +14,7 @@ const EventCard = (props) =>
     {...props}
     id={props.data.id}
     title={props.data.title}
-    subtitle={displayDate(props.data.dates[0], false, true) + (constants.EVENT_TYPE_EVENT === props.data.meta.type && props.data.dates[1] ? ' / ' + displayDate(props.data.dates[1], false, true) : '')}
+    subtitle={displayDate(props.data.start, false, true) + (constants.EVENT_TYPE_EVENT === props.data.meta.type && props.data.end ? ' / ' + displayDate(props.data.end, false, true) : '')}
     poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     contentText={getPlainText(props.data.description)}
   />
