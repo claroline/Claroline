@@ -196,6 +196,8 @@ class ResourceNodeController extends AbstractCrudController
             $resource->setHashName($publicFile->getUrl());
             $resource->setMimeType($publicFile->getMimeType());
             $resource->setSize($publicFile->getSize());
+
+            // TODO : use crud instead
             $resources[] = $this->resourceManager->create(
                 $resource,
                 $resourceType,

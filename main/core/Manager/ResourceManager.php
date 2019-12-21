@@ -145,6 +145,78 @@ class ResourceManager
     }
 
     /**
+     * Creates a resource.
+     *
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), 'role' => $entity))
+     *
+     * @param AbstractResource $resource
+     * @param ResourceType     $resourceType
+     * @param User             $creator
+     * @param Workspace        $workspace
+     * @param ResourceNode     $parent
+     * @param array            $rights
+     * @param bool             $isPublished
+     * @param bool             $createRights
+     *
+     * @deprecated: use directory listener: onAdd instead ? I don't know. This is weird.
+     *
+     * @return AbstractResource
+     */
+    public function create(
+        AbstractResource $resource,
+        ResourceType $resourceType,
+        User $creator,
+        Workspace $workspace = null,
+        ResourceNode $parent = null,
+        array $rights = [],
+        $isPublished = true,
+        $createRights = true
+    ) {
+        $this->om->startFlushSuite();
+        /** @var ResourceNode $node */
+        $node = new ResourceNode();
+        $node->setResourceType($resourceType);
+        $node->setPublished($isPublished);
+        $mimeType = (null === $resource->getMimeType()) ?
+            'custom/'.$resourceType->getName() :
+            $resource->getMimeType();
+        $node->setMimeType($mimeType);
+        $node->setName($resource->getName());
+        $node->setCreator($creator);
+        if (!$workspace && $parent && $parent->getWorkspace()) {
+            $workspace = $parent->getWorkspace();
+        }
+        if ($workspace) {
+            $node->setWorkspace($workspace);
+        }
+        $node->setParent($parent);
+        $node->setName($this->getUniqueName($node, $parent));
+        if ($parent) {
+            $this->setLastIndex($parent, $node);
+        }
+        if (!is_null($parent)) {
+            $node->setAccessibleFrom($parent->getAccessibleFrom());
+            $node->setAccessibleUntil($parent->getAccessibleUntil());
+        }
+        $resource->setResourceNode($node);
+        if ($createRights) {
+            $this->setRights($node, $parent, $rights);
+        }
+        $this->om->persist($node);
+        $this->om->persist($resource);
+        $parentPath = '';
+        if ($parent) {
+            $parentPath .= $parent->getPathForDisplay().' / ';
+        }
+        $node->setPathForCreationLog($parentPath.$node->getName());
+        $this->om->endFlushSuite();
+        
+        return $resource;
+    }
+
+    /**
      * Gets a unique name for a resource in a folder.
      * If the name of the resource already exists here, ~*indice* will be appended
      * to its name.
