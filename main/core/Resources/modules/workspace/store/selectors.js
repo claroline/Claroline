@@ -50,6 +50,11 @@ const shortcuts = createSelector(
   (store) => store.shortcuts
 )
 
+const userEvaluation = createSelector(
+  [store],
+  (store) => store.userEvaluation
+)
+
 // the current user enabled shortcuts
 const userShortcuts = createSelector(
   [shortcuts, securitySelectors.currentUser],
@@ -112,6 +117,7 @@ export const selectors = {
   tools,
   shortcuts,
   userShortcuts,
+  userEvaluation,
   defaultOpening,
   accessErrors,
   serverErrors

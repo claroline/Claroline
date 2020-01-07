@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -63,6 +64,8 @@ class WorkspaceController
     private $manager;
     /** @var WorkspaceRestrictionsManager */
     private $restrictionsManager;
+    /** @var EvaluationManager */
+    private $evaluationManager;
 
     /**
      * WorkspaceController constructor.
@@ -77,6 +80,7 @@ class WorkspaceController
      * @param Utilities                     $utils
      * @param WorkspaceManager              $manager
      * @param WorkspaceRestrictionsManager  $restrictionsManager
+     * @param EvaluationManager             $evaluationManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -88,7 +92,8 @@ class WorkspaceController
         TranslatorInterface $translator,
         Utilities $utils,
         WorkspaceManager $manager,
-        WorkspaceRestrictionsManager $restrictionsManager
+        WorkspaceRestrictionsManager $restrictionsManager,
+        EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -100,6 +105,7 @@ class WorkspaceController
         $this->utils = $utils;
         $this->manager = $manager;
         $this->restrictionsManager = $restrictionsManager;
+        $this->evaluationManager = $evaluationManager;
     }
 
     /**
@@ -148,6 +154,13 @@ class WorkspaceController
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
             }
 
+            $userEvaluation = null;
+            if ($user) {
+                $userEvaluation = $this->serializer->serialize(
+                    $this->evaluationManager->getEvaluation($workspace, $user)
+                );
+            }
+
             return new JsonResponse([
                 'workspace' => $this->serializer->serialize($workspace),
                 'managed' => $isManager,
@@ -155,7 +168,7 @@ class WorkspaceController
                 // append access restrictions to the loaded data if any
                 // to let the manager knows that other users can not enter the workspace
                 'accessErrors' => $accessErrors,
-                'userProgression' => null,
+                'userEvaluation' => $userEvaluation,
                 'tools' => array_values(array_map(function (OrderedTool $orderedTool) { // todo : create a serializer
                     return [
                         'icon' => $orderedTool->getTool()->getClass(),

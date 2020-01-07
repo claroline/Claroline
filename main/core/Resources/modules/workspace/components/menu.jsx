@@ -36,7 +36,7 @@ const WorkspaceProgression = props =>
     <LiquidGauge
       id="workspace-progression"
       type="user"
-      value={50}
+      value={get(props.userEvaluation, 'progression', 0)}
       displayValue={(value) => number(value) + '%'}
       width={70}
       height={70}
@@ -57,7 +57,10 @@ const WorkspaceProgression = props =>
 WorkspaceProgression.propTypes = {
   roles: T.arrayOf(T.shape({
     translationKey: T.string.isRequired
-  }))
+  })),
+  userEvaluation: T.shape({
+
+  })
 }
 
 const WorkspaceMenu = (props) => {
@@ -99,6 +102,7 @@ const WorkspaceMenu = (props) => {
       {get(props.workspace, 'display.showProgression') &&
         <WorkspaceProgression
           roles={workspaceRoles}
+          userEvaluation={props.userEvaluation}
         />
       }
 
@@ -149,6 +153,9 @@ WorkspaceMenu.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes
   ),
+  userEvaluation: T.shape({
+
+  }),
   shortcuts: T.arrayOf(T.shape({
     type: T.oneOf(['tool', 'action']).isRequired,
     name: T.string.isRequired

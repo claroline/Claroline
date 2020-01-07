@@ -47,8 +47,8 @@ const reducer = combineReducers({
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.shortcuts || [],
     [SHORTCUTS_LOAD]: (state, action) => action.shortcuts || []
   }),
-  userProgression: makeReducer(null, {
-    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userProgression || state
+  userEvaluation: makeReducer(null, {
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userEvaluation || state
   }),
   accessErrors: combineReducers({
     dismissed: makeReducer(false, {

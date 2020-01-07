@@ -16,7 +16,7 @@ function callback(el) {
     techOrder: ['html5', 'flash'],
     autoplay: autoplay,
     controls: !autoplay,
-    preload: 'meta',
+    preload: 'metadata',
     errorDisplay: true
   })
 }
