@@ -32,10 +32,8 @@
             {{ config.getParameter('google_meta_tag') | raw }}
         {% endif %}
 
-        {% block favicon %}
-            <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-            <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}" />
-        {% endblock %}
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}" />
 
         {# Adds stylesheets #}
         {# Styles from current theme #}

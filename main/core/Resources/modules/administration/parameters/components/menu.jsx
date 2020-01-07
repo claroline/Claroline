@@ -13,6 +13,7 @@ const ParametersMenu = (props) =>
     title={trans('main_settings', {}, 'tools')}
   >
     <Toolbar
+      id="parameters-menu"
       className="list-group"
       buttonName="list-group-item"
       actions={[
@@ -62,7 +63,7 @@ const ParametersMenu = (props) =>
         }, {
           name: 'archive',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-book',
+          icon: 'fa fa-fw fa-archive',
           label: trans('archive'),
           target: props.path+'/archives'
         }
