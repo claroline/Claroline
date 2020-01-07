@@ -9,10 +9,11 @@ import {Video as VideoTypes} from '#/plugin/video-player/files/video/prop-types'
 
 const Video = props =>
   <video
+    height="auto"
     className="video-js vjs-big-play-centered vjs-default-skin vjs-16-9 vjs-waiting"
     controls
     data-download={false}
-    data-setup={[]}
+    data-setup="{}"
   >
     <source src={props.file.url} type={props.mimeType} />
 

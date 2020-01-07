@@ -39,7 +39,7 @@
     "tinymce": "^4.9.3",
     "tinymce-codemirror": "git://github.com/christiaan/tinymce-codemirror.git#20c1bbe708",
     "uuid": "^3.3.2",
-    "video.js": "^7.4.1",
+    "video.js": "7.7.4",
     "wavesurfer.js": "2.2.1",
     "whatwg-fetch": "^2.0.1"
   },

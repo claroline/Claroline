@@ -16,9 +16,7 @@ function callback(el) {
     techOrder: ['html5', 'flash'],
     autoplay: autoplay,
     controls: !autoplay,
-    preload: 'metadata',
-      //I don't know why yet, but displaying errors crashes everything in a widget
-    errorDisplay: false
-  }, () => {}
-  )
+    preload: 'meta',
+    errorDisplay: true
+  })
 }
