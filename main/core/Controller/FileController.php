@@ -64,15 +64,16 @@ class FileController extends AbstractApiController
     /**
      * FileController constructor.
      *
-     * @param SessionInterface      $session
-     * @param ObjectManager         $om
-     * @param string                $fileDir
-     * @param SerializerProvider    $serializer
-     * @param ResourceManager       $resourceManager
-     * @param RoleManager           $roleManager
-     * @param FileUtilities         $fileUtils
-     * @param FinderProvider        $finder
-     * @param TokenStorageInterface $tokenStorage
+     * @param SessionInterface              $session
+     * @param ObjectManager                 $om
+     * @param string                        $fileDir
+     * @param ResourceNodeSerializer        $serializer
+     * @param ResourceManager               $resourceManager
+     * @param RoleManager                   $roleManager
+     * @param FileUtilities                 $fileUtils
+     * @param FinderProvider                $finder
+     * @param TokenStorageInterface         $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         SessionInterface $session,
@@ -215,7 +216,6 @@ class FileController extends AbstractApiController
             $user,
             $parent->getWorkspace(),
             $parent,
-            null,
             $rights,
             true
         );
