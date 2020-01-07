@@ -7,6 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
+import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 
@@ -82,6 +83,17 @@ const FavouritesDropdown = props =>
         ]
       })
     )}
+
+    <div className="app-header-dropdown-footer">
+      <Button
+        className="btn-link btn-emphasis btn-block"
+        type={LINK_BUTTON}
+        label={trans('workspaces' === props.section ? 'all_workspaces' : 'all_resources', {}, 'history')}
+        target={toolRoute('workspaces' === props.section ? 'workspaces' : 'resources')}
+        primary={true}
+        onClick={props.closeMenu}
+      />
+    </div>
   </div>
 
 FavouritesDropdown.propTypes = {
