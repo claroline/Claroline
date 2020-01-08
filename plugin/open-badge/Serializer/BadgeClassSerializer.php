@@ -263,7 +263,7 @@ class BadgeClassSerializer
         ]);
         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
 
-        return $event->getResponse();
+        return $event->getResponse() ?? [];
     }
 
     private function serializePermissions(BadgeClass $badge)
