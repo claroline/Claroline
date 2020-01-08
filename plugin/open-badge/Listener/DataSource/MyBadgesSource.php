@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use Claroline\OpenBadgeBundle\Entity\BadgeClass;
+use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MyBadgesSource
@@ -46,7 +46,7 @@ class MyBadgesSource
                 $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
             }
 
-            $badges = $this->finder->search(BadgeClass::class, $options);
+            $badges = $this->finder->search(Assertion::class, $options);
         }
 
         $event->setData($badges);

@@ -4,6 +4,7 @@ namespace Claroline\OpenBadgeBundle\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BadgeClassCrud
@@ -27,6 +28,7 @@ class BadgeClassCrud
      */
     public function preCreate(CreateEvent $event)
     {
+        /** @var BadgeClass $badge */
         $badge = $event->getObject();
         $badge->setIssuer($this->tokenStorage->getToken()->getUser()->getMainOrganization());
 

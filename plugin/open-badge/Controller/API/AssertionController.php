@@ -18,8 +18,10 @@ use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
 use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -142,7 +144,7 @@ class AssertionController extends AbstractCrudController
      *
      * @throws \Exception
      *
-     * @return JsonResponse
+     * @return StreamedResponse
      */
     public function assertionPdfDownloadAction(Assertion $assertion, User $currentUser)
     {
@@ -156,6 +158,11 @@ class AssertionController extends AbstractCrudController
 
         // Render the HTML as PDF
         $dompdf->render();
-        $dompdf->stream($badge->getName().'_'.$user->getFirstName().$user->getLastName());
+
+        $fileName = $badge->getName().'_'.$user->getFirstName().$user->getLastName().'.pdf';
+
+        return new StreamedResponse(function () use ($dompdf, $fileName) {
+            $dompdf->stream($fileName);
+        });
     }
 }
