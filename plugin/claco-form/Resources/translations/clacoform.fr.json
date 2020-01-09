@@ -179,5 +179,6 @@
     "enable_edition_notification": "Activer les notifications des changements",
     "disable_comments_notification": "Désactiver les notifications des commentaires",
     "enable_comments_notification": "Activer les notifications des commentaires",
-    "display_categories_help": "Les catégories restent toujours accessible aux gestionnaires."
+    "display_categories_help": "Les catégories restent toujours accessible aux gestionnaires.",
+    "entry_creation_not_allowed": "Vous ne pouvez pas créer de fiche dans cette base de données."
 }

@@ -179,5 +179,6 @@
     "enable_edition_notification": "Enable notifications on updates",
     "disable_comments_notification": "Disable notifications on comments",
     "enable_comments_notification": "Enable notifications on comments",
-    "display_categories_help": "The categories are always accessible to managers."
+    "display_categories_help": "The categories are always accessible to managers.",
+    "entry_creation_not_allowed": "You cannot add a new entry in this database."
 }

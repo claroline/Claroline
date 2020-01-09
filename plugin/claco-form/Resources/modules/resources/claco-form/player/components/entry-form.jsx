@@ -7,6 +7,7 @@ import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
 import {withRouter} from '#/main/app/router'
+import {Alert} from '#/main/app/alert/components/alert'
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
@@ -219,6 +220,14 @@ class EntryFormComponent extends Component {
   }
 
   render() {
+    if (this.props.isNew && !this.props.canAddEntry) {
+      return (
+        <Alert type="warning">
+          {trans('entry_creation_not_allowed', {}, 'clacoform')}
+        </Alert>
+      )
+    }
+
     const fields = this.getFields()
 
     return (
@@ -298,6 +307,7 @@ EntryFormComponent.propTypes = {
   impersonated: T.bool.isRequired,
   config: T.object,
   canEdit: T.bool.isRequired,
+  canAddEntry: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
   fields: T.arrayOf(T.shape(FieldType.propTypes)).isRequired,
   template: T.string,
@@ -332,6 +342,7 @@ const EntryForm = withRouter(connect(
     config: configSelectors.config(state),
     path: resourceSelectors.path(state),
 
+    canAddEntry: selectors.canAddEntry(state),
     canEdit: hasPermission('edit', resourceSelectors.resourceNode(state)),
     clacoFormId: selectors.clacoForm(state).id,
     fields: selectors.visibleFields(state),
