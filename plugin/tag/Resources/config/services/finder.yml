@@ -18,6 +18,6 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
-    Claroline\ScormBundle\Finder\TagFinder: ~
+    Claroline\TagBundle\Finder\TagFinder: ~
 
-    Claroline\ScormBundle\Finder\TaggedObjectFinder: ~
+    Claroline\TagBundle\Finder\TaggedObjectFinder: ~
