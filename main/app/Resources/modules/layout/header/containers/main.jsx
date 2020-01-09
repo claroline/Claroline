@@ -1,7 +1,6 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
-import {actions as walkthroughActions} from '#/main/app/overlays/walkthrough/store'
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
@@ -30,9 +29,6 @@ const HeaderMain = withReducer(selectors.STORE_NAME, reducer)(
       isAdmin: securitySelectors.isAdmin(state)
     }),
     (dispatch) => ({
-      startWalkthrough(steps, additional, documentation) {
-        dispatch(walkthroughActions.start(steps, additional, documentation))
-      },
       sendValidationEmail() {
         dispatch(actions.sendValidationEmail())
       }

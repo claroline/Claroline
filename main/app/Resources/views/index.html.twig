@@ -63,8 +63,8 @@
             data-config="{{ parameters | json_encode | raw | escape }}"
         ></div>
 
-        {# Anchor for UI portals (eg. modals, walkthroughs) #}
-        <div class="app-overlays-container"></div>
+        {# Anchor for UI portals (eg. modals) #}
+        <div class="app-modal-container"></div>
 
         {# Adds javascripts #}
         <script src="{{ hotAsset('runtime') }}"></script>

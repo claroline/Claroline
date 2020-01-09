@@ -10,7 +10,6 @@ import {HeaderBrand} from '#/main/app/layout/header/components/brand'
 import {HeaderUser} from '#/main/app/layout/header/components/user'
 
 import {getMenu} from '#/main/app/layout/header/utils'
-import {getWalkthrough} from '#/main/app/layout/header/walkthroughs/menus'
 
 const HeaderMain = props =>
   <header className="app-header-container">
@@ -55,12 +54,6 @@ const HeaderMain = props =>
         sendValidationEmail={props.sendValidationEmail}
         actions={[
           {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-street-view',
-            label: trans('walkthroughs'),
-            callback: () => props.startWalkthrough(getWalkthrough([], props.authenticated, props.display)),
-            displayed: false
-          }, {
             type: URL_BUTTON,
             icon: 'fa fa-fw fa-question',
             label: trans('help'),
@@ -121,7 +114,6 @@ HeaderMain.propTypes = {
   isAdmin: T.bool.isRequired,
   helpUrl: T.string,
   registration: T.bool,
-  startWalkthrough: T.func.isRequired,
   sendValidationEmail: T.func.isRequired,
   toggleMenu: T.func.isRequired
 }

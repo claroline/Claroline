@@ -165,7 +165,6 @@ WorkspaceMenu.propTypes = {
     name: T.string.isRequired
   })),
   changeSection: T.func.isRequired,
-  startWalkthrough: T.func.isRequired,
   update: T.func.isRequired
 }
 

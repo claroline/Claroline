@@ -21,7 +21,6 @@ use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -127,7 +126,7 @@ class AssertionController extends AbstractCrudController
 
     /**
      * Downloads pdf version of assertion.
-     * 
+     *
      * @EXT\Route(
      *     "/{assertion}/pdf/download",
      *     name="apiv2_assertion_pdf_download"

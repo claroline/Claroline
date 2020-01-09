@@ -12,13 +12,11 @@ import {
   PageActions,
   MoreAction
 } from '#/main/core/layout/page'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {MODAL_WALKTHROUGHS} from '#/main/app/overlays/walkthrough/modals/walkthroughs'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
-import {getWalkthroughs} from '#/main/core/tools/home/walkthroughs'
 import {WidgetGrid} from '#/main/core/widget/player/components/grid'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
@@ -57,14 +55,6 @@ const EditorTab = props =>
           <MoreAction
             actions={[
               {
-                name: 'walkthrough',
-                type: MODAL_BUTTON,
-                icon: 'fa fa-street-view',
-                label: trans('show-walkthrough', {}, 'actions'),
-                modal: [MODAL_WALKTHROUGHS, {
-                  walkthroughs: getWalkthroughs(props.currentTab, (field, value) => props.updateTab(props.currentTabIndex, field, value))
-                }]
-              }, {
                 type: CALLBACK_BUTTON,
                 label: trans('delete', {}, 'actions'),
                 icon: 'fa fa-fw fa-trash-o',
