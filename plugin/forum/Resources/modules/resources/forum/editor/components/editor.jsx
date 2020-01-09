@@ -67,9 +67,10 @@ const EditorComponent = (props) =>
             label: trans('subjects_list_display', {}, 'forum'),
             options: {
               noEmpty: true,
-              choices: Object.keys(listConst.DISPLAY_MODES).map(displayMode => ({
+              inline: false,
+              choices: Object.keys(listConst.DISPLAY_MODES).reduce((acc, displayMode) => Object.assign(acc, {
                 [displayMode]: listConst.DISPLAY_MODES[displayMode].label
-              }))
+              }), {})
             }
           }
         ]
