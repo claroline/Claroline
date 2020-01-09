@@ -13,6 +13,7 @@ namespace Claroline\OpenBadgeBundle\Entity\Rules;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,6 +50,7 @@ class Rule
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass", inversedBy="rules")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var BadgeClass
      */

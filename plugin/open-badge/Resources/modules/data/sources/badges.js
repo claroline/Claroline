@@ -13,8 +13,8 @@ export default {
     primaryAction: (badge) => ({
       type: URL_BUTTON,
       target: badge.workspace ?
-        `#${workspaceRoute(badge.workspace, 'open-badge')}/badges/${badge.id}` :
-        `#${desktopRoute('open-badge')}/badges/${badge.id}`
+        `#${workspaceRoute(badge.workspace, 'badges')}/badges/${badge.id}` :
+        `#${desktopRoute('badges')}/badges/${badge.id}`
     }),
     definition: [
       {

@@ -15,8 +15,8 @@ export default {
     primaryAction: (assertion) => ({
       type: URL_BUTTON,
       target: get(assertion, 'badge.workspace') ?
-        `#${workspaceRoute(get(assertion, 'badge.workspace'), 'open-badge')}/badges/${get(assertion, 'badge.id')}/assertion/${assertion.id}` :
-        `#${desktopRoute('open-badge')}/badges/${get(assertion, 'badge.id')}/assertion/${assertion.id}`
+        `#${workspaceRoute(get(assertion, 'badge.workspace'), 'badges')}/badges/${get(assertion, 'badge.id')}/assertion/${assertion.id}` :
+        `#${desktopRoute('badges')}/badges/${get(assertion, 'badge.id')}/assertion/${assertion.id}`
     }),
     definition: [
       {

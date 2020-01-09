@@ -7,6 +7,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\Validation\User;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -15,10 +17,25 @@ class SubjectCrud
 {
     use PermissionCheckerTrait;
 
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var MessageManager */
+    private $messageManager;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
     /**
      * ForumSerializer constructor.
      *
-     * @param FinderProvider $finder
+     * @param ObjectManager                 $om
+     * @param TokenStorageInterface         $tokenStorage
+     * @param MessageManager                $messageManager
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
@@ -35,10 +52,11 @@ class SubjectCrud
     /**
      * @param CreateEvent $event
      *
-     * @return ResourceNode
+     * @return Subject
      */
     public function preCreate(CreateEvent $event)
     {
+        /** @var Subject $subject */
         $subject = $event->getObject();
         $forum = $subject->getForum();
 
