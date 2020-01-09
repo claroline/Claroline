@@ -186,7 +186,6 @@ const BadgeFormComponent = (props) =>
                 name: 'rules',
                 label: trans('rules', {}, 'badge'),
                 type: 'collection',
-                required: true,
                 displayed: isAutoIssuing,
                 options: {
                   type: 'rule',

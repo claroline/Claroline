@@ -88,7 +88,7 @@ class BadgeClassSerializer
     }
 
     /**
-     * Serializes a Group entity.
+     * Serializes a Badge entity.
      *
      * @param BadgeClass $badge
      * @param array      $options
@@ -225,16 +225,30 @@ class BadgeClassSerializer
 
     private function deserializeRules(array $rules, BadgeClass $badge)
     {
+        $existingRules = $badge->getRules();
+
+        $ids = [];
         foreach ($rules as $rule) {
             if (!isset($rule['id'])) {
+                /** @var Rule $entity */
                 $entity = $this->ruleSerializer->deserialize($rule, new Rule());
             } else {
+                /** @var Rule $entity */
                 $entity = $this->om->getObject($rule, Rule::class);
                 $entity = $this->ruleSerializer->deserialize($rule, $entity);
             }
 
             $entity->setBadge($badge);
             $this->om->persist($entity);
+
+            $ids[] = $entity->getUuid();
+        }
+
+        // removes steps which no longer exists
+        foreach ($existingRules as $rule) {
+            if (!in_array($rule->getUuid(), $ids)) {
+                $rule->setBadge(null);
+            }
         }
     }
 
