@@ -13,21 +13,30 @@ namespace Claroline\ForumBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Message;
 use Doctrine\ORM\QueryBuilder;
 
 class MessageFinder extends AbstractFinder
 {
+    /**
+     * @return mixed
+     */
     public function getClass()
     {
-        return 'Claroline\ForumBundle\Entity\Message';
+        return Message::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $workspaceJoin = false;
+
+        $qb->join('obj.subject', 'subject');
+        $qb->join('subject.forum', 'forum');
+        $qb->join('forum.resourceNode', 'node');
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'subject':
-                    $qb->join('obj.subject', 'subject');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->like('subject.id', ':'.$filterName),
                         $qb->expr()->like('subject.uuid', ':'.$filterName)
@@ -35,7 +44,6 @@ class MessageFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'subject.title':
-                    $qb->join('obj.subject', 'subject');
                     $qb->andWhere('UPPER(subject.title) LIKE :title');
                     $qb->setParameter('title', '%'.strtoupper($filterValue).'%');
                     break;
@@ -52,8 +60,6 @@ class MessageFinder extends AbstractFinder
                     }
                     break;
                 case 'forum':
-                    $qb->join('obj.subject', 'sf');
-                    $qb->join('sf.forum', 'forum');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->like('forum.id', ':'.$filterName),
                         $qb->expr()->like('forum.uuid', ':'.$filterName)
@@ -93,21 +99,54 @@ class MessageFinder extends AbstractFinder
                     }
                     break;
                 case 'workspace':
-                    $qb->join('obj.subject', 'sf');
-                    $qb->join('sf.forum', 'forum');
-                    $qb->join('forum.resourceNode', 'node');
-                    $qb->join('node.workspace', 'w');
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'anonymous':
-                    $qb->join('obj.subject', 'sf');
-                    $qb->join('sf.forum', 'forum');
-                    $qb->join('forum.resourceNode', 'node');
-                    $qb->join('node.rights', 'rights');
-                    $qb->join('rights.role', 'role');
-                    $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
+                case 'roles':
+                    $managerRoles = [];
+                    $otherRoles = [];
+
+                    foreach ($filterValue as $roleName) {
+                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
+                            $managerRoles[] = $roleName;
+                        } else {
+                            $otherRoles[] = $roleName;
+                        }
+                    }
+
+                    $managerSearch = $roleSearch = $searches;
+                    $managerSearch['_managerRoles'] = $managerRoles;
+                    $roleSearch['_roles'] = $otherRoles;
+                    unset($managerSearch['roles']);
+                    unset($roleSearch['roles']);
+
+                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
+
+                    break;
+                case '_managerRoles':
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->leftJoin('w.roles', 'owr');
+                    $qb->andWhere('owr.name IN (:managerRoles)');
+
+                    $qb->setParameter('managerRoles', $filterValue);
+                    break;
+                case '_roles':
+                    $qb->leftJoin('node.rights', 'rights');
+                    $qb->join('rights.role', 'rightsr');
+                    $qb->andWhere('rightsr.name IN (:otherRoles)');
                     $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
+                    $qb->setParameter('otherRoles', $filterValue);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
@@ -127,6 +166,8 @@ class MessageFinder extends AbstractFinder
                     break;
             }
         }
+
+        return $qb;
     }
 
     public function getFilters()
