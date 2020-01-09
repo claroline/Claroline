@@ -121,7 +121,7 @@ class OpenBadgeManager
         return false;
     }
 
-    public function generateCertificate(Assertion $assertion)
+    public function generateCertificate(Assertion $assertion, $basePath)
     {
         $user = $assertion->getRecipient();
         $badge = $assertion->getBadge();
@@ -134,7 +134,7 @@ class OpenBadgeManager
             'username' => $user->getUsername(),
             'badge_name' => $badge->getName(),
             'badge_description' => $badge->getDescription(),
-            'badge_image' => '<img src="'.$this->assets->getUrl($badge->getImage()).'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_image' => '<img src="'.$basePath.'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
             'badge_duration' => $badge->getDurationValidation(),
             'assertion_id' => $assertion->getUuid(),
             'issued_on' => $assertion->getIssuedOn()->format('d-m-Y H:i'),

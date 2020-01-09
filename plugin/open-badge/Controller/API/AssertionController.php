@@ -13,14 +13,15 @@ namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
 use Dompdf\Dompdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -29,8 +30,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AssertionController extends AbstractCrudController
 {
-    /** @var string */
-    private $filesDir;
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     /** @var OpenBadgeManager */
     private $manager;
@@ -41,16 +42,16 @@ class AssertionController extends AbstractCrudController
     /**
      * AssertionController constructor.
      *
-     * @param string                $filesDir
-     * @param OpenBadgeManager      $manager
-     * @param TokenStorageInterface $tokenStorage
+     * @param PlatformConfigurationHandler $config
+     * @param OpenBadgeManager             $manager
+     * @param TokenStorageInterface        $tokenStorage
      */
     public function __construct(
-        $filesDir,
+        PlatformConfigurationHandler $config,
         OpenBadgeManager $manager,
         TokenStorageInterface $tokenStorage
     ) {
-        $this->filesDir = $filesDir;
+        $this->config = $config;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
     }
@@ -125,6 +126,8 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
+     * Downloads pdf version of assertion.
+     * 
      * @EXT\Route(
      *     "/{assertion}/pdf/download",
      *     name="apiv2_assertion_pdf_download"
@@ -137,32 +140,38 @@ class AssertionController extends AbstractCrudController
      * )
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      *
-     * Downloads pdf version of assertion
-     *
      * @param Assertion $assertion
      * @param User      $currentUser
+     * @param Request   $request
      *
      * @throws \Exception
      *
      * @return StreamedResponse
      */
-    public function assertionPdfDownloadAction(Assertion $assertion, User $currentUser)
+    public function assertionPdfDownloadAction(Assertion $assertion, User $currentUser, Request $request)
     {
         $badge = $assertion->getBadge();
         $user = $assertion->getRecipient();
 
+        $content = $this->manager->generateCertificate($assertion, $request->server->get('DOCUMENT_ROOT').$request->getBasePath());
+
         $dompdf = new Dompdf();
         $dompdf->set_option('isHtml5ParserEnabled', true);
         $dompdf->set_option('isRemoteEnabled', true);
-        $dompdf->loadHtml($this->manager->generateCertificate($assertion));
+        $dompdf->set_option('tempDir', $this->config->getParameter('server.tmp_dir'));
+        $dompdf->loadHtml($content);
 
         // Render the HTML as PDF
         $dompdf->render();
 
-        $fileName = $badge->getName().'_'.$user->getFirstName().$user->getLastName().'.pdf';
+        $fileName = trim($badge->getName().''.$user->getFirstName().$user->getLastName());
+        $fileName = str_replace(' ', '_', $fileName);
 
         return new StreamedResponse(function () use ($dompdf, $fileName) {
-            $dompdf->stream($fileName);
-        });
+            echo $dompdf->output();
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
+        ]);
     }
 }
