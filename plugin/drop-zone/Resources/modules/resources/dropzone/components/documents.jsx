@@ -32,7 +32,7 @@ Document.propTypes = {
   type: T.string.isRequired
 }
 
-const formatUrl = (url) => url.startsWith('http') ? url : `http://${url}`
+const formatUrl = (url) => !url || url.startsWith('http') ? url : `http://${url}`
 
 const DocumentRow = props =>
   <tr className={classes('drop-document', {'manager-document': props.document.isManager})}>
