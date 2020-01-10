@@ -133,7 +133,7 @@ const reducer = combineReducers({
       return newEntryUser
     }
   }),
-  myEntriesCount: makeReducer({}, {
+  myEntriesCount: makeReducer(0, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.myEntriesCount || state,
     [ENTRY_CREATED]: (state) => {
       return state + 1
