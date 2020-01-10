@@ -73,7 +73,12 @@ class BadgeClass
     private $criteria;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule", mappedBy="badge")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule",
+     *     mappedBy="badge",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      *
      * @var Rule[]|ArrayCollection
      */

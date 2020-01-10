@@ -67,6 +67,7 @@ class Evidence
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Rule
      */
