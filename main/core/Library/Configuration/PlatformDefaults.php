@@ -202,7 +202,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'desktop' => [
                 'default_tool' => 'home',
-                'show_progression' => true,
+                'show_progression' => false,
             ],
             'show_about_button' => true,
             'notifications_refresh_delay' => 0, // in ms
