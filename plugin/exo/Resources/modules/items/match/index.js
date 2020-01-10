@@ -122,8 +122,8 @@ export default {
   },
 
   expectAnswer: (item) => {
-    if (item.solutions && item.solutions.associations) {
-      return item.solutions.associations
+    if (item.solutions) {
+      return item.solutions
         .filter(solution => 0 < solution.score)
         .map(solution => new Answerable(solution.score, solution.id))
     }
@@ -132,8 +132,8 @@ export default {
   },
 
   allAnswers: (item) => {
-    if (item.solutions && item.solutions.associations) {
-      return item.solutions.associations.map(solution => new Answerable(solution.score))
+    if (item.solutions) {
+      return item.solutions.map(solution => new Answerable(solution.score))
     }
 
     return []
