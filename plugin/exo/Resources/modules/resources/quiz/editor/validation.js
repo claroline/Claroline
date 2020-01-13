@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
-import {notBlank, notEmpty, number, gteZero, gtZero, chain} from '#/main/app/data/types/validators'
+import {notBlank, notEmpty, number, gteZero, gtZero, chainSync} from '#/main/app/data/types/validators'
 import {trans, tval} from '#/main/app/intl/translation'
 
 import {validate as validateItem} from '#/plugin/exo/items/validation'
@@ -21,7 +21,7 @@ function validateStep(step) {
   const parameters = step.parameters
   const paramErrors = {}
 
-  paramErrors.maxAttempts = chain(parameters.maxAttempts, {}, [notBlank, number, gteZero])
+  paramErrors.maxAttempts = chainSync(parameters.maxAttempts, {}, [notBlank, number, gteZero])
 
   if (!isEmpty(paramErrors)) {
     errors.parameters = paramErrors
@@ -51,14 +51,14 @@ function validate(quiz) {
   const parameters = quiz.parameters
   const paramErrors = {}
 
-  paramErrors.duration = chain(parameters.duration, {}, [notBlank, number, gteZero])
-  paramErrors.maxAttempts = chain(parameters.maxAttempts, {}, [notBlank, number, gteZero])
-  paramErrors.maxAttemptsPerDay = chain(parameters.maxAttemptsPerDay, {}, [notBlank, number, gteZero, (value) => {
+  paramErrors.duration = chainSync(parameters.duration, {}, [notBlank, number, gteZero])
+  paramErrors.maxAttempts = chainSync(parameters.maxAttempts, {}, [notBlank, number, gteZero])
+  paramErrors.maxAttemptsPerDay = chainSync(parameters.maxAttemptsPerDay, {}, [notBlank, number, gteZero, (value) => {
     if (value > parameters.maxAttempts) {
       return trans('must_be_less_than_max_attempts', {}, 'quiz')
     }
   }])
-  paramErrors.maxPapers = chain(parameters.maxPapers, {}, [notBlank, number, gteZero, (value) => {
+  paramErrors.maxPapers = chainSync(parameters.maxPapers, {}, [notBlank, number, gteZero, (value) => {
     if (value < parameters.maxAttempts && value !== 0) {
       return trans('must_be_more_than_max_attempts', {}, 'quiz')
     }
@@ -74,8 +74,8 @@ function validate(quiz) {
 
   switch (picking.type) {
     case constants.QUIZ_PICKING_TAGS:
-      pickingErrors.pageSize = chain(picking.pageSize, {}, [notBlank, number, gtZero])
-      pickingErrors.pick = chain(picking.pick, {}, [notEmpty, (value = []) => {
+      pickingErrors.pageSize = chainSync(picking.pageSize, {}, [notBlank, number, gtZero])
+      pickingErrors.pick = chainSync(picking.pick, {}, [notEmpty, (value = []) => {
         return value.map((toPick = []) => {
           if (!toPick[0] || !toPick[1]) {
             return tval('This value should not be blank.')
@@ -86,7 +86,7 @@ function validate(quiz) {
 
     case constants.QUIZ_PICKING_DEFAULT:
     default:
-      pickingErrors.pick = chain(picking.pick, {}, [notBlank, number, gteZero])
+      pickingErrors.pick = chainSync(picking.pick, {}, [notBlank, number, gteZero])
       break
   }
 

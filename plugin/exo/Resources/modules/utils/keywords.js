@@ -1,5 +1,5 @@
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {notBlank, number, chain} from '#/main/app/data/types/validators'
+import {notBlank, number, chainSync} from '#/main/app/data/types/validators'
 
 import {makeId} from '#/main/core/scaffolding/id'
 
@@ -24,7 +24,7 @@ keywords.validate = (collection, useScore, minKeywords) => {
 
   if (useScore) {
     // Checks score for all keywords is correct
-    if (undefined !== collection.find(keyword => chain(keyword.score, {}, [notBlank, number]))) {
+    if (undefined !== collection.find(keyword => chainSync(keyword.score, {}, [notBlank, number]))) {
       errors.score = trans('words_score_not_valid', {}, 'quiz')
     }
 

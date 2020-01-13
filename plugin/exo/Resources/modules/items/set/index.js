@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, number, chain} from '#/main/app/data/types/validators'
+import {notBlank, number, chainSync} from '#/main/app/data/types/validators'
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
@@ -64,7 +64,7 @@ export default {
     const errors = {}
 
     // penalty should be greater or equal to 0
-    errors.penalty = chain(item.penalty, {}, [notBlank, number])
+    errors.penalty = chainSync(item.penalty, {}, [notBlank, number])
 
     // one item (that is not an odd) min
     if (item.items.filter(el => undefined === item.solutions.odd.find(odd => odd.itemId === el.id)).length === 0) {
@@ -86,7 +86,7 @@ export default {
 
     if (item.solutions.associations.length === 0) {
       errors.solutions = trans('set_no_solution', {}, 'quiz')
-    } else if (undefined !== item.solutions.associations.find(association => chain(association.score, {}, [notBlank, number]))) {
+    } else if (undefined !== item.solutions.associations.find(association => chainSync(association.score, {}, [notBlank, number]))) {
       // each solution should have a valid score
       errors.solutions = trans('set_score_not_valid', {}, 'quiz')
     } else if (undefined === item.solutions.associations.find(association => association.score > 0)) {
@@ -97,7 +97,7 @@ export default {
     // odd
     if (item.solutions.odd.length > 0) {
       // odd score not empty and valid number
-      if(undefined !== item.solutions.odd.find(odd => chain(odd.score, {}, [notBlank, number]))) {
+      if(undefined !== item.solutions.odd.find(odd => chainSync(odd.score, {}, [notBlank, number]))) {
         errors.odd = trans('set_score_not_valid', {}, 'quiz')
       } else if (undefined !== item.solutions.odd.find(odd => odd.score > 0)) {
         errors.odd = trans('set_odd_score_not_valid', {}, 'quiz')

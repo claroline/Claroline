@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, number, gteZero, chain} from '#/main/app/data/types/validators'
+import {notBlank, number, gteZero, chainSync} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer} from '#/plugin/exo/items/utils'
 import {OpenItem} from '#/plugin/exo/items/open/prop-types'
@@ -57,7 +57,7 @@ export default {
   validate: (item) => {
     const errors = {}
 
-    if (item._restrictLength) errors.maxLength = chain(item.maxLength, {}, [notBlank, number, gteZero])
+    if (item._restrictLength) errors.maxLength = chainSync(item.maxLength, {}, [notBlank, number, gteZero])
 
     return errors
   },

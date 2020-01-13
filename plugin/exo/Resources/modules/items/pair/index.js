@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, number, chain} from '#/main/app/data/types/validators'
+import {notBlank, number, chainSync} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 
@@ -63,7 +63,7 @@ export default {
     const errors = {}
 
     // penalty should be greater or equal to 0
-    errors.penalty = chain(item.penalty, {}, [notBlank, number])
+    errors.penalty = chainSync(item.penalty, {}, [notBlank, number])
 
     // random can not be used if no pinned item
     if (item.random && item.items.filter(pItem => pItem.hasOwnProperty('coordinates') && pItem.coordinates.length === 2).length === 0) {
@@ -79,12 +79,12 @@ export default {
     // solutions and odd
     if (item.solutions.length > 0) {
       // odd score not empty and valid number
-      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 1 && chain(solution.score, {}, [notBlank, number]) && solution.score > 0)) {
+      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 1 && chainSync(solution.score, {}, [notBlank, number]) && solution.score > 0)) {
         errors.odd = trans('odd_score_not_valid', {}, 'quiz')
       }
 
       // no pair with no score
-      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 2 && chain(solution.score, {}, [notBlank, number]))) {
+      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 2 && chainSync(solution.score, {}, [notBlank, number]))) {
         errors.solutions = trans('solution_score_not_valid', {}, 'quiz')
       }
 

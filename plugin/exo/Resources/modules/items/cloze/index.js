@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
-import {notBlank, notEmpty, chain} from '#/main/app/data/types/validators'
+import {notBlank, notEmpty, chainSync} from '#/main/app/data/types/validators'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/cloze/prop-types'
@@ -63,7 +63,7 @@ export default {
     const errors = {}
 
     if (notBlank(item.text)) {
-      errors.text = chain(item.text, {isHtml: true}, [notBlank])
+      errors.text = chainSync(item.text, {isHtml: true}, [notBlank])
     } else {
       if (notEmpty(item.holes)) {
         errors.text = trans('cloze_must_contains_clozes_error', {}, 'quiz')

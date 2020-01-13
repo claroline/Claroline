@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import {notBlank, number, gteZero, chain} from '#/main/app/data/types/validators'
+import {notBlank, number, gteZero, chainSync} from '#/main/app/data/types/validators'
 
 import {getItem} from '#/plugin/exo/items'
 
@@ -22,8 +22,8 @@ function validateQuestion(item, customValidator) {
   if (item.hints) {
     hintErrors = item.hints.map(hint => {
       const hErrors = []
-      const valueError = chain(hint.value, {isHtml: true}, [notBlank])
-      const penaltyError = chain(hint.penalty, {}, [notBlank, number, gteZero])
+      const valueError = notBlank(hint.value, {isHtml: true})
+      const penaltyError = chainSync(hint.penalty, {}, [notBlank, number, gteZero])
 
       if (valueError) {
         hErrors.push(valueError)
@@ -82,10 +82,10 @@ function validateContent(item, customValidator) {
 function validate(item) {
   return getItem(item.type).then((definition) => {
     if (definition.answerable) {
-      return validateQuestion(item, definition.validate)
+      return Promise.resolve(validateQuestion(item, definition.validate))
     }
 
-    return validateContent(item, definition.validate)
+    return Promise.resolve(validateContent(item, definition.validate))
   })
 }
 

@@ -179,6 +179,12 @@ function chain(value, options, validators) {
   }, Promise.resolve())
 }
 
+function chainSync(value, options, validators) {
+  return validators.reduce((result, validate) => {
+    return result || validate(value, options)
+  }, undefined)
+}
+
 /**
  *
  * @param errors
@@ -279,6 +285,7 @@ function notExist(value, options = {}) {
 export {
   validateIf,
   chain,
+  chainSync,
   setIfError,
 
   // validators
