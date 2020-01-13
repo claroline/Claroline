@@ -7,7 +7,7 @@ import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {PlayerTab} from '#/main/core/tools/home/player/components/tab'
 
-const PlayerMain = props => 
+const PlayerMain = props =>
   <Routes
     path={props.path}
     redirect={[
@@ -47,7 +47,6 @@ const PlayerMain = props =>
       }
     ]}
   />
-
 
 PlayerMain.propTypes = {
   path: T.string.isRequired,

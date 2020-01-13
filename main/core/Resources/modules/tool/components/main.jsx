@@ -59,33 +59,39 @@ class ToolMain extends Component {
   }
 
   componentDidMount() {
-    this.loadApp()
-    if (!this.props.loaded) {
-      this.props.open(this.props.toolName, this.props.toolContext)
-    }
+    this.loadApp().then(() => {
+      if (!this.props.loaded) {
+        this.props.open(this.props.toolName, this.props.toolContext)
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
+    let appPromise
     if (this.props.toolName && this.props.toolName !== prevProps.toolName) {
       if (this.pending) {
         this.pending.cancel()
         this.pending = null
       }
 
-      this.loadApp()
+      appPromise = this.loadApp()
+    } else {
+      appPromise = Promise.resolve(true)
     }
 
-    if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
-      this.props.open(this.props.toolName, this.props.toolContext)
-    }
+    appPromise.then(() => {
+      if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
+        this.props.open(this.props.toolName, this.props.toolContext)
+      }
 
-    if (this.props.toolName && prevProps.toolName && this.props.toolContext && prevProps.toolContext && (
-      this.props.toolName !== prevProps.toolName ||
-      this.props.toolContext.type !== prevProps.toolContext.type ||
-      (this.props.toolContext.data && prevProps.toolContext.data && this.props.toolContext.data.id !== prevProps.toolContext.data.id)
-    )) {
-      this.props.close(prevProps.toolName, prevProps.toolContext)
-    }
+      if (this.props.toolName && prevProps.toolName && this.props.toolContext && prevProps.toolContext && (
+        this.props.toolName !== prevProps.toolName ||
+        this.props.toolContext.type !== prevProps.toolContext.type ||
+        (this.props.toolContext.data && prevProps.toolContext.data && this.props.toolContext.data.id !== prevProps.toolContext.data.id)
+      )) {
+        this.props.close(prevProps.toolName, prevProps.toolContext)
+      }
+    })
   }
 
   loadApp() {
@@ -123,6 +129,8 @@ class ToolMain extends Component {
           () => this.pending = null
         )
     }
+
+    return this.pending.promise
   }
 
   componentWillUnmount() {
