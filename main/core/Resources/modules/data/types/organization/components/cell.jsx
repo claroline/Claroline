@@ -4,12 +4,12 @@ import isEmpty from 'lodash/isEmpty'
 import {UrlButton} from '#/main/app/buttons/url'
 import {DataCell as DataCellTypes} from '#/main/app/data/types/prop-types'
 
-import {route} from '#/main/core/workspace/routing'
+import {route} from '#/main/core/administration/routing'
 
-const WorkspaceCell = props => {
+const OrganizationCell = props => {
   if (!isEmpty(props.data)) {
     return (
-      <UrlButton target={'#'+route(props.data)}>
+      <UrlButton target={'#'+route('community')+'/organizations/form/'+props.data.id}>
         {props.data.name}
       </UrlButton>
     )
@@ -18,12 +18,12 @@ const WorkspaceCell = props => {
   return '-'
 }
 
-WorkspaceCell.propTypes = DataCellTypes.propTypes
+OrganizationCell.propTypes = DataCellTypes.propTypes
 
-WorkspaceCell.defaultProps = {
+OrganizationCell.defaultProps = {
   data: {}
 }
 
 export {
-  WorkspaceCell
+  OrganizationCell
 }

@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {UserDisplay} from '#/main/core/data/types/user/components/display'
-import {UserCell} from '#/main/core//data/types/user/components/cell'
+import {UserCell} from '#/main/core/data/types/user/components/cell'
 import {UserInput} from '#/main/core//data/types/user/components/input'
 
 const dataType = {
