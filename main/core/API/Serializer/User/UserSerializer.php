@@ -145,6 +145,11 @@ class UserSerializer extends GenericSerializer
             return $this->serializePublic($user);
         }
 
+        $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
+        $showEmail = !empty(array_filter($this->tokenStorage->getToken()->getRoles(), function (BaseRole $role) use ($showEmailRoles) {
+            return 'ROLE_ADMIN' === $role->getRole() || in_array($role->getRole(), $showEmailRoles);
+        }));
+
         $serializedUser = [
             'autoId' => $user->getId(), //for old compatibility purposes
             'id' => $user->getUuid(),
@@ -153,7 +158,7 @@ class UserSerializer extends GenericSerializer
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
             'picture' => $this->serializePicture($user),
-            'email' => $user->getEmail(),
+            'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
             'meta' => $this->serializeMeta($user),
