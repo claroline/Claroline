@@ -74,7 +74,11 @@ class EventController extends AbstractCrudController
 
         if (!isset($query['filters']['workspaces'])) {
             $user = $this->tokenStorage->getToken()->getUser();
-            $query['hiddenFilters']['desktop'] = 'anon.' !== $user ? $user->getUuid() : null;
+            if ('anon.' !== $user) {
+                $query['hiddenFilters']['user'] = $user->getUuid();
+            } else {
+                $query['hiddenFilters']['anonymous'] = true;
+            }
         }
 
         $data = $this->finder->search(

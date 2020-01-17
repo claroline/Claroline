@@ -13,6 +13,7 @@ namespace Claroline\AgendaBundle\Finder;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class EventFinder extends AbstractFinder
@@ -70,50 +71,7 @@ class EventFinder extends AbstractFinder
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'hasRole':
-                    if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w');
-                        $workspaceJoin = true;
-                    }
-                    // join for tool rights
-                    $qb->leftJoin('w.orderedTools', 'ot');
-                    $qb->leftJoin('ot.tool', 'ott');
-                    $qb->leftJoin('ot.rights', 'otr');
-                    $qb->leftJoin('otr.role', 'otrr');
-                    $qb->leftJoin('otrr.users', 'otrru');
-                    // join for workspace manager role
-                    $qb->leftJoin('w.roles', 'wr');
-                    $qb->leftJoin('wr.users', 'wru');
 
-                    $qb->andWhere('w.displayable = true');
-                    $qb->andWhere('w.model = false');
-                    $qb->andWhere('w.personal = false');
-
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('ott.name', ':agenda'),
-                            $qb->expr()->eq('otrru.uuid', ':roleUserId'),
-                            $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
-                        ),
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('wr.name', 'CONCAT(:managerRolePrefix, w.uuid)'),
-                            $qb->expr()->eq('wru.uuid', ':managerId')
-                        )
-                    ));
-                    $qb->setParameter('agenda', 'agenda');
-                    $qb->setParameter('roleUserId', $filterValue);
-                    $qb->setParameter('managerId', $filterValue);
-                    $qb->setParameter('managerRolePrefix', 'ROLE_WS_MANAGER_');
-                    break;
-                case 'desktop':
-                    $byUserSearch = $byWorkspaceSearch = $searches;
-                    $byUserSearch['userId'] = $filterValue;
-                    $byWorkspaceSearch['hasRole'] = $filterValue;
-                    unset($byUserSearch['desktop']);
-                    unset($byWorkspaceSearch['desktop']);
-
-                    return $this->union($byUserSearch, $byWorkspaceSearch, $options, $sortBy);
-                    break;
                 case 'user':
                     $byUserSearch = $byGroupSearch = $searches;
                     $byUserSearch['_user'] = $filterValue;
@@ -125,50 +83,88 @@ class EventFinder extends AbstractFinder
                     break;
                 case '_user':
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w');
+                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.displayable = true AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
                     }
-                    $qb->leftJoin('w.roles', 'r');
-                    $qb->leftJoin('r.users', 'ru');
+
+                    // join for creator
+                    $qb->leftJoin('obj.user', 'u');
+
+                    // join for tool rights
+                    $qb->leftJoin('w.orderedTools', 'ot');
+                    $qb->leftJoin('ot.tool', 'ott');
+                    $qb->leftJoin('ot.rights', 'otr');
+                    $qb->leftJoin('otr.role', 'otrr');
+                    $qb->leftJoin('otrr.users', 'otrru');
+                    // join for workspace manager role
+                    $qb->leftJoin('w.roles', 'wr');
+                    $qb->leftJoin('wr.users', 'wru');
+
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('ru.id', ':_userId'),
-                        $qb->expr()->like('ru.uuid', ':_userUuid')
+                        $qb->expr()->eq('u.uuid', ':userId'),
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('ott.name', ':agenda'),
+                            $qb->expr()->eq('otrru.uuid', ':roleUserId'),
+                            $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
+                        ),
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('wr.name', 'CONCAT(:managerRolePrefix, w.uuid)'),
+                            $qb->expr()->eq('wru.uuid', ':managerId')
+                        )
                     ));
-                    $qb->andWhere('r.name != :roleUser');
-                    $qb->setParameter('_userId', $filterValue);
-                    $qb->setParameter('_userUuid', $filterValue);
-                    $qb->setParameter('roleUser', 'ROLE_USER');
+
+                    $qb->setParameter('userId', $filterValue);
+                    $qb->setParameter('agenda', 'agenda');
+                    $qb->setParameter('roleUserId', $filterValue);
+                    $qb->setParameter('managerRolePrefix', 'ROLE_WS_MANAGER_');
+                    $qb->setParameter('managerId', $filterValue);
 
                     break;
                 case '_group':
                     if (!$workspaceJoin) {
-                        $qb->leftJoin('obj.workspace', 'w');
+                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.displayable = true AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
                     }
+
+                    // join for tool rights
+                    $qb->leftJoin('w.orderedTools', 'ot');
+                    $qb->leftJoin('ot.tool', 'ott');
+                    $qb->leftJoin('ot.rights', 'otr');
+                    $qb->leftJoin('otr.role', 'otrr');
+                    $qb->leftJoin('otrr.groups', 'otrrg');
+                    $qb->leftJoin('otrrg.users', 'otrru');
+
+                    // join for workspace manager role
                     $qb->leftJoin('w.roles', 'r');
                     $qb->leftJoin('r.groups', 'rg');
                     $qb->leftJoin('rg.users', 'rgu');
+
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('rgu.id', ':_groupUserId'),
-                        $qb->expr()->like('rgu.uuid', ':_groupUserUuid')
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('ott.name', ':agenda'),
+                            $qb->expr()->eq('otrru.uuid', ':_groupUserId'),
+                            $qb->expr()->eq('BIT_AND(otr.mask, 1)', '1')
+                        ),
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('r.name', 'CONCAT(:_managerRolePrefix, w.uuid)'),
+                            $qb->expr()->eq('rgu.uuid', ':_managerId')
+                        )
                     ));
-                    $qb->andWhere('r.name != :roleUser');
+
+                    $qb->setParameter('agenda', 'agenda');
                     $qb->setParameter('_groupUserId', $filterValue);
-                    $qb->setParameter('_groupUserUuid', $filterValue);
-                    $qb->setParameter('roleUser', 'ROLE_USER');
+                    $qb->setParameter('_managerId', $filterValue);
+                    $qb->setParameter('_managerRolePrefix', 'ROLE_WS_MANAGER_');
                     break;
                 case 'anonymous':
                     if (!$workspaceJoin) {
-                        $qb->join('obj.workspace', 'w');
+                        $qb->leftJoin('obj.workspace', 'w', Join::WITH, 'w.displayable = true AND w.model = false AND w.personal = false');
                         $workspaceJoin = true;
                     }
                     $qb->join('w.orderedTools', 'ot');
                     $qb->join('ot.tool', 'ott');
                     $qb->join('ot.rights', 'otr');
                     $qb->join('otr.role', 'otrr');
-                    $qb->andWhere('w.displayable = true');
-                    $qb->andWhere('w.model = false');
-                    $qb->andWhere('w.personal = false');
                     $qb->andWhere("ott.name = 'agenda'");
                     $qb->andWhere("otrr.name = 'ROLE_ANONYMOUS'");
                     $qb->andWhere('BIT_AND(otr.mask, 1) = 1');
