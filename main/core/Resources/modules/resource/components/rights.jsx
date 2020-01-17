@@ -225,7 +225,7 @@ const AdvancedTab = props => {
               size="sm"
               modal={[MODAL_ROLES, {
                 filters: [
-                  {property: 'type', value: constants.ROLE_PLATFORM, locked: true}
+                  {property: 'type', value: constants.ROLE_PLATFORM}
                 ],
                 selectAction: (selectedRoles) => ({
                   type: CALLBACK_BUTTON,
