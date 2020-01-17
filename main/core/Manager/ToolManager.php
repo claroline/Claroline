@@ -295,6 +295,38 @@ class ToolManager
         }
     }
 
+    public function getUserDisplayedTools(User $user)
+    {
+        $tools = [];
+
+        /** @var Tool[] $ots */
+        $ots = $this->getDisplayedDesktopOrderedTools($user);
+        // TODO : restore user tools config
+        //$configs = $this->getUserDesktopToolsConfiguration($user);
+
+        /** @var Role[] $roles */
+        $roles = $user->getEntityRoles();
+
+        foreach ($ots as $tool) {
+            foreach ($roles as $role) {
+                if (Role::PLATFORM_ROLE === $role->getType()) {
+                    if ('ROLE_ADMIN' === $role->getName()) {
+                        $tools[] = $tool;
+                        break;
+                    }
+
+                    $toolRole = $this->om->getRepository(ToolRole::class)->findOneBy(['role' => $role, 'tool' => $tool]);
+                    if ($toolRole && ToolRole::HIDDEN !== $toolRole->getDisplay()) {
+                        $tools[] = $tool;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $tools;
+    }
+
     /**
      * Adds the mandatory tools at the user creation.
      *

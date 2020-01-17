@@ -140,16 +140,25 @@ class Tool
      * )
      */
     protected $pwsToolConfig;
+
     /**
      * @ORM\Column(name="desktop_category", nullable=true)
      */
     protected $desktopCategory;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRole", mappedBy="tool")
+     *
+     * @var Tool
+     */
+    protected $toolRoles;
 
     public function __construct()
     {
         $this->refreshUuid();
         $this->maskDecoders = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
+        $this->toolRoles = new ArrayCollection();
     }
 
     public function getId()

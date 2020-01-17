@@ -96,7 +96,7 @@ class DesktopController
         //on our prod environments
         $this->toolManager->addMissingDesktopTools($currentUser);
 
-        $tools = $this->toolManager->getDisplayedDesktopOrderedTools($currentUser);
+        $tools = $this->toolManager->getUserDisplayedTools($currentUser);
 
         if (0 === count($tools)) {
             throw new AccessDeniedException('no tools');

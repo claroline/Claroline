@@ -106,6 +106,7 @@ class ToolRepository extends ServiceEntityRepository
 
     /**
      * Returns the visible tools in a user's desktop.
+     * is it deprecated ?
      *
      * @param User $user
      * @param int  $orderedToolType
