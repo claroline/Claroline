@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BlogPostsSource
 {
@@ -25,10 +26,14 @@ class BlogPostsSource
     /**
      * BlogPostsSource constructor.
      *
-     * @param FinderProvider $finder
+     * @param TokenStorageInterface $tokenStorage
+     * @param FinderProvider        $finder
      */
-    public function __construct(FinderProvider $finder)
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        FinderProvider $finder
+    ) {
+        $this->tokenStorage = $tokenStorage;
         $this->finder = $finder;
     }
 
@@ -40,11 +45,21 @@ class BlogPostsSource
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['status'] = Statusable::STATUS_PUBLISHED;
 
+        $roles = DataSource::CONTEXT_HOME === $event->getContext() ?
+            ['ROLE_ANONYMOUS'] :
+            array_map(
+                function ($role) { return $role->getRole(); },
+                $this->tokenStorage->getToken()->getRoles()
+            );
+
+        if (!in_array('ROLE_ADMIN', $roles)) {
+            $options['hiddenFilters']['roles'] = $roles;
+        }
+
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
-        } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
-            $options['hiddenFilters']['anonymous'] = true;
         }
+
         $event->setData(
             $this->finder->search(Post::class, $options)
         );

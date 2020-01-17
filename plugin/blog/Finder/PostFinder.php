@@ -16,6 +16,10 @@ class PostFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $qb->leftJoin('obj.blog', 'b');
+        $qb->leftJoin('b.resourceNode', 'node');
+
+        $workspaceJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'published':
@@ -73,24 +77,65 @@ class PostFinder extends AbstractFinder
                     $qb->setParameter(':endOfDay', $endOfDay);
                     break;
                 case 'tag':
-                    $qb->andWhere("obj.uuid IN (
+                    $qb->andWhere('obj.uuid IN (
                         SELECT to.objectId
-                        FROM Claroline\TagBundle\Entity\TaggedObject to
+                        FROM Claroline\\TagBundle\\Entity\\TaggedObject to
                         INNER JOIN to.tag t
                         WHERE UPPER(t.name) = :tagFilter
-                    )");
+                    )');
                     $qb->setParameter('tagFilter', strtoupper($filterValue));
                     break;
+                case 'roles':
+                    $managerRoles = [];
+                    $otherRoles = [];
+
+                    foreach ($filterValue as $roleName) {
+                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
+                            $managerRoles[] = $roleName;
+                        } else {
+                            $otherRoles[] = $roleName;
+                        }
+                    }
+
+                    $managerSearch = $roleSearch = $searches;
+                    $managerSearch['_managerRoles'] = $managerRoles;
+                    $roleSearch['_roles'] = $otherRoles;
+                    unset($managerSearch['roles']);
+                    unset($roleSearch['roles']);
+
+                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
+
+                    break;
+                case '_managerRoles':
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->leftJoin('w.roles', 'owr');
+                    $qb->andWhere('owr.name IN (:managerRoles)');
+
+                    $qb->setParameter('managerRoles', $filterValue);
+                    break;
+                case '_roles':
+                    $qb->leftJoin('node.rights', 'rights');
+                    $qb->join('rights.role', 'rightsr');
+                    $qb->andWhere('rightsr.name IN (:otherRoles)');
+                    $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
+                    $qb->setParameter('otherRoles', $filterValue);
+                    break;
                 case 'workspace':
-                    $qb->leftJoin('obj.blog', 'b');
-                    $qb->leftJoin('b.resourceNode', 'node');
-                    $qb->leftJoin('node.workspace', 'w');
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'anonymous':
-                    $qb->leftJoin('obj.blog', 'b');
-                    $qb->leftJoin('b.resourceNode', 'node');
                     $qb->join('node.rights', 'rights');
                     $qb->join('rights.role', 'role');
                     $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
