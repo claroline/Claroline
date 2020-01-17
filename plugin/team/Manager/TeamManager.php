@@ -310,7 +310,6 @@ class TeamManager
             $user,
             $workspace,
             $rootDirectory,
-            null,
             $rights
         );
 
