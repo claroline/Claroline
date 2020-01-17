@@ -15,7 +15,7 @@ import {actions, selectors} from '#/main/core/tools/community/group/store'
 const GroupsList = props =>
   <ListData
     name={selectors.LIST_NAME}
-    open={(row) => ({
+    primaryAction={(row) => ({
       type: LINK_BUTTON,
       target: `${props.path}/groups/form/${row.id}`
     })}
@@ -25,6 +25,7 @@ const GroupsList = props =>
     }}
     actions={(rows) => !isEmpty(props.workspace) ? [
       {
+        name: 'unregister',
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('unregister'),
@@ -47,10 +48,10 @@ const GroupsList = props =>
         alias: 'role',
         type: 'roles',
         label: trans('roles'),
-        calculated: (user) => !isEmpty(props.workspace) ?
-          user.roles.filter(role => role.workspace && role.workspace.id === props.workspace.uuid)
+        calculated: (group) => !isEmpty(props.workspace) ?
+          group.roles.filter(role => role.workspace && role.workspace.uuid === props.workspace.uuid)
           :
-          user.roles.filter(role => constants.ROLE_PLATFORM === role.type),
+          group.roles.filter(role => constants.ROLE_PLATFORM === role.type),
         displayed: true,
         filterable: true
       }
