@@ -50,6 +50,15 @@ class BadgeLayoutComponent extends Component {
     return null
   }
 
+  componentDidUpdate() {
+    // current section is no longer in the list of available sections
+    if (-1 === this.props.sections.findIndex(section => section.name === this.state.currentSection)) {
+      this.setState({
+        currentSection: this.props.sections[0] ? this.props.sections[0].name : null
+      })
+    }
+  }
+
   render() {
     if (isEmpty(this.props.badge)) {
       return (
@@ -186,6 +195,10 @@ BadgeLayoutComponent.propTypes = {
     label: T.string.isRequired,
     render: T.func.isRequired
   }))
+}
+
+BadgeLayoutComponent.defaultProps = {
+  sections: []
 }
 
 const BadgeLayout = connect(

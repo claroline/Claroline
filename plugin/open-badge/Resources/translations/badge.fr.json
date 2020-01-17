@@ -53,5 +53,6 @@
   "not_granted": "Vous ne possédez pas ce badge",
   "grant_users": "Attribuer à des utilisateurs",
   "badge_disabled_help": "Ce badge est désactivé et ne peut être attribué.",
-  "no_criteria": "Aucun critère d'attribution n'a été défini."
+  "no_criteria": "Aucun critère d'attribution n'a été défini.",
+  "hide_recipients": "Cacher la liste des utilisateurs ayant obtenu le badge"
 }

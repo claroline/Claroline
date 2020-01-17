@@ -118,6 +118,10 @@ const BadgeFormComponent = (props) =>
                 displayed: (badge) => badge._restrictDuration || badge.duration
               }
             ]
+          }, {
+            name: 'restrictions.hideRecipients',
+            type: 'boolean',
+            label: trans('hide_recipients', {}, 'badge')
           }
         ]
       }, {

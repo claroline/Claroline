@@ -53,5 +53,6 @@
   "not_granted": "You don't own this badge",
   "grant_users": "Grant to users",
   "badge_disabled_help": "This badge is disabled and cannot be granted.",
-  "no_criteria": "No criteria has been defined"
+  "no_criteria": "No criteria has been defined",
+  "hide_recipients": "Hide the list of badge recipients"
 }

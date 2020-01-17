@@ -20,158 +20,168 @@ import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 import {AssertionUserCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
 import {actions, selectors}  from '#/plugin/open-badge/tools/badges/badge/store'
 
-const BadgeDetailsComponent = (props) =>
-  <BadgeLayout
-    badge={props.badge}
-    assertion={null}
-
-    backAction={{
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-arrow-left',
-      label: trans('back'),
-      tooltip: 'bottom',
-      target: `${props.path}/badges`
-    }}
-    actions={[
-      {
-        name: 'edit',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pencil',
-        label: trans('edit', {}, 'actions'),
-        target: props.path + `/badges/${props.badge.id}/edit`,
-        displayed: get(props.badge, 'permissions.edit'),
-        group: trans('management')
-      }, {
-        name: 'enable',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-check-circle',
-        label: trans('enable', {}, 'actions'),
-        displayed: get(props.badge, 'permissions.edit') && !get(props.badge, 'meta.enabled'),
-        callback: () => props.enable(props.badge),
-        group: trans('management')
-      }, {
-        name: 'disable',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-times-circle',
-        label: trans('disable', {}, 'actions'),
-        displayed: get(props.badge, 'permissions.edit') && get(props.badge, 'meta.enabled'),
-        callback: () => props.disable(props.badge),
-        confirm: {
-          title: transChoice('disable_badges', 1, {count: 1}),
-          message: trans('disable_badges_confirm', {badges_list: props.badge.name})
-        },
-        group: trans('management')
-      }, {
-        name: 'delete',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-trash-o',
-        label: trans('delete', {}, 'actions'),
-        dangerous: true,
-        displayed: get(props.badge, 'permissions.delete'),
-        confirm: {
-          title: trans('objects_delete_title'),
-          message: transChoice('objects_delete_question', 1, {count: 1}),
-          button: trans('delete', {}, 'actions')
-        },
-        callback: () => props.delete(props.badge).then(() => {
-          props.history.push(props.path+'/badges')
-        }),
-        group: trans('management')
-      }
-    ]}
-
-    sections={[
-      {
-        name: 'activity',
-        label: trans('activity'),
-        render() {
-          return (
-            <ListData
-              name={selectors.FORM_NAME + '.assertions'}
-              fetch={{
-                url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
-                autoload: !isEmpty(props.badge)
-              }}
-              primaryAction={(row) => ({
-                type: LINK_BUTTON,
-                target: props.path + `/badges/${props.badge.id}/assertion/${row.id}`,
-                label: trans('open', {}, 'actions')
-              })}
-              delete={{
-                url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
-                displayed: () => get(props.badge, 'permissions.assign')
-              }}
-              definition={[
-                {
-                  name: 'user',
-                  type: 'user',
-                  label: trans('user'),
-                  displayed: true
-                }, {
-                  name: 'issuedOn',
-                  label: trans('granted_date', {}, 'badge'),
-                  type: 'date',
-                  displayed: true,
-                  primary: true,
-                  options: {
-                    time: true
-                  }
-                }
-              ]}
-              card={AssertionUserCard}
-              display={{
-                current: listConst.DISPLAY_LIST_SM,
-                available: [
-                  listConst.DISPLAY_TABLE_SM,
-                  listConst.DISPLAY_TABLE,
-                  listConst.DISPLAY_LIST_SM,
-                  listConst.DISPLAY_TILES_SM
-                ]
-              }}
-            />
-          )
-        }
-      }, {
-        name: 'granting',
-        icon: 'fa fa-fw fa-certificate',
-        label: 'Règles d\'attribution',
-        render() {
-          return (
-            <Fragment>
-              {!props.badge.meta.enabled &&
-                <div className="alert alert-info">
-                  <span className="fa fa-fw fa-info-circle icon-with-text-right" />
-                  {trans('badge_disabled_help', {}, 'badge')}
-                </div>
-              }
-
-              <div className="panel panel-default">
-                <HtmlText className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</HtmlText>
+const BadgeDetailsComponent = (props) => {
+  const sections = [
+    {
+      name: 'granting',
+      icon: 'fa fa-fw fa-certificate',
+      label: 'Règles d\'attribution',
+      render() {
+        return (
+          <Fragment>
+            {!props.badge.meta.enabled &&
+              <div className="alert alert-info">
+                <span className="fa fa-fw fa-info-circle icon-with-text-right" />
+                {trans('badge_disabled_help', {}, 'badge')}
               </div>
+            }
 
-              {get(props.badge, 'permissions.assign') &&
-                <Button
-                  className="btn btn-block btn-emphasis component-container"
-                  type={MODAL_BUTTON}
-                  label={trans('grant_users', {}, 'badge')}
-                  disabled={!props.badge.meta.enabled}
-                  modal={[MODAL_USERS, {
-                    url: ['apiv2_user_list_registerable'], // maybe not the correct URL
-                    selectAction: (selected) => ({
-                      type: CALLBACK_BUTTON,
-                      label: trans('select', {}, 'actions'),
-                      callback: () => props.grant(props.badge.id, selected)
-                    })
-                  }]}
-                  primary={true}
-                />
-              }
-            </Fragment>
-          )
-        }
+            <div className="panel panel-default">
+              <HtmlText className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</HtmlText>
+            </div>
+
+            {get(props.badge, 'permissions.assign') &&
+              <Button
+                className="btn btn-block btn-emphasis component-container"
+                type={MODAL_BUTTON}
+                label={trans('grant_users', {}, 'badge')}
+                disabled={!props.badge.meta.enabled}
+                modal={[MODAL_USERS, {
+                  url: ['apiv2_user_list_registerable'], // maybe not the correct URL
+                  selectAction: (selected) => ({
+                    type: CALLBACK_BUTTON,
+                    label: trans('select', {}, 'actions'),
+                    callback: () => props.grant(props.badge.id, selected)
+                  })
+                }]}
+                primary={true}
+              />
+            }
+          </Fragment>
+        )
       }
-    ]}
-  />
+    }
+  ]
+
+  if (get(props.badge, 'permissions.edit') || !get(props.badge, 'restrictions.hideRecipients')) {
+    sections.unshift({
+      name: 'activity',
+      label: trans('activity'),
+      render() {
+        return (
+          <ListData
+            name={selectors.FORM_NAME + '.assertions'}
+            fetch={{
+              url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
+              autoload: !isEmpty(props.badge)
+            }}
+            primaryAction={(row) => ({
+              type: LINK_BUTTON,
+              target: props.path + `/badges/${props.badge.id}/assertion/${row.id}`,
+              label: trans('open', {}, 'actions')
+            })}
+            delete={{
+              url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
+              displayed: () => get(props.badge, 'permissions.assign')
+            }}
+            definition={[
+              {
+                name: 'user',
+                type: 'user',
+                label: trans('user'),
+                displayed: true
+              }, {
+                name: 'issuedOn',
+                label: trans('granted_date', {}, 'badge'),
+                type: 'date',
+                displayed: true,
+                primary: true,
+                options: {
+                  time: true
+                }
+              }
+            ]}
+            card={AssertionUserCard}
+            display={{
+              current: listConst.DISPLAY_LIST_SM,
+              available: [
+                listConst.DISPLAY_TABLE_SM,
+                listConst.DISPLAY_TABLE,
+                listConst.DISPLAY_LIST_SM,
+                listConst.DISPLAY_TILES_SM
+              ]
+            }}
+          />
+        )
+      }
+    })
+  }
+
+  return (
+    <BadgeLayout
+      badge={props.badge}
+      assertion={null}
+
+      backAction={{
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-arrow-left',
+        label: trans('back'),
+        tooltip: 'bottom',
+        target: `${props.path}/badges`,
+        exact: true
+      }}
+      actions={[
+        {
+          name: 'edit',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          target: props.path + `/badges/${props.badge.id}/edit`,
+          displayed: get(props.badge, 'permissions.edit'),
+          group: trans('management')
+        }, {
+          name: 'enable',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-check-circle',
+          label: trans('enable', {}, 'actions'),
+          displayed: get(props.badge, 'permissions.edit') && !get(props.badge, 'meta.enabled'),
+          callback: () => props.enable(props.badge),
+          group: trans('management')
+        }, {
+          name: 'disable',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-times-circle',
+          label: trans('disable', {}, 'actions'),
+          displayed: get(props.badge, 'permissions.edit') && get(props.badge, 'meta.enabled'),
+          callback: () => props.disable(props.badge),
+          confirm: {
+            title: transChoice('disable_badges', 1, {count: 1}),
+            message: trans('disable_badges_confirm', {badges_list: props.badge.name})
+          },
+          group: trans('management')
+        }, {
+          name: 'delete',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-trash-o',
+          label: trans('delete', {}, 'actions'),
+          dangerous: true,
+          displayed: get(props.badge, 'permissions.delete'),
+          confirm: {
+            title: trans('objects_delete_title'),
+            message: transChoice('objects_delete_question', 1, {count: 1}),
+            button: trans('delete', {}, 'actions')
+          },
+          callback: () => props.delete(props.badge).then(() => {
+            props.history.push(props.path+'/badges')
+          }),
+          group: trans('management')
+        }
+      ]}
+
+      sections={sections}
+    />
+  )
+}
 
 BadgeDetailsComponent.propTypes = {
   history: T.shape({

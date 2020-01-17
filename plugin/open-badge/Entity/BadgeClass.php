@@ -101,7 +101,7 @@ class BadgeClass
     /**
      * @ORM\Column(type="boolean", nullable=true)
      *
-     * @var int
+     * @var bool
      */
     private $enabled = true;
 
@@ -111,6 +111,13 @@ class BadgeClass
      * @var int
      */
     private $durationValidation = null;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $hideRecipients = false;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", mappedBy="badge")
@@ -321,6 +328,16 @@ class BadgeClass
     public function getEnabled()
     {
         return $this->enabled;
+    }
+
+    public function setHideRecipients($bool)
+    {
+        $this->hideRecipients = $bool;
+    }
+
+    public function getHideRecipients()
+    {
+        return $this->hideRecipients;
     }
 
     public function getUpdated()

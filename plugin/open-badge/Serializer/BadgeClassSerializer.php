@@ -137,6 +137,9 @@ class BadgeClassSerializer
                'updated' => DateNormalizer::normalize($badge->getUpdated()),
                'enabled' => $badge->getEnabled(),
             ];
+            $data['restrictions'] = [
+                'hideRecipients' => $badge->getHideRecipients(),
+            ];
             $data['permissions'] = $this->serializePermissions($badge);
             $data['rules'] = array_map(function (Rule $rule) {
                 return $this->ruleSerializer->serialize($rule);
@@ -171,6 +174,7 @@ class BadgeClassSerializer
         $this->sipe('duration', 'setDurationValidation', $data, $badge);
         $this->sipe('issuingMode', 'setIssuingMode', $data, $badge);
         $this->sipe('meta.enabled', 'setEnabled', $data, $badge);
+        $this->sipe('restrictions.hideRecipients', 'setHideRecipients', $data, $badge);
 
         if (isset($data['issuer'])) {
             $badge->setIssuer($this->om->getObject($data['issuer'], Organization::class));

@@ -16,6 +16,9 @@ const Badge = {
     issuingMode: T.arrayOf(T.string),
     meta: T.shape({
       enabled: T.bool
+    }),
+    restrictions: T.shape({
+      hideRecipients: T.bool
     })
   },
   defaultProps: {
@@ -23,6 +26,9 @@ const Badge = {
     description: '',
     meta: {
       enabled: true
+    },
+    restrictions: {
+      hideRecipients: false
     }
   }
 }
