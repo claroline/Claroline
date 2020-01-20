@@ -85,7 +85,8 @@ const UsersList = props =>
           :
           user.roles.filter(role => constants.ROLE_PLATFORM === role.type),
         displayed: true,
-        filterable: true
+        filterable: true,
+        sortable: false
       }
     ]}
     card={UserCard}

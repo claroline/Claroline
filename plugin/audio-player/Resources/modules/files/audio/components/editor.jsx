@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
@@ -188,7 +188,7 @@ class AudioConfiguration extends Component {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <Waveform
           id={`resource-audio-${this.props.file.id}`}
           url={asset(this.props.file.hashName)}
@@ -275,7 +275,7 @@ class AudioConfiguration extends Component {
             onPlay={(start, end) => this.setState({currentSection: section.id, toPlay: [start, end]})}
           />
         )}
-      </div>
+      </Fragment>
     )
   }
 }
@@ -288,13 +288,14 @@ AudioConfiguration.propTypes = {
 
 const Audio = props =>
   <FormData
-    className="audio-editor"
+    className="audio-editor embedded-form-section"
     embedded={true}
     name={editorSelect.FORM_NAME}
     sections={[
       {
         title: trans('general'),
         primary: true,
+        icon: 'fa fa-fw fa-headphones',
         fields: [
           {
             name: 'description',
