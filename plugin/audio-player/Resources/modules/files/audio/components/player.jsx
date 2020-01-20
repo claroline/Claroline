@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 import classes from 'classnames'
 
 import {hasPermission} from '#/main/app/security'
@@ -202,18 +203,31 @@ class Audio extends Component {
     super(props)
 
     this.state = {
-      sectionsOptions: props.file.sections.reduce((acc, section) => {
-        acc[section.id] = {
+      sectionsOptions: props.file.sections.reduce((acc, section) => Object.assign(acc, {
+        [section.id]: {
           showHelp: false,
           showComment: constants.USER_TYPE === section.type,
           showCommentForm: false,
           showAudioUrl: false
         }
-
-        return acc
-      }, {}),
+      }), {}),
       displayAllComments: false,
       ongoingSections: []
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (get(prevProps, 'file.sections') !== get(this.props, 'file.sections')) {
+      this.setState({
+        sectionsOptions: this.props.file.sections.reduce((acc, section) => Object.assign(acc, {
+          [section.id]: {
+            showHelp: false,
+            showComment: constants.USER_TYPE === section.type,
+            showCommentForm: false,
+            showAudioUrl: false
+          }
+        }), {})
+      })
     }
   }
 
