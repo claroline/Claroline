@@ -129,7 +129,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             if (is_array($workspaces) && count($workspaces) > 0) {
                 return [
                     'type' => 'workspace',
-                    'data' => $this->serializer->serialize($workspaces[0], Options::SERIALIZE_MINIMAL),
+                    'data' => $this->serializer->serialize($workspaces[0], [Options::SERIALIZE_MINIMAL]),
                 ];
             }
         } elseif (
