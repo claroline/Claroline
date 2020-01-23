@@ -316,7 +316,7 @@ class ToolManager
                     }
 
                     $toolRole = $this->om->getRepository(ToolRole::class)->findOneBy(['role' => $role, 'tool' => $tool]);
-                    if ($toolRole && ToolRole::HIDDEN !== $toolRole->getDisplay()) {
+                    if (!$toolRole || ToolRole::HIDDEN !== $toolRole->getDisplay()) {
                         $tools[] = $tool;
                         break;
                     }
