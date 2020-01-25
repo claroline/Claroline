@@ -7,6 +7,8 @@
   "evaluation_completed_feedback": "",
   "evaluation_completed_feedback_msg": "",
 
+  "evaluation_participated_status": "Vous avez participé à l'évaluation.",
+
   "evaluation_passed_status": "Vous avez réussi l'évaluation.",
   "evaluation_passed_feedback": "",
   "evaluation_passed_feedback_msg": "",
