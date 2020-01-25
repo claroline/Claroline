@@ -46,7 +46,7 @@ const CountGauge = props => {
 }
 
 implementPropTypes(CountGauge, GaugeTypes, {
-  total: T.number.isRequired
+  total: T.number
 })
 
 export {

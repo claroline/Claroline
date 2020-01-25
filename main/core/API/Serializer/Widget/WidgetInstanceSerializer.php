@@ -66,12 +66,17 @@ class WidgetInstanceSerializer
             }
         }
 
-        return [
+        $serialized = [
             'id' => $widgetInstance->getUuid(),
             'type' => $widget->getName(),
             'source' => $dataSource ? $dataSource->getName() : null,
-            'parameters' => $parameters,
         ];
+
+        if (!empty($parameters)) {
+            $serialized['parameters'] = $parameters;
+        }
+
+        return $serialized;
     }
 
     public function deserialize($data, WidgetInstance $widgetInstance, array $options = []): WidgetInstance
