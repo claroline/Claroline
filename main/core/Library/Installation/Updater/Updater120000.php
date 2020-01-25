@@ -132,8 +132,7 @@ class Updater120000 extends Updater
             SET
                 config.name = tab.name,
                 config.longTitle = tab.name,
-                config.centerTitle = false,
-                config.is_locked = true
+                config.centerTitle = false
             ';
 
         $stmt = $this->conn->prepare($sql);

@@ -18,6 +18,11 @@ class Version20180306143853 extends AbstractMigration
             ALTER TABLE ujm_paper 
             DROP FOREIGN KEY FK_82972E4BE934951A
         ');
+
+        $this->addSql('
+            DELETE p FROM ujm_paper AS p WHERE NOT EXISTS (SELECT e.id FROM ujm_exercise AS e WHERE e.id = p.exercise_id)
+        ');
+
         $this->addSql('
             ALTER TABLE ujm_paper 
             ADD CONSTRAINT FK_82972E4BE934951A FOREIGN KEY (exercise_id) 

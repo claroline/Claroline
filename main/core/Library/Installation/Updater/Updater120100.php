@@ -30,8 +30,6 @@ class Updater120100 extends Updater
             ->prepare('
                 UPDATE claro_directory
                 SET 
-                    show_summary = 1,
-                    open_summary = 0,
                     filterable = 1,
                     sortable = 1,
                     paginated = 1,

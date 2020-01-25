@@ -102,7 +102,6 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
                 $newNode->setCreator($node->getCreator());
                 $newNode->setDescription($node->getDescription());
                 $newNode->setFullscreen($node->getFullscreen());
-                $newNode->setIcon($node->getIcon());
                 $newNode->setIndex($node->getIndex());
                 $newNode->setLicense($node->getLicense());
                 $newNode->setMimeType('custom/claroline_dropzone');
