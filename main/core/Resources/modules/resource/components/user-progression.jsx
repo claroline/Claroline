@@ -9,15 +9,26 @@ import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-t
 /**
  * Renders a gauge to display progression of the user in the resource evaluation.
  */
-const UserProgression = props =>
-  <LiquidGauge
-    id="user-progression"
-    type="user"
-    value={props.userEvaluation.progression ? props.userEvaluation.progression : 0}
-    displayValue={(value) => number(value) + '%'}
-    width={props.width}
-    height={props.height}
-  />
+const UserProgression = props => {
+  let progression = 0
+  if (props.userEvaluation.progression) {
+    progression = props.userEvaluation.progression
+    if (props.userEvaluation.progressionMax) {
+      progression = (progression / props.userEvaluation.progressionMax) * 100
+    }
+  }
+
+  return (
+    <LiquidGauge
+      id="user-progression"
+      type="user"
+      value={progression}
+      displayValue={(value) => number(value) + '%'}
+      width={props.width}
+      height={props.height}
+    />
+  )
+}
 
 UserProgression.propTypes = {
   userEvaluation: T.shape(

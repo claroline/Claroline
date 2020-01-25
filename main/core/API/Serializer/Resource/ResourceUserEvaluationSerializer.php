@@ -36,12 +36,17 @@ class ResourceUserEvaluationSerializer
      */
     public function serialize(ResourceUserEvaluation $resourceUserEvaluation)
     {
+        $score = $resourceUserEvaluation->getScore();
+        if ($score) {
+            $score = round($score, 2);
+        }
+
         $serialized = [
             'id' => $resourceUserEvaluation->getId(),
             'date' => $resourceUserEvaluation->getDate() ? $resourceUserEvaluation->getDate()->format('Y-m-d H:i') : null,
             'status' => $resourceUserEvaluation->getStatus(),
             'duration' => $resourceUserEvaluation->getDuration(),
-            'score' => $resourceUserEvaluation->getScore(),
+            'score' => $score,
             'scoreMin' => $resourceUserEvaluation->getScoreMin(),
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
             'customScore' => $resourceUserEvaluation->getCustomScore(),
