@@ -303,6 +303,33 @@ class Path extends AbstractResource
     }
 
     /**
+     * Gets all the path step in a flat array in correct order.
+     *
+     * @return Step[]
+     */
+    public function getOrderedSteps()
+    {
+        $flatten = [];
+
+        $roots = $this->getRootSteps();
+        foreach ($roots as $root) {
+            $flatten = array_merge($flatten, $this->getFlatSteps($root));
+        }
+
+        return $flatten;
+    }
+
+    private function getFlatSteps(Step $step)
+    {
+        $steps = [$step];
+        foreach ($step->getChildren() as $child) {
+            $steps = array_merge($steps, $this->getFlatSteps($child));
+        }
+
+        return $steps;
+    }
+
+    /**
      * Get root step of the path.
      *
      * @return Step[]

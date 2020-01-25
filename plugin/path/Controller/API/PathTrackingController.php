@@ -131,7 +131,7 @@ class PathTrackingController
 
             // Reverse steps to proceed the latest steps first as we will only keep the most advanced step the users have done
             /** @var Step[] $steps */
-            $steps = array_reverse($path->getSteps()->toArray());
+            $steps = array_reverse($path->getOrderedSteps());
             $stepsData = [];
             $usersDone = [];
 
