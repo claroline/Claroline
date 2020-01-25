@@ -15,7 +15,7 @@ trait Uuid
      *
      * @ORM\Column("uuid", type="string", length=36, unique=true)
      */
-    private $uuid;
+    protected $uuid;
 
     /**
      * Gets UUID.
