@@ -31,7 +31,7 @@ ResourceWidget.propTypes = {
   resourceNode: T.shape(
     ResourceNodeTypes.propTypes
   ),
-  showResourceHeader: T.bool.isRequired
+  showResourceHeader: T.bool
 }
 
 export {

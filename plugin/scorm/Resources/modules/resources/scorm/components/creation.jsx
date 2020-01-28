@@ -10,6 +10,7 @@ import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 
 const ScormForm = props =>
   <FormData
+    embedded={true}
     level={5}
     name={selectors.STORE_NAME}
     dataPart={selectors.FORM_RESOURCE_PART}

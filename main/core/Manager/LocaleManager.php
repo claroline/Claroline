@@ -45,24 +45,6 @@ class LocaleManager
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * Get a list of available languages in the platform.
-     *
-     * @param string $path The path of translations files
-     *
-     * @return array
-     */
-    public function retrieveAvailableLocales($path = '/../Resources/translations/')
-    {
-        $locales = [];
-        $data = $this->configHandler->getParameter('locales.available');
-        foreach ($data as $locale) {
-            $locales[$locale] = $locale;
-        }
-
-        return $locales;
-    }
-
     public function getLocales()
     {
         $available = $this->getAvailableLocales();
@@ -104,7 +86,10 @@ class LocaleManager
     public function getAvailableLocales()
     {
         if (!$this->locales) {
-            $this->locales = $this->retrieveAvailableLocales();
+            $data = $this->configHandler->getParameter('locales.available');
+            foreach ($data as $locale) {
+                $this->locales[$locale] = $locale;
+            }
         }
 
         return $this->locales;
@@ -161,8 +146,12 @@ class LocaleManager
      */
     private function getCurrentUser()
     {
-        if (is_object($token = $this->tokenStorage->getToken()) && is_object($user = $token->getUser())) {
-            return $user;
+        $token = $this->tokenStorage->getToken();
+        if (is_object($token)) { // not sure this check is still required
+            $user = $token->getUser();
+            if ($user instanceof User) {
+                return $user;
+            }
         }
 
         return null;
