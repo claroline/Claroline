@@ -47,11 +47,12 @@ class Crud
     /**
      * Crud constructor.
      *
-     * @param ObjectManager      $om
-     * @param StrictDispatcher   $dispatcher
-     * @param SerializerProvider $serializer
-     * @param ValidatorProvider  $validator
-     * @param SchemaProvider     $schema
+     * @param ObjectManager                 $om
+     * @param StrictDispatcher              $dispatcher
+     * @param SerializerProvider            $serializer
+     * @param ValidatorProvider             $validator
+     * @param SchemaProvider                $schema
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
       ObjectManager $om,
@@ -204,6 +205,7 @@ class Crud
      *
      * @param object $object  - the entity to copy
      * @param array  $options - additional copy options
+     * @param array  $extra
      *
      * @return object
      */
@@ -214,7 +216,7 @@ class Crud
         $new = new $class();
 
         //default option for copy
-        $options[] = [Options::REFRESH_UUID];
+        $options[] = Options::REFRESH_UUID;
         $serializer = $this->serializer->get($object);
 
         if (method_exists($serializer, 'getCopyOptions')) {
@@ -244,13 +246,12 @@ class Crud
     /**
      * Copy a list of entries of `class`.
      *
-     * @param string $class   - the class of the entries to copy
-     * @param array  $data    - the list of entries to copy
-     * @param array  $options - additional copy options
+     * @param array $data    - the list of entries to copy
+     * @param array $options - additional copy options
      *
      * @return array
      */
-    public function copyBulk($class, array $data, array $options = [])
+    public function copyBulk(array $data, array $options = [])
     {
         $this->om->startFlushSuite();
         $copies = [];

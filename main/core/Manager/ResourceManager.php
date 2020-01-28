@@ -83,12 +83,12 @@ class ResourceManager
     private $filesDirectory;
     /* @var ContainerInterface */
     private $container;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var ResourceLifecycleManager */
     private $lifeCycleManager;
+    /** @var Crud */
+    private $crud;
 
     /**
      * ResourceManager constructor.
@@ -104,6 +104,7 @@ class ResourceManager
      * @param PlatformConfigurationHandler $platformConfigHandler
      * @param SerializerProvider           $serializer
      * @param ResourceLifecycleManager     $lifeCycleManager
+     * @param Crud                         $crud
      */
     public function __construct(
         RoleManager $roleManager,
@@ -212,7 +213,7 @@ class ResourceManager
         }
         $node->setPathForCreationLog($parentPath.$node->getName());
         $this->om->endFlushSuite();
-        
+
         return $resource;
     }
 
@@ -475,12 +476,8 @@ class ResourceManager
      * @param ResourceNode $node
      * @param ResourceNode $parent
      * @param User         $user
-     * @param null         $index
-     * @param bool         $withRights           - Defines if the rights of the copied resource have to be created
-     * @param bool         $withDirectoryContent - Defines if the content of a directory has to be copied too
-     * @param array        $rights               - If defined, the copied resource will have exactly the given rights
      *
-     * @return AbstractResource
+     * @return ResourceNode
      *
      * @throws ResourceNotFoundException
      */
@@ -492,18 +489,18 @@ class ResourceManager
         $check = ['activity', 'claroline_scorm_12', 'claroline_scorm_2004'];
 
         if (in_array($node->getResourceType()->getName(), $check)) {
-            return;
+            return null;
         }
 
         $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
 
-        $newNode = $this->crud->copy($node, [Options::REFRESH_UUID, OPTIONS::IGNORE_RIGHTS], ['user' => $user, 'parent' => $parent]);
+        /** @var ResourceNode $newNode */
+        $newNode = $this->crud->copy($node, [OPTIONS::IGNORE_RIGHTS], ['user' => $user, 'parent' => $parent]);
 
         $this->om->persist($newNode);
         $this->om->flush();
 
-        //for backward compatibility for the moment
-        return $newNode->getResource();
+        return $newNode;
     }
 
     /**
@@ -536,8 +533,9 @@ class ResourceManager
     /**
      * Removes a resource.
      *
-     * @param ResourceNode $resourceNode
+     * @param ResourceNode $node
      * @param bool         $force
+     * @param bool         $softDelete
      *
      * @throws \LogicException
      */

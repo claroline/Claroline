@@ -457,7 +457,6 @@ abstract class AbstractCrudController extends AbstractApiController
         }
 
         $copies = $this->crud->copyBulk(
-            $class,
             $this->decodeIdsString($request, $class),
             $options
         );

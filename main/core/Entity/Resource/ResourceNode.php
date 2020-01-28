@@ -285,8 +285,17 @@ class ResourceNode
     /**
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(length=128, unique=true)
+     *
+     * @var string
      */
     private $slug;
+
+    /**
+     * @var AbstractResource
+     *
+     * @deprecated
+     */
+    private $resource;
 
     public function __construct()
     {
@@ -385,13 +394,20 @@ class ResourceNode
     /**
      * Unmapped field so we don't have to force flush and fetch the database at node copy for the momoent.
      *
-     * @param ResourceType
+     * @param AbstractResource
+     *
+     * @deprecated
      */
     public function setResource(AbstractResource $resource)
     {
         $this->resource = $resource;
     }
 
+    /**
+     * @return AbstractResource
+     *
+     * @deprecated
+     */
     public function getResource()
     {
         return $this->resource;
@@ -958,7 +974,7 @@ class ResourceNode
     /**
      * Get comments.
      *
-     * @return ResourceComment[]
+     * @return ResourceComment[]|ArrayCollection
      */
     public function getComments()
     {

@@ -297,6 +297,7 @@ class ResourceNodeSerializer
      *
      * @param array        $data
      * @param ResourceNode $resourceNode
+     * @param array        $options
      */
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = [])
     {
@@ -304,6 +305,8 @@ class ResourceNodeSerializer
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $resourceNode);
+        } else {
+            $resourceNode->refreshUuid();
         }
 
         if (isset($data['meta']['workspace'])) {
@@ -394,14 +397,13 @@ class ResourceNodeSerializer
             } else {
                 $workspace = $resourceNode->getWorkspace() ?
                     $resourceNode->getWorkspace() :
-                    $this->om->getRepository(Workspace::class)->findOneByCode($right['workspace']['code']);
+                    $this->om->getRepository(Workspace::class)->findOneBy(['code' => $right['workspace']['code']]);
 
-                $role = $this->om->getRepository(Role::class)->findOneBy(
-                  [
+                /** @var Role $role */
+                $role = $this->om->getRepository(Role::class)->findOneBy([
                     'translationKey' => $right['translationKey'],
                     'workspace' => $workspace,
-                  ]
-                );
+                ]);
             }
 
             if ($role && !in_array(OPTIONS::IGNORE_RIGHTS, $options)) {

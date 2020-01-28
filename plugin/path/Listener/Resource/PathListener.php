@@ -7,6 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
@@ -163,7 +164,7 @@ class PathListener
      */
     private function createResourcesCopyDirectory(ResourceNode $destination, $pathName)
     {
-        // Get current User
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         $resourcesDir = $this->resourceManager->createResource(
@@ -182,7 +183,7 @@ class PathListener
 
     private function copyStepResources(Step $step, ResourceNode $destination, array $copiedResources = [])
     {
-        // get current User
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         // copy primary resource
@@ -192,7 +193,7 @@ class PathListener
                 // resource not already copied, create a new copy
                 $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
                 if ($resourceCopy) {
-                    $copiedResources[$resourceNode->getUuid()] = $resourceCopy->getResourceNode();
+                    $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
                 }
             }
 
@@ -208,7 +209,7 @@ class PathListener
                     // resource not already copied, create a new copy
                     $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
                     if ($resourceCopy) {
-                        $copiedResources[$resourceNode->getUuid()] = $resourceCopy->getResourceNode();
+                        $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
                     }
                 }
 

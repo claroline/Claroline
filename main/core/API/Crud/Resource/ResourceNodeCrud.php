@@ -10,6 +10,7 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
@@ -182,8 +183,11 @@ class ResourceNodeCrud
 
     public function preCopy(CopyEvent $event)
     {
+        /** @var ResourceNode $node */
         $node = $event->getObject();
+        /** @var ResourceNode $newNode */
         $newNode = $event->getCopy();
+
         $resource = $this->resourceManager->getResourceFromNode($node);
 
         if (!$resource) {
@@ -191,20 +195,22 @@ class ResourceNodeCrud
             return;
         }
 
+        /** @var ResourceNode $newParent */
         $newParent = $event->getExtra()['parent'];
         $user = $event->getExtra()['user'];
 
         $this->om->persist($newNode);
+        /** @var AbstractResource $copy */
         $copy = $this->crud->copy($resource, [Options::REFRESH_UUID]);
         $copy->setResourceNode($newNode);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setCreator($user);
         //unmapped but allow to retrieve it with the entity without any request for the following code
-        $newNode->setResource($resource);
+        $newNode->setResource($copy);
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
-        $original = $this->resourceManager->getResourceFromNode($node);
-        $event = $this->lifeCycleManager->copy($original, $copy);
+
+        $this->lifeCycleManager->copy($resource, $copy);
 
         $this->om->persist($copy);
         $this->om->persist($newParent);

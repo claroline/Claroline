@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
@@ -217,13 +218,14 @@ class ResourceListener
         $parent = isset($data['destination']['autoId']) && isset($data['destination']['meta']['type']) && 'directory' === $data['destination']['meta']['type'] ?
             $this->manager->getById($data['destination']['autoId']) :
             null;
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         if (!empty($parent) && 'anon.' !== $user) {
-            $newResource = $this->manager->copy($resourceNode, $parent, $user);
+            $newNode = $this->manager->copy($resourceNode, $parent, $user);
 
             $event->setResponse(
-                new JsonResponse($this->serializer->serialize($newResource->getResourceNode()))
+                new JsonResponse($this->serializer->serialize($newNode))
             );
         } else {
             $event->setResponse(
