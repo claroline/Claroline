@@ -1,10 +1,6 @@
 import identity from 'lodash/identity'
 
-import {getApp, getApps} from '#/main/app/plugins'
-
-function getTool(name) {
-  return getApp('administration', name)()
-}
+import {getApps} from '#/main/app/plugins'
 
 function getActions(user, desktopRefresher = {}) {
   // adds default refresher actions
@@ -15,18 +11,17 @@ function getActions(user, desktopRefresher = {}) {
   }, desktopRefresher)
 
   // get all actions declared for workspace
-  const actions = getApps('actions.administration')
+  const actions = getApps('actions.desktop')
 
   return Promise.all(
     // boot actions applications
     Object.keys(actions).map(action => actions[action]())
   ).then((loadedActions) => loadedActions
     // generate action
-      .map(actionModule => actionModule.default(user, refresher))
+    .map(actionModule => actionModule.default(user, refresher))
   )
 }
 
 export {
-  getTool,
   getActions
 }

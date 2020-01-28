@@ -2,14 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
-import {url} from '#/main/app/api'
 import {trans, number} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {route as toolRoute} from '#/main/core/tool/routing'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
-import {MODAL_USERS} from '#/main/core/modals/users'
+import {getActions} from '#/main/core/desktop'
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 
@@ -44,32 +44,7 @@ const DesktopProgression = () =>
   </section>
 
 const DesktopMenu = props => {
-  const actions = [
-    {
-      name: 'walkthrough',
-      type: CALLBACK_BUTTON,
-      icon: 'fa fa-fw fa-street-view',
-      label: trans('show-walkthrough', {}, 'actions'),
-      callback: () => true,
-      subscript: {
-        type: 'label',
-        status: 'primary',
-        value: 'coming soon'
-      }
-    }, {
-      name: 'impersonation',
-      type: MODAL_BUTTON,
-      icon: 'fa fa-fw fa-mask',
-      label: trans('view-as', {}, 'actions'),
-      displayed: props.isAdmin,
-      modal: [MODAL_USERS, {
-        selectAction: (users) => ({
-          type: URL_BUTTON,
-          target: !isEmpty(users) ? url(['claro_index', {_switch: users[0].username}])+'#/desktop' : ''
-        })
-      }]
-    }
-  ]
+  const desktopActions = getActions(props.currentUser)
 
   return (
     <MenuMain
@@ -86,7 +61,7 @@ const DesktopMenu = props => {
         icon: tool.icon,
         path: toolRoute(tool.name)
       }))}
-      actions={actions}
+      actions={desktopActions}
     >
       {props.showProgression &&
         <DesktopProgression />
@@ -94,26 +69,27 @@ const DesktopMenu = props => {
 
       {!isEmpty(props.shortcuts) &&
         <DesktopShortcuts
-          shortcuts={props.shortcuts
-            .map(shortcut => {
-              if ('tool' === shortcut.type) {
-                const tool = props.tools.find(tool => tool.name === shortcut.name)
-                if (tool) {
-                  return {
-                    name: shortcut.name,
-                    type: LINK_BUTTON,
-                    icon: `fa fa-fw fa-${tool.icon}`,
-                    label: trans('open-tool', {tool: trans(tool.name, {}, 'tools')}, 'actions'),
-                    target: toolRoute(tool.name)
+          shortcuts={desktopActions.then(actions => {
+            return props.shortcuts
+              .map(shortcut => {
+                if ('tool' === shortcut.type) {
+                  const tool = props.tools.find(tool => tool.name === shortcut.name)
+                  if (tool) {
+                    return {
+                      name: shortcut.name,
+                      type: LINK_BUTTON,
+                      icon: `fa fa-fw fa-${tool.icon}`,
+                      label: trans('open-tool', {tool: trans(tool.name, {}, 'tools')}, 'actions'),
+                      target: toolRoute(tool.name)
+                    }
                   }
-                }
 
-              } else {
-                return actions.find(action => action.name === shortcut.name)
-              }
-            })
-            .filter(link => !!link)
-          }
+                } else {
+                  return actions.find(action => action.name === shortcut.name)
+                }
+              })
+              .filter(link => !!link)
+          })}
         />
       }
 
@@ -126,7 +102,9 @@ const DesktopMenu = props => {
 }
 
 DesktopMenu.propTypes = {
-  isAdmin: T.bool.isRequired,
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ),
   showProgression: T.bool.isRequired,
   section: T.string,
   shortcuts: T.arrayOf(T.shape({

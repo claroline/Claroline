@@ -13,7 +13,7 @@ const DesktopMenu = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
       (state) => ({
-        isAdmin: securitySelectors.isAdmin(state),
+        currentUser: securitySelectors.currentUser(state),
         showProgression: configSelectors.param(state, 'desktop.showProgression'),
         section: menuSelectors.openedSection(state),
         tools: selectors.tools(state)

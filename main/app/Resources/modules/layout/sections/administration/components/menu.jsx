@@ -145,17 +145,6 @@ const AdministrationMenu = props =>
     }))}
     actions={[
       {
-        name: 'walkthrough',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-street-view',
-        label: trans('show-walkthrough', {}, 'actions'),
-        callback: () => true,
-        subscript: {
-          type: 'label',
-          status: 'primary',
-          value: 'coming soon'
-        }
-      }, {
         name: 'enable-maintenance',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-hard-hat',

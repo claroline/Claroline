@@ -23,6 +23,14 @@ registry.add('ClarolineCoreBundle', {
    * Provides actions for base Claroline objects.
    */
   actions: {
+    administration: {
+
+    },
+
+    desktop: {
+      'impersonation': () => { return import(/* webpackChunkName: "core-action-desktop-impersonation" */ '#/main/core/desktop/actions/impersonation') },
+    },
+
     resource: {
       // all resources
       'about'    : () => { return import(/* webpackChunkName: "core-action-resource-about" */     '#/main/core/resource/actions/about') },
