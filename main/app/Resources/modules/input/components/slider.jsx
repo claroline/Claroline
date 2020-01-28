@@ -3,7 +3,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Overlay} from '#/main/app/overlays/components/overlay'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 class Slider extends Component {
@@ -80,7 +79,7 @@ class Slider extends Component {
 
         <TooltipOverlay
           id={this.props.id+'-tooltip'}
-          tip="Sélectionner le nombre d'utilisateurs"
+          tip={this.props.label || this.props.value}
         >
           <button
             className="slider-cursor"
@@ -99,6 +98,7 @@ class Slider extends Component {
 
 Slider.propTypes = {
   id: T.string.isRequired,
+  label: T.string,
   value: T.number,
   min: T.number,
   max: T.number,

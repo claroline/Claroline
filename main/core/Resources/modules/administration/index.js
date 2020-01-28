@@ -22,7 +22,7 @@ function getActions(user, desktopRefresher = {}) {
     Object.keys(actions).map(action => actions[action]())
   ).then((loadedActions) => loadedActions
     // generate action
-      .map(actionModule => actionModule.default(user, refresher))
+    .map(actionModule => actionModule.default(user, refresher))
   )
 }
 

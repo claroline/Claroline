@@ -12,6 +12,17 @@ use Claroline\CoreBundle\Entity\User;
 
 class Create extends AbstractAction
 {
+    /** @var Crud */
+    private $crud;
+    /** @var ObjectManager */
+    private $om;
+
+    /**
+     * Create constructor.
+     *
+     * @param Crud          $crud
+     * @param ObjectManager $om
+     */
     public function __construct(Crud $crud, ObjectManager $om)
     {
         $this->crud = $crud;
@@ -26,7 +37,7 @@ class Create extends AbstractAction
     public function execute(array $data, &$successData = [])
     {
         $hasWs = false;
-        $options = [];
+        $options = [Options::SEND_EMAIL];
 
         if (isset($data['meta']) && isset($data['meta']['personalWorkspace'])) {
             $hasWs = $data['meta']['personalWorkspace'];

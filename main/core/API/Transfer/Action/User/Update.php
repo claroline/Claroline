@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Transfer\Action\User;
 
 use Claroline\AppBundle\API\Transfer\Action\AbstractUpdateAction;
+use Claroline\CoreBundle\Entity\User;
 
 class Update extends AbstractUpdateAction
 {
@@ -13,6 +14,6 @@ class Update extends AbstractUpdateAction
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\User';
+        return User::class;
     }
 }
