@@ -189,7 +189,7 @@ const FormData = (props) => {
 }
 
 FormData.propTypes = {
-  id: T.string,
+  id: T.string.isRequired,
   /**
    * Is the form embed into another ?
    *

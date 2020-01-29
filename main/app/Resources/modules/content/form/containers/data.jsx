@@ -8,6 +8,7 @@ import set from 'lodash/set'
 
 import {url} from '#/main/app/api'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {toKey} from '#/main/core/scaffolding/text'
 
 import {FormData as FormDataComponent} from '#/main/app/content/form/components/data'
 import {actions, selectors} from '#/main/app/content/form/store'
@@ -27,6 +28,7 @@ const FormData = connect(
     }
 
     return {
+      id: ownProps.id || toKey(ownProps.name),
       new: selectors.isNew(formState),
       mode: selectors.mode(formState),
       data: data,
