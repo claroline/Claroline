@@ -36,9 +36,12 @@
     border-style: dashed;
 }
 
+// FIXME: this is ugly to do it like it
 .page-content > .empty-placeholder {
-    margin-top: @component-margin-bottom;
     flex: 1;
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
 }
 
 .form-group {
