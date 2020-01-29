@@ -9,6 +9,7 @@ import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 const ShortcutForm = props =>
   <FormData
     level={5}
+    embedded={true}
     name={selectors.STORE_NAME}
     dataPart={selectors.FORM_RESOURCE_PART}
     sections={[
