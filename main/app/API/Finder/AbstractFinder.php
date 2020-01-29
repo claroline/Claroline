@@ -266,7 +266,7 @@ abstract class AbstractFinder implements FinderInterface
         $secQ = $secQb->getQuery();
 
         $secSql = $this->getSql($secQ);
-        $sql = $firstSql.' UNION '.$secSql;
+        $sql = '('.$firstSql.') UNION ('.$secSql.')';
         $query = $this->buildQueryFromSql($sql, $options, $sortBy);
 
         $parameters = new ArrayCollection(array_merge(
