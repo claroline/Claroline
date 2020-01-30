@@ -3,6 +3,7 @@ import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {
   TOOL_OPEN,
   TOOL_CLOSE,
+  TOOL_LOAD,
   TOOL_SET_LOADED
 } from '#/main/core/tool/store/actions'
 
@@ -21,6 +22,9 @@ const reducer = combineReducers({
   currentContext: makeReducer({}, {
     [TOOL_OPEN]: (state, action) => action.context,
     [TOOL_CLOSE]: () => ({})
+  }),
+  permissions: makeReducer({}, {
+    [TOOL_LOAD]: (state, action) => action.toolData.permissions || {}
   })
 })
 

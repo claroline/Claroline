@@ -114,7 +114,12 @@ class AdministrationController
 
         $this->eventDispatcher->dispatch('log', new LogAdminToolReadEvent($toolName));
 
-        return new JsonResponse($event->getData());
+        return new JsonResponse(array_merge($event->getData(), [
+            'permissions' => [
+                'open' => $this->authorization->isGranted('OPEN', $tool),
+                'edit' => $this->authorization->isGranted('EDIT', $tool),
+            ],
+        ]));
     }
 
     /**

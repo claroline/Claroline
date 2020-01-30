@@ -223,7 +223,12 @@ class WorkspaceController
 
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 
-        return new JsonResponse($event->getData());
+        return new JsonResponse(array_merge($event->getData(), [
+            'permissions' => [
+                'open' => $this->authorization->isGranted([$toolName, 'open'], $workspace),
+                'edit' => $this->authorization->isGranted([$toolName, 'edit'], $workspace),
+            ],
+        ]));
     }
 
     /**

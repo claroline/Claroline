@@ -57,6 +57,7 @@ class Slider extends Component {
 
   render() {
     const width = (this.props.value / (this.props.max - this.props.min)) * 100
+
     return (
       <div
         className="slider progress progress-xs"
@@ -79,7 +80,7 @@ class Slider extends Component {
 
         <TooltipOverlay
           id={this.props.id+'-tooltip'}
-          tip={this.props.label || this.props.value}
+          tip={this.props.label || (this.props.value+'')}
         >
           <button
             className="slider-cursor"

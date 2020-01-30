@@ -10,8 +10,7 @@ import {UserCard} from '#/main/core/user/components/card'
 const UserDisplay = (props) => props.data ?
   <UserCard
     data={props.data}
-    size="sm"
-    orientation="col"
+    size="xs"
   /> :
   <EmptyPlaceholder
     icon="fa fa-user"

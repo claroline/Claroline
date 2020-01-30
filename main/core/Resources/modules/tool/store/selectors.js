@@ -3,6 +3,7 @@ import {createSelector} from 'reselect'
 const STORE_NAME = 'tool'
 
 const store = (state) => state[STORE_NAME] || {}
+const tool = store
 
 const loaded = createSelector(
   [store],
@@ -52,6 +53,7 @@ const contextId = createSelector(
 export const selectors = {
   STORE_NAME,
   store,
+  tool,
 
   loaded,
   name,

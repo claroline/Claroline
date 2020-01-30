@@ -1381,7 +1381,7 @@
     "display_parameters": "Display parameters",
     "add_comment": "Comment",
     "keywords": "Keywords",
-    "objects_delete_title": "Delete objects",
+    "objects_delete_title": "Deletion",
     "objects_select_title": "Select objects",
     "objects_select_confirm": "Confirm selection",
     "object_delete_question": "{1} Do you really want to remove the selected object ?|[2,Inf[ Do you really want to remove the %count% selected objects ?",

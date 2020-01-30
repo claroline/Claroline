@@ -23,7 +23,7 @@ const BadgeTool = props =>
         label: trans('add_badge', {}, 'badge'),
         target: `${props.path}/new`,
         primary: true,
-        displayed: true //only for organizationManager
+        displayed: props.editable
       }
     ]}
     subtitle={
@@ -71,7 +71,8 @@ const BadgeTool = props =>
           exact: true
         }, {
           path: '/parameters',
-          component: ParametersForm
+          component: ParametersForm,
+          disabled: !props.editable
         }
       ]}
     />
@@ -79,6 +80,7 @@ const BadgeTool = props =>
 
 BadgeTool.propTypes = {
   path: T.string.isRequired,
+  editable: T.bool.isRequired,
   currentContext: T.object.isRequired,
   openBadge: T.func.isRequired,
   openAssertion: T.func.isRequired

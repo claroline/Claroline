@@ -1412,7 +1412,7 @@
     "display_parameters": "Paramètres d'affichage",
     "add_comment": "Commenter",
     "keywords": "Mots clés",
-    "objects_delete_title": "Supprimer des objets",
+    "objects_delete_title": "Suppression",
     "objects_select_title": "Sélectionner des objets",
     "objects_select_confirm": "Valider la sélection",
     "object_delete_question": "{1} Êtes-vous sûr de vouloir supprimer l'objet sélectionné ?|[2,Inf[ Êtes-vous sur de vouloir supprimer les %count% objets sélectionnés ?",

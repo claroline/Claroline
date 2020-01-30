@@ -45,6 +45,7 @@ const GroupsInput = props => {
           <GroupCard
             key={`group-card-${group.id}`}
             data={group}
+            size="xs"
             actions={[
               {
                 name: 'delete',

@@ -23,6 +23,9 @@ class ToolListener
 {
     /**
      * BadgeListener constructor.
+     *
+     * @param SerializerProvider $serializer
+     * @param EngineInterface    $templating
      */
     public function __construct(
         SerializerProvider $serializer,
