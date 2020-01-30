@@ -70,6 +70,7 @@ class LoginForm extends Component {
                       name: 'password',
                       label: trans('password'),
                       placeholder: trans('password'),
+                      autoComplete: 'current-password',
                       hideLabel: true,
                       type: 'password',
                       required: true

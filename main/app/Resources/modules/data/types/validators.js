@@ -271,7 +271,13 @@ function notExist(value, options = {}) {
         'X-Requested-With': 'XMLHttpRequest'
       })
     })
-      .then(response => response.json())
+      .then(response => {
+        if (204 !== response.status) {
+          return response.json()
+        }
+
+        return Promise.resolve(null)
+      })
       .then(response => {
         if (response) {
           return Promise.resolve(tval(options.unique.error || 'value_not_unique'))
