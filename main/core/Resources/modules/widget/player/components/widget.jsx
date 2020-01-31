@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
+import isEmpty from 'lodash/isEmpty'
 
 import {Heading} from '#/main/core/layout/components/heading'
 import {WidgetContent} from '#/main/core/widget/content/containers/content'
@@ -51,18 +52,20 @@ const Widget = props =>
       </Heading>
     }
 
-    <div className="widget-body">
-      <div className="row">
-        {times(props.widget.display.layout.length, col =>
-          <WidgetCol
-            key={col}
-            size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
-            currentContext={props.currentContext}
-            content={props.widget.contents[col]}
-          />
-        )}
+    {!isEmpty(props.widget.contents) &&
+      <div className="widget-body">
+        <div className="row">
+          {times(props.widget.display.layout.length, col =>
+            <WidgetCol
+              key={col}
+              size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
+              currentContext={props.currentContext}
+              content={props.widget.contents[col]}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    }
   </section>
 
 Widget.propTypes = {

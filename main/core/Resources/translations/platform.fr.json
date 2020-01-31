@@ -1718,5 +1718,6 @@
     "web": "Web",
     "period": "Période",
     "registration_mail_help": "Les informations de votre compte vont vous être envoyées par courriel. (Il est possible qu'elles arrivent dans votre dossier dédié aux pourriels).",
-    "registration_validation_help": "Votre compte ne sera accessible qu'une fois que vous l'aurez activé en cliquant sur le lien qui vous a été envoyé par courriel."
+    "registration_validation_help": "Votre compte ne sera accessible qu'une fois que vous l'aurez activé en cliquant sur le lien qui vous a été envoyé par courriel.",
+    "display_optional_fields": "Afficher les champs optionels"
 }

@@ -1683,5 +1683,6 @@
     "value": "Value",
     "chart": "Chart",
     "web": "Web",
-    "period": "Period"
+    "period": "Period",
+    "display_optional_fields": "Show optional fields"
 }
