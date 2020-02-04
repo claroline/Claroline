@@ -342,7 +342,7 @@ abstract class AbstractCrudController extends AbstractApiController
         );
 
         if (is_array($object)) {
-            return new JsonResponse($object, 400);
+            return new JsonResponse($object, 422);
         }
 
         return new JsonResponse(
@@ -391,7 +391,7 @@ abstract class AbstractCrudController extends AbstractApiController
         );
 
         if (is_array($object)) {
-            return new JsonResponse($object, 400);
+            return new JsonResponse($object, 422);
         }
 
         //just in case so we really returns the proper object
