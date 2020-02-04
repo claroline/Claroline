@@ -20,7 +20,9 @@ const ToolMain = withRouter(
           return dispatch(actions.fetch(toolName, context))
         },
         close(toolName, context) {
-          dispatch(actions.closeTool(toolName, context))
+          if (toolName) {
+            dispatch(actions.closeTool(toolName, context))
+          }
         }
       })
     )(ToolMainComponent)

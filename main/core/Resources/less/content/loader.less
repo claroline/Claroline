@@ -8,12 +8,12 @@
     align-items: center;
     justify-content: center;
 
-    color: @gray;
+    color: @loader-color;
     font-family: @headings-font-family;
     font-size: 18px;
     font-weight: bold;
     padding: 15px;
-    background: @gray-lighter;
+    background: @loader-bg;
     border-radius: @border-radius-base;
 
     .content-loader-sizing-variant(120px);
@@ -42,7 +42,7 @@
     align-items: center;
     justify-content: center;
 
-    background: @gray-lighter;
+    background: @loader-bg;
     border-radius: 50%;
     margin-bottom: @component-margin-bottom;
 
@@ -60,11 +60,11 @@
 .hourglass {
     overflow: visible !important;
 
-    .hourglass-cap    { fill: #585858; }
-    .hourglass-border { stroke: #585858; }
+    .hourglass-cap    { fill: @loader-color; }
+    .hourglass-border { stroke: @loader-color; }
 
-    .primary   .hourglass-liquid { fill: lighten(@brand-primary, 35%); }
-    .secondary .hourglass-liquid { fill: lighten(@brand-secondary, 35%); }
+    .primary   .hourglass-liquid { fill: @loader-primary; }
+    .secondary .hourglass-liquid { fill: @loader-secondary; }
 }
 
 // mixins

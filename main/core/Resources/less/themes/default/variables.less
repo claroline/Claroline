@@ -93,16 +93,13 @@
 
 
 // -
-// Old loader (no longer used in new UIs)
+// Loader (aka hourglass)
 // ---
 
-@loader-bg:            @label-primary-bg;
-@loader-color:         @label-color;
-@loader-border:        transparent;
-@loader-font-size:     @font-size-small;
-@loader-padding:       @padding-small-vertical @padding-small-horizontal;
-@loader-border-radius: @border-radius-base;
-@loader-box-shadow:    @box-shadow-base;
+@loader-primary:   lighten(@brand-primary, 35%);
+@loader-secondary: lighten(@brand-secondary, 35%);
+@loader-color:     #585858;
+@loader-bg:        @gray-lighter;
 
 
 // -

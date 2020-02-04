@@ -87,6 +87,7 @@ class FormDataModal extends Component {
           sections={this.props.sections}
           setErrors={this.setErrors}
           updateProp={this.updateProp}
+          setMode={() => true}
         >
           {this.props.children}
         </FormData>

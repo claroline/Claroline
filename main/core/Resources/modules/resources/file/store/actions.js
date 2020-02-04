@@ -16,11 +16,6 @@ actions.download = (resourceNode) => ({
     forceDownload: true,
     request: {
       method: 'GET'
-    },
-    error: (response, status, dispatch) => {
-      switch(status) {
-        case 500: dispatch(resourceActions.setServerErrors(response)); break
-      }
     }
   }
 })

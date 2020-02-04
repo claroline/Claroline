@@ -52,7 +52,7 @@ const Widget = props =>
       </Heading>
     }
 
-    {!isEmpty(props.widget.contents) &&
+    {(!isEmpty(props.widget.contents) && -1 !== props.widget.contents.findIndex(content => !isEmpty(content))) &&
       <div className="widget-body">
         <div className="row">
           {times(props.widget.display.layout.length, col =>
