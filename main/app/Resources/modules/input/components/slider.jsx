@@ -126,7 +126,7 @@ class Slider extends Component {
           <span className="sr-only">{this.props.value}</span>
         </div>
 
-        {this.props.scale && this.props.scale
+        {this.props.showScale && this.props.scale && this.props.scale
           .map((tick, tickIndex) =>
             <div
               key={tick}
@@ -166,13 +166,15 @@ Slider.propTypes = {
   min: T.number,
   max: T.number,
   scale: T.arrayOf(T.number),
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  showScale: T.bool
 }
 
 Slider.defaultProps = {
   value: 0,
   min: 0,
-  max: 100
+  max: 100,
+  showScale: false
 }
 
 export {
