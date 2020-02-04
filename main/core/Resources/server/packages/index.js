@@ -101,12 +101,12 @@ function getMetaEntries (targetDir) {
 }
 
 function isMetaPackage(rootDir) {
-  return fs.existsSync(rootDir + '/main') || fs.existsSync(rootDir + '/plugin')
+  return fs.existsSync(rootDir + '/main') || fs.existsSync(rootDir + '/plugin') || fs.existsSync(rootDir + '/integration')
 }
 
 function getMetaBundles(targetDir) {
   var bundles = []
-  const src = ['main', 'plugin']
+  const src = ['main', 'plugin', 'integration']
 
   src.filter(dir => fs.existsSync(targetDir + '/' + dir)).forEach(el => {
     var dir = targetDir + '/' + el
