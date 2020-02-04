@@ -15,21 +15,21 @@ const reducer = combineReducers({
    * The list of available tools on the desktop.
    */
   tools: makeReducer([], {
-    [DESKTOP_LOAD]: (state, action) => action.tools || []
+    [DESKTOP_LOAD]: (state, action) => action.data.tools || []
   }),
 
   /**
    * The current user progression.
    */
   userProgression: makeReducer(null, {
-    [DESKTOP_LOAD]: (state, action) => action.userProgression || null
+    [DESKTOP_LOAD]: (state, action) => action.data.userProgression || null
   }),
 
   /**
    * The list of shortcuts to tools or actions.
    */
   shortcuts: makeReducer(null, {
-    [DESKTOP_LOAD]: (state, action) => action.shortcuts || []
+    [DESKTOP_LOAD]: (state, action) => action.data.shortcuts || []
   })
 })
 

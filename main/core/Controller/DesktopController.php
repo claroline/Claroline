@@ -18,6 +18,7 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -102,9 +103,12 @@ class DesktopController
             throw new AccessDeniedException('no tools');
         }
 
+        /** @var GenericDataEvent $event */
+        $event = $this->eventDispatcher->dispatch('desktop.open', new GenericDataEvent());
+
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
-        return new JsonResponse([
+        return new JsonResponse(array_merge($event->getResponse() ?? [], [
             'userProgression' => null,
             'tools' => array_values(array_map(function (Tool $tool) {
                 return [
@@ -113,7 +117,7 @@ class DesktopController
                 ];
             }, $tools)),
             'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
-        ]);
+        ]));
     }
 
     /**
