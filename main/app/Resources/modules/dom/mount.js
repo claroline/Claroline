@@ -16,13 +16,7 @@ if ('development' === env()) {
 
 import {createStore} from '#/main/app/store'
 import {Main} from '#/main/app/components/main'
-
-// config
-import {reducer as configReducer, selectors as configSelectors} from '#/main/app/config/store'
-// security
-import {reducer as securityReducer, selectors as securitySelectors} from '#/main/app/security/store'
-// tool
-import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/tool/store'
+import {getApps} from '#/main/app/plugins'
 
 /**
  * Mounts a new React/Redux app into the DOM.
@@ -35,33 +29,40 @@ import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/to
  * @param {string}      defaultPath   - the path to match when mounting the router.
  */
 function mount(container, rootComponent, reducers = {}, initialData = {}, embedded = false, defaultPath = '') {
-  // append base app reducers
-  reducers[configSelectors.STORE_NAME] = configReducer
-  reducers[securitySelectors.STORE_NAME] = securityReducer
-  reducers[toolSelectors.STORE_NAME] = toolReducer // TODO : do not declare here
+  // append plugin reducers
+  const pluginStores = getApps('store') || {}
 
-  // create store
-  // we initialize a new store even if the mounted app does not declare reducers
-  // we have dynamic reducers which can be added during runtime and they will be fucked up
-  // if they don't find a store to use.
-  const store = createStore(rootComponent.displayName, reducers, initialData)
+  Promise.all(
+    Object.keys(pluginStores).map(pluginStore => pluginStores[pluginStore]())
+  ).then((loadedStores) => {
+    loadedStores.map(storeModule => {
+      // TODO : add some checks
+      reducers[storeModule.selectors.STORE_NAME] = storeModule.reducer
+    })
 
-  const appRoot = createElement(
-    Main, {
-      store: store,
-      embedded: embedded,
-      defaultPath: defaultPath
-    },
-    createElement(rootComponent)
-  )
+    // create store
+    // we initialize a new store even if the mounted app does not declare reducers
+    // we have dynamic reducers which can be added during runtime and they will be fucked up
+    // if they don't find a store to use.
+    const store = createStore(rootComponent.displayName, reducers, initialData)
 
-  // Render app
-  try {
-    render(appRoot, container)
-  } catch (error) {
-    // rethrow errors (in some case they are swallowed)
-    throw error
-  }
+    const appRoot = createElement(
+      Main, {
+        store: store,
+        embedded: embedded,
+        defaultPath: defaultPath
+      },
+      createElement(rootComponent)
+    )
+
+    // Render app
+    try {
+      render(appRoot, container)
+    } catch (error) {
+      // rethrow errors (in some case they are swallowed)
+      throw error
+    }
+  })
 }
 
 function unmount(container) {

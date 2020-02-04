@@ -6,6 +6,10 @@ import {registry} from '#/main/app/plugins/registry'
  * Declares applications provided by the Core plugin.
  */
 registry.add('ClarolineCoreBundle', {
+  store: {
+    'tool': () => { return import(/* webpackChunkName: "core-store-tool" */ '#/main/core/tool/store') }
+  },
+
   /**
    * Provides menu which can be used in the main header menu.
    */
