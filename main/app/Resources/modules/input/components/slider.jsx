@@ -2,6 +2,10 @@
 
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
+import times from 'lodash/times'
+
+import {scaleLinear, scaleThreshold} from 'd3-scale'
 
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
@@ -9,8 +13,41 @@ class Slider extends Component {
   constructor(props) {
     super(props)
 
+    let min = this.props.min
+    if (this.props.scale) {
+      min = this.props.scale[0]
+    }
+    let max = this.props.max
+    if (this.props.scale) {
+      max = this.props.scale[this.props.scale.length - 1]
+    }
+
+    const domain = times(this.props.scale.length, (i) => {
+      const start = ((this.props.scale[i] - min) / (max - min)) * 100
+
+      let end
+      if (i + 1 <= this.props.scale.length) {
+        end = ((this.props.scale[i + 1] - min) / (max - min)) * 100
+      } else {
+        end = start
+      }
+
+      return start + ((end - start) / 2)
+    })
+
     this.state = {
-      active: false
+      active: false,
+      min: min,
+      max: max,
+      scale: this.props.scale ?
+        scaleThreshold()
+          .domain(domain)
+          .range(this.props.scale)
+        :
+        scaleLinear()
+          .domain([0, 100])
+          .range([this.props.min, this.props.max])
+          .clamp(true)
     }
 
     this.slider = React.createRef()
@@ -49,14 +86,24 @@ class Slider extends Component {
       const rect = this.slider.current.getBoundingClientRect()
 
       if (e.clientX >= rect.left && e.clientX <= (rect.left + rect.width)) {
-        const newPos = Math.round(((e.clientX - rect.left) / rect.width) * 100)
-        this.props.onChange(Math.round((newPos / 100) * (this.props.max - this.props.min)))
+        const newPos = ((e.clientX - rect.left) / rect.width) * 100
+        const newValue = this.state.scale(newPos)
+
+        if (newValue !== this.props.value) {
+          if (newValue < this.props.min) {
+            this.props.onChange(this.props.min)
+          } else if (newValue > this.props.max) {
+            this.props.onChange(this.props.max)
+          } else {
+            this.props.onChange(newValue)
+          }
+        }
       }
     }
   }
 
   render() {
-    const width = (this.props.value / (this.props.max - this.props.min)) * 100
+    const width = ((this.props.value - this.state.min) / (this.state.max - this.state.min)) * 100
 
     return (
       <div
@@ -64,19 +111,34 @@ class Slider extends Component {
         ref={this.slider}
         onMouseDown={this.onDragStart}
         onTouchStart={this.onDragStart}
+        onClick={this.onMove}
       >
         <div
           className="progress-bar progress-bar-primary"
           role="progressbar"
           aria-valuenow={this.props.value}
-          aria-valuemin={this.props.min}
-          aria-valuemax={this.props.max}
+          aria-valuemin={this.state.min}
+          aria-valuemax={this.state.max}
           style={{
-            width: width+'%'
+            width: `${width}%`
           }}
         >
           <span className="sr-only">{this.props.value}</span>
         </div>
+
+        {this.props.scale && this.props.scale
+          .map((tick, tickIndex) =>
+            <div
+              key={tick}
+              className={classes('slider-tick', {'sr-only': 0 === tickIndex || this.props.scale.length - 1 === tickIndex})}
+              style={{
+                left:  (((tick - this.state.min) / (this.state.max - this.state.min)) * 100)+'%'
+              }}
+            >
+              {tick}
+            </div>
+          )
+        }
 
         <TooltipOverlay
           id={this.props.id+'-tooltip'}
