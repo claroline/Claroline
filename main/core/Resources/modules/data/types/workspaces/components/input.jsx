@@ -1,13 +1,14 @@
 import React, {Fragment} from 'react'
 import isEmpty from 'lodash/isEmpty'
 
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+
+import {route} from '#/main/core/workspace/routing'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
@@ -46,6 +47,11 @@ const WorkspacesInput = props => {
             key={`workspace-card-${workspace.id}`}
             data={workspace}
             size="xs"
+            primaryAction={{
+              type: LINK_BUTTON,
+              label: trans('open', {}, 'actions'),
+              target: route(workspace)
+            }}
             actions={[
               {
                 name: 'delete',

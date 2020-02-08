@@ -10,6 +10,10 @@
 .page-content > .data-form {
     &:first-child {
         margin-top: @component-margin-bottom;
+
+        > .h-title { // avoid double margin
+            margin-top: 0;
+        }
     }
 }
 

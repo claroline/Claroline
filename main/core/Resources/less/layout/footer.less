@@ -36,6 +36,7 @@
 
     .app-footer-brand {
         min-height: @footer-height;
+        height: @footer-height; // because IE does not calculate proper centering with min-height
         padding: 0 floor(@grid-gutter-width / 2);
         margin-right: auto;
         display: flex;
@@ -46,6 +47,7 @@
 
         img {
             max-height: 18px;
+            max-width: 12px;
             margin-right: 10px;
         }
 

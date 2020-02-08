@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 import omit from 'lodash/omit'
 import trim from 'lodash/trim'
 
@@ -8,7 +7,6 @@ import {param} from '#/main/app/config/parameters'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
-import {ContentMeta} from '#/main/app/content/components/meta'
 
 import {route} from '#/main/core/resource/routing'
 import {ResourceType} from '#/main/core/resource/components/type'
@@ -22,13 +20,8 @@ const AboutModal = props =>
     subtitle={props.resourceNode.name}
     poster={props.resourceNode.poster ? props.resourceNode.poster.url : undefined}
   >
-    <ContentMeta
-      creator={get(props.resourceNode, 'meta.creator')}
-      created={get(props.resourceNode, 'meta.created')}
-      updated={get(props.resourceNode, 'meta.updated')}
-    />
-
     <DetailsData
+      meta={true}
       data={props.resourceNode}
       sections={[
         {
@@ -62,6 +55,10 @@ const AboutModal = props =>
               name: 'workspace',
               label: trans('workspace'),
               type: 'workspace'
+            }, {
+              name: 'id',
+              label: trans('id'),
+              type: 'string'
             }
           ]
         }

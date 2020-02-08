@@ -38,10 +38,11 @@ HeadingWrapper.defaultProps = {
 
 const ContentTitle = props =>
   <HeadingWrapper
-    {...omit(props, 'numbering', 'title', 'subtitle')}
+    {...omit(props, 'numbering', 'title', 'subtitle', 'backAction', 'actions')}
   >
     {!isEmpty(props.backAction) &&
       <Button
+        className="btn h-back"
         label={trans('back')}
         {...props.backAction}
         icon="fa fa-fw fa-arrow-left"
@@ -83,7 +84,6 @@ ContentTitle.propTypes = {
   subtitle: T.string,
   displayed: T.bool,
   align: T.oneOf(['left', 'center', 'right']),
-  children: T.any,
   backAction: T.shape({
     // TODO : action types
   }),
@@ -93,6 +93,7 @@ ContentTitle.propTypes = {
 }
 
 ContentTitle.defaultProps = {
+  level: 2,
   align: 'left',
   displayed: true
 }

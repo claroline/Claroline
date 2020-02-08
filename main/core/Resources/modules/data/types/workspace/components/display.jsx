@@ -12,6 +12,7 @@ import {WorkspaceCard} from '#/main/core/workspace/components/card'
 const WorkspaceDisplay = (props) => props.data ?
   <WorkspaceCard
     data={props.data}
+    size="xs"
     primaryAction={{
       type: LINK_BUTTON,
       label: trans('open', {}, 'actions'),

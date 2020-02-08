@@ -44,6 +44,7 @@ const WorkspaceInput = props => {
       <Fragment>
         <WorkspaceCard
           data={props.value}
+          size="xs"
           primaryAction={{
             type: LINK_BUTTON,
             label: trans('open', {}, 'actions'),

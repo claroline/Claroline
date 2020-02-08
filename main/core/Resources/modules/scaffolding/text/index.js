@@ -124,6 +124,7 @@ function toKey(text) {
   return stripDiacritics(text)
     // removes multiple whitespaces, new lines & tabs by single whitespace
     .replace(/\s\s+/g, ' ')
+    .trim()
     // replaces dots by hyphen
     .replace('.', '-')
     // removes all non alpha-numeric chars

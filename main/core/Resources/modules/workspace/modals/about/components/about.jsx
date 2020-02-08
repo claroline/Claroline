@@ -101,6 +101,10 @@ const AboutModal = props =>
                 icon: 'fa fa-fw fa-user-times',
                 labelChecked: trans('workspace_public_unregistration', {}, 'workspace')
               }
+            }, {
+              name: 'autoId',
+              label: trans('id'),
+              type: 'string'
             }
           ]
         }
