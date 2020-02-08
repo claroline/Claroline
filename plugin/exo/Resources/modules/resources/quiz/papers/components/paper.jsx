@@ -54,13 +54,15 @@ const PaperStep = props => {
 
   return (
     <Fragment>
-      <h4 className={classes('h3 h-title', 0 === props.index && 'h-first')}>
-        {numbering &&
-          <span className="h-numbering">{numbering}</span>
-        }
+      {props.showTitle &&
+        <h4 className={classes('h3 h-title', 0 === props.index && 'h-first')}>
+          {numbering &&
+            <span className="h-numbering">{numbering}</span>
+          }
 
-        {props.title || trans('step', {number: props.index + 1}, 'quiz')}
-      </h4>
+          {props.title || trans('step', {number: props.index + 1}, 'quiz')}
+        </h4>
+      }
 
       {props.items
         .filter((item) => isQuestionType(item.type))
@@ -102,7 +104,7 @@ const PaperStep = props => {
 
 PaperStep.propTypes = {
   numberingType: T.string.isRequired,
-
+  showTitle: T.bool,
   index: T.number.isRequired,
   id: T.string.isRequired,
   title: T.string,
@@ -220,6 +222,7 @@ const PaperComponent = props =>
           .map((step, index) =>
             <PaperStep
               key={step.id}
+              showTitle={props.showTitles}
               numberingType={props.numberingType}
               index={index}
               id={step.id}
@@ -247,6 +250,7 @@ PaperComponent.propTypes = {
   paper: T.shape(
     PaperTypes.propTypes
   ),
+  showTitles: T.bool,
   numberingType: T.string,
   showScore: T.bool.isRequired,
   showExpectedAnswers: T.bool.isRequired,
@@ -267,6 +271,7 @@ const Paper = withRouter(
         admin: admin,
         paper: paper,
         showScore: paper ? showScore(paper, admin) : false,
+        showTitles: selectors.showTitles(state),
         numberingType: selectors.currentNumbering(state),
         showExpectedAnswers: selectors.showExpectedAnswers(state),
         showStatistics: selectors.showStatistics(state),

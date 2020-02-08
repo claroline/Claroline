@@ -11,13 +11,15 @@ const PlayerStep = props => {
 
   return (
     <div className="current-step">
-      <h3 className="h2 h-title">
-        {numbering &&
-          <span className="h-numbering">{numbering}</span>
-        }
+      {props.showTitle &&
+        <h3 className="h2 h-title">
+          {numbering &&
+            <span className="h-numbering">{numbering}</span>
+          }
 
-        {props.title ? props.title : trans('step', {number: props.index + 1}, 'quiz')}
-      </h3>
+          {props.title ? props.title : trans('step', {number: props.index + 1}, 'quiz')}
+        </h3>
+      }
 
       {props.description &&
         <HtmlText className="step-description">{props.description}</HtmlText>
@@ -32,6 +34,7 @@ const PlayerStep = props => {
 
 PlayerStep.propTypes = {
   numbering: T.string.isRequired,
+  showTitle: T.bool,
 
   index: T.number.isRequired,
   title: T.string,

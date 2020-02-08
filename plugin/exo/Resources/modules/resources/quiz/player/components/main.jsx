@@ -22,6 +22,7 @@ const PlayerMain = (props) =>
             const Step = (
               <PlayerStep
                 index={stepIndex}
+                showTitle={props.showTitles}
                 numbering={props.numberingType}
                 title={currentStep.title}
                 description={currentStep.description}
@@ -45,6 +46,7 @@ const PlayerMain = (props) =>
 
 PlayerMain.propTypes = {
   path: T.string.isRequired,
+  showTitles: T.bool,
   numberingType: T.string,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes

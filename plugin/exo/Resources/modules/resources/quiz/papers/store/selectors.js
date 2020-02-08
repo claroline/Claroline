@@ -33,6 +33,12 @@ const currentNumbering = createSelector(
   (currentParameters) => currentParameters.numbering
 )
 
+const showTitles = createSelector(
+  [currentParameters],
+  // managing undefined is for retro-compatibility (I don't want to migrate all papers to set the parameter)
+  (currentParameters) => currentParameters.showTitles === undefined ? true : currentParameters.showTitles
+)
+
 const showExpectedAnswers = createSelector(
   [currentParameters],
   (parameters) => parameters.showFullCorrection || false
@@ -51,6 +57,7 @@ export const selectors = {
   quizHasScore,
   currentPaper,
   currentNumbering,
+  showTitles,
   showExpectedAnswers,
   showStatistics
 }

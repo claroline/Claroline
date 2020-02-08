@@ -11,6 +11,7 @@ const PlayerMain = withRouter(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
+      showTitles: selectors.showTitles(state),
       numberingType: selectors.numberingType(state),
       steps: selectors.steps(state)
     })

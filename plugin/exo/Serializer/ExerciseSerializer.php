@@ -141,6 +141,7 @@ class ExerciseSerializer
             'anonymizeAttempts' => $exercise->getAnonymizeAttempts(),
             'interruptible' => $exercise->isInterruptible(),
             'numbering' => $exercise->getNumbering(),
+            'showTitles' => $exercise->getShowTitles(),
             'mandatoryQuestions' => $exercise->getMandatoryQuestions(),
             'answersEditable' => $exercise->isAnswersEditable(),
             'showOverview' => $exercise->getShowOverview(),
@@ -192,6 +193,7 @@ class ExerciseSerializer
         $this->sipe('showStatistics', 'setStatistics', $parameters, $exercise);
         $this->sipe('allPapersStatistics', 'setAllPapersStatistics', $parameters, $exercise);
         $this->sipe('numbering', 'setNumbering', $parameters, $exercise);
+        $this->sipe('showTitles', 'setShowTitles', $parameters, $exercise);
         $this->sipe('mandatoryQuestions', 'setMandatoryQuestions', $parameters, $exercise);
         $this->sipe('maxAttemptsPerDay', 'setMaxAttemptsPerDay', $parameters, $exercise);
         $this->sipe('maxPapers', 'setMaxPapers', $parameters, $exercise);

@@ -84,6 +84,10 @@ const quizNumbering = createSelector(
   parameters,
   (parameters) => parameters.numbering
 )
+const showTitles = createSelector(
+  parameters,
+  (parameters) => parameters.showTitles
+)
 
 // TODO : remove default export and use named one
 export default {
@@ -104,7 +108,8 @@ export default {
   quizNumbering,
   papersShowExpectedAnswers,
   papersShowStatistics,
-  allPapersStatistics
+  allPapersStatistics,
+  showTitles
 }
 
 export const select = {
@@ -146,5 +151,6 @@ export const selectors = {
   quizNumbering,
   papersShowExpectedAnswers,
   papersShowStatistics,
-  allPapersStatistics
+  allPapersStatistics,
+  showTitles
 }

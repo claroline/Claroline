@@ -211,6 +211,15 @@ class Exercise extends AbstractResource
     private $numbering = ExerciseNumbering::NONE;
 
     /**
+     * Displays step titles.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $showTitles = true;
+
+    /**
      * Number of papers allowed.
      * If 0, infinite amount of papers.
      *
@@ -730,6 +739,16 @@ class Exercise extends AbstractResource
     public function getNumbering()
     {
         return $this->numbering;
+    }
+
+    public function setShowTitles($showTitles)
+    {
+        $this->showTitles = $showTitles;
+    }
+
+    public function getShowTitles()
+    {
+        return $this->showTitles;
     }
 
     public function setPicking($picking)

@@ -61,6 +61,13 @@ const quizNumbering = createSelector(
   [paperParameters],
   (parameters) => parameters.numbering || 'none' // todo : use constant
 )
+
+const showTitles = createSelector(
+  [paperParameters],
+  // managing undefined is for retro-compatibility (I don't want to migrate all papers to set the parameter)
+  (parameters) => parameters.showTitles === undefined ? true : parameters.showTitles
+)
+
 const quizEndMessage = createSelector(
   [paperParameters],
   (parameters) => parameters.endMessage
@@ -255,6 +262,7 @@ export const select = {
   isTimed,
   duration,
   quizNumbering,
+  showTitles,
   showCorrectionAt,
   correctionDate
 }

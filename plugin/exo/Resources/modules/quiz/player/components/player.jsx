@@ -30,57 +30,69 @@ import {PlayerRestrictions} from '#/plugin/exo/quiz/player/components/restrictio
 
 // TODO : rethink the loading paper process (it's a little hacky to make it quickly compatible with Router)
 
-const CurrentStep = props =>
-  <section className="current-step">
-    <h3 className="h2 h-first">
-      {props.step.title || trans('step', {number: props.number}, 'quiz')}
-    </h3>
+const CurrentStep = props => {
+  const numbering = getNumbering(props.numbering, props.number - 1)
 
-    {props.step.description &&
-      <HtmlText className="step-description">{props.step.description}</HtmlText>
-    }
+  return (
+    <section className="current-step">
+      {props.showTitle &&
+        <h3 className="h2 h-first">
+          {numbering &&
+            <span className="h-numbering">{numbering}</span>
+          }
 
-    {props.items.map((item, index) => (
-      <Panel key={item.id}>
-        {!isQuestionType(item.type) ?
-          <ContentItemPlayer
-            item={item}
-          >
-            {React.createElement(getContentDefinition(item.type).player, {item: item})}
-          </ContentItemPlayer>
-          : (!props.feedbackEnabled ?
-            <ItemPlayer
+          {props.step.title || trans('step', {number: props.number}, 'quiz')}
+        </h3>
+      }
+
+      {props.step.description &&
+        <HtmlText className="step-description">{props.step.description}</HtmlText>
+      }
+
+      {props.items.map((item, index) => (
+        <Panel key={item.id}>
+          {!isQuestionType(item.type) ?
+            <ContentItemPlayer
               item={item}
-              showHint={props.showHint}
-              usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-              numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
             >
-              {React.createElement(getDefinition(item.type).player, {
-                item: item,
-                answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
-                disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
-                onChange: (answerData) => props.updateAnswer(item.id, answerData)
-              })}
-            </ItemPlayer>
-            :
-            <ItemFeedback
-              item={item}
-              usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-              numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
-            >
-              {React.createElement(getDefinition(item.type).feedback, {
-                item: item,
-                answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
-              })}
-            </ItemFeedback>
-          )}
-      </Panel>
-    ))}
-  </section>
+              {React.createElement(getContentDefinition(item.type).player, {item: item})}
+            </ContentItemPlayer>
+            : (!props.feedbackEnabled ?
+                <ItemPlayer
+                  item={item}
+                  showHint={props.showHint}
+                  usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+                  numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
+                >
+                  {React.createElement(getDefinition(item.type).player, {
+                    item: item,
+                    answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
+                    disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
+                    onChange: (answerData) => props.updateAnswer(item.id, answerData)
+                  })}
+                </ItemPlayer>
+                :
+                <ItemFeedback
+                  item={item}
+                  usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+                  numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
+                >
+                  {React.createElement(getDefinition(item.type).feedback, {
+                    item: item,
+                    answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
+                  })}
+                </ItemFeedback>
+            )}
+        </Panel>
+      ))}
+    </section>
+  )
+}
 
 CurrentStep.propTypes = {
   numbering: T.string.isRequired,
   number: T.number.isRequired,
+  showTitle: T.bool,
   step: T.shape({
     id: T.string.isRequired,
     title: T.string,
@@ -175,6 +187,7 @@ class PlayerComponent extends Component {
           <CurrentStep
             numbering={this.props.numbering}
             number={this.props.number}
+            showTitle={this.props.showTitles}
             step={this.props.step}
             items={this.props.items}
             answers={this.props.answers}
@@ -220,6 +233,7 @@ PlayerComponent.propTypes = {
   history: T.object.isRequired,
   quizId: T.string.isRequired,
   numbering: T.string.isRequired,
+  showTitles: T.bool,
   number: T.number.isRequired,
   isTimed: T.bool.isRequired,
   duration: T.number,
@@ -281,6 +295,7 @@ const Player = withRouter(connect(
       // attempt parameters
       mandatoryQuestions: select.mandatoryQuestions(state),
       numbering: select.quizNumbering(state),
+      showTitles: select.showTitles(state),
       isTimed: select.isTimed(state),
       duration: select.duration(state),
       answersEditable: select.answersEditable(state),

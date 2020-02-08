@@ -59,8 +59,9 @@ const EditorMenu = withRouter(
           copy.id = makeId()
 
           // recalculate slug
-          const title = copy.title || trans('step', {number: pos + 1}, 'quiz')
-          copy.slug = getStepSlug(steps, toKey(title))
+          const stepTitle = copy.title ? toKey(copy.title) : ''
+          const title = stepTitle || toKey(trans('step', {number: pos + 1}, 'quiz'))
+          copy.slug = getStepSlug(steps, title)
 
           // recalculate item ids
           if (copy.items) {

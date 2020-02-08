@@ -52,7 +52,7 @@ final class Transfer
      *
      * @var string
      */
-    const NO_FETCH = ApiOptions::NO_FETCH;
+    const NO_FETCH = 'no_fetch';
 
     /**
      * Persist the tags of the question.

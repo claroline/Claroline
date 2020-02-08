@@ -15,44 +15,55 @@ const Statistics = props =>
   <div className="quiz-statistics">
     {props.quiz.steps
       .filter(step => step.items && 0 < step.items.length)
-      .map((step, idx) =>
-        <div key={idx} className="quiz-item item-paper">
-          <h3 className="h4">
-            {step.title || trans('step', {number: idx + 1}, 'quiz')}
-          </h3>
+      .map((step, idx) => {
+        const numbering = getNumbering(props.numbering, idx)
 
-          {step.items.map((item, idxItem) => {
-            return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-              <Panel key={item.id}>
-                {item.title &&
-                  <h4 className="item-title">{item.title}</h4>
+        return (
+          <div key={idx} className="quiz-item item-paper">
+            {props.showTitles &&
+              <h3 className="h4 h-title">
+                {numbering &&
+                  <span className="h-numbering">{numbering}</span>
                 }
 
-                <ItemMetadata
-                  item={item}
-                  numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
-                />
+                {step.title || trans('step', {number: idx + 1}, 'quiz')}
+              </h3>
+            }
 
-                {React.createElement(
-                  getDefinition(item.type).paper,
-                  {
-                    item,
-                    showYours: false,
-                    showExpected: false,
-                    showStats: true,
-                    showScore: false,
-                    stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+            {step.items.map((item, idxItem) => {
+              return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
+                <Panel key={item.id}>
+                  {item.title &&
+                  <h4 className="item-title">{item.title}</h4>
                   }
-                )}
-              </Panel>
-          })}
-        </div>
-      )
+
+                  <ItemMetadata
+                    item={item}
+                    numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
+                  />
+
+                  {React.createElement(
+                    getDefinition(item.type).paper,
+                    {
+                      item,
+                      showYours: false,
+                      showExpected: false,
+                      showStats: true,
+                      showScore: false,
+                      stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+                    }
+                  )}
+                </Panel>
+            })}
+          </div>
+        )
+      })
     }
   </div>
 
 Statistics.propTypes = {
   numbering: T.string,
+  showTitles: T.bool,
   quiz: T.object.isRequired,
   stats: T.object
 }
@@ -60,6 +71,7 @@ Statistics.propTypes = {
 const ConnectedStatistics = connect(
   (state) => ({
     quiz: quizSelect.quiz(state),
+    showTitles: quizSelect.quizNumbering(state),
     numbering: quizSelect.quizNumbering(state),
     stats: quizSelect.statistics(state)
   })

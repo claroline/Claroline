@@ -79,6 +79,7 @@ const Quiz = {
       showFullCorrection: true,
       showFeedback: false,
       showEndConfirm: true,
+      showTitles: true,
       endMessage: '',
       endNavigation: true,
       allPapersStatistics: false

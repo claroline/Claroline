@@ -137,15 +137,23 @@ const EditorParameters = props => {
             title: trans('display_parameters'),
             fields: [
               {
-                name: 'parameters.numbering',
-                type: 'choice',
-                label: trans('quiz_numbering', {}, 'quiz'),
-                required: true,
-                options: {
-                  noEmpty: true,
-                  condensed: true,
-                  choices: constants.QUIZ_NUMBERINGS
-                }
+                name: 'parameters.showTitles',
+                type: 'boolean',
+                label: trans('show_step_titles', {}, 'quiz'),
+                linked: [
+                  {
+                    name: 'parameters.numbering',
+                    type: 'choice',
+                    label: trans('quiz_numbering', {}, 'quiz'),
+                    required: true,
+                    displayed: (quiz) => get(quiz, 'parameters.showTitles', false),
+                    options: {
+                      noEmpty: true,
+                      condensed: true,
+                      choices: constants.QUIZ_NUMBERINGS
+                    }
+                  }
+                ]
               }
             ]
           }, {
