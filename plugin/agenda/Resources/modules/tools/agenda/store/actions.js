@@ -8,6 +8,7 @@ import {selectors} from '#/plugin/agenda/tools/agenda/store/selectors'
 
 export const AGENDA_CHANGE_TYPES = 'AGENDA_CHANGE_TYPES'
 export const AGENDA_CHANGE_VIEW  = 'AGENDA_CHANGE_VIEW'
+export const AGENDA_LOAD_EVENT   = 'AGENDA_LOAD_EVENT'
 export const AGENDA_LOAD_EVENTS  = 'AGENDA_LOAD_EVENTS'
 export const AGENDA_SET_LOADED   = 'AGENDA_SET_LOADED'
 
@@ -35,10 +36,20 @@ actions.fetch = (rangeDates) => (dispatch, getState) => {
         end: rangeDates[1].format(getApiFormat()),
         filters: filters
       }),
-      success: (response, dispatch) => dispatch(actions.load(response.data))
+      success: (response) => dispatch(actions.load(response.data))
     }
   })
 }
+
+actions.loadEvent = makeActionCreator(AGENDA_LOAD_EVENT, 'event')
+actions.get = (eventId) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: url(['apiv2_event_get', {id: eventId}]),
+    silent: true,
+    before: () => dispatch(actions.loadEvent(null)),
+    success: (response) => dispatch(actions.loadEvent(response))
+  }
+})
 
 actions.delete = (event) => ({
   [API_REQUEST]: {

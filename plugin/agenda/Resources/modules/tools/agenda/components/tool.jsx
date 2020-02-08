@@ -1,4 +1,4 @@
-import React, {createElement, Component} from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
 import get from 'lodash/get'
@@ -10,173 +10,178 @@ import {now} from '#/main/app/intl/date'
 import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {route} from '#/plugin/agenda/tools/agenda/routing'
-import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
-import {MODAL_AGENDA_PARAMETERS} from '#/plugin/agenda/tools/agenda/modals/parameters'
+import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
 import {constants} from '#/plugin/agenda/event/constants'
 import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
 
-class AgendaTool extends Component {
-  render() {
-    const currentView = AGENDA_VIEWS[this.props.view]
-    const currentRange = currentView.range(this.props.referenceDate)
+import {route} from '#/plugin/agenda/tools/agenda/routing'
+import {AGENDA_VIEWS} from '#/plugin/agenda/tools/agenda/views'
+import {MODAL_AGENDA_PARAMETERS} from '#/plugin/agenda/tools/agenda/modals/parameters'
+import {AgendaEvent} from '#/plugin/agenda/tools/agenda/containers/event'
 
-    return (
-      <ToolPage
-        subtitle={currentView.display(this.props.referenceDate)}
-        toolbar="add | previous range next | today | more"
-        actions={[
+const AgendaTool = (props) => {
+  const currentView = AGENDA_VIEWS[props.view]
+  const currentRange = currentView.range(props.referenceDate)
+
+  return (
+    <ToolPage
+      subtitle={currentView.display(props.referenceDate)}
+      toolbar="add | previous range next | today | more"
+      actions={[
+        {
+          name: 'previous',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-chevron-left',
+          label: trans('previous'),
+          target: route(props.path, props.view, currentView.previous(props.referenceDate))
+        }, {
+          name: 'next',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-chevron-right',
+          label: trans('next'),
+          target: route(props.path, props.view, currentView.next(props.referenceDate))
+        }, {
+          name: 'range',
+          type: MENU_BUTTON,
+          icon: <span>{currentView.label}</span>,
+          label: trans('change-calendar-view', {}, 'actions'),
+          menu: {
+            align: 'right',
+            label: trans('display_modes', {}, 'agenda'),
+            items: Object.keys(AGENDA_VIEWS).map(viewName => ({
+              type: LINK_BUTTON,
+              label: AGENDA_VIEWS[viewName].label,
+              target: route(props.path, viewName, props.referenceDate)
+            }))
+          }
+        }, {
+          name: 'today',
+          type: LINK_BUTTON,
+          icon: <span>{trans('today')}</span>,
+          label: trans('today'),
+          target: route(props.path, props.view, now())
+        }, {
+          name: 'add',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-plus',
+          label: trans('add-event', {}, 'actions'),
+          callback: () => props.create({
+            start: now(false)
+          }, props.contextData, props.currentUser),
+          displayed: !isEmpty(props.currentUser),
+          primary: true
+        }, {
+          name: 'configure',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-cog',
+          label: trans('configure', {}, 'actions'),
+          modal: [MODAL_AGENDA_PARAMETERS],
+          group: trans('management'),
+          displayed: false // TODO : implement
+        }, {
+          name: 'import',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-upload',
+          label: trans('import', {}, 'actions'),
+          callback: () => props.import(null, props.contextData),
+          group: trans('transfer'),
+          displayed: false // TODO : implement
+        }, {
+          name: 'export',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-download',
+          label: trans('export', {}, 'actions'),
+          target: ['apiv2_download_agenda', {workspace: get(props.contextData, 'id')}],
+          group: trans('transfer'),
+          displayed: false // TODO : implement
+        }
+      ]}
+    >
+      <Routes
+        path={props.path}
+        routes={[
           {
-            name: 'previous',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-chevron-left',
-            label: trans('previous'),
-            target: route(this.props.path, this.props.view, currentView.previous(this.props.referenceDate))
+            path: '/event/:id',
+            onEnter: (params = {}) => props.loadEvent(params.id),
+            component: AgendaEvent
           }, {
-            name: 'next',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-chevron-right',
-            label: trans('next'),
-            target: route(this.props.path, this.props.view, currentView.next(this.props.referenceDate))
-          }, {
-            name: 'range',
-            type: MENU_BUTTON,
-            icon: <span>{currentView.label}</span>,
-            label: trans('change-calendar-view', {}, 'actions'),
-            menu: {
-              align: 'right',
-              label: trans('display_modes', {}, 'agenda'),
-              items: Object.keys(AGENDA_VIEWS).map(viewName => ({
-                type: LINK_BUTTON,
-                label: AGENDA_VIEWS[viewName].label,
-                target: route(this.props.path, viewName, this.props.referenceDate)
-              }))
+            path: '/:view?/:year?/:month?/:day?',
+            onEnter: (params = {}) => {
+              // grab view from params
+              let newView = props.view
+              if (params.view) {
+                newView = params.view
+              }
+
+              // grab reference date from params
+              const newReference = moment(props.referenceDate)
+              if (params.year) {
+                newReference.year(params.year)
+
+                if (params.month) {
+                  newReference.month(params.month - 1)
+                }
+
+                if (params.day) {
+                  newReference.date(params.day)
+                }
+              }
+
+              props.changeView(newView, newReference)
+            },
+            render: () => {
+              const CurrentView = createElement(currentView.component, {
+                path: props.path,
+                loaded: props.loaded,
+                loadEvents: props.load,
+                view: props.view,
+                referenceDate: props.referenceDate,
+                range: currentRange,
+                previous: currentView.previous,
+                next: currentView.next,
+                create: (event) => props.create(event, props.contextData, props.currentUser),
+                events: props.events,
+                eventActions: (event) => [
+                  {
+                    name: 'mark-done',
+                    type: CALLBACK_BUTTON,
+                    icon: 'fa fa-fw fa-check',
+                    label: trans('mark-as-done', {}, 'actions'),
+                    callback: () => props.markDone(event),
+                    displayed: constants.EVENT_TYPE_TASK === event.meta.type && !event.meta.done
+                  }, {
+                    name: 'mark-todo',
+                    type: CALLBACK_BUTTON,
+                    label: trans('mark-as-todo', {}, 'actions'),
+                    callback: () => props.markTodo(event),
+                    displayed: constants.EVENT_TYPE_TASK === event.meta.type && event.meta.done
+                  }, {
+                    name: 'edit',
+                    type: MODAL_BUTTON,
+                    label: trans('edit', {}, 'actions'),
+                    modal: [MODAL_EVENT_PARAMETERS, {
+                      event: event,
+                      onSave: props.update
+                    }],
+                    displayed: event.permissions.edit
+                  }, {
+                    name: 'delete',
+                    type: CALLBACK_BUTTON,
+                    label: trans('delete', {}, 'actions'),
+                    callback: () => props.delete(event),
+                    dangerous: true,
+                    displayed: event.permissions.edit
+                  }
+                ]
+              })
+
+              return CurrentView
             }
-          }, {
-            name: 'today',
-            type: LINK_BUTTON,
-            icon: <span>{trans('today')}</span>,
-            label: trans('today'),
-            target: route(this.props.path, this.props.view, now())
-          }, {
-            name: 'add',
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-plus',
-            label: trans('add-event', {}, 'actions'),
-            callback: () => this.props.create({
-              start: now(false)
-            }, this.props.contextData, this.props.currentUser),
-            displayed: !isEmpty(this.props.currentUser),
-            primary: true
-          }, {
-            name: 'configure',
-            type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-cog',
-            label: trans('configure', {}, 'actions'),
-            modal: [MODAL_AGENDA_PARAMETERS],
-            group: trans('management'),
-            displayed: false // TODO : implement
-          }, {
-            name: 'import',
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-upload',
-            label: trans('import', {}, 'actions'),
-            callback: () => this.props.import(null, this.props.contextData),
-            group: trans('transfer'),
-            displayed: false // TODO : implement
-          }, {
-            name: 'export',
-            type: URL_BUTTON,
-            icon: 'fa fa-fw fa-download',
-            label: trans('export', {}, 'actions'),
-            target: ['apiv2_download_agenda', {workspace: get(this.props.contextData, 'id')}],
-            group: trans('transfer'),
-            displayed: false // TODO : implement
           }
         ]}
-      >
-        <Routes
-          path={this.props.path}
-          routes={[
-            {
-              path: '/:view?/:year?/:month?/:day?',
-              onEnter: (params = {}) => {
-                // grab view from params
-                let newView = this.props.view
-                if (params.view) {
-                  newView = params.view
-                }
-
-                // grab reference date from params
-                const newReference = moment(this.props.referenceDate)
-                if (params.year) {
-                  newReference.year(params.year)
-
-                  if (params.month) {
-                    newReference.month(params.month - 1)
-                  }
-
-                  if (params.day) {
-                    newReference.date(params.day)
-                  }
-                }
-
-                this.props.changeView(newView, newReference)
-              },
-              render: () => {
-                const CurrentView = createElement(currentView.component, {
-                  path: this.props.path,
-                  loaded: this.props.loaded,
-                  loadEvents: this.props.load,
-                  view: this.props.view,
-                  referenceDate: this.props.referenceDate,
-                  range: currentRange,
-                  previous: currentView.previous,
-                  next: currentView.next,
-                  create: (event) => this.props.create(event, this.props.contextData, this.props.currentUser),
-                  events: this.props.events,
-                  eventActions: (event) => [
-                    {
-                      name: 'mark-done',
-                      type: CALLBACK_BUTTON,
-                      icon: 'fa fa-fw fa-check',
-                      label: trans('mark-as-done', {}, 'actions'),
-                      callback: () => this.props.markDone(event),
-                      displayed: constants.EVENT_TYPE_TASK === event.meta.type && !event.meta.done
-                    }, {
-                      name: 'mark-todo',
-                      type: CALLBACK_BUTTON,
-                      label: trans('mark-as-todo', {}, 'actions'),
-                      callback: () => this.props.markTodo(event),
-                      displayed: constants.EVENT_TYPE_TASK === event.meta.type && event.meta.done
-                    }, {
-                      name: 'edit',
-                      type: MODAL_BUTTON,
-                      label: trans('edit', {}, 'actions'),
-                      modal: [MODAL_EVENT_PARAMETERS, {
-                        event: event,
-                        onSave: this.props.update
-                      }],
-                      displayed: event.permissions.edit
-                    }, {
-                      name: 'delete',
-                      type: CALLBACK_BUTTON,
-                      label: trans('delete', {}, 'actions'),
-                      callback: () => this.props.delete(event),
-                      dangerous: true,
-                      displayed: event.permissions.edit
-                    }
-                  ]
-                })
-
-                return CurrentView
-              }
-            }
-          ]}
-        />
-      </ToolPage>
-    )
-  }
+      />
+    </ToolPage>
+  )
 }
 
 AgendaTool.propTypes = {
@@ -200,16 +205,21 @@ AgendaTool.propTypes = {
   changeView: T.func.isRequired,
 
   loaded: T.bool.isRequired,
-  events: T.arrayOf(T.shape({
-
-  })).isRequired,
+  events: T.arrayOf(T.shape(
+    EventTypes.propTypes
+  )).isRequired,
   load: T.func.isRequired,
   create: T.func.isRequired,
   update: T.func.isRequired,
   delete: T.func.isRequired,
   markDone: T.func.isRequired,
   markTodo: T.func.isRequired,
-  import: T.func.isRequired
+  import: T.func.isRequired,
+
+  loadEvent: T.func.isRequired,
+  currentEvent: T.shape(
+    EventTypes.propTypes
+  )
 }
 
 export {

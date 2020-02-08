@@ -24,6 +24,9 @@ const Event = {
     }),
     permissions: T.shape({
       edit: T.bool
+    }),
+    workspace: T.shape({
+
     })
   },
   defaultProps: {

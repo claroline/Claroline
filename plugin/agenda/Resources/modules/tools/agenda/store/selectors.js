@@ -35,6 +35,11 @@ const events = createSelector(
   (store) => store.events
 )
 
+const currentEvent = createSelector(
+  [store],
+  (store) => store.current
+)
+
 export const selectors = {
   STORE_NAME,
 
@@ -44,5 +49,6 @@ export const selectors = {
   types,
 
   loaded,
-  events
+  events,
+  currentEvent
 }

@@ -2,11 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
 
+import {route} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
 
 const AboutModal = props =>
@@ -25,6 +28,17 @@ const AboutModal = props =>
         primary: true,
         fields: [
           {
+            name: 'url',
+            type: 'url',
+            label: trans('url', {}, 'data'),
+            calculated: (event) => {
+              if (event.workspace) {
+                return `${url(['claro_index', {}, true])}#${workspaceRoute(event.workspace, 'agenda')}/event/${event.id}`
+              }
+
+              return `${url(['claro_index', {}, true])}#${route('agenda')}/event/${event.id}`
+            }
+          }, {
             name: 'dates',
             type: 'date-range',
             label: trans('date'),

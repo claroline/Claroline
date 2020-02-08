@@ -5,7 +5,6 @@ namespace Claroline\AgendaBundle\Serializer;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
@@ -31,7 +30,7 @@ class EventSerializer
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
 
-    /** @var SerializerProvider */
+    /** @var UserSerializer */
     private $userSerializer;
 
     /**
@@ -132,6 +131,7 @@ class EventSerializer
      */
     public function deserialize(array $data, Event $event = null)
     {
+        $this->sipe('id', 'setUuid', $data, $event);
         $this->sipe('title', 'setTitle', $data, $event);
         $this->sipe('display.color', 'setPriority', $data, $event);
         $this->sipe('allDay', 'setAllDay', $data, $event);
@@ -150,6 +150,7 @@ class EventSerializer
         }
 
         if (isset($data['workspace'])) {
+            /** @var Workspace $workspace */
             $workspace = $this->om->getObject($data['workspace'], Workspace::class);
             if ($workspace->getId()) {
                 $event->setWorkspace($workspace);

@@ -22,7 +22,8 @@ const AgendaTool = withRouter(
       referenceDate: selectors.referenceDate(state),
 
       loaded: selectors.loaded(state),
-      events: selectors.events(state)
+      events: selectors.events(state),
+      currentEvent: selectors.currentEvent(state)
     }),
     (dispatch) => ({
       changeView(view, referenceDate) {
@@ -30,6 +31,9 @@ const AgendaTool = withRouter(
       },
       load(rangeDates) {
         dispatch(actions.fetch(rangeDates))
+      },
+      loadEvent(eventId) {
+        dispatch(actions.get(eventId))
       },
       create(event, context, user) {
         const end = moment(event.start, 'YYYY-MM-DDThh:mm:ss')

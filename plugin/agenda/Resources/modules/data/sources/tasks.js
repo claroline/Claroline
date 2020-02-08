@@ -11,7 +11,7 @@ export default {
   parameters: {
     primaryAction: (task) => ({
       type: URL_BUTTON,
-      target: `#${task.workspace ? workspaceRoute(task.workspace, 'agenda') : route('agenda')}`
+      target: `#${task.workspace ? workspaceRoute(task.workspace, 'agenda') : route('agenda')}/event/${task.id}`
     }),
     definition: [
       {

@@ -9,7 +9,8 @@ import {
   AGENDA_CHANGE_TYPES,
   AGENDA_CHANGE_VIEW,
   AGENDA_SET_LOADED,
-  AGENDA_LOAD_EVENTS
+  AGENDA_LOAD_EVENTS,
+  AGENDA_LOAD_EVENT
 } from '#/plugin/agenda/tools/agenda/store/actions'
 
 const reducer = combineReducers({
@@ -19,7 +20,8 @@ const reducer = combineReducers({
 
   referenceDate: makeReducer(now(), {
     [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => now(),
-    [AGENDA_CHANGE_VIEW]: (state, action) => moment(action.referenceDate).format(getApiFormat())
+    [AGENDA_CHANGE_VIEW]: (state, action) => moment(action.referenceDate).format(getApiFormat()),
+    [AGENDA_LOAD_EVENT]: (state, action) => action.event && action.event.start ? moment(action.event.start).format(getApiFormat()) : state
   }),
 
   types: makeReducer(['event', 'task'], {
@@ -37,6 +39,10 @@ const reducer = combineReducers({
   events: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => [],
     [AGENDA_LOAD_EVENTS]: (state, action) => action.events
+  }),
+
+  current: makeReducer(null, {
+    [AGENDA_LOAD_EVENT]: (state, action) => action.event
   })
 })
 
