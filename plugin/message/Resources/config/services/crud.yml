@@ -4,8 +4,10 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\MessageBundle\Crud\Message:
+    Claroline\MessageBundle\Crud\MessageCrud:
         arguments:
+            - '@security.token_storage'
             - '@Claroline\MessageBundle\Manager\MessageManager'
         tags:
+            - { name: kernel.event_listener, event: crud_pre_create_object_claroline_messagebundle_entity_message, method: preCreate }
             - { name: kernel.event_listener, event: crud_post_create_object_claroline_messagebundle_entity_message, method: postCreate }

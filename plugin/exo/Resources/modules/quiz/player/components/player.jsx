@@ -58,30 +58,30 @@ const CurrentStep = props => {
               {React.createElement(getContentDefinition(item.type).player, {item: item})}
             </ContentItemPlayer>
             : (!props.feedbackEnabled ?
-                <ItemPlayer
-                  item={item}
-                  showHint={props.showHint}
-                  usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-                  numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
-                >
-                  {React.createElement(getDefinition(item.type).player, {
-                    item: item,
-                    answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
-                    disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
-                    onChange: (answerData) => props.updateAnswer(item.id, answerData)
-                  })}
-                </ItemPlayer>
-                :
-                <ItemFeedback
-                  item={item}
-                  usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-                  numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
-                >
-                  {React.createElement(getDefinition(item.type).feedback, {
-                    item: item,
-                    answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
-                  })}
-                </ItemFeedback>
+              <ItemPlayer
+                item={item}
+                showHint={props.showHint}
+                usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+                numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
+              >
+                {React.createElement(getDefinition(item.type).player, {
+                  item: item,
+                  answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
+                  disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
+                  onChange: (answerData) => props.updateAnswer(item.id, answerData)
+                })}
+              </ItemPlayer>
+              :
+              <ItemFeedback
+                item={item}
+                usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+                numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
+              >
+                {React.createElement(getDefinition(item.type).feedback, {
+                  item: item,
+                  answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
+                })}
+              </ItemFeedback>
             )}
         </Panel>
       ))}

@@ -11,18 +11,16 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/role")
+ * @EXT\Route("/role")
  */
 class RoleController extends AbstractCrudController
 {
@@ -35,23 +33,10 @@ class RoleController extends AbstractCrudController
     }
 
     /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return [
-            'list' => [Options::SERIALIZE_COUNT_USER],
-            'get' => [Options::SERIALIZE_COUNT_USER],
-            'create' => [Options::SERIALIZE_COUNT_USER],
-            'update' => [Options::SERIALIZE_COUNT_USER],
-        ];
-    }
-
-    /**
      * List platform roles.
      *
-     * @Route("/platform", name="apiv2_role_platform_list")
-     * @Method("GET")
+     * @EXT\Route("/platform", name="apiv2_role_platform_list")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -70,8 +55,8 @@ class RoleController extends AbstractCrudController
     /**
      * List platform roles.
      *
-     * @Route("/platform/grantable", name="apiv2_role_platform_grantable_list")
-     * @Method("GET")
+     * @EXT\Route("/platform/grantable", name="apiv2_role_platform_grantable_list")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *

@@ -101,7 +101,7 @@ class RoleSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serialized['meta'] = $this->serializeMeta($role, $options);
+            $serialized['meta'] = $this->serializeMeta($role);
             $serialized['restrictions'] = $this->serializeRestrictions($role);
 
             if ($workspace = $role->getWorkspace()) {
@@ -151,24 +151,21 @@ class RoleSerializer
     /**
      * Serialize role metadata.
      *
-     * @param Role  $role
-     * @param array $options
+     * @param Role $role
      *
      * @return array
      */
-    public function serializeMeta(Role $role, array $options)
+    public function serializeMeta(Role $role)
     {
         $meta = [
            'readOnly' => $role->isReadOnly(),
            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
        ];
 
-        if (in_array(Options::SERIALIZE_COUNT_USER, $options)) {
-            if (Role::USER_ROLE !== $role->getType()) {
-                $meta['users'] = $this->userRepo->countUsersByRoleIncludingGroup($role);
-            } else {
-                $meta['users'] = 1;
-            }
+        if (Role::USER_ROLE !== $role->getType()) {
+            $meta['users'] = $this->userRepo->countUsersByRoleIncludingGroup($role);
+        } else {
+            $meta['users'] = 1;
         }
 
         return $meta;
@@ -331,8 +328,8 @@ class RoleSerializer
 
                     if ($workspaceId) {
                         /** @var OrderedTool $orderedTool */
-                        $workspace = $this->om->getRepository(Workspace::class)->findOneByUuid($workspaceId);
-                        $tool = $this->om->getRepository(Tool::class)->findOneByName($toolName);
+                        $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceId]);
+                        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $toolName]);
 
                         $orderedTool = $this->orderedToolRepo->findOneBy([
                             'tool' => $tool,

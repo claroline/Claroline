@@ -326,7 +326,6 @@ class MessageController extends AbstractCrudController
     {
         return [
             'get' => [Options::IS_RECURSIVE],
-            'create' => [Options::CRUD_CREATE],
         ];
     }
 

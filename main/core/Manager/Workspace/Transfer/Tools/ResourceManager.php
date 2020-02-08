@@ -10,6 +10,7 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -23,10 +24,34 @@ class ResourceManager implements ToolImporterInterface
 {
     use LoggableTrait;
 
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var ObjectManager */
+    private $om;
+    /** @var FinderProvider */
+    private $finder;
+    /** @var Crud */
+    private $crud;
+    /** @var TokenStorage */
+    private $tokenStorage;
+    /** @var UserManager */
+    private $userManager;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var ResManager */
+    private $resourceManager;
+
     /**
      * WorkspaceSerializer constructor.
      *
      * @param SerializerProvider $serializer
+     * @param UserManager        $userManager
+     * @param FinderProvider     $finder
+     * @param Crud               $crud
+     * @param TokenStorage       $tokenStorage
+     * @param ResManager         $resourceManager
+     * @param ObjectManager      $om
+     * @param StrictDispatcher   $eventDispatcher
      */
     public function __construct(
         SerializerProvider $serializer,
@@ -49,10 +74,14 @@ class ResourceManager implements ToolImporterInterface
     }
 
     /**
+     * @param Workspace $workspace
+     * @param array     $options
+     *
      * @return array
      */
     public function serialize(Workspace $workspace, array $options): array
     {
+        /** @var ResourceNode $root */
         $root = $this->om->getRepository(ResourceNode::class)
           ->findOneBy(['parent' => null, 'workspace' => $workspace->getId()]);
 
@@ -88,6 +117,7 @@ class ResourceManager implements ToolImporterInterface
     public function prepareImport(array $orderedToolData, array $data): array
     {
         foreach ($orderedToolData['data']['resources'] as $serialized) {
+            /** @var ImportObjectEvent $event */
             $event = $this->dispatcher->dispatch(
                 'transfer.'.$serialized['_type'].'.import.before',
                 ImportObjectEvent::class,
@@ -150,11 +180,12 @@ class ResourceManager implements ToolImporterInterface
         $this->om->startFlushSuite();
 
         foreach ($resources as $data) {
+            /** @var AbstractResource $resource */
             $resource = new $data['_class']();
             $resource->setResourceNode($nodes[$data['_nodeId']]);
-            $this->dispatchCrud('create', 'pre', [$resource, [Options::WORKSPACE_COPY]]);
+            $this->dispatchCrud('create', 'pre', [$resource]);
             $this->serializer->deserialize($data, $resource, [Options::REFRESH_UUID]);
-            $this->dispatchCrud('create', 'post', [$resource, [Options::WORKSPACE_COPY]]);
+            $this->dispatchCrud('create', 'post', [$resource]);
             $this->dispatcher->dispatch(
                 'transfer.'.$data['_type'].'.import.after',
                 ImportObjectEvent::class,
@@ -171,7 +202,7 @@ class ResourceManager implements ToolImporterInterface
         $data = $event->getData();
 
         foreach ($data['resources'] as $key => $serialized) {
-            $node = $this->om->getRepository(ResourceNode::class)->findOneByUuid($serialized['_nodeId']);
+            $node = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $serialized['_nodeId']]);
             $resource = $this->om->getRepository($serialized['_class'])->findOneBy(['resourceNode' => $node]);
 
             /** @var ExportObjectEvent $new */

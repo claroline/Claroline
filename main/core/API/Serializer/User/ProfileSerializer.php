@@ -55,7 +55,7 @@ class ProfileSerializer
             ->findVisibleFacets($this->tokenStorage->getToken(), in_array(Options::REGISTRATION, $options));
 
         return array_map(function (Facet $facet) {
-            return $this->facetSerializer->serialize($facet, [Options::PROFILE_SERIALIZE]);
+            return $this->facetSerializer->serialize($facet);
         }, $facets);
     }
 }

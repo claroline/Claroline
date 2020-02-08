@@ -13,7 +13,6 @@ namespace Claroline\PlannedNotificationBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\PlannedNotificationBundle\Entity\Message;
@@ -79,7 +78,7 @@ class PlannedNotificationListener
         $newNotifs = [];
 
         foreach ($planned as $old) {
-            $new = $this->crud->copy($old, [Options::GENERATE_UUID]);
+            $new = $this->crud->copy($old);
             $new->setWorkspace($workspace);
             $new->emptyRoles();
 
@@ -95,7 +94,7 @@ class PlannedNotificationListener
         }
 
         foreach ($oldMessages as $old) {
-            $new = $this->crud->copy($old, [Options::GENERATE_UUID]);
+            $new = $this->crud->copy($old);
             $new->setWorkspace($workspace);
             $new->emptyNotifications();
 

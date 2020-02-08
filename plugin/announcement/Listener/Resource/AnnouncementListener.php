@@ -47,11 +47,12 @@ class AnnouncementListener
     /**
      * AnnouncementListener constructor.
      *
-     * @param ObjectManager       $om
-     * @param TwigEngine          $templating
-     * @param AnnouncementManager $manager
-     * @param SerializerProvider  $serializer
-     * @param Crud                $crud
+     * @param ObjectManager                 $om
+     * @param TwigEngine                    $templating
+     * @param AnnouncementManager           $manager
+     * @param SerializerProvider            $serializer
+     * @param Crud                          $crud
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
@@ -106,7 +107,6 @@ class AnnouncementListener
             $newAnnouncement['id'] = Uuid::uuid4()->toString();
             $this->crud->create('Claroline\AnnouncementBundle\Entity\Announcement', $newAnnouncement, [
               'announcement_aggregate' => $copy,
-              Options::NO_LOG => Options::NO_LOG,
             ]);
         }
 
@@ -118,6 +118,7 @@ class AnnouncementListener
 
     public function onExport(ExportObjectEvent $exportEvent)
     {
+        /** @var AnnouncementAggregate $announcements */
         $announcements = $exportEvent->getObject();
         $announcePosts = $announcements->getAnnouncements()->toArray();
 

@@ -157,15 +157,15 @@ class MessageSerializer
     {
         $this->sipe('object', 'setObject', $data, $message);
         $this->sipe('content', 'setContent', $data, $message);
-        $currentUser = $this->tokenStorage->getToken()->getUser();
 
         if (isset($data['parent'])) {
             $parent = $this->om->getRepository(Message::class)->findOneBy(['uuid' => $data['parent']['id']]);
             $message->setParent($parent);
         }
 
-        if ($currentUser instanceof User && in_array(Options::CRUD_CREATE, $options)) {
-            $message->setSender($currentUser);
+        if (isset($data['sender'])) {
+            $sender = $this->om->getRepository(User::class)->findOneBy(['username' => $data['sender']['username']]);
+            $message->setSender($sender);
         }
 
         if (isset($data['receivers'])) {

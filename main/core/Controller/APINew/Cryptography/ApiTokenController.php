@@ -11,17 +11,15 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Cryptography;
 
-use Claroline\AppBundle\Api\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Route("apitoken")
+ * @EXT\Route("apitoken")
  */
 class ApiTokenController extends AbstractCrudController
 {
@@ -39,13 +37,13 @@ class ApiTokenController extends AbstractCrudController
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *    "/list/current",
      *    name="apiv2_apitoken_list_current"
      * )
-     * @Method("GET")
+     * @EXT\Method("GET")
      *
-     * @param Workspace $workspace
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -77,12 +75,5 @@ class ApiTokenController extends AbstractCrudController
     public function getName()
     {
         return 'apitoken';
-    }
-
-    public function getOptions()
-    {
-        return [
-            'create' => [Crud::NO_VALIDATE],
-        ];
     }
 }

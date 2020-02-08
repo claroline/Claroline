@@ -137,12 +137,11 @@ class WorkspaceCrud
     {
         $this->logListener->disable();
         $workspace = $event->getObject();
-        $options = $event->getOptions();
 
         $new = $event->getCopy();
         $new->refreshUuid();
 
-        $this->manager->copy($workspace, $new, in_array(Options::WORKSPACE_MODEL, $options));
+        $this->manager->copy($workspace, $new);
         $this->logListener->enable();
     }
 

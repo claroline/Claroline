@@ -43,8 +43,6 @@ class Create extends AbstractAction
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }
 
-        $options = [Options::IGNORE_CRUD_POST_EVENT];
-
         $permissions = [
           'open' => isset($data['open']) ? $data['open'] : false,
           'edit' => isset($data['edit']) ? $data['edit'] : false,
@@ -87,14 +85,17 @@ class Create extends AbstractAction
           'rights' => $rights,
         ];
 
-        $parent = $this->om->getRepository(ResourceNode::class)->findOneByUuid($data['directory']['id']);
+        if (isset($data['directory'])) {
+            $parent = $this->om->getRepository(ResourceNode::class)->findOneByUuid($data['directory']['id']);
+        }
+
         /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode, $options);
+        $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);
 
         $resourceNode->setParent($parent);
         $resourceNode->setWorkspace($parent->getWorkspace());
 
-        $resource = $this->crud->create(Directory::class, [], $options);
+        $resource = $this->crud->create(Directory::class, []);
         $resource->setResourceNode($resourceNode);
 
         $this->om->persist($resourceNode);

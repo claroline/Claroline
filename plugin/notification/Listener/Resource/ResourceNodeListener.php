@@ -11,7 +11,6 @@
 
 namespace Icap\NotificationBundle\Listener\Resource;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -45,20 +44,16 @@ class ResourceNodeListener
      */
     public function onSerialize(DecorateResourceNodeEvent $event)
     {
-        $options = $event->getOptions();
+        $node = $event->getResourceNode();
+        $user = $this->tokenStorage->getToken()->getUser();
+        $followResource = 'anon.' !== $user ?
+            $this->notificationManager->getFollowerResource(
+                $user->getId(),
+                $node->getId(),
+                $node->getClass()
+            ) :
+            false;
 
-        if (!in_array(Options::SKIP_RESOURCE_NOTIFICATION, $options)) {
-            $node = $event->getResourceNode();
-            $user = $this->tokenStorage->getToken()->getUser();
-            $followResource = 'anon.' !== $user ?
-                $this->notificationManager->getFollowerResource(
-                    $user->getId(),
-                    $node->getId(),
-                    $node->getClass()
-                ) :
-                false;
-
-            $event->add('notifications', ['enabled' => !empty($followResource)]);
-        }
+        $event->add('notifications', ['enabled' => !empty($followResource)]);
     }
 }

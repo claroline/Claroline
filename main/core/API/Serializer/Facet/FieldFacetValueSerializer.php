@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\Facet;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
@@ -10,13 +11,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FieldFacetValueSerializer
 {
-    const OPTION_MINIMAL = 'minimal';
+    /** @var ObjectManager */
+    private $om;
 
     /** @var FieldFacetSerializer */
     private $fieldFacetSerializer;
-
-    /** @var UserSerializer */
-    private $userSerializer;
 
     /** @var ContainerInterface */
     private $container;
@@ -25,14 +24,16 @@ class FieldFacetValueSerializer
      * FieldFacetValueSerializer constructor.
      *
      * @param FieldFacetSerializer $fieldFacetSerializer
-     * @param UserSerializer       $userSerializer
      * @param ContainerInterface   $container
      */
     public function __construct(
         FieldFacetSerializer $fieldFacetSerializer,
         ContainerInterface $container
     ) {
+        $this->om = $container->get(ObjectManager::class);
+        //$this->userSerializer = $container->get(UserSerializer::class);
         $this->fieldFacetSerializer = $fieldFacetSerializer;
+        // TODO : remove dependency to container (but there is a circular reference on UserSerializer)
         $this->container = $container;
     }
 
@@ -51,10 +52,6 @@ class FieldFacetValueSerializer
      */
     public function serialize(FieldFacetValue $fieldFacetValue, array $options = [])
     {
-        //this is the bloc that should be used
-        if (in_array(Options::PROFILE_SERIALIZE, $options)) {
-        }
-
         //probably used by the clacoform
         $serialized = [
             'id' => $fieldFacetValue->getId(),
@@ -62,17 +59,9 @@ class FieldFacetValueSerializer
             'name' => $fieldFacetValue->getFieldFacet()->getName(),
         ];
 
-        if (!in_array(static::OPTION_MINIMAL, $options)) {
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'user' => $fieldFacetValue->getUser() ? [
-                  'autoId' => $fieldFacetValue->getUser()->getId(), //for old compatibility purposes
-                  'id' => $fieldFacetValue->getUser()->getUuid(),
-                  'name' => $fieldFacetValue->getUser()->getFirstName().' '.$fieldFacetValue->getUser()->getLastName(),
-                  'firstName' => $fieldFacetValue->getUser()->getFirstName(),
-                  'lastName' => $fieldFacetValue->getUser()->getLastName(),
-                  'username' => $fieldFacetValue->getUser()->getUsername(),
-                  'email' => $fieldFacetValue->getUser()->getEmail(),
-                  ] : null,
+                'user' => $fieldFacetValue->getUser() ? $this->container->get(UserSerializer::class)->serialize($fieldFacetValue->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
                 'fieldFacet' => $this->fieldFacetSerializer->serialize($fieldFacetValue->getFieldFacet()),
             ]);
         }
@@ -87,13 +76,14 @@ class FieldFacetValueSerializer
      * @param FieldFacetValue|null $fieldFacetValue
      * @param array                $options         - a list of serialization options
      *
-     * @return array - the serialized representation of the field facet value
+     * @return FieldFacetValue
      */
     public function deserialize(array $data, FieldFacetValue $fieldFacetValue = null, array $options = [])
     {
-        $fieldFacet = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager')
+        /** @var FieldFacet $fieldFacet */
+        $fieldFacet = $this->om
             ->getRepository(FieldFacet::class)
-            ->findOneByUuid($data['fieldFacet']['id']);
+            ->findOneBy(['uuid' => $data['fieldFacet']['id']]);
 
         $fieldFacetValue->setFieldFacet($fieldFacet);
         $value = $data['value'];

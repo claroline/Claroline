@@ -18,14 +18,6 @@ final class Options
     /* SERIALIZER PROVIDER OPTIONS */
     /*******************************/
 
-    /*
-     * Using this option, the serializer provider won't fetch any data from the database
-     * even if an id or an uuid exists
-     */
-    const NO_FETCH = 'no_fetch';
-
-    const NO_COUNT = 'no_count';
-
     const SERIALIZE_LIST = 'serialize_list';
 
     /*
@@ -50,60 +42,39 @@ final class Options
     //do something better with these options
 
     const LIGHT_COPY = 'light_copy';
-    const NO_LOG = 'no_log';
     const SOFT_DELETE = 'soft_delete';
-    const THROW_VALIDATION_EXCEPTION = 'throw_validation_exception';
-    const NO_VALIDATE = 'no_validate'; //if validation is too long for huge csv
-    const NO_PERMISSION_CHECK = 'no_permission_check';
-    const GENERATE_UUID = 'generate_uuid';
     const FORCE_FLUSH = 'force_flush';
 
-    const ADD_PERSONAL_WORKSPACE = 'add_personal_workspace';
+    //for user
     const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
-    const DESERIALIZE_FACET = 'deserialize_facet';
     const SERIALIZE_FACET = 'serialize_facet';
     const SEND_EMAIL = 'send_email';
     const ADD_NOTIFICATIONS = 'add_notifications';
-    const PROFILE_SERIALIZE = 'profile_serialize';
     const VALIDATE_FACET = 'validate_facet';
     const REGISTRATION = 'registration';
 
     //for workspace
-    const WORKSPACE_MODEL = 'workspace_model';
     const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
-    const WORKSPACE_COPY = 'workspace_copy';
 
     //for role
-    const SERIALIZE_ROLES = 'serialize_roles';
-    const SERIALIZE_COUNT_USER = 'serialize_count_user';
     const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';
 
     //for serialize, do we want to (de)serialize objects in subtrees ?
     const DEEP_SERIALIZE = 'deep_serialize';
     const DEEP_DESERIALIZE = 'deep_deserialize';
 
-    //file upload options
-    const TEMPORARY_FILE = 'temporary_file';
-    const PUBLIC_FILE = 'public_file';
-    const PRIVATE_FILE = 'private_file';
     const REFRESH_UUID = 'refresh_uuid';
 
     //for resource node
-    const SKIP_RESOURCE_NOTIFICATION = 'skip_resource_notification';
-    const SERIALIZE_RESOURCE = 'serialize_resource';
     const IGNORE_RIGHTS = 'ignore_rights';
     const SERIALIZE_TOOL = 'serialize_tool';
-
-    const CRUD_CREATE = 'crud_create';
-    const CRUD_UPDATE = 'crud_update';
-    const IGNORE_CRUD_POST_EVENT = 'ignore_crud_post_event';
 
     //finder options
     const SQL_QUERY = 'sql_query';
 
     //transfer_options
     const WORKSPACE_IMPORT = 'workspace_import';
-    const ADMINISTRATION_IMPORT = 'administration_import';
 
+    // for SchemaProvider
     const IGNORE_COLLECTIONS = 'ignore_collections';
 }

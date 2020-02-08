@@ -23,8 +23,6 @@ class Crud
     const COLLECTION_REMOVE = 'remove';
     /** @var string */
     const PROPERTY_SET = 'set';
-    /** @var string */
-    const NO_VALIDATE = 'no_validate';
     // TODO : remove me. only for retro compatibility it should be always the case
     // but I don't know if it will break things if I do it now
     const THROW_EXCEPTION = 'throw_exception';
@@ -84,16 +82,13 @@ class Crud
     public function create($class, $data, array $options = [])
     {
         // validates submitted data.
-        if (!in_array(self::NO_VALIDATE, $options)) {
-            $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
-
-            if (count($errors) > 0) {
-                // TODO : it should always throw exception
-                if (in_array(self::THROW_EXCEPTION, $options)) {
-                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
-                } else {
-                    return $errors;
-                }
+        $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
+        if (count($errors) > 0) {
+            // TODO : it should always throw exception
+            if (in_array(self::THROW_EXCEPTION, $options)) {
+                throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
+            } else {
+                return $errors;
             }
         }
 
@@ -106,9 +101,8 @@ class Crud
 
         if ($this->dispatch('create', 'pre', [$object, $options, $data])) {
             $this->om->save($object);
-            if (!in_array(Options::IGNORE_CRUD_POST_EVENT, $options)) {
-                $this->dispatch('create', 'post', [$object, $options, $data]);
-            }
+
+            $this->dispatch('create', 'post', [$object, $options, $data]);
         }
 
         return $object;
@@ -128,16 +122,13 @@ class Crud
     public function update($class, $data, array $options = [])
     {
         // validates submitted data.
-        if (!in_array(self::NO_VALIDATE, $options)) {
-            $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
-
-            if (count($errors) > 0) {
-                // TODO : it should always throw exception
-                if (in_array(self::THROW_EXCEPTION, $options)) {
-                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
-                } else {
-                    return $errors;
-                }
+        $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
+        if (count($errors) > 0) {
+            // TODO : it should always throw exception
+            if (in_array(self::THROW_EXCEPTION, $options)) {
+                throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
+            } else {
+                return $errors;
             }
         }
 

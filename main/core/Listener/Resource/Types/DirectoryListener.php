@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -36,11 +35,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class DirectoryListener
 {
+    /** @var ObjectManager */
+    private $om;
+
     /** @var SerializerProvider */
     private $serializer;
 
+    /** @var Crud */
+    private $crud;
+
     /** @var ResourceManager */
     private $resourceManager;
+
+    /** @var ResourceActionManager */
+    private $actionManager;
 
     /** @var RightsManager */
     private $rightsManager;
@@ -57,7 +65,6 @@ class DirectoryListener
      * @param ResourceManager       $resourceManager
      * @param ResourceActionManager $actionManager
      * @param RightsManager         $rightsManager
-     * @param LogListener           $logListener
      * @param ParametersSerializer  $parametersSerializer
      */
     public function __construct(
@@ -67,7 +74,6 @@ class DirectoryListener
         ResourceManager $resourceManager,
         ResourceActionManager $actionManager,
         RightsManager $rightsManager,
-        LogListener $logListener,
         ParametersSerializer $parametersSerializer
     ) {
         $this->om = $om;
@@ -76,7 +82,6 @@ class DirectoryListener
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
-        $this->logListener = $logListener;
         $this->parametersSerializer = $parametersSerializer;
     }
 
@@ -110,7 +115,7 @@ class DirectoryListener
     {
         $data = $event->getData();
         $parent = $event->getResourceNode();
-        $this->logListener->disable();
+
         $add = $this->actionManager->get($parent, 'add');
 
         // checks if the current user can add
@@ -120,7 +125,6 @@ class DirectoryListener
         }
 
         $options = $event->getOptions();
-        $options[] = Options::IGNORE_CRUD_POST_EVENT;
 
         // create the resource node
 
@@ -140,22 +144,17 @@ class DirectoryListener
         if (!empty($data['resourceNode']['rights'])) {
             foreach ($data['resourceNode']['rights'] as $rights) {
                 /** @var Role $role */
-                $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneBy(['name' => $rights['name']]);
+                $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $rights['name']]);
                 $this->rightsManager->editPerms($rights['permissions'], $role, $resourceNode);
             }
         } else {
             // todo : initialize default rights
         }
-        $this->logListener->enable();
-        $this->crud->dispatch('create', 'post', [$resource, $options]);
+
         $this->om->persist($resource);
         $this->om->persist($resourceNode);
 
-        // todo : dispatch creation event
-
         $this->om->flush();
-
-        $this->crud->dispatch('create', 'post', [$resourceNode]);
 
         // todo : dispatch get/load action instead
         $event->setResponse(new JsonResponse(
