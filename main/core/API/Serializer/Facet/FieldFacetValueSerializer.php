@@ -31,7 +31,6 @@ class FieldFacetValueSerializer
         ContainerInterface $container
     ) {
         $this->om = $container->get(ObjectManager::class);
-        //$this->userSerializer = $container->get(UserSerializer::class);
         $this->fieldFacetSerializer = $fieldFacetSerializer;
         // TODO : remove dependency to container (but there is a circular reference on UserSerializer)
         $this->container = $container;

@@ -3,44 +3,45 @@
 namespace Claroline\ForumBundle\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Finder\User\UserFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
-use Claroline\ForumBundle\Entity\Validation\User;
+use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\MessageBundle\Manager\MessageManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MessageCrud
 {
     use PermissionCheckerTrait;
 
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var MessageManager */
+    private $messageManager;
+
     /**
-     * ForumSerializer constructor.
+     * MessageCrud constructor.
      *
-     * @param FinderProvider $finder
+     * @param ObjectManager                 $om
+     * @param MessageManager                $messageManager
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
-        TokenStorageInterface $tokenStorage,
         MessageManager $messageManager,
-        StrictDispatcher $dispatcher,
-        UserFinder $userFinder,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
-        $this->tokenStorage = $tokenStorage;
         $this->messageManager = $messageManager;
-        $this->dispatcher = $dispatcher;
-        $this->userFinder = $userFinder;
         $this->authorization = $authorization;
     }
 
     /**
+     * Manage moderation on message create.
+     *
      * @param CreateEvent $event
      *
      * @return ResourceNode
@@ -51,13 +52,13 @@ class MessageCrud
         $forum = $this->getSubject($message)->getForum();
 
         //create user if not here
-        $user = $this->om->getRepository(User::class)->findOneBy([
-          'user' => $message->getCreator(),
-          'forum' => $forum,
+        $user = $this->om->getRepository(UserValidation::class)->findOneBy([
+            'user' => $message->getCreator(),
+            'forum' => $forum,
         ]);
 
         if (!$user) {
-            $user = new User();
+            $user = new UserValidation();
             $user->setForum($forum);
             $user->setUser($message->getCreator());
         }
@@ -77,24 +78,31 @@ class MessageCrud
     }
 
     /**
+     * Send notifications after creation.
+     *
      * @param CreateEvent $event
      *
-     * @return ResourceNode
+     * @return Message
      */
     public function postCreate(CreateEvent $event)
     {
+        /** @var Message $message */
         $message = $event->getObject();
-        $forum = $message->getSubject()->getForum();
 
-        $usersValidate = $this->om->getRepository('ClarolineForumBundle:Validation\User')
-          ->findBy(['forum' => $forum, 'notified' => true]);
+        $subject = $this->getSubject($message);
+        $forum = $subject->getForum();
+
+        /** @var UserValidation[] $usersValidate */
+        $usersValidate = $this->om
+            ->getRepository(UserValidation::class)
+            ->findBy(['forum' => $forum, 'notified' => true]);
 
         $toSend = $this->messageManager->create(
-          $message->getContent(),
-          $message->getSubject()->getTitle(),
-          array_map(function ($userValidate) {
-              return $userValidate->getUser();
-          }, $usersValidate)
+            $message->getContent(),
+            $subject->getTitle(),
+            array_map(function (UserValidation $userValidate) {
+                return $userValidate->getUser();
+            }, $usersValidate)
         );
 
         $this->messageManager->send($toSend);
@@ -102,7 +110,7 @@ class MessageCrud
         return $message;
     }
 
-    public function getSubject(Message $message)
+    private function getSubject(Message $message)
     {
         if (!$message->getSubject()) {
             $parent = $message->getParent();

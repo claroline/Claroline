@@ -18,16 +18,28 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\Manager;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SubjectSerializer
 {
     use SerializerTrait;
 
+    /** @var FinderProvider */
+    private $finder;
+    /** @var FileUtilities */
     private $fileUt;
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
+    /** @var ObjectManager */
     private $om;
-
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
+    /** @var UserSerializer */
+    private $userSerializer;
+    /** @var Manager */
+    private $manager;
+    /** @var ObjectRepository */
     private $messageRepo;
 
     public function getClass()
@@ -57,9 +69,15 @@ class SubjectSerializer
     }
 
     /**
+     * SubjectSerializer constructor.
+     *
+     * @param FinderProvider           $finder
      * @param FileUtilities            $fileUt
      * @param EventDispatcherInterface $eventDispatcher
+     * @param PublicFileSerializer     $fileSerializer
      * @param ObjectManager            $om
+     * @param UserSerializer           $userSerializer
+     * @param Manager                  $manager
      */
     public function __construct(
         FinderProvider $finder,
@@ -97,28 +115,23 @@ class SubjectSerializer
         ]);
 
         return [
-          'id' => $subject->getUuid(),
-          'forum' => [
-            'id' => $subject->getForum()->getUuid(),
-          ],
-          'tags' => $this->serializeTags($subject),
-          'content' => $first ? $first->getContent() : null,
-          'title' => $subject->getTitle(),
-          'meta' => $this->serializeMeta($subject, $options),
-          'restrictions' => $this->serializeRestrictions($subject, $options),
-          'poster' => $subject->getPoster() ? $this->fileSerializer->serialize($subject->getPoster()) : null,
+            'id' => $subject->getUuid(),
+            'forum' => [
+                'id' => $subject->getForum()->getUuid(),
+            ],
+            'tags' => $this->serializeTags($subject),
+            'content' => $first ? $first->getContent() : null,
+            'title' => $subject->getTitle(),
+            'meta' => $this->serializeMeta($subject, $options),
+            'poster' => $subject->getPoster() ? $this->fileSerializer->serialize($subject->getPoster()) : null,
         ];
     }
 
-    public function serializeMeta(Subject $subject, array $options = [])
+    private function serializeMeta(Subject $subject, array $options = [])
     {
         return [
             'views' => $subject->getViewCount(),
             'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
-            /*
-            'lastMessages' => array_map(function ($message) {
-                return $this->serializerProvider->serialize($message);
-            }, $finder->fetch('Claroline\ForumBundle\Entity\Message', ['subject' => $subject->getUuid(), 'parent' => null], ['sortBy' => 'dateCreation', 'direction' => 0], 0, 1)),*/
             'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
             'created' => $subject->getCreationDate()->format('Y-m-d\TH:i:s'),
             'updated' => $subject->getModificationDate()->format('Y-m-d\TH:i:s'),
@@ -129,15 +142,6 @@ class SubjectSerializer
         ];
     }
 
-    public function serializeRestrictions(Subject $subject, array $options = [])
-    {
-        return [
-          'sticky' => true,
-          'edit' => true,
-          'delete' => false,
-        ];
-    }
-
     /**
      * Deserializes data into a Subject entity.
      *
@@ -145,7 +149,7 @@ class SubjectSerializer
      * @param Subject $subject
      * @param array   $options
      *
-     * @return Forum
+     * @return Subject
      */
     public function deserialize($data, Subject $subject, array $options = [])
     {
@@ -173,7 +177,7 @@ class SubjectSerializer
                 }
 
                 $first = new Message();
-                $first->setIsFirst(true);
+                $first->setFirst(true);
                 $first->setSubject($subject);
                 $first->setModerated($subject->getModerated());
             }
@@ -249,13 +253,12 @@ class SubjectSerializer
     /**
      * Deserializes Item tags.
      *
-     * @param Item  $question
-     * @param array $tags
-     * @param array $options
+     * @param Subject $subject
+     * @param array   $tags
+     * @param array   $options
      */
     private function deserializeTags(Subject $subject, array $tags = [], array $options = [])
     {
-        //  if ($this->hasOption(Transfer::PERSIST_TAG, $options)) {
         $event = new GenericDataEvent([
             'tags' => $tags,
             'data' => [
@@ -269,7 +272,6 @@ class SubjectSerializer
         ]);
 
         $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
-        //}
     }
 
     private function isHot(Subject $subject)

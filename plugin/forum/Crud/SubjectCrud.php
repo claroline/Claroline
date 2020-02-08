@@ -7,9 +7,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Entity\Validation\User;
+use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 use Claroline\MessageBundle\Manager\MessageManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SubjectCrud
@@ -18,9 +17,6 @@ class SubjectCrud
 
     /** @var ObjectManager */
     private $om;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var MessageManager */
     private $messageManager;
@@ -32,18 +28,15 @@ class SubjectCrud
      * ForumSerializer constructor.
      *
      * @param ObjectManager                 $om
-     * @param TokenStorageInterface         $tokenStorage
      * @param MessageManager                $messageManager
      * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
-        TokenStorageInterface $tokenStorage,
         MessageManager $messageManager,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
-        $this->tokenStorage = $tokenStorage;
         $this->messageManager = $messageManager;
         $this->authorization = $authorization;
     }
@@ -60,13 +53,13 @@ class SubjectCrud
         $forum = $subject->getForum();
 
         //create user if not here
-        $user = $this->om->getRepository('ClarolineForumBundle:Validation\User')->findOneBy([
-          'user' => $subject->getCreator(),
-          'forum' => $forum,
+        $user = $this->om->getRepository(UserValidation::class)->findOneBy([
+            'user' => $subject->getCreator(),
+            'forum' => $forum,
         ]);
 
         if (!$user) {
-            $user = new User();
+            $user = new UserValidation();
             $user->setForum($forum);
             $user->setUser($subject->getCreator());
         }
@@ -97,6 +90,40 @@ class SubjectCrud
 
         if ($first) {
             $this->om->persist($first);
+        }
+
+        return $subject;
+    }
+
+    /**
+     * Send notifications after creation.
+     *
+     * @param CreateEvent $event
+     *
+     * @return Subject
+     */
+    public function postCreate(CreateEvent $event)
+    {
+        /** @var Subject $subject */
+        $subject = $event->getObject();
+        $forum = $subject->getForum();
+
+        $message = $subject->getFirstMessage();
+        if ($message) {
+            /** @var UserValidation[] $usersValidate */
+            $usersValidate = $this->om
+                ->getRepository(UserValidation::class)
+                ->findBy(['forum' => $forum, 'notified' => true]);
+
+            $toSend = $this->messageManager->create(
+                $message->getContent(),
+                $subject->getTitle(),
+                array_map(function (UserValidation $userValidate) {
+                    return $userValidate->getUser();
+                }, $usersValidate)
+            );
+
+            $this->messageManager->send($toSend);
         }
 
         return $subject;

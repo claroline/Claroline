@@ -171,6 +171,19 @@ class Subject
         return $this->forum;
     }
 
+    public function getFirstMessage()
+    {
+        $first = null;
+        foreach ($this->messages as $message) {
+            if ($message->isFirst()) {
+                $first = $message;
+                break;
+            }
+        }
+
+        return $first;
+    }
+
     /**
      * Sets the subject creator.
      *
