@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
@@ -40,8 +39,6 @@ class UserCrud
     private $mailManager;
     /** @var UserManager */
     private $userManager;
-    /** @var StrictDispatcher */
-    private $dispatcher;
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var CryptographyManager */
@@ -64,7 +61,6 @@ class UserCrud
         $this->toolManager = $container->get('claroline.manager.tool_manager');
         $this->mailManager = $container->get('claroline.manager.mail_manager');
         $this->userManager = $container->get('claroline.manager.user_manager');
-        $this->dispatcher = $container->get('Claroline\AppBundle\Event\StrictDispatcher');
         $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->cryptoManager = $container->get('claroline.manager.cryptography_manager');
         $this->parameters = $container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize();
@@ -225,20 +221,16 @@ class UserCrud
 
         if ($ws) {
             $ws->setCode($ws->getCode().'#deleted_user#'.$user->getId());
-            $ws->setDisplayable(false);
+            $ws->setHidden(true);
             $this->om->persist($ws);
         }
 
         if ($userRole) {
             $this->om->remove($userRole);
         }
+
         $this->om->persist($user);
         $this->om->flush();
-
-        //dispatch some events but they should be listening the same as we are imo.
-        //something should be done for event listeners
-        $this->dispatcher->dispatch('claroline_users_delete', 'GenericData', [[$user]]);
-        $this->dispatcher->dispatch('delete_user', 'DeleteUser', [$user]);
     }
 
     /**

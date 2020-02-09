@@ -2,9 +2,9 @@
 
 namespace Claroline\TagBundle\Listener\User;
 
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User as UserEntity;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Manager\TagManager;
@@ -38,19 +38,14 @@ class UserListener
     }
 
     /**
-     * @param GenericDataEvent $event
+     * @param DeleteEvent $event
      */
-    public function onDelete(GenericDataEvent $event)
+    public function onDelete(DeleteEvent $event)
     {
-        /** @var UserEntity[] $users */
-        $users = $event->getData();
+        /** @var UserEntity $user */
+        $user = $event->getObject();
 
-        $ids = [];
-        foreach ($users as $user) {
-            $ids[] = $user->getId();
-        }
-
-        $this->manager->removeTaggedObjectsByClassAndIds(UserEntity::class, $ids);
+        $this->manager->removeTaggedObjectsByClassAndIds(UserEntity::class, [$user->getId()]);
     }
 
     /**

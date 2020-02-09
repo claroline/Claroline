@@ -218,10 +218,6 @@ class UserFinder extends AbstractFinder
                     $qb->leftJoin('grpRole.workspace', 'ws');
                     $qb->andWhere('ws.uuid IN ('.$string.')');
                     break;
-                case 'blacklist':
-                    $qb->andWhere("obj.uuid NOT IN (:{$filterName})");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
                 case 'groupName':
                     $qb->join('obj.groups', 'gn');
                     $qb->andWhere("UPPER(gn.name) LIKE :{$filterName}");

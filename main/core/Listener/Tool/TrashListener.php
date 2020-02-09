@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class TrashListener
 {
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();

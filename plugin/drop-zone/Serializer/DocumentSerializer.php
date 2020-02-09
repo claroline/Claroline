@@ -87,14 +87,6 @@ class DocumentSerializer
                 null,
             'isManager' => $document->getIsManager(),
         ];
-
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serialized = array_merge($serialized, [
-                'comments' => array_values(array_map(function (DocumentComment $comment) use ($options) {
-                    return $this->documentCommentSerializer->serialize($comment, $options);
-                }, $document->getComments()->toArray())),
-            ]);
-        }
     }
 
     private function getToolDocuments(Document $document)

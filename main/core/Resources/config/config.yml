@@ -248,7 +248,6 @@ plugin:
           is_exportable: true
           is_locked_for_admin: false
           is_anonymous_excluded: false
-          desktop_category: user
 
         - name: resource_trash
           class: trash-alt

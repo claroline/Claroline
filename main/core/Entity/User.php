@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -188,18 +187,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
      */
     protected $initDate;
-
-    /**
-     * @var OrderedTool[]|ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
-     *     mappedBy="user"
-     * )
-     *
-     * @todo relation should not be declared here (only use Unidirectional)
-     */
-    protected $orderedTools;
 
     /**
      * @ORM\Column(name="reset_password", nullable=true)
@@ -392,7 +379,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
         $this->wkUserQueues = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->orderedTools = new ArrayCollection();
         $this->fieldsFacetValue = new ArrayCollection();
         $this->scheduledTasks = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
@@ -823,16 +809,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function setCreationDate(\DateTime $date)
     {
         $this->created = $date;
-    }
-
-    /**
-     * @return OrderedTool[]|ArrayCollection
-     *
-     * @deprecated
-     */
-    public function getOrderedTools()
-    {
-        return $this->orderedTools;
     }
 
     public function getResetPasswordHash()

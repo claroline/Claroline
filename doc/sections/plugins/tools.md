@@ -53,12 +53,12 @@ claroline.listener.example_tool:
 ### Listener implementation
 
 ```php
-public function onWorkspaceOpen(DisplayToolEvent $event)
+public function onWorkspaceOpen(OpenToolEvent $event)
 {
     $event->setContent($this->workspace($event->getWorkspace()->getId()));
 }
 
-public function onDesktopOpen(DisplayToolEvent $event)
+public function onDesktopOpen(OpenToolEvent $event)
 {
     $event->setContent($this->desktop());
 }

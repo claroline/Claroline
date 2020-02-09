@@ -67,7 +67,7 @@ class ContactController extends AbstractCrudController
         return 'contact';
     }
 
-    public function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters()
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -123,14 +123,7 @@ class ContactController extends AbstractCrudController
         }
         $params['hiddenFilters']['contactable'] = true;
 
-        if (intval($picker)) {
-            $params['hiddenFilters']['blacklist'] = array_map(function (User $user) {
-                return $user->getUuid();
-            }, $this->contactManager->getContactsUser($currentUser));
-        }
-        $data = $this->finder->search(User::class, $params);
-
-        return new JsonResponse($data, 200);
+        return new JsonResponse($this->finder->search(User::class, $params), 200);
     }
 
     public function getClass()

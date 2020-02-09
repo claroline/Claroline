@@ -166,7 +166,7 @@ class ApiLoader extends Loader
                             $route = new ApiRoute($pattern, $routeDefaults, []);
                             $route->setAction($name);
                             $route->setMethods([$options[1]]);
-                            $requirements = $refClass->newInstanceWithoutConstructor()->mergeRequirements();
+                            $requirements = $refClass->newInstanceWithoutConstructor()->getRequirements();
 
                             if (isset($requirements[$name])) {
                                 $route->setRequirements($requirements[$name]);

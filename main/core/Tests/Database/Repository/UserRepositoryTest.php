@@ -91,12 +91,6 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(3, count($users));
     }
 
-    public function testFindAllExcept()
-    {
-        $users = self::$repo->findAllExcept([self::get('john')]);
-        $this->assertEquals(3, count($users));
-    }
-
     public function testFindByUsernamesThrowsAnExceptionIfAUserIsMissing()
     {
         $users = self::$repo->findByUsernames(['john', 'unknown']);
@@ -132,15 +126,5 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count($users));
         $users = self::$repo->findByRoles([self::get('ROLE_2')]);
         $this->assertEquals(1, count($users));
-    }
-
-    public function testFindUsernames()
-    {
-        $this->assertEquals(5, count(self::$repo->findUsernames()));
-    }
-
-    public function testFindEmails()
-    {
-        $this->assertEquals(5, count(self::$repo->findEmails()));
     }
 }

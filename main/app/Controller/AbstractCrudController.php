@@ -5,6 +5,7 @@ namespace Claroline\AppBundle\Controller;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -35,11 +36,15 @@ abstract class AbstractCrudController extends AbstractApiController
     /** @var ObjectManager */
     protected $om;
 
+    /**
+     * @var array
+     *
+     * @deprecated should not be stored
+     */
+    protected $options = [];
+
     /** @var ContainerInterface */
     protected $container;
-
-    /** @var array */
-    protected $options;
 
     /**
      * Get the name of the managed entity.
@@ -62,7 +67,7 @@ abstract class AbstractCrudController extends AbstractApiController
         $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->routerFinder = $container->get('Claroline\AppBundle\Routing\Finder');
         $this->routerDocumentator = $container->get('Claroline\AppBundle\Routing\Documentator');
-        $this->options = $this->mergeOptions();
+        $this->options = $this->getOptions();
     }
 
     //these are the injectors you should use
@@ -488,20 +493,20 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     protected function find($class, $id)
     {
-        return $this->om->getRepository($class)->findOneBy(
-            !is_numeric($id) && property_exists($class, 'uuid') ?
-                ['uuid' => $id] :
-                ['id' => $id]
-        );
+        if (!is_numeric($id) && property_exists($class, 'uuid')) {
+            return $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
+        }
+
+        return $this->om->getRepository($class)->findOneBy(['id' => $id]);
     }
 
     /**
      * @return array
      */
-    protected function getDefaultOptions()
+    public function getOptions()
     {
         return [
-            'list' => [],
+            'list' => [Options::SERIALIZE_LIST],
             'get' => [],
             'create' => [],
             'update' => [],
@@ -518,53 +523,19 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @return array
      */
-    private function getDefaultRequirements()
+    public function getRequirements()
     {
         return [
-          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|\/)).*'],
-          'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|\/)).*'],
-          'exist' => [],
+            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|\/)).*'],
+            'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|\/)).*'],
+            'exist' => [],
         ];
     }
 
     /**
      * @return array
      */
-    protected function getRequirements()
-    {
-        return [];
-    }
-
-    /**
-     * @return array
-     */
-    public function mergeRequirements()
-    {
-        return array_merge($this->getDefaultRequirements(), $this->getRequirements());
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [];
-    }
-
-    /**
-     * @return array
-     */
-    public function mergeOptions()
-    {
-        $this->options = array_merge_recursive($this->getDefaultOptions(), $this->getOptions());
-
-        return $this->options;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters()
     {
         return [];
     }

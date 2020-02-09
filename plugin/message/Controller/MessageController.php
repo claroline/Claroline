@@ -324,9 +324,9 @@ class MessageController extends AbstractCrudController
 
     public function getOptions()
     {
-        return [
+        return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],
-        ];
+        ]);
     }
 
     public function getClass()

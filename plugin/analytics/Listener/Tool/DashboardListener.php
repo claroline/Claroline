@@ -13,8 +13,8 @@ namespace Claroline\AnalyticsBundle\Listener\Tool;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Manager\ProgressionManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -56,9 +56,9 @@ class DashboardListener
     /**
      * Displays dashboard on Workspace.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
         $levelMax = 1;

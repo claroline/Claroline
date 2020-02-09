@@ -12,8 +12,8 @@
 namespace Claroline\OpenBadgeBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 /**
@@ -38,9 +38,9 @@ class ToolListener
     /**
      * Displays home on Desktop.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([]);
 
@@ -48,9 +48,9 @@ class ToolListener
     }
 
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setData([]);
 

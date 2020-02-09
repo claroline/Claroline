@@ -15,7 +15,7 @@ use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\ConfigureToolEvent;
+use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

@@ -12,11 +12,11 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\AppBundle\Controller\SecurityController;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class ArchiveController extends SecurityController
+class ArchiveController extends AbstractSecurityController
 {
     /**
      * ArchiveController constructor.

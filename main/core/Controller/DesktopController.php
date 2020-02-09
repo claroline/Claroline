@@ -17,9 +17,9 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -111,10 +111,7 @@ class DesktopController
         return new JsonResponse(array_merge($event->getResponse() ?? [], [
             'userProgression' => null,
             'tools' => array_values(array_map(function (Tool $tool) {
-                return [
-                    'icon' => $tool->getClass(),
-                    'name' => $tool->getName(),
-                ];
+                return $this->serializer->serialize($tool, [Options::SERIALIZE_MINIMAL]);
             }, $tools)),
             'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
         ]));
@@ -141,8 +138,8 @@ class DesktopController
             throw new AccessDeniedException();
         }
 
-        /** @var DisplayToolEvent $event */
-        $event = $this->eventDispatcher->dispatch('open_tool_desktop_'.$toolName, new DisplayToolEvent());
+        /** @var OpenToolEvent $event */
+        $event = $this->eventDispatcher->dispatch('open_tool_desktop_'.$toolName, new OpenToolEvent());
 
         $this->eventDispatcher->dispatch('log', new LogDesktopToolReadEvent($toolName));
 

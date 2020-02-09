@@ -2,7 +2,7 @@
 
 namespace Claroline\AnalyticsBundle\Controller\Administration;
 
-use Claroline\AppBundle\Controller\SecurityController;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @Route("/tools/admin/analytics")
  */
-class AnalyticsController extends SecurityController
+class AnalyticsController extends AbstractSecurityController
 {
     /** @var AnalyticsManager */
     private $analyticsManager;

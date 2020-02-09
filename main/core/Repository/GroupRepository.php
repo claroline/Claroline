@@ -185,26 +185,6 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * @param string $search
-     *
-     * @return array
-     */
-    public function findByNameForAjax($search)
-    {
-        $resultArray = [];
-        $groups = $this->findByName($search);
-
-        foreach ($groups as $group) {
-            $resultArray[] = [
-                'id' => $group->getId(),
-                'text' => $group->getName(),
-            ];
-        }
-
-        return $resultArray;
-    }
-
-    /**
      * @param array $params
      *
      * @return array|ArrayCollection
@@ -236,25 +216,6 @@ class GroupRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
-
-        return ($getQuery) ? $query : $query->getResult();
-    }
-
-    public function findByRolesAndName(array $roles, $name, $getQuery = false, $orderedBy = 'id')
-    {
-        $search = strtoupper($name);
-        $dql = "
-            SELECT u, ws, r FROM Claroline\\CoreBundle\\Entity\\Group u
-            JOIN u.roles r
-            LEFT JOIN r.workspace ws
-            WHERE r IN (:roles)
-            AND UPPER(u.name) LIKE :search
-            ORDER BY u.{$orderedBy}
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-        $query->setParameter('search', "%{$search}%");
 
         return ($getQuery) ? $query : $query->getResult();
     }

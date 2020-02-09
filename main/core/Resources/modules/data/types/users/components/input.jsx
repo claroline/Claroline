@@ -21,7 +21,6 @@ const UsersButton = props =>
     label={trans('add_users')}
     disabled={props.disabled}
     modal={[MODAL_USERS, {
-      url: ['apiv2_user_list_registerable'], // maybe not the correct URL
       title: props.title,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,

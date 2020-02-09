@@ -299,7 +299,6 @@ abstract class RepositoryTestCase extends WebTestCase
     {
         $tool = new Tool();
         $tool->setName($name);
-        $tool->setDisplayName($name);
         $tool->setClass($name.'Class');
         self::create($name, $tool);
     }

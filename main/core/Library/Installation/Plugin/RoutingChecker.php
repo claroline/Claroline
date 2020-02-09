@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Library\PluginBundleInterface;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
@@ -30,7 +29,6 @@ class RoutingChecker implements CheckerInterface
     const INVALID_ROUTING_EXTENSION = 'invalid_routing_extension';
     const INVALID_YAML_ROUTING_FILE = 'invalid_yaml_routing_file';
 
-    private $router;
     private $yamlParser;
     private $plugin;
     private $pluginFqcn;
@@ -39,12 +37,10 @@ class RoutingChecker implements CheckerInterface
     /**
      * Constructor.
      *
-     * @param Router                         $router
      * @param \Symfony\Component\Yaml\Parser $yamlParser
      */
-    public function __construct(Router $router, Parser $yamlParser)
+    public function __construct(Parser $yamlParser)
     {
-        $this->router = $router;
         $this->yamlParser = $yamlParser;
     }
 

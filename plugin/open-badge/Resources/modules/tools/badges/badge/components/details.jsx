@@ -47,7 +47,6 @@ const BadgeDetailsComponent = (props) => {
                 label={trans('grant_users', {}, 'badge')}
                 disabled={!props.badge.meta.enabled}
                 modal={[MODAL_USERS, {
-                  url: ['apiv2_user_list_registerable'], // maybe not the correct URL
                   selectAction: (selected) => ({
                     type: CALLBACK_BUTTON,
                     label: trans('select', {}, 'actions'),

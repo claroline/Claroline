@@ -21,54 +21,21 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Manages platform uploaded files... sort of.
  *
- * @EXT\Route("/publicfile")
+ * @EXT\Route("/public_file")
  */
 class FileController extends AbstractCrudController
 {
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
     /**
-     * @EXT\Route(
-     *    "/upload",
-     *    name="apiv2_file_upload",
-     *    options={ "method_prefix" = false }
-     * )
-     * @EXT\Method("POST")
+     * FileController constructor.
      *
-     * @param Request $request
-     *
-     * @return JsonResponse
+     * @param StrictDispatcher $dispatcher
      */
-    public function uploadAction(Request $request)
+    public function __construct(StrictDispatcher $dispatcher)
     {
-        $files = $this->uploadFiles($request);
-        $data = [];
-
-        foreach ($files as $file) {
-            $data[] = $this->serializer->serialize($file);
-        }
-
-        return new JsonResponse($data, 200);
-    }
-
-    private function uploadFiles(Request $request)
-    {
-        $files = $request->files->all();
-        $handler = $request->get('handler');
-        $objects = [];
-        /** @var StrictDispatcher */
-        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
-
-        foreach ($files as $file) {
-            $object = $this->crud->create(
-              PublicFile::class,
-              [],
-              ['file' => $file]
-          );
-
-            $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
-            $objects[] = $object;
-        }
-
-        return $objects;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getClass()
@@ -84,6 +51,30 @@ class FileController extends AbstractCrudController
     /** @return string */
     public function getName()
     {
-        return 'uploadedfile';
+        return 'uploaded_file';
+    }
+
+    /**
+     * @EXT\Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false})
+     * @EXT\Method("POST")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function uploadAction(Request $request)
+    {
+        $files = $request->files->all();
+        $handler = $request->get('handler');
+
+        $objects = [];
+        foreach ($files as $file) {
+            $object = $this->crud->create(PublicFile::class, [], ['file' => $file]);
+
+            $this->dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
+            $objects[] = $this->serializer->serialize($object);
+        }
+
+        return new JsonResponse($objects, 200);
     }
 }

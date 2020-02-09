@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -51,9 +51,9 @@ class CommunityListener
     /**
      * Displays users on Workspace.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setData([
             'profile' => $this->profileSerializer->serialize(),
@@ -69,9 +69,9 @@ class CommunityListener
     }
 
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([
             'profile' => $this->profileSerializer->serialize(),

@@ -28,7 +28,6 @@ services:
               - method: setRouterDocumentator
                 arguments:
                   - '@Claroline\AppBundle\Routing\Documentator'
-              - method: mergeOptions
 
     Claroline\OpenBadgeBundle\Controller\OpenBadgeController:
         arguments:

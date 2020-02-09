@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -58,9 +58,9 @@ class CommunityListener
     /**
      * Displays user administration tool.
      *
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayTool(OpenAdministrationToolEvent $event)
+    public function onDisplayTool(OpenToolEvent $event)
     {
         $event->setData([
             // todo : put it in the async load of form

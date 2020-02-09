@@ -12,7 +12,7 @@
 namespace Claroline\AgendaBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class AgendaListener
 {
@@ -20,18 +20,18 @@ class AgendaListener
     private $serializer;
 
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $event->setContent([]);
         $event->stopPropagation();
     }
 
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();

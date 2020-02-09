@@ -2,14 +2,14 @@
 
 namespace UJM\ExoBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class QuestionBankListener
 {
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->stopPropagation();
     }

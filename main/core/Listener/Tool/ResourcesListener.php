@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 
 class ResourcesListener
@@ -40,9 +40,9 @@ class ResourcesListener
     /**
      * Displays resources on Desktop.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([
             'root' => null,
@@ -53,9 +53,9 @@ class ResourcesListener
     /**
      * Displays resources on Workspace.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
 

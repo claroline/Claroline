@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
-use Claroline\AppBundle\Controller\SecurityController;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @EXT\Route("/plugin")
  */
-class PluginController extends SecurityController
+class PluginController extends AbstractSecurityController
 {
     /** @var PluginManager */
     private $pluginManager;

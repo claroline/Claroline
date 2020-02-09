@@ -11,14 +11,14 @@
 
 namespace Claroline\TagBundle\Listener\Administration;
 
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class TagsListener
 {
     /**
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
+    public function onAdministrationToolOpen(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();

@@ -36,7 +36,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
-        $claroDispatcher->dispatch('notObserved', 'OpenAdministrationTool', []);
+        $claroDispatcher->dispatch('notObserved', 'Resource\Resource', []);
     }
 
     /**
@@ -48,7 +48,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
         $dispatcher->shouldReceive('dispatch')->once();
-        $claroDispatcher->dispatch('notPopulated', 'OpenAdministrationTool', []);
+        $claroDispatcher->dispatch('notPopulated', 'Tool\OpenTool', []);
     }
 
     public function testDispatch()
@@ -61,7 +61,7 @@ class StrictDispatcherTest extends MockeryTestCase
             }
         );
         $claroDispatcher = new StrictDispatcher($dispatcher);
-        $event = $claroDispatcher->dispatch('test_populated', 'OpenAdministrationTool', []);
+        $event = $claroDispatcher->dispatch('test_populated', 'Tool\OpenTool', []);
         $this->assertEquals('content', $event->getData()[0]);
     }
 }

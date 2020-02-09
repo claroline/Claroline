@@ -48,7 +48,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $messageManager;
 
     /**
-     * SecurityController constructor.
+     * AuthenticationSuccessListener constructor.
      *
      * @param TokenStorageInterface        $tokenStorage
      * @param PlatformConfigurationHandler $config

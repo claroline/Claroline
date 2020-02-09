@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\API\TransferProvider;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 /**
  * Transfer tool.
@@ -26,9 +26,9 @@ class TransferListener
     /**
      * Displays transfer tool.
      *
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayTool(OpenAdministrationToolEvent $event)
+    public function onDisplayTool(OpenToolEvent $event)
     {
         $event->setData([
             'explanation' => $this->transfer->getAvailableActions('csv'),

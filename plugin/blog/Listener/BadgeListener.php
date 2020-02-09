@@ -8,15 +8,15 @@ use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class BadgeListener
 {
-    /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router */
+    /** @var RouterInterface */
     private $router;
 
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }

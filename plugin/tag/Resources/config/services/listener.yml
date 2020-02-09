@@ -27,7 +27,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\TagBundle\Manager\TagManager'
         tags:
-            - { name: kernel.event_listener, event: claroline_users_delete, method: onDelete }
+            - { name: kernel.event_listener, event: crud.pre.delete.user, method: onDelete }
             - { name: kernel.event_listener, event: merge_users, method: onMerge }
 
     Claroline\TagBundle\Listener\User\GroupListener:

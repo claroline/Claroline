@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
-use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\AppBundle\Entity\FromPlugin;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,31 +26,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tool
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
+    use FromPlugin;
 
     const ADMINISTRATION = 'administration';
     const WORKSPACE = 'workspace';
     const DESKTOP = 'desktop';
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column()
      */
     protected $name;
-
-    /**
-     * @ORM\Column(name="display_name", nullable=true)
-     *
-     * Name that will be displayed in the user's desktop
-     * (can be edited in the administration section)
-     */
-    protected $displayName;
 
     /**
      * @ORM\Column()
@@ -109,21 +97,6 @@ class Tool
     private $isVisible = true;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
-    protected $plugin;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
-     *     mappedBy="tool",
-     *     cascade={"remove"}
-     * )
-     */
-    protected $orderedTools;
-
-    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder",
      *     mappedBy="tool",
@@ -142,28 +115,26 @@ class Tool
     protected $pwsToolConfig;
 
     /**
-     * @ORM\Column(name="desktop_category", nullable=true)
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
+     *     mappedBy="tool",
+     *     cascade={"remove"}
+     * )
+     *
+     * @var OrderedTool[]|ArrayCollection
      */
-    protected $desktopCategory;
+    private $orderedTools;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRole", mappedBy="tool")
-     *
-     * @var Tool
+     * Tool constructor.
      */
-    protected $toolRoles;
-
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->maskDecoders = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
-        $this->toolRoles = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
+        $this->orderedTools = new ArrayCollection();
     }
 
     public function setName($name)
@@ -176,18 +147,6 @@ class Tool
     public function getName()
     {
         return $this->name;
-    }
-
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-
-        return $this;
-    }
-
-    public function getDisplayName()
-    {
-        return $this->displayName ?: $this->name;
     }
 
     public function setClass($class)
@@ -238,21 +197,6 @@ class Tool
         return $this->isVisible;
     }
 
-    public function setPlugin(Plugin $plugin = null)
-    {
-        $this->plugin = $plugin;
-
-        return $this;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Plugin
-     */
-    public function getPlugin()
-    {
-        return $this->plugin;
-    }
-
     public function setDisplayableInWorkspace($bool)
     {
         $this->isDisplayableInWorkspace = $bool;
@@ -287,11 +231,6 @@ class Tool
     public function isExportable()
     {
         return $this->isExportable;
-    }
-
-    public function getOrderedTools()
-    {
-        return $this->orderedTools;
     }
 
     public function setIsConfigurableInWorkspace($bool)
@@ -362,18 +301,13 @@ class Tool
         return $this->pwsToolConfig;
     }
 
-    public function getDesktopCategory()
+    public function getOrderedTools()
     {
-        return $this->desktopCategory;
-    }
-
-    public function setDesktopCategory($desktopCategory)
-    {
-        $this->desktopCategory = $desktopCategory;
+        return $this->orderedTools;
     }
 
     public function __toString()
     {
-        return $this->getDisplayName();
+        return $this->getName();
     }
 }

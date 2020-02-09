@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 /**
  * Home tool.
@@ -41,9 +41,9 @@ class DataTransferListener
     /**
      * Displays home on Workspace.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
         $explanations = $this->transfer->getAvailableActions('csv', [Options::WORKSPACE_IMPORT], [

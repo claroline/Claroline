@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -58,9 +58,9 @@ class HomeListener
     /**
      * Displays home on Desktop.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $adminTabs = $this->finder->search(HomeTab::class, [
             'filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP],
@@ -89,9 +89,9 @@ class HomeListener
     /**
      * Displays home on Workspace.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayWorkspace(DisplayToolEvent $event)
+    public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
 

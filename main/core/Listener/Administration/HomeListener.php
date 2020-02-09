@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class HomeListener
 {
@@ -24,9 +24,9 @@ class HomeListener
     /**
      * Displays home administration tool.
      *
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayTool(OpenAdministrationToolEvent $event)
+    public function onDisplayTool(OpenToolEvent $event)
     {
         $homeTabs = $this->finder->search(
           HomeTab::class,

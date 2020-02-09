@@ -3,8 +3,7 @@
 namespace HeVinci\CompetencyBundle\Listener;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -51,9 +50,9 @@ class PluginListener
     }
 
     /**
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onOpenLearningObjectivesTool(OpenAdministrationToolEvent $event)
+    public function onOpenLearningObjectivesTool(OpenToolEvent $event)
     {
         $this->competencyManager->ensureHasScale();
         $event->setData([]);
@@ -61,9 +60,9 @@ class PluginListener
     }
 
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onOpenMyLearningObjectivesTool(DisplayToolEvent $event)
+    public function onOpenMyLearningObjectivesTool(OpenToolEvent $event)
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();

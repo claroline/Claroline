@@ -11,7 +11,7 @@
 
 namespace Claroline\MessageBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\MessageBundle\Manager\ContactManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -43,9 +43,9 @@ class MessagingListener
     /**
      * Displays messaging on Desktop.
      *
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
+    public function onDisplayDesktop(OpenToolEvent $event)
     {
         $event->setData([
             'options' => $this->contactManager->getUserOptions(

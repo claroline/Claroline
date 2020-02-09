@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Used to declare some redirection to maintain some old routes for retro-compatibility.
+ * Used to declare redirection to maintain some old routes for retro-compatibility.
  * Routes are not named to avoid someone using it directly.
  */
 class LegacyController

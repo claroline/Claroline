@@ -19,9 +19,9 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -169,16 +169,12 @@ class WorkspaceController
                 // to let the manager knows that other users can not enter the workspace
                 'accessErrors' => $accessErrors,
                 'userEvaluation' => $userEvaluation,
-                'tools' => array_values(array_map(function (OrderedTool $orderedTool) { // todo : create a serializer
-                    return [
-                        'icon' => $orderedTool->getTool()->getClass(),
-                        'name' => $orderedTool->getTool()->getName(),
-                    ];
+                'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
+                    return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
                 }, $orderedTools)),
-                //'shortcuts' => $this->manager->getShortcuts($workspace, $user),
-
                 'root' => $this->serializer->serialize($this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]), [Options::SERIALIZE_MINIMAL]),
                 // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
+                //'shortcuts' => $this->manager->getShortcuts($workspace, $user),
                 'shortcuts' => array_values(array_map(function (Shortcuts $shortcuts) {
                     return $this->serializer->serialize($shortcuts);
                 }, $workspace->getShortcuts()->toArray())),
@@ -218,8 +214,8 @@ class WorkspaceController
             throw new AccessDeniedException();
         }
 
-        /** @var DisplayToolEvent $event */
-        $event = $this->eventDispatcher->dispatch('open_tool_workspace_'.$toolName, new DisplayToolEvent($workspace));
+        /** @var OpenToolEvent $event */
+        $event = $this->eventDispatcher->dispatch('open_tool_workspace_'.$toolName, new OpenToolEvent($workspace));
 
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 

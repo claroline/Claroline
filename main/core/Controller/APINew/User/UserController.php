@@ -517,7 +517,7 @@ class UserController extends AbstractCrudController
 
     public function getOptions()
     {
-        return [
+        return array_merge(parent::getOptions(), [
             'deleteBulk' => [Options::SOFT_DELETE],
             'create' => [
                 //maybe move these options in an other class
@@ -527,18 +527,18 @@ class UserController extends AbstractCrudController
             ],
             'get' => [Options::SERIALIZE_FACET],
             'update' => [Options::SERIALIZE_FACET],
-        ];
+        ]);
     }
 
     /**
      * @return array
      */
-    public function getDefaultRequirements()
+    public function getRequirements()
     {
-        return [
+        return array_merge(parent::getRequirements(), [
           'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|current|\/)).*'],
           'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|current|\/)).*'],
           'exist' => [],
-        ];
+        ]);
     }
 }

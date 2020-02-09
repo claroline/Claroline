@@ -13,7 +13,7 @@ namespace Claroline\TeamBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -49,9 +49,9 @@ class TeamListener
     }
 
     /**
-     * @param DisplayToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onWorkspaceToolOpen(DisplayToolEvent $event)
+    public function onWorkspaceToolOpen(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
         $teamParams = $this->teamManager->getWorkspaceTeamParameters($workspace);

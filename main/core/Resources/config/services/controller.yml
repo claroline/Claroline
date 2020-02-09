@@ -25,12 +25,11 @@ services:
               - method: setRouterDocumentator
                 arguments:
                   - '@Claroline\AppBundle\Routing\Documentator'
-              - method: mergeOptions
               - method: setContainer
                 arguments:
                   - '@service_container'
                   
-        Claroline\AppBundle\Controller\SecurityController:
+        Claroline\AppBundle\Controller\AbstractSecurityController:
             calls:
               - method: setObjectManager
                 arguments:
@@ -175,7 +174,9 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.data_source'
 
-    Claroline\CoreBundle\Controller\APINew\FileController: ~
+    Claroline\CoreBundle\Controller\APINew\FileController:
+        arguments:
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\APINew\LoggerController:
         arguments:
@@ -211,13 +212,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\TransferController:
         arguments:
           - '@Claroline\AppBundle\API\TransferProvider'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@router'
           - '%claroline.api.core_schema.dir%'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Command\AsyncCommand'
 
     Claroline\CoreBundle\Controller\APINew\WidgetController:
         arguments:

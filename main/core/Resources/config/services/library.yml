@@ -28,7 +28,6 @@ services:
 
     Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker:
         arguments:
-            - '@router'
             - '@claroline.symfony_yaml'
 
     Claroline\CoreBundle\Library\Installation\Plugin\Recorder:

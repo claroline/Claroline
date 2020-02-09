@@ -34,7 +34,6 @@ const UserTab = props =>
 
         // select users to register
         modal: [MODAL_USERS, {
-          url: ['apiv2_user_list_registerable'],
           title: trans('register_users'),
           subtitle: trans('workspace_register_select_users'),
           selectAction: (selectedUsers) => ({

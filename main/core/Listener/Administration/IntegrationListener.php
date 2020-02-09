@@ -2,16 +2,16 @@
 
 namespace Claroline\CoreBundle\Listener\Administration;
 
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
 class IntegrationListener
 {
     /**
      * Displays analytics administration tool.
      *
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayTool(OpenAdministrationToolEvent $event)
+    public function onDisplayTool(OpenToolEvent $event)
     {
         $event->setData([]);
         $event->stopPropagation();

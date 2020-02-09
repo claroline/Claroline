@@ -45,7 +45,7 @@ services:
           - '@claroline.manager.progression_manager'
           
     _instanceof:
-        Claroline\AppBundle\Controller\SecurityController:
+        Claroline\AppBundle\Controller\AbstractSecurityController:
             calls:
               - method: setObjectManager
                 arguments:

@@ -11,68 +11,44 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Import\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
- * @Route("/transfer")
+ * @EXT\Route("/transfer")
  */
 class TransferController extends AbstractCrudController
 {
     /** @var TransferProvider */
     private $provider;
 
-    /** @var Crud */
-    protected $crud;
-
-    /** @var FinderProvider */
-    protected $finder;
-
-    /** @var SerializerProvider */
-    protected $serializer;
-
     /** @var string */
     private $schemaDir;
 
     /**
      * @param TransferProvider $provider
-     * @param FileUtilities    $fileUt
      * @param string           $schemaDir
      */
     public function __construct(
         TransferProvider $provider,
-        SerializerProvider $serializer,
-        RouterInterface $router,
-        $schemaDir,
-        FileUtilities $fileUt,
-        Crud $crud,
-        ObjectManager $om,
-        $async
+        $schemaDir
     ) {
         $this->provider = $provider;
         $this->schemaDir = $schemaDir;
-        $this->fileUt = $fileUt;
-        $this->router = $router;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->async = $async;
-        $this->om = $om;
+    }
+
+    public function getName()
+    {
+        return 'transfer';
     }
 
     public function getClass()
@@ -86,39 +62,62 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *    "/upload/{workspaceId}",
-     *    name="apiv2_transfer_upload_file"
-     * )
-     * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
-     * @Method("POST")
+     * @return array
+     */
+    public function getRequirements()
+    {
+        return [
+            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|transfer|\/)).*'],
+            'update' => ['id' => '^(?!.*(schema|parameters|find|transfer|\/)).*'],
+            'exist' => [],
+        ];
+    }
+
+    /**
+     * @EXT\Route("/upload/{workspaceId}", name="apiv2_transfer_upload_file")
+     * @EXT\ParamConverter("organization", options={"mapping": {"id": "uuid"}})
+     * @EXT\Method("POST")
      *
      * @param Request $request
+     * @param int     $workspaceId
+     *
+     * @return JsonResponse
      */
-    public function uploadFileAction(Request $request, $workspaceId = 0)
+    public function uploadFileAction(Request $request, $workspaceId = null)
     {
-        $file = $this->uploadFile($request);
-        $workspace = $this->om->getRepository(Workspace::class)->find($workspaceId);
-        if ($workspace) {
-            $workspace = $this->serializer->serialize($workspace);
+        $toUpload = $request->files->all()['file'];
+        $handler = $request->get('handler');
+
+        /** @var StrictDispatcher */
+        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
+
+        $object = $this->crud->create(PublicFile::class, [], ['file' => $toUpload]);
+
+        $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
+
+        $file = $this->serializer->serialize($object);
+
+        $workspace = null;
+        if ($workspaceId) {
+            $workspace = $this->om->getRepository(Workspace::class)->find($workspaceId);
         }
 
-        $this->crud->create(
-            File::class,
-            ['uploadedFile' => $file, 'workspace' => $workspace]
-        );
+        $this->crud->create(File::class, [
+            'uploadedFile' => $file,
+            'workspace' => $workspace ? $this->serializer->serialize($workspace) : null,
+        ]);
 
         return new JsonResponse([$file], 200);
     }
 
     /**
-     * @Route(
-     *    "/workspace/{workspaceId}",
-     *    name="apiv2_workspace_transfer_list"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_list")
+     * @EXT\Method("GET")
      *
+     * @param int     $workspaceId
      * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function workspaceListAction($workspaceId, Request $request)
     {
@@ -138,19 +137,13 @@ class TransferController extends AbstractCrudController
       ));
     }
 
-    public function getName()
-    {
-        return 'transfer';
-    }
-
     /**
-     * @Route(
-     *    "/start",
-     *    name="apiv2_transfer_start"
-     * )
-     * @Method("POST")
+     * @EXT\Route("/start", name="apiv2_transfer_start")
+     * @EXT\Method("POST")
      *
      * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function startAction(Request $request)
     {
@@ -162,7 +155,7 @@ class TransferController extends AbstractCrudController
 
         $publicFile = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
         $uuid = $request->get('workspace');
-        $workspace = $this->om->getRepository(Workspace::class)->findOneByUuid($uuid);
+        $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $uuid]);
 
         if ($workspace) {
             $data['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
@@ -175,20 +168,16 @@ class TransferController extends AbstractCrudController
             $data
         );
 
-        //the following line doesn't work on our live server but it's supposed to be the proper way to do it
-        //$this->async->run('claroline:api:load '.$publicFile->getId().' '.$data['action'].' '.$this->getLogFile($request));
-
         return new JsonResponse('started', 200);
     }
 
     /**
-     * Difference with file controller ?
+     * @EXT\Route("/schema", name="apiv2_transfer_schema")
+     * @EXT\Method("GET")
      *
-     * @Route(
-     *    "/schema",
-     *    name="apiv2_transfer_schema"
-     * )
-     * @Method("GET")
+     * @param string $class
+     *
+     * @return JsonResponse
      */
     public function schemaAction($class)
     {
@@ -198,11 +187,13 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *    "/export/{format}",
-     *    name="apiv2_transfer_export"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/export/{format}", name="apiv2_transfer_export")
+     * @EXT\Method("GET")
+     *
+     * @param Request $request
+     * @param string  $format
+     *
+     * @return Response
      */
     public function exportAction(Request $request, $format)
     {
@@ -217,8 +208,13 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/action/{name}/{format}", name="apiv2_transfer_action")
-     * @Method("GET")
+     * @EXT\Route("/action/{name}/{format}", name="apiv2_transfer_action")
+     * @EXT\Method("GET")
+     *
+     * @param string $name
+     * @param string $format
+     *
+     * @return JsonResponse
      */
     public function getExplanationAction($name, $format)
     {
@@ -226,8 +222,12 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/actions/{format}", name="apiv2_transfer_actions")
-     * @Method("GET")
+     * @EXT\Route("/actions/{format}", name="apiv2_transfer_actions")
+     * @EXT\Method("GET")
+     *
+     * @param string $format
+     *
+     * @return JsonResponse
      */
     public function getAvailableActions($format)
     {
@@ -242,37 +242,5 @@ class TransferController extends AbstractCrudController
     private function getLogFile(Request $request)
     {
         return $request->query->get('log');
-    }
-
-    public function uploadFile(Request $request)
-    {
-        $file = $request->files->all()['file'];
-        $handler = $request->get('handler');
-
-        /** @var StrictDispatcher */
-        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
-
-        $object = $this->crud->create(
-              PublicFile::class,
-              [],
-              ['file' => $file]
-          );
-
-        $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
-
-        return $this->serializer->serialize($object);
-    }
-
-    /**
-     * @return array
-     *               It would be nice to automatize this
-     */
-    protected function getRequirements()
-    {
-        return [
-            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|transfer|\/)).*'],
-            'update' => ['id' => '^(?!.*(schema|parameters|find|transfer|\/)).*'],
-            'exist' => [],
-        ];
     }
 }

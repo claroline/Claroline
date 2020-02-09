@@ -70,8 +70,3 @@ services:
             - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
             - '@ujm_exo.collection.item_definitions'
             - '@event_dispatcher'
-
-    UJM\ExoBundle\Manager\HintManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@ujm_exo.serializer.hint'

@@ -220,26 +220,6 @@ class UserManager
         $this->objectManager->flush();
     }
 
-    public function countUsersToUpdate(array $users)
-    {
-        $count = 0;
-
-        foreach ($users as $user) {
-            if (isset($user[5])) {
-                $code = '' === trim($user[5]) ? null : $user[5];
-            } else {
-                $code = null;
-            }
-
-            $userEntity = $this->getUserByUsernameOrMailOrCode($user[2], $user[4], $code);
-            if ($userEntity) {
-                ++$count;
-            }
-        }
-
-        return $count;
-    }
-
     /**
      * @param string $username
      *
@@ -469,11 +449,6 @@ class UserManager
         $this->objectManager->flush();
     }
 
-    public function getOneUserByUsername($username, $executeQuery = true)
-    {
-        return $this->userRepo->findOneUserByUsername($username, $executeQuery);
-    }
-
     public function getUserByUsernameOrMail($username, $email, $executeQuery = true)
     {
         return $this->userRepo->findUserByUsernameOrMail(
@@ -481,20 +456,6 @@ class UserManager
             $email,
             $executeQuery
         );
-    }
-
-    public function getUsersByUsernamesOrMails($usernames, $mails, $executeQuery = true)
-    {
-        return $this->userRepo->findUsersByUsernamesOrMails($usernames, $mails, $executeQuery);
-    }
-
-    public function getUserByUsernameOrMailOrCode($username, $email, $code)
-    {
-        if (empty($code) || !$this->platformConfigHandler->getParameter('is_user_admin_code_unique')) {
-            return $this->getUserByUsernameOrMail($username, $email, true);
-        }
-
-        return $this->userRepo->findUserByUsernameOrMailOrCode($username, $email, $code);
     }
 
     public function getCountAllEnabledUsers($executeQuery = true)
@@ -583,6 +544,7 @@ class UserManager
         return $options;
     }
 
+    // TODO : remove me, only used by claco form which should use standard picker
     public function getAllVisibleUsersIdsForUserPicker(User $user)
     {
         $usersIds = [];

@@ -4,7 +4,7 @@ namespace Claroline\AnalyticsBundle\Controller\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\SecurityController;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LogManager;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @Route("/tools/admin/logs")
  */
-class LogController extends SecurityController
+class LogController extends AbstractSecurityController
 {
     /** @var FinderProvider */
     private $finder;

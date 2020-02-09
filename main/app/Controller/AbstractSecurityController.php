@@ -7,11 +7,14 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-abstract class SecurityController
+abstract class AbstractSecurityController
 {
     use PermissionCheckerTrait;
 
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+
+    /** @var ObjectManager */
     private $om;
 
     public function setAuthorizationChecker(AuthorizationCheckerInterface $authorization)
@@ -28,10 +31,8 @@ abstract class SecurityController
      * @param string $toolName
      *
      * @throws \Exception
-     *
-     * @return bool
      */
-    public function canOpenAdminTool($toolName)
+    protected function canOpenAdminTool($toolName)
     {
         $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')
             ->findOneBy(['name' => $toolName]);

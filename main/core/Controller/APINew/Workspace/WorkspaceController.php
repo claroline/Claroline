@@ -734,21 +734,4 @@ class WorkspaceController extends AbstractCrudController
     {
         return Workspace::class;
     }
-
-    public function getOptions()
-    {
-        return [
-            'list' => [Options::SERIALIZE_LIST],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getRequirements()
-    {
-        return [
-            'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|menu\/)).*'],
-        ];
-    }
 }

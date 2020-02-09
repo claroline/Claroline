@@ -655,9 +655,6 @@ class DatabaseWriter
         } else {
             $tool->setClass('tools');
         }
-        if (isset($toolConfiguration['desktop_category'])) {
-            $tool->setDesktopCategory("{$toolConfiguration['desktop_category']}");
-        }
 
         $this->toolManager->setLogger($this->logger);
         $this->toolManager->create($tool);

@@ -112,11 +112,15 @@ class Update1205Command extends ContainerAwareCommand
 
                 foreach ($regexes as $regex => $replacement) {
                     $this->log('Matching regex '.$regex.'...');
-                    $sql = 'SELECT * from '.$tableName.' WHERE '.$columnName." RLIKE '{$regex}'";
-                    $this->log($sql);
+
                     $rsm = new ResultSetMappingBuilder($em);
                     $rsm->addRootEntityFromClassMetadata($class, '');
-                    $query = $em->createNativeQuery($sql, $rsm);
+                    $query = $em->createNativeQuery('SELECT * FROM :tableName WHERE :columnName RLIKE ":regex"', $rsm);
+                    $query->setParameters([
+                        'tableName' => $tableName,
+                        'columnName' => $columnName,
+                        'regex' => $regex,
+                    ]);
                     $data = $query->getResult();
                     $this->log(count($data).' results...');
                     $i = 0;

@@ -8,8 +8,6 @@ services:
         arguments:
             - '@security.token_storage'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
-            - '@form.factory'
-            - '@request_stack'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\TeamBundle\Manager\TeamManager'
             - '@translator'

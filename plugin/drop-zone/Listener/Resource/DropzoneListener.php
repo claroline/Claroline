@@ -19,10 +19,6 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Manager\TeamManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -32,15 +28,6 @@ class DropzoneListener
 
     /** @var DropzoneManager */
     private $dropzoneManager;
-
-    /** @var FormFactory */
-    private $formFactory;
-
-    /** @var Request */
-    private $request;
-
-    /** @var TwigEngine */
-    private $templating;
 
     /** @var SerializerProvider */
     private $serializer;
@@ -56,8 +43,6 @@ class DropzoneListener
      *
      * @param TokenStorageInterface $tokenStorage
      * @param DropzoneManager       $dropzoneManager
-     * @param FormFactory           $formFactory
-     * @param RequestStack          $requestStack
      * @param SerializerProvider    $serializer
      * @param TeamManager           $teamManager
      * @param TranslatorInterface   $translator
@@ -65,16 +50,12 @@ class DropzoneListener
     public function __construct(
         TokenStorageInterface $tokenStorage,
         DropzoneManager $dropzoneManager,
-        FormFactory $formFactory,
-        RequestStack $requestStack,
         SerializerProvider $serializer,
         TeamManager $teamManager,
         TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->dropzoneManager = $dropzoneManager;
-        $this->formFactory = $formFactory;
-        $this->request = $requestStack->getCurrentRequest();
         $this->serializer = $serializer;
         $this->teamManager = $teamManager;
         $this->translator = $translator;

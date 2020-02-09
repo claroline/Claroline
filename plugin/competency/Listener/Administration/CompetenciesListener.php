@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Listener\Administration;
 
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 
 /**
@@ -25,9 +25,9 @@ class CompetenciesListener
     }
 
     /**
-     * @param OpenAdministrationToolEvent $event
+     * @param OpenToolEvent $event
      */
-    public function onDisplayTool(OpenAdministrationToolEvent $event)
+    public function onDisplayTool(OpenToolEvent $event)
     {
         $this->competencyManager->ensureHasScale();
         $event->setData([]);
