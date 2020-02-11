@@ -10,7 +10,7 @@ const RoleTab = connect(
   state => ({
     path: toolSelectors.path(state),
     contextData: toolSelectors.contextData(state),
-    canCreate: communitySelectors.canCreate(state)
+    canCreate: communitySelectors.canCreateRole(state)
   }),
   dispatch => ({
     open(id = null, workspace) {

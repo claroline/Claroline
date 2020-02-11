@@ -35,6 +35,19 @@ const canCreate = createSelector(
   }
 )
 
+const canCreateRole = createSelector(
+  [securitySelectors.currentUser, toolSelectors.contextType, toolSelectors.contextData],
+  (currentUser, contextType, contextData) => {
+    if (contextType === toolConstants.TOOL_WORKSPACE) {
+      const permLevel = getPermissionLevel(currentUser, contextData)
+
+      return permLevel === constants.MANAGER || permLevel === constants.ADMIN
+    }
+
+    return false
+  }
+)
+
 const canRegister = createSelector(
   [securitySelectors.currentUser, toolSelectors.contextType, toolSelectors.contextData],
   (currentUser, contextType, contextData) => {
@@ -66,6 +79,7 @@ export const selectors = {
   loaded,
   restrictions,
   canCreate,
+  canCreateRole,
   canRegister,
   defaultRole
 }
