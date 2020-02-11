@@ -41,23 +41,19 @@ const Editor = props =>
             }, {
               name: 'publicDirectory',
               type: 'boolean',
-              label: trans('team_directory_public_access', {}, 'team'),
-              required: true
+              label: trans('team_directory_public_access', {}, 'team')
             }, {
               name: 'deletableDirectory',
               type: 'boolean',
-              label: trans('delete_team_directory', {}, 'team'),
-              required: true
+              label: trans('delete_team_directory', {}, 'team')
             }, {
               name: 'selfRegistration',
               type: 'boolean',
-              label: trans('team_self_registration', {}, 'team'),
-              required: true
+              label: trans('team_self_registration', {}, 'team')
             }, {
               name: 'selfUnregistration',
               type: 'boolean',
-              label: trans('team_self_unregistration', {}, 'team'),
-              required: true
+              label: trans('team_self_unregistration', {}, 'team')
             }
           ]
         }
