@@ -9,6 +9,7 @@ import {Menu} from '#/main/app/overlays/menu/components/menu'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
+import {route as userRoute} from '#/main/core/user/routing'
 
 import {constants} from '#/main/core/header/search/constants'
 
@@ -84,7 +85,7 @@ class SearchMenu extends Component {
                       primaryAction: {
                         type: LINK_BUTTON,
                         label: trans('open', {}, 'actions'),
-                        target: 'workspaces' === resultType ? workspaceRoute(result) : resourceRoute(result)
+                        target: 'workspaces' === resultType ? workspaceRoute(result) : ('resources' === resultType ? resourceRoute(result) : userRoute(result))
                       }
                     })
                   )}
