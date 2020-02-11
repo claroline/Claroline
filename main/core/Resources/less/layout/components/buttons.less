@@ -78,36 +78,7 @@ input[type=reset] {
 // ---
 
 .btn-link {
-    .button-base();
-
-    font-weight: normal;
-    border-radius: 0;
-
-    &,
-    &:active,
-    &.active,
-    &[disabled],
-    fieldset[disabled] & {
-        background-color: transparent;
-        .box-shadow(none);
-    }
-    &,
-    &:hover,
-    &:focus,
-    &:active {
-        border-color: transparent;
-    }
-    &:hover,
-    &:focus {
-        background-color: transparent;
-    }
-    &[disabled],
-    fieldset[disabled] & {
-        &:hover,
-        &:focus {
-            text-decoration: none;
-        }
-    }
+    .button-link-base();
 }
 
 // variants

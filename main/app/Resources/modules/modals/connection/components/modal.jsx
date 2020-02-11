@@ -109,7 +109,6 @@ class ConnectionModal extends Component {
               icon="fa fa-angle-double-left"
               label=""
               disabled={0 === this.state.currentSlide}
-              primary={true}
               callback={this.previous}
             />
           }
