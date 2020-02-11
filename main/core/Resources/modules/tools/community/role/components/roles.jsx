@@ -8,6 +8,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
+import {constants} from '#/main/core/user/constants'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 import {selectors} from '#/main/core/tools/community/role/store'
 
@@ -33,6 +34,19 @@ const RolesList = props =>
         label: trans('name'),
         displayed: true,
         primary: true
+      }, {
+        name: 'name',
+        type: 'string',
+        label: trans('code'),
+        displayed: false
+      }, {
+        name: 'type',
+        type: 'choice',
+        label: trans('type'),
+        options: {
+          choices: constants.ROLE_TYPES
+        },
+        displayed: false
       }, {
         name: 'restrictions.maxUsers',
         type: 'number',

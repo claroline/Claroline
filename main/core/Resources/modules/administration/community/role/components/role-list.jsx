@@ -12,16 +12,16 @@ const RoleList = {
   }),
   definition: [
     {
+      name: 'translationKey',
+      type: 'translation',
+      label: trans('name'),
+      displayed: true
+    }, {
       name: 'name',
       type: 'string',
       label: trans('code'),
       displayed: false,
       primary: true
-    }, {
-      name: 'translationKey',
-      type: 'translation',
-      label: trans('name'),
-      displayed: true
     }, {
       name: 'type',
       type: 'choice',

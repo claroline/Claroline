@@ -142,6 +142,11 @@ class RoleForm extends Component {
                 label: trans('name'),
                 required: true,
                 disabled: this.props.role.meta && this.props.role.meta.readOnly
+              }, {
+                name: 'name',
+                type: 'string',
+                label: trans('code'),
+                readOnly: true
               }
             ]
           }
