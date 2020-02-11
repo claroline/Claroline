@@ -29,7 +29,7 @@ class FinderProvider
     private $finders = [];
 
     /**
-     * Finder constructor.
+     * FinderProvider constructor.
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
@@ -155,9 +155,11 @@ class FinderProvider
         try {
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);
         } catch (FinderException $e) {
-            $data = $this->om->getRepository($class)->findBy($filters, null, 0 < $limit ? $limit : null, $page);
+            if ($count) {
+                return count($this->om->getRepository($class)->findBy($filters));
+            }
 
-            return $count ? count($data) : $data;
+            return $this->om->getRepository($class)->findBy($filters, null, 0 < $limit ? $limit : null, $page);
         }
     }
 
