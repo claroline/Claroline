@@ -34,8 +34,7 @@ const EditorMain = (props) =>
           {
             name: 'autoDownload',
             label: trans('auto_download'),
-            type: 'boolean',
-            required: true
+            type: 'boolean'
           }, {
             name: 'commentsActivated',
             label: trans('activate_comments'),
