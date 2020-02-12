@@ -67,7 +67,6 @@ abstract class AbstractCrudController extends AbstractApiController
         $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->routerFinder = $container->get('Claroline\AppBundle\Routing\Finder');
         $this->routerDocumentator = $container->get('Claroline\AppBundle\Routing\Documentator');
-        $this->options = $this->getOptions();
     }
 
     //these are the injectors you should use
@@ -84,6 +83,7 @@ abstract class AbstractCrudController extends AbstractApiController
     public function setCrud(Crud $crud)
     {
         $this->crud = $crud;
+        $this->options = $this->getOptions(); // TODO : remove me.
     }
 
     public function setObjectManager(ObjectManager $om)

@@ -26,6 +26,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class BadgeClassSerializer
 {
@@ -114,7 +115,6 @@ class BadgeClassSerializer
             'duration' => $badge->getDurationValidation(),
             'image' => $image ? $this->publicFileSerializer->serialize($image) : null,
             'issuer' => $this->organizationSerializer->serialize($badge->getIssuer() ? $badge->getIssuer() : $this->organizationManager->getDefault(true)),
-            //only in non list mode I guess
             'tags' => $this->serializeTags($badge),
         ];
 
@@ -133,9 +133,9 @@ class BadgeClassSerializer
         } else {
             $data['issuingMode'] = $badge->getIssuingMode();
             $data['meta'] = [
-               'created' => DateNormalizer::normalize($badge->getCreated()),
-               'updated' => DateNormalizer::normalize($badge->getUpdated()),
-               'enabled' => $badge->getEnabled(),
+                'created' => DateNormalizer::normalize($badge->getCreated()),
+                'updated' => DateNormalizer::normalize($badge->getUpdated()),
+                'enabled' => $badge->getEnabled(),
             ];
             $data['restrictions'] = [
                 'hideRecipients' => $badge->getHideRecipients(),
@@ -201,7 +201,7 @@ class BadgeClassSerializer
         }
 
         if (isset($data['tags'])) {
-            $this->deserializeTags($badge, $data['tags'], $options);
+            $this->deserializeTags($badge, $data['tags']);
         }
 
         if (isset($data['allowedUsers'])) {
@@ -229,34 +229,40 @@ class BadgeClassSerializer
 
     private function deserializeRules(array $rules, BadgeClass $badge)
     {
+        /** @var Rule[] $existingRules */
         $existingRules = $badge->getRules();
 
         $ids = [];
-        foreach ($rules as $rule) {
-            if (!isset($rule['id'])) {
-                /** @var Rule $entity */
-                $entity = $this->ruleSerializer->deserialize($rule, new Rule());
-            } else {
-                /** @var Rule $entity */
-                $entity = $this->om->getObject($rule, Rule::class);
-                $entity = $this->ruleSerializer->deserialize($rule, $entity);
+        foreach ($rules as $ruleData) {
+            $existingRule = null;
+            if (isset($ruleData['id'])) {
+                foreach ($existingRules as $rule) {
+                    if ($rule->getUuid() === $ruleData['id']) {
+                        $existingRule = $rule;
+                        break;
+                    }
+                }
             }
 
-            $entity->setBadge($badge);
-            $this->om->persist($entity);
+            if (empty($existingRule)) {
+                $existingRule = new Rule();
+            }
 
-            $ids[] = $entity->getUuid();
+            $rule = $this->ruleSerializer->deserialize($ruleData, $existingRule);
+            $badge->addRule($rule);
+
+            $ids[] = $rule->getUuid();
         }
 
-        // removes steps which no longer exists
+        // removes rules which no longer exists
         foreach ($existingRules as $rule) {
             if (!in_array($rule->getUuid(), $ids)) {
-                $rule->setBadge(null);
+                $badge->removeRule($rule);
             }
         }
     }
 
-    private function deserializeTags(BadgeClass $badge, array $tags = [], array $options = [])
+    private function deserializeTags(BadgeClass $badge, array $tags = [])
     {
         $event = new GenericDataEvent([
             'tags' => $tags,
@@ -294,7 +300,7 @@ class BadgeClassSerializer
         $isOrganizationManager = false;
         $allowedUserIds = [];
 
-        $roles = array_map(function ($role) {
+        $roles = array_map(function (Role $role) {
             return $role->getRole();
         }, $this->tokenStorage->getToken()->getRoles());
 
@@ -318,7 +324,7 @@ class BadgeClassSerializer
                 case BadgeClass::ISSUING_MODE_GROUP:
                     $users = [];
 
-                    foreach ($this->getAllowedIssuersGroups() as $group) {
+                    foreach ($badge->getAllowedIssuersGroups() as $group) {
                         foreach ($group->getUsers() as $user) {
                             $users[$user->getId()] = $user;
                         }

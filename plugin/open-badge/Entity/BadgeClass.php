@@ -421,6 +421,28 @@ class BadgeClass
     }
 
     /**
+     * @param Rule $rule
+     */
+    public function addRule(Rule $rule)
+    {
+        if (!$this->rules->contains($rule)) {
+            $this->rules->add($rule);
+            $rule->setBadge($this);
+        }
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    public function removeRule(Rule $rule)
+    {
+        if ($this->rules->contains($rule)) {
+            $this->rules->removeElement($rule);
+            $rule->setBadge(null);
+        }
+    }
+
+    /**
      * @return Assertion[]|ArrayCollection
      */
     public function getAssertions()
