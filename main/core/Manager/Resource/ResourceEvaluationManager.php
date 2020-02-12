@@ -128,8 +128,10 @@ class ResourceEvaluationManager
         }
         $this->persistResourceEvaluation($evaluation);
         $this->updateResourceUserEvaluation($evaluation, $forced);
-        $this->eventDispatcher->dispatch('resource_evaluation', new ResourceEvaluationEvent($resourceUserEvaluation));
+
         $this->om->endFlushSuite();
+
+        $this->eventDispatcher->dispatch('resource_evaluation', new ResourceEvaluationEvent($resourceUserEvaluation));
 
         return $evaluation;
     }
@@ -298,6 +300,8 @@ class ResourceEvaluationManager
             $rue->setNbAttempts($nbAttempts);
         }
         $this->persistResourceUserEvaluation($rue);
+
+        return $rue;
     }
 
     /**

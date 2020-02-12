@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
+import classes from 'classnames'
 import isEqual from 'lodash/isEqual'
 
 import {Heading} from '#/main/core/layout/components/heading'
@@ -152,7 +153,7 @@ class ListData extends Component {
     }
 
     return (
-      <div className="data-list">
+      <div className={classes('data-list', this.props.className)}>
         {this.props.title &&
           <Heading level={this.props.level} displayLevel={this.props.displayLevel}>
             {this.props.title}
@@ -206,6 +207,7 @@ class ListData extends Component {
 ListData.propTypes = {
   level: T.number,
   displayLevel: T.number,
+  className: T.string,
   title: T.string,
   loading: T.bool,
 

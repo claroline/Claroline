@@ -146,7 +146,7 @@ class EvaluationManager
             $progressionMax = count($resources);
 
             // if there is a triggering resource evaluation checks if is part of the workspace requirements
-            // if not, no evalution is computed
+            // if not, no evaluation is computed
             if ($currentRue) {
                 $currentResourceId = $currentRue->getResourceNode()->getUuid();
 

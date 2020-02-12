@@ -304,9 +304,6 @@ class AttemptManager
         $score = $this->paperManager->calculateScore($paper);
         $paper->setScore($score);
 
-        if ($generateEvaluation) {
-            $evaluation = $this->paperManager->generateResourceEvaluation($paper, $finished);
-        }
         $this->om->persist($paper);
         $this->om->endFlushSuite();
 
@@ -315,6 +312,8 @@ class AttemptManager
         if ($generateEvaluation) {
             $user = $paper->getUser();
 
+            $evaluation = $this->paperManager->generateResourceEvaluation($paper, $finished);
+
             $event = new LogExerciseEvent('resource-ujm_exercise-paper-end', $paper->getExercise(), [
               'user' => $user ?
                ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
@@ -322,7 +321,7 @@ class AttemptManager
             $this->eventDispatcher->dispatch('log', $event);
 
             $event = new GenericDataEvent($evaluation);
-            $this->eventDispatcher->dispatch('resource.score_evaluation.created', $event);
+            $this->eventDispatcher->dispatch('resource.score_evaluation.created', $event); // TODO : use standard `resource_evaluation` event (it's only used in path)
         }
     }
 

@@ -11,3 +11,7 @@ services:
           - '@claroline.manager.workspace_manager'
           - '%claroline.param.web_directory%'
           - '@templating'
+
+    Claroline\OpenBadgeBundle\Manager\RuleManager:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Library\Configuration;
+namespace Claroline\OpenBadgeBundle\Configuration;
 
 use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 
@@ -17,12 +17,10 @@ class PlatformDefaults implements ParameterProviderInterface
 {
     public function getDefaultParameters()
     {
-        $parameters = [
-          'badges' => [
-            'enable_default' => true,
-          ],
+        return [
+            'badges' => [
+                'enable_default' => true,
+            ],
         ];
-
-        return $parameters;
     }
 }

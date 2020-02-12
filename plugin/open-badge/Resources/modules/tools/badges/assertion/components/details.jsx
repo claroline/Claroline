@@ -30,7 +30,8 @@ const AssertionDetailsComponent = (props) =>
       icon: 'fa fa-fw fa-arrow-left',
       label: trans('back'),
       tooltip: 'bottom',
-      target: `${props.path}/badges/${get(props.assertion, 'badge.id')}`
+      target: `${props.path}/badges/${get(props.assertion, 'badge.id')}`,
+      exact: true
     }}
     actions={[
       {
@@ -50,6 +51,7 @@ const AssertionDetailsComponent = (props) =>
           return (
             <Fragment>
               <ListData
+                className="component-container"
                 name={selectors.STORE_NAME + '.badges.assertion.evidences'}
                 fetch={{
                   url: ['apiv2_assertion_evidences', {assertion: props.assertion.id}],
@@ -59,7 +61,8 @@ const AssertionDetailsComponent = (props) =>
                   type: MODAL_BUTTON,
                   modal: [MODAL_BADGE_EVIDENCE, {
                     evidence: row,
-                    assertion: props.assertion
+                    assertion: props.assertion,
+                    disabled: get(props.assertion.badge, 'permissions.assign')
                   }]
                 })}
                 delete={{
@@ -68,10 +71,18 @@ const AssertionDetailsComponent = (props) =>
                 definition={[
                   {
                     name: 'name',
-                    type: 'string',
+                    type: 'translation',
                     label: trans('name'),
                     displayed: true,
-                    primary: true
+                    primary: true,
+                    options: {
+                      domain: 'badge'
+                    }
+                  }, {
+                    name: 'narrative',
+                    type: 'string',
+                    label: trans('description'),
+                    displayed: true
                   }
                 ]}
               />

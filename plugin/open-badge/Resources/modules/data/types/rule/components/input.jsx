@@ -56,13 +56,13 @@ class RuleInput extends Component {
                 [RESOURCE_PASSED]: trans(RESOURCE_PASSED, {}, 'badge'),
                 [RESOURCE_SCORE_ABOVE]: trans(RESOURCE_SCORE_ABOVE, {}, 'badge'),
                 [RESOURCE_COMPLETED_ABOVE]: trans(RESOURCE_COMPLETED_ABOVE, {}, 'badge'),
-                //[WORKSPACE_PASSED]: trans(WORKSPACE_PASSED),
-                //[WORKSPACE_SCORE_ABOVE]: trans(WORKSPACE_SCORE_ABOVE),
-                //[WORKSPACE_COMPLETED_ABOVE]: trans(WORKSPACE_COMPLETED_ABOVE),
+                //[WORKSPACE_PASSED]: trans(WORKSPACE_PASSED, {}, 'badge'),
+                //[WORKSPACE_SCORE_ABOVE]: trans(WORKSPACE_SCORE_ABOVE, {}, 'badge'),
+                //[WORKSPACE_COMPLETED_ABOVE]: trans(WORKSPACE_COMPLETED_ABOVE, {}, 'badge'),
                 [RESOURCE_PARTICIPATED]: trans(RESOURCE_PARTICIPATED, {}, 'badge'),
                 [IN_GROUP]: trans(IN_GROUP, {}, 'badge'),
                 [IN_ROLE]: trans(IN_ROLE, {}, 'badge')
-                //[PROFILE_COMPLETED]: trans(PROFILE_COMPLETED)
+                //[PROFILE_COMPLETED]: trans(PROFILE_COMPLETED, {}, 'badge')
               }
             }
             onChange={(value) => {

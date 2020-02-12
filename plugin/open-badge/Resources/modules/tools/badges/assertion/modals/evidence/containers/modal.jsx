@@ -10,7 +10,7 @@ import {reducer, selectors} from '#/plugin/open-badge/tools/badges/assertion/mod
 const EvidenceModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      isNew: formSelectors.isNew(formSelectors.isNew(state, selectors.STORE_NAME))
+      isNew: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
       initForm(evidence = null) {

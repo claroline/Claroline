@@ -4,5 +4,5 @@ services:
         autoconfigure: false #default should be true now
         public: false #default should be false now
 
-    Claroline\OpenBadgeBundle\Library\Configuration\PlatformDefaults:
+    Claroline\OpenBadgeBundle\Configuration\PlatformDefaults:
         tags: [claroline.configuration]

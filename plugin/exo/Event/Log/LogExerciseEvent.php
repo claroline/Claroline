@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\Exercise;
 class LogExerciseEvent extends AbstractLogResourceEvent
 {
     /**
+     * @param string   $action
      * @param Exercise $exercise
      * @param array    $details
      */

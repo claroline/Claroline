@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\User;

@@ -7,7 +7,6 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-import {ResourceCard} from '#/main/core/resource/components/card'
 
 import {selectors} from '#/plugin/open-badge/tools/badges/assertion/modals/evidence/store/selectors'
 
@@ -22,6 +21,7 @@ const EvidenceModal = props =>
     <FormData
       name={selectors.STORE_NAME}
       target={['apiv2_evidence_create']}
+      disabled={props.disabled}
       sections={[
         {
           title: trans('general'),
@@ -65,6 +65,7 @@ const EvidenceModal = props =>
 EvidenceModal.propTypes = {
   assertion: T.object,
   evidence: T.object,
+  disabled: T.bool,
 
   // from store
   isNew: T.bool.isRequired,
@@ -73,6 +74,10 @@ EvidenceModal.propTypes = {
 
   // from modal
   fadeModal: T.func.isRequired
+}
+
+EvidenceModal.defaultProps = {
+  disabled: true
 }
 
 export {
