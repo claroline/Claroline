@@ -36,7 +36,7 @@ const CurrentStep = props => {
   return (
     <section className="current-step">
       {props.showTitle &&
-        <h3 className="h2 h-first">
+        <h3 className="h2 step-title">
           {numbering &&
             <span className="h-numbering">{numbering}</span>
           }

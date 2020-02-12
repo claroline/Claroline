@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 // TODO : replace all button by #/main/app/action/components/button
 
 const PreviousButton = props =>
-  <button className="btn btn-previous btn-default" onClick={props.onClick}>
+  <button className="btn btn-previous btn-default btn-emphasis" onClick={props.onClick}>
     <span className="fa fa-fw fa-angle-double-left" />
     {trans('previous')}
   </button>
@@ -17,7 +17,7 @@ PreviousButton.propTypes = {
 }
 
 const NextButton = props =>
-  <button className="btn btn-next btn-default" onClick={props.onClick}>
+  <button className="btn btn-next btn-default btn-emphasis" onClick={props.onClick}>
     {trans('next')}
     <span className="fa fa-fw fa-angle-double-right" />
   </button>
@@ -27,7 +27,7 @@ NextButton.propTypes = {
 }
 
 const ValidateButton = props =>
-  <button className="btn btn-next btn-validate btn-default" onClick={props.onClick}>
+  <button className="btn btn-next btn-validate btn-default btn-emphasis" onClick={props.onClick}>
     {trans('validate')}
     <span className="fa fa-fw fa-angle-double-right" />
   </button>
@@ -37,7 +37,7 @@ ValidateButton.propTypes = {
 }
 
 const SubmitButton = props =>
-  <button className="btn btn-submit btn-success" onClick={props.onClick}>
+  <button className="btn btn-submit btn-success btn-emphasis" onClick={props.onClick}>
     <span className="fa fa-fw fa-check" />
     {trans('validate')}
   </button>
@@ -47,7 +47,7 @@ SubmitButton.propTypes = {
 }
 
 const FinishButton = props =>
-  <button className="btn btn-finish btn-primary" onClick={props.onClick}>
+  <button className="btn btn-finish btn-primary btn-emphasis" onClick={props.onClick}>
     <span className="fa fa-fw fa-sign-out" />
     {trans('finish', {}, 'actions')}
   </button>
@@ -150,7 +150,7 @@ NotLastQuestionButton.propTypes = {
 }
 
 const PlayerNav = props =>
-  <nav className="player-nav">
+  <nav className="player-nav component-container">
     <div className="backward">
       {(props.previous) &&
         <PreviousButton onClick={() => props.navigateToAndValidate(props.previous)} />

@@ -44,4 +44,16 @@
       }
     }
   }
+
+  .progress + .current-step {
+    .step-title {
+      margin-top: @line-height-computed - 4px; // 4px is to absorb progress bar height
+    }
+  }
+
+  .quiz-gauges-container + .current-step {
+    .step-title {
+      margin-top: 0;
+    }
+  }
 }
