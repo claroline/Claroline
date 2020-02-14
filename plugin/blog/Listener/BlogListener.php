@@ -3,7 +3,7 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;

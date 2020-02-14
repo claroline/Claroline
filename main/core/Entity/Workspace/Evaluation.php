@@ -12,8 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
@@ -30,7 +29,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * )
  * @DoctrineAssert\UniqueEntity({"workspace", "user"})
  */
-class Evaluation extends AbstractEvaluation
+class Evaluation extends AbstractUserEvaluation
 {
     use Uuid;
 
@@ -39,17 +38,6 @@ class Evaluation extends AbstractEvaluation
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
     protected $workspace;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
-     */
-    protected $user;
-
-    /**
-     * @ORM\Column(name="user_name")
-     */
-    protected $userName;
 
     /**
      * @ORM\Column(name="workspace_code")
@@ -75,38 +63,6 @@ class Evaluation extends AbstractEvaluation
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @param string $userName
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
     }
 
     /**

@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
@@ -310,18 +309,13 @@ class AttemptManager
         $this->paperManager->checkPaperEvaluated($paper);
 
         if ($generateEvaluation) {
+            $this->paperManager->generateResourceEvaluation($paper, $finished);
+
             $user = $paper->getUser();
-
-            $evaluation = $this->paperManager->generateResourceEvaluation($paper, $finished);
-
             $event = new LogExerciseEvent('resource-ujm_exercise-paper-end', $paper->getExercise(), [
-              'user' => $user ?
-               ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
+                'user' => $user ? ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
             ]);
             $this->eventDispatcher->dispatch('log', $event);
-
-            $event = new GenericDataEvent($evaluation);
-            $this->eventDispatcher->dispatch('resource.score_evaluation.created', $event); // TODO : use standard `resource_evaluation` event (it's only used in path)
         }
     }
 

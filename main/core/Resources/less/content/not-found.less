@@ -8,12 +8,12 @@
     align-items: center;
     justify-content: center;
 
-    color: @gray;
+    color: @loader-color;
     font-family: @headings-font-family;
     font-size: 18px;
     font-weight: bold;
     padding: 15px;
-    background: @gray-lighter;
+    background: @loader-bg;
     border-radius: @border-radius-base;
 
     .content-not-found-sizing-variant(120px);
@@ -42,7 +42,7 @@
     align-items: center;
     justify-content: center;
 
-    background: @gray-lighter;
+    background: @loader-bg;
     border-radius: 50%;
     margin-bottom: @component-margin-bottom;
 
@@ -60,11 +60,11 @@
 .compass {
     overflow: visible !important;
 
-    .compass-border { stroke: #585858; }
-    .compass-fill { fill: #585858; }
+    .compass-border { stroke: @loader-color; }
+    .compass-fill { fill: @loader-color; }
 
-    .primary   .compass-arrow { fill: lighten(@brand-primary, 35%); }
-    .secondary .compass-arrow { fill: lighten(@brand-secondary, 35%); }
+    .primary   .compass-arrow { fill: @loader-primary; }
+    .secondary .compass-arrow { fill: @loader-secondary; }
 }
 
 // mixins

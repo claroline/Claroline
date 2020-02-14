@@ -12,10 +12,11 @@
 namespace Claroline\CoreBundle\Listener\Workspace;
 
 use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Claroline\CoreBundle\Event\Log\LogRoleUnsubscribeEvent;
-use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
+use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 
 class EvaluationListener
@@ -34,10 +35,11 @@ class EvaluationListener
     }
 
     /**
-     * @param ResourceEvaluationEvent $event
+     * @param UserEvaluationEvent $event
      */
-    public function onResourceEvaluation(ResourceEvaluationEvent $event)
+    public function onResourceEvaluation(UserEvaluationEvent $event)
     {
+        /** @var ResourceUserEvaluation $resourceUserEvaluation */
         $resourceUserEvaluation = $event->getEvaluation();
         $resourceNode = $resourceUserEvaluation->getResourceNode();
         $workspace = $resourceNode->getWorkspace();

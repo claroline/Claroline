@@ -12,14 +12,14 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
+use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -131,7 +131,7 @@ class ResourceEvaluationManager
 
         $this->om->endFlushSuite();
 
-        $this->eventDispatcher->dispatch('resource_evaluation', new ResourceEvaluationEvent($resourceUserEvaluation));
+        $this->eventDispatcher->dispatch('resource_evaluation', new UserEvaluationEvent($resourceUserEvaluation));
 
         return $evaluation;
     }
@@ -203,7 +203,7 @@ class ResourceEvaluationManager
                     $rue->setProgressionMax($data['progressionMax']);
                 }
             } else {
-                $newProgresssion = empty($data['progressionMax']) ?
+                $newProgression = empty($data['progressionMax']) ?
                     $data['progression'] :
                     $data['progression'] / $data['progressionMax'];
 
@@ -211,7 +211,7 @@ class ResourceEvaluationManager
                 $rueProgressionMax = $rue->getProgressionMax();
                 $oldProgression = empty($rueProgressionMax) ? $rueProgression : $rueProgression / $rueProgressionMax;
 
-                if (is_null($oldProgression) || $newProgresssion >= $oldProgression) {
+                if (is_null($oldProgression) || $newProgression >= $oldProgression) {
                     $rue->setProgression($data['progression']);
 
                     if (isset($data['progressionMax'])) {
@@ -240,6 +240,7 @@ class ResourceEvaluationManager
             ++$nbOpenings;
             $rue->setNbOpenings($nbOpenings);
         }
+
         $this->persistResourceUserEvaluation($rue);
     }
 
@@ -344,13 +345,15 @@ class ResourceEvaluationManager
      *
      * @param ResourceNode $node
      * @param User         $user
-     * @param int          $duration
+     *
+     * @return int
      */
     public function computeDurationForResourceEvaluation(ResourceNode $node, User $user)
     {
         $this->om->startFlushSuite();
 
         $resUserEval = $this->getResourceUserEvaluation($node, $user);
+        /** @var LogConnectResource[] $resourceLogs */
         $resourceLogs = $this->logConnectResource->findBy(['resource' => $node, 'user' => $user]);
         $duration = 0;
 

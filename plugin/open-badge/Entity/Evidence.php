@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,37 +25,49 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Evidence
 {
-    use Uuid;
     use Id;
+    use Uuid;
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     private $narrative;
 
     /**
      * @ORM\Column()
+     *
+     * @var string
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     private $description;
 
     /**
      * @ORM\Column(nullable=true)
+     *
+     * @var string
      */
     private $genre;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     private $audience;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", inversedBy="evidences")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var Assertion
      */
     private $assertion;
 
@@ -64,6 +77,13 @@ class Evidence
      * @var ResourceUserEvaluation
      */
     private $resourceEvidence;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Evaluation")
+     *
+     * @var Evaluation
+     */
+    private $workspaceEvidence;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule")
@@ -80,6 +100,9 @@ class Evidence
      */
     private $user;
 
+    /**
+     * Evidence constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -88,7 +111,7 @@ class Evidence
     /**
      * Get the value of Narrative.
      *
-     * @return mixed
+     * @return string
      */
     public function getNarrative()
     {
@@ -98,7 +121,7 @@ class Evidence
     /**
      * Set the value of Narrative.
      *
-     * @param mixed narrative
+     * @param string $narrative
      *
      * @return self
      */
@@ -112,7 +135,7 @@ class Evidence
     /**
      * Get the value of Name.
      *
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -122,7 +145,7 @@ class Evidence
     /**
      * Set the value of Name.
      *
-     * @param mixed name
+     * @param string $name
      *
      * @return self
      */
@@ -136,7 +159,7 @@ class Evidence
     /**
      * Get the value of Description.
      *
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {
@@ -146,7 +169,7 @@ class Evidence
     /**
      * Set the value of Description.
      *
-     * @param mixed description
+     * @param string $description
      *
      * @return self
      */
@@ -160,7 +183,7 @@ class Evidence
     /**
      * Get the value of Genre.
      *
-     * @return mixed
+     * @return string
      */
     public function getGenre()
     {
@@ -170,7 +193,7 @@ class Evidence
     /**
      * Set the value of Genre.
      *
-     * @param mixed genre
+     * @param string $genre
      *
      * @return self
      */
@@ -184,7 +207,7 @@ class Evidence
     /**
      * Get the value of Audience.
      *
-     * @return mixed
+     * @return string
      */
     public function getAudience()
     {
@@ -194,7 +217,7 @@ class Evidence
     /**
      * Set the value of Audience.
      *
-     * @param mixed audience
+     * @param string $audience
      *
      * @return self
      */
@@ -208,7 +231,7 @@ class Evidence
     /**
      * Get the value of Assertion.
      *
-     * @return mixed
+     * @return Assertion
      */
     public function getAssertion()
     {
@@ -218,42 +241,76 @@ class Evidence
     /**
      * Set the value of Assertion.
      *
-     * @param mixed assertion
+     * @param Assertion assertion
      *
      * @return self
      */
-    public function setAssertion($assertion)
+    public function setAssertion(Assertion $assertion)
     {
         $this->assertion = $assertion;
 
         return $this;
     }
 
-    public function setResourceEvidence($resourceEvidence)
+    /**
+     * @param ResourceUserEvaluation $resourceEvidence
+     */
+    public function setResourceEvidence(ResourceUserEvaluation $resourceEvidence)
     {
         $this->resourceEvidence = $resourceEvidence;
     }
 
+    /**
+     * @return ResourceUserEvaluation
+     */
     public function getResourceEvidence()
     {
         return $this->resourceEvidence;
     }
 
+    /**
+     * @param Evaluation $workspaceEvidence
+     */
+    public function setWorkspaceEvidence(Evaluation $workspaceEvidence)
+    {
+        $this->workspaceEvidence = $workspaceEvidence;
+    }
+
+    /**
+     * @return Evaluation
+     */
+    public function getWorkspaceEvidence()
+    {
+        return $this->workspaceEvidence;
+    }
+
+    /**
+     * @param Rule $rule
+     */
     public function setRule(Rule $rule)
     {
         $this->rule = $rule;
     }
 
+    /**
+     * @return Rule
+     */
     public function getRule()
     {
         return $this->rule;
     }
 
+    /**
+     * @param User $user
+     */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;

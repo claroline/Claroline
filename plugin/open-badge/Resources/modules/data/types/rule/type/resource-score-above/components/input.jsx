@@ -1,41 +1,56 @@
-import React, {Component, Fragment} from 'react'
+import React, {Fragment} from 'react'
+import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {FormGroup} from '#/main/app/content/form/components/group'
 
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceInput} from '#/main/core/data/types/resource/components/input'
 import {NumberInput} from '#/main/app/data/types/number/components/input'
 
-// todo : fix responsive (incorrect margin bottom)
 // todo : manages errors
 
-class ResourceScoreAboveInput extends Component {
-  constructor(props) {
-    super(props)
-  }
+const ResourceScoreAboveInput = (props) =>
+  <Fragment>
+    <FormGroup
+      id={`${props.id}-resource`}
+      label={trans('resource')}
+    >
+      <ResourceInput
+        id={`${props.id}-resource`}
+        disabled={props.disabled}
+        onChange={(resource) => props.onChange({resource: resource})}
+        value={get(props.value, 'resource')}
+        size={props.size}
+      />
+    </FormGroup>
 
-  render() {
-    return (
-      <Fragment>
-        <ResourceInput
-          onChange={(value) => this.props.onChange({resource: value})}
-          value={this.props.value.resource}
-        />
-        <NumberInput
-          onChange={(value) => this.props.onChange({value})}
-          min={0}
-          value={this.props.value.value}
-        />
-      </Fragment>
-    )
-  }
-}
+    <FormGroup
+      id={`${props.id}-score`}
+      className="form-last"
+      label={trans('score')}
+    >
+      <NumberInput
+        id={`${props.id}-score`}
+        disabled={props.disabled}
+        onChange={(value) => props.onChange({value: value})}
+        min={0}
+        value={get(props.value, 'value')}
+        size={props.size}
+      />
+    </FormGroup>
+  </Fragment>
 
 implementPropTypes(ResourceScoreAboveInput, FormFieldTypes, {
   // more precise value type
-  value: T.arrayOf(T.string)
-
-
+  value: T.shape({
+    resource: T.shape(
+      ResourceNodeTypes.propTypes
+    ),
+    value: T.number
+  })
 }, {
   value: {resource: null, value: null}
 })

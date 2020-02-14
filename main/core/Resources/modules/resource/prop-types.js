@@ -1,5 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
+import {User} from '#/main/core/user/prop-types'
+
 const ResourceType = {
   propTypes: {
     name: T.string.isRequired,
@@ -48,14 +50,20 @@ const ResourceNode = {
      */
     meta: T.shape({
       type: T.string.isRequired,
+      className: T.string,
       mimeType: T.string.isRequired,
+      active: T.bool,
       published: T.bool.isRequired,
       description: T.string,
       views: T.number,
-      creator: T.shape({
-
-      }),
-      commentsActivated: T.bool.isRequired
+      creator: T.shape(
+        User.propTypes
+      ),
+      created: T.string,
+      updated: T.string,
+      commentsActivated: T.bool,
+      authors: T.string,
+      license: T.string
     }),
 
     /**
@@ -96,6 +104,7 @@ const ResourceNode = {
   defaultProps: {
     meta: {
       published: false,
+      active: true,
       views: 0
     },
     display: {

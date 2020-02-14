@@ -1,33 +1,29 @@
-import React, {Component} from 'react'
+import React from 'react'
 
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {GroupInput} from '#/main/core/data/types/group/components/input'
+import {Group as GroupTypes} from '#/main/core/user/prop-types'
 
-// todo : fix responsive (incorrect margin bottom)
 // todo : manages errors
 
-class InGroupInput extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <GroupInput
-        onChange={(value) => this.props.onChange(value)}
-        value={this.props.value}
-      />
-    )
-  }
-}
+const InGroupInput = (props) =>
+  <FormGroup
+    id={props.id}
+    className="form-last"
+    label={trans('group')}
+  >
+    <GroupInput {...props} />
+  </FormGroup>
 
 implementPropTypes(InGroupInput, FormFieldTypes, {
   // more precise value type
-  value: T.arrayOf(T.string)
-
-
+  value: T.shape(
+    GroupTypes.proptTypes
+  )
 }, {
   value: null
 })

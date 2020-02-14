@@ -9,23 +9,34 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Resource;
+namespace Claroline\CoreBundle\Event;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event dispatched when an activity evaluation is created or updated.
  */
-class ResourceEvaluationEvent extends Event
+class UserEvaluationEvent extends Event
 {
+    /** @var AbstractUserEvaluation */
     private $evaluation;
 
-    public function __construct(ResourceUserEvaluation $evaluation)
+    /**
+     * ResourceEvaluationEvent constructor.
+     *
+     * @param AbstractUserEvaluation $evaluation
+     */
+    public function __construct(AbstractUserEvaluation $evaluation)
     {
         $this->evaluation = $evaluation;
     }
 
+    /**
+     * Get the current evaluation.
+     *
+     * @return AbstractUserEvaluation
+     */
     public function getEvaluation()
     {
         return $this->evaluation;

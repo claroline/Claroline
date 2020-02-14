@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;

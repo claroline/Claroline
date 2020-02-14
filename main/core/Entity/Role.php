@@ -320,6 +320,9 @@ class Role extends BaseRole
         $this->users = new ArrayCollection();
     }
 
+    /**
+     * @return ArrayCollection|Group[]
+     */
     public function getGroups()
     {
         return $this->groups;

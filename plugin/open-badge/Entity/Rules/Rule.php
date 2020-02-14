@@ -30,6 +30,7 @@ class Rule
     const WORKSPACE_PASSED = 'workspace_passed';
     const WORKSPACE_SCORE_ABOVE = 'workspace_score_above';
     const WORKSPACE_COMPLETED_ABOVE = 'workspace_completed_above';
+    const WORKSPACE_PARTICIPATED = 'workspace_participated';
 
     const IN_GROUP = 'in_group';
     const IN_ROLE = 'in_role';

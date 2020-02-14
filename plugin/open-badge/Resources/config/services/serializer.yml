@@ -55,6 +55,7 @@ services:
         arguments:
             - '@router'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\HostedBadgeSerializer: ~
 

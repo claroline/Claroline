@@ -7,11 +7,12 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -147,11 +148,14 @@ class PathListener
     /**
      * Fired when a Resource Evaluation with a score is created.
      *
-     * @param GenericDataEvent $event
+     * @param UserEvaluationEvent $event
      */
-    public function onScoreEvaluationCreated(GenericDataEvent $event)
+    public function onEvaluation(UserEvaluationEvent $event)
     {
-        $this->userProgressionManager->handleResourceEvaluation($event->getData());
+        /** @var ResourceUserEvaluation $evaluation */
+        $evaluation = $event->getEvaluation();
+
+        $this->userProgressionManager->handleResourceEvaluation($evaluation);
     }
 
     /**

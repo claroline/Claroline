@@ -13,15 +13,15 @@ namespace Claroline\OpenBadgeBundle\Listener\Rules;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
-use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ResourceEvaluationListener
+class WorkspaceEvaluationListener
 {
     /** @var ObjectManager */
     private $om;
@@ -52,27 +52,27 @@ class ResourceEvaluationListener
     /**
      * @param UserEvaluationEvent $event
      */
-    public function onResourceEvaluation(UserEvaluationEvent $event)
+    public function onWorkspaceEvaluation(UserEvaluationEvent $event)
     {
-        /** @var ResourceUserEvaluation $evaluation */
+        /** @var Evaluation $evaluation */
         $evaluation = $event->getEvaluation();
 
         /** @var Rule[] $rules */
-        $rules = $this->om->getRepository(Rule::class)->findBy(['node' => $evaluation->getResourceNode()]);
+        $rules = $this->om->getRepository(Rule::class)->findBy(['workspace' => $evaluation->getWorkspace()]);
 
         foreach ($rules as $rule) {
             switch ($rule->getAction()) {
-                case Rule::RESOURCE_PASSED:
-                    $this->awardResourcePassed($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_PASSED:
+                    $this->awardWorkspacePassed($evaluation->getUser(), $evaluation, $rule);
                     break;
-                case Rule::RESOURCE_SCORE_ABOVE:
-                    $this->awardResourceScoreAbove($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_SCORE_ABOVE:
+                    $this->awardWorkspaceScoreAbove($evaluation->getUser(), $evaluation, $rule);
                     break;
-                case Rule::RESOURCE_COMPLETED_ABOVE:
-                    $this->awardResourceCompletedAbove($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_COMPLETED_ABOVE:
+                    $this->awardWorkspaceCompletedAbove($evaluation->getUser(), $evaluation, $rule);
                     break;
-                case Rule::RESOURCE_PARTICIPATED:
-                    $this->awardResourceParticipated($evaluation->getUser(), $evaluation, $rule);
+                case Rule::WORKSPACE_PARTICIPATED:
+                    $this->awardWorkspaceParticipated($evaluation->getUser(), $evaluation, $rule);
                     break;
                 default:
                     break;
@@ -80,21 +80,21 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourcePassed(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspacePassed(User $user, Evaluation $evaluation, Rule $rule)
     {
         if (AbstractEvaluation::STATUS_PRIORITY[AbstractEvaluation::STATUS_PASSED] <= AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
             $evidence = new Evidence();
             $now = new \DateTime();
             $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_resource_passed',
+                'evidence_narrative_workspace_passed',
                 [
                     '%date%' => $now->format('Y-m-d H:i:s'),
                 ],
                 'badge'
             ));
             $evidence->setRule($rule);
-            $evidence->setName(Rule::RESOURCE_PASSED);
-            $evidence->setResourceEvidence($evaluation);
+            $evidence->setName(Rule::WORKSPACE_PASSED);
+            $evidence->setWorkspaceEvidence($evaluation);
             $evidence->setUser($user);
 
             $this->om->persist($evidence);
@@ -104,22 +104,22 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourceScoreAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspaceScoreAbove(User $user, Evaluation $evaluation, Rule $rule)
     {
         $data = $rule->getData();
         if ($data && $evaluation->getScore() >= $data['value']) {
             $evidence = new Evidence();
             $now = new \DateTime();
             $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_resource_score_above',
+                'evidence_narrative_workspace_score_above',
                 [
                     '%date%' => $now->format('Y-m-d H:i:s'),
                 ],
                 'badge'
             ));
             $evidence->setRule($rule);
-            $evidence->setName(Rule::RESOURCE_SCORE_ABOVE);
-            $evidence->setResourceEvidence($evaluation);
+            $evidence->setName(Rule::WORKSPACE_SCORE_ABOVE);
+            $evidence->setWorkspaceEvidence($evaluation);
             $evidence->setUser($user);
 
             $this->om->persist($evidence);
@@ -129,7 +129,7 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourceCompletedAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspaceCompletedAbove(User $user, Evaluation $evaluation, Rule $rule)
     {
         $data = $rule->getData();
         $progression = ($evaluation->getProgression() / $evaluation->getProgressionMax()) * 100;
@@ -137,15 +137,15 @@ class ResourceEvaluationListener
             $evidence = new Evidence();
             $now = new \DateTime();
             $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_resource_completed_above',
+                'evidence_narrative_workspace_completed_above',
                 [
                     '%date%' => $now->format('Y-m-d H:i:s'),
                 ],
                 'badge'
             ));
             $evidence->setRule($rule);
-            $evidence->setName(Rule::RESOURCE_COMPLETED_ABOVE);
-            $evidence->setResourceEvidence($evaluation);
+            $evidence->setName(Rule::WORKSPACE_COMPLETED_ABOVE);
+            $evidence->setWorkspaceEvidence($evaluation);
             $evidence->setUser($user);
 
             $this->om->persist($evidence);
@@ -155,21 +155,21 @@ class ResourceEvaluationListener
         }
     }
 
-    private function awardResourceParticipated(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
+    private function awardWorkspaceParticipated(User $user, Evaluation $evaluation, Rule $rule)
     {
         if (AbstractEvaluation::STATUS_PRIORITY[AbstractEvaluation::STATUS_PARTICIPATED] <= AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
             $evidence = new Evidence();
             $now = new \DateTime();
             $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_resource_participated',
+                'evidence_narrative_workspace_participated',
                 [
                     '%date%' => $now->format('Y-m-d H:i:s'),
                 ],
                 'badge'
             ));
             $evidence->setRule($rule);
-            $evidence->setName(Rule::RESOURCE_PARTICIPATED);
-            $evidence->setResourceEvidence($evaluation);
+            $evidence->setName(Rule::WORKSPACE_PARTICIPATED);
+            $evidence->setWorkspaceEvidence($evaluation);
             $evidence->setUser($user);
 
             $this->om->persist($evidence);

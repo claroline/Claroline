@@ -1,31 +1,29 @@
-import React, {Component} from 'react'
+import React from 'react'
 
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {FormGroup} from '#/main/app/content/form/components/group'
 
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {WorkspaceInput} from '#/main/core/data/types/workspace/components/input'
 
-// todo : fix responsive (incorrect margin bottom)
 // todo : manages errors
 
-class WorkspacePassedInput extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <WorkspaceInput
-        onChange={(value) => this.props.onChange(value)}
-        value={this.props.value}
-      />
-    )
-  }
-}
+const WorkspacePassedInput = (props) =>
+  <FormGroup
+    id={props.id}
+    className="form-last"
+    label={trans('workspace')}
+  >
+    <WorkspaceInput {...props} />
+  </FormGroup>
 
 implementPropTypes(WorkspacePassedInput, FormFieldTypes, {
   // more precise value type
-  value: T.arrayOf(T.string)
+  value: T.shape(
+    WorkspaceTypes.propTypes
+  )
 }, {
   value: null
 })

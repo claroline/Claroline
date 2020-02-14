@@ -17,4 +17,4 @@ services:
             - { name: kernel.event_listener, event: resource.innova_path.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.innova_path.delete, method: onDelete }
             - { name: kernel.event_listener, event: resource.innova_path.copy, method: onCopy }
-            - { name: kernel.event_listener, event: resource.score_evaluation.created, method: onScoreEvaluationCreated }
+            - { name: kernel.event_listener, event: resource_evaluation, method: onEvaluation }

@@ -103,7 +103,7 @@ const BadgeFormComponent = (props) =>
             name: '_restrictDuration',
             type: 'boolean',
             label: trans('restrict_duration', {}, 'badge'),
-            calculated: (badge) => badge._restrictDuration || badge.duration,
+            calculated: (badge) => badge._restrictDuration || !!badge.duration,
             onChange: (enabled) => {
               if (!enabled) {
                 props.updateProp('duration', null)
@@ -115,7 +115,7 @@ const BadgeFormComponent = (props) =>
                 type: 'number',
                 label: trans('duration'),
                 required: true,
-                displayed: (badge) => badge._restrictDuration || badge.duration
+                displayed: (badge) => badge._restrictDuration || !!badge.duration
               }
             ]
           }, {
@@ -191,6 +191,7 @@ const BadgeFormComponent = (props) =>
                 label: trans('rules', {}, 'badge'),
                 type: 'collection',
                 displayed: isAutoIssuing,
+                required: true,
                 options: {
                   type: 'rule',
                   placeholder: trans('no_rule', {}, 'badge'),

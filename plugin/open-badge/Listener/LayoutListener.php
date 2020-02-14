@@ -11,50 +11,20 @@
 
 namespace Claroline\OpenBadgeBundle\Listener;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
-use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
-/**
- * Badge tool.
- */
-class ToolListener
+class LayoutListener
 {
     /**
-     * BadgeListener constructor.
+     * LayoutListener constructor.
      *
-     * @param SerializerProvider $serializer
      * @param EngineInterface    $templating
      */
     public function __construct(
-        SerializerProvider $serializer,
         EngineInterface $templating
     ) {
         $this->templating = $templating;
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * Displays home on Desktop.
-     *
-     * @param OpenToolEvent $event
-     */
-    public function onDisplayDesktop(OpenToolEvent $event)
-    {
-        $event->setData([]);
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param OpenToolEvent $event
-     */
-    public function onDisplayWorkspace(OpenToolEvent $event)
-    {
-        $event->setData([]);
-
-        $event->stopPropagation();
     }
 
     /**

@@ -1,17 +1,16 @@
-import React, {Component} from 'react'
+import React from 'react'
 import classes from 'classnames'
-
 import merge from 'lodash/merge'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {Select} from '#/main/app/input/components/select'
 
 import {InGroupInput} from '#/plugin/open-badge/data/types/rule/type/in-group/components/input'
 import {InRoleInput} from '#/plugin/open-badge/data/types/rule/type/in-role/components/input'
 import {ResourceCompletedAboveInput} from '#/plugin/open-badge/data/types/rule/type/resource-completed-above/components/input'
-import {ResourceParticipatedInput} from '#/plugin/open-badge/data/types/rule/type/resource-participated/components/input'
 import {ResourcePassedInput} from '#/plugin/open-badge/data/types/rule/type/resource-passed/components/input'
 import {ResourceScoreAboveInput} from '#/plugin/open-badge/data/types/rule/type/resource-score-above/components/input'
 import {WorkspaceCompletedAboveInput} from '#/plugin/open-badge/data/types/rule/type/workspace-completed-above/components/input'
@@ -22,13 +21,13 @@ import {
   RESOURCE_PASSED,
   RESOURCE_SCORE_ABOVE,
   RESOURCE_COMPLETED_ABOVE,
+  RESOURCE_PARTICIPATED,
   WORKSPACE_PASSED,
   WORKSPACE_SCORE_ABOVE,
   WORKSPACE_COMPLETED_ABOVE,
-  RESOURCE_PARTICIPATED,
+  WORKSPACE_PARTICIPATED,
   IN_ROLE,
-  IN_GROUP,
-  PROFILE_COMPLETED
+  IN_GROUP
 } from '#/plugin/open-badge/data/types/rule/constants'
 
 import {trans} from '#/main/app/intl/translation'
@@ -36,113 +35,162 @@ import {trans} from '#/main/app/intl/translation'
 // todo : fix responsive (incorrect margin bottom)
 // todo : manages errors
 
-class RuleInput extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      type: null
-    }
-  }
+const RuleDataInput = (props) => {
+  switch (props.type) {
+    case RESOURCE_PARTICIPATED:
+    case RESOURCE_PASSED:
+      return (
+        <ResourcePassedInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={props.onChange}
+          size={props.size}
+        />
+      )
 
-  render() {
-    //the "col-md-6 col-xs-12" and the rules className for layout should be changed later
-    return (
-      <div className={classes('row', this.props.className)}>
-        <div className="col-md-6 col-xs-12">
-          <Select
-            multiple={false}
-            choices={
-              {
-                [RESOURCE_PASSED]: trans(RESOURCE_PASSED, {}, 'badge'),
-                [RESOURCE_SCORE_ABOVE]: trans(RESOURCE_SCORE_ABOVE, {}, 'badge'),
-                [RESOURCE_COMPLETED_ABOVE]: trans(RESOURCE_COMPLETED_ABOVE, {}, 'badge'),
-                //[WORKSPACE_PASSED]: trans(WORKSPACE_PASSED, {}, 'badge'),
-                //[WORKSPACE_SCORE_ABOVE]: trans(WORKSPACE_SCORE_ABOVE, {}, 'badge'),
-                //[WORKSPACE_COMPLETED_ABOVE]: trans(WORKSPACE_COMPLETED_ABOVE, {}, 'badge'),
-                [RESOURCE_PARTICIPATED]: trans(RESOURCE_PARTICIPATED, {}, 'badge'),
-                [IN_GROUP]: trans(IN_GROUP, {}, 'badge'),
-                [IN_ROLE]: trans(IN_ROLE, {}, 'badge')
-                //[PROFILE_COMPLETED]: trans(PROFILE_COMPLETED, {}, 'badge')
-              }
-            }
-            onChange={(value) => {
-              this.props.onChange({
-                type: value
-              })
-              this.setState({
-                type: value
-              })
-            }}
-            value={this.props.value.type}
-          />
-        </div>
-        <div>
-          {(() => {
-            switch(this.props.value.type) {
-              case RESOURCE_PASSED:
-                return <ResourcePassedInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: value})}}
-                />
-              case RESOURCE_SCORE_ABOVE:
-                return <ResourceScoreAboveInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: merge(this.props.value.data, value)})}}
-                />
-              case RESOURCE_COMPLETED_ABOVE:
-                return <ResourceCompletedAboveInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: merge(this.props.value.data, value)})}}
-                />
-              case WORKSPACE_PASSED:
-                return <WorkspacePassedInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: value})}}
-                />
-              case WORKSPACE_SCORE_ABOVE:
-                return <WorkspaceScoreAboveInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: merge(this.props.value.data, value)})}}
-                />
-              case WORKSPACE_COMPLETED_ABOVE:
-                return <WorkspaceCompletedAboveInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: merge(this.props.value.data, value)})}}
-                />
-              case RESOURCE_PARTICIPATED:
-                return <ResourceParticipatedInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: value})}}
-                />
-              case IN_GROUP:
-                return <InGroupInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: value})}}
-                />
-              case IN_ROLE:
-                return <InRoleInput
-                  value={this.props.value.data}
-                  onChange={(value) => {this.props.onChange({type: this.state.type, data: value})}}
-                />
-              case PROFILE_COMPLETED:
-                return <div> PROFILE_COMPLETED </div>
-            }
-          }).bind(this)()}
-        </div>
-      </div>
-    )
+    case RESOURCE_SCORE_ABOVE:
+      return (
+        <ResourceScoreAboveInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={(value) => props.onChange(merge(props.value || {}, value))}
+          size={props.size}
+        />
+      )
+
+    case RESOURCE_COMPLETED_ABOVE:
+      return (
+        <ResourceCompletedAboveInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={(value) => props.onChange(merge(props.value || {}, value))}
+          size={props.size}
+        />
+      )
+
+    case WORKSPACE_PARTICIPATED:
+    case WORKSPACE_PASSED:
+      return (
+        <WorkspacePassedInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={props.onChange}
+          size={props.size}
+        />
+      )
+
+    case WORKSPACE_SCORE_ABOVE:
+      return (
+        <WorkspaceScoreAboveInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={(value) => props.onChange(merge(props.value || {}, value))}
+          size={props.size}
+        />
+      )
+
+    case WORKSPACE_COMPLETED_ABOVE:
+      return (
+        <WorkspaceCompletedAboveInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={(value) => props.onChange(merge(props.value || {}, value))}
+          size={props.size}
+        />
+      )
+
+    case IN_GROUP:
+      return (
+        <InGroupInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={props.onChange}
+          size={props.size}
+        />
+      )
+
+    case IN_ROLE:
+      return (
+        <InRoleInput
+          id={props.id}
+          disabled={props.disabled}
+          value={props.value}
+          onChange={props.onChange}
+          size={props.size}
+        />
+      )
   }
 }
 
+RuleDataInput.propTypes = {
+  id: T.string.isRequired,
+  type: T.string.isRequired,
+  disabled: T.bool,
+  value: T.any,
+  size: T.string,
+  onChange: T.func.isRequired
+}
+
+const RuleInput = (props) =>
+  <div className={classes('rule-control', props.className)}>
+    <FormGroup
+      id={`${props.id}-rule-type`}
+      label={trans('type')}
+      hideLabel={true}
+    >
+      <Select
+        id={`${props.id}-rule-type`}
+        disabled={props.disabled}
+        choices={{
+          // resources
+          [RESOURCE_PARTICIPATED]: trans(RESOURCE_PARTICIPATED, {}, 'badge'),
+          [RESOURCE_PASSED]: trans(RESOURCE_PASSED, {}, 'badge'),
+          [RESOURCE_SCORE_ABOVE]: trans(RESOURCE_SCORE_ABOVE, {}, 'badge'),
+          [RESOURCE_COMPLETED_ABOVE]: trans(RESOURCE_COMPLETED_ABOVE, {}, 'badge'),
+          // workspaces
+          [WORKSPACE_PARTICIPATED]: trans(WORKSPACE_PARTICIPATED, {}, 'badge'),
+          [WORKSPACE_PASSED]: trans(WORKSPACE_PASSED, {}, 'badge'),
+          [WORKSPACE_SCORE_ABOVE]: trans(WORKSPACE_SCORE_ABOVE, {}, 'badge'),
+          [WORKSPACE_COMPLETED_ABOVE]: trans(WORKSPACE_COMPLETED_ABOVE, {}, 'badge'),
+          // users
+          [IN_GROUP]: trans(IN_GROUP, {}, 'badge'),
+          [IN_ROLE]: trans(IN_ROLE, {}, 'badge')
+        }}
+        onChange={(value) => props.onChange({type: value, data: null})}
+        value={props.value.type}
+        size={props.size}
+      />
+    </FormGroup>
+
+    {props.value.type &&
+      <RuleDataInput
+        id={`${props.id}-rule-data`}
+        type={props.value.type}
+        value={props.value.data}
+        disabled={props.disabled}
+        size={props.size}
+        onChange={(value) => props.onChange({type: props.value.type, data: value})}
+      />
+    }
+  </div>
+
 implementPropTypes(RuleInput, FormFieldTypes, {
   // more precise value type
-  value: T.object
+  value: T.shape({
+    type: T.string,
+    data: T.any
+  })
 }, {
   value: {
     type: '',
-    data: {
-
-    }
+    data: {}
   }
 })
 

@@ -400,6 +400,7 @@ services:
     Claroline\CoreBundle\Manager\Workspace\EvaluationManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@event_dispatcher'
 
     claroline.manager.workspace.evaluation:
         alias: Claroline\CoreBundle\Manager\Workspace\EvaluationManager

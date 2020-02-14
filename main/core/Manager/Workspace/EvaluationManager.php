@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -21,22 +21,32 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\UserEvaluationEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EvaluationManager
 {
     /** @var ObjectManager */
     private $om;
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
     private $evaluationRepo;
     private $requirementsRepo;
     private $resourceUserEvalRepo;
 
     /**
-     * @param ObjectManager $om
+     * EvaluationManager constructor.
+     *
+     * @param ObjectManager            $om
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(
+        ObjectManager $om,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
 
         $this->evaluationRepo = $om->getRepository(Evaluation::class);
         $this->requirementsRepo = $om->getRepository(Requirements::class);
@@ -91,6 +101,7 @@ class EvaluationManager
         });
 
         // Retrieves resources that have to be done by the user in the workspace
+        /** @var Requirements $userRequirements */
         $userRequirements = $this->requirementsRepo->findOneBy(['workspace' => $workspace, 'user' => $user]);
 
         if ($userRequirements) {
@@ -101,6 +112,7 @@ class EvaluationManager
 
         // Retrieves resources that have to be done by the roles that the user has in the workspace
         foreach ($roles as $role) {
+            /** @var Requirements $roleRequirements */
             $roleRequirements = $this->requirementsRepo->findOneBy(['workspace' => $workspace, 'role' => $role]);
 
             if ($roleRequirements) {
@@ -188,8 +200,11 @@ class EvaluationManager
             $evaluation->setProgression($progression);
             $evaluation->setStatus($status);
             $evaluation->setDate(new \DateTime());
+
             $this->om->persist($evaluation);
             $this->om->flush();
+
+            $this->eventDispatcher->dispatch('workspace.evaluate', new UserEvaluationEvent($evaluation));
         }
 
         return $evaluation;
@@ -420,11 +435,11 @@ class EvaluationManager
     {
         $users = [];
 
-        foreach ($role->getUsers()->toArray() as $user) {
+        foreach ($role->getUsers() as $user) {
             $users[$user->getUuid()] = $user;
         }
-        foreach ($role->getGroups()->toArray() as $group) {
-            foreach ($group->getUsers()->toArray() as $user) {
+        foreach ($role->getGroups() as $group) {
+            foreach ($group->getUsers() as $user) {
                 $users[$user->getUuid()] = $user;
             }
         }
@@ -448,11 +463,11 @@ class EvaluationManager
     {
         $users = [];
 
-        foreach ($role->getUsers()->toArray() as $user) {
+        foreach ($role->getUsers() as $user) {
             $users[$user->getUuid()] = $user;
         }
-        foreach ($role->getGroups()->toArray() as $group) {
-            foreach ($group->getUsers()->toArray() as $user) {
+        foreach ($role->getGroups() as $group) {
+            foreach ($group->getUsers() as $user) {
                 $users[$user->getUuid()] = $user;
             }
         }

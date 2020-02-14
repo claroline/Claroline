@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -219,38 +219,46 @@ class UserProgressionManager
      */
     public function computeResourceUserEvaluation(Path $path, User $user)
     {
-        $steps = $path->getSteps()->toArray();
-        $stepsUuids = array_map(function (Step $step) {
-            return $step->getUuid();
-        }, $steps);
         $resourceUserEval = $this->resourceEvalManager->getResourceUserEvaluation($path->getResourceNode(), $user);
-        $evaluations = $resourceUserEval->getEvaluations();
+        $steps = array_map(function (Step $step) {
+            return $step->getUuid();
+        }, $path->getSteps()->toArray());
+
         $progression = 0;
         $progressionMax = count($steps);
 
-        /** @var ResourceEvaluation $evaluation */
-        foreach ($evaluations as $evaluation) {
-            $data = $evaluation->getData();
+        $status = AbstractEvaluation::STATUS_OPENED;
+        // only compute progression if path is not empty
+        if ($progressionMax) {
+            $evaluations = $resourceUserEval->getEvaluations();
 
-            if (isset($data['step']) && isset($data['status'])) {
-                $statusIndex = array_search($data['status'], ['seen', 'done']);
-                $uuidIndex = array_search($data['step'], $stepsUuids);
+            /** @var ResourceEvaluation $evaluation */
+            foreach ($evaluations as $evaluation) {
+                $data = $evaluation->getData();
 
-                if (false !== $statusIndex && false !== $uuidIndex) {
-                    ++$progression;
-                    array_splice($stepsUuids, $uuidIndex, 1);
+                if (isset($data['step']) && isset($data['status'])) {
+                    $statusIndex = array_search($data['status'], ['seen', 'done']);
+                    $uuidIndex = array_search($data['step'], $steps);
+
+                    if (false !== $statusIndex && false !== $uuidIndex) {
+                        ++$progression;
+                        array_splice($steps, $uuidIndex, 1);
+                    }
                 }
             }
+
+            if ($progression >= $progressionMax) {
+                $status = AbstractEvaluation::STATUS_COMPLETED;
+            } else {
+                $status = AbstractEvaluation::STATUS_INCOMPLETE;
+            }
         }
-        $status = $progression >= $progressionMax ?
-            AbstractEvaluation::STATUS_COMPLETED :
-            AbstractEvaluation::STATUS_INCOMPLETE;
 
         return [
             'progression' => $progression,
             'progressionMax' => $progressionMax,
             'status' => $status,
-            'stepsToDo' => $stepsUuids,
+            'stepsToDo' => $steps,
         ];
     }
 
@@ -280,11 +288,10 @@ class UserProgressionManager
     /**
      * Fetches and updates score for all paths linked to the evaluation.
      *
-     * @param ResourceEvaluation $evaluation
+     * @param ResourceUserEvaluation $resourceUserEvaluation
      */
-    public function handleResourceEvaluation(ResourceEvaluation $evaluation)
+    public function handleResourceEvaluation(ResourceUserEvaluation $resourceUserEvaluation)
     {
-        $resourceUserEvaluation = $evaluation->getResourceUserEvaluation();
         $resourceNode = $resourceUserEvaluation->getResourceNode();
         $user = $resourceUserEvaluation->getUser();
 
@@ -293,13 +300,13 @@ class UserProgressionManager
 
         // Retrieves corresponding paths
         $paths = [];
-
         foreach ($steps as $step) {
             $paths[$step->getPath()->getUuid()] = $step->getPath();
         }
 
         // Gets all ResourceUserEvaluation entities linked to each path and user
         foreach ($paths as $path) {
+            /** @var ResourceUserEvaluation $userEval */
             $userEval = $this->resourceUserEvalRepo->findOneBy([
                 'user' => $user,
                 'resourceNode' => $path->getResourceNode(),

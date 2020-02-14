@@ -11,8 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
-use Claroline\CoreBundle\Entity\AbstractEvaluation;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -30,53 +29,58 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * )
  * @DoctrineAssert\UniqueEntity({"resourceNode", "user"})
  */
-class ResourceUserEvaluation extends AbstractEvaluation
+class ResourceUserEvaluation extends AbstractUserEvaluation
 {
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE")
+     *
+     * @var ResourceNode
      */
     protected $resourceNode;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
-     */
-    protected $user;
-
-    /**
-     * @ORM\Column(name="user_name")
-     */
-    protected $userName;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceEvaluation",
      *     mappedBy="resourceUserEvaluation"
      * )
+     *
+     * @var ResourceEvaluation[]|ArrayCollection
      */
     protected $evaluations;
 
     /**
      * @ORM\Column(name="nb_attempts", type="integer")
+     *
+     * @var int
      */
     protected $nbAttempts = 0;
 
     /**
      * @ORM\Column(name="nb_openings", type="integer")
+     *
+     * @var int
      */
     protected $nbOpenings = 0;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $required = false;
 
+    /**
+     * ResourceUserEvaluation constructor.
+     */
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
     }
 
+    /**
+     * @return ResourceNode
+     */
     public function getResourceNode()
     {
         return $this->resourceNode;
@@ -85,32 +89,6 @@ class ResourceUserEvaluation extends AbstractEvaluation
     public function setResourceNode(ResourceNode $resourceNode)
     {
         $this->resourceNode = $resourceNode;
-    }
-
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user = null)
-    {
-        $this->user = $user;
-
-        if ($user) {
-            $this->setUserName($user->getFirstName().' '.$user->getLastName());
-        } else {
-            $this->setUsername('anonymous');
-        }
-    }
-
-    public function getUserName()
-    {
-        return $this->userName;
-    }
-
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
     }
 
     public function getEvaluations()
