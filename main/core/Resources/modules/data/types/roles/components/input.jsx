@@ -29,6 +29,7 @@ const RolesButton = props =>
         callback: () => props.onChange(selected)
       })
     }]}
+    size={props.size}
   />
 
 RolesButton.propTypes = {
@@ -37,7 +38,8 @@ RolesButton.propTypes = {
   filters: T.arrayOf(T.shape({
     // TODO : list filter types
   })),
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const RolesInput = props => {
@@ -94,12 +96,14 @@ const RolesInput = props => {
     <EmptyPlaceholder
       icon="fa fa-id-badge"
       title={trans('no_role')}
+      size={props.size}
     >
       {!props.disabled &&
-      <RolesButton
-        {...props.picker}
-        onChange={props.onChange}
-      />
+        <RolesButton
+          {...props.picker}
+          size={props.size}
+          onChange={props.onChange}
+        />
       }
     </EmptyPlaceholder>
   )

@@ -16,6 +16,7 @@ const TemplateTypeInput = props => {
     return(
       <Fragment>
         <TemplateTypeCard
+          size="xs"
           data={props.value}
           actions={[
             {
@@ -32,6 +33,8 @@ const TemplateTypeInput = props => {
         <ModalButton
           className="btn btn-block"
           style={{marginTop: 10}}
+          size={props.size}
+          disabled={props.disabled}
           modal={[MODAL_TEMPLATE_TYPES, {
             title: props.picker.title,
             confirmText: props.picker.confirmText,
@@ -52,10 +55,13 @@ const TemplateTypeInput = props => {
     <EmptyPlaceholder
       icon="fa fa-file-alt"
       title={trans('no_template_type', {}, 'template')}
+      size={props.size}
     >
       <ModalButton
         style={{marginTop: 10}}
         className="btn btn-block"
+        size={props.size}
+        disabled={props.disabled}
         modal={[MODAL_TEMPLATE_TYPES, {
           title: props.picker.title,
           confirmText: props.picker.confirmText,

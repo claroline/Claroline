@@ -17,7 +17,8 @@ const OrganizationButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('select_an_organization')}
+    label={trans('add_organization')}
+    disabled={props.disabled}
     modal={[MODAL_ORGANIZATIONS, {
       url: ['apiv2_organization_list'],
       title: props.title,
@@ -26,11 +27,14 @@ const OrganizationButton = props =>
         callback: () => props.onChange(selected[0])
       })
     }]}
+    size={props.size}
   />
 
 OrganizationButton.propTypes = {
   title: T.string,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string,
+  disabled: T.bool
 }
 
 const OrganizationInput = props => {
@@ -56,6 +60,7 @@ const OrganizationInput = props => {
         <OrganizationButton
           {...props.picker}
           disabled={props.disabled}
+          size={props.size}
           onChange={props.onChange}
         />
       </Fragment>
@@ -66,10 +71,12 @@ const OrganizationInput = props => {
     <EmptyPlaceholder
       icon="fa fa-building"
       title={trans('no_organization')}
+      size={props.size}
     >
       <OrganizationButton
         {...props.picker}
         disabled={props.disabled}
+        size={props.size}
         onChange={props.onChange}
       />
     </EmptyPlaceholder>

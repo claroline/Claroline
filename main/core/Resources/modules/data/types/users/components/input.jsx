@@ -28,12 +28,14 @@ const UsersButton = props =>
         callback: () => props.onChange(selected)
       })
     }]}
+    size={props.size}
   />
 
 UsersButton.propTypes = {
   title: T.string,
   disabled: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const UsersInput = props => {
@@ -70,6 +72,7 @@ const UsersInput = props => {
         <UsersButton
           {...props.picker}
           disabled={props.disabled}
+          size={props.size}
           onChange={(selected) => {
             const newValue = props.value
             selected.forEach(user => {
@@ -89,11 +92,13 @@ const UsersInput = props => {
       <EmptyPlaceholder
         icon="fa fa-user"
         title={trans('no_user')}
+        size={props.size}
       >
         <UsersButton
           {...props.picker}
           disabled={props.disabled}
           onChange={props.onChange}
+          size={props.size}
         />
       </EmptyPlaceholder>
     )

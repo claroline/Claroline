@@ -17,7 +17,7 @@ const LocationsButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('select_a_location')}
+    label={trans('add_location')}
     disabled={props.disabled}
     modal={[MODAL_LOCATIONS, {
       url: ['apiv2_location_list'],
@@ -28,12 +28,14 @@ const LocationsButton = props =>
         callback: () => props.onChange(selected[0])
       })
     }]}
+    size={props.size}
   />
 
 LocationsButton.propTypes = {
   title: T.string,
   disabled: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const LocationInput = props => {
@@ -57,6 +59,7 @@ const LocationInput = props => {
 
         <LocationsButton
           {...props.picker}
+          size={props.size}
           disabled={props.disabled}
           onChange={props.onChange}
         />
@@ -68,9 +71,11 @@ const LocationInput = props => {
     <EmptyPlaceholder
       icon="fa fa-location-arrow"
       title={trans('no_location')}
+      size={props.size}
     >
       <LocationsButton
         {...props.picker}
+        size={props.size}
         disabled={props.disabled}
         onChange={props.onChange}
       />

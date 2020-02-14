@@ -17,7 +17,7 @@ const GroupButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('add_groups')}
+    label={trans('add_group')}
     disabled={props.disabled}
     modal={[MODAL_GROUPS, {
       url: ['apiv2_group_list_registerable'],
@@ -28,12 +28,14 @@ const GroupButton = props =>
         callback: () => props.onChange(selected[0])
       })
     }]}
+    size={props.size}
   />
 
 GroupButton.propTypes = {
   title: T.string,
   disabled: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const GroupInput = props => {
@@ -60,6 +62,7 @@ const GroupInput = props => {
           {...props.picker}
           disabled={props.disabled}
           onChange={props.onChange}
+          size={props.size}
         />
       </Fragment>
     )
@@ -69,9 +72,11 @@ const GroupInput = props => {
     <EmptyPlaceholder
       icon="fa fa-users"
       title={trans('no_group')}
+      size={props.size}
     >
       <GroupButton
         {...props.picker}
+        size={props.size}
         disabled={props.disabled}
         onChange={props.onChange}
       />

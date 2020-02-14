@@ -17,7 +17,7 @@ const RoleButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('add_roles')}
+    label={trans('add_role')}
     modal={[MODAL_ROLES, {
       url: props.url,
       title: props.title,
@@ -28,6 +28,8 @@ const RoleButton = props =>
         callback: () => props.onChange(selected[0])
       })
     }]}
+    size={props.size}
+    disabled={props.disabled}
   />
 
 RoleButton.propTypes = {
@@ -36,7 +38,9 @@ RoleButton.propTypes = {
   filters: T.arrayOf(T.shape({
     // TODO : list filter types
   })),
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string,
+  disabled: T.bool
 }
 
 const RoleInput = props => {
@@ -63,6 +67,7 @@ const RoleInput = props => {
         {!props.disabled &&
           <RoleButton
             {...props.picker}
+            size={props.size}
             onChange={props.onChange}
           />
         }
@@ -72,11 +77,15 @@ const RoleInput = props => {
 
   return (
     <EmptyPlaceholder
+      id={props.id}
       icon="fa fa-id-card"
       title={trans('no_role')}
+      size={props.size}
     >
       <RoleButton
         {...props.picker}
+        size={props.size}
+        disabled={props.disabled}
         onChange={props.onChange}
       />
     </EmptyPlaceholder>

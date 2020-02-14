@@ -27,12 +27,14 @@ const UserButton = props =>
         callback: () => props.onChange(selected[0])
       })
     }]}
+    size={props.size}
   />
 
 UserButton.propTypes = {
   title: T.string,
   disabled: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const UserInput = props => {
@@ -59,6 +61,7 @@ const UserInput = props => {
           {...props.picker}
           disabled={props.disabled}
           onChange={props.onChange}
+          size={props.size}
         />
       </Fragment>
     )
@@ -68,11 +71,13 @@ const UserInput = props => {
     <EmptyPlaceholder
       icon="fa fa-user"
       title={trans('no_user')}
+      size={props.size}
     >
       <UserButton
         {...props.picker}
         disabled={props.disabled}
         onChange={props.onChange}
+        size={props.size}
       />
     </EmptyPlaceholder>
   )

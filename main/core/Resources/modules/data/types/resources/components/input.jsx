@@ -12,8 +12,6 @@ import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
-// TODO : manage disabled state
-
 const ResourcesButton = props =>
   <Button
     type={MODAL_BUTTON}
@@ -33,6 +31,8 @@ const ResourcesButton = props =>
     style={{
       marginTop: '10px' // todo
     }}
+    size={props.size}
+    disabled={props.disabled}
   />
 
 ResourcesButton.propTypes = {
@@ -45,7 +45,9 @@ ResourcesButton.propTypes = {
     slug: T.string.isRequired,
     name: T.string.isRequired
   }),
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string,
+  disabled: T.bool
 }
 
 const ResourcesInput = props => {
@@ -64,6 +66,7 @@ const ResourcesInput = props => {
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete', {}, 'actions'),
                 dangerous: true,
+                disabled: props.disabled,
                 callback: () => {
                   const newValue = props.value
                   const index = newValue.findIndex(r => r.id === resource.id)
@@ -80,6 +83,8 @@ const ResourcesInput = props => {
 
         <ResourcesButton
           {...props.picker}
+          size={props.size}
+          disabled={props.disabled}
           onChange={(selected) => {
             const newValue = props.value
             selected.forEach(resource => {
@@ -96,12 +101,12 @@ const ResourcesInput = props => {
     )
   }
 
-  return(
+  return (
     <EmptyPlaceholder
       id={props.id}
-      size="lg"
       icon="fa fa-folder"
       title={trans('no_resource', {}, 'resource')}
+      size={props.size}
     >
       <ResourcesButton
         {...props.picker}

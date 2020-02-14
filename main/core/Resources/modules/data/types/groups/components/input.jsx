@@ -29,12 +29,14 @@ const GroupsButton = props =>
         callback: () => props.onChange(selected)
       })
     }]}
+    size={props.size}
   />
 
 GroupsButton.propTypes = {
   title: T.string,
   disabled: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const GroupsInput = props => {
@@ -71,6 +73,7 @@ const GroupsInput = props => {
         <GroupsButton
           {...props.picker}
           disabled={props.disabled}
+          size={props.size}
           onChange={(selected) => {
             const newValue = props.value
             selected.forEach(group => {
@@ -91,9 +94,11 @@ const GroupsInput = props => {
     <EmptyPlaceholder
       icon="fa fa-users"
       title={trans('no_group')}
+      size={props.size}
     >
       <GroupsButton
         {...props.picker}
+        size={props.size}
         disabled={props.disabled}
         onChange={props.onChange}
       />

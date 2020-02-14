@@ -29,13 +29,15 @@ const WorkspacesButton = props =>
         callback: () => props.onChange(selected[0])
       })
     }]}
+    size={props.size}
   />
 
 WorkspacesButton.propTypes = {
   title: T.string,
   model: T.bool,
   disabled: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  size: T.string
 }
 
 const WorkspaceInput = props => {
@@ -67,6 +69,7 @@ const WorkspaceInput = props => {
           {...props.picker}
           disabled={props.disabled}
           onChange={props.onChange}
+          size={props.size}
         />
       </Fragment>
     )
@@ -76,11 +79,13 @@ const WorkspaceInput = props => {
     <EmptyPlaceholder
       icon="fa fa-book"
       title={props.picker.model ? trans('no_workspace_model') : trans('no_workspace')}
+      size={props.size}
     >
       <WorkspacesButton
         {...props.picker}
         disabled={props.disabled}
         onChange={props.onChange}
+        size={props.size}
       />
     </EmptyPlaceholder>
   )

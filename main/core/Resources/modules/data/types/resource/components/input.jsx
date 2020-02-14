@@ -28,6 +28,7 @@ const ResourceInput = props => {
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-recycle',
             label: trans('replace', {}, 'actions'),
+            disabled: props.disabled,
             modal: [MODAL_RESOURCES, {
               title: props.picker.title,
               current: props.picker.current,
@@ -45,6 +46,7 @@ const ResourceInput = props => {
             icon: 'fa fa-fw fa-trash-o',
             label: trans('delete', {}, 'actions'),
             dangerous: true,
+            disabled: props.disabled,
             modal: [MODAL_CONFIRM, {
               title: transChoice('resources_delete_confirm', 1, {}, 'resource'),
               question: transChoice('resources_delete_message', 1, {count: 1}, 'resource'),
@@ -62,6 +64,7 @@ const ResourceInput = props => {
           className="btn btn-sm btn-link"
           title={trans('delete')}
           dangerous={true}
+          disabled={props.disabled}
           modal={[MODAL_CONFIRM, {
             dangerous: true,
             icon: 'fa fa-fw fa-trash-o',
@@ -85,6 +88,7 @@ const ResourceInput = props => {
         id={props.id}
         icon="fa fa-folder"
         title={trans('no_resource', {}, 'resource')}
+        size={props.size}
       >
         <ModalButton
           className="btn btn-block"
@@ -102,6 +106,8 @@ const ResourceInput = props => {
           style={{
             marginTop: '10px' // todo
           }}
+          size={props.size}
+          disabled={props.disabled}
         >
           <span className="fa fa-fw fa-plus icon-with-text-right" />
           {trans('add_resource', {}, 'resource')}
