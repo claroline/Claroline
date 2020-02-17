@@ -113,7 +113,7 @@ const EditorForm = props =>
       }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
-        displayed: props.currentContext.type === 'workspace' || (props.administration && 'desktop' === props.currentContext.type),
+        displayed: props.administration || 'desktop' !== props.currentContext.type,
         fields: [
           {
             name: 'restrictions.hidden',
