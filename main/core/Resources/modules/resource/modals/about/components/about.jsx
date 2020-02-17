@@ -1,9 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
-import trim from 'lodash/trim'
 
-import {param} from '#/main/app/config/parameters'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
@@ -46,7 +45,7 @@ const AboutModal = props =>
               name: 'url',
               type: 'url',
               label: trans('url', {}, 'data'),
-              calculated: (resourceNode) => `${param('server.protocol')}://${param('server.host')}/${trim(param('server.path'), '/')}#${route(resourceNode)}`
+              calculated: (resourceNode) => `${url(['claro_index', {}, true])}#${route(resourceNode)}`
             }, {
               name: 'meta.description',
               label: trans('description'),
