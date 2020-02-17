@@ -118,7 +118,7 @@ class ConnectionMessageSerializer
                         'poster' => $poster,
                         'order' => $slide->getOrder(),
                     ];
-                }, $message->getSlides()->toArray()))
+                }, $message->getSlides()->toArray())),
             ]);
         }
 

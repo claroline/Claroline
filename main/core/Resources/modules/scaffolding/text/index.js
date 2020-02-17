@@ -118,10 +118,11 @@ function stripDiacritics(str) {
 /**
  * Normalizes a string to be used as a key (eg. id, slug, react array `key`).
  *
- * @param text
+ * @param {string} text
+ * @param {number} length
  */
-function toKey(text) {
-  return stripDiacritics(text)
+function toKey(text, length = 30) {
+  const formatted = stripDiacritics(text)
     // removes multiple whitespaces, new lines & tabs by single whitespace
     .replace(/\s\s+/g, ' ')
     .trim()
@@ -133,8 +134,13 @@ function toKey(text) {
     .replace(/\s/g, '-')
     // removes uppercase
     .toLowerCase()
+
+  if (length) {
     // shorten text
-    .substring(0, 30)
+    return formatted.substring(0, length)
+  }
+
+  return formatted
 }
 
 export {
