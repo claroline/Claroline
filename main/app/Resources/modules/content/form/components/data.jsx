@@ -151,7 +151,7 @@ const FormData = (props) => {
           displayLevel={hDisplay}
           defaultOpened={openedSection ? (openedSection.id || toKey(openedSection.title)) : undefined}
         >
-          {otherSections.map(section =>
+          {otherSections.map(section => (
             <FormSection
               id={`${getSectionId(section, props.id)}-section`}
               className={section.className}
@@ -161,6 +161,7 @@ const FormData = (props) => {
               subtitle={section.subtitle}
               errors={getSectionErrors(section.fields, props.errors)}
               validating={props.validating}
+              actions={section.actions}
             >
               <FormFieldset
                 id={getSectionId(section, props.id)}
@@ -179,7 +180,7 @@ const FormData = (props) => {
                 {!section.component && section.render && section.render()}
               </FormFieldset>
             </FormSection>
-          )}
+          ))}
         </FormSections>
       }
 

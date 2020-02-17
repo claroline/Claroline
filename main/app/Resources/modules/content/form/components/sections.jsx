@@ -13,21 +13,17 @@ import {FormStatus} from '#/main/app/content/form/components/status'
  * @param props
  * @constructor
  */
-const FormSection = props => {
-
-  return (
-    <Section
-      {...omit(props, ['validating', 'errors'])}
-      className={classes('form-section', props.className)}
-      status={!isEmpty(props.errors) ?
-        <FormStatus id={props.id} validating={props.validating} position="left" /> :
-        undefined
-      }
-    >
-      {props.children}
-    </Section>
-  )
-}
+const FormSection = props =>
+  <Section
+    {...omit(props, 'validating', 'errors')}
+    className={classes('form-section', props.className)}
+    status={!isEmpty(props.errors) ?
+      <FormStatus id={props.id} validating={props.validating} position="left" /> :
+      undefined
+    }
+  >
+    {props.children}
+  </Section>
 
 FormSection.propTypes = {
   id: T.string,

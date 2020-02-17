@@ -46,6 +46,9 @@ const DataFormSection = {
     primary: T.bool,
     displayed: T.oneOfType([T.bool, T.func]),
     defaultOpened: T.bool,
+    actions: T.arrayOf(T.shape({
+      // TODO : action types
+    })),
     fields: T.arrayOf(T.shape(
       merge({}, DataFormProperty.propTypes, {
         // children
