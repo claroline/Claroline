@@ -89,14 +89,14 @@ class TextNormalizer
 
     public static function toKey($string)
     {
-        $key = TextNormalizer::stripDiacritics($string);
+        $key = static::stripDiacritics($string);
         // removes multiple whitespaces, new lines & tabs by single whitespace
-        $key = preg_replace('/\s\s+/g', ' ', $key);
+        $key = preg_replace('/\s\s+/', ' ', $key);
         $key = trim($key);
         // replaces dots by hyphen
         $key = str_replace('.', '-', $key);
         // removes all non alpha-numeric chars
-        $key = str_replace('/[^a-zA-Z0-9\- ]/g', '', $key);
+        $key = preg_replace('/[^a-zA-Z0-9\-]/', '', $key);
         // removes uppercase
         $key = strtolower($key);
 
