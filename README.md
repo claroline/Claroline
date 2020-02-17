@@ -57,7 +57,7 @@ file. For an installation from scratch, the commands would be:
     git clone http://github.com/claroline/Claroline
     cd Claroline
     php scripts/configure.php
-    composer update --prefer-dist --no-dev
+    composer update
      
     npm install
     composer build
