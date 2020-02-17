@@ -4,6 +4,11 @@ services:
         autoconfigure: false
         public: true #because lazy
 
+    Claroline\AppBundle\Manager\PlatformManager:
+        arguments:
+            - '@request_stack'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
     Claroline\AppBundle\Manager\DatabaseManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

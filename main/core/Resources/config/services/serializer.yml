@@ -257,13 +257,12 @@ services:
     Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer:
         arguments:
             - '%kernel.environment%'
-            - '@assets.packages'
             - '@event_dispatcher'
             - '@security.token_storage'
             - '@request_stack'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@router'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@claroline.manager.version_manager'
             - '@claroline.manager.plugin_manager'
             - '@claroline.manager.icon_set_manager'
@@ -345,6 +344,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
 
     Claroline\CoreBundle\API\Serializer\Icon\IconSetSerializer:

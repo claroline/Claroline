@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Platform;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
@@ -18,6 +19,9 @@ class ConnectionMessageSerializer
     /** @var ObjectManager */
     private $om;
 
+    /** @var PlatformManager */
+    private $platformManager;
+
     /** @var RoleSerializer */
     private $roleSerializer;
 
@@ -27,14 +31,17 @@ class ConnectionMessageSerializer
     /**
      * ConnectionMessageSerializer constructor.
      *
-     * @param ObjectManager  $om
-     * @param RoleSerializer $roleSerializer
+     * @param ObjectManager   $om
+     * @param PlatformManager $platformManager
+     * @param RoleSerializer  $roleSerializer
      */
     public function __construct(
         ObjectManager $om,
+        PlatformManager $platformManager,
         RoleSerializer $roleSerializer
     ) {
         $this->om = $om;
+        $this->platformManager = $platformManager;
         $this->roleSerializer = $roleSerializer;
 
         $this->roleRepo = $om->getRepository(Role::class);
@@ -86,15 +93,29 @@ class ConnectionMessageSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'slides' => array_values(array_map(function (Slide $slide) {
+                'slides' => array_values(array_map(function (Slide $slide) use ($options) {
+                    $poster = null;
+                    if ($slide->getPoster()) {
+                        if (in_array(Options::ABSOLUTE_URL, $options)) {
+                            $poster = [
+                                'url' => $this->platformManager->getUrl().'/'.$slide->getPoster(),
+                                'mimeType' => 'image/*',
+                                'absolute' => true,
+                            ];
+                        } else {
+                            $poster = [
+                                'url' => $slide->getPoster(),
+                                'mimeType' => 'image/*',
+                                'absolute' => false,
+                            ];
+                        }
+                    }
+
                     return [
                         'id' => $slide->getUuid(),
                         'title' => $slide->getTitle(),
                         'content' => $slide->getContent(),
-                        'poster' => $slide->getPoster() ? [
-                            'url' => $slide->getPoster(),
-                            'mimeType' => 'image/*',
-                        ] : null,
+                        'poster' => $poster,
                         'order' => $slide->getOrder(),
                     ];
                 }, $message->getSlides()->toArray()))

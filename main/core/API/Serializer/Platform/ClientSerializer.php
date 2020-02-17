@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Platform;
 
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Manager\OauthManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
@@ -14,10 +15,9 @@ use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilename;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Symfony\Component\Asset\Packages;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -28,9 +28,6 @@ class ClientSerializer
     /** @var string */
     private $env;
 
-    /** @var Packages */
-    private $assets;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -40,11 +37,11 @@ class ClientSerializer
     /** @var ObjectManager */
     private $om;
 
-    /** @var RouterInterface */
-    private $router;
-
     /** @var PlatformConfigurationHandler */
     private $config;
+
+    /** @var PlatformManager */
+    private $platformManager;
 
     /** @var VersionManager */
     private $versionManager;
@@ -65,13 +62,12 @@ class ClientSerializer
      * ClientSerializer constructor.
      *
      * @param string                       $env
-     * @param Packages                     $assets
      * @param EventDispatcherInterface     $eventDispatcher
      * @param TokenStorageInterface        $tokenStorage
      * @param RequestStack                 $requestStack
      * @param ObjectManager                $om
-     * @param RouterInterface              $router
      * @param PlatformConfigurationHandler $config
+     * @param PlatformManager              $platformManager
      * @param VersionManager               $versionManager
      * @param PluginManager                $pluginManager
      * @param IconSetManager               $iconManager
@@ -80,14 +76,13 @@ class ClientSerializer
      */
     public function __construct(
         $env,
-        Packages $assets,
 
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
         ObjectManager $om,
-        RouterInterface $router,
         PlatformConfigurationHandler $config,
+        PlatformManager $platformManager,
         VersionManager $versionManager,
         PluginManager $pluginManager,
         IconSetManager $iconManager,
@@ -95,12 +90,11 @@ class ClientSerializer
         OauthManager $oauthManager
     ) {
         $this->env = $env;
-        $this->assets = $assets;
         $this->tokenStorage = $tokenStorage;
         $this->requestStack = $requestStack;
         $this->om = $om;
-        $this->router = $router;
         $this->config = $config;
+        $this->platformManager = $platformManager;
         $this->versionManager = $versionManager;
         $this->pluginManager = $pluginManager;
         $this->iconManager = $iconManager;
@@ -119,8 +113,6 @@ class ClientSerializer
      */
     public function serialize()
     {
-        $request = $this->requestStack->getCurrentRequest();
-
         $logo = null;
         if ($this->config->getParameter('logo')) {
             $logo = $this->om->getRepository(PublicFile::class)->findOneBy([
@@ -131,6 +123,7 @@ class ClientSerializer
 
         if ($this->config->getParameter('restrictions.users') && $this->config->getParameter('restrictions.max_users')) {
             $maxUsers = $this->config->getParameter('restrictions.max_users');
+            /** @var UserRepository $userRepo */
             $userRepo = $this->om->getRepository(User::class);
             $usersCount = $userRepo->countAllEnabledUsers();
 
@@ -148,12 +141,7 @@ class ClientSerializer
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
             'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
-            'asset' => $this->assets->getUrl(''),
-            'server' => [ // TODO : maybe only expose final URL
-                'protocol' => $request->isSecure() || $this->config->getParameter('ssl_enabled') ? 'https' : 'http',
-                'host' => $this->config->getParameter('domain_name') ? $this->config->getParameter('domain_name') : $request->getHost(),
-                'path' => $request->getBasePath(),
-            ],
+            'serverUrl' => $this->platformManager->getUrl(),
             'theme' => $this->serializeTheme(),
             'locale' => $this->serializeLocale(),
             'display' => [
@@ -210,7 +198,7 @@ class ClientSerializer
 
         // retrieve the current platform locale
         $defaultLocale = $this->config->getParameter('locales.default');
-        if ($currentUser instanceof User) {
+        if ($currentUser instanceof User) { // TODO : there is a method to do that. Reuse it
             // Get the locale for the logged user
             $locale = $currentUser->getLocale();
         } elseif (!empty($this->config->getParameter('locales.available')) && array_key_exists($request->getLocale(), $this->config->getParameter('locales.available'))) {

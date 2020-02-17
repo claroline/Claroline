@@ -86,7 +86,7 @@ class ConnectionMessageManager
         $this->dispatcher->dispatch('platform.connection_messages.populate', $event);
         // TODO : find a way to validate populated data. For now I just expect an array which looks like
         // the return of ConnectionMessageSerializer
-        $extMessages = $event->getData() ?? [];
+        $extMessages = $event->getResponse() ?? [];
 
         return array_merge($storedMessages, $extMessages);
     }

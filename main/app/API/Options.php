@@ -25,6 +25,8 @@ final class Options
      */
     const SERIALIZE_MINIMAL = 'serialize_minimal';
 
+    const ABSOLUTE_URL = 'absolute_url';
+
     /*******************************/
     /* SPECIFIC SERIALIZER OPTIONS */
     /*******************************/
