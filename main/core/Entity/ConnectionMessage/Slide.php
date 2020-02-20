@@ -52,6 +52,13 @@ class Slide
     private $message;
 
     /**
+     * @ORM\Column(name="shortcuts", type="json_array", nullable=true)
+     *
+     * @var array
+     */
+    private $shortcuts = [];
+
+    /**
      * Slide constructor.
      */
     public function __construct()
@@ -137,5 +144,21 @@ class Slide
     public function setMessage(ConnectionMessage $message = null)
     {
         $this->message = $message;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShortcuts()
+    {
+        return $this->shortcuts;
+    }
+
+    /**
+     * @param array $shortcuts
+     */
+    public function setShortcuts(array $shortcuts)
+    {
+        $this->shortcuts = $shortcuts;
     }
 }

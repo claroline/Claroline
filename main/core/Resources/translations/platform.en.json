@@ -1683,5 +1683,7 @@
     "chart": "Chart",
     "web": "Web",
     "period": "Period",
-    "display_optional_fields": "Show optional fields"
+    "display_optional_fields": "Show optional fields",
+    "my_progression": "My progression",
+    "useful_links": "Useful links"
 }

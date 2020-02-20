@@ -16,7 +16,11 @@ const Slide = {
     order: T.number,
     message: T.shape({
       id: T.string
-    })
+    }),
+    shortcuts: T.arrayOf(T.shape({
+      type: T.oneOf(['tool', 'action']).isRequired,
+      name: T.string.isRequired
+    }))
   }
 }
 
@@ -54,7 +58,7 @@ const IconSet = {
     type: T.string,
     default: T.bool,
     active: T.bool,
-    editable: T.bool,
+    editable: T.bool
   },
   defaultProps: {
     type: constants.ICON_SET_TYPE_RESOURCE,

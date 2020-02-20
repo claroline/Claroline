@@ -10,11 +10,16 @@ use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\ConnectionMessage\Slide;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ConnectionMessageSerializer
 {
     use SerializerTrait;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
 
     /** @var ObjectManager */
     private $om;
@@ -27,25 +32,30 @@ class ConnectionMessageSerializer
 
     private $roleRepo;
     private $slideRepo;
+    private $toolRepo;
 
     /**
      * ConnectionMessageSerializer constructor.
      *
-     * @param ObjectManager   $om
-     * @param PlatformManager $platformManager
-     * @param RoleSerializer  $roleSerializer
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ObjectManager                 $om
+     * @param PlatformManager               $platformManager
+     * @param RoleSerializer                $roleSerializer
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PlatformManager $platformManager,
         RoleSerializer $roleSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->platformManager = $platformManager;
         $this->roleSerializer = $roleSerializer;
 
         $this->roleRepo = $om->getRepository(Role::class);
         $this->slideRepo = $om->getRepository(Slide::class);
+        $this->toolRepo = $om->getRepository(Tool::class);
     }
 
     /**
@@ -111,12 +121,27 @@ class ConnectionMessageSerializer
                         }
                     }
 
+                    $shortcuts = [];
+                    if (!empty($slide->getShortcuts())) {
+                        foreach ($slide->getShortcuts() as $shortcut) {
+                            if ('tool' === $shortcut['type']) {
+                                $tool = $this->toolRepo->findOneBy(['name' => $shortcut['name']]);
+                                if ($tool && $this->authorization->isGranted('OPEN', $tool)) {
+                                    $shortcuts[] = $shortcut;
+                                }
+                            } else {
+                                $shortcuts[] = $shortcut;
+                            }
+                        }
+                    }
+
                     return [
                         'id' => $slide->getUuid(),
                         'title' => $slide->getTitle(),
                         'content' => $slide->getContent(),
                         'poster' => $poster,
                         'order' => $slide->getOrder(),
+                        'shortcuts' => $slide->getShortcuts(),
                     ];
                 }, $message->getSlides()->toArray())),
             ]);
@@ -169,25 +194,30 @@ class ConnectionMessageSerializer
             $newSlidesIds = [];
 
             foreach ($data['slides'] as $slideOrder => $slideData) {
-                $slide = $this->slideRepo->findOneBy(['uuid' => $slideData['id']]);
+                $slide = null;
+                if ($slideData['id']) {
+                    $slide = $this->slideRepo->findOneBy(['uuid' => $slideData['id']]);
+                }
 
                 if (!$slide) {
                     $slide = new Slide();
-                    $slide->setMessage($message);
-                    $this->sipe('id', 'setUuid', $slideData, $slide);
                 }
-                $slide->setOrder($slideOrder);
+
+                $this->sipe('id', 'setUuid', $slideData, $slide);
                 $this->sipe('content', 'setContent', $slideData, $slide);
                 $this->sipe('title', 'setTitle', $slideData, $slide);
                 $this->sipe('poster.url', 'setPoster', $slideData, $slide);
+                $this->sipe('shortcuts', 'setShortcuts', $slideData, $slide);
 
-                $this->om->persist($slide);
+                $slide->setOrder($slideOrder);
+                $message->addSlide($slide);
 
                 $newSlidesIds[] = $slide->getUuid();
             }
+
             foreach ($oldSlides as $oldSlide) {
                 if (!in_array($oldSlide->getUuid(), $newSlidesIds)) {
-                    $this->om->remove($oldSlide);
+                    $message->removeSlide($oldSlide);
                 }
             }
         }

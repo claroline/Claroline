@@ -8,10 +8,14 @@ import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Toolbar} from '#/main/app/action/components/toolbar'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Checkbox} from '#/main/app/input/components/checkbox'
+import {route as toolRoute} from '#/main/core/tool/routing'
 
+import {User as UserTypes} from '#/main/core/user/prop-types'
+import {getActions} from '#/main/core/desktop'
 import {constants} from '#/main/core/administration/parameters/constants'
 import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/administration/parameters/prop-types'
 
@@ -66,9 +70,11 @@ class ConnectionModal extends Component {
     const message = this.props.messages[this.state.current] || {}
     const slide = get(message, `slides[${this.state.currentSlide}]`)
 
+    const desktopActions = getActions(this.props.currentUser)
+
     return (
       <Modal
-        {...omit(this.props, 'messages', 'discard', 'noDiscard')}
+        {...omit(this.props, 'messages', 'currentUser', 'discard', 'noDiscard')}
         className="connection-message-modal"
         title={message.title}
         subtitle={trans('current_of_total', {current: this.state.currentSlide + 1, total: message.slides.length})}
@@ -84,12 +90,44 @@ class ConnectionModal extends Component {
           </h1>
         }
 
-        {slide.content &&
-          <HtmlText className="modal-body">
-            {slide.content}
-          </HtmlText>
-        }
+        {(slide.content || !isEmpty(slide.shortcuts)) &&
+          <div className="modal-body">
+            {slide.content &&
+              <HtmlText>
+                {slide.content}
+              </HtmlText>
+            }
 
+            {!isEmpty(slide.shortcuts) &&
+              <h4>{trans('useful_links')}</h4>
+            }
+
+            {!isEmpty(slide.shortcuts) &&
+              <Toolbar
+                id={`slide-shortcuts-${slide.id}`}
+                className="list-group"
+                buttonName="list-group-item"
+                actions={desktopActions.then(actions => {
+                  return slide.shortcuts
+                    .map(shortcut => {
+                      if ('tool' === shortcut.type) {
+                        return {
+                          name: shortcut.name,
+                          type: LINK_BUTTON,
+                          //icon: `fa fa-fw fa-${tool.icon}`,
+                          label: trans('open-tool', {tool: trans(shortcut.name, {}, 'tools')}, 'actions'),
+                          target: toolRoute(shortcut.name)
+                        }
+                      } else {
+                        return actions.find(action => action.name === shortcut.name)
+                      }
+                    })
+                    .filter(link => !!link)
+                })}
+              />
+            }
+          </div>
+        }
 
         <div className="modal-footer">
           {constants.MESSAGE_TYPE_DISCARD === message.type &&
@@ -146,6 +184,9 @@ ConnectionModal.propTypes = {
   messages: T.arrayOf(T.shape(
     ConnectionMessageTypes.propTypes
   )).isRequired,
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ),
   noDiscard: T.bool, // do not send discard request (mostly for preview mode)
   discard: T.func.isRequired
 }

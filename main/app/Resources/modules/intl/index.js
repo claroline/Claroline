@@ -9,6 +9,7 @@ import {
   isValidDate,
   apiDate,
   displayDate,
+  displayDuration,
   now
 } from '#/main/app/intl/date'
 import {locale} from '#/main/app/intl/locale'
@@ -23,6 +24,7 @@ export {
   isValidDate,
   apiDate,
   displayDate,
+  displayDuration,
   now,
   // locale
   locale,
