@@ -496,6 +496,7 @@ class EvaluationManager
             $resourceUserEval = new ResourceUserEvaluation();
             $resourceUserEval->setResourceNode($resourceNode);
             $resourceUserEval->setUser($user);
+            $resourceUserEval->setStatus(AbstractEvaluation::STATUS_TODO);
         }
         $resourceUserEval->setRequired(true);
         $this->om->persist($resourceUserEval);

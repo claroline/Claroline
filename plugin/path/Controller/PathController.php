@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Innova\PathBundle\Controller\API;
+namespace Innova\PathBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -82,7 +82,6 @@ class PathController extends AbstractCrudController
         }
         $status = $this->decodeRequest($request)['status'];
         $this->userProgressionManager->update($step, $user, $status, true);
-        $this->userProgressionManager->generateResourceEvaluation($step, $user, $status);
         $resourceUserEvaluation = $this->userProgressionManager->getResourceUserEvaluation($step->getPath(), $user);
 
         return new JsonResponse([

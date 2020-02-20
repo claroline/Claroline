@@ -48,8 +48,10 @@ class PathSerializer
     {
         return [
             'id' => $path->getUuid(),
-            'display' => [
+            'meta' => [
                 'description' => $path->getDescription(),
+            ],
+            'display' => [
                 'showOverview' => $path->getShowOverview(),
                 'numbering' => $path->getNumbering() ? $path->getNumbering() : 'none',
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
@@ -83,7 +85,7 @@ class PathSerializer
             $path->refreshUuid();
         }
 
-        $this->sipe('display.description', 'setDescription', $data, $path);
+        $this->sipe('meta.description', 'setDescription', $data, $path);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $path);
         $this->sipe('display.numbering', 'setNumbering', $data, $path);
         $this->sipe('display.manualProgressionAllowed', 'setManualProgressionAllowed', $data, $path);

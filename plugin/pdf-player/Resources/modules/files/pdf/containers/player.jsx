@@ -1,8 +1,7 @@
 import {connect} from 'react-redux'
-import {actions as resourceActions} from '#/main/core/resource/store/actions'
 
-// the component to connect
 import {PdfPlayer as PdfPlayerComponent} from '#/plugin/pdf-player/files/pdf/components/player'
+import {actions} from '#/plugin/pdf-player/files/pdf/store'
 
 /**
  * Connected container for resources.
@@ -13,8 +12,8 @@ import {PdfPlayer as PdfPlayerComponent} from '#/plugin/pdf-player/files/pdf/com
 const PdfPlayer = connect(
   null,
   (dispatch) => ({
-    setErrors() {
-      dispatch(resourceActions.setServerErrors(['file_not_found']))
+    updateProgression(id, currentPage, totalPage) {
+      dispatch(actions.updateProgression(id, currentPage, totalPage))
     }
   })
 )(PdfPlayerComponent)

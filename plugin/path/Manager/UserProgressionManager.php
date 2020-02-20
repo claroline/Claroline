@@ -7,19 +7,16 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserProgressionManager
 {
     /** @var ObjectManager */
     private $om;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
@@ -27,26 +24,26 @@ class UserProgressionManager
     private $progressionRepo;
     private $stepRepo;
     private $resourceUserEvalRepo;
+    /** @var ResourceEvaluationRepository */
+    private $resourceEvalRepo;
 
     /**
      * UserProgressionManager constructor.
      *
      * @param ObjectManager             $om
-     * @param TokenStorageInterface     $tokenStorage
      * @param ResourceEvaluationManager $resourceEvalManager
      */
     public function __construct(
         ObjectManager $om,
-        TokenStorageInterface $tokenStorage,
         ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->om = $om;
-        $this->tokenStorage = $tokenStorage;
         $this->resourceEvalManager = $resourceEvalManager;
 
         $this->progressionRepo = $this->om->getRepository(UserProgression::class);
         $this->stepRepo = $this->om->getRepository(Step::class);
         $this->resourceUserEvalRepo = $this->om->getRepository(ResourceUserEvaluation::class);
+        $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
     }
 
     /**
@@ -116,39 +113,9 @@ class UserProgressionManager
             }
         }
 
+        $this->updateResourceEvaluation($step, $user, $status);
+
         return $progression;
-    }
-
-    /**
-     * Fetch resource user evaluation with up-to-date status.
-     *
-     * @param Path $path
-     *
-     * @return ResourceUserEvaluation
-     */
-    public function getUpdatedResourceUserEvaluation(Path $path)
-    {
-        $resourceUserEvaluation = null;
-
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User) {
-            $resourceUserEvaluation = $this->resourceEvalManager->getResourceUserEvaluation($path->getResourceNode(), $user);
-            $data = $this->computeResourceUserEvaluation($path, $user);
-
-            if ($data['progression'] !== $resourceUserEvaluation->getProgression() ||
-                $data['progressionMax'] !== $resourceUserEvaluation->getProgressionMax() ||
-                $data['status'] !== $resourceUserEvaluation->getStatus()
-            ) {
-                $resourceUserEvaluation->setProgression($data['progression']);
-                $resourceUserEvaluation->setProgressionMax($data['progressionMax']);
-                $resourceUserEvaluation->setStatus($data['status']);
-                $resourceUserEvaluation->setDate(new \DateTime());
-                $this->om->persist($resourceUserEvaluation);
-                $this->om->flush();
-            }
-        }
-
-        return $resourceUserEvaluation;
     }
 
     /**
@@ -173,53 +140,54 @@ class UserProgressionManager
      *
      * @return ResourceEvaluation
      */
-    public function generateResourceEvaluation(Step $step, User $user, $status)
+    public function updateResourceEvaluation(Step $step, User $user, $status)
     {
-        $statusData = $this->computeResourceUserEvaluation($step->getPath(), $user);
-        $stepIndex = array_search($step->getUuid(), $statusData['stepsToDo']);
+        $evaluation = $this->resourceEvalRepo->findOneInProgress($step->getPath()->getResourceNode(), $user);
 
-        if (false !== $stepIndex && false !== array_search($status, ['seen', 'done'])) {
-            ++$statusData['progression'];
-            array_splice($statusData['stepsToDo'], $stepIndex, 1);
+        $data = ['done' => []];
+        if ($evaluation) {
+            $data = array_merge($data, $evaluation->getData() ?? []);
         }
 
+        if (!in_array($step->getUuid(), $data['done']) && in_array($status, ['seen', 'done'])) {
+            // mark the step as done if it has the correct status
+            $data['done'][] = $step->getUuid();
+        } elseif (in_array($step->getUuid(), $data['done']) && !in_array($status, ['seen', 'done'])) {
+            // mark the step as not done
+            array_splice($data['done'], array_search($step->getUuid(), $data['done']), 1);
+        }
+
+        $statusData = $this->computeResourceUserEvaluation($step->getPath(), $data);
+
         $evaluationData = [
-            'step' => $step->getUuid(),
-            'status' => $status,
-            'toDo' => $statusData['stepsToDo'],
+            'status' => $statusData['status'],
+            'progression' => $statusData['progression'],
+            'progressionMax' => $statusData['progressionMax'],
+            'data' => $data,
         ];
+
+        if ($evaluation) {
+            return $this->resourceEvalManager->updateResourceEvaluation($evaluation, null, $evaluationData, false, false);
+        }
 
         return $this->resourceEvalManager->createResourceEvaluation(
             $step->getPath()->getResourceNode(),
             $user,
             null,
-            [
-                'status' => $statusData['status'],
-//                'score' => $statusData['score'],
-//                'scoreMax' => $statusData['scoreMax'],
-                'progression' => $statusData['progression'],
-                'progressionMax' => $statusData['progressionMax'],
-                'data' => $evaluationData,
-            ],
-            [
-                'status' => true,
-                'score' => true,
-                'progression' => true,
-            ]
+            $evaluationData
         );
     }
 
     /**
      * Compute current resource evaluation status.
      *
-     * @param Path $path
-     * @param User $user
+     * @param Path  $path
+     * @param array $data
      *
      * @return array
      */
-    public function computeResourceUserEvaluation(Path $path, User $user)
+    private function computeResourceUserEvaluation(Path $path, array $data = [])
     {
-        $resourceUserEval = $this->resourceEvalManager->getResourceUserEvaluation($path->getResourceNode(), $user);
         $steps = array_map(function (Step $step) {
             return $step->getUuid();
         }, $path->getSteps()->toArray());
@@ -230,22 +198,9 @@ class UserProgressionManager
         $status = AbstractEvaluation::STATUS_OPENED;
         // only compute progression if path is not empty
         if ($progressionMax) {
-            $evaluations = $resourceUserEval->getEvaluations();
+            $rest = array_diff($steps, $data['done'] ?? []);
 
-            /** @var ResourceEvaluation $evaluation */
-            foreach ($evaluations as $evaluation) {
-                $data = $evaluation->getData();
-
-                if (isset($data['step']) && isset($data['status'])) {
-                    $statusIndex = array_search($data['status'], ['seen', 'done']);
-                    $uuidIndex = array_search($data['step'], $steps);
-
-                    if (false !== $statusIndex && false !== $uuidIndex) {
-                        ++$progression;
-                        array_splice($steps, $uuidIndex, 1);
-                    }
-                }
-            }
+            $progression = $progressionMax - count($rest);
 
             if ($progression >= $progressionMax) {
                 $status = AbstractEvaluation::STATUS_COMPLETED;
@@ -258,7 +213,6 @@ class UserProgressionManager
             'progression' => $progression,
             'progressionMax' => $progressionMax,
             'status' => $status,
-            'stepsToDo' => $steps,
         ];
     }
 

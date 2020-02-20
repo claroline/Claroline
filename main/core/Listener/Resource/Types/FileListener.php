@@ -125,7 +125,7 @@ class FileListener
             [$resource, $path]
         );
 
-        if ($event->isPopulated()) {
+        if ($loadEvent->isPopulated()) {
             $additionalFileData = $loadEvent->getData();
         } else {
             // no listener found, try to dispatch the fallback event

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
@@ -30,10 +29,10 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LogConnectManager;
-use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -41,49 +40,48 @@ class LogListener
 {
     private $om;
     private $tokenStorage;
+    /** @var Request */
+    private $request;
     private $container;
     private $roleManager;
     private $ch;
     private $enabledLog;
-    private $resourceManager;
-    private $resourceEvalManager;
     private $logConnectManager;
 
     /**
+     * LogListener constructor.
+     *
      * @param ObjectManager                $om
      * @param TokenStorageInterface        $tokenStorage
+     * @param RequestStack                 $requestStack
      * @param ContainerInterface           $container
      * @param RoleManager                  $roleManager
      * @param PlatformConfigurationHandler $ch
-     * @param ResourceManager              $resourceManager
-     * @param ResourceEvaluationManager    $resourceEvalManager
      * @param LogConnectManager            $logConnectManager
      */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
+        RequestStack $requestStack,
         ContainerInterface $container,
         RoleManager $roleManager,
         PlatformConfigurationHandler $ch,
-        ResourceManager $resourceManager,
-        ResourceEvaluationManager $resourceEvalManager,
         LogConnectManager $logConnectManager
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
+        $this->request = $requestStack->getMasterRequest();
         $this->container = $container;
         $this->roleManager = $roleManager;
         $this->ch = $ch;
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
-        $this->resourceManager = $resourceManager;
-        $this->resourceEvalManager = $resourceEvalManager;
         $this->logConnectManager = $logConnectManager;
     }
 
     private function createLog(LogGenericEvent $event)
     {
         if (!$this->enabledLog) {
-            return;
+            return null;
         }
 
         //Add doer details
@@ -91,7 +89,6 @@ class LogListener
         $doerIp = null;
         $doerSessionId = null;
         $doerType = null;
-        $details = [];
 
         //Event can override the doer
         if (null === $event->getDoer()) {
@@ -107,9 +104,10 @@ class LogListener
                     $doer = $token->getUser();
                     $doerType = Log::doerTypeUser;
                 }
-                if ($request = $this->container->get('request_stack')->getMasterRequest()) {
-                    $doerSessionId = $request->getSession()->getId();
-                    $doerIp = $request->getClientIp();
+
+                if ($this->request) {
+                    $doerSessionId = $this->request->getSession()->getId();
+                    $doerIp = $this->request->getClientIp();
                 } else {
                     $doerIp = 'CLI';
                 }
@@ -229,6 +227,10 @@ class LogListener
 
     /**
      * Is a repeat if the session contains a same logSignature for the same action category.
+     *
+     * @param LogGenericEvent $event
+     *
+     * @return bool
      */
     public function isARepeat(LogGenericEvent $event)
     {
@@ -238,8 +240,7 @@ class LogListener
         }
 
         if ($event instanceof LogNotRepeatableInterface) {
-            $request = $this->container->get('request_stack')->getMasterRequest();
-            $session = $request->getSession();
+            $session = $this->request->getSession();
 
             $is = false;
             $pushInSession = true;
@@ -338,29 +339,6 @@ class LogListener
             $logCreated = true;
         }
 
-        // Increment view count
-        if ($event instanceof LogResourceReadEvent) {
-            // Get connected user
-            $tokenStorage = $this->container->get('security.token_storage');
-            $token = $tokenStorage->getToken();
-            $user = $token ? $token->getUser() : null;
-
-            // Increment view count if viewer is not creator of the resource
-            if (is_null($user) || is_string($user) || $user !== $event->getResource()->getCreator()) {
-                // TODO : add me in an event on the resource 'open'
-                $this->resourceManager->addView($event->getResource());
-            }
-            if ($logCreated && !empty($user) && 'anon.' !== $user && 'directory' !== $event->getResource()->getResourceType()->getName()) {
-                $this->resourceEvalManager->updateResourceUserEvaluationData(
-                    $event->getResource(),
-                    $user,
-                    new \DateTime(),
-                    ['status' => AbstractEvaluation::STATUS_OPENED],
-                    ['status' => true],
-                    false
-                );
-            }
-        }
         if ($logCreated && $log && (
             $event instanceof LogUserLoginEvent ||
             $event instanceof LogWorkspaceEnterEvent ||

@@ -7,7 +7,6 @@ services:
     Innova\PathBundle\Listener\Resource\PathListener:
         arguments:
            - '@security.token_storage'
-           - '@templating'
            - '@translator'
            - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\AppBundle\API\SerializerProvider'

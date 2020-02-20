@@ -1293,20 +1293,9 @@ class DropzoneManager
      *
      * @return ResourceUserEvaluation
      */
-    public function generateResourceUserEvaluation(Dropzone $dropzone, User $user)
+    public function getResourceUserEvaluation(Dropzone $dropzone, User $user)
     {
-        $userEval = $this->resourceEvalManager->getResourceUserEvaluation($dropzone->getResourceNode(), $user, false);
-
-        if (empty($userEval)) {
-            $userEval = $this->resourceEvalManager->createResourceEvaluation(
-                $dropzone->getResourceNode(),
-                $user,
-                null,
-                ['status' => AbstractEvaluation::STATUS_NOT_ATTEMPTED]
-            );
-        }
-
-        return $userEval;
+        return $this->resourceEvalManager->getResourceUserEvaluation($dropzone->getResourceNode(), $user);
     }
 
     /**

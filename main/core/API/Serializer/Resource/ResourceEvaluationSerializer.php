@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
 class ResourceEvaluationSerializer
 {
@@ -37,22 +38,19 @@ class ResourceEvaluationSerializer
             $score = round($score, 2);
         }
 
-        $serialized = [
+        return [
             'id' => $resourceEvaluation->getId(),
-            'date' => $resourceEvaluation->getDate() ? $resourceEvaluation->getDate()->format('Y-m-d H:i') : null,
+            'date' => DateNormalizer::normalize($resourceEvaluation->getDate()),
             'status' => $resourceEvaluation->getStatus(),
             'duration' => $resourceEvaluation->getDuration(),
             'score' => $score,
             'scoreMin' => $resourceEvaluation->getScoreMin(),
             'scoreMax' => $resourceEvaluation->getScoreMax(),
-            'customScore' => $resourceEvaluation->getCustomScore(),
             'progression' => $resourceEvaluation->getProgression(),
             'progressionMax' => $resourceEvaluation->getProgressionMax(),
             'comment' => $resourceEvaluation->getComment(),
             'data' => $resourceEvaluation->getData(),
             'resourceUserEvaluation' => $this->resourceUserEvaluationSerializer->serialize($resourceEvaluation->getResourceUserEvaluation()),
         ];
-
-        return $serialized;
     }
 }

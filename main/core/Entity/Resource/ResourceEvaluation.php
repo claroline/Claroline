@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository")
  * @ORM\Table(name="claro_resource_evaluation")
  */
 class ResourceEvaluation extends AbstractEvaluation

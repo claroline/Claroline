@@ -24,10 +24,10 @@ class PdfPlayer extends Component {
         pdf: pdf,
         context: document.getElementById('pdf-canvas-' + this.props.file.id).getContext('2d')
       }, () => this.renderPage())
-    }).catch(() => this.props.setErrors())
+    }).catch(() => {})
   }
 
-  renderPage() {
+  renderPage(updateProgression = true) {
     this.state.pdf.getPage(this.state.page).then(page => {
       const viewport = page.getViewport(this.state.scale / 100)
       const canvas = document.getElementById('pdf-canvas-' + this.props.file.id)
@@ -40,6 +40,10 @@ class PdfPlayer extends Component {
         viewport: viewport
       }
       page.render(renderContext)
+
+      if (updateProgression) {
+        this.props.updateProgression(this.props.file.id, this.state.page, this.state.pdf.numPages)
+      }
     })
   }
 
@@ -51,6 +55,7 @@ class PdfPlayer extends Component {
     } else if (pageNum > this.state.pdf.numPages) {
       pageNum = this.state.pdf.numPages
     }
+
     this.setState({page: parseInt(pageNum)}, () => this.renderPage())
   }
 
@@ -60,7 +65,7 @@ class PdfPlayer extends Component {
     if (1 >= scale) {
       scale = 1
     }
-    this.setState({scale: parseInt(scale)}, () => this.renderPage())
+    this.setState({scale: parseInt(scale)}, () => this.renderPage(false))
   }
 
   render() {
@@ -118,6 +123,7 @@ class PdfPlayer extends Component {
             <span className="pdf-zoom-unit">%</span>
           </div>
         </div>
+
         <div className="pdf-player">
           <canvas id={'pdf-canvas-' + this.props.file.id} className="pdf-player-page" />
         </div>
@@ -130,7 +136,7 @@ PdfPlayer.propTypes = {
   file: T.shape(
     PdfTypes.propTypes
   ).isRequired,
-  setErrors: T.func.isRequired
+  updateProgression: T.func.isRequired
 }
 
 export {

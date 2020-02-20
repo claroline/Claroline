@@ -98,11 +98,10 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.token_storage'
+            - '@request_stack'
             - '@service_container'
             - '@claroline.manager.role_manager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.resource_manager'
-            - '@claroline.manager.resource_evaluation_manager'
             - '@claroline.manager.log_connect'
         tags:
             - { name: kernel.event_listener, event: log, method: onLog }

@@ -43,7 +43,7 @@ const EditorParameters = props =>
               label: trans('enable_overview'),
               linked: [
                 {
-                  name: 'display.description',
+                  name: 'meta.description',
                   type: 'html',
                   label: trans('overview_message'),
                   displayed: props.path.display.showOverview,

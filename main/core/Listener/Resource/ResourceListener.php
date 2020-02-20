@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -68,12 +68,23 @@ class ResourceListener
     public function load(LoadResourceEvent $event)
     {
         $resourceNode = $event->getResourceNode();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        //I have no idea if it is correct to do this
-        if ('anon.' !== $this->tokenStorage->getToken()->getUser()) {
-            $this->evaluationManager->createResourceEvaluation($resourceNode, $this->tokenStorage->getToken()->getUser(), null, [
-                'status' => ResourceEvaluation::STATUS_PARTICIPATED,
-            ]);
+        // Increment view count if viewer is not creator of the resource
+        if (!($user instanceof User) || $user !== $resourceNode->getCreator()) {
+            $this->manager->addView($resourceNode);
+        }
+
+        // Update current user evaluation
+        if ($user instanceof User) {
+            $this->evaluationManager->updateResourceUserEvaluationData(
+                $resourceNode,
+                $user,
+                new \DateTime(),
+                ['status' => AbstractEvaluation::STATUS_OPENED],
+                false,
+                true
+            );
         }
 
         // propagate event to resource type

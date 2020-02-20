@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Innova\PathBundle\Controller\API;
+namespace Innova\PathBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;

@@ -40,6 +40,9 @@ const Step = {
 const Path = {
   propTypes: {
     id: T.string.isRequired,
+    meta: T.shape({
+      description: T.string
+    }),
     display: T.shape({
       showOverview: T.bool,
       numbering: T.oneOf(['none', 'numeric', 'literal', 'custom']),
@@ -58,6 +61,7 @@ const Path = {
     ))
   },
   defaultProps: {
+    meta: {},
     display: {
       showOverview: false,
       numbering: 'none',

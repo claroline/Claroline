@@ -124,7 +124,7 @@ ResourcesModal.propTypes = {
 
 ResourcesModal.defaultProps = {
   icon: 'fa fa-fw fa-folder',
-  title: trans('resource_explorer', {}, 'resource'),
+  title: trans('resources'),
   filters: [],
   current: null
 }

@@ -98,7 +98,7 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
 
     public function getNbAttempts()
     {
-        return $this->nbAttempts;
+        return $this->nbAttempts ?? 0;
     }
 
     public function setNbAttempts($nbAttempts)
@@ -108,7 +108,7 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
 
     public function getNbOpenings()
     {
-        return $this->nbOpenings;
+        return $this->nbOpenings ?? 0;
     }
 
     public function setNbOpenings($nbOpenings)

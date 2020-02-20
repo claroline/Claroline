@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Workspace;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
 class EvaluationSerializer
 {
@@ -36,13 +37,12 @@ class EvaluationSerializer
     {
         return [
             'id' => $evaluation->getUuid(),
-            'date' => $evaluation->getDate() ? $evaluation->getDate()->format('Y-m-d H:i') : null,
+            'date' => DateNormalizer::normalize($evaluation->getDate()),
             'status' => $evaluation->getStatus(),
             'duration' => $evaluation->getDuration(),
             'score' => $evaluation->getScore(),
             'scoreMin' => $evaluation->getScoreMin(),
             'scoreMax' => $evaluation->getScoreMax(),
-            'customScore' => $evaluation->getCustomScore(),
             'progression' => $evaluation->getProgression(),
             'progressionMax' => $evaluation->getProgressionMax(),
             'user' => $this->userSerializer->serialize($evaluation->getUser(), [Options::SERIALIZE_MINIMAL]),

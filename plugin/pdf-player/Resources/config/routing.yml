@@ -1,6 +1,6 @@
 # JSON API
 innova_path_api:
-    resource: "@InnovaPathBundle/Controller/"
+    resource: "@ClarolinePdfPlayerBundle/Controller/"
     prefix: apiv2
     type: api
     options:

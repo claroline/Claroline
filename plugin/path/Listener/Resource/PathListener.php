@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -28,9 +27,6 @@ class PathListener
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
-    /** @var TwigEngine */
-    private $templating;
 
     /** @var TranslatorInterface */
     private $translator;
@@ -51,7 +47,6 @@ class PathListener
      * PathListener constructor.
      *
      * @param TokenStorageInterface  $tokenStorage
-     * @param TwigEngine             $templating
      * @param TranslatorInterface    $translator
      * @param ObjectManager          $om
      * @param SerializerProvider     $serializer
@@ -60,7 +55,6 @@ class PathListener
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        TwigEngine $templating,
         TranslatorInterface $translator,
         ObjectManager $om,
         SerializerProvider $serializer,
@@ -68,7 +62,6 @@ class PathListener
         UserProgressionManager $userProgressionManager)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
         $this->translator = $translator;
         $this->om = $om;
         $this->serializer = $serializer;
@@ -85,12 +78,13 @@ class PathListener
     {
         /** @var Path $path */
         $path = $event->getResource();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $event->setData([
             'path' => $this->serializer->serialize($path),
-            'userEvaluation' => $this->serializer->serialize(
-                $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
-            ),
+            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
+                $this->userProgressionManager->getResourceUserEvaluation($path, $user)
+            ) : null,
         ]);
         $event->stopPropagation();
     }
@@ -147,6 +141,7 @@ class PathListener
 
     /**
      * Fired when a Resource Evaluation with a score is created.
+     * We will update progression for all paths using this resource.
      *
      * @param UserEvaluationEvent $event
      */

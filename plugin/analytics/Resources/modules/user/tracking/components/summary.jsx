@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ResourceUserEvaluation} from '#/main/core/user/tracking/prop-types'
+import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
 const Summary = props =>
   <div className="panel panel-default">
@@ -23,7 +23,9 @@ const Summary = props =>
   </div>
 
 Summary.propTypes = {
-  evaluations: T.arrayOf(T.shape(ResourceUserEvaluation.propTypes))
+  evaluations: T.arrayOf(T.shape(
+    UserEvaluationTypes.propTypes
+  ))
 }
 
 export {

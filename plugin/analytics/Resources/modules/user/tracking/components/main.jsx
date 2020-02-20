@@ -6,7 +6,7 @@ import {merge} from 'lodash'
 import {trans} from '#/main/app/intl/translation'
 import {User} from '#/main/core/user/prop-types'
 import {actions} from '#/main/core/user/tracking/store'
-import {ResourceUserEvaluation} from '#/main/core/user/tracking/prop-types'
+import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 import {UserPage} from '#/main/core/user/components/page'
 import {UserDetails} from '#/main/core/user/components/details'
 import {Timeline} from '#/main/core/user/tracking/components/timeline'
@@ -93,7 +93,7 @@ class TrackingComponent extends Component {
 
 TrackingComponent.propTypes = {
   user: T.shape(User.propTypes).isRequired,
-  evaluations: T.arrayOf(T.shape(ResourceUserEvaluation.propTypes)),
+  evaluations: T.arrayOf(T.shape(UserEvaluationTypes.propTypes)),
   loadTrackings: T.func.isRequired
 }
 

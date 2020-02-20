@@ -35,8 +35,8 @@ class AbstractEvaluation
         self::STATUS_OPENED => 2,
         self::STATUS_INCOMPLETE => 3,
         self::STATUS_PARTICIPATED => 4,
-        self::STATUS_COMPLETED => 5,
-        self::STATUS_FAILED => 6,
+        self::STATUS_FAILED => 5,
+        self::STATUS_COMPLETED => 6,
         self::STATUS_PASSED => 7,
     ];
 
@@ -60,7 +60,7 @@ class AbstractEvaluation
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $duration;
+    protected $duration = 0;
 
     /**
      * @ORM\Column(name="score", type="float", nullable=true)
@@ -76,11 +76,6 @@ class AbstractEvaluation
      * @ORM\Column(name="score_max", type="float", nullable=true)
      */
     protected $scoreMax;
-
-    /**
-     * @ORM\Column(name="custom_score", nullable=true)
-     */
-    protected $customScore;
 
     /**
      * @ORM\Column(name="progression", type="integer", nullable=true)
@@ -124,7 +119,7 @@ class AbstractEvaluation
 
     public function getDuration()
     {
-        return $this->duration;
+        return $this->duration ?? 0;
     }
 
     public function setDuration($duration)
@@ -160,16 +155,6 @@ class AbstractEvaluation
     public function setScoreMax($scoreMax)
     {
         $this->scoreMax = $scoreMax;
-    }
-
-    public function getCustomScore()
-    {
-        return $this->customScore;
-    }
-
-    public function setCustomScore($customScore)
-    {
-        $this->customScore = $customScore;
     }
 
     public function getProgression()

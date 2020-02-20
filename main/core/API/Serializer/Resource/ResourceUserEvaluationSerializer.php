@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource;
 
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
 class ResourceUserEvaluationSerializer
 {
@@ -41,15 +42,14 @@ class ResourceUserEvaluationSerializer
             $score = round($score, 2);
         }
 
-        $serialized = [
+        return [
             'id' => $resourceUserEvaluation->getId(),
-            'date' => $resourceUserEvaluation->getDate() ? $resourceUserEvaluation->getDate()->format('Y-m-d H:i') : null,
+            'date' => DateNormalizer::normalize($resourceUserEvaluation->getDate()),
             'status' => $resourceUserEvaluation->getStatus(),
             'duration' => $resourceUserEvaluation->getDuration(),
             'score' => $score,
             'scoreMin' => $resourceUserEvaluation->getScoreMin(),
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
-            'customScore' => $resourceUserEvaluation->getCustomScore(),
             'progression' => $resourceUserEvaluation->getProgression(),
             'progressionMax' => $resourceUserEvaluation->getProgressionMax(),
             'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode()), // TODO : remove me or add an option
@@ -59,7 +59,5 @@ class ResourceUserEvaluationSerializer
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
             'required' => $resourceUserEvaluation->isRequired(),
         ];
-
-        return $serialized;
     }
 }

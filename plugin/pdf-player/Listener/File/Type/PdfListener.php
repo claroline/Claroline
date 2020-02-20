@@ -11,22 +11,58 @@
 
 namespace Claroline\PdfPlayerBundle\Listener\File\Type;
 
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
+use Claroline\PdfPlayerBundle\Manager\UserEvaluationManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Integrates PDF files into Claroline.
  */
 class PdfListener
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /** @var UserEvaluationManager */
+    private $userEvaluationManager;
+
+    /**
+     * PdfListener constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param SerializerProvider    $serializer
+     * @param UserEvaluationManager $userEvaluationManager
+     */
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        SerializerProvider $serializer,
+        UserEvaluationManager $userEvaluationManager
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->serializer = $serializer;
+        $this->userEvaluationManager = $userEvaluationManager;
+    }
+
     /**
      * @param LoadFileEvent $event
      */
     public function onLoad(LoadFileEvent $event)
     {
-        // setting empty data let the dispatcher know there is
-        // a player for pdf but it doesn't require any additional data
-        // without it, the dispatcher will try to find a player for "application/*"
-        $event->setData([]);
+        /** @var File $pdf */
+        $pdf = $event->getResource();
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $event->setData([
+            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
+                $this->userEvaluationManager->getResourceUserEvaluation($pdf->getResourceNode(), $user)
+            ) : null,
+        ]);
         $event->stopPropagation();
     }
 }

@@ -15,7 +15,7 @@ import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
 const UserProgression = props =>
   <section className="user-progression">
-    <h3 className="h2">{trans('resource_overview_progression', {}, 'resource')}</h3>
+    <h3 className="h2">{trans('my_progression')}</h3>
 
     <div className="panel panel-default">
       <div className="panel-body text-center">
@@ -52,7 +52,6 @@ const UserProgression = props =>
   </section>
 
 UserProgression.propTypes = {
-  unlocked: T.bool,
   status: T.string,
   statusTexts: T.object,
   score: T.shape({
@@ -66,7 +65,6 @@ UserProgression.propTypes = {
 }
 
 UserProgression.defaultProps = {
-  unlocked: false,
   status: constants.EVALUATION_STATUS_NOT_ATTEMPTED,
   statusTexts: {},
   details: []
@@ -193,11 +191,6 @@ const ResourceOverview = props =>
 ResourceOverview.propTypes = {
   contentText: T.node, // can be a string or an empty placeholder
   progression: T.shape({
-    /**
-     * Permits to show notation & feedback before the end of evaluation.
-     * (Some resources like DropZone implement it)
-     */
-    unlocked: T.bool,
     status: T.string,
     statusTexts: T.object,
     feedback: T.shape({

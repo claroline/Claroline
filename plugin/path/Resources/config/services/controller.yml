@@ -29,12 +29,12 @@ services:
                 arguments:
                   - '@service_container'
 
-    Innova\PathBundle\Controller\API\PathController:
+    Innova\PathBundle\Controller\PathController:
         arguments:
             - '@security.authorization_checker'
             - '@Innova\PathBundle\Manager\UserProgressionManager'
 
-    Innova\PathBundle\Controller\API\PathTrackingController:
+    Innova\PathBundle\Controller\PathTrackingController:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'

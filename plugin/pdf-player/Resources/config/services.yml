@@ -2,8 +2,26 @@ services:
     _defaults:
         autowire: false #change to true
         autoconfigure: false
-        public: true #because controller
+        public: true # because controller
 
+    # Controllers
+    Claroline\PdfPlayerBundle\Controller\UserEvaluationController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\PdfPlayerBundle\Manager\UserEvaluationManager'
+
+    # Listeners
     Claroline\PdfPlayerBundle\Listener\File\Type\PdfListener:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\PdfPlayerBundle\Manager\UserEvaluationManager'
         tags:
             - { name: kernel.event_listener, event: file.application_pdf.load, method: onLoad }
+
+    # Managers
+    Claroline\PdfPlayerBundle\Manager\UserEvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.resource_evaluation_manager'

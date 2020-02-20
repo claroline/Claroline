@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ChapterSerializer
 {
@@ -21,8 +21,7 @@ class ChapterSerializer
     /**
      * ChapterSerializer constructor.
      *
-     * @param ObjectManager      $om
-     * @param ContainerInterface $container
+     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
