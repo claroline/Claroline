@@ -9,5 +9,6 @@ function getTool(name) {
 }
 
 export {
+  getTools,
   getTool
 }
