@@ -102,7 +102,7 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () =>
 
 actions.deleteFile = (fileId, onSuccess = () => {}) => ({
   [constants.API_REQUEST]: {
-    url: url(['apiv2_publicfile_delete_bulk'], {ids: [fileId]}),
+    url: url(['apiv2_public_file_delete_bulk'], {ids: [fileId]}),
     request: {
       method: 'DELETE'
     },

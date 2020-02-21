@@ -51,7 +51,7 @@ class FileController extends AbstractCrudController
     /** @return string */
     public function getName()
     {
-        return 'uploaded_file';
+        return 'public_file';
     }
 
     /**
