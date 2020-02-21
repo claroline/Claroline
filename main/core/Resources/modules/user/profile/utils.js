@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {trans} from '#/main/app/intl/translation'
 
 function getMainFacet(facets) {
@@ -20,7 +22,7 @@ function getDefaultFacet() {
 
 function getDetailsDefaultSection(parameters, user) {
   let displayEmail = false
-  parameters.show_email.forEach(role => {
+  get(parameters, 'show_email', []).forEach(role => {
     user.roles.forEach(userRole => {
       if (userRole.name === role) {
         displayEmail = true
