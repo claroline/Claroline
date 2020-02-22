@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {makeCancelable} from '#/main/app/api'
+import {trans} from '#/main/app/intl/translation'
 import {getType} from '#/main/app/data/types'
 
 import {FormGroup} from '#/main/app/content/form/components/group'
@@ -73,7 +74,10 @@ class DataInput extends Component {
       )
       .then(
         () => this.pending = null,
-        () => this.pending = null
+        (error) => {
+          this.pending = null
+          this.setState({loaded: true, error: error})
+        }
       )
   }
 
@@ -93,7 +97,7 @@ class DataInput extends Component {
   renderInput() {
     if (!this.state.loaded) {
       // todo : better
-      return 'loading'
+      return trans('loading')
     }
 
     if (this.state.error) {

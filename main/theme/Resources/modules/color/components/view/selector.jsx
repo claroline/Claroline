@@ -87,7 +87,7 @@ class HueSelector extends Component {
       >
         <button
           type="button"
-          className="slider-cursor"
+          className="color-slider-cursor"
           style={{
             bottom: `${(original.h / 360)*100}%`
           }}
@@ -138,7 +138,7 @@ class AlphaSelector extends Component {
 
         <button
           type="button"
-          className="slider-cursor"
+          className="color-slider-cursor"
           style={{
             left: `${currentAlpha * 100}%`
           }}

@@ -12,7 +12,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
-import {ColorInput} from '#/main/app/data/types/color/components/input'
+import {ColorInput} from '#/main/theme/data/types/color/components/input'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 
 import {SCORE_SUM} from '#/plugin/exo/quiz/enums'

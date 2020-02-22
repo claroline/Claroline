@@ -6,9 +6,9 @@ import {implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-import {ColorChartLibrary} from '#/main/core/layout/color-chart/components/view/library'
-import {ColorChartSelector} from '#/main/core/layout/color-chart/components/view/selector'
-import {ColorChart as ColorChartTypes} from '#/main/core/layout/color-chart/prop-types'
+import {ColorChartLibrary} from '#/main/theme/color/components/view/library'
+import {ColorChartSelector} from '#/main/theme/color/components/view/selector'
+import {ColorChart as ColorChartTypes} from '#/main/theme/color/prop-types'
 
 class ColorChart extends Component {
   constructor(props) {

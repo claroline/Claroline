@@ -12,7 +12,7 @@ import {constants} from '#/plugin/exo/items/grid/constants'
 import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ColorInput} from '#/main/app/data/types/color/components/input'
+import {ColorInput} from '#/main/theme/data/types/color/components/input'
 import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 
 import {utils} from '#/plugin/exo/items/grid/utils/utils'

@@ -8,5 +8,6 @@
     "dollar": "USD",
     "dollar_short": "$"
   },
-  "not_found": "Contenu non trouvé"
+  "not_found": "Contenu non trouvé",
+  "loading": "Chargement en cours..."
 }

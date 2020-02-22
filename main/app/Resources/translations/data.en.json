@@ -2,7 +2,6 @@
   "boolean": "Boolean",
   "choice": "Choice",
   "collection": "Collection",
-  "color": "Color",
   "country": "Country",
   "currency": "Currency",
   "date": "Date",

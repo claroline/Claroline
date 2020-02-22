@@ -8,8 +8,8 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {ColorInput} from '#/main/app/data/types/color/components/input'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
+import {ColorInput} from '#/main/theme/data/types/color/components/input'
 
 export class AreaPopover extends Component {
   constructor(props) {

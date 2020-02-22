@@ -77,7 +77,7 @@ const EditorForm = props =>
             }
           }, {
             name: 'icon',
-            type: 'string',
+            type: 'icon',
             label: trans('icon'),
             help: trans('icon_tab_help'),
             onChange: (icon) => {

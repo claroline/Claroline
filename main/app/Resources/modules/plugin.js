@@ -17,7 +17,6 @@ registry.add('ClarolineAppBundle', {
       'cascade-enum': () => { return import(/* webpackChunkName: "app-data-type-cascade-enum" */ '#/main/app/data/types/cascade-enum') },
       'choice'      : () => { return import(/* webpackChunkName: "app-data-type-choice" */       '#/main/app/data/types/choice') },
       'collection'  : () => { return import(/* webpackChunkName: "app-data-type-collection" */   '#/main/app/data/types/collection') },
-      'color'       : () => { return import(/* webpackChunkName: "app-data-type-color" */        '#/main/app/data/types/color') },
       'country'     : () => { return import(/* webpackChunkName: "app-data-type-country" */      '#/main/app/data/types/country') },
       'currency'    : () => { return import(/* webpackChunkName: "app-data-type-currency" */     '#/main/app/data/types/currency') },
       'date'        : () => { return import(/* webpackChunkName: "app-data-type-date" */         '#/main/app/data/types/date') },

@@ -8,7 +8,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
-import {ColorChart} from '#/main/core/layout/color-chart/components/color-chart'
+import {ColorChart} from '#/main/theme/color/components/color-chart'
 
 class ColorInput extends Component {
   constructor(props) {

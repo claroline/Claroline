@@ -11,6 +11,8 @@
 // in base64 encoded to avoid external image
 @transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
 
+// TODO : should be merged with date picker and icon picker
+
 .color-chart-container {
     position: relative;
     display: inline-flex;
@@ -150,7 +152,7 @@
         overflow: visible; // show cursor overflow for terminal values
         position: relative;
 
-        .slider-cursor {
+        .color-slider-cursor {
             position: absolute;
             display: inline-block;
             width: @color-chart-slider-size;
@@ -163,7 +165,7 @@
         &.color-slider-h {
             height: @color-chart-slider-size;
 
-            .slider-cursor {
+            .color-slider-cursor {
                 cursor: ew-resize;
                 width: floor(@color-chart-slider-size / 2);
                 margin-left: -(@color-chart-slider-size / 4);
@@ -173,7 +175,7 @@
         &.color-slider-v {
             width: @color-chart-slider-size;
 
-            .slider-cursor {
+            .color-slider-cursor {
                 cursor: ns-resize;
                 height: floor(@color-chart-slider-size / 2);
                 margin-top: -(@color-chart-slider-size / 4);
