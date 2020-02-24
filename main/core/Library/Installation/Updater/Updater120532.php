@@ -66,7 +66,7 @@ class Updater120532 extends Updater
     {
         $url = $this->config->getParameter('internet.platform_url');
         if (!empty($url) && false === strpos('http', $url)) {
-            if ($this->config->getParameter('internet.ssl_enabled')) {
+            if ($this->config->getParameter('ssl.enabled')) {
                 $this->config->setParameter('internet.platform_url', 'https://'.$url);
             } else {
                 $this->config->setParameter('internet.platform_url', 'http://'.$url);
