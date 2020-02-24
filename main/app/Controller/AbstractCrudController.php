@@ -121,7 +121,6 @@ abstract class AbstractCrudController extends AbstractApiController
         $data = $this->finder->fetch($class, $query['filters'], [], 0, 2);
 
         $options = $this->options['get'];
-
         if (isset($query['options'])) {
             $options = $query['options'];
         }
@@ -175,16 +174,17 @@ abstract class AbstractCrudController extends AbstractApiController
         $object = $this->find($class, $id);
 
         $options = $this->options['get'];
-
         if (isset($query['options'])) {
             $options = $query['options'];
         }
 
-        return $object ?
-            new JsonResponse(
-                $this->serializer->serialize($object, $options)
-            ) :
-            new JsonResponse("No object found for id {$id} of class {$class}", 404);
+        if ($object) {
+            return new JsonResponse(
+                $this->serializer->serialize($object, $options ?? [])
+            );
+        }
+
+        return new JsonResponse("No object found for id {$id} of class {$class}", 404);
     }
 
     /**
@@ -241,11 +241,9 @@ abstract class AbstractCrudController extends AbstractApiController
 
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
-        return new JsonResponse($this->finder->search(
-            $class,
-            $query,
-            $options
-        ));
+        return new JsonResponse(
+            $this->finder->search($class, $query, $options ?? [])
+        );
     }
 
     /**
@@ -280,7 +278,7 @@ abstract class AbstractCrudController extends AbstractApiController
         $data = $this->finder->search(
             $class,
             $query,
-            $options
+            $options ?? []
         )['data'];
 
         $titles = [];
@@ -334,17 +332,13 @@ abstract class AbstractCrudController extends AbstractApiController
     public function createAction(Request $request, $class)
     {
         $query = $request->query->all();
-        $options = $this->options['create'];
 
+        $options = $this->options['create'];
         if (isset($query['options'])) {
             $options = $query['options'];
         }
 
-        $object = $this->crud->create(
-            $class,
-            $this->decodeRequest($request),
-            $options
-        );
+        $object = $this->crud->create($class, $this->decodeRequest($request), $options ?? []);
 
         if (is_array($object)) {
             return new JsonResponse($object, 422);
@@ -377,23 +371,18 @@ abstract class AbstractCrudController extends AbstractApiController
     public function updateAction($id, Request $request, $class)
     {
         $query = $request->query->all();
-        $data = $this->decodeRequest($request);
 
+        $data = $this->decodeRequest($request);
         if (!isset($data['id'])) {
             $data['id'] = $id;
         }
 
         $options = $this->options['update'];
-
         if (isset($query['options'])) {
             $options = $query['options'];
         }
 
-        $object = $this->crud->update(
-            $class,
-            $data,
-            $options
-        );
+        $object = $this->crud->update($class, $data, $options ?? []);
 
         if (is_array($object)) {
             return new JsonResponse($object, 422);
