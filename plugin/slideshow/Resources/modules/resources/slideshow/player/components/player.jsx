@@ -1,7 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-
+import get from 'lodash/get'
+import tinycolor from 'tinycolor2'
 import Carousel from 'react-bootstrap/lib/Carousel'
 
 import {asset} from '#/main/app/config/asset'
@@ -29,6 +30,7 @@ const PlayerComponent = props => {
 
   return (
     <Carousel
+      className="row slideshow-carourel"
       defaultActiveIndex={activeIndex}
       interval={props.autoPlay && props.interval}
       controls={props.showControls}
@@ -39,25 +41,35 @@ const PlayerComponent = props => {
       nextIcon={<span className="fa fa-chevron-right" />}
       nextLabel={trans('next')}
     >
-      {props.slides.map(slide =>
-        <Carousel.Item
-          key={slide.id}
-        >
-          <img src={asset(slide.content.url)} alt={slide.title} />
+      {props.slides.map(slide => {
+        let color
+        if (get(slide, 'display.color')) {
+          color = tinycolor(slide.display.color)
+        }
 
-          {(slide.meta.title || slide.meta.description) &&
-            <Carousel.Caption>
-              {slide.meta.title &&
-                <h3>{slide.meta.title}</h3>
-              }
+        return (
+          <Carousel.Item
+            key={slide.id}
+            style={color ? {
+              backgroundColor: color.toRgbString()
+            } : undefined}
+          >
+            <img src={asset(slide.content.url)} alt={slide.title} />
 
-              {slide.meta.description &&
-                <p>{slide.meta.description}</p>
-              }
-            </Carousel.Caption>
-          }
-        </Carousel.Item>
-      )}
+            {(slide.meta.title || slide.meta.description) &&
+              <Carousel.Caption>
+                {slide.meta.title &&
+                  <h3>{slide.meta.title}</h3>
+                }
+
+                {slide.meta.description &&
+                  <p>{slide.meta.description}</p>
+                }
+              </Carousel.Caption>
+            }
+          </Carousel.Item>
+        )
+      })}
     </Carousel>
   )
 }

@@ -84,6 +84,16 @@ const SlideModal = props =>
               }
             }
           ]
+        }, {
+          icon: 'fa fa-fw fa-desktop',
+          title: trans('display_parameters'),
+          fields: [
+            {
+              name: 'display.color',
+              label: trans('color'),
+              type: 'color'
+            }
+          ]
         }
       ]}
     />

@@ -11,10 +11,14 @@ const Slide = {
     meta: T.shape({
       title: T.string,
       description: T.string
+    }),
+    display: T.shape({
+      color: T.string
     })
   },
   defaultProps: {
-    meta: {}
+    meta: {},
+    display: {}
   }
 }
 

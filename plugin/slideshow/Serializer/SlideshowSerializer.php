@@ -94,6 +94,9 @@ class SlideshowSerializer
                         'title' => $slide->getTitle(),
                         'description' => $slide->getDescription(),
                     ],
+                    'display' => [
+                        'color' => $slide->getColor(),
+                    ],
                 ];
             }, $slideshow->getSlides()->toArray()),
         ];
@@ -146,6 +149,7 @@ class SlideshowSerializer
 
                 $this->sipe('meta.title', 'setTitle', $slideData, $slide);
                 $this->sipe('meta.description', 'setDescription', $slideData, $slide);
+                $this->sipe('display.color', 'setColor', $slideData, $slide);
 
                 // TODO : enhance to allow more than files (eg. HTML)
                 $this->sipe('content.url', 'setContent', $slideData, $slide);
