@@ -215,7 +215,7 @@ class ResourceNodeCrud
         $this->om->persist($copy);
         $this->om->persist($newParent);
 
-        $this->serializer->deserializeRights($this->serializer->serialize($node)['rights'], $newNode);
+        $this->serializer->deserializeRights($this->serializer->serialize($newParent)['rights'], $newNode);
 
         if ('directory' === $node->getResourceType()->getName()) {
             foreach ($node->getChildren() as $child) {
