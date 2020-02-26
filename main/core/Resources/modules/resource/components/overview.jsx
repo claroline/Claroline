@@ -6,8 +6,9 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {constants as baseConstants} from '#/main/core/constants'
 import {constants} from '#/main/core/resource/constants'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
@@ -65,7 +66,7 @@ UserProgression.propTypes = {
 }
 
 UserProgression.defaultProps = {
-  status: constants.EVALUATION_STATUS_NOT_ATTEMPTED,
+  status: baseConstants.EVALUATION_STATUS_NOT_ATTEMPTED,
   statusTexts: {},
   details: []
 }
@@ -73,9 +74,9 @@ UserProgression.defaultProps = {
 const UserFeedback = props => {
   const displayed = props.displayed // Feedback are enabled
     && [
-      constants.EVALUATION_STATUS_PASSED,
-      constants.EVALUATION_STATUS_FAILED,
-      constants.EVALUATION_STATUS_COMPLETED
+      baseConstants.EVALUATION_STATUS_PASSED,
+      baseConstants.EVALUATION_STATUS_FAILED,
+      baseConstants.EVALUATION_STATUS_COMPLETED
     ].indexOf(props.status) > -1 // Evaluation is finished
 
   if (displayed) {
@@ -83,17 +84,17 @@ const UserFeedback = props => {
     let alertTitle
     let alertMessage
     switch (props.status) {
-      case constants.EVALUATION_STATUS_PASSED:
+      case baseConstants.EVALUATION_STATUS_PASSED:
         alertType = 'success'
         alertTitle = trans('evaluation_passed_feedback')
         alertMessage = props.success
         break
-      case constants.EVALUATION_STATUS_FAILED:
+      case baseConstants.EVALUATION_STATUS_FAILED:
         alertType = 'danger'
         alertTitle = trans('evaluation_failed_feedback')
         alertMessage = props.failure
         break
-      case constants.EVALUATION_STATUS_COMPLETED:
+      case baseConstants.EVALUATION_STATUS_COMPLETED:
       default:
         alertType = 'info'
         alertTitle = trans('evaluation_completed_feedback')
@@ -122,7 +123,7 @@ UserFeedback.propTypes = {
 }
 
 UserFeedback.defaultProps = {
-  status: constants.EVALUATION_STATUS_NOT_ATTEMPTED,
+  status: baseConstants.EVALUATION_STATUS_NOT_ATTEMPTED,
   success: trans('evaluation_passed_feedback_msg'),
   failure: trans('evaluation_failed_feedback_msg')
 }
@@ -175,7 +176,7 @@ const ResourceOverview = props =>
 
             <div className="panel panel-default">
               {typeof props.contentText === 'string' ?
-                <HtmlText className="panel-body">{props.contentText}</HtmlText>
+                <ContentHtml className="panel-body">{props.contentText}</ContentHtml>
                 :
                 <div className="panel-body">{props.contentText}</div>
               }

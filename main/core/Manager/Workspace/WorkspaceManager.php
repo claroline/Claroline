@@ -17,6 +17,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
@@ -174,6 +175,8 @@ class WorkspaceManager
     }
 
     /**
+     * @param Organization[] $organizations
+     *
      * @return int
      */
     public function getNbNonPersonalWorkspaces($organizations = null)
@@ -285,7 +288,7 @@ class WorkspaceManager
         return $this->workspaceRepo->findWorkspacesWithMostResources($max, $organizations);
     }
 
-    public function addUserQueue(Workspace $workspace, User $user)
+    public function addUserQueue(Workspace $workspace, User $user) // TODO : move in WorkspaceUserQueueManager
     {
         $wksrq = new WorkspaceRegistrationQueue();
         $wksrq->setUser($user);
@@ -301,7 +304,7 @@ class WorkspaceManager
         $this->om->flush();
     }
 
-    public function isUserInValidationQueue(Workspace $workspace, User $user)
+    public function isUserInValidationQueue(Workspace $workspace, User $user) // TODO : move in WorkspaceUserQueueManager
     {
         $workspaceRegistrationQueueRepo =
             $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
@@ -321,31 +324,13 @@ class WorkspaceManager
         $role = $workspace->getDefaultRole();
         $this->roleManager->associateRole($user, $role);
 
+        // nope
         if ($user->getUuid() === $this->container->get('security.token_storage')->getToken()->getUser()->getUuid()) {
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->container->get('security.token_storage')->setToken($token);
         }
 
         return $user;
-    }
-
-    /**
-     * Count the number of resources in a workspace.
-     *
-     * @param Workspace $workspace
-     *
-     * @return int
-     */
-    public function countResources(Workspace $workspace)
-    {
-        //@todo count directory from dql
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        if (!$root) {
-            return 0;
-        }
-        $descendants = $this->resourceManager->getDescendants($root);
-
-        return count($descendants);
     }
 
     /**
@@ -387,7 +372,7 @@ class WorkspaceManager
 
     public function getWorkspaceOptions(Workspace $workspace)
     {
-        $workspaceOptions = $this->workspaceOptionsRepo->findOneByWorkspace($workspace);
+        $workspaceOptions = $this->workspaceOptionsRepo->findOneBy(['workspace' => $workspace]);
 
         //might not be required
         if (!$workspaceOptions) {
@@ -754,20 +739,6 @@ class WorkspaceManager
         return $workspace;
     }
 
-    public function getRecentWorkspaceForUser(User $user, array $roles)
-    {
-        $wsLogs = $this->getLatestWorkspacesByUser($user, $roles);
-        $workspaces = [];
-
-        if (!empty($wsLogs)) {
-            foreach ($wsLogs as $wsLog) {
-                $workspaces[] = $wsLog['workspace'];
-            }
-        }
-
-        return $workspaces;
-    }
-
     public function unregister(AbstractRoleSubject $subject, Workspace $workspace)
     {
         $rolesToRemove = array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($workspace) {
@@ -777,6 +748,21 @@ class WorkspaceManager
         foreach ($rolesToRemove as $role) {
             $this->roleManager->dissociateRole($subject, $role);
         }
+    }
+
+    public function countUsersForRoles(Workspace $workspace)
+    {
+        $roles = $workspace->getRoles();
+
+        $usersInRoles = [];
+        foreach ($roles as $role) {
+            $usersInRoles[] = [
+                'name' => $role->getTranslationKey(),
+                'total' => floatval($this->userRepo->countUsersByRole($role)),
+            ];
+        }
+
+        return $usersInRoles;
     }
 
     public function setWorkspacesFlag()

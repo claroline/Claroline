@@ -194,7 +194,7 @@ class WorkspaceController
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "id"}
+     *      options={"mapping": {"id": "uuid"}}
      * )
      *
      * @param Workspace $workspace

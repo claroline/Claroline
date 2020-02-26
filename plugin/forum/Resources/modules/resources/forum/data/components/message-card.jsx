@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {getPlainText} from '#/main/app/data/types/html/utils'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 const MessageCard = (props) =>

@@ -12,9 +12,12 @@
 namespace Claroline\CoreBundle\Controller\APINew\Tool;
 
 use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -32,6 +35,10 @@ class ToolController extends AbstractApiController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ObjectManager */
+    private $om;
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
     /** @var ToolManager */
     private $toolManager;
     /** @var LogConnectManager */
@@ -41,15 +48,21 @@ class ToolController extends AbstractApiController
      * ToolController constructor.
      *
      * @param AuthorizationCheckerInterface $authorization
+     * @param ObjectManager                 $om
+     * @param StrictDispatcher              $eventDispatcher
      * @param ToolManager                   $toolManager
      * @param LogConnectManager             $logConnectManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
+        StrictDispatcher $eventDispatcher,
         ToolManager $toolManager,
         LogConnectManager $logConnectManager
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->logConnectManager = $logConnectManager;
     }
@@ -69,9 +82,14 @@ class ToolController extends AbstractApiController
     {
         /** @var Tool|AdminTool $tool */
         $tool = null;
+        $contextObject = null;
         switch ($context) {
             case Tool::ADMINISTRATION:
                 $tool = $this->toolManager->getAdminToolByName($name);
+                break;
+            case Tool::WORKSPACE:
+                $tool = $this->toolManager->getToolByName($name);
+                $contextObject = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
                 break;
             default:
                 $tool = $this->toolManager->getToolByName($name);
@@ -87,10 +105,10 @@ class ToolController extends AbstractApiController
         }
 
         /** @var ConfigureToolEvent $event */
-        $event = $this->eventDispatcher->dispatch($context.'.'.$name.'.configure', new ConfigureToolEvent($this->decodeRequest($request)));
+        $event = $this->eventDispatcher->dispatch($context.'.'.$name.'.configure', new ConfigureToolEvent($this->decodeRequest($request), $contextObject));
 
         return new JsonResponse(
-            $event->getUpdated()
+            $event->getData()
         );
     }
 
@@ -112,6 +130,6 @@ class ToolController extends AbstractApiController
             $this->logConnectManager->computeToolDuration($user, $name, $context, $contextId);
         }
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 }

@@ -125,3 +125,42 @@
         }
     }
 }
+
+.resource-evaluation-card {
+    .resource-evaluation-details {
+        display: flex;
+
+        // mostly the same than `.analytics-card`
+        article {
+            display: flex;
+            align-items: center;
+            margin-bottom: @data-card-padding;
+
+            > .fa {
+                display: flex;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: center;
+
+                color: white;
+                font-size: @font-size-small;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+
+                margin-left: @data-card-padding;
+                margin-right: @data-card-padding;
+            }
+
+            h5 {
+                margin: 0;
+                font-weight: 900;
+            }
+
+            small {
+                display: block;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}

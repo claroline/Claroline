@@ -4,17 +4,9 @@ services:
         autoconfigure: false
         public: false
 
-    Claroline\AnalyticsBundle\Listener\Administration\DashboardListener:
-        arguments:
-            - '@claroline.event.manager'
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_dashboard, method: onDisplayTool }
-
     Claroline\AnalyticsBundle\Listener\Tool\DashboardListener:
         arguments:
-            - '@claroline.event.manager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.progression_manager'
-            - '@security.token_storage'
+            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_dashboard, method: onDisplayWorkspace }
+            - { name: kernel.event_listener, event: administration_tool_dashboard, method: onDisplayAdministration }

@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+
 import {arc} from 'd3-shape'
 
 /**
@@ -10,16 +11,21 @@ const Arc = props => {
     .innerRadius(props.innerRadius)
     .outerRadius(props.outerRadius)
     .startAngle(props.startAngle)
+    //.cornerRadius(6)
+    .padAngle(0.015)
     .endAngle(props.endAngle)
+
   const centroid = arcInstance.centroid().map(v => 1.5 * v)
+
   return (
     <g>
       <path
+        className="arc"
         d={arcInstance()}
         fill={props.color}
       />
       {props.showValue &&
-        <text textAnchor={'middle'} transform={`translate(${centroid})`}>{props.value}</text>
+        <text textAnchor="middle" transform={`translate(${centroid})`}>{props.value}</text>
       }
     </g>
   )

@@ -43,7 +43,22 @@
     "resources_delete_confirm": "{1} Suppression d'une ressource | [2,Inf[ Suppression de ressources",
     "resources_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette ressource ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% ressources ?",
     "all_resources": "Toutes les ressources",
+    "all_resources_help": "Vous trouverez ci-dessous toutes les ressources de l'espace auxquelles vous avez participé.",
+    "required_resources": "Ressources requises",
+    "required_resources_help": "Vous trouverez ci-dessous toutes les ressources à faire pour progresser dans l'espace d'activités.",
     "not_found": "Ressource non trouvée",
     "not_found_desc": "Nous sommes désolés, nous n'avons pas pu trouver votre ressource. Il est possible qu'elle n'existe pas (ou plus) ou que l'URL utilisée soit incorrecte.",
-    "loading": "Nous chargeons votre ressource..."
+    "loading": "Nous chargeons votre ressource...",
+    "no_started_resource": "Vous n'avez commencé aucune ressource.",
+    "no_started_resource_help": "Parcourez vos ressources pour voir apparaître votre progression dans chacune d'elles ici.",
+
+    "evaluation_not_attempted_status": "Vous n'avez pas commencé la ressource.",
+    "evaluation_todo_status": "Vous devez faire cette ressource.",
+    "evaluation_unknown_status": "Nous ne connaissons pas votre progression dans cette ressource.",
+    "evaluation_opened_status": "Vous avez ouvert la ressource.",
+    "evaluation_incomplete_status": "Vous n'avez pas terminé la ressource.",
+    "evaluation_participated_status": "Vous avez participé à la ressource.",
+    "evaluation_failed_status": "Vous n'avez pas réussi la ressource.",
+    "evaluation_completed_status": "Vous avez terminé la ressource.",
+    "evaluation_passed_status": "Vous avez réussi la ressource."
 }

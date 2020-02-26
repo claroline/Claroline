@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {POPOVER_BUTTON} from '#/main/app/buttons/popover'
 
@@ -35,7 +35,7 @@ const FeedbackButton = props => {
       popover={{
         className: 'feedback-popover',
         position: 'bottom',
-        content: <HtmlText>{props.feedback}</HtmlText>
+        content: <ContentHtml>{props.feedback}</ContentHtml>
       }}
     />
   )

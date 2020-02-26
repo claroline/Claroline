@@ -57,7 +57,8 @@ const AboutModal = props =>
             }, {
               name: 'id',
               label: trans('id'),
-              type: 'string'
+              type: 'string',
+              calculated: (resourceNode) => resourceNode.id + ' / ' + resourceNode.autoId
             }
           ]
         }

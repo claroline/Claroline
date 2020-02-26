@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {utils} from '#/plugin/exo/items/cloze/utils'
@@ -21,7 +21,7 @@ const AnswerStatsTable = props =>
 
       return (
         <div key={idx} className={classes('answer-item', {'selected-answer': props.hasExpectedAnswers && answer.score > 0})}>
-          <HtmlText>{answer.text}</HtmlText>
+          <ContentHtml>{answer.text}</ContentHtml>
           <div>
             <AnswerStats stats={{
               value: props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId][key] ?

@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Log\Connection\LogConnectWorkspaceRepository")
  * @ORM\Table(name="claro_log_connect_workspace")
  */
 class LogConnectWorkspace extends AbstractLogConnect

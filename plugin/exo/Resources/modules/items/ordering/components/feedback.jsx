@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
@@ -33,9 +33,9 @@ const OrderingFeedback = props =>  {
                 {props.item.hasExpectedAnswers &&
                   <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
                 }
-                <HtmlText className="item-data">
+                <ContentHtml className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
-                </HtmlText>
+                </ContentHtml>
 
                 <Feedback
                   id={`oredering-answer-${a.itemId}-feedback`}
@@ -54,9 +54,9 @@ const OrderingFeedback = props =>  {
                 {props.item.hasExpectedAnswers &&
                   <WarningIcon valid={solution.score < 1}/>
                 }
-                <HtmlText className="item-data">
+                <ContentHtml className="item-data">
                   {props.item.items.find(item => item.id === solution.itemId).data}
-                </HtmlText>
+                </ContentHtml>
                 {solution.score > 0 &&
                   <Feedback
                     id={`oredering-solution-${solution.itemId}-feedback`}
@@ -81,9 +81,9 @@ const OrderingFeedback = props =>  {
                 {props.item.hasExpectedAnswers &&
                   <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
                 }
-                <HtmlText className="item-data">
+                <ContentHtml className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
-                </HtmlText>
+                </ContentHtml>
                 <Feedback
                   id={`oredering-answer-${a.itemId}-feedback`}
                   feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
@@ -108,9 +108,9 @@ const OrderingFeedback = props =>  {
                 {props.item.hasExpectedAnswers &&
                   <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
                 }
-                <HtmlText className="item-data">
+                <ContentHtml className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
-                </HtmlText>
+                </ContentHtml>
                 <Feedback
                   id={`oredering-answer-${a.itemId}-feedback`}
                   feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}

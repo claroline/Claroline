@@ -20,6 +20,8 @@
     "log_doer": "Auteur de l'action",
     "log_export": "Téléchargement",
     "log_filter_actions": "Afficher les actions",
+    "log_admin-tool-read_sentence": "a ouvert l'outil d'administration %tool%",
+    "log_admin-tool-read_shortname": "Ouverture",
     "log_group-add_user_filter": "Ajout d'un utilisateur à un groupe",
     "log_group-add_user_sentence": "a ajouté %receiver_user% au groupe %receiver_group%",
     "log_group-add_user_shortname": "Ajout",

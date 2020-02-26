@@ -5,7 +5,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
@@ -88,9 +88,9 @@ const AnnouncePost = props =>
         </div>
       </div>
 
-      <HtmlText>
+      <ContentHtml>
         {props.content}
-      </HtmlText>
+      </ContentHtml>
     </div>
   </div>
 

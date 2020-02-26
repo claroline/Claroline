@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
-import {constants} from '#/main/core/resource/constants'
+import {constants as baseConstants} from '#/main/core/constants'
 
 const STORE_NAME = 'resource'
 
@@ -124,17 +124,17 @@ const hasEvaluation = createSelector(
 const isTerminated = createSelector(
   [evaluationStatus],
   (evaluationStatus) => [
-    constants.EVALUATION_STATUS_COMPLETED,
-    constants.EVALUATION_STATUS_PASSED,
-    constants.EVALUATION_STATUS_FAILED
+    baseConstants.EVALUATION_STATUS_COMPLETED,
+    baseConstants.EVALUATION_STATUS_PASSED,
+    baseConstants.EVALUATION_STATUS_FAILED
   ].inArray(evaluationStatus)
 )
 
 const isSuccessful = createSelector(
   [evaluationStatus],
   (evaluationStatus) => [
-    constants.EVALUATION_STATUS_COMPLETED,
-    constants.EVALUATION_STATUS_PASSED
+    baseConstants.EVALUATION_STATUS_COMPLETED,
+    baseConstants.EVALUATION_STATUS_PASSED
   ].inArray(evaluationStatus)
 )
 

@@ -10,7 +10,6 @@ import {reducer as paginationReducer} from '#/main/app/content/pagination/store/
 import {reducer as searchReducer} from '#/main/app/content/search/store/reducer'
 import {
   LIST_SORT_UPDATE,
-  LIST_SORT_DIRECTION_UPDATE,
   LIST_RESET_SELECT,
   LIST_TOGGLE_SELECT,
   LIST_TOGGLE_SELECT_ALL,
@@ -74,26 +73,8 @@ const totalResultsReducer = makeInstanceReducer(defaultState.totalResults, {
  * Reduces list sort.
  */
 const sortByReducer = makeInstanceReducer(defaultState.sortBy, {
-  [LIST_SORT_UPDATE]: (state, action) => {
-    let direction = 1
-    if (state && state.property === action.property) {
-      if (1 === state.direction) {
-        direction = -1
-      } else if (-1 === state.direction) {
-        direction = 0
-      }
-      else {
-        direction = 1
-      }
-    }
-
-    return {
-      property: action.property,
-      direction: direction
-    }
-  },
-  [LIST_SORT_DIRECTION_UPDATE]: (state, action) => ({
-    property: state.property,
+  [LIST_SORT_UPDATE]: (state, action) => ({
+    property: action.property,
     direction: action.direction
   })
 })

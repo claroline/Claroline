@@ -25,7 +25,7 @@ const EditorForm = props =>
     disabled={props.readOnly}
     target={[props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
       context: props.currentContext.type,
-      contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.uuid : get(props.currentUser, 'id')
+      contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.id : get(props.currentUser, 'id')
     }]}
     cancel={{
       type: LINK_BUTTON,
@@ -138,7 +138,7 @@ const EditorForm = props =>
                 required: true,
                 options: {
                   picker: props.currentContext.type === 'workspace' ? {
-                    url: ['apiv2_workspace_list_roles', {id: get(props.currentContext, 'data.uuid')}],
+                    url: ['apiv2_workspace_list_roles', {id: get(props.currentContext, 'data.id')}],
                     filters: []
                   } : undefined
                 }

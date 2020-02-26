@@ -172,7 +172,7 @@ const OrganizationForm = props =>
               selectAction: (workspaces) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
-                callback: () => props.addWorkspaces(props.organization.id, workspaces.map(workspace => workspace.uuid))
+                callback: () => props.addWorkspaces(props.organization.id, workspaces.map(workspace => workspace.id))
               })
             }]
           }

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Section} from '#/main/app/content/components/sections'
 
 import {selectors} from '#/plugin/lti/resources/lti/store'
@@ -30,7 +30,7 @@ class PlayerComponent extends Component {
             className="form-section embedded-list-section"
             title={this.props.ltiResource.ltiApp.title}
           >
-            <HtmlText>{this.props.ltiResource.ltiApp.description}</HtmlText>
+            <ContentHtml>{this.props.ltiResource.ltiApp.description}</ContentHtml>
           </Section>
         }
         {this.props.ltiResource && this.props.ltiResource.ltiApp &&

@@ -7,10 +7,8 @@ import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
-import {ContentMeta} from '#/main/app/content/components/meta'
 
 import {route} from '#/main/core/workspace/routing'
-import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 const AboutModal = props =>
@@ -21,22 +19,8 @@ const AboutModal = props =>
     subtitle={props.workspace.name}
     poster={props.workspace.poster ? props.workspace.poster.url : undefined}
   >
-    <ContentMeta
-      creator={get(props.workspace, 'meta.creator')}
-      created={get(props.workspace, 'meta.created')}
-      updated={get(props.workspace, 'meta.updated')}
-    />
-
-    <div className="modal-body">
-      <WorkspaceMetrics
-        workspace={props.workspace}
-        level={5}
-        width={80}
-        height={80}
-      />
-    </div>
-
     <DetailsData
+      meta={true}
       data={props.workspace}
       sections={[
         {
@@ -102,9 +86,10 @@ const AboutModal = props =>
                 labelChecked: trans('workspace_public_unregistration', {}, 'workspace')
               }
             }, {
-              name: 'autoId',
+              name: 'id',
               label: trans('id'),
-              type: 'string'
+              type: 'string',
+              calculated: (workspace) => workspace.id + ' / ' + workspace.autoId
             }
           ]
         }

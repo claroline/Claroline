@@ -22,6 +22,7 @@ import {
 } from '#/main/core/layout/table/components/table'
 import {DataListView, DataListProperty} from '#/main/app/content/list/prop-types'
 import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/app/content/list/components/actions'
+import {toKey} from '#/main/core/scaffolding/text'
 
 const DataCellContent = props => {
   let cellData
@@ -34,9 +35,12 @@ const DataCellContent = props => {
   let cellRendering
   if (props.column.render) {
     cellRendering = props.column.render(props.rowData)
-  } else if (props.definition.components && props.definition.components.table) {
+  } else if (get(props.definition, 'components.table', null)) {
     // use custom component defined in the type definition
-    cellRendering = React.createElement(props.definition.components.table, merge({data: cellData}, props.column.options || {}))
+    cellRendering = React.createElement(props.definition.components.table, merge({}, props.column.options || {}, {
+      id: toKey(props.column.name + '-' + props.rowData.id),
+      data: cellData
+    }))
   } else {
     // use render defined in the type definition
     cellRendering = props.definition.render(cellData, props.column.options || {})
@@ -183,7 +187,18 @@ const DataTable = props =>
           <TableSortingCell
             key={column.name}
             direction={(column.alias && column.alias === props.sorting.current.property) || column.name === props.sorting.current.property ? props.sorting.current.direction : 0}
-            onSort={() => props.sorting.updateSort(column.alias ? column.alias : column.name)}
+            onSort={() => {
+              let direction = 1
+              if ((column.alias && column.alias === props.sorting.current.property) || column.name === props.sorting.current.property) {
+                if (1 === props.sorting.current.direction) {
+                  direction = -1
+                } else if (-1 === props.sorting.current.direction) {
+                  direction = 0
+                }
+              }
+
+              props.sorting.updateSort(column.alias ? column.alias : column.name, direction)
+            }}
           >
             {column.label}
           </TableSortingCell>

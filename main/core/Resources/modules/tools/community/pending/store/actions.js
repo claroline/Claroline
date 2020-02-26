@@ -8,7 +8,7 @@ export const actions = {}
 
 actions.register = (users, workspace) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_workspace_registration_validate', {id: workspace.uuid}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),
+    url: url(['apiv2_workspace_registration_validate', {id: workspace.id}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),
     request: {
       method: 'PATCH'
     },
@@ -21,7 +21,7 @@ actions.register = (users, workspace) => ({
 
 actions.remove = (users, workspace) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_workspace_registration_remove', {id: workspace.uuid}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),
+    url: url(['apiv2_workspace_registration_remove', {id: workspace.id}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),
     request: {
       method: 'DELETE'
     },

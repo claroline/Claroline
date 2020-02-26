@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 const RolesDisplay = (props) => {
   if (!isEmpty(props.data)) {

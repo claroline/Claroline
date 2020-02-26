@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 const WorkspaceCard = props =>

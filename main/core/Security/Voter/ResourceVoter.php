@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -43,7 +42,6 @@ class ResourceVoter implements VoterInterface
     private $ut;
     private $maskManager;
     private $resourceManager;
-    private $workspaceManager;
     private $rightsManager;
     private $restrictionsManager;
 
@@ -55,7 +53,6 @@ class ResourceVoter implements VoterInterface
      * @param Utilities                   $ut
      * @param MaskManager                 $maskManager
      * @param ResourceManager             $resourceManager
-     * @param WorkspaceManager            $workspaceManager
      * @param RightsManager               $rightsManager
      * @param ResourceRestrictionsManager $restrictionsManager
      */
@@ -65,7 +62,6 @@ class ResourceVoter implements VoterInterface
         Utilities $ut,
         MaskManager $maskManager,
         ResourceManager $resourceManager,
-        WorkspaceManager $workspaceManager,
         RightsManager $rightsManager,
         ResourceRestrictionsManager $restrictionsManager
     ) {
@@ -76,7 +72,6 @@ class ResourceVoter implements VoterInterface
         $this->ut = $ut;
         $this->maskManager = $maskManager;
         $this->resourceManager = $resourceManager;
-        $this->workspaceManager = $workspaceManager;
         $this->rightsManager = $rightsManager;
         $this->restrictionsManager = $restrictionsManager;
     }
@@ -300,7 +295,7 @@ class ResourceVoter implements VoterInterface
             ->checkResourceLimitExceeded($workspace);
 
         if ($isLimitExceeded) {
-            $currentCount = $this->workspaceManager->countResources($workspace);
+            $currentCount = $this->resourceManager->countActiveResources($workspace);
             $errors[] = $this->translator
                 ->trans(
                     'resource_limit_exceeded',

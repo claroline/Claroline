@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
 

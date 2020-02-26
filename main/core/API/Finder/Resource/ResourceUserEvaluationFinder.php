@@ -29,6 +29,7 @@ class ResourceUserEvaluationFinder extends AbstractFinder
         array $options = ['count' => false, 'page' => 0, 'limit' => -1]
     ) {
         $userJoin = false;
+        $nodeJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -57,8 +58,22 @@ class ResourceUserEvaluationFinder extends AbstractFinder
                     $qb->setParameter('lastName', '%'.strtoupper($filterValue).'%');
                     break;
                 case 'resourceNode':
-                    $qb->join('obj.resourceNode', 'r');
+                    if (!$nodeJoin) {
+                        $qb->join('obj.resourceNode', 'r');
+                        $nodeJoin = true;
+                    }
+
                     $qb->andWhere("r.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'workspace':
+                    if (!$nodeJoin) {
+                        $qb->join('obj.resourceNode', 'r');
+                        $nodeJoin = true;
+                    }
+
+                    $qb->join('r.workspace', 'w');
+                    $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'fromDate':

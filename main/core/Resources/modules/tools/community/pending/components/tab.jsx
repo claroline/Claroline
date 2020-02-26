@@ -26,7 +26,7 @@ const PendingTab = props =>
     <ListData
       name={selectors.LIST_NAME}
       fetch={{
-        url: ['apiv2_workspace_list_pending', {id: props.workspace.uuid}],
+        url: ['apiv2_workspace_list_pending', {id: props.workspace.id}],
         autoload: true
       }}
       primaryAction={(row) => ({
@@ -94,7 +94,7 @@ const PendingTab = props =>
           type: 'roles',
           label: trans('roles'),
           calculated: (user) => !isEmpty(props.workspace) ?
-            user.roles.filter(role => role.workspace && role.workspace.id === props.workspace.uuid)
+            user.roles.filter(role => role.workspace && role.workspace.id === props.workspace.id)
             :
             user.roles.filter(role => constants.ROLE_PLATFORM === role.type),
           displayed: true,

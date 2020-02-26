@@ -289,6 +289,7 @@ class UserController extends AbstractCrudController
             $this->crud->replace($user, 'mainOrganization', $organization);
         }
 
+        // TODO : dispatch an event for user registration and do next in a listener in AuthenticationBundle
         $selfLog = $this->config->getParameter('registration.auto_logging');
         $validation = $this->config->getParameter('registration.validation');
         // auto log user if option is set and account doesn't need to be validated

@@ -7,8 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {ContentHelp} from '#/main/app/content/components/help'
 import {DataError} from '#/main/app/data/components/error'
-
-import {FormGroup as FormGroupTypes} from '#/main/core/layout/form/prop-types'
+import {DataGroup as DataGroupTypes} from '#/main/app/data/types/prop-types'
 
 // TODO : move in Data module and rename (this is not only used in form)
 
@@ -50,7 +49,7 @@ const FormGroup = props =>
     }
   </div>
 
-implementPropTypes(FormGroup, FormGroupTypes, {
+implementPropTypes(FormGroup, DataGroupTypes, {
   children: T.node.isRequired
 })
 

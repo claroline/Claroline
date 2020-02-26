@@ -5,8 +5,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 import {Location as LocationType} from '#/main/core/user/prop-types'
 import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
@@ -83,7 +83,7 @@ const LocationInput = props => {
   )
 }
 
-implementPropTypes(LocationInput, FormFieldTypes, {
+implementPropTypes(LocationInput, DataInputTypes, {
   value: T.shape(LocationType.propTypes),
   picker: T.shape({
     title: T.string

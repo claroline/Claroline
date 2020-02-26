@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -45,8 +44,6 @@ class UserCrud
     private $cryptoManager;
     /** @var array */
     private $parameters;
-    /** @var UserRepository */
-    private $userRepo;
 
     /**
      * @param ContainerInterface $container
@@ -64,8 +61,6 @@ class UserCrud
         $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->cryptoManager = $container->get('claroline.manager.cryptography_manager');
         $this->parameters = $container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize();
-
-        $this->userRepo = $this->om->getRepository(User::class);
     }
 
     /**
@@ -78,7 +73,7 @@ class UserCrud
             $this->parameters['restrictions']['users'] &&
             $this->parameters['restrictions']['max_users']
         ) {
-            $usersCount = $this->userRepo->countAllEnabledUsers();
+            $usersCount = $this->userManager->countEnabledUsers();
 
             if ($usersCount >= $this->parameters['restrictions']['max_users']) {
                 throw new AccessDeniedException();

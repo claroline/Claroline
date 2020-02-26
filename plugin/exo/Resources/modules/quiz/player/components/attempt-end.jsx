@@ -9,7 +9,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/workspace/routing'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
@@ -42,7 +42,7 @@ const AttemptEndComponent = props =>
         get(props.paper, 'structure.parameters.successMessage') &&
         (get(props.paper, 'score') / get(props.paper, 'total')) * 100 >= get(props.paper, 'structure.parameters.successScore') &&
           <div className="alert alert-info">
-            <HtmlText>{get(props.paper, 'structure.parameters.successMessage')}</HtmlText>
+            <ContentHtml>{get(props.paper, 'structure.parameters.successMessage')}</ContentHtml>
           </div>
         }
 
@@ -52,12 +52,12 @@ const AttemptEndComponent = props =>
         get(props.paper, 'structure.parameters.failureMessage') &&
         (get(props.paper, 'score') / get(props.paper, 'total')) * 100 < get(props.paper, 'structure.parameters.successScore') &&
           <div className="alert alert-danger">
-            <HtmlText>{get(props.paper, 'structure.parameters.failureMessage')}</HtmlText>
+            <ContentHtml>{get(props.paper, 'structure.parameters.failureMessage')}</ContentHtml>
           </div>
         }
 
         {props.endMessage ?
-          <HtmlText>{props.endMessage}</HtmlText> :
+          <ContentHtml>{props.endMessage}</ContentHtml> :
           <div>
             <h2 className="h4">{trans('attempt_end_title', {}, 'quiz')}</h2>
             <p>{trans('attempt_end_info', {}, 'quiz')}</p>

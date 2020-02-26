@@ -18,5 +18,15 @@
   "workspace_public_unregistration": "Les désinscriptions sont publiques.",
   "not_found": "Espace d'activités non trouvé",
   "not_found_desc": "Nous sommes désolés, nous n'avons pas pu trouver votre espace d'activités. Il est possible qu'il n'existe pas (ou plus) ou que l'URL utilisée soit incorrecte.",
-  "loading": "Nous chargeons votre espace d'activités..."
+  "loading": "Nous chargeons votre espace d'activités...",
+
+  "evaluation_not_attempted_status": "Vous n'avez pas commencé l'espace d'activités.",
+  "evaluation_todo_status": "Vous devez faire cet espace d'activités.",
+  "evaluation_unknown_status": "Nous ne connaissons pas votre progression dans cet espace d'activités.",
+  "evaluation_opened_status": "Vous avez ouvert l'espace d'activités.",
+  "evaluation_incomplete_status": "Vous n'avez pas terminé l'espace d'activités.",
+  "evaluation_participated_status": "Vous avez participé à l'espace d'activités.",
+  "evaluation_failed_status": "Vous n'avez pas réussi l'espace d'activités.",
+  "evaluation_completed_status": "Vous avez terminé l'espace d'activités.",
+  "evaluation_passed_status": "Vous avez réussi l'espace d'activités."
 }

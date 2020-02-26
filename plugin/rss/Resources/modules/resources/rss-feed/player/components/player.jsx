@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/rss/resources/rss-feed/player/store/selectors'
 

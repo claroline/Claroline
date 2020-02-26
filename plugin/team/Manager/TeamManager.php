@@ -270,10 +270,9 @@ class TeamManager
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
         $resourceTypes = $this->resourceManager->getAllResourceTypes();
 
-        $directory = $this->resourceManager->createResource(
-            'Claroline\CoreBundle\Entity\Resource\Directory',
-            $team->getName()
-        );
+        $directory = new Directory();
+        $directory->setName($team->getName());
+
         $teamRoleName = $teamRole->getName();
         $teamManagerRoleName = $teamManagerRole->getName();
         $rights = [];

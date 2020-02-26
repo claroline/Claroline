@@ -209,7 +209,7 @@ class TransferManager
         $this->log('Deserializing the roles...');
         $roles = [];
         foreach ($data['roles'] as $roleData) {
-            $roleData['workspace']['uuid'] = $workspace->getUuid();
+            $roleData['workspace']['id'] = $workspace->getUuid();
             $role = $this->serializer->deserialize($roleData, new Role());
             $role->setWorkspace($workspace);
             $this->om->persist($role);
@@ -225,7 +225,7 @@ class TransferManager
         $this->om->persist($workspace);
         $this->om->forceFlush();
 
-        $data['root']['meta']['workspace']['uuid'] = $workspace->getUuid();
+        $data['root']['meta']['workspace']['id'] = $workspace->getUuid();
 
         $this->log('Get filebag');
 

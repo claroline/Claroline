@@ -17,7 +17,7 @@ class WorkspaceTeamParametersSerializer
     private $workspaceRepo;
 
     /**
-     * TeamParamtersSerializer constructor.
+     * WorkspaceTeamParametersSerializer constructor.
      *
      * @param ObjectManager $om
      */
@@ -40,19 +40,17 @@ class WorkspaceTeamParametersSerializer
      */
     public function serialize(WorkspaceTeamParameters $parameters)
     {
-        $serialized = [
+        return [
             'id' => $parameters->getUuid(),
             'selfRegistration' => $parameters->isSelfRegistration(),
             'selfUnregistration' => $parameters->isSelfUnregistration(),
             'publicDirectory' => $parameters->isPublic(),
             'deletableDirectory' => $parameters->isDirDeletable(),
             'allowedTeams' => $parameters->getMaxTeams(),
-            'workspace' => [
-              'uuid' => $parameters->getWorkspace()->getUuid(),
+            'workspace' => [ // TODO : use workspaceSerializer instead
+                'id' => $parameters->getWorkspace()->getUuid(),
             ],
         ];
-
-        return $serialized;
     }
 
     /**
@@ -73,8 +71,9 @@ class WorkspaceTeamParametersSerializer
         $this->sipe('deletableDirectory', 'setDirDeletable', $data, $parameters);
         $this->sipe('allowedTeams', 'setMaxTeams', $data, $parameters);
 
-        if (isset($data['workspace']['uuid'])) {
-            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['uuid']]);
+        if (isset($data['workspace']['id'])) {
+            /** @var Workspace $workspace */
+            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
 
             if ($workspace) {
                 $parameters->setWorkspace($workspace);

@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect'
-import isEmpty   from 'lodash/isEmpty'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {isAdmin as userIsAdmin} from '#/main/app/security/permissions'
@@ -31,6 +31,11 @@ const fakeUser = () => ({
 const currentUser = createSelector(
   [store],
   (store) => store.currentUser
+)
+
+const currentUserId = createSelector(
+  [currentUser],
+  (currentUser) => currentUser ? currentUser.id : null
 )
 
 /**
@@ -68,6 +73,7 @@ export const selectors = {
 
   fakeUser,
   currentUser,
+  currentUserId,
   isImpersonated,
   isAuthenticated,
   isAdmin

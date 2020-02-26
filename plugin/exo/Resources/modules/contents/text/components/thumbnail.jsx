@@ -1,12 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const TextContentThumbnail = props =>
-  <HtmlText className="text-content-thumbnail">
+  <ContentHtml className="text-content-thumbnail">
     {props.data}
-  </HtmlText>
+  </ContentHtml>
 
 TextContentThumbnail.propTypes = {
   data: T.string

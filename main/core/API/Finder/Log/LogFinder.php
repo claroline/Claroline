@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Finder\Log;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Log\Log;
 use Doctrine\ORM\QueryBuilder;
 
 class LogFinder extends AbstractFinder
@@ -31,6 +32,11 @@ class LogFinder extends AbstractFinder
                     }
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                /*case 'workspace':
+                    $qb->join('obj.workspace', 'ws');
+                    $qb->andWhere("ws.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;*/
                 case 'doer':
                     if (!$userJoin) {
                         $userJoin = true;
@@ -119,7 +125,7 @@ class LogFinder extends AbstractFinder
     /** @return $string */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Log\Log';
+        return Log::class;
     }
 
     private function filterAction($action, QueryBuilder $qb)

@@ -1,12 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const TextContentModal = (props) =>
-  <HtmlText className="text-content-modal">
+  <ContentHtml className="text-content-modal">
     {props.data}
-  </HtmlText>
+  </ContentHtml>
 
 TextContentModal.propTypes = {
   data: T.string,

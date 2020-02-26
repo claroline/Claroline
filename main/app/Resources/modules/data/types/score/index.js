@@ -1,11 +1,13 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/app/intl/translation'
 import {chain, number, inRange} from '#/main/app/data/types/validators'
 
-import {ScoreInput} from '#/main/app/data/types/score/components/input'
-import {ScoreTable} from '#/main/app/data/types/score/components/table'
+import {ScoreCell} from '#/main/app/data/types/score/components/cell'
+import {ScoreDisplay} from '#/main/app/data/types/score/components/display'
 
 /**
- * Score data type (maybe not a type).
+ * Score data type.
  *
  * Manages score values.
  */
@@ -23,12 +25,17 @@ const dataType = {
   /**
    * Displays a score value.
    *
-   * @param {number}  raw
-   * @param {options} options
+   * @param {{current: number, total: number}} raw
    *
    * @return {string}
    */
-  render: (raw, options) => (raw || 0 === raw ? raw : '-') + ' / ' + options.max,
+  render: (raw) => {
+    if (!isEmpty(raw)) {
+      return (raw.current || 0 === raw.current ? raw.current : '-') + ' / ' + raw.total
+    }
+
+    return ''
+  },
 
   /**
    * Validates a score value.
@@ -44,8 +51,13 @@ const dataType = {
    * Custom components for scores rendering.
    */
   components: {
-    input: ScoreInput,
-    table: ScoreTable
+    // old api
+    details: ScoreDisplay,
+    table: ScoreCell,
+
+    // new api
+    display: ScoreDisplay,
+    cell: ScoreCell
   }
 }
 

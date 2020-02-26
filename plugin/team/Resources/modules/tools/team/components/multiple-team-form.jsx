@@ -14,7 +14,7 @@ const MultipleTeamForm = props =>
       level={3}
       name={selectors.STORE_NAME + '.teams.multiple'}
       buttons={true}
-      target={['apiv2_team_multiple_create', {workspace: props.workspace.uuid}]}
+      target={['apiv2_team_multiple_create', {workspace: props.workspace.id}]}
       cancel={{
         type: LINK_BUTTON,
         target: props.path,
@@ -111,7 +111,7 @@ MultipleTeamForm.propTypes = {
     creatableResources: T.arrayOf(T.string)
   }).isRequired,
   workspace: T.shape({
-    uuid: T.string.isRequired
+    id: T.string.isRequired
   }).isRequired,
   resourceTypes: T.arrayOf(T.object).isRequired,
   history: T.shape({

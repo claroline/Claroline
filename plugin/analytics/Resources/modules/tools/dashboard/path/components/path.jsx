@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {asset} from '#/main/app/config/asset'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {route as resourceRoute} from '#/main/core/resource/routing'

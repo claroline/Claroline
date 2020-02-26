@@ -8,7 +8,6 @@ import set from 'lodash/set'
 
 import {withRouter} from '#/main/app/router'
 import {Alert} from '#/main/app/alert/components/alert'
-import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
@@ -305,7 +304,6 @@ EntryFormComponent.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
   impersonated: T.bool.isRequired,
-  config: T.object,
   canEdit: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
@@ -338,8 +336,6 @@ EntryFormComponent.propTypes = {
 const EntryForm = withRouter(connect(
   state => ({
     currentUser: securitySelectors.currentUser(state),
-    impersonated: securitySelectors.isImpersonated(state),
-    config: configSelectors.config(state),
     path: resourceSelectors.path(state),
 
     canAddEntry: selectors.canAddEntry(state),

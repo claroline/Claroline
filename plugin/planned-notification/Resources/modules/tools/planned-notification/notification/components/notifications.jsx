@@ -18,7 +18,7 @@ const NotificationsList = props =>
       target: props.path+`/notifications/form/${row.id}`
     })}
     fetch={{
-      url: ['apiv2_plannednotification_workspace_list', {workspace: props.workspace.uuid}],
+      url: ['apiv2_plannednotification_workspace_list', {workspace: props.workspace.id}],
       autoload: true
     }}
     delete={{
@@ -80,7 +80,7 @@ NotificationsList.propTypes = {
   path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   workspace: T.shape({
-    uuid: T.string.isRequired
+    id: T.string.isRequired
   }).isRequired
 }
 

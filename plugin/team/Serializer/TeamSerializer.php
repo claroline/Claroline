@@ -8,6 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
@@ -131,8 +132,9 @@ class TeamSerializer
         $this->sipe('publicDirectory', 'setIsPublic', $data, $team);
         $this->sipe('deletableDirectory', 'setDirDeletable', $data, $team);
 
-        if (isset($data['workspace']['uuid'])) {
-            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['uuid']]);
+        if (isset($data['workspace']['id'])) {
+            /** @var Workspace $workspace */
+            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
 
             if ($workspace) {
                 $team->setWorkspace($workspace);

@@ -7,14 +7,14 @@ import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {LinkButton} from '#/main/app/buttons/link'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors as correctionSelectors} from '#/plugin/exo/resources/quiz/correction/store/selectors'
 
 export const QuestionRow = props =>
   <tr>
     <td>
-      <HtmlText>{props.question.title || props.question.content}</HtmlText>
+      <ContentHtml>{props.question.title || props.question.content}</ContentHtml>
     </td>
     <td>{props.answers.length}</td>
     <td className="actions-cell text-right">

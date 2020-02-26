@@ -10,7 +10,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections} from '#/main/app/content/form/components/sections'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'

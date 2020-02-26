@@ -46,7 +46,7 @@ actions.close = makeActionCreator(TOOL_CLOSE)
  */
 actions.fetch = (toolName, context) => (dispatch) => {
   if (context.url) {
-    dispatch({
+    return dispatch({
       [API_REQUEST]: {
         silent: true,
         url: context.url,
@@ -65,6 +65,8 @@ actions.fetch = (toolName, context) => (dispatch) => {
   } else {
     dispatch(actions.setLoaded(true))
     dispatch(menuActions.changeSection('tool'))
+
+    return Promise.resolve({})
   }
 }
 

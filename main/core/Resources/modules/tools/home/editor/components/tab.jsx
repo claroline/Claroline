@@ -94,7 +94,7 @@ const EditorTab = props =>
           } : undefined}
           target={[props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
             context: props.currentContext.type,
-            contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.uuid : get(props.currentUser, 'id')
+            contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.id : get(props.currentUser, 'id')
           }]}
           sections={[]}
           cancel={{

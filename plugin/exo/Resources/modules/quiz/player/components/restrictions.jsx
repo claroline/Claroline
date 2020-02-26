@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/workspace/routing'
@@ -36,7 +36,7 @@ const PlayerRestrictions = props => {
 
         <div className={showAttemptScore ? 'col-md-9':'col-md-12'}>
           {props.message ?
-            <HtmlText>{props.message}</HtmlText> :
+            <ContentHtml>{props.message}</ContentHtml> :
             <div>
               <h2 className="h4">{trans('max_attempts_reached_title', {}, 'quiz')}</h2>
               <p>{trans('max_attempts_reached_info', {}, 'quiz')}</p>

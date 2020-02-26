@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
-use Claroline\CoreBundle\Repository\WidgetInstanceRepository;
 
 class WidgetManager
 {
@@ -22,9 +21,6 @@ class WidgetManager
 
     /** @var WidgetRepository */
     private $widgetRepository;
-
-    /** @var WidgetInstanceRepository */
-    private $widgetInstanceRepository;
 
     /** @var PluginManager */
     private $pluginManager;
@@ -42,7 +38,6 @@ class WidgetManager
         $this->om = $om;
         $this->pluginManager = $pluginManager;
         $this->widgetRepository = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
-        $this->widgetInstanceRepository = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
     }
 
     /**
@@ -57,45 +52,5 @@ class WidgetManager
         $enabledPlugins = $this->pluginManager->getEnabled(true);
 
         return $this->widgetRepository->findAllAvailable($enabledPlugins, $context);
-    }
-
-    /**
-     * @param null $organizations
-     *
-     * @return int
-     */
-    public function getNbWidgetInstances($organizations = null)
-    {
-        return $this->widgetInstanceRepository->countWidgetInstances(null, $organizations);
-    }
-
-    /**
-     * @param null $organizations
-     *
-     * @return int
-     */
-    public function getNbWorkspaceWidgetInstances($organizations = null)
-    {
-        return $this->widgetInstanceRepository->countWidgetInstances('workspace', $organizations);
-    }
-
-    /**
-     * @param null $organizations
-     *
-     * @return int
-     */
-    public function getNbDesktopWidgetInstances($organizations = null)
-    {
-        return $this->widgetInstanceRepository->countWidgetInstances('desktop', $organizations);
-    }
-
-    /**
-     * @param null $organizations
-     *
-     * @return array
-     */
-    public function countWidgetsByType($organizations = null)
-    {
-        return $this->widgetInstanceRepository->countByType($organizations);
     }
 }

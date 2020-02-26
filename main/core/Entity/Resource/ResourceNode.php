@@ -166,7 +166,8 @@ class ResourceNode
      *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
-     *     mappedBy="resourceNode"
+     *     mappedBy="resourceNode",
+     *     orphanRemoval=true
      * )
      */
     protected $rights;
@@ -503,7 +504,13 @@ class ResourceNode
      */
     public function getPathForDisplay()
     {
-        return self::convertPathForDisplay($this->path);
+        $pathForDisplay = preg_replace('/%([^\/]+)\//', ' / ', $this->path);
+
+        if (null !== $pathForDisplay && strlen($pathForDisplay) > 0) {
+            $pathForDisplay = substr_replace($pathForDisplay, '', -3);
+        }
+
+        return $pathForDisplay;
     }
 
     /**
@@ -535,24 +542,6 @@ class ResourceNode
     }
 
     /**
-     * Converts a path for display: remove ids.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    public static function convertPathForDisplay($path)
-    {
-        $pathForDisplay = preg_replace('/%([^\/]+)\//', ' / ', $path);
-
-        if (null !== $pathForDisplay && strlen($pathForDisplay) > 0) {
-            $pathForDisplay = substr_replace($pathForDisplay, '', -3);
-        }
-
-        return $pathForDisplay;
-    }
-
-    /**
      * Returns the resource rights.
      *
      * @return ResourceRights[]|ArrayCollection
@@ -569,7 +558,23 @@ class ResourceNode
      */
     public function addRight(ResourceRights $right)
     {
-        $this->rights->add($right);
+        if (!$this->rights->contains($right)) {
+            $this->rights->add($right);
+            $right->setResourceNode($this);
+        }
+    }
+
+    /**
+     * Remove rights from the resource.
+     *
+     * @param ResourceRights $right
+     */
+    public function removeRight(ResourceRights $right)
+    {
+        if ($this->rights->contains($right)) {
+            $this->rights->removeElement($right);
+            $right->setResourceNode(null);
+        }
     }
 
     /**

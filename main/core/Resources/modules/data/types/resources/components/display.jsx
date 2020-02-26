@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceCard} from '#/main/core/resource/components/card'

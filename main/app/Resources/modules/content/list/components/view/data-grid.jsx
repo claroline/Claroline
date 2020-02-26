@@ -101,7 +101,7 @@ const DataGridSort = props =>
           type: CALLBACK_BUTTON,
           label: column.label,
           active: props.current.property && (props.current.property === column.alias || props.current.property === column.name),
-          callback: () => props.updateSort(column.alias ? column.alias : column.name)
+          callback: () => props.updateSort(column.alias ? column.alias : column.name, props.current.direction || 1)
         }))
       }}
     />
@@ -116,7 +116,16 @@ const DataGridSort = props =>
       })}
       label={trans('sort', {}, 'actions')}
       disabled={!props.current.property}
-      callback={() => props.updateSort(props.current.property)}
+      callback={() => {
+        let direction = 1
+        if (1 === props.current.direction) {
+          direction = -1
+        } else if (-1 === props.current.direction) {
+          direction = 0
+        }
+
+        props.updateSort(props.current.property, direction)
+      }}
       tooltip="left"
       primary={true}
     />

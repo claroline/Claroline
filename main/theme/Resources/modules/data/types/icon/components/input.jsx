@@ -3,7 +3,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
@@ -70,7 +70,7 @@ class IconInput extends Component {
   }
 }
 
-implementPropTypes(IconInput, FormFieldTypes, {
+implementPropTypes(IconInput, DataInputTypes, {
   // more precise value type
   value: T.string,
 

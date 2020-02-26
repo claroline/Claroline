@@ -184,10 +184,58 @@ const DataSearch = {
   defaultProps: {}
 }
 
+/**
+ * Definition of common props of a data input.
+ *
+ * @type {{propTypes, defaultProps}}
+ */
+const DataInput = {
+  propTypes: {
+    id: T.string.isRequired,
+    value: T.any, // depends on type
+    error: T.oneOfType([T.string, T.arrayOf(T.string)]),
+    className: T.string,
+    placeholder: T.any, // depends on type
+    autoComplete: T.string,
+    disabled: T.bool,
+    size: T.oneOf(['sm', 'lg']),
+    onChange: T.func.isRequired
+  },
+  defaultProps: {
+    disabled: false
+  }
+}
+
+/**
+ * Definition of common props of a data group.
+ *
+ * @type {{propTypes, defaultProps}}
+ */
+const DataGroup = {
+  propTypes: {
+    id: T.string.isRequired,
+    className: T.string,
+    label: T.string,
+    hideLabel: T.bool,
+    help: T.oneOfType([T.string, T.arrayOf(T.string)]),
+    warnOnly: T.bool,
+    error: T.oneOfType([T.string, T.arrayOf(T.string), T.arrayOf(T.arrayOf(T.string))]),
+    optional: T.bool
+  },
+  defaultProps: {
+    className: '',
+    hideLabel: false,
+    warnOnly: false,
+    optional: false
+  }
+}
+
 export {
   DataType,
   DataProperty,
   DataCell,
   DataDetails,
-  DataSearch
+  DataSearch,
+  DataInput,
+  DataGroup
 }

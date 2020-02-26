@@ -138,52 +138,6 @@ class UserManager
     }
 
     /**
-     * Persist a user.
-     *
-     * @param User $user
-     *
-     * @return User
-     */
-    public function persistUser(User $user)
-    {
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-
-        return $user;
-    }
-
-    /**
-     * Removes users from a csv file.
-     *
-     * @todo use the csv from the api transfer
-     * @todo REMOVE ME
-     */
-    public function csvRemove($file)
-    {
-        $data = file_get_contents($file);
-        $data = $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities')->formatCsvOutput($data);
-        $userNames = str_getcsv($data, PHP_EOL);
-        $this->objectManager->startFlushSuite();
-        $i = 0;
-
-        foreach ($userNames as $username) {
-            $user = $this->getUserByUsername($username);
-
-            if ($user) {
-                $this->log('Removing '.$user->getUsername().'...');
-                $this->objectManager->remove($user);
-                ++$i;
-            }
-
-            if (0 === $i % 50) {
-                $this->objectManager->forceFlush();
-            }
-        }
-
-        $this->objectManager->endFlushSuite();
-    }
-
-    /**
      * Creates the personal workspace of a user.
      *
      * @param User      $user
@@ -249,21 +203,11 @@ class UserManager
         return $this->userRepo->refreshUser($user);
     }
 
-    /**
-     * @todo use finder instead
-     * @todo REMOVE ME
-     */
-    public function getAll()
-    {
-        return $this->userRepo->findAll();
-    }
-
     public function countUsersForPlatformRoles($organizations = null)
     {
         $roles = $this->roleManager->getAllPlatformRoles();
-        $roleNames = array_map(function ($r) {return $r->getName(); }, $roles);
+        $roleNames = array_map(function (Role $r) {return $r->getName(); }, $roles);
         $usersInRoles = [];
-        $usersInRoles[] = ['name' => 'user_accounts', 'total' => floatval($this->userRepo->countUsers($organizations))];
         foreach ($roles as $role) {
             $restrictionRoleNames = null;
             if ('ROLE_USER' === $role->getName()) {
@@ -314,38 +258,12 @@ class UserManager
         return $this->userRepo->findUsersOwnersOfMostWorkspaces($max, $organizations);
     }
 
-    /**
-     * @param int $userId
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return User
-     */
-    public function getUserById($userId)
-    {
-        /** @var User $user */
-        $user = $this->userRepo->find($userId);
-
-        return $user;
-    }
-
-    /*
-     * I don't want to break the old pager which is oddly written
-     */
-    public function getUsersByRolesWithGroups(array $roles)
-    {
-        return $this->userRepo->findUsersByRolesIncludingGroups($roles);
-    }
-
     public function getUsersExcludingRoles(array $roles, $offset = null, $limit = null)
     {
         return $this->userRepo->findUsersExcludingRoles($roles, $offset, $limit);
     }
 
     /**
-     * @todo Please describe me. I couldn't find findOneByResetPasswordHash
-     *
      * @param string $resetPassword
      *
      * @return User
@@ -458,25 +376,9 @@ class UserManager
         );
     }
 
-    public function getCountAllEnabledUsers($executeQuery = true)
+    public function countEnabledUsers(array $organizations = [])
     {
-        return $this->userRepo->countAllEnabledUsers($executeQuery);
-    }
-
-    /**
-     * Checks if a user will have a personal workspace at his creation.
-     */
-    public function personalWorkspaceAllowed($roles)
-    {
-        $roles[] = $this->roleManager->getRoleByName('ROLE_USER');
-
-        foreach ($roles as $role) {
-            if ($role->isPersonalWorkspaceCreationEnabled()) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->userRepo->countUsers($organizations);
     }
 
     /**
@@ -871,6 +773,8 @@ class UserManager
      *
      * @param User $from
      * @param User $to
+     *
+     * @return int
      */
     public function transferRoles(User $from, User $to)
     {
@@ -902,7 +806,7 @@ class UserManager
         if ($this->platformConfigHandler->getParameter('restrictions.users') &&
             $this->platformConfigHandler->getParameter('restrictions.max_users')
         ) {
-            $usersCount = $this->getCountAllEnabledUsers();
+            $usersCount = $this->countEnabledUsers();
 
             if ($usersCount >= $this->platformConfigHandler->getParameter('restrictions.max_users')) {
                 $usersLimitReached = true;

@@ -6,7 +6,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {displayDate} from '#/main/app/intl/date'
 
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceIcon} from '#/main/core/resource/components/icon'

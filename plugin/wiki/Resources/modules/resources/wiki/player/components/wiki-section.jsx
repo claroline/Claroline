@@ -15,7 +15,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {Heading} from '#/main/core/layout/components/heading'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {Section as SectionTypes} from '#/plugin/wiki/resources/wiki/prop-types'
 import {actions} from '#/plugin/wiki/resources/wiki/player/store'
@@ -92,7 +92,7 @@ const WikiSectionContent = props =>
     </Heading>
 
     {props.section.activeContribution.text &&
-      <HtmlText className="wiki-section-text">{props.section.activeContribution.text}</HtmlText>
+      <ContentHtml className="wiki-section-text">{props.section.activeContribution.text}</ContentHtml>
     }
   </section>
 

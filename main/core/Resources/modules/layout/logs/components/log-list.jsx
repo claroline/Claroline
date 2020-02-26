@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {schemeCategory20c} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
-import {constants as listConst} from '#/main/app/content/list/constants'
 
 class LogList extends Component {
   componentDidMount() {
@@ -27,7 +28,7 @@ class LogList extends Component {
         {this.props.chart &&
           <div className="text-center">
             <LineChart
-              data={this.props.chart.data}
+              data={[this.props.chart.data]}
               xAxisLabel={{
                 show: true,
                 text: trans('date'),
@@ -47,6 +48,7 @@ class LogList extends Component {
                 left: 50,
                 right: 20
               }}
+              colors={schemeCategory20c}
             />
           </div>
         }
@@ -81,8 +83,8 @@ class LogList extends Component {
                 transDomain: 'log'
               }
             }, {
-              name: 'doer.name',
-              type: 'string',
+              name: 'doer',
+              type: 'user',
               label: trans('user'),
               displayed: true
             }, {
@@ -99,7 +101,7 @@ class LogList extends Component {
           ]}
           
           display={{
-            available : [listConst.DISPLAY_TABLE, listConst.DISPLAY_TABLE_SM],
+            available: [listConst.DISPLAY_TABLE, listConst.DISPLAY_TABLE_SM],
             current: listConst.DISPLAY_TABLE
           }}
           selectable={false}

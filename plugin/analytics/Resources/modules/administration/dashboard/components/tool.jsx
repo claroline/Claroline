@@ -1,126 +1,73 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {url} from '#/main/app/api'
-import {trans} from '#/main/app/intl/translation'
-import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
-import {matchPath, Routes} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 
-import {ToolPage} from '#/main/core/tool/containers/page'
-import {Overview} from '#/plugin/analytics/administration/dashboard/components/overview'
-import {Audience} from '#/plugin/analytics/administration/dashboard/components/audience'
-import {Resources} from '#/plugin/analytics/administration/dashboard/components/resources'
-import {TopActions} from '#/plugin/analytics/administration/dashboard/components/top-actions'
-import {Connections} from '#/plugin/analytics/administration/dashboard/components/connections'
-import {Logs} from '#/plugin/analytics/administration/dashboard/components/logs'
-import {UserLogs} from '#/plugin/analytics/administration/dashboard/components/logs-user'
-import {LogDetails} from '#/main/core/layout/logs'
+import {DashboardOverview} from '#/plugin/analytics/administration/dashboard/components/overview'
+import {DashboardActivity} from '#/plugin/analytics/administration/dashboard/components/activity'
+import {DashboardContent} from '#/plugin/analytics/administration/dashboard/components/content'
+import {DashboardCommunity} from '#/plugin/analytics/administration/dashboard/components/community'
 
 const DashboardTool = (props) =>
-  <ToolPage
-    actions={[
+  <Routes
+    path={props.path}
+    routes={[
       {
-        name: 'download',
-        type: DOWNLOAD_BUTTON,
-        file: {
-          url: url(['apiv2_log_connect_platform_list_csv']) + props.connectionsQuery
-        },
-        label: trans('download_csv_list', {}, 'log'),
-        icon: 'fa fa-download',
-        displayed: matchPath(props.location.pathname, {path: `${props.path}/connections`, exact: true})
+        path: '/',
+        exact: true,
+        render: () => {
+          const Overview = (
+            <DashboardOverview count={props.count} />
+          )
+
+          return Overview
+        }
       }, {
-        name: 'download',
-        type: DOWNLOAD_BUTTON,
-        file: {
-          url: url(['apiv2_admin_tool_logs_list_csv']) + props.logsQuery
-        },
-        label: trans('download_csv_list', {}, 'log'),
-        icon: 'fa fa-download',
-        displayed: matchPath(props.location.pathname, {path: `${props.path}/log`, exact: true})
+        path: '/activity',
+        render: () => {
+          const Activity = (
+            <DashboardActivity count={props.count} />
+          )
+
+          return Activity
+        }
       }, {
-        name: 'download',
-        type: DOWNLOAD_BUTTON,
-        file: {
-          url: url(['apiv2_admin_tool_logs_list_users_csv']) + props.usersQuery
-        },
-        label: trans('download_csv_list', {}, 'log'),
-        icon: 'fa fa-download',
-        displayed: matchPath(props.location.pathname, {path: `${props.path}/logs/users`, exact: true})
+        path: '/content',
+        render: () => {
+          const Content = (
+            <DashboardContent count={props.count} />
+          )
+
+          return Content
+        }
+      }, {
+        path: '/community',
+        render: () => {
+          const Community = (
+            <DashboardCommunity count={props.count} />
+          )
+
+          return Community
+        }
       }
     ]}
-    subtitle={
-      <Routes
-        path={props.path}
-        routes={[
-          {
-            path: '/',
-            render: () => trans('overview', {}, 'analytics'),
-            exact: true
-          }, {
-            path: '/audience',
-            render: () => trans('user_visit')
-          }, {
-            path: '/resources',
-            render: () => trans('analytics_resources')
-          }, {
-            path: '/top',
-            render: () => trans('analytics_top')
-          }, {
-            path: '/connections',
-            render: () => trans('connection_time')
-          }, {
-            path: '/log',
-            render: () => trans('users_actions')
-          }, {
-            path: '/logs/users',
-            render: () => trans('user_actions')
-          }
-        ]}
-      />
-    }
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/',
-          component: Overview,
-          exact: true
-        }, {
-          path: '/audience',
-          component: Audience
-        }, {
-          path: '/resources',
-          component: Resources
-        }, {
-          path: '/top',
-          component: TopActions
-        }, {
-          path: '/connections',
-          component: Connections
-        }, {
-          path: '/log',
-          component: Logs,
-          exact: true
-        }, {
-          path: '/log/:id',
-          component: LogDetails,
-          onEnter: (params) => props.openLog(params.id)
-        }, {
-          path: '/logs/users',
-          component: UserLogs
-        }
-      ]}
-    />
-  </ToolPage>
+  />
 
 DashboardTool.propTypes = {
   path: T.string.isRequired,
-  location: T.object.isRequired,
-  connectionsQuery: T.string,
-  logsQuery: T.string,
-  usersQuery: T.string,
-  openLog: T.func.isRequired
+  count: T.shape({
+    workspaces: T.number,
+    resources: T.number,
+    storage: T.number,
+    connections: T.shape({
+      count: T.number,
+      avgTime: T.number
+    }),
+    users: T.number,
+    roles: T.number,
+    groups: T.number,
+    organizations: T.number
+  }).isRequired
 }
 
 export {

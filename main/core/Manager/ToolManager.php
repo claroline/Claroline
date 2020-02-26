@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRole;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
+use Claroline\CoreBundle\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Repository\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;

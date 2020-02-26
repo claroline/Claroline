@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {NumberInput} from '#/main/app/data/types/number/components/input'
 
@@ -51,7 +51,7 @@ const StorageInput = props =>
     </span>
   </div>
 
-implementPropTypes(StorageInput, FormFieldTypes, {
+implementPropTypes(StorageInput, DataInputTypes, {
   // more precise value type
   value: T.number
 })

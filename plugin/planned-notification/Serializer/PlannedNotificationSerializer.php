@@ -8,6 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 
 class PlannedNotificationSerializer
@@ -98,8 +99,9 @@ class PlannedNotificationSerializer
                 $notification->setMessage($message);
             }
         }
-        if (isset($data['workspace']['uuid'])) {
-            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['uuid']]);
+        if (isset($data['workspace']['id'])) {
+            /** @var Workspace $workspace */
+            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
 
             if (!empty($workspace)) {
                 $notification->setWorkspace($workspace);

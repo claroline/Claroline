@@ -3,7 +3,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -61,7 +61,7 @@ const FilterInput = props => {
   )
 }
 
-implementPropTypes(FilterInput, FormFieldTypes, {
+implementPropTypes(FilterInput, DataInputTypes, {
   value: T.shape({
     property: T.string,
     value: T.any, // depends on the type data type

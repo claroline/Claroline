@@ -8,5 +8,6 @@ import {DashboardMenu} from '#/plugin/analytics/administration/dashboard/compone
 export default {
   component: DashboardTool,
   menu: DashboardMenu,
-  store: reducer
+  store: reducer,
+  styles: ['claroline-distribution-plugin-analytics-dashboard-tool']
 }

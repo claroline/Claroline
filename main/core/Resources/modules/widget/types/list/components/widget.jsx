@@ -36,7 +36,7 @@ class ListWidget extends Component {
           url: ['apiv2_data_source', {
             type: this.props.source,
             context: this.props.currentContext.type,
-            contextId: 'workspace' === this.props.currentContext.type ? this.props.currentContext.data.uuid : null
+            contextId: 'workspace' === this.props.currentContext.type ? this.props.currentContext.data.id : null
           }],
           autoload: true
         }}

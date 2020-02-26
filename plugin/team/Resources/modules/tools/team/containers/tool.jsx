@@ -14,7 +14,7 @@ const TeamTool = withRouter(
       canEdit: selectors.canEdit(state),
       teamParams: selectors.teamParams(state),
       resourceTypes: selectors.resourceTypes(state),
-      workspaceId: toolSelectors.contextData(state) ? toolSelectors.contextData(state).uuid : null
+      workspaceId: toolSelectors.contextId(state)
     }),
     (dispatch) => ({
       resetForm(formData) {

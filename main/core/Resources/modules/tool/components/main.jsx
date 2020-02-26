@@ -61,7 +61,9 @@ class ToolMain extends Component {
   componentDidMount() {
     this.loadApp().then(() => {
       if (!this.props.loaded) {
-        this.props.open(this.props.toolName, this.props.toolContext)
+        this.pending = makeCancelable(
+          this.props.open(this.props.toolName, this.props.toolContext)
+        )
       }
     })
   }
@@ -69,6 +71,11 @@ class ToolMain extends Component {
   componentDidUpdate(prevProps) {
     let appPromise
     if (this.props.toolName && this.props.toolName !== prevProps.toolName) {
+      if (this.pendingApp) {
+        this.pendingApp.cancel()
+        this.pendingApp = null
+      }
+
       if (this.pending) {
         this.pending.cancel()
         this.pending = null
@@ -81,21 +88,27 @@ class ToolMain extends Component {
 
     appPromise.then(() => {
       if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
-        this.props.open(this.props.toolName, this.props.toolContext)
-      }
+        if (!this.pending) {
+          // close previous tool
+          if (this.props.toolName && prevProps.toolName && this.props.toolContext && prevProps.toolContext && (
+            this.props.toolName !== prevProps.toolName ||
+            this.props.toolContext.type !== prevProps.toolContext.type ||
+            (this.props.toolContext.data && prevProps.toolContext.data && this.props.toolContext.data.id !== prevProps.toolContext.data.id)
+          )) {
+            this.props.close(prevProps.toolName, prevProps.toolContext)
+          }
 
-      if (this.props.toolName && prevProps.toolName && this.props.toolContext && prevProps.toolContext && (
-        this.props.toolName !== prevProps.toolName ||
-        this.props.toolContext.type !== prevProps.toolContext.type ||
-        (this.props.toolContext.data && prevProps.toolContext.data && this.props.toolContext.data.id !== prevProps.toolContext.data.id)
-      )) {
-        this.props.close(prevProps.toolName, prevProps.toolContext)
+          // open current tool
+          this.pending = makeCancelable(
+            this.props.open(this.props.toolName, this.props.toolContext)
+          )
+        }
       }
     })
   }
 
   loadApp() {
-    if (!this.pending) {
+    if (!this.pendingApp) {
       this.setState({appLoaded: false})
 
       let app
@@ -105,9 +118,9 @@ class ToolMain extends Component {
         app = getTool(this.props.toolName)
       }
 
-      this.pending = makeCancelable(app)
+      this.pendingApp = makeCancelable(app)
 
-      this.pending.promise
+      this.pendingApp.promise
         .then(
           (resolved) => {
             if (resolved.default) {
@@ -125,19 +138,25 @@ class ToolMain extends Component {
           (error) => console.error(error) /* eslint-disable-line no-console */
         )
         .then(
-          () => this.pending = null,
-          () => this.pending = null
+          () => this.pendingApp = null,
+          () => this.pendingApp = null
         )
     }
 
-    return this.pending.promise
+    return this.pendingApp.promise
   }
 
   componentWillUnmount() {
+    if (this.pendingApp) {
+      this.pendingApp.cancel()
+      this.pendingApp = null
+    }
+
     if (this.pending) {
       this.pending.cancel()
       this.pending = null
     }
+
     this.props.close(this.props.toolName, this.props.toolContext)
   }
 

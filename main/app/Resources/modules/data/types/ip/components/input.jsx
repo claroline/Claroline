@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {IPv4} from '#/main/app/data/types/ip/utils'
 
@@ -116,7 +116,7 @@ class IpInput extends Component {
   }
 }
 
-implementPropTypes(IpInput, FormFieldTypes, {
+implementPropTypes(IpInput, DataInputTypes, {
   value: T.string,
   placeholder: T.string,
   size: T.string

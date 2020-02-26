@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * WidgetInstance entity.
  *
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetInstanceRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_widget_instance")
  */
 class WidgetInstance

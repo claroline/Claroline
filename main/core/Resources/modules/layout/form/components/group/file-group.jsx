@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group.jsx'
 
 import {File} from '#/main/core/layout/form/components/field/file.jsx'
@@ -11,7 +11,7 @@ const FileGroup = props =>
     <File {...props} />
   </FormGroup>
 
-implementPropTypes(FileGroup, FormGroupWithFieldTypes, {
+implementPropTypes(FileGroup, [DataGroupTypes, DataInputTypes], {
   // more precise value type
   value: T.oneOfType([T.array, T.object]),
   // custom props

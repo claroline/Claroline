@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {actions} from '#/plugin/exo/resources/quiz/correction/store/actions'
@@ -26,7 +26,7 @@ class AnswerRow extends Component {
           <div className="text-fields">
             {this.props.data && 0 !== this.props.data.length ?
               <div>
-                <HtmlText className="answer-item">{this.props.data}</HtmlText>
+                <ContentHtml className="answer-item">{this.props.data}</ContentHtml>
                 {0 < this.props.maxLength &&
                   <div className="pull-right">
                     {trans('text_length')} : {this.props.data.replace('&nbsp;', ' ').replace(/<[^>]*>/g, '').length}
@@ -98,9 +98,9 @@ let Answers = props => {
   return (
     <div className="answers-list">
       <h2 className="question-title">
-        <HtmlText>
+        <ContentHtml>
           {props.question.title || props.question.content}
-        </HtmlText>
+        </ContentHtml>
 
         {props.answers.length > 0 &&
           <button

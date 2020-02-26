@@ -5,11 +5,11 @@ import cloneDeep from 'lodash/cloneDeep'
 import moment from 'moment'
 
 import {trans} from '#/main/app/intl/translation'
-import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group.jsx'
-import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
-import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group.jsx'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
+import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group'
+import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
+import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group'
+import {ContentHtml} from '#/main/app/content/components/html'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
 import {DropzoneType, CorrectionType, GradeType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {computeScoreFromGrades} from '#/plugin/drop-zone/resources/dropzone/utils'
@@ -27,9 +27,9 @@ const CriteriaForm = props =>
           {props.dropzone.parameters.criteria.map(c =>
             <tr key={`criterion-form-${c.id}`}>
               <td>
-                <HtmlText>
+                <ContentHtml>
                   {c.instruction}
-                </HtmlText>
+                </ContentHtml>
               </td>
               <td className="criterion-scale-form-row">
                 <ChoiceGroup
@@ -111,9 +111,9 @@ export class CorrectionForm extends Component {
           {this.props.dropzone.display.correctionInstruction &&
             <div id="correction-instruction-container">
               <h2>{trans('correction_instruction', {}, 'dropzone')}</h2>
-              <HtmlText>
+              <ContentHtml>
                 {this.props.dropzone.display.correctionInstruction}
-              </HtmlText>
+              </ContentHtml>
               <hr/>
             </div>
           }

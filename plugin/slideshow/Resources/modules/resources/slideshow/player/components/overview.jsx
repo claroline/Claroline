@@ -9,8 +9,8 @@ import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {ContentHtml} from '#/main/app/content/components/html'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
@@ -26,7 +26,7 @@ const OverviewComponent = props =>
         <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
 
         <div className="panel panel-default">
-          <HtmlText className="panel-body">{props.overviewMessage}</HtmlText>
+          <ContentHtml className="panel-body">{props.overviewMessage}</ContentHtml>
         </div>
       </section>
     }

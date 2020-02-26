@@ -4,7 +4,7 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 const parseValue = (value) => !isNaN(value) ? parseFloat(value) : value
 
@@ -74,7 +74,7 @@ const Radios = props => {
   )
 }
 
-implementPropTypes(Radios, FormFieldTypes, {
+implementPropTypes(Radios, DataInputTypes, {
   value: T.oneOfType([T.string, T.number]),
 
   // custom props

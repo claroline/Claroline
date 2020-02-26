@@ -5,8 +5,6 @@ import {DataProperty} from '#/main/app/data/types/prop-types'
 
 import {constants} from '#/main/app/content/form/constants'
 
-// todo use layout/form/prop-types
-
 const DataFormProperty = {
   propTypes: merge({}, DataProperty.propTypes, {
     // form configuration

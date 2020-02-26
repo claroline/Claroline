@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 const Apps = (props) =>
   <ListData

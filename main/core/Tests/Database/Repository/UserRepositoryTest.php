@@ -75,8 +75,7 @@ class UserRepositoryTest extends RepositoryTestCase
 
     public function testFindAll()
     {
-        $this->assertEquals(5, count(self::$repo->findAll()));
-        $this->assertInstanceOf('Doctrine\ORM\Query', self::$repo->findAll(false));
+        $this->assertEquals(4, count(self::$repo->findAll()));
     }
 
     public function testFindByName()

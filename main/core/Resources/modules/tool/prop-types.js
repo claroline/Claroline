@@ -14,9 +14,9 @@ const Tool = {
       ]),
       data: T.object
     }),
-    display: {
+    display: T.shape({
       showIcon: T.bool
-    }
+    })
   },
   defaultProps: {
 

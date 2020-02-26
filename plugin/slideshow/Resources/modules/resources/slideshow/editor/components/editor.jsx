@@ -10,7 +10,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/editor/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'

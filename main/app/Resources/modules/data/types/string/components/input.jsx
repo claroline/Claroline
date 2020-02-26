@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 class StringInput extends PureComponent {
   constructor(props) {
@@ -46,7 +46,7 @@ class StringInput extends PureComponent {
   }
 }
 
-implementPropTypes(StringInput, FormFieldTypes, {
+implementPropTypes(StringInput, DataInputTypes, {
   value: T.string,
   long: T.bool,
   minRows: T.number,

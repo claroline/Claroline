@@ -18,5 +18,15 @@
   "workspace_public_unregistration": "Unregistration is public.",
   "not_found": "Workspace not found",
   "not_found_desc": "We are sorry, we could not find your workspace. It is possible that it does not exist (or no longer) or that the URL used is incorrect.",
-  "loading": "We are loading your workspace..."
+  "loading": "We are loading your workspace...",
+
+  "evaluation_not_attempted_status": "You have not started the workspace.",
+  "evaluation_todo_status": "You have to do the workspace.",
+  "evaluation_unknown_status": "We don't know your progression in this workspace.",
+  "evaluation_opened_status": "You have opened the workspace.",
+  "evaluation_incomplete_status": "You have started the workspace.",
+  "evaluation_participated_status": "You have participated to the workspace.",
+  "evaluation_failed_status": "You did not pass the workspace.",
+  "evaluation_completed_status": "You have finished the workspace.",
+  "evaluation_passed_status": "You have passed the workspace."
 }

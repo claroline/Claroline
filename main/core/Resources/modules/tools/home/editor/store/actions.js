@@ -27,7 +27,7 @@ actions.createTab = (context, administration, position, currentUser, navigate) =
       context.type,
     administration: administration,
     user: context.type === 'desktop' && !administration ? currentUser : null,
-    workspace: context.type === 'workspace' ? {uuid: context.data.uuid} : null
+    workspace: context.type === 'workspace' ? {id: context.data.id} : null
   })))
 
   // open new tab

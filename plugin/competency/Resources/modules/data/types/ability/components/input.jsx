@@ -5,8 +5,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Ability as AbilityType} from '#/plugin/competency/administration/competency/prop-types'
 import {MODAL_ABILITIES_PICKER} from '#/plugin/competency/modals/abilities'
@@ -76,7 +76,7 @@ const AbilityInput = props => {
   }
 }
 
-implementPropTypes(AbilityInput, FormFieldTypes, {
+implementPropTypes(AbilityInput, DataInputTypes, {
   value: T.shape(AbilityType.propTypes),
   picker: T.shape({
     title: T.string,

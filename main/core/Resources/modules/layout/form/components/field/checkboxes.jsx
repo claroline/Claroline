@@ -3,7 +3,7 @@ import React from 'react'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 
@@ -47,7 +47,7 @@ const Checkboxes = props => {
   )
 }
 
-implementPropTypes(Checkboxes, FormFieldTypes, {
+implementPropTypes(Checkboxes, DataInputTypes, {
   value: T.array,
   choices: T.object.isRequired,
   disabledChoices: T.arrayOf(T.string),

@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 

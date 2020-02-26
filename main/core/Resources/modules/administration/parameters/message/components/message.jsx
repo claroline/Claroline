@@ -11,8 +11,8 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
 import {
@@ -45,9 +45,9 @@ const SlidesForm = (props) =>
                 src={asset(slide.poster.url)}
                 alt={slide.title}
               /> :
-              <HtmlText className="text-thumbnail">
+              <ContentHtml className="text-thumbnail">
                 {slide.content || slide.title}
-              </HtmlText>
+              </ContentHtml>
             }
 
             {!props.disabled &&

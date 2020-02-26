@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {utils} from '#/plugin/exo/items/choice/utils'
 import {WarningIcon} from '#/plugin/exo/items/choice/components/warning-icon'
@@ -29,9 +29,9 @@ const ChoiceFeedback = props =>
             />
           }
 
-          <HtmlText className="choice-item-content">
+          <ContentHtml className="choice-item-content">
             {utils.getChoiceById(props.item.choices, solution.id).data}
-          </HtmlText>
+          </ContentHtml>
 
           {utils.isSolutionChecked(solution, props.answer) &&
             <div className="choice-item-feedback">

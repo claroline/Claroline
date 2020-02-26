@@ -41,8 +41,6 @@ class GroupRepositoryTest extends RepositoryTestCase
     {
         $groups = self::$repo->findAll();
         $this->assertEquals(5, count($groups));
-        $query = self::$repo->findAll(false);
-        $this->assertInstanceof('Doctrine\ORM\Query', $query);
     }
 
     public function testFindByName()

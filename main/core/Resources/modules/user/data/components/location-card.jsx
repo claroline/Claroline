@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 import {locationTypes} from '#/main/core/administration/community/location/constants'
 import {Location as LocationTypes} from '#/main/core/user/prop-types'

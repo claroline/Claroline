@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
@@ -220,9 +220,9 @@ class Association extends Component {
       })}>
         <div className="text-fields">
           {this.props.association._itemData &&
-            <HtmlText className="form-control">
+            <ContentHtml className="form-control">
               {this.props.association._itemData}
-            </HtmlText>
+            </ContentHtml>
           }
 
           {!this.props.association._itemData &&

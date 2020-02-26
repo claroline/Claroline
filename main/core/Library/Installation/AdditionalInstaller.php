@@ -289,7 +289,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         }
 
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
-        $termsOfServiceManager->sendDatas();
+        $termsOfServiceManager->sendData();
 
         $this->setUpdateDate();
     }

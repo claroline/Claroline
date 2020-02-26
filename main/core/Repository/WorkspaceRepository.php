@@ -84,6 +84,8 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Counts the non personal workspaces.
      *
+     * @param array $organizations
+     *
      * @return int
      */
     public function countNonPersonalWorkspaces($organizations = null)
@@ -93,13 +95,14 @@ class WorkspaceRepository extends EntityRepository
             ->select('COUNT(w.id)')
             ->andWhere('w.personal = :personal')
             ->setParameter('personal', false);
-        if (null !== $organizations) {
+
+        if (!empty($organizations)) {
             $qb->join('w.organizations', 'orgas')
                 ->andWhere('orgas IN (:organizations)')
                 ->setParameter('organizations', $organizations);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

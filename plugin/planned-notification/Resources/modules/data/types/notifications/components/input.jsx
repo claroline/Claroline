@@ -6,8 +6,8 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {MODAL_PLANNED_NOTIFICATIONS_PICKER} from '#/plugin/planned-notification/modals/notifications'
 import {Notification as NotificationType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
@@ -98,7 +98,7 @@ const NotificationsInput = props => {
   }
 }
 
-implementPropTypes(NotificationsInput, FormFieldTypes, {
+implementPropTypes(NotificationsInput, DataInputTypes, {
   value: T.arrayOf(T.shape(NotificationType.propTypes)),
   picker: T.shape({
     title: T.string,

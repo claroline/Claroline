@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 const ItemFeedback = props =>
@@ -20,7 +20,7 @@ const ItemFeedback = props =>
     {(props.item.feedback && !isHtmlEmpty(props.item.feedback)) &&
       <div className="item-feedback">
         <span className="fa fa-comment" />
-        <HtmlText>{props.item.feedback}</HtmlText>
+        <ContentHtml>{props.item.feedback}</ContentHtml>
       </div>
     }
   </div>

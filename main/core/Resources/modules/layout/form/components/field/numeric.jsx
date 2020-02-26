@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 const NumericInput = props =>
   <input
@@ -39,7 +39,7 @@ const Numeric = props => props.unit ?
   :
   <NumericInput {...props} />
 
-implementPropTypes(Numeric, FormFieldTypes, {
+implementPropTypes(Numeric, DataInputTypes, {
   value: T.oneOfType([T.number, T.string]),
   min: T.number,
   max: T.number,

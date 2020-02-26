@@ -14,12 +14,11 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TermsOfServiceManager
 {
     private $configHandler;
-    private $container;
+    private $versionManager;
     private $contentManager;
     private $isActive;
     private $userManager;
@@ -27,13 +26,13 @@ class TermsOfServiceManager
 
     public function __construct(
         PlatformConfigurationHandler $configHandler,
-        ContainerInterface $container,
+        VersionManager $versionManager,
         ContentManager $contentManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
     ) {
         $this->configHandler = $configHandler;
-        $this->container = $container;
+        $this->versionManager = $versionManager;
         $this->contentManager = $contentManager;
         $this->isActive = $configHandler->getParameter('terms_of_service');
         $this->userManager = $userManager;
@@ -47,7 +46,7 @@ class TermsOfServiceManager
      */
     public function isActive()
     {
-        return $this->isActive;
+        return $this->configHandler->getParameter('terms_of_service');
     }
 
     public function getTermsOfService($translations = true)
@@ -104,7 +103,7 @@ class TermsOfServiceManager
         }
     }
 
-    public function sendDatas()
+    public function sendData()
     {
         $platformUrl = $this->configHandler->getParameter('platform_url');
 
@@ -114,10 +113,10 @@ class TermsOfServiceManager
             $lang = $this->configHandler->getParameter('locale_language');
             $country = $this->configHandler->getParameter('country');
             $supportEmail = $this->configHandler->getParameter('support_email');
-            $version = $this->getCoreBundleVersion();
+            $version = $this->versionManager->getDistributionVersion();
             $nbNonPersonalWorkspaces = $this->workspaceManager->getNbNonPersonalWorkspaces();
             $nbPersonalWorkspaces = $this->workspaceManager->getNbPersonalWorkspaces();
-            $nbUsers = $this->userManager->getCountAllEnabledUsers();
+            $nbUsers = $this->userManager->countEnabledUsers();
             $type = 3;
             $token = $this->configHandler->getParameter('token');
 
@@ -141,24 +140,5 @@ class TermsOfServiceManager
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_exec($curl);
         }
-    }
-
-    private function getCoreBundleVersion()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $version = '-';
-        $installedFile = $this->container->getParameter('kernel.root_dir').
-            $ds.'..'.$ds.'vendor'.$ds.'composer'.$ds.'installed.json';
-        $jsonString = file_get_contents($installedFile);
-        $bundles = json_decode($jsonString, true);
-
-        foreach ($bundles as $bundle) {
-            if (isset($bundle['name']) && 'claroline/core-bundle' === $bundle['name']) {
-                $version = $bundle['version'];
-                break;
-            }
-        }
-
-        return $version;
     }
 }

@@ -18,7 +18,7 @@ import {displayUsername} from '#/main/core/user/utils'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 
 import {calculateTotal} from '#/plugin/exo/items/score'
@@ -92,7 +92,7 @@ const PaperStep = props => {
             {(item.feedback && !isHtmlEmpty(item.feedback)) &&
               <div className="item-feedback">
                 <span className="fa fa-comment" />
-                <HtmlText>{item.feedback}</HtmlText>
+                <ContentHtml>{item.feedback}</ContentHtml>
               </div>
             }
           </Panel>

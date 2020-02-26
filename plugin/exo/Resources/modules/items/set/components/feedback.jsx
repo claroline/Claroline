@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {utils} from '#/plugin/exo/items/set/utils'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
@@ -18,9 +18,9 @@ const SetFeedback = props =>
         {props.item.sets.map((set) =>
           <li key={`your-answer-set-id-${set.id}`}>
             <div className="set">
-              <HtmlText className="set-heading">
+              <ContentHtml className="set-heading">
                 {set.data}
-              </HtmlText>
+              </ContentHtml>
 
               <ul>
                 {props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>

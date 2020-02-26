@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
@@ -14,7 +14,7 @@ const InfobarComponent = props =>
       <h2 className="panel-title">{trans('infobar', {}, 'icap_blog')}</h2>
     </div>
     {!isEmpty(props.infos) &&
-      <HtmlText className="panel-body">{props.infos}</HtmlText>
+      <ContentHtml className="panel-body">{props.infos}</ContentHtml>
     }
 
   </div>

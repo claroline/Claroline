@@ -13,7 +13,7 @@ import {Plugins} from '#/main/core/administration/parameters/plugin/containers/p
 import {Messages} from '#/main/core/administration/parameters/message/components/messages'
 import {Message} from '#/main/core/administration/parameters/message/containers/message'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
-import {Appearance} from '#/main/core/administration/parameters/appearance/containers/appearance'
+import {AppearanceMain} from '#/main/core/administration/parameters/appearance/containers/main'
 import {IconsMain} from '#/main/core/administration/parameters/icon/containers/main'
 
 const ParametersTool = (props) => {
@@ -100,7 +100,7 @@ const ParametersTool = (props) => {
             component: Technical
           }, {
             path: '/appearance',
-            component: Appearance
+            component: AppearanceMain
           }, {
             path: '/icons',
             component: IconsMain

@@ -83,9 +83,10 @@ const DropsList = props =>
           label: trans('score', {}, 'platform'),
           type: 'score',
           displayed: true,
-          options: {
-            max: props.dropzone.parameters.scoreMax
-          }
+          calculated: (row) => ({
+            current: row.score,
+            total: props.dropzone.parameters.scoreMax
+          })
         }
       ]}
       actions={(rows) => [
@@ -95,8 +96,7 @@ const DropsList = props =>
           label: trans('correct_the_copy', {}, 'dropzone'),
           target: `${props.path}/drop/${rows[0].id}`,
           scope: ['object']
-        },
-        {
+        }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-unlock',
           label: trans('unlock_drop', {}, 'dropzone'),

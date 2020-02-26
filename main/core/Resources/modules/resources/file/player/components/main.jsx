@@ -9,7 +9,7 @@ import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'
 import {getFile} from '#/main/core/files'
 import {File as FileTypes} from '#/main/core/files/prop-types'
 
-import {Comments} from '#/main/core/layout/comment/components/comments'
+import {Comments} from '#/main/app/content/components/comments'
 
 // TODO : display a standard player with file info if no custom one
 const PlayerMain = (props) => {

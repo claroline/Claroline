@@ -3,7 +3,7 @@ import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {isValidDate, getApiFormat, getDisplayFormat, displayDate, apiDate} from '#/main/app/intl/date'
 
 import {Button} from '#/main/app/action/components/button'
@@ -79,7 +79,7 @@ class DateInput extends Component {
   }
 }
 
-implementPropTypes(DateInput, FormFieldTypes, {
+implementPropTypes(DateInput, DataInputTypes, {
   value: T.string,
   calendarIcon: T.string,
 

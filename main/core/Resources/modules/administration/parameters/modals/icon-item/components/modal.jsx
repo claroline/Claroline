@@ -12,7 +12,7 @@ import {selectors} from '#/main/core/administration/parameters/store'
 import {
   IconSet as IconSetType,
   IconItem as IconItemType
-} from '#/main/core/administration/parameters/prop-types'
+} from '#/main/core/administration/parameters/icon/prop-types'
 
 const IconItemFormModal = props =>
   <Modal

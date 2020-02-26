@@ -14,27 +14,18 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class LogManager
 {
     const CSV_LOG_BATCH = 1000;
 
-    private $container;
-
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
 
-    /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $logRepository */
+    /** @var LogRepository $logRepository */
     private $logRepository;
 
     /** @var FinderProvider */
@@ -47,32 +38,26 @@ class LogManager
     private $ut;
 
     /**
-     * @param $container
+     * LogManager constructor.
+     *
      * @param ObjectManager       $objectManager
      * @param FinderProvider      $finder
      * @param TranslatorInterface $translator
+     * @param ClaroUtilities      $ut
      */
     public function __construct(
-        $container,
         ObjectManager $objectManager,
         FinderProvider $finder,
         TranslatorInterface $translator,
         ClaroUtilities $ut
     ) {
-        $this->container = $container;
-        $this->om = $objectManager;
-        $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
-        $this->finder = $finder;
         $this->translator = $translator;
+        $this->om = $objectManager;
+        $this->finder = $finder;
         $this->ut = $ut;
-    }
 
-    public function detach($obj)
-    {
-        $this->om->detach($obj);
+        $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
     }
-
-    // New api
 
     /**
      * Get log by id.
@@ -310,234 +295,6 @@ class LogManager
         return $chartData;
     }
 
-    // TODO: Clean old methods after refactoring. Old methods from here and below
-
-    public function getDesktopWidgetList(WidgetInstance $instance)
-    {
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-
-        $hiddenConfigs = $this->om
-            ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
-            ->findBy(['user' => $user]);
-
-        $workspaceIds = [];
-
-        foreach ($hiddenConfigs as $hiddenConfig) {
-            $workspaceIds[] = $hiddenConfig->getWorkspaceId();
-        }
-
-        // Get manager and collaborator workspaces config
-        /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces */
-        $workspaces = $this->om
-            ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-            ->findByUserAndRoleNamesNotIn($user, ['ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'], $workspaceIds);
-
-        $configs = [];
-
-        if (count($workspaces) > 0) {
-            //add this method to the repository @see ligne 68
-            $configs = $this->om
-                ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')->findByWorkspaces($workspaces);
-        }
-
-        $defaultInstance = $this->om
-            ->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
-            ->findOneBy(
-            [
-                'widget' => $instance->getWidget(),
-                'isAdmin' => true,
-                'workspace' => null,
-                'user' => null,
-                'isDesktop' => false,
-            ]
-        );
-
-        $defaultConfig = $this->getLogConfig($defaultInstance);
-
-        if (null === $defaultConfig) {
-            $defaultConfig = new LogWidgetConfig();
-            $defaultConfig->setRestrictions(
-                $this->getDefaultWorkspaceConfigRestrictions()
-            );
-            $defaultConfig->setAmount(5);
-        }
-
-        // Complete missing configs
-        foreach ($workspaces as $workspace) {
-            $config = null;
-
-            for ($i = 0, $countConfigs = count($configs); $i < $countConfigs && null === $config; ++$i) {
-                $current = $configs[$i];
-                if ($current->getWidgetInstance()->getWorkspace()->getId() === $workspace->getId()) {
-                    $config = $current;
-                }
-            }
-
-            if (null === $config) {
-                $config = new LogWidgetConfig();
-                $config->copy($defaultConfig);
-                $widgetInstance = new WidgetInstance();
-                $widgetInstance->setWorkspace($workspace);
-                $config->setWidgetInstance($widgetInstance);
-                $configs[] = $config;
-            }
-        }
-
-        // Remove configs which hasAllRestriction
-        $configsCleaned = [];
-        $events = $this->container->get('claroline.event.manager')
-            ->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE);
-
-        foreach ($configs as $config) {
-            if (false === $config->hasAllRestriction($events)) {
-                $configsCleaned[] = $config;
-            }
-        }
-
-        $configs = $configsCleaned;
-
-        if (0 === count($configs)) {
-            return;
-        }
-
-        $desktopConfig = $this->getLogConfig($instance);
-        $desktopConfig = null === $desktopConfig ? $defaultConfig : $desktopConfig;
-        $query = $this->logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
-        $logs = $query->getResult();
-        $chartData = $this->logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
-
-        //List item delegation
-        $views = $this->renderLogs($logs);
-
-        return [
-            'logs' => $logs,
-            'listItemViews' => $views,
-            'chartData' => $chartData,
-            'logAmount' => $desktopConfig->getAmount(),
-            'isDesktop' => true,
-            'title' => $this->translator->trans(
-                'your_workspace_activity_overview',
-                [],
-                'platform'
-            ),
-        ];
-    }
-
-    public function getWorkspaceWidgetList(WidgetInstance $instance)
-    {
-        $workspace = $instance->getWorkspace();
-
-        if (!$this->isAllowedToViewLogs($workspace)) {
-            return;
-        }
-
-        $config = $this->getLogConfig($instance);
-
-        if (null === $config) {
-            $defaultConfig = $this->om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
-                ->findOneBy(['isDesktop' => false, 'isAdmin' => true]);
-
-            $config = new LogWidgetConfig();
-
-            if (null !== $defaultConfig) {
-                $config->copy($this->getLogConfig($defaultConfig));
-            }
-
-            $config->setRestrictions(
-                $this->getDefaultWorkspaceConfigRestrictions()
-            );
-            $widgetInstance = new WidgetInstance();
-            $widgetInstance->setWorkspace($workspace);
-            $config->setWidgetInstance($widgetInstance);
-        }
-
-        /** @var \Claroline\CoreBundle\Manager\EventManager $eventManager */
-        $eventManager = $this->container->get('claroline.event.manager');
-
-        if ($config->hasNoRestriction()) {
-            return;
-        }
-
-        $query = $this->logRepository->findLogsThroughConfigs([$config], $config->getAmount());
-        $logs = $query->getResult();
-        $chartData = $this->logRepository->countByDayThroughConfigs([$config], $this->getDefaultRange());
-
-        //List item delegation
-        $views = $this->renderLogs($logs);
-
-        $workspaceEvents = $eventManager->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE);
-
-        if ($config->hasAllRestriction(count($workspaceEvents))) {
-            $title = $this->translator->trans(
-                'recent_all_workspace_activities_overview',
-                ['%workspaceName%' => $workspace->getName()],
-                'platform'
-            );
-        } else {
-            $title = $this->translator->trans(
-                'Overview of recent activities in %workspaceName%',
-                ['%workspaceName%' => $workspace->getName()],
-                'platform'
-            );
-        }
-
-        return [
-            'logs' => $logs,
-            'listItemViews' => $views,
-            'chartData' => $chartData,
-            'workspace' => $workspace,
-            'logAmount' => $config->getAmount(),
-            'title' => $title,
-            'isDesktop' => false,
-        ];
-    }
-
-    public function getWorkspaceVisibilityForDesktopWidget(User $user, array $workspaces)
-    {
-        $workspacesVisibility = [];
-
-        foreach ($workspaces as $workspace) {
-            $workspacesVisibility[$workspace->getId()] = true;
-        }
-
-        $hiddenWorkspaceConfigs = $this->om
-            ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
-            ->findBy(['user' => $user]);
-
-        foreach ($hiddenWorkspaceConfigs as $config) {
-            if (null !== $workspacesVisibility[$config->getWorkspaceId()]) {
-                $workspacesVisibility[$config->getWorkspaceId()] = false;
-            }
-        }
-
-        return $workspacesVisibility;
-    }
-
-    /**
-     * @param null $domain
-     *
-     * @return array
-     */
-    public function getDefaultConfigRestrictions($domain = null)
-    {
-        return $this->container->get('claroline.event.manager')->getEvents($domain);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDefaultWorkspaceConfigRestrictions()
-    {
-        return $this->getDefaultConfigRestrictions(LogGenericEvent::DISPLAYED_WORKSPACE);
-    }
-
-    public function getLogConfig(WidgetInstance $config = null)
-    {
-        return $this->om
-            ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')
-            ->findOneBy(['widgetInstance' => $config]);
-    }
-
     public function getDetails(Log $log)
     {
         $details = $log->getDetails();
@@ -559,47 +316,5 @@ class LogManager
             ],
             'log'
         );
-    }
-
-    protected function isAllowedToViewLogs($workspace)
-    {
-        $security = $this->container->get('security.authorization_checker');
-
-        return $security->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getGuid())
-            || $security->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid());
-    }
-
-    protected function renderLogs($logs)
-    {
-        //List item delegation
-        $views = [];
-        foreach ($logs as $log) {
-            $eventName = 'create_log_list_item_'.$log->getAction();
-            $event = new LogCreateDelegateViewEvent($log);
-
-            /** @var EventDispatcher $eventDispatcher */
-            $eventDispatcher = $this->container->get('event_dispatcher');
-
-            if ($eventDispatcher->hasListeners($eventName)) {
-                $event = $eventDispatcher->dispatch($eventName, $event);
-
-                $views[$log->getId().''] = $event->getResponseContent();
-            }
-        }
-
-        return $views;
-    }
-
-    protected function getDefaultRange()
-    {
-        //By default last thirty days :
-        $startDate = new \DateTime('now');
-        $startDate->setTime(0, 0, 0);
-        $startDate->sub(new \DateInterval('P29D')); // P29D means a period of 29 days
-
-        $endDate = new \DateTime('now');
-        $endDate->setTime(23, 59, 59);
-
-        return [$startDate->getTimestamp(), $endDate->getTimestamp()];
     }
 }

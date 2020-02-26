@@ -12,7 +12,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {MODAL_TAGS} from '#/plugin/tag/modals/tags'
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
@@ -285,7 +285,7 @@ class TagInput extends Component {
   }
 }
 
-implementPropTypes(TagInput, FormFieldTypes, {
+implementPropTypes(TagInput, DataInputTypes, {
   objectClass: T.string,
   value: T.arrayOf(T.string)
 }, {

@@ -138,12 +138,8 @@ class MessageManager
         }
 
         //workspaces are going to be notified
-        foreach ($workspaceReceivers as $workspaceReceiver) {
-            $users = $this->userRepo->findByWorkspaceWithUsersFromGroup($workspaceReceiver);
-
-            foreach ($users as $user) {
-                $userReceivers[] = $user;
-            }
+        if (!empty($workspaceReceivers)) {
+            $userReceivers = array_merge($userReceivers, $this->userRepo->findByWorkspaces($workspaceReceivers));
         }
 
         $ids = [];

@@ -2,15 +2,15 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/main/core/resources/text/store'
 import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
 
 const PlayerComponent = props =>
-  <HtmlText>
+  <ContentHtml>
     {props.text.content}
-  </HtmlText>
+  </ContentHtml>
 
 PlayerComponent.propTypes = {
   text: T.shape(TextTypes.propTypes).isRequired

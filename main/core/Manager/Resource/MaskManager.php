@@ -273,7 +273,7 @@ class MaskManager
         return count($menuActions) > 0;
     }
 
-    public function getDefaultActions()
+    public static function getDefaultActions()
     {
         return self::$defaultActions;
     }

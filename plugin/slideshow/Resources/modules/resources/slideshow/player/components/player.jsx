@@ -7,7 +7,7 @@ import Carousel from 'react-bootstrap/lib/Carousel'
 
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'

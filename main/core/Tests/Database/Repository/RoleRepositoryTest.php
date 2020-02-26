@@ -36,12 +36,6 @@ class RoleRepositoryTest extends RepositoryTestCase
         self::createGroup('group_1', [], [self::get('ROLE_WS_CUSTOM_2')]);
     }
 
-    public function testFindByWorkspace()
-    {
-        $roles = self::$repo->findByWorkspace(self::get('ws_1'));
-        $this->assertEquals(5, count($roles));
-    }
-
     public function testFindCollaboratorRole()
     {
         $role = self::$repo->findCollaboratorRole(self::get('ws_1'));

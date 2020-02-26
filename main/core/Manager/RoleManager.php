@@ -21,9 +21,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Exception\AddRoleException;
+use Claroline\CoreBundle\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\Exception\AddRoleException;
-use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -279,7 +279,7 @@ class RoleManager
      */
     public function getWorkspaceRoles(Workspace $workspace)
     {
-        return $this->roleRepo->findByWorkspace($workspace);
+        return $this->roleRepo->findBy(['workspace' => $workspace]);
     }
 
     /**
@@ -290,7 +290,7 @@ class RoleManager
     public function getWorkspaceConfigurableRoles(Workspace $workspace)
     {
         /** @var Role[] $roles */
-        $roles = $this->roleRepo->findByWorkspace($workspace);
+        $roles = $this->roleRepo->findBy(['workspace' => $workspace]);
         $configurableRoles = [];
 
         foreach ($roles as $role) {
@@ -376,7 +376,7 @@ class RoleManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Role[]
+     * @return Role[]
      */
     public function getAllPlatformRoles()
     {
@@ -520,25 +520,6 @@ class RoleManager
      *
      * @return Role[]
      */
-    public function getRoleByWorkspaceCodeAndTranslationKey(
-        $workspaceCode,
-        $translationKey,
-        $executeQuery = true
-    ) {
-        return $this->roleRepo->findRoleByWorkspaceCodeAndTranslationKey(
-            $workspaceCode,
-            $translationKey,
-            $executeQuery
-        );
-    }
-
-    /**
-     * @param string $workspaceCode
-     * @param string $translationKey
-     * @param bool   $executeQuery
-     *
-     * @return Role[]
-     */
     public function getRolesByWorkspaceCodeAndTranslationKey(
         $workspaceCode,
         $translationKey,
@@ -620,7 +601,7 @@ class RoleManager
         // Check users' roles
         $this->log('Checking user role integrity.');
         $userManager = $this->container->get('claroline.manager.user_manager');
-        $totalUsers = $userManager->getCountAllEnabledUsers();
+        $totalUsers = $userManager->countEnabledUsers();
         $i = $userIdx;
         $this->om->startFlushSuite();
         for ($batch = 0; $batch < ceil(($totalUsers - $userIdx) / $batchSize); ++$batch) {

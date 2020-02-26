@@ -5,8 +5,8 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {route} from '#/main/core/workspace/routing'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
@@ -113,7 +113,7 @@ const WorkspacesInput = props => {
   )
 }
 
-implementPropTypes(WorkspacesInput, FormFieldTypes, {
+implementPropTypes(WorkspacesInput, DataInputTypes, {
   value: T.arrayOf(T.shape(WorkspaceType.propTypes)),
   picker: T.shape({
     title: T.string

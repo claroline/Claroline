@@ -5,6 +5,7 @@ namespace Claroline\PlannedNotificationBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 
 class MessageSerializer
@@ -53,6 +54,7 @@ class MessageSerializer
     /**
      * @param array   $data
      * @param Message $message
+     * @param array   $options
      *
      * @return Message
      */
@@ -65,8 +67,9 @@ class MessageSerializer
         $this->sipe('title', 'setTitle', $data, $message);
         $this->sipe('content', 'setContent', $data, $message);
 
-        if (isset($data['workspace']['uuid'])) {
-            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['uuid']]);
+        if (isset($data['workspace']['id'])) {
+            /** @var Workspace $workspace */
+            $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
 
             if (!empty($workspace)) {
                 $message->setWorkspace($workspace);

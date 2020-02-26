@@ -12,7 +12,7 @@ import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {DropzoneType, DropType, Revision as RevisionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -102,7 +102,7 @@ const MyDropComponent = props =>
   <section className="resource-section drop-panel">
     <h2>{trans('my_drop', {}, 'dropzone')}</h2>
     {props.dropzone.instruction &&
-      <HtmlText>{props.dropzone.instruction}</HtmlText>
+      <ContentHtml>{props.dropzone.instruction}</ContentHtml>
     }
 
     <Documents

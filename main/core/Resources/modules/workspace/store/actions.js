@@ -87,7 +87,7 @@ actions.closeWorkspace = (slug) => ({
 
 actions.checkAccessCode = (workspace, code) => ({
   [API_REQUEST] : {
-    url: ['claro_workspace_unlock', {id: workspace.uuid}],
+    url: ['claro_workspace_unlock', {id: workspace.id}],
     request: {
       method: 'POST',
       body: JSON.stringify({code: code})
@@ -100,7 +100,7 @@ actions.checkAccessCode = (workspace, code) => ({
 
 actions.selfRegister = (workspace) => ({
   [API_REQUEST] : {
-    url: ['apiv2_workspace_self_register', {workspace: workspace.uuid}],
+    url: ['apiv2_workspace_self_register', {workspace: workspace.id}],
     request: {
       method: 'PUT'
     },

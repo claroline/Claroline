@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 class EmailInput extends PureComponent {
   constructor(props) {
@@ -32,7 +32,7 @@ class EmailInput extends PureComponent {
   }
 }
 
-implementPropTypes(EmailInput, FormFieldTypes, {
+implementPropTypes(EmailInput, DataInputTypes, {
   // more precise value type
   value: T.string
 }, {

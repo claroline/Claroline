@@ -1,9 +1,9 @@
 /* global document */
 
-function scrollTo(elementSelector) {
+function scrollTo(elementSelector, options) {
   const scrollToElement = document.querySelector(elementSelector)
   if (scrollToElement) {
-    scrollToElement.scrollIntoView({behavior: 'smooth'})
+    scrollToElement.scrollIntoView(options)
   }
 }
 

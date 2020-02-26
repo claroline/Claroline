@@ -99,7 +99,6 @@ class ResourceNodeSerializer
     public function serialize(ResourceNode $resourceNode, array $options = [])
     {
         $serializedNode = [
-            //also used for the export. It's not pretty.
             'autoId' => $resourceNode->getId(),
             'id' => $resourceNode->getUuid(),
             'slug' => $resourceNode->getSlug(),
@@ -112,16 +111,14 @@ class ResourceNodeSerializer
             // TODO : it should not be available in minimal mode
             // for now I need it to compute simple access rights (for display)
             // we should compute simple access here to avoid exposing this big object
-            'rights' => $this->rightsManager->getRights($resourceNode, $options),
+            'rights' => array_values($this->rightsManager->getRights($resourceNode, $options)),
         ];
 
-        // TODO : it should not (I think) be available in minimal mode
-        // for now I need it to compute rights
         if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
                 'slug' => $resourceNode->getWorkspace()->getSlug(),
-                'autoId' => $resourceNode->getWorkspace()->getId(), // TODO : remove me
+                'autoId' => $resourceNode->getWorkspace()->getId(),
                 'name' => $resourceNode->getWorkspace()->getName(),
                 'code' => $resourceNode->getWorkspace()->getCode(),
             ];
@@ -131,7 +128,7 @@ class ResourceNodeSerializer
         if (!empty($parent)) {
             $serializedNode['parent'] = [
                 'id' => $parent->getUuid(),
-                'autoId' => $parent->getId(), // TODO : remove me
+                'autoId' => $parent->getId(),
                 'name' => $parent->getName(),
                 'slug' => $parent->getSlug(),
             ];
@@ -250,10 +247,11 @@ class ResourceNodeSerializer
         ];
 
         if (Shortcut::class === $resourceNode->getResourceType()->getClass()) {
-            //required for opening the proper player in case of shortcut. This is not pretty but the players
-            //need the meta['type'] to be the target one to open the proper player/editor (they dont know what to do otherwise)
-            //unless we implement a "link" player wich will then the target and dispatch again.
-            //This is the easy way
+            // required for opening the proper player in case of shortcut. This is not pretty but the players
+            // need the meta['type'] to be the target one to open the proper player/editor (they dont know what to do otherwise)
+            // unless we implement a "link" player wich will then the target and dispatch again.
+            // This is the easy way
+            /** @var Shortcut $resource */
             $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
             $target = $resource->getTarget();
             $meta['type'] = $target->getResourceType()->getName();
@@ -311,7 +309,7 @@ class ResourceNodeSerializer
 
         if (isset($data['meta']['workspace'])) {
             /** @var Workspace $workspace */
-            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['meta']['workspace']['uuid']]);
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['meta']['workspace']['id']]);
             $resourceNode->setWorkspace($workspace);
         }
 
@@ -374,48 +372,48 @@ class ResourceNodeSerializer
 
     public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
     {
-        // additional data might be required later (recursive)
-        foreach ($rights as $right) {
-            $creationPerms = [];
-            if (isset($right['permissions']['create'])) {
-                if (!empty($right['permissions']['create']) && 'directory' === $resourceNode->getResourceType()->getName()) {
-                    // ugly hack to only get create rights for directories (it's the only one that can handle it).
-                    $creationPerms = array_map(function (string $typeName) {
-                        return $this->om
-                            ->getRepository(ResourceType::class)
-                            ->findOneBy(['name' => $typeName]);
-                    }, $right['permissions']['create']);
+        if (!in_array(OPTIONS::IGNORE_RIGHTS, $options)) {
+            $existingRights = $resourceNode->getRights();
+
+            $roles = [];
+            foreach ($rights as $right) {
+                if (isset($right['name'])) {
+                    /** @var Role $role */
+                    $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
+
+                    if ($role) {
+                        $creationPerms = [];
+                        if (isset($right['permissions']['create'])) {
+                            if (!empty($right['permissions']['create']) && 'directory' === $resourceNode->getResourceType()->getName()) {
+                                // ugly hack to only get create rights for directories (it's the only one that can handle it).
+                                $creationPerms = array_map(function (string $typeName) {
+                                    return $this->om
+                                        ->getRepository(ResourceType::class)
+                                        ->findOneBy(['name' => $typeName]);
+                                }, $right['permissions']['create']);
+                            }
+
+                            unset($right['permissions']['create']);
+                        }
+
+                        $this->newRightsManager->update(
+                            $resourceNode,
+                            $role,
+                            $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
+                            $creationPerms,
+                            in_array(Options::IS_RECURSIVE, $options)
+                        );
+
+                        $roles[] = $role->getName();
+                    }
                 }
-
-                unset($right['permissions']['create']);
             }
 
-            $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
-
-            if (isset($right['name'])) {
-                $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
-            } else {
-                $workspace = $resourceNode->getWorkspace() ?
-                    $resourceNode->getWorkspace() :
-                    $this->om->getRepository(Workspace::class)->findOneBy(['code' => $right['workspace']['code']]);
-
-                /** @var Role $role */
-                $role = $this->om->getRepository(Role::class)->findOneBy([
-                    'translationKey' => $right['translationKey'],
-                    'workspace' => $workspace,
-                ]);
-            }
-
-            if ($role && !in_array(OPTIONS::IGNORE_RIGHTS, $options)) {
-                $this->newRightsManager->update(
-                      $resourceNode,
-                      $role,
-                      $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
-                      $creationPerms,
-                      $recursive
-                  );
-            } else {
-                //role not found ... how to retrieve it ?
+            // removes rights which no longer exists
+            foreach ($existingRights as $existingRight) {
+                if (!in_array($existingRight->getRole()->getName(), $roles)) {
+                    $resourceNode->removeRight($existingRight);
+                }
             }
         }
     }

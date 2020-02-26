@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 
@@ -22,7 +22,7 @@ const PlayerStep = props => {
       }
 
       {props.description &&
-        <HtmlText className="step-description">{props.description}</HtmlText>
+        <ContentHtml className="step-description">{props.description}</ContentHtml>
       }
 
       {props.items.map(item =>

@@ -166,10 +166,8 @@ class PathListener
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $resourcesDir = $this->resourceManager->createResource(
-            Directory::class,
-            $pathName.' ('.$this->translator->trans('resources', [], 'platform').')'
-        );
+        $resourcesDir = new Directory();
+        $resourcesDir->setName($pathName.' ('.$this->translator->trans('resources', [], 'platform').')');
 
         return $this->resourceManager->create(
             $resourcesDir,

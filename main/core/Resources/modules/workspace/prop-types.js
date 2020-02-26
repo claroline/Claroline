@@ -5,16 +5,18 @@ import {Role, User} from '#/main/core/user/prop-types'
 
 const Workspace = {
   propTypes: {
-    id: T.number,
-    uuid: T.string,
+    id: T.string,
+    autoId: T.number,
     name: T.string,
-    poster: T.string,
+    poster: T.shape({
+      url: T.string
+    }),
     meta: T.shape({
       slug: T.string,
       description: T.string,
-      creator: T.shape({
-        // TODO : user types
-      }),
+      creator: T.shape(
+        User.propTypes
+      ),
       model: T.bool,
       personal: T.bool,
       usedStorage: T.number,
@@ -36,14 +38,14 @@ const Workspace = {
       validation: T.bool,
       selfRegistration: T.bool,
       selfUnregistration: T.bool
-    }).isRequired,
+    }),
     restrictions: T.shape({
       hidden: T.bool,
       maxUsers: T.number,
       maxResources: T.number,
       maxStorage: T.number,
       dates: T.arrayOf(T.string)
-    }).isRequired,
+    }),
     notifications: T.shape({
       enabled: T.bool
     }),
@@ -95,10 +97,37 @@ const Requirements = {
     id: T.string,
     role: T.shape(Role.propTypes),
     user: T.shape(User.propTypes)
+  },
+  defaultProps: {
+
+  }
+}
+
+const UserEvaluation = {
+  propTypes: {
+    id: T.string.isRequired,
+    date: T.String,
+    status: T.string,
+    duration: T.number,
+    score: T.number,
+    scoreMin: T.number,
+    scoreMax: T.number,
+    progression: T.number,
+    progressionMax: T.number,
+    user: T.shape(
+      User.propTypes
+    ),
+    workspace: T.shape(
+      Workspace.propTypes
+    )
+  },
+  defaultProps: {
+
   }
 }
 
 export {
   Workspace,
-  Requirements
+  Requirements,
+  UserEvaluation
 }

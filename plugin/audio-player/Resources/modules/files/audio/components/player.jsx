@@ -15,7 +15,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {makeId} from '#/main/core/scaffolding/id'
 import {selectors as fileSelect} from '#/main/core/resources/file/store'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 
@@ -28,9 +28,9 @@ import {SectionsComments} from '#/plugin/audio-player/files/audio/components/sec
 const Transcripts = props =>
   <div className="audio-player-transcripts">
     {props.transcripts.map((transcript, idx) =>
-      <HtmlText key={`transcript-${idx}`}>
+      <ContentHtml key={`transcript-${idx}`}>
         {transcript}
-      </HtmlText>
+      </ContentHtml>
     )}
   </div>
 
@@ -83,9 +83,9 @@ const Section = props =>
         <h3>{props.section.title}</h3>
       }
       {props.options.showHelp &&
-        <HtmlText className="section-help">
+        <ContentHtml className="section-help">
           {props.section.help}
-        </HtmlText>
+        </ContentHtml>
       }
       {props.options.showComment && (!props.section.comment || props.options.showCommentForm ?
         <UserMessageForm
@@ -261,9 +261,9 @@ class Audio extends Component {
         }
 
         {this.props.file.description &&
-          <HtmlText className="audio-player-transcripts">
+          <ContentHtml className="audio-player-transcripts">
             {this.props.file.description}
-          </HtmlText>
+          </ContentHtml>
         }
 
         {(!this.props.canEdit || !this.state.displayAllComments) &&

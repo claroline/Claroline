@@ -36,9 +36,10 @@ class LogController extends AbstractSecurityController
     /**
      * LogController constructor.
      *
-     * @param FinderProvider     $finder
-     * @param SerializerProvider $serializer
-     * @param LogManager         $logManager
+     * @param TokenStorageInterface $tokenStorage
+     * @param FinderProvider        $finder
+     * @param SerializerProvider    $serializer
+     * @param LogManager            $logManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -62,12 +63,18 @@ class LogController extends AbstractSecurityController
         return 'log';
     }
 
+    public function getClass()
+    {
+        return Log::class;
+    }
+
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route("/", name="apiv2_admin_tool_logs_list")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function listAction(Request $request)
     {
@@ -82,11 +89,12 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      * @Route("/csv", name="apiv2_admin_tool_logs_list_csv")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return StreamedResponse
      */
     public function listCsvAction(Request $request)
     {
@@ -104,11 +112,12 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route("/chart", name="apiv2_admin_tool_logs_list_chart")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function listChartAction(Request $request)
     {
@@ -136,11 +145,12 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      * @Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv")
      * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return StreamedResponse
      */
     public function userActionsListCsvAction(Request $request)
     {
@@ -158,24 +168,19 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @param Log $log
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route("/{id}", name="apiv2_admin_tool_logs_get", requirements={"id"="\d+"})
+     * @ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log")
      * @Method("GET")
      *
-     * @ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log")
+     * @param Log $log
+     *
+     * @return JsonResponse
      */
     public function getAction(Log $log)
     {
         $this->canOpenAdminTool('dashboard');
 
         return new JsonResponse($this->serializer->serialize($log, ['details' => true]));
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Log\Log';
     }
 
     private function addOrganizationFilter($query)

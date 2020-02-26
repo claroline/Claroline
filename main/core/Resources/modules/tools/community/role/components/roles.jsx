@@ -16,7 +16,7 @@ const RolesList = props =>
   <ListData
     name={selectors.LIST_NAME}
     fetch={{
-      url: ['apiv2_workspace_list_roles_configurable', {id: props.workspace.uuid}],
+      url: ['apiv2_workspace_list_roles_configurable', {id: props.workspace.id}],
       autoload: true
     }}
     primaryAction={(row) => ({

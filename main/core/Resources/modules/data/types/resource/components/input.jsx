@@ -3,8 +3,8 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
@@ -117,7 +117,7 @@ const ResourceInput = props => {
   }
 }
 
-implementPropTypes(ResourceInput, FormFieldTypes, {
+implementPropTypes(ResourceInput, DataInputTypes, {
   value: T.shape(
     ResourceNodeTypes.propTypes
   ),

@@ -9,15 +9,15 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {IconSet as IconSetType} from '#/main/core/administration/parameters/prop-types'
+import {selectors} from '#/main/core/administration/parameters/icon/store/selectors'
+import {IconSet as IconSetType} from '#/main/core/administration/parameters/icon/prop-types'
 import {IconItemCard} from '#/main/core/administration/parameters/icon/components/icon-item-card'
 
 const Icon = (props) =>
   <FormData
     level={2}
     title={props.new ? trans('icon_set_creation') : trans('icon_set_edition')}
-    name={selectors.STORE_NAME+'.icons.current'}
+    name={selectors.STORE_NAME+'.current'}
     target={(iconSet, isNew) => isNew ?
       ['apiv2_icon_set_create'] :
       ['apiv2_icon_set_update', {id: iconSet.id}]
@@ -63,7 +63,7 @@ const Icon = (props) =>
         ]}
       >
         <ListData
-          name={`${selectors.STORE_NAME}.icons.items`}
+          name={`${selectors.STORE_NAME}.items`}
           fetch={{
             url: ['apiv2_icon_set_items_list', {iconSet: props.iconSet.id}],
             autoload: props.iconSet.id && !props.new

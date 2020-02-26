@@ -22,25 +22,6 @@ use Doctrine\ORM\Query;
 class RoleRepository extends EntityRepository
 {
     /**
-     * Returns the roles associated to a workspace.
-     *
-     * @param Workspace $workspace
-     *
-     * @return Role[]
-     */
-    public function findByWorkspace(Workspace $workspace)
-    {
-        $query = $this->_em->createQuery('
-            SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.workspace ws
-            WHERE ws.id = :workspaceId
-        ');
-        $query->setParameter('workspaceId', $workspace->getId());
-
-        return $query->getResult();
-    }
-
-    /**
      * Returns the collaborator role of a workspace.
      *
      * @param Workspace $workspace
@@ -145,26 +126,6 @@ class RoleRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
-    }
-
-    public function findRoleByWorkspaceCodeAndTranslationKey(
-        $workspaceCode,
-        $translationKey,
-        $executeQuery = true
-    ) {
-        $dql = '
-            SELECT r
-            FROM Claroline\CoreBundle\Entity\Role r
-            INNER JOIN r.workspace w
-            WHERE w.code = :code
-            AND r.translationKey = :key
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('code', $workspaceCode);
-        $query->setParameter('key', $translationKey);
-
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
     public function findRolesByWorkspaceCodeAndTranslationKey(

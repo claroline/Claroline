@@ -27,6 +27,22 @@ class OptimizedRightsManager
 {
     use LoggableTrait;
 
+    /** @var Connection */
+    private $conn;
+
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /**
+     * OptimizedRightsManager constructor.
+     *
+     * @param Connection       $conn
+     * @param StrictDispatcher $dispatcher
+     * @param ObjectManager    $om
+     */
     public function __construct(Connection $conn, StrictDispatcher $dispatcher, ObjectManager $om)
     {
         $this->conn = $conn;
@@ -127,7 +143,7 @@ class OptimizedRightsManager
         $fullDirectoryMask = pow(2, count($defaults)) - 1;
 
         /**
-         * For complexes resources the bits look loke this.
+         * For complexes resources the bits look like this.
          *
          * common      | custom
          * 1 1 0 1 1 0 | 1 1
@@ -200,7 +216,10 @@ class OptimizedRightsManager
     }
 
     /**
-     * @param ResourceRights $rights
+     * @param ResourceNode $node
+     * @param Role         $role
+     * @param int          $mask
+     * @param array        $types
      */
     public function logUpdate(ResourceNode $node, Role $role, $mask, $types)
     {

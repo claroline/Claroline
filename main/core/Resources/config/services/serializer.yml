@@ -76,6 +76,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     claroline.serializer.workspace.evaluation:
         alias: Claroline\CoreBundle\API\Serializer\Workspace\EvaluationSerializer
@@ -274,6 +275,9 @@ services:
         arguments:
             - '@translator'
             - '@event_dispatcher'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectWorkspaceSerializer:
         tags: [claroline.serializer]

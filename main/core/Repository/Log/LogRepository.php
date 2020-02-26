@@ -15,14 +15,15 @@ use Claroline\CoreBundle\API\Finder\Log\LogFinder;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class LogRepository extends ServiceEntityRepository
 {
+    /** @var LogFinder */
+    private $finder;
+
     public function __construct(RegistryInterface $registry, LogFinder $finder)
     {
         $this->finder = $finder;
@@ -169,112 +170,7 @@ class LogRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countActiveUsers(
-        array $filters = []
-    ) {
-        $filters['action'] = LogUserLoginEvent::ACTION;
-
-        $qb = $this
-            ->createQueryBuilder('obj')
-            ->select('COUNT(DISTINCT obj.doer) AS users');
-
-        $this->finder->configureQueryBuilder($qb, $filters);
-
-        $query = $qb->getQuery();
-        $result = $query->getResult();
-
-        return $result[0]['users'];
-    }
-
     // TODO: Clean old methods after refactoring
-
-    /**
-     * @param $configs
-     * @param $range
-     *
-     * @return array|null
-     */
-    public function countByDayThroughConfigs($configs, $range)
-    {
-        if (null === $configs || 0 === count($configs)) {
-            return;
-        }
-
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->leftJoin('log.workspace', 'workspace')
-            ->select('log.shortDateLog as shortDate, count(log.id) as total')
-            ->orderBy('shortDate', 'ASC')
-            ->groupBy('shortDate');
-
-        $queryBuilder = $this->addConfigurationFilterToQueryBuilder($queryBuilder, $configs);
-
-        return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
-    }
-
-    public function countByDayFilteredLogs(
-        $action,
-        $range,
-        $userSearch,
-        $actionRestriction,
-        $workspaceIds = null,
-        $unique = false,
-        $resourceType = null,
-        $resourceNodeIds = null,
-        $groupSearch = null
-    ) {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->orderBy('shortDate', 'ASC')
-            ->groupBy('shortDate');
-
-        if (true === $unique) {
-            $queryBuilder->select('log.shortDateLog as shortDate, count(DISTINCT log.doer) as total');
-        } else {
-            $queryBuilder->select('log.shortDateLog as shortDate, count(log.id) as total');
-        }
-
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionRestriction);
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-        $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
-        $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
-        $queryBuilder = $this->addGroupFilterToQueryBuilder($queryBuilder, $groupSearch);
-
-        if (null !== $workspaceIds && count($workspaceIds) > 0) {
-            $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
-        }
-        if (null !== $resourceNodeIds && count($resourceNodeIds) > 0) {
-            $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
-        }
-
-        return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
-    }
-
-    /**
-     * @param $configs
-     * @param $maxResult
-     *
-     * @return Query|null
-     */
-    public function findLogsThroughConfigs($configs, $maxResult = -1)
-    {
-        if (null === $configs || 0 === count($configs)) {
-            return null;
-        }
-
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->leftJoin('log.workspace', 'workspace')
-            ->orderBy('log.dateLog', 'DESC');
-
-        $queryBuilder = $this->addConfigurationFilterToQueryBuilder($queryBuilder, $configs);
-
-        if ($maxResult > 0) {
-            $queryBuilder->setMaxResults($maxResult);
-        }
-
-        return $queryBuilder->getQuery();
-    }
 
     public function findFilteredLogsQuery(
         $action,
@@ -582,30 +478,6 @@ class LogRepository extends ServiceEntityRepository
             } else {
                 $queryBuilder->andWhere('resource.id IN (:resourceNodeIds)')
                     ->setParameter('resourceNodeIds', $resourceNodeIds);
-            }
-        }
-
-        return $queryBuilder;
-    }
-
-    /**
-     * @param QueryBuilder                                         $queryBuilder
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance[] $configs
-     *
-     * @return mixed
-     */
-    private function addConfigurationFilterToQueryBuilder(QueryBuilder $queryBuilder, $configs)
-    {
-        foreach ($configs as $config) {
-            $workspaceId = $config->getWidgetInstance()->getWorkspace()->getId();
-            $queryBuilder
-                ->where('workspace.id = :workspaceId')
-                ->setParameter('workspaceId', $workspaceId);
-
-            if ($config->hasRestriction()) {
-                $queryBuilder
-                    ->andWhere('log.action IN (:actions)')
-                    ->setParameter('actions', $config->getRestrictions());
             }
         }
 

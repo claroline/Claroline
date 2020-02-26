@@ -25,15 +25,13 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Exception\ExportResourceException;
+use Claroline\CoreBundle\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Exception\ResourceNotFoundException;
+use Claroline\CoreBundle\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
-use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
-use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
-use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
-use Claroline\CoreBundle\Manager\Exception\RightsException;
-use Claroline\CoreBundle\Manager\Exception\WrongClassException;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
@@ -285,11 +283,11 @@ class ResourceManager
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param array                                              $rights
+     * @param ResourceNode $node
+     * @param ResourceNode $parent
+     * @param array        $rights
      *
-     * @throws RightsException
+     * @return ResourceNode
      */
     public function setRights(
         ResourceNode $node,
@@ -761,29 +759,6 @@ class ResourceManager
     }
 
     /**
-     * @param string $class
-     * @param string $name
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
-     *
-     * @throws WrongClassException
-     */
-    public function createResource($class, $name)
-    {
-        $entity = new $class();
-
-        if ($entity instanceof AbstractResource) {
-            $entity->setName($name);
-
-            return $entity;
-        }
-
-        throw new WrongClassException(
-            "{$class} doesn't extend Claroline\\CoreBundle\\Entity\\Resource\\AbstractResource."
-        );
-    }
-
-    /**
      * @param int $id
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
@@ -948,10 +923,22 @@ class ResourceManager
      */
     public function checkResourceLimitExceeded(Workspace $workspace)
     {
-        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-        $maxFileStorage = $workspace->getMaxUploadResources();
+        return $workspace->getMaxUploadResources() < $this->countActiveResources($workspace);
+    }
 
-        return ($maxFileStorage < $workspaceManager->countResources($workspace)) ? true : false;
+    /**
+     * Count the number of resources in a workspace.
+     *
+     * @param Workspace $workspace
+     *
+     * @return int
+     */
+    public function countActiveResources(Workspace $workspace = null)
+    {
+        return $this->resourceNodeRepo->count([
+            'workspace' => $workspace,
+            'active' => true,
+        ]);
     }
 
     /**

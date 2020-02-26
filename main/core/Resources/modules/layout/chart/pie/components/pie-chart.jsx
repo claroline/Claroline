@@ -12,8 +12,10 @@ import {DataSeries} from '#/main/core/layout/chart/pie/components/data-series.js
  */
 const PieChart = props => {
   let radius = props.width/2 - props.margin.top
+
   return (
     <Chart
+      className="pie-chart"
       width={props.width}
       height={props.width}
       margin={{
@@ -26,11 +28,13 @@ const PieChart = props => {
       <DataSeries
         data={props.data}
         colors={props.colors}
-        innerRadius={0}
+        innerRadius={props.innerRadius}
         outerRadius={radius}
         showValue={props.showValue}
         showPercentage={props.showPercentage}
       />
+
+      {props.children}
     </Chart>
   )
 }
@@ -43,6 +47,7 @@ implementPropTypes(PieChart, ChartTypes, {
 }, {
   colors: schemeCategory20c,
   width: 550,
+  innerRadius: 0,
   showValue: true,
   showPercentage: false
 })

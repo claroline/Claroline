@@ -4,7 +4,7 @@ import classes from 'classnames'
 import has from 'lodash/has'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
@@ -30,9 +30,9 @@ const SetPaper = props =>
             {props.item.sets.map((set) =>
               <li key={`your-answer-set-id-${set.id}`}>
                 <div className="set">
-                  <HtmlText className="set-heading">
+                  <ContentHtml className="set-heading">
                     {set.data}
-                  </HtmlText>
+                  </ContentHtml>
 
                   <ul>
                     { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
@@ -109,9 +109,9 @@ const SetPaper = props =>
             {props.item.sets.map((set) =>
               <li key={`expected-set-id-${set.id}`}>
                 <div className="set">
-                  <HtmlText className="set-heading">
+                  <ContentHtml className="set-heading">
                     {set.data}
-                  </HtmlText>
+                  </ContentHtml>
 
                   <ul>
                     { utils.getSetItems(set.id, props.item.solutions.associations).map(ass =>
@@ -178,9 +178,9 @@ const SetPaper = props =>
               {props.item.sets.map((set) =>
                 <li key={`stats-expected-set-id-${set.id}`}>
                   <div className="set">
-                    <HtmlText className="set-heading">
+                    <ContentHtml className="set-heading">
                       {set.data}
-                    </HtmlText>
+                    </ContentHtml>
                     <ul>
                       {utils.getSetItems(set.id, props.item.solutions.associations).map(ass =>
                         <li key={`stats-expected-association-${ass.itemId}-${ass.setId}`}>

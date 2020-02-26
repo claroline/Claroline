@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group.jsx'
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 
@@ -16,7 +16,7 @@ const RadiosGroup = props =>
     <Radios {...props} />
   </FormGroup>
 
-implementPropTypes(RadiosGroup, FormGroupWithFieldTypes, {
+implementPropTypes(RadiosGroup, [DataGroupTypes, DataInputTypes], {
   // more precise value type
   value: T.oneOfType([T.string, T.number]),
 

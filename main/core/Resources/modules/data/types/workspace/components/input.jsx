@@ -7,10 +7,10 @@ import {Button} from '#/main/app/action/components/button'
 
 import {route} from '#/main/core/workspace/routing'
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 const WorkspacesButton = props =>
   <Button
@@ -91,7 +91,7 @@ const WorkspaceInput = props => {
   )
 }
 
-implementPropTypes(WorkspaceInput, FormFieldTypes, {
+implementPropTypes(WorkspaceInput, DataInputTypes, {
   value: T.shape(WorkspaceType.propTypes),
   picker: T.shape({
     title: T.string,

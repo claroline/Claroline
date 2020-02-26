@@ -125,7 +125,7 @@ class ClientSerializer
             $maxUsers = $this->config->getParameter('restrictions.max_users');
             /** @var UserRepository $userRepo */
             $userRepo = $this->om->getRepository(User::class);
-            $usersCount = $userRepo->countAllEnabledUsers();
+            $usersCount = $userRepo->countUsers();
 
             if ($usersCount >= $maxUsers) {
                 $usersLimitReached = true;

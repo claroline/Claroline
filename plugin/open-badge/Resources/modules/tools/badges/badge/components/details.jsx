@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -37,7 +37,7 @@ const BadgeDetailsComponent = (props) => {
             }
 
             <div className="panel panel-default">
-              <HtmlText className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</HtmlText>
+              <ContentHtml className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</ContentHtml>
             </div>
 
             {get(props.badge, 'permissions.assign') &&

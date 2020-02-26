@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
-import {ProgressBar} from '#/main/core/layout/components/progress-bar'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 
@@ -24,6 +24,7 @@ const PathCurrent = props => {
   return (
     <Fragment>
       <ProgressBar
+        className="progress-minimal"
         value={Math.floor(((currentIndex+1) / props.all.length) * 100)}
         size="xs"
         type="user"

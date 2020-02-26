@@ -7,7 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 
@@ -93,7 +93,7 @@ class LocaleInput extends PureComponent {
   }
 }
 
-implementPropTypes(LocaleInput, FormFieldTypes, {
+implementPropTypes(LocaleInput, DataInputTypes, {
   // more precise value type
   value: T.oneOfType([
     T.string, // single locale

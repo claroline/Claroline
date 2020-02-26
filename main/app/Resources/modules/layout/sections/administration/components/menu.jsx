@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
-import {ProgressBar} from '#/main/core/layout/components/progress-bar'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
 import {MODAL_MAINTENANCE} from '#/main/app/modals/maintenance'
 
@@ -37,6 +37,7 @@ class PlatformStatus extends Component {
           <div>
             {trans('users')}
             <ProgressBar
+              className="progress-minimal"
               value={25}
               size="xs"
               type="user"
@@ -47,6 +48,7 @@ class PlatformStatus extends Component {
             {trans('storage')}
 
             <ProgressBar
+              className="progress-minimal"
               value={25}
               size="xs"
               type="user"

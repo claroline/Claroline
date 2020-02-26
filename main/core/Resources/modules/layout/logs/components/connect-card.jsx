@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
-import {convertTimestampToString} from '#/main/app/intl/date'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {displayDuration} from '#/main/app/intl/date'
+import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
@@ -15,7 +15,7 @@ const LogConnectCard = props =>
     icon={<UserAvatar picture={props.data.user.picture} alt={true} />}
     title={props.data.user.firstName + ' ' + props.data.user.lastName}
     subtitle={props.data.date}
-    contentText={props.data.duration !== null ? convertTimestampToString(props.data.duration) : null}
+    contentText={props.data.duration !== null ? displayDuration(props.data.duration) : null}
   />
 
 LogConnectCard.propTypes = {

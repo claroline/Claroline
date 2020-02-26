@@ -19,7 +19,7 @@ const UsersList = props =>
   <ListData
     name={selectors.LIST_NAME}
     fetch={{
-      url: !isEmpty(props.workspace) ? ['apiv2_workspace_list_users', {id: props.workspace.uuid}] : ['apiv2_visible_users_list'],
+      url: !isEmpty(props.workspace) ? ['apiv2_workspace_list_users', {id: props.workspace.id}] : ['apiv2_visible_users_list'],
       autoload: true
     }}
     primaryAction={(row) => ({
@@ -81,7 +81,7 @@ const UsersList = props =>
         type: 'roles',
         label: trans('roles'),
         calculated: (user) => !isEmpty(props.workspace) ?
-          user.roles.filter(role => role.workspace && role.workspace.id === props.workspace.uuid)
+          user.roles.filter(role => role.workspace && role.workspace.id === props.workspace.id)
           :
           user.roles.filter(role => constants.ROLE_PLATFORM === role.type),
         displayed: true,

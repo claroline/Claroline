@@ -3,10 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
-import {displayDate} from '#/main/app/intl/date'
+import {trans, displayDate} from '#/main/app/intl'
 
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {displayUsername} from '#/main/core/user/utils'
 

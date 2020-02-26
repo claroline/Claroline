@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldType} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Select} from '#/main/app/input/components/select'
 
 const hasChildren = (props, lvl) => {
@@ -84,7 +84,7 @@ const CascadeInput = props =>
     )}
   </fieldset>
 
-implementPropTypes(CascadeInput, FormFieldType, {
+implementPropTypes(CascadeInput, DataInputTypes, {
   choices: T.array.isRequired,
   value: T.array
 }, {

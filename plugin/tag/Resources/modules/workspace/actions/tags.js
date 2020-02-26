@@ -13,7 +13,7 @@ export default (workspaces, refresher) => ({
   modal: [MODAL_OBJECT_TAGS, {
     objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace',
     objects: workspaces.map(workspace => ({
-      id: workspace.uuid,
+      id: workspace.id,
       name: workspace.name
     })),
     update: (objects) => refresher.update(objects)

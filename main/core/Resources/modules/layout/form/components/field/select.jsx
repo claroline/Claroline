@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 // TODO : implement disabledChoices
 
@@ -45,7 +45,7 @@ const Select = props =>
     )}
   </select>
 
-implementPropTypes(Select, FormFieldTypes, {
+implementPropTypes(Select, DataInputTypes, {
   choices: T.object.isRequired,
   disabledChoices: T.arrayOf(T.string),
   value: T.oneOfType([T.string, T.number, T.array]),

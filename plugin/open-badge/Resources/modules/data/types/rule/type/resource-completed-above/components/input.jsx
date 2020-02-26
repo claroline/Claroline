@@ -3,7 +3,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -45,7 +45,7 @@ const ResourceCompletedAboveInput = (props) =>
     </FormGroup>
   </Fragment>
 
-implementPropTypes(ResourceCompletedAboveInput, FormFieldTypes, {
+implementPropTypes(ResourceCompletedAboveInput, DataInputTypes, {
   // more precise value type
   value: T.shape({
     resource: T.shape(

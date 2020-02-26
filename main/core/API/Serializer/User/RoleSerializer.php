@@ -273,12 +273,12 @@ class RoleSerializer
         $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
 
         // we should test role type before trying to set the workspace
-        if (!empty($data['workspace']) && !empty($data['workspace']['uuid'])) {
+        if (!empty($data['workspace']) && !empty($data['workspace']['id'])) {
             $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-                ->findOneBy(['uuid' => $data['workspace']['uuid']]);
+                ->findOneBy(['uuid' => $data['workspace']['id']]);
 
             if (!$role->getName()) {
-                $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['uuid']);
+                $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['id']);
             }
 
             if ($workspace) {

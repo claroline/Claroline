@@ -34,7 +34,7 @@ actions.addUsersToRole = (role, users)  => ({
 
 actions.unregister = (users, workspace) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_workspace_unregister_users', {id: workspace.uuid}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),
+    url: url(['apiv2_workspace_unregister_users', {id: workspace.id}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),
     request: {
       method: 'DELETE'
     },

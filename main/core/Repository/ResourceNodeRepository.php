@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -27,7 +28,9 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 class ResourceNodeRepository extends MaterializedPathRepository implements ContainerAwareInterface
 {
+    /** @var ContainerInterface */
     private $container;
+    /** @var ResourceQueryBuilder */
     private $builder;
 
     public function setContainer(ContainerInterface $container = null)
@@ -53,7 +56,9 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     }
 
     /**
-     * @param string|int $id The id or guid of the node
+     * @param string|int $id          The id or guid of the node
+     * @param null       $lockMode
+     * @param null       $lockVersion
      *
      * @return ResourceNode|null
      */
@@ -88,9 +93,10 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $query = $this->_em->createQuery($this->builder->getDql());
         $query->setParameters($this->builder->getParameters());
 
+        /** @var ResourceNode[] $results */
         $results = $query->getResult();
 
-        //in case somethign was messed up at some point
+        //in case something was messed up at some point
         if (1 === count($results)) {
             return $results[0];
         }
@@ -134,26 +140,25 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $query = $this->_em->createQuery($this->builder->getDql());
         $query->setParameters($this->builder->getParameters());
 
-        return $this->executeQuery($query, null, null, false);
+        return $query->getResult();
     }
 
     /**
-     * Returns the immediate children of a resource that are openable by any of the given roles.
+     * Returns the immediate children of a resource that are viewable by any of the given roles.
      *
      * @param ResourceNode $parent           The id of the parent of the requested children
      * @param array        $roles            [string] $roles  An array of roles
      * @param User         $user             the user opening
-     * @param bool         $withLastOpenDate with the last openend node (with the last opened date)
+     * @param bool         $withLastOpenDate with the last opened node (with the last opened date)
      * @param bool         $canAdministrate
      *
      * @throws \RuntimeException
-     * @throw InvalidArgumentException if the array of roles is empty
      *
      * @return array[array] An array of resources represented as arrays
      */
     public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false, $canAdministrate = false)
     {
-        //if we usurpate a role, then it's like we're anonymous.
+        // if we usurpate a role, then it's like we're anonymous.
         if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) {
             $user = 'anon.';
         }
@@ -193,7 +198,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             $query = $this->_em->createQuery($this->builder->getDql());
             $query->setParameters($this->builder->getParameters());
 
-            $children = $this->executeQuery($query);
+            $children = $query->getArrayResult();
             $childrenWithMaxRights = [];
 
             foreach ($children as $child) {
@@ -230,7 +235,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
 
             $query = $this->_em->createQuery($this->builder->getDql());
             $query->setParameters($this->builder->getParameters());
-            $items = $this->executeQuery($query);
+            $items = $query->getArrayResult();
 
             foreach ($returnedArray as $key => $returnedElement) {
                 foreach ($items as $item) {
@@ -257,11 +262,12 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      * Returns an array of different file types with the number of resources that
      * belong to this type.
      *
-     * @param int $max
+     * @param int            $max
+     * @param Organization[] $organizations
      *
      * @return array
      */
-    public function findMimeTypesWithMostResources($max, $organizations = null)
+    public function findMimeTypesWithMostResources($max, array $organizations = [])
     {
         $qb = $this->createQueryBuilder('resource');
         $qb->select('resource.mimeType AS type, COUNT(resource.id) AS total')
@@ -269,10 +275,10 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             ->groupBy('resource.mimeType')
             ->orderBy('total', 'DESC');
 
-        if (null !== $organizations) {
+        if (!empty($organizations)) {
             $qb->leftJoin('resource.workspace', 'ws')
-                ->leftJoin('ws.organizations', 'orgas')
-                ->andWhere('orgas IN (:organizations)')
+                ->leftJoin('ws.organizations', 'o')
+                ->andWhere('o IN (:organizations)')
                 ->setParameter('organizations', $organizations);
         }
 
@@ -298,23 +304,23 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
 
     /**
      * @param string $name
-     * @param array  $extraDatas
+     * @param array  $extraData
      * @param bool   $executeQuery
      *
      * @return QueryBuilder|array
      */
-    public function findByName($name, $extraDatas = [], $executeQuery = true)
+    public function findByName($name, $extraData = [], $executeQuery = true)
     {
         $name = strtoupper($name);
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->createQueryBuilder('resourceNode');
         $queryBuilder->where($queryBuilder->expr()->like('UPPER(resourceNode.name)', ':name'));
 
-        if (0 < count($extraDatas)) {
-            foreach ($extraDatas as $key => $extraData) {
+        if (0 < count($extraData)) {
+            foreach ($extraData as $key => $extra) {
                 $queryBuilder
                     ->andWhere(sprintf('resourceNode.%s = :%s', $key, $key))
-                    ->setParameter(sprintf(':%s', $key), $extraData);
+                    ->setParameter(sprintf(':%s', $key), $extra);
             }
         }
 
@@ -325,62 +331,52 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder;
     }
 
-    /**
-     * Executes a DQL query and returns resources as entities or arrays.
-     * If it returns arrays, it add a "pathfordisplay" field to each item.
-     *
-     * @param Query $query   The query to execute
-     * @param int   $offset  First row to start with
-     * @param int   $numrows Maximum number of rows to return
-     * @param bool  $asArray Whether the resources must be returned as arrays or as objects
-     *
-     * @return array[AbstractResource|array]
-     */
-    private function executeQuery($query, $offset = null, $numrows = null, $asArray = true)
-    {
-        $query->setFirstResult($offset);
-        $query->setMaxResults($numrows);
-
-        if ($asArray) {
-            $resources = $query->getArrayResult();
-            $return = $resources;
-            // Add a field "pathfordisplay" in each entity (as array) of the given array.
-            foreach ($resources as $key => $resource) {
-                if (isset($resource['path'])) {
-                    $return[$key]['path_for_display'] = ResourceNode::convertPathForDisplay($resource['path']);
-                }
-            }
-
-            return $return;
-        }
-
-        return $query->getResult();
-    }
-
     private function isWorkspaceManager(ResourceNode $node, array $roles)
     {
-        $rolenames = [];
+        $roleNames = [];
 
         foreach ($roles as $role) {
             if ($role instanceof Role) {
-                $rolenames[] = $role->getRole();
+                $roleNames[] = $role->getRole();
             } else {
-                $rolenames[] = $role;
+                $roleNames[] = $role;
             }
         }
 
         $isWorkspaceManager = false;
         $ws = $node->getWorkspace();
-        $managerRole = 'ROLE_WS_MANAGER_'.$ws->getGuid();
+        $managerRole = 'ROLE_WS_MANAGER_'.$ws->getUuid();
 
-        if (in_array($managerRole, $rolenames)) {
+        if (in_array($managerRole, $roleNames)) {
             $isWorkspaceManager = true;
         }
 
-        if (in_array('ROLE_ADMIN', $rolenames)) {
+        if (in_array('ROLE_ADMIN', $roleNames)) {
             $isWorkspaceManager = true;
         }
 
         return $isWorkspaceManager;
+    }
+
+    public function countActiveResources(array $workspaces = [], array $organizations = []): int
+    {
+        $qb = $this->createQueryBuilder('node')
+            ->select('COUNT(node)')
+            ->where('node.active = true');
+
+        if (!empty($workspaces)) {
+            $qb
+                ->andWhere('node.workspace IN (:workspaces)')
+                ->setParameter('workspaces', $workspaces);
+        }
+
+        if (!empty($organizations)) {
+            $qb
+                ->join('node.workspace', 'w')
+                ->andWhere('w.organization IN (:organizations)')
+                ->setParameter('organizations', $organizations);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

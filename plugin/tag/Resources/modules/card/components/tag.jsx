@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {transChoice} from '#/main/app/intl/translation'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 import {UserMicro} from '#/main/core/user/components/micro'
 
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'

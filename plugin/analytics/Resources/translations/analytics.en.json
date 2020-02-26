@@ -1,14 +1,18 @@
 {
+  "overview": "Overview",
   "range_week": "Week",
   "range_month": "Month",
   "range_year": "Year",
+  "recent_activity": "Recent activity",
   "range_next_week": "Next week",
   "range_next_month": "Next month",
   "range_next_year": "Next year",
+  "connection_avg_time": "%time% on average",
+  "latest_actions": "Latest actions",
+
   "evaluation_requirements": "Requirements for evaluation",
   "evaluations": "Evaluations",
   "not_started": "Not started",
-  "overview": "Overview",
   "requirements_info_1": "You can specify here the resources that have to be done in the workspace.",
   "requirements_info_2": "For that, you must first add roles and/or users for which you want to assign resources.",
   "requirements_info_3": "And then, you will be able to define a list of resources to do on the dedicated page."

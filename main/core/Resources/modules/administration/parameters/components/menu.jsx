@@ -25,11 +25,11 @@ const ParametersMenu = (props) =>
           target: props.path+'/',
           exact: true
         }, {
-          name: 'technical',
+          name: 'i18n',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-wrench',
-          label: trans('technical'),
-          target: props.path+'/technical'
+          icon: 'fa fa-fw fa-language',
+          label: trans('language'),
+          target: props.path+'/i18n'
         }, {
           name: 'appearance',
           type: LINK_BUTTON,
@@ -43,17 +43,17 @@ const ParametersMenu = (props) =>
           label: trans('icons'),
           target: props.path+'/icons'
         }, {
+          name: 'technical',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-wrench',
+          label: trans('technical'),
+          target: props.path+'/technical'
+        }, {
           name: 'messages',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-comment-dots',
           label: trans('connection_messages'),
           target: props.path+'/messages'
-        }, {
-          name: 'i18n',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-language',
-          label: trans('language'),
-          target: props.path+'/i18n'
         }, {
           name: 'plugins',
           type: LINK_BUTTON,

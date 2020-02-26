@@ -119,7 +119,7 @@ const TeamForm = props =>
                 type: 'callback',
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_members', {}, 'team'),
-                callback: () => props.pickUsers(props.team.id, props.workspace.uuid)
+                callback: () => props.pickUsers(props.team.id, props.workspace.id)
               }
             ]}
           >
@@ -148,7 +148,7 @@ const TeamForm = props =>
                 type: 'callback',
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_managers', {}, 'team'),
-                callback: () => props.pickUsers(props.team.id, props.workspace.uuid, true)
+                callback: () => props.pickUsers(props.team.id, props.workspace.id, true)
               }
             ]}
           >
@@ -174,7 +174,7 @@ TeamForm.propTypes = {
   path: T.string.isRequired,
   team: T.shape(TeamType.propTypes).isRequired,
   workspace: T.shape({
-    uuid: T.string.isRequired
+    id: T.string.isRequired
   }).isRequired,
   isNew: T.bool.isRequired,
   resourceTypes: T.arrayOf(T.object).isRequired,

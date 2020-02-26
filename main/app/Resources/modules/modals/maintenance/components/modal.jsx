@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Alert} from '#/main/app/alert/components/alert'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -24,7 +24,7 @@ const MaintenanceModal = props =>
       </p>
 
       <Alert type="info" style={{marginBottom: 0}}>
-        <HtmlText>{trans('maintenance_allowed_users', {role: '<b>ROLE_ADMIN</b>'}, 'administration')}</HtmlText>
+        <ContentHtml>{trans('maintenance_allowed_users', {role: '<b>ROLE_ADMIN</b>'}, 'administration')}</ContentHtml>
       </Alert>
     </div>
 

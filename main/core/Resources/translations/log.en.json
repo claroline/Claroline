@@ -19,6 +19,8 @@
     "log_doer": "Doer",
     "log_export": "Download",
     "log_filter_actions": "Show actions",
+    "log_admin-tool-read_sentence": "opened the administration tool %tool%",
+    "log_admin-tool-read_shortname": "Opening",
     "log_group-add_user_filter": "Adding user to group",
     "log_group-add_user_sentence": "has added %receiver_user% to group %receiver_group%",
     "log_group-add_user_shortname": "Adding",

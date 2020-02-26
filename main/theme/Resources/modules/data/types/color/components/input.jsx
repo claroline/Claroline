@@ -4,7 +4,7 @@ import tinycolor from 'tinycolor2'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
@@ -99,7 +99,7 @@ class ColorInput extends Component {
   }
 }
 
-implementPropTypes(ColorInput, FormFieldTypes, {
+implementPropTypes(ColorInput, DataInputTypes, {
   // more precise value type
   value: T.string,
 

@@ -1,0 +1,9 @@
+services:
+    Claroline\AnalyticsBundle\Manager\AnalyticsManager:
+        arguments:
+          - '@security.token_storage'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@claroline.log.manager'
+          - '@claroline.manager.user_manager'
+          - '@claroline.manager.workspace_manager'
+          - '@Claroline\CoreBundle\Manager\FileManager'

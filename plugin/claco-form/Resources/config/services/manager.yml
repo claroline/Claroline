@@ -16,4 +16,3 @@ services:
             - '@router'
             - '@security.token_storage'
             - '@translator'
-            - '@claroline.manager.user_manager'

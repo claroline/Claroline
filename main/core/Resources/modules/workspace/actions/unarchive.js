@@ -23,7 +23,7 @@ export default (workspaces, refresher) => {
     request: {
       url: url(
         ['apiv2_workspace_unarchive'],
-        {ids: processable.map(workspace => workspace.uuid)}
+        {ids: processable.map(workspace => workspace.id)}
       ),
       request: {
         method: 'PUT'

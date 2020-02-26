@@ -21,7 +21,7 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {MODAL_USERS} from '#/main/core/modals/users'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {UserMicro} from '#/main/core/user/components/micro'
 
 import {
@@ -348,9 +348,9 @@ class EntryComponent extends Component {
                 </div>
 
                 {this.props.template && this.props.useTemplate ?
-                  <HtmlText>
+                  <ContentHtml>
                     {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.canViewMetadata())}
-                  </HtmlText> :
+                  </ContentHtml> :
                   <DetailsData
                     name={selectors.STORE_NAME+'.entries.current'}
                     sections={this.getSections(this.props.fields)}

@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 
 import {getPlainText} from '#/main/app/data/types/html/utils'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 import {Message as MessageTypes} from '#/plugin/message/prop-types'

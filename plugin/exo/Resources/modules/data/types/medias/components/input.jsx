@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {selectors} from '#/plugin/exo/resources/quiz/editor/store'
 import {MODAL_ADD_MEDIA} from '#/plugin/exo/data/types/medias/modals/editor'
@@ -102,7 +102,7 @@ class MediasInput extends Component {
   }
 }
 
-implementPropTypes(MediasInput, FormFieldTypes, {
+implementPropTypes(MediasInput, DataInputTypes, {
   value: T.arrayOf(T.shape({
     id: T.string.isRequired,
     type: T.string.isRequired,

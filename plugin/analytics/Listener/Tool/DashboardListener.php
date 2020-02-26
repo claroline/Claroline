@@ -11,46 +11,23 @@
 
 namespace Claroline\AnalyticsBundle\Listener\Tool;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\AnalyticsBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\CoreBundle\Manager\EventManager;
-use Claroline\CoreBundle\Manager\ProgressionManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DashboardListener
 {
-    /** @var EventManager */
-    private $eventManager;
-
-    /** @var ProgressionManager */
-    private $progressionManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    private $logConnectWSRepo;
+    /** @var AnalyticsManager */
+    private $manager;
 
     /**
      * DashboardListener constructor.
      *
-     * @param EventManager          $eventManager
-     * @param ObjectManager         $om
-     * @param ProgressionManager    $progressionManager
-     * @param TokenStorageInterface $tokenStorage
+     * @param AnalyticsManager $manager
      */
     public function __construct(
-        EventManager $eventManager,
-        ObjectManager $om,
-        ProgressionManager $progressionManager,
-        TokenStorageInterface $tokenStorage
+        AnalyticsManager $manager
     ) {
-        $this->eventManager = $eventManager;
-        $this->progressionManager = $progressionManager;
-        $this->tokenStorage = $tokenStorage;
-
-        $this->logConnectWSRepo = $om->getRepository(LogConnectWorkspace::class);
+        $this->manager = $manager;
     }
 
     /**
@@ -61,16 +38,21 @@ class DashboardListener
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
-        $levelMax = 1;
-        $authenticatedUser = $this->tokenStorage->getToken()->getUser();
-        $user = 'anon.' !== $authenticatedUser ? $authenticatedUser : null;
-        $items = $this->progressionManager->fetchItems($workspace, $user, $levelMax);
-        $workspaceConnections = $this->logConnectWSRepo->findBy(['workspace' => $workspace]);
         $event->setData([
-            'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
-            'items' => $items,
-            'levelMax' => null,    // how deep to process children recursively
-            'nbConnections' => count($workspaceConnections),
+            'count' => $this->manager->count($workspace),
+        ]);
+        $event->stopPropagation();
+    }
+
+    /**
+     * Displays dashboard on Administration.
+     *
+     * @param OpenToolEvent $event
+     */
+    public function onDisplayAdministration(OpenToolEvent $event)
+    {
+        $event->setData([
+            'count' => $this->manager->count(),
         ]);
         $event->stopPropagation();
     }

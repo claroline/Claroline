@@ -3,7 +3,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 function computeTime(value) {
   const restHours = value % 3600
@@ -108,7 +108,7 @@ class TimeInput extends Component {
   }
 }
 
-implementPropTypes(TimeInput, FormFieldTypes, {
+implementPropTypes(TimeInput, DataInputTypes, {
   value: T.number,
 
   min: T.number, // todo : implement

@@ -7,7 +7,7 @@ import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON, CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {route as resourceRoute} from '#/main/core/resource/routing'
@@ -101,7 +101,7 @@ const Step = props =>
         })}>
           {props.description &&
             <div className="step-description panel panel-default">
-              <HtmlText className="panel-body">{props.description}</HtmlText>
+              <ContentHtml className="panel-body">{props.description}</ContentHtml>
             </div>
           }
 

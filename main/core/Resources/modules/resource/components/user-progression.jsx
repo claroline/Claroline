@@ -8,6 +8,7 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {MenuButton} from '#/main/app/buttons/menu'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
+import {constants as baseConstants} from '#/main/core/constants'
 import {constants} from '#/main/core/resource/constants'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
@@ -16,19 +17,19 @@ const ProgressionPopover = props =>
     <h4 className="dropdown-menu-header">
       <span className={classes('fa', {
         // icons
-        'fa-question': constants.EVALUATION_STATUS_UNKNOWN === props.status,
-        'fa-eye': constants.EVALUATION_STATUS_OPENED === props.status,
-        'fa-sync': constants.EVALUATION_STATUS_INCOMPLETE === props.status,
-        'fa-flag-checkered': constants.EVALUATION_STATUS_COMPLETED === props.status,
-        'fa-trophy': constants.EVALUATION_STATUS_PASSED === props.status,
-        'fa-ban': constants.EVALUATION_STATUS_FAILED === props.status,
-        'fa-handshake': constants.EVALUATION_STATUS_PARTICIPATED === props.status,
+        'fa-question': baseConstants.EVALUATION_STATUS_UNKNOWN === props.status,
+        'fa-eye': baseConstants.EVALUATION_STATUS_OPENED === props.status,
+        'fa-sync': baseConstants.EVALUATION_STATUS_INCOMPLETE === props.status,
+        'fa-flag-checkered': baseConstants.EVALUATION_STATUS_COMPLETED === props.status,
+        'fa-trophy': baseConstants.EVALUATION_STATUS_PASSED === props.status,
+        'fa-ban': baseConstants.EVALUATION_STATUS_FAILED === props.status,
+        'fa-handshake': baseConstants.EVALUATION_STATUS_PARTICIPATED === props.status,
 
         // colors
-        'ended': -1 !== [constants.EVALUATION_STATUS_PASSED, constants.EVALUATION_STATUS_COMPLETED, constants.EVALUATION_STATUS_PARTICIPATED].indexOf(props.status),
-        'failed': constants.EVALUATION_STATUS_FAILED === props.status,
-        'in-progress': constants.EVALUATION_STATUS_OPENED === props.status,
-        'incomplete': constants.EVALUATION_STATUS_INCOMPLETE === props.status
+        'ended': -1 !== [baseConstants.EVALUATION_STATUS_PASSED, baseConstants.EVALUATION_STATUS_COMPLETED, baseConstants.EVALUATION_STATUS_PARTICIPATED].indexOf(props.status),
+        'failed': baseConstants.EVALUATION_STATUS_FAILED === props.status,
+        'in-progress': baseConstants.EVALUATION_STATUS_OPENED === props.status,
+        'incomplete': baseConstants.EVALUATION_STATUS_INCOMPLETE === props.status
       })} />
 
       {constants.EVALUATION_STATUSES[props.status]}
@@ -61,7 +62,7 @@ ProgressionPopover.propTypes = {
 }
 
 ProgressionPopover.defaultProps = {
-  status: constants.EVALUATION_STATUS_UNKNOWN
+  status: baseConstants.EVALUATION_STATUS_UNKNOWN
 }
 
 /**

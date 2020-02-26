@@ -149,6 +149,8 @@ class WorkspaceSerializer
         }
 
         $serialized = [
+            'id' => $this->getUuid($workspace, $options),
+            'autoId' => $workspace->getId(),
             'name' => $workspace->getName(),
             'code' => $workspace->getCode(),
             'slug' => $workspace->getSlug(),
@@ -164,13 +166,6 @@ class WorkspaceSerializer
             'meta' => $this->getMeta($workspace, $options),
         ];
 
-        if (!in_array(Options::REFRESH_UUID, $options)) {
-            $serialized['uuid'] = $workspace->getUuid();
-            $serialized['id'] = $workspace->getId(); // TODO : remove me
-        } else {
-            $serialized['uuid'] = $this->getUuid($workspace, $options);
-        }
-
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'registered' => $this->isRegistered($workspace),
@@ -182,7 +177,7 @@ class WorkspaceSerializer
                 'notifications' => $this->getNotifications($workspace),
             ]);
 
-            // TODO : remove me. Used by ViewAs modal in UI and workspace transfer
+            // TODO : remove me. Used by workspace transfer
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
                 $workspaceRoles = array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray())));
                 if (in_array(Options::REFRESH_UUID, $options)) {
@@ -227,7 +222,7 @@ class WorkspaceSerializer
      */
     private function getMeta(Workspace $workspace, array $options)
     {
-        $data = [
+        return [
             'lang' => $workspace->getLang(),
             'forceLang' => (bool) $workspace->getLang(),
             'archived' => $workspace->isArchived(),
@@ -238,23 +233,6 @@ class WorkspaceSerializer
             'updated' => DateNormalizer::normalize($workspace->getCreated()), // todo implement
             'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
         ];
-
-        // TODO : create an endpoint in the api to retrieve it instead
-        if (!in_array(Options::SERIALIZE_LIST, $options) && !in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            // this query is very slow
-            $data['totalUsers'] = $this->finder->fetch(
-              User::class,
-              ['workspace' => $workspace->getUuid()],
-              null,
-              0,
-              -1,
-              true
-            );
-            $data['totalResources'] = $this->workspaceManager->countResources($workspace);
-            $data['usedStorage'] = $this->workspaceManager->getUsedStorage($workspace);
-        }
-
-        return $data;
     }
 
     private function getOpening(Workspace $workspace)
@@ -420,7 +398,7 @@ class WorkspaceSerializer
 
         //not sure if keep that. Might be troublesome later for rich texts
         if (!in_array(Options::REFRESH_UUID, $options)) {
-            $this->sipe('uuid', 'setUuid', $data, $workspace);
+            $this->sipe('id', 'setUuid', $data, $workspace);
         } else {
             $workspace->refreshUuid();
         }

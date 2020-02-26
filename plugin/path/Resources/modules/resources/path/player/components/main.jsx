@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {constants} from '#/plugin/path/resources/path/constants'
 import {Path as PathTypes, Step as StepTypes} from '#/plugin/path/resources/path/prop-types'

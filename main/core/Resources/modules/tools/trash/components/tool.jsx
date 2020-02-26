@@ -29,7 +29,7 @@ const TrashTool = props => {
         name={selectors.STORE_NAME + '.resources'}
         fetch={{
           url: ['apiv2_resource_workspace_removed_list', {
-            workspace: props.workspace.uuid
+            workspace: props.workspace.id
           }],
           autoload: true
         }}
@@ -61,7 +61,7 @@ const TrashTool = props => {
 TrashTool.propTypes = {
   path: T.string.isRequired,
   workspace: T.shape({
-    uuid: T.string.isRequired
+    id: T.string.isRequired
   }),
   invalidate: T.func.isRequired
 }

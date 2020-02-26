@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {TemplateType as TemplateTypeType} from '#/main/core/administration/template/prop-types'
 import {TemplateTypeCard} from '#/main/core/administration/template/data/components/template-type-card'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 const TemplateTypeDisplay = (props) => props.data ?
   <TemplateTypeCard

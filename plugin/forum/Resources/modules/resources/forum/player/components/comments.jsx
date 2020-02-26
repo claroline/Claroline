@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
@@ -179,7 +179,7 @@ const Comment = props => {
         </div>
 
         {React.createElement(
-          props.allowHtml ? HtmlText : 'div',
+          props.allowHtml ? ContentHtml : 'div',
           {className: 'user-comment-content'},
           props.content
         )}

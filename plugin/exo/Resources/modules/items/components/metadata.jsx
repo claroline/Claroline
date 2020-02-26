@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {ObjectsPlayer} from '#/plugin/exo/items/components/item-objects'
 
 export const Metadata = props =>
@@ -12,12 +12,12 @@ export const Metadata = props =>
       }
 
       {props.item.content && !props.isContentItem &&
-        <HtmlText className="item-content">{props.item.content}</HtmlText>
+        <ContentHtml className="item-content">{props.item.content}</ContentHtml>
       }
     </div>
 
     {props.item.description &&
-      <HtmlText className="item-description">{props.item.description}</HtmlText>
+      <ContentHtml className="item-description">{props.item.description}</ContentHtml>
     }
 
     {props.item.objects && 0 !== props.item.objects.length &&

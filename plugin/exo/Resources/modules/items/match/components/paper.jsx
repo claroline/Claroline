@@ -7,7 +7,7 @@ import Nav from 'react-bootstrap/lib/Nav'
 import Popover from 'react-bootstrap/lib/Popover'
 import NavItem from 'react-bootstrap/lib/NavItem'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {SolutionScore} from '#/plugin/exo/components/score'
@@ -43,9 +43,9 @@ const MatchLinkPopover = props =>
     }
 
     {props.solution.feedback &&
-      <HtmlText className="match-association-feedback">
+      <ContentHtml className="match-association-feedback">
         {props.solution.feedback}
-      </HtmlText>
+      </ContentHtml>
     }
   </Popover>
 
@@ -57,12 +57,12 @@ MatchLinkPopover.propTypes = {
 }
 
 const MatchItem = props =>
-  <HtmlText
+  <ContentHtml
     id={`${props.selectedTab}_${props.type}_${props.item.id}`}
     className={classes('match-item answer-item', props.type)}
   >
     {props.item.data}
-  </HtmlText>
+  </ContentHtml>
 
 MatchItem.propTypes = {
   type: T.string.isRequired,
@@ -290,16 +290,16 @@ class MatchPaper extends Component {
                           )}
                         >
                           <div className="sets">
-                            <HtmlText className="item-content">
+                            <ContentHtml className="item-content">
                               {utils.getSolutionData(solution.firstId, this.props.item.firstSet)}
-                            </HtmlText>
+                            </ContentHtml>
 
                             <span className="fa fa-fw fa-chevron-left" />
                             <span className="fa fa-fw fa-chevron-right" />
 
-                            <HtmlText className="item-content">
+                            <ContentHtml className="item-content">
                               {utils.getSolutionData(solution.secondId, this.props.item.secondSet)}
-                            </HtmlText>
+                            </ContentHtml>
                           </div>
 
                           <Feedback
@@ -330,16 +330,16 @@ class MatchPaper extends Component {
                           )}
                         >
                           <div className="sets">
-                            <HtmlText className="item-content">
+                            <ContentHtml className="item-content">
                               {utils.getSolutionData(solution.firstId, this.props.item.firstSet)}
-                            </HtmlText>
+                            </ContentHtml>
 
                             <span className="fa fa-fw fa-chevron-left" />
                             <span className="fa fa-fw fa-chevron-right" />
 
-                            <HtmlText className="item-content">
+                            <ContentHtml className="item-content">
                               {utils.getSolutionData(solution.secondId, this.props.item.secondSet)}
-                            </HtmlText>
+                            </ContentHtml>
                           </div>
 
                           <AnswerStats stats={{
@@ -360,16 +360,16 @@ class MatchPaper extends Component {
                               className='answer-item'
                             >
                               <div className="sets">
-                                <HtmlText className="item-content">
+                                <ContentHtml className="item-content">
                                   {first.data}
-                                </HtmlText>
+                                </ContentHtml>
 
                                 <span className="fa fa-fw fa-chevron-left" />
                                 <span className="fa fa-fw fa-chevron-right" />
 
-                                <HtmlText className="item-content">
+                                <ContentHtml className="item-content">
                                   {second.data}
-                                </HtmlText>
+                                </ContentHtml>
                               </div>
 
                               <AnswerStats stats={{

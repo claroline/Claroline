@@ -2,12 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const OpenFeedback = props =>
   <div className="open-feedback">
     {props.answer && 0 !== props.answer.length ?
-      <HtmlText>{props.answer}</HtmlText>
+      <ContentHtml>{props.answer}</ContentHtml>
       :
       <div className="no-answer">{trans('no_answer', {}, 'quiz')}</div>
     }

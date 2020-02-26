@@ -6,7 +6,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -32,9 +32,9 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 
 const Association = props =>
   <div className="association answer-item set-answer-item selected">
-    <HtmlText className="item-content">
+    <ContentHtml className="item-content">
       {props.association._itemData}
-    </HtmlText>
+    </ContentHtml>
 
     {props.removable &&
       <Button
@@ -57,9 +57,9 @@ Association.propTypes = {
 
 const Set = props =>
   <div className="set">
-    <HtmlText className="set-heading">
+    <ContentHtml className="set-heading">
       {props.set.data}
-    </HtmlText>
+    </ContentHtml>
 
     <ul>
       {props.associations.map(ass =>
@@ -108,9 +108,9 @@ SetList.propTypes = {
 
 let Item = props =>
   <div className="set-answer-item answer-item">
-    <HtmlText className="item-content">
+    <ContentHtml className="item-content">
       {props.item.data}
-    </HtmlText>
+    </ContentHtml>
 
     {props.connectDragSource(
       <div>

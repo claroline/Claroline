@@ -14,5 +14,4 @@ class ColorCollectionController extends AbstractCrudController
     {
         return 'color_collection';
     }
-
 }

@@ -123,8 +123,8 @@ class RoleForm extends Component {
         name={selectors.STORE_NAME + '.roles.current'}
         buttons={true}
         target={(role, isNew) => isNew ?
-          ['apiv2_role_create', {options: ['serialize_role_tools_rights', `workspace_id_${this.props.workspace.uuid}`]}] :
-          ['apiv2_role_update', {id: role.id, options: ['serialize_role_tools_rights', `workspace_id_${this.props.workspace.uuid}`]}]
+          ['apiv2_role_create', {options: ['serialize_role_tools_rights', `workspace_id_${this.props.workspace.id}`]}] :
+          ['apiv2_role_update', {id: role.id, options: ['serialize_role_tools_rights', `workspace_id_${this.props.workspace.id}`]}]
         }
         cancel={{
           type: LINK_BUTTON,
@@ -259,7 +259,7 @@ class RoleForm extends Component {
                   modal: [MODAL_WORKSPACE_SHORTCUTS, {
                     workspace: this.props.workspace,
                     tools: Object.keys(this.props.role.tools || {}),
-                    handleSelect: (selected) => this.props.addShortcuts(this.props.workspace.uuid, this.props.role.id, selected)
+                    handleSelect: (selected) => this.props.addShortcuts(this.props.workspace.id, this.props.role.id, selected)
                   }]
                 }
               ]}
@@ -272,7 +272,7 @@ class RoleForm extends Component {
                       name={shortcut.name}
                       type={shortcut.type}
                       label={this.getLabel(shortcut.type, shortcut.name)}
-                      removeShortcut={() => this.props.removeShortcut(this.props.workspace.uuid, this.props.role.id, shortcut.type, shortcut.name)}
+                      removeShortcut={() => this.props.removeShortcut(this.props.workspace.id, this.props.role.id, shortcut.type, shortcut.name)}
                     />
                   ) :
                   <div className="panel-body">

@@ -6,11 +6,11 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 const RolesButton = props =>
   <Button
@@ -109,7 +109,7 @@ const RolesInput = props => {
   )
 }
 
-implementPropTypes(RolesInput, FormFieldTypes, {
+implementPropTypes(RolesInput, DataInputTypes, {
   value: T.arrayOf(T.shape(RoleType.propTypes)),
   picker: T.shape({
     url: T.oneOfType([T.string, T.array]),

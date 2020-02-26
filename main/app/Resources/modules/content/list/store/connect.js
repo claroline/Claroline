@@ -86,8 +86,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     },
 
     // sorting
-    updateSort(property) {
-      dispatch(listActions.updateSort(ownProps.name, property))
+    updateSort(property, direction) {
+      dispatch(listActions.updateSort(ownProps.name, property, direction))
     },
 
     // selection

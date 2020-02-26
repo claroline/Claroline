@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {now, displayDate} from '#/main/app/intl/date'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {PageSimple} from '#/main/app/page/components/simple'
@@ -27,7 +27,7 @@ const HomeDisabled = (props) => {
         </h1>
 
         {!props.disabled && props.maintenance && props.maintenanceMessage &&
-          <HtmlText>{props.maintenanceMessage}</HtmlText>
+          <ContentHtml>{props.maintenanceMessage}</ContentHtml>
         }
 
         {props.disabled && props.authenticated &&

@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import isArray from 'lodash/isArray'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {DataError} from '#/main/app/data/components/error'
 
 import {DateInput} from '#/main/app/data/types/date/components/input'
@@ -76,7 +76,7 @@ class DateRangeInput extends Component {
   }
 }
 
-implementPropTypes(DateRangeInput, FormFieldTypes, {
+implementPropTypes(DateRangeInput, DataInputTypes, {
   // more precise value type
   value: T.arrayOf(T.string),
 

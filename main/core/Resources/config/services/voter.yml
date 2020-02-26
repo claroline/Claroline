@@ -60,7 +60,6 @@ services:
             - '@Claroline\CoreBundle\Library\Security\Utilities'
             - '@claroline.manager.mask_manager'
             - '@claroline.manager.resource_manager'
-            - '@claroline.manager.workspace_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.manager.resource_restrictions'
 

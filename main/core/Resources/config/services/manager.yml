@@ -3,14 +3,14 @@ services:
         autoconfigure: false
         public: false #because lazy
 
-    Claroline\CoreBundle\Manager\WorkspaceUserQueueManager:
+    Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager:
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.role_manager'
 
     claroline.manager.workspace_user_queue_manager:
-        alias: Claroline\CoreBundle\Manager\WorkspaceUserQueueManager
+        alias: Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager
         public: true
 
     Claroline\CoreBundle\Manager\WidgetManager:
@@ -82,7 +82,7 @@ services:
     Claroline\CoreBundle\Manager\TermsOfServiceManager:
         arguments:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@service_container'
+          - '@Claroline\CoreBundle\Manager\VersionManager'
           - '@claroline.manager.content_manager'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.workspace_manager'
@@ -141,17 +141,6 @@ services:
         alias: Claroline\CoreBundle\Manager\RegistrationManager
         public: true
 
-    Claroline\CoreBundle\Manager\ProgressionManager:
-        arguments:
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@claroline.manager.resource_evaluation_manager'
-          - '@router'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-
-    claroline.manager.progression_manager:
-        alias: Claroline\CoreBundle\Manager\ProgressionManager
-        public: true
-
     Claroline\CoreBundle\Manager\PluginManager:
         arguments:
           - '%kernel.root_dir%'
@@ -176,7 +165,6 @@ services:
 
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
-          - '@service_container'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@translator'
@@ -341,19 +329,6 @@ services:
 
     claroline.manager.api_manager:
         alias: Claroline\CoreBundle\Manager\ApiManager
-        public: true
-
-    Claroline\CoreBundle\Manager\AnalyticsManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.log.manager'
-          - '@claroline.manager.user_manager'
-          - '@claroline.manager.workspace_manager'
-          - '@claroline.manager.widget_manager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    claroline.manager.analytics_manager:
-        alias: Claroline\CoreBundle\Manager\AnalyticsManager
         public: true
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager:

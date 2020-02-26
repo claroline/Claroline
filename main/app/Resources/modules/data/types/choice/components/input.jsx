@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Select} from '#/main/app/input/components/select'
 import {Checkboxes} from '#/main/app/input/components/checkboxes'
@@ -31,7 +31,7 @@ const ChoiceInput = props => {
   )
 }
 
-implementPropTypes(ChoiceInput, FormFieldTypes, {
+implementPropTypes(ChoiceInput, DataInputTypes, {
   // more precise value type
   value: T.oneOfType([T.string, T.number, T.array]),
   // custom props

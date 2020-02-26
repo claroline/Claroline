@@ -5,7 +5,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {trans} from '#/main/app/intl/translation'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
@@ -68,12 +68,12 @@ const RolesInputComponent = props =>
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-plus"
         label={trans('add_roles')}
-        callback={() => props.pickRoles(props.workspace.uuid, props)}
+        callback={() => props.pickRoles(props.workspace.id, props)}
       />
     }
   </div>
 
-implementPropTypes(RolesInputComponent, FormFieldTypes, {
+implementPropTypes(RolesInputComponent, DataInputTypes, {
   value: T.arrayOf(
     T.shape(RoleType.propTypes)
   ),

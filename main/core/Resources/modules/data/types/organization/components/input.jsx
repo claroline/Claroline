@@ -5,8 +5,8 @@ import {Button} from '#/main/app/action/components/button'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
 import {Organization as OrganizationType} from '#/main/core/user/prop-types'
 import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
@@ -83,7 +83,7 @@ const OrganizationInput = props => {
   )
 }
 
-implementPropTypes(OrganizationInput, FormFieldTypes, {
+implementPropTypes(OrganizationInput, DataInputTypes, {
   value: T.shape(OrganizationType.propTypes),
   picker: T.shape({
     title: T.string

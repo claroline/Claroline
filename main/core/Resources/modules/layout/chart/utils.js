@@ -91,6 +91,7 @@ const formatData = (data) => {
  */
 const scaleAxis = (values, type, dataType, length = null, minMaxAsDomain = false) => {
   let scale = null
+  let minValue, maxValue
   switch (dataType) {
     case STRING_DATA_TYPE:
       scale = scaleBand()
@@ -98,11 +99,18 @@ const scaleAxis = (values, type, dataType, length = null, minMaxAsDomain = false
         .rangeRound([0, length])
         .paddingInner([0.2])
       break
-    case NUMBER_DATA_TYPE: {
-      let minValue = minMaxAsDomain ? min(values) : 0
-      scale = scaleLinear().domain([minValue, max(values)])
+
+    case NUMBER_DATA_TYPE:
+      minValue = minMaxAsDomain ? min(values) : 0
+      maxValue = max(values)
+      if (!minMaxAsDomain) {
+        const step = (maxValue - (maxValue % 5)) / 5
+        maxValue = step*5 < maxValue ? step*6 : step*5
+      }
+
+      scale = scaleLinear().domain([minValue, maxValue])
       break
-    }
+
     case DATE_DATA_TYPE:
       scale = scaleTime().domain(extent(values))
       break

@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Tinymce} from '#/main/core/tinymce/components/tinymce'
 import {getOffsets} from '#/main/core/scaffolding/text/selection'
@@ -193,7 +193,7 @@ class Textarea extends Component {
   }
 }
 
-implementPropTypes(Textarea, FormFieldTypes, {
+implementPropTypes(Textarea, DataInputTypes, {
   // more precise value type
   value: T.string,
   // custom props

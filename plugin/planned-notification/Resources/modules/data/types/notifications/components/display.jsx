@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Notification as NotificationType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 import {NotificationCard} from '#/plugin/planned-notification/tools/planned-notification/notification/data/components/notification-card'

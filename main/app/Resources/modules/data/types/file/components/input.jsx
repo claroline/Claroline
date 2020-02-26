@@ -4,7 +4,7 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
 
 import {FileDropContext} from '#/main/app/overlays/dnd/file-drop-context'
@@ -141,7 +141,7 @@ class FileComponent extends Component {
 // register to the FileDropContext to know when a file enters the window
 FileComponent.contextType = FileDropContext
 
-implementPropTypes(FileComponent, FormFieldTypes, {
+implementPropTypes(FileComponent, DataInputTypes, {
   // more precise value type
   value: T.oneOfType([
     T.array,

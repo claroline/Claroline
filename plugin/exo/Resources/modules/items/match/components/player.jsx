@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {utils} from '#/plugin/exo/items/match/utils'
 
 /* If any previous answer draw them */
@@ -28,12 +28,12 @@ class MatchItem extends Component{
 
   render() {
     return (
-      <HtmlText
+      <ContentHtml
         id={this.props.type + '_' + this.props.item.id}
         className={classes('answer-item match-item', this.props.type)}
       >
         {this.props.item.data}
-      </HtmlText>
+      </ContentHtml>
     )
   }
 }

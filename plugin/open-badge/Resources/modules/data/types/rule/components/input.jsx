@@ -3,7 +3,7 @@ import classes from 'classnames'
 import merge from 'lodash/merge'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {Select} from '#/main/app/input/components/select'
@@ -181,7 +181,7 @@ const RuleInput = (props) =>
     }
   </div>
 
-implementPropTypes(RuleInput, FormFieldTypes, {
+implementPropTypes(RuleInput, DataInputTypes, {
   // more precise value type
   value: T.shape({
     type: T.string,

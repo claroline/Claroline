@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

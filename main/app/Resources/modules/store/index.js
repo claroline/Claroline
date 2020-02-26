@@ -6,7 +6,9 @@ import {
   createStore as baseCreate
 } from 'redux'
 import thunk from 'redux-thunk'
+import get from 'lodash/get'
 import merge from 'lodash/merge'
+import set from 'lodash/set'
 
 import {env} from '#/main/app/config'
 import {combineReducers} from '#/main/app/store/reducer'
@@ -71,9 +73,10 @@ function createStore(name, reducers, initialState = {}) {
   // support for dynamic reducer loading
   store.asyncReducers = {}
   store.injectReducer = (key, reducer) => {
-    if (!store.asyncReducers[key]) {
+    if (!get(store.asyncReducers, key, false)) {
       // only append non mounted reducers
-      store.asyncReducers[key] = reducer
+      set(store.asyncReducers, key, reducer)
+
       store.replaceReducer(
         createReducer(merge({}, reducers, store.asyncReducers))
       )

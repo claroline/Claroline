@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {Row, Col} from 'react-bootstrap'
 import {isArray} from 'lodash'
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const DetailsField = (props) =>
   <Row>
@@ -132,7 +132,7 @@ const LogDetails = (props) =>
           }
           {props.log.detailedDescription &&
           <DetailsGroupField name={'context-details'} label={trans('log_context', {}, 'log')}>
-            <HtmlText>{props.log.detailedDescription}</HtmlText>
+            <ContentHtml>{props.log.detailedDescription}</ContentHtml>
           </DetailsGroupField>
           }
         </div>

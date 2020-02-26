@@ -12,10 +12,12 @@ import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {User as UserTypes} from '#/main/core/user/prop-types'
+import {constants as baseConstants} from '#/main/core/constants'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {getActions} from '#/main/core/workspace/utils'
-import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
+import {Workspace as WorkspaceTypes, UserEvaluation as UserEvaluationTypes} from '#/main/core/workspace/prop-types'
+import {constants} from '#/main/core/workspace/constants'
 
 const WorkspaceShortcuts = props =>
   <Toolbar
@@ -27,40 +29,51 @@ const WorkspaceShortcuts = props =>
     onClick={props.autoClose}
   />
 
-const WorkspaceProgression = props =>
-  <section className="app-menu-status">
-    <h2 className="sr-only">
-      {trans('my_progression')}
-    </h2>
+const WorkspaceProgression = props => {
+  let progression = 0
+  if (props.userEvaluation.progression) {
+    progression = props.userEvaluation.progression
+    if (props.userEvaluation.progressionMax) {
+      progression = (progression / props.userEvaluation.progressionMax) * 100
+    }
+  }
 
-    <LiquidGauge
-      id="workspace-progression"
-      type="user"
-      value={get(props.userEvaluation, 'progression', 0)}
-      displayValue={(value) => number(value) + '%'}
-      width={70}
-      height={70}
-    />
+  return (
+    <section className="app-menu-status">
+      <h2 className="sr-only">
+        {trans('my_progression')}
+      </h2>
 
-    <div className="app-menu-status-info">
-      <h3 className="h4">
-        {!isEmpty(props.roles) ?
-          props.roles.map(role => trans(role.translationKey)).join(', ') :
-          trans('guest')
-        }
-      </h3>
+      <LiquidGauge
+        id="workspace-progression"
+        type="user"
+        value={progression}
+        displayValue={(value) => number(value) + '%'}
+        width={70}
+        height={70}
+      />
 
-      {trans('Vous n\'avez pas terminé toutes les activités disponibles.')}
-    </div>
-  </section>
+      <div className="app-menu-status-info">
+        <h3 className="h4">
+          {!isEmpty(props.roles) ?
+            props.roles.map(role => trans(role.translationKey)).join(', ') :
+            trans('guest')
+          }
+        </h3>
+
+        {constants.EVALUATION_STATUSES[get(props.userEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)]}
+      </div>
+    </section>
+  )
+}
 
 WorkspaceProgression.propTypes = {
   roles: T.arrayOf(T.shape({
     translationKey: T.string.isRequired
   })),
-  userEvaluation: T.shape({
-
-  })
+  userEvaluation: T.shape(
+    UserEvaluationTypes.propTypes
+  )
 }
 
 const WorkspaceMenu = (props) => {
@@ -78,7 +91,7 @@ const WorkspaceMenu = (props) => {
 
   let workspaceRoles = []
   if (!isEmpty(props.workspace) && props.currentUser) {
-    workspaceRoles = props.currentUser.roles.filter(role => -1 !== role.name.indexOf(props.workspace.uuid))
+    workspaceRoles = props.currentUser.roles.filter(role => -1 !== role.name.indexOf(props.workspace.id))
   }
 
   return (

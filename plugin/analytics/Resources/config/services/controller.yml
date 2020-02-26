@@ -4,10 +4,23 @@ services:
         autoconfigure: false
         public: true #because controller
 
-    Claroline\AnalyticsBundle\Controller\Administration\AnalyticsController:
+    _instanceof:
+        Claroline\AppBundle\Controller\AbstractSecurityController:
+            calls:
+              - method: setObjectManager
+                arguments:
+                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+              - method: setAuthorizationChecker
+                arguments:
+                  - '@security.authorization_checker'
+
+    Claroline\AnalyticsBundle\Controller\Administration\DashboardController:
         arguments:
           - '@security.token_storage'
-          - '@claroline.manager.analytics_manager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
+          - '@claroline.event.manager'
 
     Claroline\AnalyticsBundle\Controller\Administration\LogController:
         arguments:
@@ -31,7 +44,12 @@ services:
     Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
         arguments:
           - '@security.authorization_checker'
-          - '@claroline.manager.analytics_manager'
+          - '@security.token_storage'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
+          - '@claroline.event.manager'
 
     Claroline\AnalyticsBundle\Controller\Workspace\LogController:
         arguments:
@@ -39,17 +57,3 @@ services:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\CoreBundle\API\Serializer\Log\LogSerializer'
           - '@claroline.log.manager'
-
-    Claroline\AnalyticsBundle\Controller\Workspace\ProgressionController:
-        arguments:
-          - '@claroline.manager.progression_manager'
-          
-    _instanceof:
-        Claroline\AppBundle\Controller\AbstractSecurityController:
-            calls:
-              - method: setObjectManager
-                arguments:
-                  - '@Claroline\AppBundle\Persistence\ObjectManager'
-              - method: setAuthorizationChecker
-                arguments:
-                  - '@security.authorization_checker'

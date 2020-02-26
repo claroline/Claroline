@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/tools/workspace/{workspaceId}/logs", requirements={"workspaceId"="\d+"})
+ * @Route("/tools/workspace/{workspaceId}/logs")
  */
 class LogController
 {
@@ -72,6 +72,11 @@ class LogController
         return 'log';
     }
 
+    public function getClass()
+    {
+        return Log::class;
+    }
+
     /**
      * @param Request   $request
      * @param Workspace $workspace
@@ -83,7 +88,7 @@ class LogController
      * @ParamConverter(
      *     "workspace",
      *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspaceId": "id"}}
+     *     options={"mapping": {"workspaceId": "uuid"}}
      * )
      */
     public function listAction(Request $request, Workspace $workspace)
@@ -108,7 +113,7 @@ class LogController
      * @ParamConverter(
      *     "workspace",
      *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspaceId": "id"}}
+     *     options={"mapping": {"workspaceId": "uuid"}}
      * )
      */
     public function listCsvAction(Request $request, Workspace $workspace)
@@ -135,7 +140,7 @@ class LogController
      * @Route("/chart", name="apiv2_workspace_tool_logs_list_chart")
      * @Method("GET")
      *
-     * @ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
     public function listChartAction(Request $request, Workspace $workspace)
     {
@@ -154,7 +159,7 @@ class LogController
      * @Route("/users", name="apiv2_workspace_tool_logs_list_users")
      * @Method("GET")
      *
-     * @ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
     public function userActionsListAction(Request $request, Workspace $workspace)
     {
@@ -192,30 +197,6 @@ class LogController
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="user_actions_'.$dateStr.'.csv"',
         ]);
-    }
-
-    /**
-     * @param Log $log
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/{id}", name="apiv2_workspace_tool_logs_get", requirements={"id"="\d+"})
-     * @Method("GET")
-     *
-     * @ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log", options={
-     *     "mapping": {"workspaceId": "workspace",
-     *     "id": "id"
-     * }})
-     */
-    public function getAction(Log $log)
-    {
-        $this->checkLogToolAccess($log->getWorkspace());
-
-        return new JsonResponse($this->serializer->serialize($log, ['details' => true]));
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Log\Log';
     }
 
     /**

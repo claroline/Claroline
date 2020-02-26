@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import has from 'lodash/has'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
 
 import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail'
@@ -85,7 +85,7 @@ class FileComponent extends Component {
   }
 }
 
-implementPropTypes(FileComponent, FormFieldTypes, {
+implementPropTypes(FileComponent, DataInputTypes, {
   // more precise value type
   value: T.oneOfType([T.array, T.object]),
   // custom props

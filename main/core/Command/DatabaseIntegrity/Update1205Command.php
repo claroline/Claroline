@@ -115,12 +115,7 @@ class Update1205Command extends ContainerAwareCommand
 
                     $rsm = new ResultSetMappingBuilder($em);
                     $rsm->addRootEntityFromClassMetadata($class, '');
-                    $query = $em->createNativeQuery('SELECT * FROM :tableName WHERE :columnName RLIKE ":regex"', $rsm);
-                    $query->setParameters([
-                        'tableName' => $tableName,
-                        'columnName' => $columnName,
-                        'regex' => $regex,
-                    ]);
+                    $query = $em->createNativeQuery("SELECT * FROM $tableName WHERE $columnName RLIKE '$regex'", $rsm);
                     $data = $query->getResult();
                     $this->log(count($data).' results...');
                     $i = 0;

@@ -3,7 +3,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
@@ -44,7 +44,7 @@ const WorkspaceCompletedAboveInput = (props) =>
     </FormGroup>
   </Fragment>
 
-implementPropTypes(WorkspaceCompletedAboveInput, FormFieldTypes, {
+implementPropTypes(WorkspaceCompletedAboveInput, DataInputTypes, {
   // more precise value type
   value: T.shape({
     workspace: T.shape(

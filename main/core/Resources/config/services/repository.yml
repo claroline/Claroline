@@ -1,13 +1,8 @@
 services:
     _defaults:
-        autowire: true #change to true
-        autoconfigure: true #change to true
-        public: false #default should be false now
-
-
-    #         tags: [doctrine.repository_service]
-
-        # Register all classes in these directories as services
+        autowire: true
+        autoconfigure: true
+        public: false
 
     _instanceof:
         Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository:

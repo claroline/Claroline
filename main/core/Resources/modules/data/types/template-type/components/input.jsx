@@ -5,8 +5,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {TemplateTypeCard} from '#/main/core/administration/template/data/components/template-type-card'
 import {TemplateType as TemplateTypeType} from '#/main/core/administration/template/prop-types'
 import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
@@ -78,7 +78,7 @@ const TemplateTypeInput = props => {
   )
 }
 
-implementPropTypes(TemplateTypeInput, FormFieldTypes, {
+implementPropTypes(TemplateTypeInput, DataInputTypes, {
   value: T.shape(TemplateTypeType.propTypes),
   picker: T.shape({
     title: T.string,

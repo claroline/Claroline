@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Ability as AbilityType} from '#/plugin/competency/administration/competency/prop-types'
 import {AbilityCard} from '#/plugin/competency/administration/competency/data/components/ability-card'

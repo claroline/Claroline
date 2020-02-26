@@ -20,7 +20,7 @@ const GroupsList = props =>
       target: `${props.path}/groups/form/${row.id}`
     })}
     fetch={{
-      url: ['apiv2_workspace_list_groups', {id: props.workspace.uuid}],
+      url: ['apiv2_workspace_list_groups', {id: props.workspace.id}],
       autoload: true
     }}
     actions={(rows) => !isEmpty(props.workspace) ? [
@@ -49,7 +49,7 @@ const GroupsList = props =>
         type: 'roles',
         label: trans('roles'),
         calculated: (group) => !isEmpty(props.workspace) ?
-          group.roles.filter(role => role.workspace && role.workspace.uuid === props.workspace.uuid)
+          group.roles.filter(role => role.workspace && role.workspace.id === props.workspace.id)
           :
           group.roles.filter(role => constants.ROLE_PLATFORM === role.type),
         displayed: true,

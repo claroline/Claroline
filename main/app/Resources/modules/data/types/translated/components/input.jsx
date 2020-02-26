@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 
 import {locale} from '#/main/app/intl/locale'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 const TranslatedInput = props =>
@@ -23,7 +23,7 @@ const TranslatedInput = props =>
   />
 
 
-implementPropTypes(TranslatedInput, FormFieldTypes, {
+implementPropTypes(TranslatedInput, DataInputTypes, {
   // more precise value type
   value: T.object,
 

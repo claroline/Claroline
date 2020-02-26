@@ -11,7 +11,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {hasPermission} from '#/main/app/security'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
@@ -229,7 +229,7 @@ const PostCardComponent = props =>
 
     {'sm' !== props.size && props.data.content &&
       <div className="post-content">
-        <HtmlText>{`${props.data.content}${(props.data.abstract ? '[...]' : '')}`}</HtmlText>
+        <ContentHtml>{`${props.data.content}${(props.data.abstract ? '[...]' : '')}`}</ContentHtml>
 
         {props.data.abstract &&
           <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-block">

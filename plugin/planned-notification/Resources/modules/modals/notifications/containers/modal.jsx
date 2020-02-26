@@ -13,7 +13,7 @@ const NotificationsPickerModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME)),
-      workspaceId: state.workspace.uuid
+      workspaceId: state.workspace.id
     }),
     (dispatch) => ({
       resetSelect() {

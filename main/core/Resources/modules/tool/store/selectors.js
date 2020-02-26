@@ -47,7 +47,7 @@ const contextData = createSelector(
 
 const contextId = createSelector(
   [contextData],
-  (contextData) => contextData ? contextData.uuid : undefined
+  (contextData) => contextData ? contextData.id : undefined
 )
 
 export const selectors = {

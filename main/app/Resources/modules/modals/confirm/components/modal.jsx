@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
@@ -14,7 +14,7 @@ const ConfirmModal = props =>
   <Modal
     {...omit(props, 'dangerous', 'question', 'additional', 'confirmAction', 'handleConfirm')}
   >
-    <HtmlText className="modal-body">{props.question}</HtmlText>
+    <ContentHtml className="modal-body">{props.question}</ContentHtml>
 
     {props.additional}
 

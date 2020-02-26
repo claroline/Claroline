@@ -17,7 +17,7 @@ const BadgesList = (props) =>
     name={selectors.LIST_NAME}
     fetch={{
       url: 'workspace' === props.currentContext.type ?
-        ['apiv2_badge-class_workspace_badge_list', {workspace: props.currentContext.data.uuid}] :
+        ['apiv2_badge-class_workspace_badge_list', {workspace: props.currentContext.data.id}] :
         ['apiv2_badge-class_list'],
       autoload: true
     }}

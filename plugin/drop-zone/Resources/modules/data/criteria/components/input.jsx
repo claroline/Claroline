@@ -4,7 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
@@ -97,7 +97,7 @@ const CriteriaInput = props =>
     />
   </div>
 
-implementPropTypes(CriteriaInput, FormFieldTypes, {
+implementPropTypes(CriteriaInput, DataInputTypes, {
   // more precise value type
   value: T.arrayOf(
     T.shape(CriterionTypes.propTypes)

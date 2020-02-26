@@ -5,7 +5,7 @@ import has from 'lodash/has'
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -77,7 +77,7 @@ class ImageInputComponent extends PureComponent {
   }
 }
 
-implementPropTypes(ImageInputComponent, FormFieldTypes, {
+implementPropTypes(ImageInputComponent, DataInputTypes, {
   value: T.object,
   size: T.arrayOf(T.number),
   autoUpload: T.bool.isRequired,

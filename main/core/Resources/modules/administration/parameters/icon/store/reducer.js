@@ -5,22 +5,22 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors} from '#/main/core/administration/parameters/store/selectors'
+import {selectors} from '#/main/core/administration/parameters/icon/store/selectors'
 
 const reducer = combineReducers({
-  list: makeListReducer(selectors.STORE_NAME+'.icons.list', {}, {
+  list: makeListReducer(selectors.STORE_NAME+'.list', {}, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.icons.current']: () => true,
+      [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.current']: () => true,
       [makeInstanceAction(TOOL_LOAD, 'main_settings')]: () => true
     })
   }),
-  current: makeFormReducer(selectors.STORE_NAME+'.icons.current'),
-  items: makeListReducer(selectors.STORE_NAME+'.icons.items', {}, {
+  current: makeFormReducer(selectors.STORE_NAME+'.current'),
+  items: makeListReducer(selectors.STORE_NAME+'.items', {}, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(TOOL_LOAD, 'main_settings')]: () => true
     })
   }),
-  item: makeFormReducer(selectors.STORE_NAME+'.icons.item'),
+  item: makeFormReducer(selectors.STORE_NAME+'.item'),
   mimeTypes: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.mimeTypes
   })

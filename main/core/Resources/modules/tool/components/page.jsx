@@ -12,6 +12,7 @@ import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 const ToolPage = props =>
   <PageFull
+    className={`${props.name}-page`}
     title={trans(props.name, {}, 'tools')}
     showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
     path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}

@@ -1,5 +1,8 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+
+import {trans} from '#/main/app/intl/translation'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Path} from '#/plugin/analytics/tools/dashboard/path/components/path'
 
@@ -14,7 +17,9 @@ class Paths extends Component {
 
   render() {
     return (
-      <Fragment>
+      <ToolPage
+        subtitle={trans('paths_tracking')}
+      >
         {this.props.tracking.map((tracking, index) =>
           <Path
             key={`path-tracking-${index}`}
@@ -25,7 +30,7 @@ class Paths extends Component {
             showStepDetails={this.props.showStepDetails}
           />
         )}
-      </Fragment>
+      </ToolPage>
     )
   }
 }

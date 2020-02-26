@@ -39,7 +39,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -71,6 +70,7 @@ class ClacoFormManager
     private $translator;
     private $userManager;
 
+    private $userRepo;
     private $categoryRepo;
     private $clacoFormRepo;
     private $commentRepo;
@@ -94,7 +94,6 @@ class ClacoFormManager
      * @param RouterInterface               $router
      * @param TokenStorageInterface         $tokenStorage
      * @param TranslatorInterface           $translator
-     * @param UserManager                   $userManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -106,8 +105,7 @@ class ClacoFormManager
         ObjectManager $om,
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        UserManager $userManager
+        TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -119,8 +117,8 @@ class ClacoFormManager
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
-        $this->userManager = $userManager;
 
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
         $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
@@ -965,7 +963,8 @@ class ClacoFormManager
         $this->om->startFlushSuite();
 
         foreach ($usersIds as $userId) {
-            $user = $this->userManager->getUserById($userId);
+            /** @var User $user */
+            $user = $this->userRepo->find($userId);
 
             if (!empty($user)) {
                 $this->switchEntryUserShared($entry, $user, true);

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {displayDate} from '#/main/app/intl/date'
 import {asset} from '#/main/app/config/asset'
 import {getPlainText} from '#/main/app/data/types/html/utils'
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 import {constants} from '#/plugin/agenda/event/constants'
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'

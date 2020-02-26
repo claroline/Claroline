@@ -52,7 +52,7 @@ class ResourceListener
         $node = $event->getObject();
         $workspace = $node->getWorkspace();
         $usersToNotify = $workspace ?
-            $this->userRepo->findUsersByWorkspaces([$workspace]) :
+            $this->userRepo->findByWorkspaces([$workspace]) :
             [];
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', [$node, $usersToNotify]);
@@ -85,7 +85,7 @@ class ResourceListener
         if ($old['meta']['published'] !== $node->isPublished() && $node->isPublished()) {
             $workspace = $node->getWorkspace();
             $usersToNotify = $node->getWorkspace() && !$node->getWorkspace()->isDisabledNotifications() ?
-                $this->om->getRepository(User::class)->findUsersByWorkspaces([$workspace]) :
+                $this->userRepo->findByWorkspaces([$workspace]) :
                 [];
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
         }

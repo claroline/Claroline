@@ -109,7 +109,7 @@ class RoutedExplain extends Component {
         level={2}
         name={selectors.STORE_NAME + '.import'}
         title={trans(entity, {}, 'transfer')}
-        target={['apiv2_transfer_start', {log: this.getLogId(), workspace: props.workspace && props.workspace.uuid ? props.workspace.uuid : null }]}
+        target={['apiv2_transfer_start', {log: this.getLogId(), workspace: props.workspace && props.workspace.id ? props.workspace.id : null }]}
         buttons={true}
         save={{
           type: CALLBACK_BUTTON,

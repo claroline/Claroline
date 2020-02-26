@@ -29,7 +29,7 @@ const Requirements = (props) =>
             icon: 'fa fa-fw fa-plus',
             label: trans('add_roles'),
             modal: [MODAL_ROLES, {
-              url: ['apiv2_workspace_list_roles', {id: props.workspace.uuid}],
+              url: ['apiv2_workspace_list_roles', {id: props.workspace.id}],
               filters: [],
               title: trans('add_roles'),
               selectAction: (selectedRoles) => ({
@@ -73,7 +73,7 @@ const Requirements = (props) =>
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
             modal: [MODAL_USERS, {
-              url: ['apiv2_workspace_list_users', {id: props.workspace.uuid}],
+              url: ['apiv2_workspace_list_users', {id: props.workspace.id}],
               title: trans('add_users'),
               selectAction: (selectedUsers) => ({
                 type: CALLBACK_BUTTON,

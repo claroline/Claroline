@@ -11,7 +11,7 @@ import {Button} from '#/main/app/action/components/button'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {LinkButton} from '#/main/app/buttons/link/components/button'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
@@ -69,7 +69,7 @@ const UserMessage = props => {
         </div>
 
         {React.createElement(
-          props.allowHtml ? HtmlText : 'div',
+          props.allowHtml ? ContentHtml : 'div',
           {className: 'user-message-content'},
           props.content
         )}

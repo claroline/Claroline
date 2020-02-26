@@ -6,8 +6,8 @@ import {Button} from '#/main/app/action/components/button'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {UserCard} from '#/main/core/user/components/card'
 import {User as UserType} from '#/main/core/user/prop-types'
 import {MODAL_USERS} from '#/main/core/modals/users'
@@ -105,7 +105,7 @@ const UsersInput = props => {
   }
 }
 
-implementPropTypes(UsersInput, FormFieldTypes, {
+implementPropTypes(UsersInput, DataInputTypes, {
   value: T.arrayOf(T.shape(UserType.propTypes)),
   picker: T.shape({
     title: T.string

@@ -4,11 +4,11 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {selectors} from '#/main/core/administration/parameters/store/selectors'
+import {selectors} from '#/main/core/administration/parameters/icon/store/selectors'
 
 const Icons = (props) =>
   <ListData
-    name={selectors.STORE_NAME+'.icons.list'}
+    name={selectors.STORE_NAME+'.list'}
     fetch={{
       url: ['apiv2_icon_set_list'],
       autoload: true

@@ -6,7 +6,7 @@ import Overlay from 'react-bootstrap/lib/Overlay'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 class HoverFeedback extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class HoverFeedback extends Component {
             id={this.props.id}
             className="feedback-popover"
           >
-            <HtmlText>{this.props.feedback}</HtmlText>
+            <ContentHtml>{this.props.feedback}</ContentHtml>
           </Popover>
         </Overlay>
       </span>

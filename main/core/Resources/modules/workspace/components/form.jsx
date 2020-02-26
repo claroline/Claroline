@@ -110,6 +110,10 @@ const WorkspaceFormComponent = (props) =>
         title: trans('display_parameters'),
         fields: [
           {
+            name: 'poster',
+            type: 'image',
+            label: trans('poster')
+          }, {
             name: 'thumbnail',
             type: 'image',
             label: trans('thumbnail')

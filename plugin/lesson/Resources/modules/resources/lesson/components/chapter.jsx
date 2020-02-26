@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {flattenChapters} from '#/plugin/lesson/resources/lesson/utils'
 import {LessonCurrent} from '#/plugin/lesson/resources/lesson/components/current'
@@ -31,9 +31,9 @@ const Chapter = props => {
         <h1 className="chapter-title h2 h-title">{props.chapter.title}</h1>
 
         <div className="panel panel-default">
-          <HtmlText className="panel-body">
+          <ContentHtml className="panel-body">
             {props.chapter.text ? props.chapter.text : ''}
-          </HtmlText>
+          </ContentHtml>
         </div>
       </section>
     </LessonCurrent>

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
+use Claroline\AnalyticsBundle\Manager\AnalyticsManager;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\Platform\EnableEvent;
@@ -19,8 +20,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Manager\AnalyticsManager;
-use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,8 +42,6 @@ class ParametersController
     private $versionManager;
     /** @var ParametersSerializer */
     private $serializer;
-    /** @var FileManager */
-    private $fileManager;
 
     /**
      * ParametersController constructor.
@@ -54,22 +51,19 @@ class ParametersController
      * @param AnalyticsManager             $analyticsManager
      * @param VersionManager               $versionManager
      * @param ParametersSerializer         $serializer
-     * @param FileManager                  $fileManager
      */
     public function __construct(
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $ch,
         AnalyticsManager $analyticsManager,
         VersionManager $versionManager,
-        ParametersSerializer $serializer,
-        FileManager $fileManager
+        ParametersSerializer $serializer
     ) {
         $this->dispatcher = $dispatcher;
         $this->config = $ch;
         $this->serializer = $serializer;
         $this->versionManager = $versionManager;
         $this->analyticsManager = $analyticsManager;
-        $this->fileManager = $fileManager;
     }
 
     /**
@@ -107,13 +101,10 @@ class ParametersController
     {
         $parameters = $this->serializer->serialize();
 
-        $usersCount = $this->analyticsManager->countEnabledUsers();
-        $wsCount = $this->analyticsManager->countNonPersonalWorkspaces(null);
-        $resourceCount = $this->analyticsManager->getResourceTypesCount(null, null);
-        $otherResources = $this->analyticsManager->getOtherResourceTypesCount();
+        $analytics = $this->analyticsManager->count();
 
         // TODO : not the correct place to do it
-        $usedStorage = $this->fileManager->computeUsedStorage();
+        $usedStorage = $analytics['storage'];
         $parameters['restrictions']['used_storage'] = $usedStorage;
         $parameters['restrictions']['max_storage_reached'] = isset($parameters['restrictions']['max_storage_size']) &&
             $parameters['restrictions']['max_storage_size'] &&
@@ -123,13 +114,7 @@ class ParametersController
         return new JsonResponse([
             'version' => $this->versionManager->getDistributionVersion(),
             'meta' => $parameters['meta'],
-            'analytics' => [
-                'resources' => $resourceCount,
-                'workspaces' => $wsCount,
-                'other' => $otherResources,
-                'users' => $usersCount,
-                'storage' => $usedStorage,
-            ],
+            'analytics' => $analytics, // TODO : add analytics through eventing to avoid hard dependendy to a plugin
         ]);
     }
 

@@ -4,7 +4,7 @@ import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {utils} from '#/plugin/exo/items/match/utils'
 
@@ -32,9 +32,9 @@ const MatchLinkPopover = props =>
       </span>
     }
     {props.solution.feedback &&
-      <HtmlText className="match-association-feedback">
+      <ContentHtml className="match-association-feedback">
         {props.solution.feedback}
-      </HtmlText>
+      </ContentHtml>
     }
   </Popover>
 
@@ -46,12 +46,12 @@ MatchLinkPopover.propTypes = {
 }
 
 const MatchItem = props =>
-  <HtmlText
+  <ContentHtml
     id={`${props.type}_${props.item.id}`}
     className={classes('answer-item match-item', props.type)}
   >
     {props.item.data}
-  </HtmlText>
+  </ContentHtml>
 
 MatchItem.propTypes = {
   type: T.string.isRequired,

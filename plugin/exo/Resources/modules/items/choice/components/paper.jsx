@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {SCORE_FIXED, SCORE_RULES} from '#/plugin/exo/quiz/enums'
 import {utils} from '#/plugin/exo/items/choice/utils'
@@ -42,9 +42,9 @@ const ChoicePaper = props =>
                 />
               }
 
-              <HtmlText className="choice-item-content">
+              <ContentHtml className="choice-item-content">
                 {utils.getChoiceById(props.item.choices, solution.id).data}
-              </HtmlText>
+              </ContentHtml>
 
               <div className="choice-item-feedback">
                 <Feedback
@@ -81,9 +81,9 @@ const ChoicePaper = props =>
                 disabled
               />
 
-              <HtmlText className="choice-item-content">
+              <ContentHtml className="choice-item-content">
                 {utils.getChoiceById(props.item.choices, solution.id).data}
-              </HtmlText>
+              </ContentHtml>
 
               <div className="choice-item-feedback">
                 <Feedback
@@ -110,9 +110,9 @@ const ChoicePaper = props =>
                 'selected-answer': solution.score > 0
               })}
             >
-              <HtmlText className="choice-item-content">
+              <ContentHtml className="choice-item-content">
                 {utils.getChoiceById(props.item.choices, solution.id).data}
-              </HtmlText>
+              </ContentHtml>
 
               <AnswerStats stats={{
                 value: props.stats.choices[solution.id] ?

@@ -9,7 +9,6 @@ import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {displayUsername} from '#/main/core/user/utils'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {actions as papersActions, selectors as paperSelectors} from '#/plugin/exo/resources/quiz/papers/store'
@@ -87,16 +86,20 @@ const Papers = props =>
         }, {
           name: 'score',
           label: trans('score'),
+          type: 'score',
           displayed: props.hasScore,
           displayable: props.hasScore,
           filterable: false,
           sortable: true,
-          render: (rowData) => {
-            if (rowData.total) {
-              return <ScoreBox size="sm" className="pull-right" score={rowData.score} scoreMax={rowData.total} />
+          calculated: (row) => {
+            if (row.total) {
+              return {
+                current: row.score,
+                total: row.total
+              }
             }
 
-            return '-'
+            return null
           }
         }
       ]}

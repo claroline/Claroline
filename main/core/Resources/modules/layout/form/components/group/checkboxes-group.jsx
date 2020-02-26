@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes'
 
@@ -14,7 +14,7 @@ const CheckboxesGroup = props =>
     <Checkboxes {...props} />
   </FormGroup>
 
-implementPropTypes(CheckboxesGroup, FormGroupWithFieldTypes, {
+implementPropTypes(CheckboxesGroup, [DataGroupTypes, DataInputTypes], {
   // more precise value type
   value: T.array,
 

@@ -4,10 +4,10 @@ import {PropTypes as T} from 'prop-types'
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {trans} from '#/main/app/intl/translation'
-import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
-import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group.jsx'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
+import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
+import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group'
+import {ContentHtml} from '#/main/app/content/components/html'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {validateNotBlank} from '#/plugin/drop-zone/resources/dropzone/correction/validator'
@@ -55,9 +55,9 @@ class DenialBox extends Component {
     return (
       <div id="denial-box">
         {this.state.correction.correctionDenied &&
-          <HtmlText>
+          <ContentHtml>
             {this.state.correction.correctionDeniedComment}
-          </HtmlText>
+          </ContentHtml>
         }
         {!this.state.correction.correctionDenied && !this.state.showForm &&
           <button
@@ -133,9 +133,9 @@ class CorrectionModal extends Component {
                 {this.props.dropzone.parameters.criteria.map(c =>
                   <tr key={`correction-criterion-${c.id}`}>
                     <td>
-                      <HtmlText>
+                      <ContentHtml>
                         {c.instruction}
-                      </HtmlText>
+                      </ContentHtml>
                     </td>
                     <td className="criterion-scale-form-row">
                       <ChoiceGroup
@@ -163,9 +163,9 @@ class CorrectionModal extends Component {
           {this.state.correction.comment &&
             <div>
               <h3>{trans('comment', {}, 'platform')}</h3>
-              <HtmlText className="correction-comment">
+              <ContentHtml className="correction-comment">
                 {this.state.correction.comment}
-              </HtmlText>
+              </ContentHtml>
             </div>
           }
           {this.props.showDenialBox &&

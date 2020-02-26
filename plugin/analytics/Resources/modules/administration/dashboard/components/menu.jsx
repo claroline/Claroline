@@ -17,48 +17,30 @@ const DashboardMenu = (props) =>
       buttonName="list-group-item"
       actions={[
         {
-          name: 'analytics',
+          name: 'overview',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pie-chart',
           label: trans('overview', {}, 'analytics'),
           target: props.path,
           exact: true
         }, {
-          name: 'connections',
+          name: 'activity',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-clock',
-          label: trans('connection_time'),
-          target: props.path + '/connections'
+          icon: 'fa fa-fw fa-chart-line',
+          label: trans('activity'),
+          target: props.path + '/activity'
         }, {
-          name: 'log',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-users',
-          label: trans('users_actions'),
-          target: props.path + '/log'
-        }, {
-          name: 'logs_users',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-user',
-          label: trans('user_actions'),
-          target: props.path + '/logs/users'
-        }, {
-          name: 'audience',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-line-chart',
-          label: trans('user_visit'),
-          target: props.path + '/audience'
-        }, {
-          name: 'resources',
+          name: 'content',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-folder',
-          label: trans('analytics_resources'),
-          target: props.path + '/resources'
+          label: trans('content'),
+          target: props.path + '/content'
         }, {
-          name: 'top',
+          name: 'community',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-sort-amount-desc',
-          label: trans('analytics_top'),
-          target: props.path + '/top'
+          icon: 'fa fa-fw fa-users',
+          label: trans('community'),
+          target: props.path + '/community'
         }
       ]}
       onClick={props.autoClose}

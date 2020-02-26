@@ -190,7 +190,7 @@ class CreateOrUpdate extends AbstractAction
             'label' => 'root',
             'options' => ['picker' => [
               'filters' => [
-                ['property' => 'workspace', 'value' => $extra['workspace']['uuid'], 'locked' => true],
+                ['property' => 'workspace', 'value' => $extra['workspace']['id'], 'locked' => true],
                 ['property' => 'resourceType', 'value' => 'directory', 'locked' => true],
               ],
               'current' => $root,

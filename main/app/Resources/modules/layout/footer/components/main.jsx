@@ -5,7 +5,7 @@ import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
@@ -14,7 +14,7 @@ const FooterMain = (props) =>
   <footer className="app-footer-container">
     <div className="app-footer" role="presentation">
       {props.content &&
-        <HtmlText className="app-footer-content">{props.content}</HtmlText>
+        <ContentHtml className="app-footer-content">{props.content}</ContentHtml>
       }
 
       <a className="app-footer-brand" href="https://www.claroline.net">

@@ -8,7 +8,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {LinkButton} from '#/main/app/buttons/link'
 
 import {route as resourceRoute} from '#/main/core/resource/routing'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getToolDocumentType} from '#/plugin/drop-zone/resources/dropzone/utils'
@@ -58,7 +58,7 @@ const DocumentRow = props =>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_TEXT &&
-        <HtmlText>{props.document.data}</HtmlText>
+        <ContentHtml>{props.document.data}</ContentHtml>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_URL &&

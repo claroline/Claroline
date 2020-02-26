@@ -101,7 +101,7 @@ CreatePermission.propTypes = {
 const RolePermissions = props =>
   <tr>
     <th scope="row">
-      {trans(props.translationKey)}
+      {props.translationKey}
     </th>
 
     {Object.keys(props.permissions).map(permission =>
@@ -192,29 +192,31 @@ const AdvancedTab = props => {
       <tbody>
         {props.permissions.map((rolePerm, index) => {
           const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
-          const displayName = workspaceCode ? rolePerm.translationKey + ' (' + workspaceCode + ')': rolePerm.translationKey
-          return (<RolePermissions
-            key={rolePerm.id}
-            name={rolePerm.name}
-            translationKey={displayName}
-            permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
-            deletable={!isStandardRole(rolePerm.name, props.workspace)}
-            update={(permissions) => {
-              const newPerms = cloneDeep(props.permissions)
-              const rights = newPerms.find(perm => perm.name === rolePerm.name)
-              rights.permissions = permissions
+          const displayName = trans(rolePerm.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
 
-              props.updatePermissions(newPerms)
-            }}
-            delete={() => {
-              const newPerms = cloneDeep(props.permissions)
-              newPerms.splice(index, 1)
+          return (
+            <RolePermissions
+              key={rolePerm.id}
+              name={rolePerm.name}
+              translationKey={displayName}
+              permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
+              deletable={!isStandardRole(rolePerm.name, props.workspace)}
+              update={(permissions) => {
+                const newPerms = cloneDeep(props.permissions)
+                const rights = newPerms.find(perm => perm.name === rolePerm.name)
+                rights.permissions = permissions
 
-              props.updatePermissions(newPerms)
-            }}
-          />)
-        }
-        )}
+                props.updatePermissions(newPerms)
+              }}
+              delete={() => {
+                const newPerms = cloneDeep(props.permissions)
+                newPerms.splice(index, 1)
+
+                props.updatePermissions(newPerms)
+              }}
+            />
+          )
+        })}
       </tbody>
 
       <tfoot>

@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {DataCard} from '#/main/app/content/card/components/data'
+import {DataCard} from '#/main/app/data/components/card'
 
 const TaggedObjectCard = props =>
   <DataCard
@@ -15,7 +15,9 @@ const TaggedObjectCard = props =>
 TaggedObjectCard.propTypes = {
   className: T.string,
   data: T.shape({
-
+    id: T.string.isRequired,
+    name: T.string,
+    type: T.string
   }).isRequired
 }
 

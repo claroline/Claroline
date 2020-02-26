@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {User as UserType} from '#/main/core/user/prop-types'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
 class PublicUrlModal extends Component {
@@ -38,9 +38,9 @@ class PublicUrlModal extends Component {
                 label: trans('profile_public_url_preview'),
                 hideLabel: true,
                 render: () =>
-                  <HtmlText className="read-only">
+                  <ContentHtml className="read-only">
                     {'#/desktop/community/profile/'+ this.state.url}
-                  </HtmlText>
+                  </ContentHtml>
               }, {
                 name: 'url',
                 type: 'string',

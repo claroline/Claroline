@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
 import {constants} from '#/plugin/scorm/resources/scorm/constants'

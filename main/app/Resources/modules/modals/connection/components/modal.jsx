@@ -10,7 +10,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 import {route as toolRoute} from '#/main/core/tool/routing'
 
@@ -93,9 +93,9 @@ class ConnectionModal extends Component {
         {(slide.content || !isEmpty(slide.shortcuts)) &&
           <div className="modal-body">
             {slide.content &&
-              <HtmlText>
+              <ContentHtml>
                 {slide.content}
-              </HtmlText>
+              </ContentHtml>
             }
 
             {!isEmpty(slide.shortcuts) &&

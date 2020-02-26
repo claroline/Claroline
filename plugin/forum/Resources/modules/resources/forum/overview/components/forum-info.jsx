@@ -11,12 +11,14 @@ const ForumInfo = (props) =>
         cardTitle={trans('participating_users', {}, 'forum')}
       />
     </div>
+
     <div className="col-md-4">
       <MetricCard
         value={props.forum.meta.subjects}
         cardTitle={trans('subjects', {}, 'forum')}
       />
     </div>
+
     <div className="col-md-4">
       <MetricCard
         value={props.forum.meta.messages}

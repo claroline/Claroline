@@ -8,7 +8,7 @@ import isEmpty from 'lodash/isEmpty'
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 import {LinkButton} from '#/main/app/buttons/link'
@@ -85,7 +85,7 @@ class BadgeLayoutComponent extends Component {
 
           <div className="badge-info">
             <h1>{this.props.badge.name}</h1>
-            <HtmlText>{this.props.badge.description}</HtmlText>
+            <ContentHtml>{this.props.badge.description}</ContentHtml>
           </div>
 
           {false && isEmpty(this.props.assertion) &&

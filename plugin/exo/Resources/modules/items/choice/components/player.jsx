@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {getNumbering} from '#/plugin/exo/utils/numbering'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
@@ -66,9 +66,9 @@ class ChoicePlayer extends Component {
                 ))}
               />
 
-              <HtmlText className="choice-item-content">
+              <ContentHtml className="choice-item-content">
                 {choice.data}
-              </HtmlText>
+              </ContentHtml>
             </label>
           )}
         </div>

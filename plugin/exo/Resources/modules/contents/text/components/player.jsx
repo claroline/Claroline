@@ -1,12 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const TextContentPlayer = (props) =>
-  <HtmlText>
+  <ContentHtml>
     {props.item.data}
-  </HtmlText>
+  </ContentHtml>
 
 TextContentPlayer.propTypes = {
   item: T.shape({

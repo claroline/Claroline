@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
@@ -14,75 +14,73 @@ import {Logs} from '#/plugin/analytics/resource/dashboard/containers/logs'
 import {UserLogs} from '#/plugin/analytics/resource/dashboard/containers/logs-user'
 
 const DashboardMain = (props) =>
-  <Fragment>
-    <Await
-      for={getAnalytics(props.resourceNode)}
-      placeholder={
-        <ContentLoader
-          size="lg"
-          description={trans('loading')}
-        />
-      }
-      then={(apps) => (
-        <div className="row">
-          <div className="col-md-3">
-            <Vertical
-              style={{
-                marginTop: '20px'
-              }}
-              basePath={props.path}
-              tabs={
-                apps.map(app => ({
-                  icon: app.icon,
-                  title: app.label,
-                  path: `/dashboard/${app.path}`,
+  <Await
+    for={getAnalytics(props.resourceNode)}
+    placeholder={
+      <ContentLoader
+        size="lg"
+        description={trans('loading')}
+      />
+    }
+    then={(apps) => (
+      <div className="row">
+        <div className="col-md-3">
+          <Vertical
+            style={{
+              marginTop: '20px'
+            }}
+            basePath={props.path}
+            tabs={
+              apps.map(app => ({
+                icon: app.icon,
+                title: app.label,
+                path: `/dashboard/${app.path}`,
+                exact: true
+              })).concat([
+                {
+                  icon: 'fa fa-fw fa-users',
+                  title: trans('users_actions'),
+                  path: '/dashboard/log'
+                }, {
+                  icon: 'fa fa-fw fa-user',
+                  title: trans('user_actions'),
+                  path: '/dashboard/logs/users',
                   exact: true
-                })).concat([
-                  {
-                    icon: 'fa fa-fw fa-users',
-                    title: trans('users_actions'),
-                    path: '/dashboard/log'
-                  }, {
-                    icon: 'fa fa-fw fa-user',
-                    title: trans('user_actions'),
-                    path: '/dashboard/logs/users',
-                    exact: true
-                  }
-                ])
-              }
-            />
-          </div>
-
-          <div className="dashboard-content col-md-9">
-            <Routes
-              path={props.path}
-              routes={
-                apps.map(app => ({
-                  path: `/dashboard/${app.path}`,
-                  component: app.component,
-                  exact: true
-                })).concat([
-                  {
-                    path: '/dashboard/log',
-                    component: Logs,
-                    exact: true
-                  }, {
-                    path: '/dashboard/log/:id',
-                    component: LogDetails,
-                    onEnter: (params) => props.openLog(params.id)
-                  }, {
-                    path: '/dashboard/logs/users',
-                    component: UserLogs,
-                    exact: true
-                  }
-                ])
-              }
-            />
-          </div>
+                }
+              ])
+            }
+          />
         </div>
-      )}
-    />
-  </Fragment>
+
+        <div className="dashboard-content col-md-9">
+          <Routes
+            path={props.path}
+            routes={
+              apps.map(app => ({
+                path: `/dashboard/${app.path}`,
+                component: app.component,
+                exact: true
+              })).concat([
+                {
+                  path: '/dashboard/log',
+                  component: Logs,
+                  exact: true
+                }, {
+                  path: '/dashboard/log/:id',
+                  component: LogDetails,
+                  onEnter: (params) => props.openLog(params.id)
+                }, {
+                  path: '/dashboard/logs/users',
+                  component: UserLogs,
+                  exact: true
+                }
+              ])
+            }
+          />
+        </div>
+      </div>
+    )}
+  />
 
 DashboardMain.propTypes = {
   path: T.string.isRequired,

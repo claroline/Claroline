@@ -5,8 +5,8 @@ import {Button} from '#/main/app/action/components/button'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
@@ -92,7 +92,7 @@ const RoleInput = props => {
   )
 }
 
-implementPropTypes(RoleInput, FormFieldTypes, {
+implementPropTypes(RoleInput, DataInputTypes, {
   value: T.arrayOf(T.shape(RoleType.propTypes)),
   picker: T.shape({
     url: T.oneOfType([T.string, T.array]),

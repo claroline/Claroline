@@ -37,7 +37,7 @@ class WorkspaceValidator implements ValidatorInterface
         }
 
         //one day this should be removed and id should be used instead
-        if ($this->exists('code', $data['code'], isset($data['uuid']) ? $data['uuid'] : null)) {
+        if ($this->exists('code', $data['code'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
                 'path' => 'code',
                 'message' => 'The code '.$data['code'].' already exists.',

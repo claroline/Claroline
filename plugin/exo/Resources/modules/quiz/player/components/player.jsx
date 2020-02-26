@@ -9,11 +9,11 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Timer} from '#/main/core/layout/gauge/components/timer'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ProgressBar} from '#/main/core/layout/components/progress-bar'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
@@ -47,7 +47,7 @@ const CurrentStep = props => {
       }
 
       {props.step.description &&
-        <HtmlText className="step-description">{props.step.description}</HtmlText>
+        <ContentHtml className="step-description">{props.step.description}</ContentHtml>
       }
 
       {props.items.map((item, index) => (
@@ -134,6 +134,7 @@ class PlayerComponent extends Component {
       <div className="quiz-player">
         {this.props.progression &&
           <ProgressBar
+            className="progress-minimal"
             value={Math.floor((this.props.progression.current / this.props.progression.total) * 100)}
             size="xs"
             type="user"

@@ -11,28 +11,21 @@
 
 namespace Claroline\CoreBundle\Entity\Log\Connection;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractLogConnect
+abstract class AbstractLogConnect
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
      */
     protected $user;
@@ -48,20 +41,13 @@ class AbstractLogConnect
     protected $duration;
 
     /**
-     * Constructor.
+     * AbstractLogConnect constructor.
      */
     public function __construct()
     {
         $this->refreshUuid();
-        $this->connectionDate = new \DateTime();
-    }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
+        $this->connectionDate = new \DateTime();
     }
 
     /**

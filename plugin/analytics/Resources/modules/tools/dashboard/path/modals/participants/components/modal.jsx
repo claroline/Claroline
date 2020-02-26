@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {convertTimestampToString} from '#/main/app/intl/date'
+import {displayDuration} from '#/main/app/intl/date'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -80,7 +80,7 @@ const ParticipantsModal = props =>
           label: trans('duration'),
           displayed: true,
           filterable: false,
-          calculated: (rowData) => rowData.duration !== null ? convertTimestampToString(rowData.duration) : null
+          calculated: (rowData) => rowData.duration !== null ? displayDuration(rowData.duration) : null
         }, {
           name: 'date',
           type: 'date',

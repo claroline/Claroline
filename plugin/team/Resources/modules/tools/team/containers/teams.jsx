@@ -12,7 +12,7 @@ import {Teams as TeamsComponent} from '#/plugin/team/tools/team/components/teams
 const Teams = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    workspaceId: toolSelectors.contextData(state).uuid,
+    workspaceId: toolSelectors.contextId(state),
     myTeams: selectors.myTeams(state),
     canEdit: selectors.canEdit(state)
   }),

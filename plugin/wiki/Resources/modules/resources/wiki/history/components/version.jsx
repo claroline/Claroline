@@ -1,15 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {displayDate} from '#/main/app/intl/date'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const Version = props =>
   <div>
-    <h2>{props.version.title && <HtmlText>{props.version.title}</HtmlText>}</h2>
+    <h2>{props.version.title && <ContentHtml>{props.version.title}</ContentHtml>}</h2>
     {props.version.meta && props.version.meta.creator &&
     <h5 className="small text-muted">[ {props.version.meta.creator.username} ({props.version.meta.creator.name}) - {displayDate(props.version.meta.createdAt, true, true)} ]</h5>
     }
-    <HtmlText className="wiki-section-content">{props.version.text}</HtmlText>
+    <ContentHtml className="wiki-section-content">{props.version.text}</ContentHtml>
   </div>
   
 Version.propTypes = {

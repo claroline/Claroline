@@ -375,7 +375,7 @@ const Subject =  withRouter(withModal(connect(
       dispatch(listActions.fetchData(`${selectors.STORE_NAME}.subjects.messages`, ['apiv2_forum_subject_get_message', {id, forumId}]))
     },
     toggleSort(sortOrder) {
-      dispatch(listActions.updateSortDirection(`${selectors.STORE_NAME}.subjects.messages`, -sortOrder))
+      dispatch(listActions.updateSort(`${selectors.STORE_NAME}.subjects.messages`, 'creationDate', -sortOrder))
       dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.subjects.messages`))
     },
     changePage(page) {

@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Index;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
@@ -26,7 +25,7 @@ use Doctrine\ORM\Mapping\Index;
  *             columns={"resourceNode_id", "role_id"}
  *         )
  *     },
- *     indexes={@Index(name="mask_idx", columns={"mask"})}
+ *     indexes={@ORM\Index(name="mask_idx", columns={"mask"})}
  * )
  */
 class ResourceRights
@@ -112,7 +111,7 @@ class ResourceRights
         return $this->resourceNode;
     }
 
-    public function setResourceNode(ResourceNode $resourceNode)
+    public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
     }

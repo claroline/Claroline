@@ -11,7 +11,7 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {ContentTags} from '#/main/app/content/components/tags'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ContentHtml} from '#/main/app/content/components/html'
 import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
@@ -81,7 +81,7 @@ const OverviewComponent = props =>
           <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
           {props.forum.display.description &&
             <div className="panel panel-default">
-              <HtmlText className="panel-body">{props.forum.display.description}</HtmlText>
+              <ContentHtml className="panel-body">{props.forum.display.description}</ContentHtml>
             </div>
           }
         </section>

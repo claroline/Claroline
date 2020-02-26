@@ -2,7 +2,7 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {RoleInput} from '#/main/core/data/types/role/components/input'
@@ -19,7 +19,7 @@ const InRoleInput = (props) =>
     <RoleInput {...props} />
   </FormGroup>
 
-implementPropTypes(InRoleInput, FormFieldTypes, {
+implementPropTypes(InRoleInput, DataInputTypes, {
   // more precise value type
   value: T.shape(
     RoleTypes.propTypes

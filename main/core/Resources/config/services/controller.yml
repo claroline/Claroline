@@ -95,6 +95,8 @@ services:
     Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
         arguments:
           - '@security.authorization_checker'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.tool_manager'
           - '@claroline.manager.log_connect'
 
@@ -192,10 +194,9 @@ services:
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.analytics_manager'
+          - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
           - '@Claroline\CoreBundle\Manager\VersionManager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-          - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CoreBundle\Controller\APINew\ScheduledTaskController: ~
 
