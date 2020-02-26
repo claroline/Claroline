@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\EventManager;
@@ -238,9 +239,7 @@ class ResourceController
         }
 
         if ($fileName) {
-            $fileName = str_replace('/', '_', $fileName);
-            $fileName = str_replace('\\', '_', $fileName);
-            $fileName = str_replace(' ', '_', $fileName);
+            $fileName = TextNormalizer::toKey($fileName);
         }
 
         $response = new BinaryFileResponse($file, 200, ['Content-Disposition' => "attachment; filename={$fileName}"]);
