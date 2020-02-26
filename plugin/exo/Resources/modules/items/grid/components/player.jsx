@@ -4,6 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
+import {MenuButton, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
 
@@ -40,37 +41,26 @@ class GridCell extends Component {
               {this.props.cell.data}
             </div>
           }
+
           {this.props.cell.choices.length > 0 &&
-            <div className="dropdown">
-              <button
-                className={classes('btn btn-default dropdown-toggle', {disabled: this.props.disabled})}
-                type="button"
-                id={`choice-drop-down-${this.props.cell.id}`}
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true"
-              >
-                {this.getTextValue() === '' ?
-                  <span>{trans('grid_choice_select_empty', {}, 'quiz')}</span>
-                  :
-                  <span>{this.getTextValue()}</span>
-                }
-                &nbsp;<span className="caret"></span>
-              </button>
-              <ul className="dropdown-menu" aria-labelledby={`choice-drop-down-${this.props.cell.id}`}>
-                {this.props.cell.choices.map((choice, index) => {
-                  {return choice !== this.getTextValue() &&
-                     <li
-                       key={`choice-${index}`}
-                       onClick={() => this.props.disabled ? false : this.props.onChange(this.setTextAnswer(choice))}
-                     >
-                       <a style={{color:this.props.cell.color}}>{choice}</a>
-                     </li>
-                  }
-                })}
-              </ul>
-            </div>
+            <MenuButton
+              className={classes('btn', {disabled: this.props.disabled})}
+              id={`choice-drop-down-${this.props.cell.id}`}
+              menu={{
+                items: this.props.cell.choices.map((choice) => ({
+                  type: CALLBACK_BUTTON,
+                  label: choice,
+                  disabled: this.props.disabled,
+                  active: this.getTextValue() === choice,
+                  callback: () => this.props.onChange(this.setTextAnswer(choice))
+                }))
+              }}
+            >
+              {this.getTextValue() || trans('grid_choice_select_empty', {}, 'quiz')}
+              &nbsp;<span className="caret" />
+            </MenuButton>
           }
+
           {this.props.cell.input && this.props.cell.choices.length === 0 &&
             <input
               type="text"
