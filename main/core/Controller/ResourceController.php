@@ -18,12 +18,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
@@ -77,9 +75,6 @@ class ResourceController
     /** @var ResourceRightsRepository */
     private $rightsRepo;
 
-    /** @var EventManager */
-    private $eventManager;
-
     /**
      * ResourceController constructor.
      *
@@ -92,7 +87,6 @@ class ResourceController
      * @param ResourceRestrictionsManager   $restrictionsManager
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
-     * @param EventManager                  $eventManager
      * @param FinderProvider                $finder
      */
     public function __construct(
@@ -105,8 +99,7 @@ class ResourceController
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization,
-        EventManager $eventManager
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
@@ -118,7 +111,6 @@ class ResourceController
         $this->om = $om;
         $this->rightsRepo = $om->getRepository(ResourceRights::class);
         $this->authorization = $authorization;
-        $this->eventManager = $eventManager;
         $this->finder = $finder;
     }
 
@@ -239,12 +231,13 @@ class ResourceController
         }
 
         if ($fileName) {
-            $fileName = TextNormalizer::toKey($fileName);
+            $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+            $fileName = TextNormalizer::toKey(str_replace('.'.$ext, '', $fileName)).'.'.$ext;
         }
 
-        $response = new BinaryFileResponse($file, 200, ['Content-Disposition' => "attachment; filename={$fileName}"]);
-
-        return $response;
+        return new BinaryFileResponse($file, 200, [
+            'Content-Disposition' => "attachment; filename={$fileName}"
+        ]);
     }
 
     /**
@@ -359,33 +352,6 @@ class ResourceController
 
         // dispatch action event
         return $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
-    }
-
-    /**
-     * Shows resource logs list.
-     *
-     * @todo use standard resource action system.
-     *
-     * @EXT\Route("/logs/{node}", name="claro_resource_logs")
-     * @EXT\Template("ClarolineCoreBundle:resource/logs:list.html.twig")
-     *
-     * @param ResourceNode $node the resource
-     *
-     * @return array
-     */
-    public function logListAction(ResourceNode $node)
-    {
-        $resource = $this->manager->getResourceFromNode($node);
-        $collection = new ResourceCollection([$node]);
-        if (!$this->authorization->isGranted('ADMINISTRATE', $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
-        }
-
-        return [
-            'workspace' => $node->getWorkspace(),
-            '_resource' => $resource,
-            'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
-        ];
     }
 
     /**
