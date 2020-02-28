@@ -79,10 +79,11 @@ class ParametersSerializer
             $data['tos']['text'] = $this->serializeTos();
         }
 
-        $data['javascripts'] = $this->serializeJavascripts($data);
+        $data['javascripts'] = $this->serializeAssets('javascripts', $data);
+        $data['stylesheets'] = $this->serializeAssets('stylesheets', $data);
         $data['display']['logo'] = $this->serializeAppearanceLogo($data);
         // TODO : move this somewhere else
-        $data['archives'] = $this->serializeArchive($data);
+        $data['archives'] = $this->serializeArchive();
 
         return $data;
     }
@@ -98,7 +99,8 @@ class ParametersSerializer
     {
         $original = $data;
         $this->deserializeTos($data);
-        $data = $this->getJavascriptsData($data);
+        $data = $this->getAssetsData('javascripts', $data);
+        $data = $this->getAssetsData('stylesheets', $data);
         $data = $this->getLogoData($data);
 
         if (isset($data['mailer'])) {
@@ -146,15 +148,14 @@ class ParametersSerializer
         }
     }
 
-    public function getJavascriptsData(array $data)
+    public function getAssetsData($name, array $data)
     {
-        if (isset($data['javascripts'])) {
-            $javascripts = $data['javascripts'];
-            $data['javascripts'] = [];
-            //maybe validate its a real javascript file here
+        if (isset($data[$name])) {
+            $assets = $data[$name];
+            $data[$name] = [];
 
-            foreach ($javascripts as $javascript) {
-                $data['javascripts'][] = $javascript['url'];
+            foreach ($assets as $asset) {
+                $data[$name][] = $asset['url'];
             }
         }
 
@@ -199,12 +200,12 @@ class ParametersSerializer
         return $files;
     }
 
-    public function serializeJavascripts(array $data)
+    public function serializeAssets($name, array $data)
     {
         $uploadedFiles = [];
 
-        if (isset($data['javascripts'])) {
-            foreach ($data['javascripts'] as $url) {
+        if (isset($data[$name])) {
+            foreach ($data[$name] as $url) {
                 $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $url]);
                 $uploadedFiles[] = $this->serializer->serialize($file);
             }

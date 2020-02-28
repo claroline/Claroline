@@ -261,17 +261,29 @@ const Technical = props =>
         ]
       }, {
         icon: 'fa fa-fw fa-file',
-        title: trans('javascripts'),
-        fields: [{
-          name: 'javascripts',
-          label: trans('javascripts'),
-          type: 'collection',
-          options: {
-            type: 'file',
-            placeholder: trans('no_javascript'),
-            button: trans('add_javascript')
+        title: trans('files'),
+        fields: [
+          {
+            name: 'javascripts',
+            label: trans('javascripts'),
+            type: 'collection',
+            options: {
+              type: 'file',
+              placeholder: trans('no_javascript'),
+              button: trans('add_javascript')
+            }
+          }, {
+            name: 'stylesheets',
+            label: trans('stylesheets'),
+            type: 'collection',
+            help: trans('custom_stylesheets_help'),
+            options: {
+              type: 'file',
+              placeholder: trans('no_stylesheet'),
+              button: trans('add_stylesheet')
+            }
           }
-        }]
+        ]
       }
     ]}
   />

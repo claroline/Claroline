@@ -236,7 +236,7 @@ class ResourceController
         }
 
         return new BinaryFileResponse($file, 200, [
-            'Content-Disposition' => "attachment; filename={$fileName}"
+            'Content-Disposition' => "attachment; filename={$fileName}",
         ]);
     }
 

@@ -44,7 +44,7 @@
 
         {# Styles from plateform configuration #}
         {% for file in parameters.stylesheets %}
-            <script src="{{ asset(file) }}"></script>
+            <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
         {% endfor %}
     </head>
 

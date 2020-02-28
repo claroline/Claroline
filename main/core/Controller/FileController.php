@@ -139,15 +139,15 @@ class FileController extends AbstractApiController
     public function listTinyMceDestinationsAction(Workspace $workspace = null)
     {
         $data = $this->finder->search(
-          ResourceNode::class, [
-            'filters' => [
-                'meta.uploadDestination' => true,
-                'roles' => array_map(function (Role $role) {
-                    return $role->getRole();
-                }, $this->tokenStorage->getToken()->getRoles()),
+            ResourceNode::class, [
+                'filters' => [
+                    'meta.uploadDestination' => true,
+                    'roles' => array_map(function (Role $role) {
+                        return $role->getRole();
+                    }, $this->tokenStorage->getToken()->getRoles()),
+                ],
             ],
-          ],
-          [Options::SERIALIZE_MINIMAL]
+            [Options::SERIALIZE_MINIMAL]
         );
 
         return new JsonResponse($data['data']);
