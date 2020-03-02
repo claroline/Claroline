@@ -100,7 +100,7 @@ const Step = props =>
           'col-md-12': 0 === props.secondaryResources.length
         })}>
           {props.description &&
-            <div className="panel panel-default">
+            <div className="step-description panel panel-default">
               <HtmlText className="panel-body">{props.description}</HtmlText>
             </div>
           }
