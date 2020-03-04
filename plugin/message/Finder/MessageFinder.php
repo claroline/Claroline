@@ -89,6 +89,7 @@ class MessageFinder extends AbstractFinder
             $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
+                case 'read':
                 case 'isRead':
                     $qb->orderBy('um.isRead', $sortByDirection);
                     break;

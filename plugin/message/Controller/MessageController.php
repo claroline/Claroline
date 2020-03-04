@@ -47,6 +47,24 @@ class MessageController extends AbstractCrudController
     }
 
     /**
+     * @EXT\Route("/count/unread", name="apiv2_message_count_unread")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @return JsonResponse
+     */
+    public function countUnreadAction()
+    {
+        return new JsonResponse(
+            $this->finder->fetch(Message::class, [
+                'read' => false,
+                'removed' => false,
+                'sent' => false,
+            ], null, 0, -1, true)
+        );
+    }
+
+    /**
      * @EXT\Route("/received", name="apiv2_message_received")
      * @EXT\Method("GET")
      * @ApiDoc(

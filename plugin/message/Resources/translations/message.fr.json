@@ -19,5 +19,11 @@
     "marked_unread_message": "Marquer comme non lu",
     "new_message": "Nouveau message",
     "remove_message_confirm_message": "Êtes-vous sûr de vouloir supprimer ce message ?",
-    "remove_message_s_confirm_message": "Êtes-vous sûr de vouloir supprimer ces %count% messages ?"
+    "remove_message_s_confirm_message": "Êtes-vous sûr de vouloir supprimer ces %count% messages ?",
+    "all_messages": "Voir tous mes messages",
+    "empty_unread": "Vous n'avez pas de nouveaux messages",
+    "empty_unread_help": "Lorsque vous recevrez un message, il apparaîtra ici",
+    "more_unread": "+ %count% autres nouveaux messages",
+    "no_object": "(aucun objet)",
+    "sent_at": "le %date%"
 }

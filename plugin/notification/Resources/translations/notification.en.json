@@ -8,8 +8,5 @@
     "disable_notifications_info": "Stop being notified of changes for this resource",
     "enable_notifications": "Follow this resource",
     "enable_notifications_info": "Get notified of changes for this resource",
-    "mark_all_viewed": "Mark all as read",
-    "purge_after_days": "Remove after (days)",
-    "purge_enabled": "Remove notifications automatically",
-    "purge_explain_text": "\"*by activating this option, the history of notifications will be automatically deleted according to the value below"
+    "mark_all_viewed": "Mark all as read"
 }

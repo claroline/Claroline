@@ -6,6 +6,13 @@ import {registry} from '#/main/app/plugins/registry'
  * Declares applications provided by the Message plugin.
  */
 registry.add('ClarolineMessageBundle', {
+  /**
+   * Provides menu which can be used in the main header menu.
+   */
+  header: {
+    'messages': () => { return import(/* webpackChunkName: "message-header-messages" */ '#/plugin/message/header/messages') }
+  },
+
   tools: {
     'messaging': () => { return import(/* webpackChunkName: "message-tool-messaging" */ '#/plugin/message/tools/messaging') }
   },

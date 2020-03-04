@@ -8,8 +8,5 @@
     "disable_notifications_info": "Ne pas être notifié des nouveautés de cette ressource",
     "enable_notifications": "Suivre cette ressource",
     "enable_notifications_info": "Être notifié des nouveautés de cette ressource",
-    "mark_all_viewed": "Tout marquer comme lu",
-    "purge_after_days": "Effacer après (jours)",
-    "purge_enabled": "Effacement automatique",
-    "purge_explain_text": "* en activant cette option, l'historique des notifications sera effacé automatiquement en fonction de la valeur ci-dessous."
+    "mark_all_viewed": "Tout marquer comme lu"
 }

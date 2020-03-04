@@ -7,32 +7,39 @@ import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 import {route as toolRoute} from '#/main/core/tool/routing'
 
-import {NotificationCard} from '#/plugin/notification/components/card'
-import {constants} from '#/plugin/notification/header/notifications/constants'
+import {Message as MessageTypes} from '#/plugin/message/prop-types'
+import {MessageCard} from '#/plugin/message/data/components/message-card'
+import {constants} from '#/plugin/message/header/messages/constants'
 
-const NotificationsDropdown = (props) =>
+const MessagesDropdown = (props) =>
   <div className="app-header-dropdown dropdown-menu dropdown-menu-right">
     {isEmpty(props.results) &&
       <div className="app-header-dropdown-empty">
-        {trans('empty_unread', {}, 'notification')}
+        {trans('empty_unread', {}, 'message')}
         <small>
-          {trans('empty_unread_help', {}, 'notification')}
+          {trans('empty_unread_help', {}, 'message')}
         </small>
       </div>
     }
 
     {!isEmpty(props.results) && props.results.map(result =>
-      <NotificationCard
+      <MessageCard
         key={result.id}
         size="xs"
         direction="row"
         data={result}
+        primaryAction={{
+          type: LINK_BUTTON,
+          label: trans('open', {}, 'actions'),
+          target: toolRoute('messaging') + '/message/' + result.id,
+          onClick: props.closeMenu
+        }}
       />
     )}
 
     {props.count > constants.LIMIT_RESULTS &&
       <div className="app-header-dropdown-footer app-header-dropdown-empty">
-        {trans('more_unread', {count: props.count - constants.LIMIT_RESULTS}, 'notification')}
+        {trans('more_unread', {count: props.count - constants.LIMIT_RESULTS}, 'message')}
       </div>
     }
 
@@ -40,23 +47,23 @@ const NotificationsDropdown = (props) =>
       <Button
         className="btn-link btn-emphasis btn-block"
         type={LINK_BUTTON}
-        label={trans('all_notifications', {}, 'notification')}
-        target={toolRoute('notification')}
+        label={trans('all_messages', {}, 'message')}
+        target={toolRoute('messaging')}
         primary={true}
         onClick={props.closeMenu}
       />
     </div>
   </div>
 
-NotificationsDropdown.propTypes = {
+MessagesDropdown.propTypes = {
   count: T.number.isRequired,
-  results: T.arrayOf(T.shape({
-    // TODO
-  })).isRequired,
+  results: T.arrayOf(T.shape(
+    MessageTypes.propTypes
+  )).isRequired,
   closeMenu: T.func.isRequired
 }
 
-class NotificationsMenu extends Component {
+class MessagesMenu extends Component {
   constructor(props) {
     super(props)
 
@@ -91,7 +98,7 @@ class NotificationsMenu extends Component {
   }
 
   count() {
-    this.props.countNotifications()
+    this.props.countMessages()
       .then(() => {
         if (this.props.refreshDelay) {
           this.counter = setTimeout(this.count, this.props.refreshDelay)
@@ -112,25 +119,25 @@ class NotificationsMenu extends Component {
 
     return (
       <Button
-        id="app-notifications"
+        id="app-messages"
         type={MENU_BUTTON}
         className="app-header-btn app-header-item"
         icon={!this.props.loaded && this.state.opened ?
           'fa fa-fw fa-spinner fa-spin' :
-          'fa fa-fw fa-bell'
+          'fa fa-fw fa-envelope'
         }
-        label={trans('notifications', {}, 'notification')}
+        label={trans('messages', {}, 'message')}
         tooltip="bottom"
         opened={this.props.loaded && this.state.opened}
         onToggle={(opened) => {
           if (opened) {
-            this.props.getNotifications()
+            this.props.getMessages()
           }
 
           this.setOpened(opened)
         }}
         menu={
-          <NotificationsDropdown
+          <MessagesDropdown
             count={this.props.count}
             results={this.props.results}
             closeMenu={() => this.setOpened(false)}
@@ -146,18 +153,18 @@ class NotificationsMenu extends Component {
   }
 }
 
-NotificationsMenu.propTypes = {
+MessagesMenu.propTypes = {
   isAuthenticated: T.bool.isRequired,
   refreshDelay: T.number,
   count: T.number.isRequired,
   loaded: T.bool.isRequired,
-  results: T.arrayOf(T.shape({
-    // TODO
-  })).isRequired,
-  countNotifications: T.func.isRequired,
-  getNotifications: T.func.isRequired
+  results: T.arrayOf(T.shape(
+    MessageTypes.propTypes
+  )).isRequired,
+  countMessages: T.func.isRequired,
+  getMessages: T.func.isRequired
 }
 
 export {
-  NotificationsMenu
+  MessagesMenu
 }
