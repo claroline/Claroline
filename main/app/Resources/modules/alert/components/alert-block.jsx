@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 const AlertBlock = props =>
-  <div className={classes('alert alert-detailed', 'alert-'+props.type)}>
-    <span className={classes('alert-icon fa fa-fw', {
+  <div className={classes('alert alert-detailed', 'alert-'+props.type, props.className)}>
+    <span className={classes('alert-icon', !props.icon && 'fa fa-fw', props.icon || {
       'fa-info-circle':          'info' === props.type,
       'fa-check-circle':         'success' === props.type,
       'fa-exclamation-triangle': 'warning' === props.type,
@@ -21,6 +21,8 @@ const AlertBlock = props =>
   </div>
 
 AlertBlock.propTypes = {
+  className: T.string,
+  icon: T.string,
   type: T.oneOf(['info', 'success', 'warning', 'danger']),
   title: T.string,
   children: T.node.isRequired

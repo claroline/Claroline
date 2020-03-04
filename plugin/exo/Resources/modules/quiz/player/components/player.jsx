@@ -10,6 +10,7 @@ import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Timer} from '#/main/core/layout/gauge/components/timer'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
@@ -138,6 +139,16 @@ class PlayerComponent extends Component {
             type="user"
           />
         }
+        {this.props.testMode &&
+          <AlertBlock
+            type="info"
+            icon="fa fa-fw fa-flask"
+            title={trans('test_mode', {}, 'quiz')} className="alert-test-mode"
+          >
+            {trans('test_mode_desc', {}, 'quiz')}
+          </AlertBlock>
+        }
+
         {(this.props.progression || this.props.isTimed) &&
           <div className="quiz-gauges-container">
             {this.props.progression &&
@@ -232,6 +243,7 @@ PlayerComponent.propTypes = {
   workspace: T.object,
   history: T.object.isRequired,
   quizId: T.string.isRequired,
+  testMode: T.bool.isRequired,
   numbering: T.string.isRequired,
   showTitles: T.bool,
   number: T.number.isRequired,
@@ -286,6 +298,7 @@ const Player = withRouter(connect(
       quizId: select.quizId(state),
 
       // general attempt info
+      testMode: select.testMode(state),
       paper: paper,
       progression: select.progressionDisplayed(state) ? {
         current: Object.values(select.answers(state)).filter(a => a.data && a.data.length > 0).length,
