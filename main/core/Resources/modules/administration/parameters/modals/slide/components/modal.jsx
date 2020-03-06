@@ -69,13 +69,12 @@ class SlideFormModal extends Component {
 
     this.state = {
       actions: [],
-      tools: []
+      tools: Object.keys(getTools(this.props.currentUser)) || []
     }
   }
 
   componentDidMount() {
     getActions(this.props.currentUser).then((actions) => this.setState({actions: actions}))
-    getTools(this.props.currentUser).then((tools) => this.setState({tools: tools}))
   }
 
   render() {
