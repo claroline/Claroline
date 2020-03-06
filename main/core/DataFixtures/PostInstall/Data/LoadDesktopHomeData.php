@@ -66,7 +66,13 @@ class LoadDesktopHomeData implements RequiredFixture
                         'enableDisplays' => false,
                         'availableDisplays' => [],
                         'card' => [
-                            'display' => ['icon', 'flags', 'subtitle'],
+                            'display' => [
+                                'icon',
+                                'flags',
+                                'subtitle',
+                                'description',
+                                'footer',
+                            ],
                         ],
                         'paginated' => true,
                         'count' => true,
