@@ -41,17 +41,19 @@ function showCorrection(paper, admin = false) {
  * @return {boolean}
  */
 function showScore(paper, admin = false) {
-  if (admin) {
-    return true
-  }
+  if (get(paper, 'structure.parameters.hasExpectedAnswers') && get(paper, 'structure.score.type') !== 'none') {
+    if (admin) {
+      return true
+    }
 
-  const showScoreAt = get(paper, 'structure.parameters.showScoreAt')
-  if (showScoreAt === constants.QUIZ_SCORE_AT_CORRECTION){
-    return showCorrection(paper, admin)
-  }
+    const showScoreAt = get(paper, 'structure.parameters.showScoreAt')
+    if (showScoreAt === constants.QUIZ_SCORE_AT_CORRECTION){
+      return showCorrection(paper, admin)
+    }
 
-  if (showScoreAt === constants.QUIZ_SCORE_AT_VALIDATION){
-    return paper.finished
+    if (showScoreAt === constants.QUIZ_SCORE_AT_VALIDATION){
+      return paper.finished
+    }
   }
 
   return false
