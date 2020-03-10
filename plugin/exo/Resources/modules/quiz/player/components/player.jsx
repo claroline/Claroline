@@ -212,6 +212,7 @@ class PlayerComponent extends Component {
 
         {(!this.state.fetching && !this.state.error) &&
           <PlayerNav
+            resourceId={this.props.resourceId}
             previous={this.props.previous}
             mandatoryQuestions={this.props.mandatoryQuestions}
             next={this.props.next}
@@ -240,7 +241,7 @@ class PlayerComponent extends Component {
 
 PlayerComponent.propTypes = {
   path: T.string,
-  workspaceId: T.number,
+  resourceId: T.string.isRequired,
   workspace: T.object,
   history: T.object.isRequired,
   quizId: T.string.isRequired,
@@ -294,8 +295,8 @@ const Player = withRouter(connect(
     return {
       // general info
       path: resourceSelect.path(state),
-      workspaceId: resourceSelect.workspaceId(state),
       workspace: resourceSelect.workspace(state),
+      resourceId: resourceSelect.id(state),
       quizId: select.quizId(state),
 
       // general attempt info

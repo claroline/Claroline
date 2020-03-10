@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {matchPath} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -24,7 +25,10 @@ const EditorMenu = props =>
         status: props.validating ? 'danger' : 'warning',
         value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock-o': !props.validating})} />
       } : undefined,
-      onClick: props.autoClose
+      onClick: (e) => {
+        props.autoClose(e)
+        scrollTo('.main-page-content')
+      }
     }].concat(props.steps.map((step, index) => ({
       type: LINK_BUTTON,
       label: step.title || trans('step', {number: index + 1}, 'quiz'),
@@ -35,7 +39,10 @@ const EditorMenu = props =>
         status: props.validating ? 'danger' : 'warning',
         value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock-o': !props.validating})} />
       } : undefined,
-      onClick: props.autoClose,
+      onClick: (e) => {
+        props.autoClose(e)
+        scrollTo('.main-page-content')
+      },
       additional: [
         {
           name: 'copy',
@@ -114,7 +121,10 @@ const EditorMenu = props =>
         const newSlug = props.addStep(props.steps)
         props.history.push(`${props.path}/edit/${newSlug}`)
       },
-      onClick: props.autoClose
+      onClick: (e) => {
+        props.autoClose(e)
+        scrollTo('.main-page-content')
+      }
     }])}
   />
 

@@ -10,10 +10,6 @@ import {PageContent} from '#/main/app/page/components/content'
 
 /**
  * Root of the current page.
- *
- * For now, modals are managed here.
- * In future version, when the layout will be in React,
- * it'll be moved in higher level.
  */
 const PageFull = props =>
   <PageSimple

@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {matchPath} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -100,7 +101,10 @@ const EditorMenu = props => {
         icon: 'fa fa-fw fa-cog',
         label: trans('parameters'),
         target: `${props.basePath}/edit/parameters`,
-        onClick: props.autoClose
+        onClick: (e) => {
+          props.autoClose(e)
+          scrollTo('.main-page-content')
+        }
       }].concat(props.path.steps.map(getStepSummary), [{
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-plus',
@@ -109,7 +113,10 @@ const EditorMenu = props => {
           const newSlug = props.addStep(props.path.steps)
           props.history.push(`${props.basePath}/edit/${newSlug}`)
         },
-        onClick: props.autoClose
+        onClick: (e) => {
+          props.autoClose(e)
+          scrollTo('.main-page-content')
+        }
       }])}
     />
   )

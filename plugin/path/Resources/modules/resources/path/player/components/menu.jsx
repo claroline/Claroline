@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {matchPath} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Summary} from '#/main/app/content/components/summary'
@@ -15,7 +16,11 @@ const PlayerMenu = props => {
       label: step.title,
       target: `${props.path}/play/${step.slug}`,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${step.slug}`}),
-      children: step.children ? step.children.map(getStepSummary) : []
+      children: step.children ? step.children.map(getStepSummary) : [],
+      onClick: (e) => {
+        props.autoClose(e)
+        scrollTo('.main-page-content')
+      }
     }
   }
 

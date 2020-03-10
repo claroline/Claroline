@@ -60,6 +60,7 @@ class ResourcePage extends Component {
 
     return (
       <ToolPage
+        id={`resource-${this.props.resourceNode.id}`}
         className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
         header={{
           title: this.props.resourceNode.name,

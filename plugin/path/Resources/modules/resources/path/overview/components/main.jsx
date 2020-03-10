@@ -50,6 +50,7 @@ const OverviewMain = props => {
 
         <OverviewSummary
           basePath={props.basePath}
+          resourceId={props.resourceId}
           steps={props.path.steps}
         />
       </section>
@@ -59,6 +60,7 @@ const OverviewMain = props => {
 
 OverviewMain.propTypes = {
   basePath: T.string.isRequired,
+  resourceId: T.string.isRequired,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,

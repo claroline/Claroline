@@ -15,6 +15,7 @@ import {PageWrapper} from '#/main/app/page/components/wrapper'
  */
 const PageSimple = props =>
   <PageWrapper
+    id={props.id}
     embedded={props.embedded}
     className={classes(props.className, props.size, {
       fullscreen: props.fullscreen,

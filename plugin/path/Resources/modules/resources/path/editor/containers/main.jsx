@@ -16,6 +16,7 @@ const EditorMain = withRouter(
       basePath: resourceSelectors.path(state),
       path: selectors.path(state),
       steps: flattenSteps(selectors.steps(state)),
+      resourceId: resourceSelectors.id(state),
       resourceParent: resourceSelectors.parent(state),
       workspace: resourceSelectors.workspace(state)
     }),

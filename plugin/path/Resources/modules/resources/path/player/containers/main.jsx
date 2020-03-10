@@ -12,6 +12,7 @@ const PlayerMain = connect(
   state => ({
     basePath: resourceSelectors.path(state),
     currentUser: securitySelectors.currentUser(state),
+    resourceId: resourceSelectors.id(state),
     path: selectors.path(state),
     navigationEnabled: selectors.navigationEnabled(state),
     steps: flattenSteps(selectors.steps(state))

@@ -125,6 +125,7 @@ class EditorMain extends Component {
                 if (step) {
                   const CurrentStep = (
                     <PathCurrent
+                      resourceId={this.props.resourceId}
                       prefix={`${this.props.basePath}/edit`}
                       current={step}
                       all={this.props.steps}
@@ -167,6 +168,7 @@ EditorMain.propTypes = {
     pathname: T.string.isRequired
   }).isRequired,
   basePath: T.string.isRequired,
+  resourceId: T.string.isRequired,
   workspace: T.object,
   path: T.shape(
     PathTypes.propTypes

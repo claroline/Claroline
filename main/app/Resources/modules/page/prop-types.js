@@ -17,6 +17,7 @@ const PageSection = {
 
 const PageSimple = {
   propTypes: {
+    id: T.string,
     className: T.string,
     size: T.oneOf(['sm', 'lg']),
 

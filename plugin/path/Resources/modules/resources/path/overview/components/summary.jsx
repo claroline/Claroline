@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
@@ -10,6 +11,7 @@ const SummaryStep = props =>
     <LinkButton
       className="summary-link"
       target={`${props.basePath}/play/${props.step.slug}`}
+      onClick={() => scrollTo(`#resource-${props.resourceId} > .page-content`)}
     >
       {props.step.title}
     </LinkButton>
@@ -29,6 +31,7 @@ const SummaryStep = props =>
 
 SummaryStep.propTypes = {
   basePath: T.string.isRequired,
+  resourceId: T.string.isRequired,
   step: T.shape(
     StepTypes.propTypes
   ).isRequired
@@ -47,6 +50,7 @@ const OverviewSummary = props =>
 
 OverviewSummary.propTypes = {
   basePath: T.string.isRequired,
+  resourceId: T.string.isRequired,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )).isRequired

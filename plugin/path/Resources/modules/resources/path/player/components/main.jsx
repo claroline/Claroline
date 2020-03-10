@@ -44,6 +44,7 @@ const PlayerMain = props => {
               if (step) {
                 const Current =
                   <PathCurrent
+                    resourceId={props.resourceId}
                     prefix={`${props.basePath}/play`}
                     current={step}
                     all={props.steps}
@@ -79,6 +80,7 @@ PlayerMain.propTypes = {
   basePath: T.string.isRequired,
   currentUser: T.object,
   navigationEnabled: T.bool.isRequired,
+  resourceId: T.string.isRequired,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,

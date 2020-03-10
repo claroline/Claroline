@@ -2,57 +2,93 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {isQuestionType} from '#/plugin/exo/items/item-types'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
 
 // TODO : replace all button by #/main/app/action/components/button
 
 const PreviousButton = props =>
-  <button className="btn btn-previous btn-default btn-emphasis" onClick={props.onClick}>
+  <button
+    className="btn btn-previous btn-default btn-emphasis"
+    onClick={(e) => {
+      props.onClick(e)
+      scrollTo(`#resource-${props.resourceId} > .page-content`)
+    }}
+  >
     <span className="fa fa-fw fa-angle-double-left" />
     {trans('previous')}
   </button>
 
 PreviousButton.propTypes = {
+  resourceId: T.string.isRequired,
   onClick: T.func.isRequired
 }
 
 const NextButton = props =>
-  <button className="btn btn-next btn-default btn-emphasis" onClick={props.onClick}>
+  <button
+    className="btn btn-next btn-default btn-emphasis"
+    onClick={(e) => {
+      props.onClick(e)
+      scrollTo(`#resource-${props.resourceId} > .page-content`)
+    }}
+  >
     {trans('next')}
     <span className="fa fa-fw fa-angle-double-right" />
   </button>
 
 NextButton.propTypes = {
+  resourceId: T.string.isRequired,
   onClick: T.func.isRequired
 }
 
 const ValidateButton = props =>
-  <button className="btn btn-next btn-validate btn-default btn-emphasis" onClick={props.onClick}>
+  <button
+    className="btn btn-next btn-validate btn-default btn-emphasis"
+    onClick={(e) => {
+      props.onClick(e)
+      scrollTo(`#resource-${props.resourceId} > .page-content`)
+    }}
+  >
     {trans('validate')}
     <span className="fa fa-fw fa-angle-double-right" />
   </button>
 
 ValidateButton.propTypes = {
+  resourceId: T.string.isRequired,
   onClick: T.func.isRequired
 }
 
 const SubmitButton = props =>
-  <button className="btn btn-submit btn-success btn-emphasis" onClick={props.onClick}>
+  <button
+    className="btn btn-submit btn-success btn-emphasis"
+    onClick={(e) => {
+      props.onClick(e)
+      scrollTo(`#resource-${props.resourceId} > .page-content`)
+    }}
+  >
     <span className="fa fa-fw fa-check" />
     {trans('validate')}
   </button>
 
 SubmitButton.propTypes = {
+  resourceId: T.string.isRequired,
   onClick: T.func.isRequired
 }
 
 const FinishButton = props =>
-  <button className="btn btn-finish btn-primary btn-emphasis" onClick={props.onClick}>
+  <button
+    className="btn btn-finish btn-primary btn-emphasis"
+    onClick={(e) => {
+      props.onClick(e)
+      scrollTo(`#resource-${props.resourceId} > .page-content`)
+    }}
+  >
     <span className="fa fa-fw fa-sign-out" />
     {trans('finish', {}, 'actions')}
   </button>
 
 FinishButton.propTypes = {
+  resourceId: T.string.isRequired,
   onClick: T.func.isRequired
 }
 
@@ -79,6 +115,7 @@ const canGoForward = (step, answers, mandatoryQuestions) => {
 const ForwardButton = props => canGoForward(props.step, props.answers, props.mandatoryQuestions) ?
   (props.next) ?
     <NotLastQuestionButton
+      resourceId={props.resourceId}
       openFeedbackAndValidate={props.openFeedbackAndValidate}
       navigateToAndValidate={props.navigateToAndValidate}
       step={props.step}
@@ -89,6 +126,7 @@ const ForwardButton = props => canGoForward(props.step, props.answers, props.man
     /> :
     //no next section
     <LastQuestionButton
+      resourceId={props.resourceId}
       openFeedbackAndValidate={props.openFeedbackAndValidate}
       finish={props.finish}
       currentStepSend={props.currentStepSend}
@@ -102,6 +140,7 @@ const ForwardButton = props => canGoForward(props.step, props.answers, props.man
 ForwardButton.propTypes = {
   next: T.object,
   step: T.object.isRequired,
+  resourceId: T.string.isRequired,
   navigateToAndValidate: T.func.isRequired,
   finish: T.func.isRequired,
   openFeedbackAndValidate: T.func.isRequired,
@@ -116,14 +155,15 @@ const LastQuestionButton = props =>
   (props.showFeedback) ?
     (!props.feedbackEnabled) ?
       (props.currentStepSend) ?
-        <ValidateButton onClick={() => props.openFeedbackAndValidate(props.step)} /> :
-        <NextButton onClick={() => props.openFeedbackAndValidate(props.step)} /> :
-      <FinishButton onClick={props.finish}/> :
-    <FinishButton onClick={props.finish}/>
+        <ValidateButton onClick={() => props.openFeedbackAndValidate(props.step)} resourceId={props.resourceId} /> :
+        <NextButton onClick={() => props.openFeedbackAndValidate(props.step)} resourceId={props.resourceId} /> :
+      <FinishButton onClick={props.finish} resourceId={props.resourceId} /> :
+    <FinishButton onClick={props.finish} resourceId={props.resourceId} />
 
 LastQuestionButton.propTypes = {
   step: T.object.isRequired,
   finish: T.func.isRequired,
+  resourceId: T.string.isRequired,
   openFeedbackAndValidate: T.func.isRequired,
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
@@ -134,14 +174,15 @@ const NotLastQuestionButton = props =>
   (props.currentStepSend) ?
     (props.showFeedback) ?
       (!props.feedbackEnabled) ?
-        <ValidateButton onClick={() => props.openFeedbackAndValidate(props.step)} /> :
-        <NextButton onClick={() => props.navigateToAndValidate(props.next)} /> :
-      <ValidateButton onClick={() => props.navigateToAndValidate(props.next)} /> :
-    <NextButton onClick={() => props.navigateToAndValidate(props.next)} />
+        <ValidateButton onClick={() => props.openFeedbackAndValidate(props.step)} resourceId={props.resourceId} /> :
+        <NextButton onClick={() => props.navigateToAndValidate(props.next)} resourceId={props.resourceId} /> :
+      <ValidateButton onClick={() => props.navigateToAndValidate(props.next)} resourceId={props.resourceId} /> :
+    <NextButton onClick={() => props.navigateToAndValidate(props.next)} resourceId={props.resourceId} />
 
 NotLastQuestionButton.propTypes = {
   step: T.object.isRequired,
   next: T.object,
+  resourceId: T.string.isRequired,
   openFeedbackAndValidate: T.func.isRequired,
   navigateToAndValidate: T.func.isRequired,
   showFeedback: T.bool.isRequired,
@@ -153,12 +194,13 @@ const PlayerNav = props =>
   <nav className="player-nav component-container">
     <div className="backward">
       {(props.previous) &&
-        <PreviousButton onClick={() => props.navigateToAndValidate(props.previous)} />
+        <PreviousButton onClick={() => props.navigateToAndValidate(props.previous)} resourceId={props.resourceId} />
       }
     </div>
 
     <div className="forward">
       <ForwardButton
+        resourceId={props.resourceId}
         openFeedbackAndValidate={props.openFeedbackAndValidate}
         navigateToAndValidate={props.navigateToAndValidate}
         mandatoryQuestions={props.mandatoryQuestions}
@@ -179,6 +221,7 @@ PlayerNav.propTypes = {
   step: T.object.isRequired,
   navigateTo: T.func.isRequired,
   finish: T.func.isRequired,
+  resourceId: T.string.isRequired,
   navigateToAndValidate: T.func.isRequired,
   openFeedbackAndValidate: T.func.isRequired,
   submit: T.func.isRequired,
