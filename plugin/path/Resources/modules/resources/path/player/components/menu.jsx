@@ -38,7 +38,8 @@ PlayerMenu.propTypes = {
   path: T.string.isRequired,
   steps: T.arrayOf(T.shape({
     // TODO : step types
-  }))
+  })),
+  autoClose: T.func
 }
 
 PlayerMenu.defaultProps = {

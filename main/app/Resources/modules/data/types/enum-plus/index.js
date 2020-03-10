@@ -3,10 +3,12 @@ import {trans} from '#/main/app/intl/translation'
 import {EnumPlusSearch} from '#/main/app/data/types/enum-plus/components/search'
 import {isChoiceValid, parseChoice, renderChoice} from '#/main/app/data/types/enum-plus/utils'
 
+// TODO : merge with choice type
+
 const dataType = {
   name: 'enum-plus',
   meta: {
-    creatable: true,
+    creatable: false,
     icon: 'fa fa-fw fa fa-list',
     label: trans('enum_plus', {}, 'data'),
     description: trans('enum_plus_desc', {}, 'data')

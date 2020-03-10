@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {implementPropTypes} from '#/main/app/prop-types'
@@ -27,7 +28,7 @@ const PageFull = props =>
       />
     }
 
-    <PageContent>
+    <PageContent className={classes({'main-page-content': !props.embedded})}>
       {props.children}
     </PageContent>
   </PageSimple>

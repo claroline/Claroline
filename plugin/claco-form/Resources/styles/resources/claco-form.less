@@ -9,7 +9,7 @@
     flex: 1 0 auto;
     display: flex;
     min-height: 100%;
-    align-items: stretch;
+    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     margin: 0 -(floor(@grid-gutter-width / 2));
@@ -26,6 +26,8 @@
         padding: 0;
         background: white;
         border: 1px solid #e5e5e5;
+        max-height: 240px;
+        height: 100%;
 
         .action-icon,
         .action-label {

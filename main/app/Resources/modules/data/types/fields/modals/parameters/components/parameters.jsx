@@ -101,11 +101,8 @@ class ParametersModal extends Component {
               }, {
                 name: 'required',
                 type: 'boolean',
-                label: trans('field_optional'),
-                displayed: !this.state.restrictions.locked || this.state.restrictions.lockedEditionOnly,
-                options: {
-                  labelChecked: trans('field_required')
-                }
+                label: trans('field_required'),
+                displayed: !this.state.restrictions.locked || this.state.restrictions.lockedEditionOnly
               }
             ]
           }, this.state.typeDef && {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -43,74 +43,103 @@ EnumChildren.propTypes = {
   onDelete: T.func.isRequired
 }
 
-const EnumItem = props =>
-  <li className={classes('cascade-enum-item', {
-    'item-root': props.level === 1,
-    'item-child': props.level > 1
-  })}>
-    <div className="item-container">
-      <TextGroup
-        id={`item-${props.item.id}-value`}
-        className="enum-item-content"
-        label={`${trans('choice')}-${props.indexes.join('-')}`}
-        hideLabel={true}
-        value={props.item.value}
-        onChange={value => {
-          const newItem = Object.assign({}, props.item, {value: value})
-          props.onChange(newItem, props.indexes)
-        }}
-        warnOnly={!props.validating}
-        error={props.error ? props.error[props.item.id] : props.error}
-      />
+class EnumItem extends Component {
+  constructor(props) {
+    super(props)
 
-      <div className="right-controls">
-        <Button
-          id={`enum-item-${props.item.id}-add`}
-          type={CALLBACK_BUTTON}
-          className="btn-link"
-          icon="fa fa-fw fa-plus"
-          label={props.addChildButtonLabel}
-          tooltip="left"
-          callback={() => {
-            const newItem = Object.assign({}, props.item)
-            const newChild = {
-              id: makeId(),
-              value: '',
-              children: []
-            }
-
-            if (!newItem.children) {
-              newItem.children = []
-            }
-            newItem.children.push(newChild)
-            props.onChange(newItem, props.indexes)
-          }}
-        />
-
-        <Button
-          id={`enum-item-${props.item.id}-delete`}
-          type={CALLBACK_BUTTON}
-          className="btn-link"
-          icon="fa fa-fw fa-trash-o"
-          label={props.deleteButtonLabel}
-          tooltip="left"
-          callback={() => props.onDelete(props.indexes)}
-          dangerous={true}
-        />
-      </div>
-    </div>
-
-    {props.item.children && props.item.children.length > 0 &&
-      <EnumChildren
-        {...props}
-        indexes={props.indexes}
-        item={props.item}
-        level={props.level + 1}
-        validating={props.validating}
-        error={props.error}
-      />
+    this.state = {
+      collapsed: false
     }
-  </li>
+  }
+
+  render() {
+    return (
+      <li className={classes('cascade-enum-item', {
+        'item-root': this.props.level === 1,
+        'item-child': this.props.level > 1
+      })}>
+        <div className="item-container">
+          <TextGroup
+            id={`item-${this.props.item.id}-value`}
+            className="enum-item-content"
+            label={`${trans('choice')}-${this.props.indexes.join('-')}`}
+            hideLabel={true}
+            value={this.props.item.value}
+            onChange={value => {
+              const newItem = Object.assign({}, this.props.item, {value: value})
+              this.props.onChange(newItem, this.props.indexes)
+            }}
+            warnOnly={!this.props.validating}
+            error={this.props.error ? this.props.error[this.props.item.id] : this.props.error}
+          />
+
+          <div className="right-controls">
+            {this.props.item.children && this.props.item.children.length > 0 &&
+              <Button
+                id={`enum-item-${this.props.item.id}-toggle`}
+                type={CALLBACK_BUTTON}
+                className="btn-link"
+                icon={classes('fa fa-fw', {
+                  'fa-caret-right': this.state.collapsed,
+                  'fa-caret-down': !this.state.collapsed
+                })}
+                label={trans(this.state.collapsed ? 'expand':'collapse', {}, 'actions')}
+                tooltip="left"
+                callback={() => this.setState({collapsed: !this.state.collapsed})}
+              />
+            }
+
+            <Button
+              id={`enum-item-${this.props.item.id}-add`}
+              type={CALLBACK_BUTTON}
+              className="btn-link"
+              icon="fa fa-fw fa-plus"
+              label={this.props.addChildButtonLabel}
+              tooltip="left"
+              callback={() => {
+                const newItem = Object.assign({}, this.props.item)
+                const newChild = {
+                  id: makeId(),
+                  value: '',
+                  children: []
+                }
+
+                if (!newItem.children) {
+                  newItem.children = []
+                }
+                newItem.children.push(newChild)
+                this.props.onChange(newItem, this.props.indexes)
+              }}
+            />
+
+            <Button
+              id={`enum-item-${this.props.item.id}-delete`}
+              type={CALLBACK_BUTTON}
+              className="btn-link"
+              icon="fa fa-fw fa-trash-o"
+              label={this.props.deleteButtonLabel}
+              tooltip="left"
+              callback={() => this.props.onDelete(this.props.indexes)}
+              dangerous={true}
+            />
+          </div>
+        </div>
+
+        {!this.state.collapsed && this.props.item.children && this.props.item.children.length > 0 &&
+          <EnumChildren
+            {...this.props}
+            indexes={this.props.indexes}
+            item={this.props.item}
+            level={this.props.level + 1}
+            validating={this.props.validating}
+            error={this.props.error}
+          />
+        }
+      </li>
+    )
+  }
+}
+
 
 EnumItem.propTypes = {
   indexes: T.array.isRequired,
