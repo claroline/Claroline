@@ -14,7 +14,7 @@ actions.register = (users, workspace) => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.STORE_NAME + '.users.list'))
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.pending.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.pending'))
     }
   }
 })
@@ -27,7 +27,7 @@ actions.remove = (users, workspace) => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.STORE_NAME + '.users.list'))
-      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.pending.list'))
+      dispatch(listActions.invalidateData(selectors.STORE_NAME + '.pending'))
     }
   }
 })
