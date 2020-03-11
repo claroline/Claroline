@@ -15,7 +15,6 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/core/user/utils'
-import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {DataCard} from '#/main/app/data/components/card'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
@@ -46,13 +45,13 @@ const WorkspaceProgression = (props) => {
       </div>
 
       <div className="panel-body text-center">
-        <ScoreGauge
+        <LiquidGauge
+          id={`user-progression-${props.workspaceEvaluation.id}`}
           type="user"
-          value={get(props.workspaceEvaluation, 'score')}
-          total={get(props.workspaceEvaluation, 'scoreMax')}
+          value={progression}
+          displayValue={(value) => number(value) + '%'}
           width={140}
           height={140}
-          displayValue={value => undefined === value || null === value ? '?' : value+''}
         />
 
         <h4 className="user-progression-status h5">
@@ -67,16 +66,18 @@ const WorkspaceProgression = (props) => {
         </li>
 
         <li className="list-group-item">
-          {trans('progression')}
-          <span className="value">
-            {number(progression)} %
-          </span>
-        </li>
-
-        <li className="list-group-item">
           {trans('duration')}
           <span className="value">{get(props.workspaceEvaluation, 'duration') ? displayDuration(get(props.workspaceEvaluation, 'duration')) : '-'}</span>
         </li>
+
+        {get(props.workspaceEvaluation, 'scoreMax') &&
+          <li className="list-group-item">
+            {trans('score')}
+            <span className="value">
+              {get(props.workspaceEvaluation, 'score') || '?'} / {get(props.workspaceEvaluation, 'scoreMax')}
+            </span>
+          </li>
+        }
       </ul>
     </div>
   )

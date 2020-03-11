@@ -32,6 +32,7 @@ use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -42,6 +43,9 @@ class LogConnectManager
 
     /** @var ObjectManager */
     private $om;
+
+    /** @var EvaluationManager */
+    private $workspaceEvaluationManager;
 
     /** @var ResourceEvaluationManager */
     private $resourceEvaluationManager;
@@ -64,17 +68,20 @@ class LogConnectManager
     /**
      * @param FinderProvider            $finder
      * @param ObjectManager             $om
+     * @param EvaluationManager         $workspaceEvaluationManager
      * @param ResourceEvaluationManager $resourceEvaluationManager
      * @param TranslatorInterface       $translator
      */
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om,
+        EvaluationManager $workspaceEvaluationManager,
         ResourceEvaluationManager $resourceEvaluationManager,
         TranslatorInterface $translator
     ) {
         $this->finder = $finder;
         $this->om = $om;
+        $this->workspaceEvaluationManager = $workspaceEvaluationManager;
         $this->resourceEvaluationManager = $resourceEvaluationManager;
         $this->translator = $translator;
 
@@ -115,8 +122,13 @@ class LogConnectManager
                     $workspaceConnection = $this->getComputableWorkspace($user);
 
                     if (!is_null($workspaceConnection)) {
-                        $this->computeConnectionDuration($workspaceConnection, $dateLog);
+                        $updatedWorkspaceConnection = $this->computeConnectionDuration($workspaceConnection, $dateLog);
                     }
+
+                    if (!empty($updatedWorkspaceConnection) && $updatedWorkspaceConnection->getDuration()) {
+                        $this->workspaceEvaluationManager->addDurationToWorkspaceEvaluation($workspaceConnection->getWorkspace(), $user, $updatedWorkspaceConnection->getDuration());
+                    }
+
                     // Creates workspace log for current connection
                     $this->createLogConnectWorkspace($user, $logWorkspace, $dateLog);
 
@@ -162,7 +174,10 @@ class LogConnectManager
                         $workspaceConnection = $this->getComputableWorkspace($user);
 
                         if (!is_null($workspaceConnection)) {
-                            $this->computeConnectionDuration($workspaceConnection, $dateLog);
+                            $updatedWorkspaceConnection = $this->computeConnectionDuration($workspaceConnection, $dateLog);
+                            if ($updatedWorkspaceConnection && $updatedWorkspaceConnection->getDuration()) {
+                                $this->workspaceEvaluationManager->addDurationToWorkspaceEvaluation($workspaceConnection->getWorkspace(), $user, $updatedWorkspaceConnection->getDuration());
+                            }
                         }
                     }
                     // Computes last tool duration
@@ -221,6 +236,7 @@ class LogConnectManager
                             } else {
                                 $updatedConnection = $this->computeConnectionDuration($resourceConnection, $dateLog);
                             }
+
                             if ($updatedConnection && $updatedConnection->getDuration()) {
                                 $this->resourceEvaluationManager->addDurationToResourceEvaluation(
                                     $resourceConnection->getResource(),
@@ -297,7 +313,10 @@ class LogConnectManager
         $workspaceConnection = $this->getLogConnectWorkspaceByWorkspace($user, $workspace);
 
         if (!is_null($workspaceConnection)) {
-            $this->computeConnectionDuration($workspaceConnection, new \DateTime());
+            $updatedWorkspaceConnection = $this->computeConnectionDuration($workspaceConnection, new \DateTime());
+            if ($updatedWorkspaceConnection && $updatedWorkspaceConnection->getDuration()) {
+                $this->workspaceEvaluationManager->addDurationToWorkspaceEvaluation($workspaceConnection->getWorkspace(), $user, $updatedWorkspaceConnection->getDuration());
+            }
         }
     }
 

@@ -178,6 +178,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
           - '@claroline.manager.resource_evaluation_manager'
           - '@translator'
 

@@ -45,7 +45,7 @@ class EvaluationListener
         $workspace = $resourceNode->getWorkspace();
         $user = $resourceUserEvaluation->getUser();
 
-        $this->evaluationManager->computeEvaluation($workspace, $user, $resourceUserEvaluation);
+        $this->evaluationManager->computeEvaluation($workspace, $user, $resourceUserEvaluation, new \DateTime());
     }
 
     /**

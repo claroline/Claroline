@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command\Logs;
 
+use Claroline\CoreBundle\Manager\LogConnectManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,6 +28,7 @@ class LogConnectionComputeCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var LogConnectManager $logConnectManager */
         $logConnectManager = $this->getContainer()->get('claroline.manager.log_connect');
 
         $output->writeln('<info>  Computing spent time in platform...</info>');

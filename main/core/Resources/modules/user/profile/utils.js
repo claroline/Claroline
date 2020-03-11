@@ -22,7 +22,9 @@ function getDefaultFacet() {
 
 function getDetailsDefaultSection(parameters, user) {
   let displayEmail = false
-  get(parameters, 'show_email', []).forEach(role => {
+
+  const showEmailRoles = get(parameters, 'show_email', []) || []
+  showEmailRoles.forEach(role => {
     user.roles.forEach(userRole => {
       if (userRole.name === role) {
         displayEmail = true

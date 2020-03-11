@@ -132,9 +132,10 @@ class UserCrud
 
         $this->roleManager->createUserRole($user);
 
+        $mailValidated = $user->isMailValidated() ?? $this->config->getParameter('auto_validate_email');
         $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));
-        $user->setHideMailWarning($this->config->getParameter('auto_validate_email'));
-        $user->setIsMailValidated($this->config->getParameter('auto_validate_email'));
+        $user->setHideMailWarning($mailValidated);
+        $user->setIsMailValidated($mailValidated);
 
         if ($this->mailManager->isMailerAvailable() && in_array(Options::SEND_EMAIL, $options)) {
             //send a validation by hash

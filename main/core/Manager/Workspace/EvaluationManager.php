@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager\Workspace;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Role;
@@ -31,6 +32,7 @@ class EvaluationManager
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
+    private $logConnectRepo;
     private $evaluationRepo;
     private $requirementsRepo;
     private $resourceUserEvalRepo;
@@ -48,6 +50,7 @@ class EvaluationManager
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
 
+        $this->logConnectRepo = $this->om->getRepository(LogConnectWorkspace::class);
         $this->evaluationRepo = $om->getRepository(Evaluation::class);
         $this->requirementsRepo = $om->getRepository(Requirements::class);
         $this->resourceUserEvalRepo = $om->getRepository(ResourceUserEvaluation::class);
@@ -131,12 +134,13 @@ class EvaluationManager
      * @param Workspace                   $workspace
      * @param User                        $user
      * @param ResourceUserEvaluation|null $currentRue
+     * @param \DateTime                   $date
      *
      * @return Evaluation|null
      *
      * @throws \Exception
      */
-    public function computeEvaluation(Workspace $workspace, User $user, ResourceUserEvaluation $currentRue = null)
+    public function computeEvaluation(Workspace $workspace, User $user, ResourceUserEvaluation $currentRue = null, $date = null)
     {
         $evaluation = $this->getEvaluation($workspace, $user);
 
@@ -155,6 +159,8 @@ class EvaluationManager
             ];
             $resources = $this->computeResourcesToDo($workspace, $user);
 
+            $score = 0;
+            $scoreMax = 0;
             $progressionMax = count($resources);
 
             // if there is a triggering resource evaluation checks if is part of the workspace requirements
@@ -165,10 +171,10 @@ class EvaluationManager
                 if (isset($resources[$currentResourceId])) {
                     if ($currentRue->getStatus()) {
                         ++$statusCount[$currentRue->getStatus()];
+                        $score += $currentRue->getScore() ?? 0;
+                        $scoreMax += $currentRue->getScoreMax() ?? 0;
                     }
                     unset($resources[$currentResourceId]);
-                } else {
-                    return $evaluation;
                 }
             }
 
@@ -177,18 +183,18 @@ class EvaluationManager
 
                 if ($resourceEval && $resourceEval->getStatus()) {
                     ++$statusCount[$resourceEval->getStatus()];
+                    $score += $resourceEval->getScore() ?? 0;
+                    $scoreMax += $resourceEval->getScoreMax() ?? 0;
                 }
             }
 
             $progression = $statusCount[AbstractEvaluation::STATUS_PASSED] +
                 $statusCount[AbstractEvaluation::STATUS_FAILED] +
                 $statusCount[AbstractEvaluation::STATUS_COMPLETED] +
-                $statusCount[AbstractEvaluation::STATUS_OPENED] +
                 $statusCount[AbstractEvaluation::STATUS_PARTICIPATED];
 
             $status = AbstractEvaluation::STATUS_INCOMPLETE;
-
-            if (0 < count($statusCount[AbstractEvaluation::STATUS_FAILED])) {
+            if (0 !== $statusCount[AbstractEvaluation::STATUS_FAILED]) {
                 // if there is one failed resource the workspace is considered as failed also
                 $status = AbstractEvaluation::STATUS_FAILED;
             } elseif ($progression === $progressionMax) {
@@ -199,7 +205,15 @@ class EvaluationManager
             $evaluation->setProgressionMax($progressionMax);
             $evaluation->setProgression($progression);
             $evaluation->setStatus($status);
-            $evaluation->setDate(new \DateTime());
+
+            if ($date) {
+                $evaluation->setDate($date);
+            }
+
+            if ($scoreMax) {
+                $evaluation->setScore($score);
+                $evaluation->setScoreMax($scoreMax);
+            }
 
             $this->om->persist($evaluation);
             $this->om->flush();
@@ -518,5 +532,58 @@ class EvaluationManager
             $this->om->persist($resourceUserEval);
         }
         $this->om->flush();
+    }
+
+    /**
+     * Add duration to a workspace user evaluation.
+     *
+     * @param Workspace $workspace
+     * @param User      $user
+     * @param int       $duration
+     */
+    public function addDurationToWorkspaceEvaluation(Workspace $workspace, User $user, $duration)
+    {
+        $this->om->startFlushSuite();
+
+        $workspaceEval = $this->getEvaluation($workspace, $user);
+
+        $evaluationDuration = $workspaceEval->getDuration();
+        if (is_null($workspaceEval->getDuration())) {
+            $evaluationDuration = $this->computeDuration($workspaceEval);
+        }
+
+        $workspaceEval->setDuration($evaluationDuration + $duration);
+
+        $this->om->persist($workspaceEval);
+        $this->om->flush();
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Compute duration for a workspace user evaluation.
+     *
+     * @param Evaluation $workspaceEvaluation
+     *
+     * @return int
+     */
+    public function computeDuration(Evaluation $workspaceEvaluation)
+    {
+        /** @var LogConnectWorkspace[] $workspaceLogs */
+        $workspaceLogs = $this->logConnectRepo->findBy(['workspace' => $workspaceEvaluation->getWorkspace(), 'user' => $workspaceEvaluation->getUser()]);
+
+        $duration = 0;
+        foreach ($workspaceLogs as $log) {
+            if ($log->getDuration()) {
+                $duration += $log->getDuration();
+            }
+        }
+
+        $workspaceEvaluation->setDuration($duration);
+
+        $this->om->persist($workspaceEvaluation);
+        $this->om->flush();
+
+        return $duration;
     }
 }

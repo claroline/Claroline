@@ -44,12 +44,6 @@ const ResourceEvaluationsModal = props =>
           },
           displayed: true
         }, {
-          name: 'duration',
-          type: 'time',
-          label: trans('duration'),
-          displayed: true,
-          filterable: false
-        }, {
           name: 'progression',
           type: 'progression',
           label: trans('progression'),
