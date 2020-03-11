@@ -105,10 +105,6 @@ const ClacoFormResource = props =>
         onEnter: (params) => {
           props.openEntryForm(params.id, props.clacoForm.id, [], props.currentUser)
           props.loadEntryUser(params.id, props.currentUser)
-        },
-        onLeave: () => {
-          props.resetEntryForm()
-          props.resetEntryUser()
         }
       }, {
         path: '/entry/form/:id?',
@@ -119,10 +115,6 @@ const ClacoFormResource = props =>
           if (params.id) {
             props.loadEntryUser(params.id, props.currentUser)
           }
-        },
-        onLeave: () => {
-          props.resetEntryForm()
-          props.resetEntryUser()
         }
       }
     ]}
@@ -138,9 +130,7 @@ ClacoFormResource.propTypes = {
   defaultHome: T.string,
   resetForm: T.func.isRequired,
   openEntryForm: T.func.isRequired,
-  resetEntryForm: T.func.isRequired,
   loadEntryUser: T.func.isRequired,
-  resetEntryUser: T.func.isRequired,
   loadAllUsedCountries: T.func.isRequired
 }
 

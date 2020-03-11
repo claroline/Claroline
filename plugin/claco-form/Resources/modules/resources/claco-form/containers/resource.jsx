@@ -46,16 +46,10 @@ const ClacoFormResource = withRouter(
 
           dispatch(entryActions.openForm(selectors.STORE_NAME+'.entries.current', id, defaultValue))
         },
-        resetEntryForm() {
-          dispatch(formActions.resetForm(selectors.STORE_NAME+'.entries.current', {}, true))
-        },
         loadEntryUser(entryId, currentUser) {
           if (currentUser) {
             dispatch(entryActions.loadEntryUser(entryId))
           }
-        },
-        resetEntryUser() {
-          dispatch(entryActions.resetEntryUser())
         },
         loadAllUsedCountries(clacoFormId) {
           dispatch(entryActions.loadAllUsedCountries(clacoFormId))

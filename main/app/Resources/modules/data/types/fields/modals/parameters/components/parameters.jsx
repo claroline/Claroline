@@ -55,6 +55,14 @@ class ParametersModal extends Component {
     })
   }
 
+  generateParametersForm(fields) {
+    return fields.map(optionField => merge({}, optionField, {
+      name: `options.${optionField.name}`, // store all options in an `options` sub object
+      onChange: (value) => this.updateOptions(optionField.name, value),
+      linked: optionField.linked ? this.generateParametersForm(optionField.linked) : []
+    }))
+  }
+
   render() {
     return (
       <FormDataModal
@@ -109,10 +117,7 @@ class ParametersModal extends Component {
             id: 'parameters',
             icon: 'fa fa-fw fa-cog',
             title: trans('parameters'),
-            fields: this.state.typeDef.configure(this.state.options).map(optionField => merge({}, optionField, {
-              name: `options.${optionField.name}`, // store all options in an `options` sub object
-              onChange: (value) => this.updateOptions(optionField.name, value)
-            }))
+            fields: this.generateParametersForm(this.state.typeDef.configure(this.state.options))
           }, {
             id: 'help',
             icon: 'fa fa-fw fa-info',

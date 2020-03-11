@@ -858,7 +858,8 @@ class ClacoFormController
             return new JsonResponse(null, 404);
         }
         $response = new StreamedResponse();
-        $path = $this->filesDir.DIRECTORY_SEPARATOR.$data['url'];
+        $path = $this->filesDir.DIRECTORY_SEPARATOR.preg_replace('#^\.\.\/files\/#', '', $data['url']); // TODO : files part should not be stored in the DB
+
         $response->setCallBack(
             function () use ($path) {
                 readfile($path);
@@ -1065,7 +1066,7 @@ class ClacoFormController
                     $file = $fieldFacetValue->getValue();
 
                     if (!empty($file) && is_array($file)) {
-                        $fileUrl = preg_replace('#^\.\.\/files\/#', '', $file['url']);
+                        $fileUrl = preg_replace('#^\.\.\/files\/#', '', $file['url']); // TODO : files part should not be stored in the DB
                         $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$fileUrl;
                         $fileParts = explode('/', $file['url']);
                         $fileName = count($fileParts) > 0 ? $fileParts[count($fileParts) - 1] : $file['name'];
