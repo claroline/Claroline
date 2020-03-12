@@ -16,9 +16,7 @@ use Claroline\CoreBundle\API\Serializer\Log\LogSerializer;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LogManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -26,7 +24,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/tools/workspace/{workspaceId}/logs")
+ * @EXT\Route("/tools/workspace/{workspaceId}/logs")
  */
 class LogController
 {
@@ -78,18 +76,14 @@ class LogController
     }
 
     /**
+     * @EXT\Route("/", name="apiv2_workspace_tool_logs_list")
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
+     * @EXT\Method("GET")
+     *
      * @param Request   $request
      * @param Workspace $workspace
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/", name="apiv2_workspace_tool_logs_list")
-     * @Method("GET")
-     *
-     * @ParamConverter(
-     *     "workspace",
-     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspaceId": "uuid"}}
-     * )
+     * @return JsonResponse
      */
     public function listAction(Request $request, Workspace $workspace)
     {
@@ -103,18 +97,14 @@ class LogController
     }
 
     /**
+     * @EXT\Route("/csv", name="apiv2_workspace_tool_logs_list_csv")
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
+     * @EXT\Method("GET")
+     *
      * @param Request   $request
      * @param Workspace $workspace
      *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     * @Route("/csv", name="apiv2_workspace_tool_logs_list_csv")
-     * @Method("GET")
-     *
-     * @ParamConverter(
-     *     "workspace",
-     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspaceId": "uuid"}}
-     * )
+     * @return StreamedResponse
      */
     public function listCsvAction(Request $request, Workspace $workspace)
     {
@@ -133,55 +123,14 @@ class LogController
     }
 
     /**
+     * @EXT\Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv")
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
+     * @EXT\Method("GET")
+     *
      * @param Request   $request
      * @param Workspace $workspace
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/chart", name="apiv2_workspace_tool_logs_list_chart")
-     * @Method("GET")
-     *
-     * @ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     */
-    public function listChartAction(Request $request, Workspace $workspace)
-    {
-        $this->checkLogToolAccess($workspace);
-
-        $chartData = $this->logManager->getChartData($this->getWorkspaceFilteredQuery($request, $workspace));
-
-        return new JsonResponse($chartData);
-    }
-
-    /**
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/users", name="apiv2_workspace_tool_logs_list_users")
-     * @Method("GET")
-     *
-     * @ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     */
-    public function userActionsListAction(Request $request, Workspace $workspace)
-    {
-        $this->checkLogToolAccess($workspace);
-        $userList = $this->logManager->getUserActionsList($this->getWorkspaceFilteredQuery($request, $workspace));
-
-        return new JsonResponse($userList);
-    }
-
-    /**
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     * @Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv")
-     * @Method("GET")
-     *
-     * @ParamConverter(
-     *     "workspace",
-     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspaceId": "id"}}
-     * )
+     * @return StreamedResponse
      */
     public function userActionsListCsvAction(Request $request, Workspace $workspace)
     {

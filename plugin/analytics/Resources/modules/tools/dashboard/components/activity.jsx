@@ -3,7 +3,9 @@ import {PropTypes as T} from 'prop-types'
 
 import {schemeCategory20c} from 'd3-scale'
 
+import {url} from '#/main/app/api'
 import {trans, displayDuration} from '#/main/app/intl'
+import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {ActionsChart} from '#/plugin/analytics/charts/actions/containers/chart'
@@ -12,6 +14,37 @@ import {ConnectionTimeChart} from '#/plugin/analytics/charts/connection-time/con
 const DashboardActivity = (props) =>
   <ToolPage
     subtitle={trans('activity')}
+    toolbar="more"
+    actions={[
+      {
+        name: 'download-connection-times',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-download',
+        label: trans('export-connections', {}, 'actions'),
+        file: {
+          url: url(['apiv2_log_connect_workspace_list_csv', {workspace: props.workspaceId}])
+        },
+        group: trans('export')
+      }, {
+        name: 'download',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-download',
+        label: trans('export-actions', {}, 'actions'),
+        file: {
+          url: url(['apiv2_workspace_tool_logs_list_csv', {workspaceId: props.workspaceId}])
+        },
+        group: trans('export')
+      }, {
+        name: 'download-users',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-download',
+        label: trans('export-user-actions', {}, 'actions'),
+        file: {
+          url: url(['apiv2_workspace_tool_logs_list_users_csv', {workspaceId: props.workspaceId}])
+        },
+        group: trans('export')
+      }
+    ]}
   >
     <div className="row">
       <div className="analytics-card">

@@ -8,16 +8,14 @@ use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LogManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Route("/tools/admin/logs")
+ * @EXT\Route("/tools/admin/logs")
  */
 class LogController extends AbstractSecurityController
 {
@@ -69,8 +67,8 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/", name="apiv2_admin_tool_logs_list")
-     * @Method("GET")
+     * @EXT\Route("/", name="apiv2_admin_tool_logs_list")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -89,8 +87,8 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/csv", name="apiv2_admin_tool_logs_list_csv")
-     * @Method("GET")
+     * @EXT\Route("/csv", name="apiv2_admin_tool_logs_list_csv")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -112,41 +110,8 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/chart", name="apiv2_admin_tool_logs_list_chart")
-     * @Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function listChartAction(Request $request)
-    {
-        $this->canOpenAdminTool('dashboard');
-        $query = $this->addOrganizationFilter($request->query->all());
-        $chartData = $this->logManager->getChartData($query);
-
-        return new JsonResponse($chartData);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/users", name="apiv2_admin_tool_logs_list_users")
-     * @Method("GET")
-     */
-    public function userActionsListAction(Request $request)
-    {
-        $this->canOpenAdminTool('dashboard');
-        $query = $this->addOrganizationFilter($request->query->all());
-        $userList = $this->logManager->getUserActionsList($query);
-
-        return new JsonResponse($userList);
-    }
-
-    /**
-     * @Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv")
-     * @Method("GET")
+     * @EXT\Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -165,22 +130,6 @@ class LogController extends AbstractSecurityController
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="user_actions_'.$dateStr.'.csv"',
         ]);
-    }
-
-    /**
-     * @Route("/{id}", name="apiv2_admin_tool_logs_get", requirements={"id"="\d+"})
-     * @ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log")
-     * @Method("GET")
-     *
-     * @param Log $log
-     *
-     * @return JsonResponse
-     */
-    public function getAction(Log $log)
-    {
-        $this->canOpenAdminTool('dashboard');
-
-        return new JsonResponse($this->serializer->serialize($log, ['details' => true]));
     }
 
     private function addOrganizationFilter($query)
