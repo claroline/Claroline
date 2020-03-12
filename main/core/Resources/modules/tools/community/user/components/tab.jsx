@@ -42,7 +42,7 @@ const UserTab = props =>
 
             // select roles to assign to selected users
             modal: [MODAL_ROLES, {
-              url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'uuid')}],
+              url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'id')}],
               filters: [],
               title: trans('register_users'),
               subtitle: trans('workspace_register_select_roles'),
@@ -66,7 +66,7 @@ const UserTab = props =>
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('export', {}, 'actions'),
-        target: url(['apiv2_user_csv'])+props.listQueryString+'&filters[workspace]='+get(props.contextData, 'uuid', null)
+        target: url(['apiv2_user_csv'])+props.listQueryString+'&filters[workspace]='+get(props.contextData, 'id', null)
           +'&columns[]=firstName&columns[]=lastName&columns[]=username&columns[]=email',
         group: trans('transfer')
       }
