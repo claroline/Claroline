@@ -31,7 +31,7 @@ const WorkspaceShortcuts = props =>
 
 const WorkspaceProgression = props => {
   let progression = 0
-  if (props.userEvaluation.progression) {
+  if (get(props.userEvaluation, 'progression')) {
     progression = props.userEvaluation.progression
     if (props.userEvaluation.progressionMax) {
       progression = (progression / props.userEvaluation.progressionMax) * 100
