@@ -7,7 +7,7 @@ services:
     Claroline\ForumBundle\Crud\SubjectCrud:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_forumbundle_entity_subject, method: preCreate }
@@ -16,7 +16,7 @@ services:
     Claroline\ForumBundle\Crud\MessageCrud:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\MessageBundle\Manager\MessageManager'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@security.authorization_checker'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_forumbundle_entity_message, method: preCreate }

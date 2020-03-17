@@ -31,7 +31,7 @@ services:
 
     Claroline\ForumBundle\Controller\API\ForumController:
         arguments:
-             - '@Claroline\ForumBundle\Manager\Manager'
+             - '@Claroline\ForumBundle\Manager\ForumManager'
 
     Claroline\ForumBundle\Controller\API\MessageController: ~
 

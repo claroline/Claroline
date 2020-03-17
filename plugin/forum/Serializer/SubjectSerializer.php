@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Manager\Manager;
+use Claroline\ForumBundle\Manager\ForumManager;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -37,7 +37,7 @@ class SubjectSerializer
     private $fileSerializer;
     /** @var UserSerializer */
     private $userSerializer;
-    /** @var Manager */
+    /** @var ForumManager */
     private $manager;
     /** @var ObjectRepository */
     private $messageRepo;
@@ -77,7 +77,7 @@ class SubjectSerializer
      * @param PublicFileSerializer     $fileSerializer
      * @param ObjectManager            $om
      * @param UserSerializer           $userSerializer
-     * @param Manager                  $manager
+     * @param ForumManager             $manager
      */
     public function __construct(
         FinderProvider $finder,
@@ -86,7 +86,7 @@ class SubjectSerializer
         PublicFileSerializer $fileSerializer,
         ObjectManager $om,
         UserSerializer $userSerializer,
-        Manager $manager
+        ForumManager $manager
     ) {
         $this->finder = $finder;
         $this->fileUt = $fileUt;
@@ -133,8 +133,8 @@ class SubjectSerializer
             'views' => $subject->getViewCount(),
             'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
             'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
-            'created' => $subject->getCreationDate()->format('Y-m-d\TH:i:s'),
-            'updated' => $subject->getModificationDate()->format('Y-m-d\TH:i:s'),
+            'created' => DateNormalizer::normalize($subject->getCreationDate()),
+            'updated' => DateNormalizer::normalize($subject->getModificationDate()),
             'sticky' => $subject->isSticked(),
             'closed' => $subject->isClosed(),
             'flagged' => $subject->isFlagged(),

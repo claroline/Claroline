@@ -54,6 +54,8 @@ abstract class AbstractMessage
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="user_id")
+     *
+     * @var User
      */
     protected $creator;
 
@@ -97,6 +99,9 @@ abstract class AbstractMessage
         $this->creator = $creator;
     }
 
+    /**
+     * @return User
+     */
     public function getCreator()
     {
         return $this->creator;

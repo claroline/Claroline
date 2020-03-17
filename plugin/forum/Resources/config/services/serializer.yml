@@ -10,7 +10,7 @@ services:
            - '@Claroline\AppBundle\API\FinderProvider'
            - '@security.token_storage'
            - '@event_dispatcher'
-           - '@Claroline\ForumBundle\Manager\Manager'
+           - '@Claroline\ForumBundle\Manager\ForumManager'
            - '@security.authorization_checker'
 
     claroline.serializer.forum:
@@ -39,7 +39,7 @@ services:
            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
            - '@Claroline\AppBundle\Persistence\ObjectManager'
            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-           - '@Claroline\ForumBundle\Manager\Manager'
+           - '@Claroline\ForumBundle\Manager\ForumManager'
 
     claroline.serializer.forum_subject:
          alias: Claroline\ForumBundle\Serializer\SubjectSerializer

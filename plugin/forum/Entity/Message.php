@@ -28,6 +28,8 @@ class Message extends AbstractMessage
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     *
+     * @var Subject
      */
     protected $subject;
 
@@ -37,6 +39,8 @@ class Message extends AbstractMessage
      *     inversedBy="children",
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     *
+     * @var Message
      */
     protected $parent;
 
@@ -45,6 +49,8 @@ class Message extends AbstractMessage
      *     targetEntity="Claroline\ForumBundle\Entity\Message",
      *     mappedBy="parent"
      * )
+     *
+     * @var Message[]
      */
     protected $children;
 

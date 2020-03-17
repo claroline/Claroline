@@ -11,7 +11,7 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User;
-use Claroline\ForumBundle\Manager\Manager;
+use Claroline\ForumBundle\Manager\ForumManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -31,7 +31,7 @@ class ForumSerializer
         FinderProvider $finder,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
-        Manager $manager,
+        ForumManager $manager,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->finder = $finder;

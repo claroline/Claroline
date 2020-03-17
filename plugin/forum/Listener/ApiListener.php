@@ -3,20 +3,20 @@
 namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
-use Claroline\ForumBundle\Manager\Manager;
+use Claroline\ForumBundle\Manager\ForumManager;
 
 /**
  * Class ApiListener.
  */
 class ApiListener
 {
-    /** @var Manager */
+    /** @var ForumManager */
     private $manager;
 
     /**
-     * @param Manager $manager
+     * @param ForumManager $manager
      */
-    public function __construct(Manager $manager)
+    public function __construct(ForumManager $manager)
     {
         $this->manager = $manager;
     }

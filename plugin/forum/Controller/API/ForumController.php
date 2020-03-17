@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Manager\Manager;
+use Claroline\ForumBundle\Manager\ForumManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +18,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ForumController extends AbstractCrudController
 {
-    /* @var Manager */
+    /* @var ForumManager */
     protected $manager;
 
     /**
      * ForumController constructor.
      *
-     * @param Manager $manager
+     * @param ForumManager $manager
      */
-    public function __construct(Manager $manager)
+    public function __construct(ForumManager $manager)
     {
         $this->manager = $manager;
     }

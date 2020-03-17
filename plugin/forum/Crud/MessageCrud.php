@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\MessageBundle\Manager\MessageManager;
+use Claroline\ForumBundle\Manager\ForumManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MessageCrud
@@ -19,23 +19,23 @@ class MessageCrud
     /** @var ObjectManager */
     private $om;
 
-    /** @var MessageManager */
-    private $messageManager;
+    /** @var ForumManager */
+    private $forumManager;
 
     /**
      * MessageCrud constructor.
      *
      * @param ObjectManager                 $om
-     * @param MessageManager                $messageManager
+     * @param ForumManager                  $forumManager
      * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
-        MessageManager $messageManager,
+        ForumManager $forumManager,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
-        $this->messageManager = $messageManager;
+        $this->forumManager = $forumManager;
         $this->authorization = $authorization;
     }
 
@@ -48,8 +48,9 @@ class MessageCrud
      */
     public function preCreate(CreateEvent $event)
     {
+        /** @var Message $message */
         $message = $event->getObject();
-        $forum = $this->getSubject($message)->getForum();
+        $forum = $message->getSubject()->getForum();
 
         //create user if not here
         $user = $this->om->getRepository(UserValidation::class)->findOneBy([
@@ -89,35 +90,8 @@ class MessageCrud
         /** @var Message $message */
         $message = $event->getObject();
 
-        $subject = $this->getSubject($message);
-        $forum = $subject->getForum();
-
-        /** @var UserValidation[] $usersValidate */
-        $usersValidate = $this->om
-            ->getRepository(UserValidation::class)
-            ->findBy(['forum' => $forum, 'notified' => true]);
-
-        $toSend = $this->messageManager->create(
-            $message->getContent(),
-            $subject->getTitle(),
-            array_map(function (UserValidation $userValidate) {
-                return $userValidate->getUser();
-            }, $usersValidate)
-        );
-
-        $this->messageManager->send($toSend);
+        $this->forumManager->notifyMessage($message);
 
         return $message;
-    }
-
-    private function getSubject(Message $message)
-    {
-        if (!$message->getSubject()) {
-            $parent = $message->getParent();
-
-            return $this->getSubject($parent);
-        }
-
-        return $message->getSubject();
     }
 }

@@ -15,14 +15,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Manager\Manager;
+use Claroline\ForumBundle\Manager\ForumManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -40,7 +42,7 @@ class ForumListener
     /** @var ResourceEvaluationManager */
     private $evaluationManager;
 
-    /** @var Manager */
+    /** @var ForumManager */
     private $manager;
 
     /** @var TokenStorageInterface */
@@ -53,7 +55,7 @@ class ForumListener
      * @param SerializerProvider        $serializer
      * @param Crud                      $crud
      * @param ResourceEvaluationManager $evaluationManager
-     * @param Manager                   $manager
+     * @param ForumManager              $manager
      * @param TokenStorageInterface     $tokenStorage
      */
     public function __construct(
@@ -61,7 +63,7 @@ class ForumListener
         SerializerProvider $serializer,
         Crud $crud,
         ResourceEvaluationManager $evaluationManager,
-        Manager $manager,
+        ForumManager $manager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
@@ -79,7 +81,9 @@ class ForumListener
      */
     public function onOpen(LoadResourceEvent $event)
     {
+        /** @var Forum $forum */
         $forum = $event->getResource();
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $isValidatedUser = false;
 
@@ -108,6 +112,7 @@ class ForumListener
 
     public function onExport(ExportObjectEvent $exportEvent)
     {
+        /** @var Forum $forum */
         $forum = $exportEvent->getObject();
         $data = [
           'subjects' => array_map(function (Subject $subject) {

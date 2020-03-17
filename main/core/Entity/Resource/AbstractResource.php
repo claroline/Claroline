@@ -35,8 +35,6 @@ abstract class AbstractResource
      */
     protected $resourceNode;
 
-    protected $name = ''; // should be removed ?
-
     protected $mimeType;
 
     /**
@@ -70,15 +68,7 @@ abstract class AbstractResource
      */
     public function getName()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+        return $this->getResourceNode()->getName();
     }
 
     /**

@@ -14,3 +14,7 @@ plugin:
           type: list
           context: [workspace, desktop, home]
           tags: [community]
+
+    templates:
+        - name: forum_new_message
+          placeholders: [forum, forum_url, subject, subject_url, message, date, author, workspace, workspace_url]

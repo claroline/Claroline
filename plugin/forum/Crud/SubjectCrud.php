@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\MessageBundle\Manager\MessageManager;
+use Claroline\ForumBundle\Manager\ForumManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SubjectCrud
@@ -18,8 +18,8 @@ class SubjectCrud
     /** @var ObjectManager */
     private $om;
 
-    /** @var MessageManager */
-    private $messageManager;
+    /** @var ForumManager */
+    private $forumManager;
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -28,16 +28,16 @@ class SubjectCrud
      * ForumSerializer constructor.
      *
      * @param ObjectManager                 $om
-     * @param MessageManager                $messageManager
+     * @param ForumManager                  $forumManager
      * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         ObjectManager $om,
-        MessageManager $messageManager,
+        ForumManager $forumManager,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->om = $om;
-        $this->messageManager = $messageManager;
+        $this->forumManager = $forumManager;
         $this->authorization = $authorization;
     }
 
@@ -106,24 +106,10 @@ class SubjectCrud
     {
         /** @var Subject $subject */
         $subject = $event->getObject();
-        $forum = $subject->getForum();
 
         $message = $subject->getFirstMessage();
         if ($message) {
-            /** @var UserValidation[] $usersValidate */
-            $usersValidate = $this->om
-                ->getRepository(UserValidation::class)
-                ->findBy(['forum' => $forum, 'notified' => true]);
-
-            $toSend = $this->messageManager->create(
-                $message->getContent(),
-                $subject->getTitle(),
-                array_map(function (UserValidation $userValidate) {
-                    return $userValidate->getUser();
-                }, $usersValidate)
-            );
-
-            $this->messageManager->send($toSend);
+            $this->forumManager->notifyMessage($message);
         }
 
         return $subject;

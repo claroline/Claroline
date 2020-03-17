@@ -17,7 +17,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
             - '@claroline.manager.resource_evaluation_manager'
-            - '@Claroline\ForumBundle\Manager\Manager'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_forum.load, method: onOpen }
@@ -29,7 +29,7 @@ services:
 
     Claroline\ForumBundle\Listener\ApiListener:
         arguments:
-            - '@Claroline\ForumBundle\Manager\Manager'
+            - '@Claroline\ForumBundle\Manager\ForumManager'
         tags:
             - { name: kernel.event_listener, event: merge_users, method: onMerge }
 
