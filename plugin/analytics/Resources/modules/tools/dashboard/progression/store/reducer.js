@@ -5,6 +5,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {LOAD_REQUIREMENTS} from '#/plugin/analytics/tools/dashboard/progression/store/actions'
 
+import {selectors as baseSelectors} from '#/plugin/analytics/tools/dashboard/store/selectors'
 import {USER_PROGRESSION_LOAD, USER_PROGRESSION_RESET} from '#/plugin/analytics/tools/dashboard/progression/store/actions'
 import {selectors} from '#/plugin/analytics/tools/dashboard/progression/store/selectors'
 
@@ -12,12 +13,12 @@ const reducer = combineReducers({
   requirements: combineReducers({
     roles: makeListReducer(selectors.STORE_NAME + '.requirements.roles', {}, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     }),
     users: makeListReducer(selectors.STORE_NAME + '.requirements.users', {}, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
       })
     }),
     current: makeReducer(null, {
@@ -30,7 +31,7 @@ const reducer = combineReducers({
    */
   evaluations: makeListReducer(selectors.STORE_NAME + '.evaluations', {}, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true
     })
   }),
 
