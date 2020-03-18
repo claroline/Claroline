@@ -153,9 +153,12 @@ class ResourceManager implements ToolImporterInterface
             $rights = $data['rights'];
             unset($data['rights']);
             $node = $this->om->getObject($data, ResourceNode::class) ?? new ResourceNode();
-            $node = $this->serializer->deserialize($data, $node);
+            // FIXME
+            // I don't really understand why it's done like it but node should be deserialized in one time
+            // I think it may be because the workspace is not flushed yet and the deserialize method do a db call to retrieve it
+            $node = $this->serializer->deserialize($data, $node, [Options::IGNORE_RIGHTS]);
             $node->setWorkspace($workspace);
-            $this->serializer->get(ResourceNode::class)->deserialize(['rights' => $rights], $node);
+            $node = $this->serializer->deserialize(['rights' => $rights], $node);
 
             if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
                 $node->setCreator($this->tokenStorage->getToken()->getUser());

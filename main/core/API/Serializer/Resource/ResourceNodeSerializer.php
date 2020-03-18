@@ -341,10 +341,6 @@ class ResourceNodeSerializer
             $resourceNode->setMimeType($mimeType);
         }
 
-        if (isset($data['rights'])) {
-            $this->deserializeRights($data['rights'], $resourceNode, $options);
-        }
-
         $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
         $this->sipe('meta.license', 'setLicense', $data, $resourceNode);
@@ -368,52 +364,65 @@ class ResourceNodeSerializer
             $resourceNode->setAccessibleFrom($dateRange[0]);
             $resourceNode->setAccessibleUntil($dateRange[1]);
         }
+
+        if (!in_array(OPTIONS::IGNORE_RIGHTS, $options) && isset($data['rights'])) {
+            $this->deserializeRights($data['rights'], $resourceNode, $options);
+        }
     }
 
     public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
     {
-        if (!in_array(OPTIONS::IGNORE_RIGHTS, $options)) {
-            $existingRights = $resourceNode->getRights();
+        $existingRights = $resourceNode->getRights();
 
-            $roles = [];
-            foreach ($rights as $right) {
-                if (isset($right['name'])) {
-                    /** @var Role $role */
-                    $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
+        $roles = [];
+        foreach ($rights as $right) {
+            if (isset($right['name'])) {
+                /** @var Role $role */
+                $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
+            } else {
+                // this block is required by workspace transfer and I don't know why (it shouldn't)
+                $workspace = $resourceNode->getWorkspace() ?
+                    $resourceNode->getWorkspace() :
+                    $this->om->getRepository(Workspace::class)->findOneBy(['code' => $right['workspace']['code']]);
 
-                    if ($role) {
-                        $creationPerms = [];
-                        if (isset($right['permissions']['create'])) {
-                            if (!empty($right['permissions']['create']) && 'directory' === $resourceNode->getResourceType()->getName()) {
-                                // ugly hack to only get create rights for directories (it's the only one that can handle it).
-                                $creationPerms = array_map(function (string $typeName) {
-                                    return $this->om
-                                        ->getRepository(ResourceType::class)
-                                        ->findOneBy(['name' => $typeName]);
-                                }, $right['permissions']['create']);
-                            }
-
-                            unset($right['permissions']['create']);
-                        }
-
-                        $this->newRightsManager->update(
-                            $resourceNode,
-                            $role,
-                            $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
-                            $creationPerms,
-                            in_array(Options::IS_RECURSIVE, $options)
-                        );
-
-                        $roles[] = $role->getName();
-                    }
-                }
+                /** @var Role $role */
+                $role = $this->om->getRepository(Role::class)->findOneBy([
+                    'translationKey' => $right['translationKey'],
+                    'workspace' => $workspace,
+                ]);
             }
 
-            // removes rights which no longer exists
-            foreach ($existingRights as $existingRight) {
-                if (!in_array($existingRight->getRole()->getName(), $roles)) {
-                    $resourceNode->removeRight($existingRight);
+            if ($role) {
+                $creationPerms = [];
+                if (isset($right['permissions']['create'])) {
+                    if (!empty($right['permissions']['create']) && 'directory' === $resourceNode->getResourceType()->getName()) {
+                        // ugly hack to only get create rights for directories (it's the only one that can handle it).
+                        $creationPerms = array_map(function (string $typeName) {
+                            return $this->om
+                                ->getRepository(ResourceType::class)
+                                ->findOneBy(['name' => $typeName]);
+                        }, $right['permissions']['create']);
+                    }
+
+                    unset($right['permissions']['create']);
                 }
+
+                $this->newRightsManager->update(
+                    $resourceNode,
+                    $role,
+                    $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
+                    $creationPerms,
+                    in_array(Options::IS_RECURSIVE, $options)
+                );
+
+                $roles[] = $role->getName();
+            }
+        }
+
+        // removes rights which no longer exists
+        foreach ($existingRights as $existingRight) {
+            if (!in_array($existingRight->getRole()->getName(), $roles)) {
+                $resourceNode->removeRight($existingRight);
             }
         }
     }

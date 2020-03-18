@@ -155,7 +155,7 @@ class ListData extends Component {
     return (
       <div className={classes('data-list', this.props.className)}>
         {this.props.title &&
-          <Heading level={this.props.level} displayLevel={this.props.displayLevel}>
+          <Heading level={this.props.level} displayLevel={this.props.displayLevel} className="h-title">
             {this.props.title}
           </Heading>
         }

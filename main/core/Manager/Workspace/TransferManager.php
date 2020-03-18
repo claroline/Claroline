@@ -47,6 +47,8 @@ class TransferManager
     private $ots;
     /** @var FileUtilities */
     private $fileUts;
+    /** @var LogListener */
+    private $logListener;
 
     /**
      * TransferManager constructor.
@@ -60,6 +62,7 @@ class TransferManager
      * @param Crud                $crud
      * @param TokenStorage        $tokenStorage
      * @param FileUtilities       $fileUts
+     * @param LogListener         $logListener
      */
     public function __construct(
       ObjectManager $om,

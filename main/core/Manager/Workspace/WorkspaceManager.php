@@ -574,6 +574,7 @@ class WorkspaceManager
         }
 
         // Copy workspace shortcuts
+        /** @var Shortcuts[] $workspaceShortcuts */
         $workspaceShortcuts = $this->shortcutsRepo->findBy(['workspace' => $workspace]);
 
         foreach ($workspaceShortcuts as $shortcuts) {

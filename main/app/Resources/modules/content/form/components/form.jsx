@@ -79,7 +79,7 @@ class Form extends Component {
     return (
       <FormWrapper id={this.props.id} embedded={this.props.embedded} className={this.props.className}>
         {this.props.title &&
-          <Heading level={this.props.level} displayLevel={this.props.displayLevel}>
+          <Heading level={this.props.level} displayLevel={this.props.displayLevel} className="h-title">
             {this.props.title}
           </Heading>
         }

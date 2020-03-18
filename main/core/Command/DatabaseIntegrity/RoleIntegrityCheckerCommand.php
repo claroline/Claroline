@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,6 +35,7 @@ class RoleIntegrityCheckerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
+        /** @var RoleManager $roleManager */
         $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
         $roleManager->setLogger($consoleLogger);
         $userId = $input->getOption('user');
