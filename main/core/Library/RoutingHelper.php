@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class RoutingHelper
@@ -13,21 +14,34 @@ class RoutingHelper
         $this->router = $router;
     }
 
+    public function indexUrl()
+    {
+        return $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+    }
+
     public function indexPath()
     {
         return $this->router->generate('claro_index');
     }
 
+    public function desktopUrl($toolName = null)
+    {
+        return $this->indexUrl().'#/desktop/'.$toolName;
+    }
+
     public function desktopPath($toolName = null)
     {
-        return $this->router->generate('claro_index')
-            .'#/desktop/'.$toolName;
+        return $this->indexPath().'#/desktop/'.$toolName;
+    }
+
+    public function resourceUrl($resource)
+    {
+        return $this->indexUrl().'#'.$this->resourceFragment($resource);
     }
 
     public function resourcePath($resource)
     {
-        return $this->router->generate('claro_index')
-          .'#'.$this->resourceFragment($resource);
+        return $this->indexPath().'#'.$this->resourceFragment($resource);
     }
 
     public function resourceFragment($resource)
@@ -59,10 +73,14 @@ class RoutingHelper
         }
     }
 
+    public function workspaceUrl($workspace, $toolName = null)
+    {
+        return $this->indexUrl().'#'.$this->workspaceFragment($workspace, $toolName);
+    }
+
     public function workspacePath($workspace, $toolName = null)
     {
-        return $this->router->generate('claro_index')
-            .'#'.$this->workspaceFragment($workspace, $toolName);
+        return $this->indexPath().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
     public function workspaceFragment($workspace, $toolName = null)
