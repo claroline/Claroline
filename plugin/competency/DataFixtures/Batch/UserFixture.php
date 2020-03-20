@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\DataFixtures\Batch;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\User;
 use HeVinci\CompetencyBundle\Util\DataFixture;
 
@@ -12,7 +13,7 @@ class UserFixture extends DataFixture
         $manager = $this->container->get('claroline.manager.user_manager');
         $this->flushSuites($this->loadUserData(), 5, function ($user) use ($manager) {
             $user = $this->buildUser($user[0], $user[1]);
-            $manager->createUser($user, false);
+            $manager->createUser($user, [Options::NO_EMAIL]);
         });
     }
 

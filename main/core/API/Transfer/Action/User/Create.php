@@ -37,7 +37,7 @@ class Create extends AbstractAction
     public function execute(array $data, &$successData = [])
     {
         $hasWs = false;
-        $options = [Options::SEND_EMAIL];
+        $options = [];
 
         if (isset($data['meta']) && isset($data['meta']['personalWorkspace'])) {
             $hasWs = $data['meta']['personalWorkspace'];

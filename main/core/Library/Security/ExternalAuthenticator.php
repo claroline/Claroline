@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -90,7 +91,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
                 $user->setUsername($data['username']);
                 $user->setEmail($data['email']);
                 $user->setAuthentication($driver);
-                $user = $this->userManager->createUser($user, []);
+                $user = $this->userManager->createUser($user, [Options::NO_EMAIL]);
 
                 return new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
             }

@@ -50,7 +50,7 @@ final class Options
     //for user
     const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
     const SERIALIZE_FACET = 'serialize_facet';
-    const SEND_EMAIL = 'send_email';
+    const NO_EMAIL = 'no_email';
     const ADD_NOTIFICATIONS = 'add_notifications';
     const VALIDATE_FACET = 'validate_facet';
     const REGISTRATION = 'registration';

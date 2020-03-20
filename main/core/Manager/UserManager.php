@@ -106,7 +106,7 @@ class UserManager
      * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand and default User in fixtures, and other things)
      *
      * @param User  $user
-     * @param bool  $sendMail   do we need to email the new user ?
+     * @param array $options
      * @param array $rolesToAdd
      *
      * @return User
@@ -115,7 +115,7 @@ class UserManager
      */
     public function createUser(
         User $user,
-        array $options = [Options::SEND_EMAIL],
+        array $options = [],
         $rolesToAdd = []
     ) {
         $this->objectManager->startFlushSuite();
@@ -683,7 +683,7 @@ class UserManager
             $user->disable();
             $user->remove();
 
-            $this->createUser($user, [Options::NO_PERSONAL_WORKSPACE]);
+            $this->createUser($user, [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
         }
 
         $roleAdmin = $this->roleManager->getRoleByName('ROLE_ADMIN');
@@ -710,7 +710,7 @@ class UserManager
             $user->disable();
             $user->remove();
 
-            $this->createUser($user, [Options::NO_PERSONAL_WORKSPACE]);
+            $this->createUser($user, [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
         }
 
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');

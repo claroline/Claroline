@@ -117,7 +117,7 @@ class UserCrud
         $user->setHideMailWarning($mailValidated);
         $user->setIsMailValidated($mailValidated);
 
-        if ($this->mailManager->isMailerAvailable() && in_array(Options::SEND_EMAIL, $options)) {
+        if ($this->mailManager->isMailerAvailable() && !in_array(Options::NO_EMAIL, $options)) {
             // send a validation by hash
             $mailValidation = $this->config->getParameter('registration.validation');
             if (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL === $mailValidation) {

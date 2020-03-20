@@ -522,7 +522,6 @@ class UserController extends AbstractCrudController
             'deleteBulk' => [Options::SOFT_DELETE],
             'create' => [
                 //maybe move these options in an other class
-                Options::SEND_EMAIL,
                 Options::ADD_NOTIFICATIONS,
                 Options::WORKSPACE_VALIDATE_ROLES,
             ],
