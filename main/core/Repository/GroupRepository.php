@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 class GroupRepository extends EntityRepository
 {
@@ -63,34 +62,6 @@ class GroupRepository extends EntityRepository
         }
 
         return $this->findAll();
-    }
-
-    /**
-     * Returns all the groups whose name match a search string.
-     *
-     * @param string $search
-     * @param bool   $executeQuery
-     * @param string $orderedBy
-     * @param string $order        ( ascending , descending )
-     *
-     * @return Group[]|Query
-     */
-    public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
-    {
-        $dql = "
-            SELECT g, r, ws
-            FROM Claroline\\CoreBundle\\Entity\\Group g
-            LEFT JOIN g.roles r
-            LEFT JOIN r.workspace ws
-            WHERE UPPER(g.name) LIKE :search
-            ORDER BY g.{$orderedBy}
-            ".$order
-        ;
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$search}%");
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id', $order = null)

@@ -110,6 +110,8 @@ class UserManager
      * @param array $rolesToAdd
      *
      * @return User
+     *
+     * @deprecated
      */
     public function createUser(
         User $user,

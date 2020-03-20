@@ -2,6 +2,7 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,17 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SectionComment
 {
+    use Id;
     use Uuid;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     protected $content;
 
@@ -32,22 +29,30 @@ class SectionComment
      *     inversedBy="comments"
      * )
      * @ORM\JoinColumn(name="section_id", onDelete="CASCADE")
+     *
+     * @var Section
      */
     protected $section;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var User
      */
     protected $user;
 
     /**
      * @ORM\Column(name="creation_date", type="datetime")
+     *
+     * @var \DateTime
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="edition_date", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     protected $editionDate;
 
@@ -55,11 +60,6 @@ class SectionComment
     {
         $this->refreshUuid();
         $this->creationDate = new \DateTime();
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function getContent()
@@ -82,6 +82,9 @@ class SectionComment
         $this->section = $section;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;

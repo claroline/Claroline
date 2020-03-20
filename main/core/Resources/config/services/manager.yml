@@ -231,7 +231,6 @@ services:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '%claroline.param.files_directory%'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '%claroline.param.uploads_directory%'
@@ -348,7 +347,6 @@ services:
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@service_container'
 

@@ -211,6 +211,7 @@ class FileController extends AbstractApiController
             ];
         }
 
+        // TODO : create with crud instead
         $file = $this->resourceManager->create(
             $file,
             $this->resourceManager->getResourceTypeByName('file'),

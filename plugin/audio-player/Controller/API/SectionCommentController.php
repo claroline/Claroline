@@ -94,10 +94,11 @@ class SectionCommentController extends AbstractCrudController
      *
      * @param ResourceNode $resourceNode
      *
-     * @return JsonResponse
+     * @return StreamedResponse
      */
     public function sectionsCommentsCsvExportAction(ResourceNode $resourceNode)
     {
+        /** @var SectionComment[] $comments */
         $comments = $this->finder->fetch(SectionComment::class, ['resourceNode' => $resourceNode->getUuid()]);
         $dateStr = date('YmdHis');
 

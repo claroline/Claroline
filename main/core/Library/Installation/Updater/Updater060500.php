@@ -10,18 +10,22 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater060500 extends Updater
 {
     private $container;
 
+    /** @var ObjectManager */
+    private $om;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $this->ut = $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
     }
 
     public function postUpdate()
@@ -41,7 +45,7 @@ class Updater060500 extends Updater
 
         foreach ($entities as $entity) {
             if (!$entity->getEmailValidationHash()) {
-                $entity->setEmailValidationHash($this->ut->generateGuid());
+                $entity->setEmailValidationHash(Uuid::uuid4()->toString());
                 $this->om->persist($entity);
             }
             ++$i;

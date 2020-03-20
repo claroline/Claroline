@@ -91,12 +91,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Library\Utilities\ThumbnailCreator:
-        arguments:
-            - '%kernel.root_dir%'
-            - '%claroline.param.thumbnails_directory%'
-            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-
     Claroline\CoreBundle\Library\Utilities\FileUtilities:
         arguments:
             - '%claroline.param.files_directory%'

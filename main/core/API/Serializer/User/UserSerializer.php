@@ -499,6 +499,7 @@ class UserSerializer extends GenericSerializer
                     ]);
                 }
 
+                // TODO : this should not be done here
                 if ($role && $role->getId()) {
                     $roleWs = $role->getWorkspace();
                     if (in_array(Options::WORKSPACE_VALIDATE_ROLES, $options) && Role::WS_ROLE === $role->getType() && $roleWs->getRegistrationValidation()) {

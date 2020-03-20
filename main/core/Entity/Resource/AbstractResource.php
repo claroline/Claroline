@@ -38,6 +38,17 @@ abstract class AbstractResource
     protected $mimeType;
 
     /**
+     * Only used for setting ResourceNode name in old creation.
+     *
+     * @todo remove me
+     *
+     * @var string
+     *
+     * @deprecated
+     */
+    protected $name;
+
+    /**
      * @return int
      */
     public function getId()
@@ -68,7 +79,17 @@ abstract class AbstractResource
      */
     public function getName()
     {
-        return $this->getResourceNode()->getName();
+        return $this->name ?? $this->getResourceNode()->getName();
+    }
+
+    /**
+     * @param $name
+     *
+     * @deprecated Only used by old creation process
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**

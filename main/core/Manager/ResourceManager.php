@@ -972,6 +972,7 @@ class ResourceManager
      * Adds the public file directory in a workspace.
      *
      * @todo move in workspace manager
+     * @todo use crud instead
      *
      * @param Workspace $workspace
      *

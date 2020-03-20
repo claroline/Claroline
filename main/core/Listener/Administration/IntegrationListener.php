@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 class IntegrationListener
 {
     /**
-     * Displays analytics administration tool.
+     * Displays integration administration tool.
      *
      * @param OpenToolEvent $event
      */

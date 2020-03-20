@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
@@ -12,13 +11,14 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
-use Claroline\CoreBundle\Manager\CryptographyManager;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserCrud
@@ -26,10 +26,12 @@ class UserCrud
     /** @var ContainerInterface */
     private $container;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var ObjectManager */
     private $om;
-    /** @var FinderProvider */
-    private $finder;
+    /** @var PlatformConfigurationHandler */
+    private $config;
     /** @var RoleManager */
     private $roleManager;
     /** @var ToolManager */
@@ -38,29 +40,24 @@ class UserCrud
     private $mailManager;
     /** @var UserManager */
     private $userManager;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var CryptographyManager */
-    private $cryptoManager;
-    /** @var array */
-    private $parameters;
+    /** @var OrganizationManager */
+    private $organizationManager;
 
     /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
-        //too many dependencies, simplify this when we can
         $this->container = $container;
+
+        $this->tokenStorage = $container->get('security.token_storage');
         $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $this->finder = $container->get('Claroline\AppBundle\API\FinderProvider');
+        $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->roleManager = $container->get('claroline.manager.role_manager');
         $this->toolManager = $container->get('claroline.manager.tool_manager');
         $this->mailManager = $container->get('claroline.manager.mail_manager');
         $this->userManager = $container->get('claroline.manager.user_manager');
-        $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
-        $this->cryptoManager = $container->get('claroline.manager.cryptography_manager');
-        $this->parameters = $container->get('Claroline\CoreBundle\API\Serializer\ParametersSerializer')->serialize();
+        $this->organizationManager = $container->get('claroline.manager.organization.organization_manager');
     }
 
     /**
@@ -68,28 +65,15 @@ class UserCrud
      */
     public function preCreate(CreateEvent $event)
     {
-        if (isset($this->parameters['restrictions']['users']) &&
-            isset($this->parameters['restrictions']['max_users']) &&
-            $this->parameters['restrictions']['users'] &&
-            $this->parameters['restrictions']['max_users']
-        ) {
+        $restrictions = $this->config->getParameter('restrictions') ?? [];
+        if (isset($restrictions['users']) && isset($restrictions['max_users']) && $restrictions['users'] && $restrictions['max_users']) {
             $usersCount = $this->userManager->countEnabledUsers();
-
-            if ($usersCount >= $this->parameters['restrictions']['max_users']) {
+            if ($usersCount >= $restrictions['max_users']) {
                 throw new AccessDeniedException();
             }
         }
 
         $user = $this->create($event->getObject(), $event->getOptions());
-
-        $data = $event->getData();
-
-        if (isset($data['groups'])) {
-            foreach ($data['groups'] as $group) {
-                $entity = $this->finder->get(Group::class)->findOneBy($group);
-                $user->addGroup($entity);
-            }
-        }
 
         $this->om->persist($user);
         $this->om->flush();
@@ -109,28 +93,24 @@ class UserCrud
             );
         }
 
-        $addedTools = $this->toolManager->addRequiredToolsToUser($user, 0);
-        $this->toolManager->addRequiredToolsToUser($user, 1);
-        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
-        $groupUser = $this->om->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
+        // add default roles and groups
+        $this->roleManager->createUserRole($user);
 
+        $groupUser = $this->om->getRepository(Group::class)->findOneBy(['name' => PlatformRoles::USER]);
         if ($groupUser) {
             $user->addGroup($groupUser);
-        } else {
-            //maybe throw an exception ?
         }
 
-        if (!$roleUser) {
-            throw new \Exception('ROLE_USER does not exists');
+        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+        if ($roleUser) {
+            $user->addRole($roleUser);
         }
 
-        $user->addRole($roleUser);
-
-        //create default desktop tools
+        // create default desktop tools
+        $addedTools = $this->toolManager->addRequiredToolsToUser($user, 0);
+        $this->toolManager->addRequiredToolsToUser($user, 1);
         $toolsRolesConfig = $this->toolManager->getUserDesktopToolsConfiguration($user);
         $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig, $addedTools);
-
-        $this->roleManager->createUserRole($user);
 
         $mailValidated = $user->isMailValidated() ?? $this->config->getParameter('auto_validate_email');
         $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));
@@ -138,7 +118,7 @@ class UserCrud
         $user->setIsMailValidated($mailValidated);
 
         if ($this->mailManager->isMailerAvailable() && in_array(Options::SEND_EMAIL, $options)) {
-            //send a validation by hash
+            // send a validation by hash
             $mailValidation = $this->config->getParameter('registration.validation');
             if (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL === $mailValidation) {
                 $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
@@ -146,7 +126,7 @@ class UserCrud
                 $user->setIsEnabled(false);
                 $this->mailManager->sendEnableAccountMessage($user);
             } elseif (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_PARTIAL === $mailValidation) {
-                //don't change anything
+                // don't change anything
                 $this->mailManager->sendCreationMessage($user);
             }
         }
@@ -154,7 +134,7 @@ class UserCrud
         $this->om->persist($user);
 
         if (in_array(Options::ADD_NOTIFICATIONS, $options)) {
-            //i'm not sure we can depend on that one
+            // TODO : this shouldn't be done in the core. Create a CrudListener in notification plugin
             $nManager = $this->container->get('Icap\NotificationBundle\Manager\NotificationUserParametersManager');
             $notifications = $this->config->getParameter('auto_enable_notifications');
             $nManager->processUpdate($notifications, $user);
@@ -170,14 +150,13 @@ class UserCrud
             }
         }
 
-        $token = $this->container->get('security.token_storage')->getToken();
-
         if (null === $user->getMainOrganization()) {
+            $token = $this->tokenStorage->getToken();
             //we want a min organization
             if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {
                 $user->addOrganization($token->getUser()->getMainOrganization(), true);
             } else {
-                $user->addOrganization($this->container->get('claroline.manager.organization.organization_manager')->getDefault(), true);
+                $user->addOrganization($this->organizationManager->getDefault(), true);
             }
         }
 

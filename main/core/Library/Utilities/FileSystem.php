@@ -13,6 +13,9 @@ namespace Claroline\CoreBundle\Library\Utilities;
 
 use Symfony\Component\Filesystem\Filesystem as Fs;
 
+/**
+ * @todo check if this is still required
+ */
 class FileSystem extends Fs
 {
     public function rmdir($path, $recursive = false)

@@ -48,7 +48,6 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.resource_manager'
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'

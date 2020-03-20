@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,81 +23,6 @@ class ClaroUtilities
     {
         $this->container = $container;
         $this->hasIntl = extension_loaded('intl');
-    }
-
-    /**
-     * Generates a globally unique identifier.
-     *
-     * @return string
-     *
-     * @deprecated use UuidTrait instead
-     */
-    public function generateGuid()
-    {
-        return Uuid::uuid4()->toString();
-    }
-
-    /**
-     * Take a file size (B) and displays it in a more readable way.
-     *
-     * @deprecated. just let the client do it for you
-     */
-    public function formatFileSize($fileSize)
-    {
-        //don't format if it's already formatted.
-        $validUnits = ['KB', 'MB', 'GB', 'TB'];
-
-        foreach ($validUnits as $unit) {
-            if (strpos($unit, $fileSize)) {
-                return $fileSize;
-            }
-        }
-
-        if ($fileSize < 1024) {
-            return $fileSize.' B';
-        } elseif ($fileSize < 1048576) {
-            return round($fileSize / 1024, 2).' KB';
-        } elseif ($fileSize < 1073741824) {
-            return round($fileSize / 1048576, 2).' MB';
-        } elseif ($fileSize < 1099511627776) {
-            return round($fileSize / 1073741824, 2).' GB';
-        }
-
-        return round($fileSize / 1099511627776, 2).' TB';
-    }
-
-    /**
-     * Take a formatted file size and returns the number of bytes.
-     *
-     * @deprecated. just let the client do it for you
-     */
-    public function getRealFileSize($fileSize)
-    {
-        //B goes at the end because it's always matched otherwise
-        $validUnits = ['KB', 'MB', 'GB', 'TB'];
-        $value = str_replace(' ', '', $fileSize);
-
-        $pattern = '/\d+/';
-        preg_match($pattern, $value, $match);
-
-        foreach ($validUnits as $unit) {
-            if (strpos($fileSize, $unit)) {
-                switch ($unit) {
-                    case 'B':
-                        return $match[0] * pow(1024, 0);
-                    case 'KB':
-                        return $match[0] * pow(1024, 1);
-                    case 'MB':
-                        return $match[0] * pow(1024, 2);
-                    case 'GB':
-                        return $match[0] * pow(1024, 3);
-                    case 'TB':
-                        return $match[0] * pow(1024, 4);
-                }
-            }
-        }
-
-        return $fileSize;
     }
 
     public function formatCsvOutput($data)

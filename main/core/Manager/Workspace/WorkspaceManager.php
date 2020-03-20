@@ -19,7 +19,6 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -27,7 +26,6 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -59,8 +57,6 @@ class WorkspaceManager
     private $dispatcher;
     /** @var ObjectManager */
     private $om;
-    /** @var ClaroUtilities */
-    private $ut;
     private $sut;
     private $container;
     /** @var array */
@@ -75,7 +71,6 @@ class WorkspaceManager
      * @param ResourceManager    $resourceManager
      * @param StrictDispatcher   $dispatcher
      * @param ObjectManager      $om
-     * @param ClaroUtilities     $ut
      * @param Utilities          $sut
      * @param ContainerInterface $container
      */
@@ -84,13 +79,11 @@ class WorkspaceManager
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        ClaroUtilities $ut,
         Utilities $sut,
         ContainerInterface $container
     ) {
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
-        $this->ut = $ut;
         $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;

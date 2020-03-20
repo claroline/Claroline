@@ -14,6 +14,7 @@ namespace Claroline\WebResourceBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -267,7 +268,7 @@ class WebResourceManager
             $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
         }
 
-        return $this->container->get('Claroline\CoreBundle\Library\Utilities\ClaroUtilities')->generateGuid().'.'.$mixed;
+        return Uuid::uuid4()->toString().'.'.$mixed;
     }
 
     public function create(UploadedFile $tmpFile, Workspace $workspace)

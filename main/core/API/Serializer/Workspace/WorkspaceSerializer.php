@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -42,9 +41,6 @@ class WorkspaceSerializer
     /** @var ResourceManager */
     private $resourceManager;
 
-    /** @var ClaroUtilities */
-    private $utilities;
-
     /** @var FileUtilities */
     private $fileUt;
 
@@ -68,7 +64,6 @@ class WorkspaceSerializer
      * @param ObjectManager                 $om
      * @param WorkspaceManager              $workspaceManager
      * @param ResourceManager               $resourceManager
-     * @param ClaroUtilities                $utilities
      * @param FileUtilities                 $fileUt
      * @param FinderProvider                $finder
      * @param UserSerializer                $userSerializer
@@ -81,7 +76,6 @@ class WorkspaceSerializer
         ObjectManager $om,
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
-        ClaroUtilities $utilities,
         FileUtilities $fileUt,
         FinderProvider $finder,
         UserSerializer $userSerializer,
@@ -93,7 +87,6 @@ class WorkspaceSerializer
         $this->om = $om;
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
-        $this->utilities = $utilities;
         $this->fileUt = $fileUt;
         $this->finder = $finder;
         $this->userSerializer = $userSerializer;
@@ -318,7 +311,7 @@ class WorkspaceSerializer
             'allowedIps' => $workspace->getAllowedIps(),
             'maxUsers' => $workspace->getMaxUsers(),
             // TODO : store raw file size to avoid this
-            'maxStorage' => $this->utilities->getRealFileSize($workspace->getMaxStorageSize()),
+            'maxStorage' => $this->fileUt->getRealFileSize($workspace->getMaxStorageSize()),
             'maxResources' => $workspace->getMaxUploadResources(),
         ];
     }
@@ -428,7 +421,7 @@ class WorkspaceSerializer
             // TODO : store raw file size to avoid this
             if (isset($data['restrictions']['maxStorage'])) {
                 $workspace->setMaxStorageSize(
-                    $this->utilities->formatFileSize($data['restrictions']['maxStorage'])
+                    $this->fileUt->formatFileSize($data['restrictions']['maxStorage'])
                 );
             }
 

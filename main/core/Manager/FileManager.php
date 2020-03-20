@@ -14,10 +14,9 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,7 +25,6 @@ class FileManager
 {
     private $om;
     private $fileDir;
-    private $ut;
     private $resManager;
     private $dispatcher;
     private $tokenStorage;
@@ -34,7 +32,6 @@ class FileManager
     public function __construct(
         ObjectManager $om,
         $fileDir,
-        ClaroUtilities $ut,
         ResourceManager $rm,
         StrictDispatcher $dispatcher,
         $uploadDir,
@@ -43,7 +40,6 @@ class FileManager
     ) {
         $this->om = $om;
         $this->fileDir = $fileDir;
-        $this->ut = $ut;
         $this->resManager = $rm;
         $this->dispatcher = $dispatcher;
         $this->uploadDir = $uploadDir;
@@ -64,7 +60,7 @@ class FileManager
         if (!is_null($workspace)) {
             $hashName = 'WORKSPACE_'.$workspace->getId().
                 DIRECTORY_SEPARATOR.
-                $this->ut->generateGuid().
+                Uuid::uuid4()->toString().
                 '.'.
                 $extension;
             $tmpFile->move(
@@ -73,7 +69,7 @@ class FileManager
             );
         } else {
             $hashName =
-                $this->tokenStorage->getToken()->getUsername().DIRECTORY_SEPARATOR.$this->ut->generateGuid().
+                $this->tokenStorage->getToken()->getUsername().DIRECTORY_SEPARATOR.Uuid::uuid4()->toString().
                 '.'.$extension;
             $tmpFile->move(
                 $this->fileDir.DIRECTORY_SEPARATOR.$this->tokenStorage->getToken()->getUsername(),
@@ -123,7 +119,7 @@ class FileManager
         $mimeType = $upload->getClientMimeType();
         $hashName = 'WORKSPACE_'.$workspaceId.
             $ds.
-            $this->ut->generateGuid().
+            Uuid::uuid4()->toString().
             '.'.
             $extension;
         $upload->move($this->fileDir.$ds.'WORKSPACE_'.$workspaceId, $hashName);
@@ -140,12 +136,6 @@ class FileManager
         $this->om->persist($file);
         $this->om->persist($node);
         $this->om->flush();
-    }
-
-    public function getDirectoryChildren(ResourceNode $parent)
-    {
-        return $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\File')
-            ->findDirectoryChildren($parent);
     }
 
     public function computeUsedStorage()
