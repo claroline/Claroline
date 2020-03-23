@@ -107,25 +107,32 @@ class ResourceEvaluationListener
     private function awardResourceScoreAbove(User $user, ResourceUserEvaluation $evaluation, Rule $rule)
     {
         $data = $rule->getData();
-        if ($data && $evaluation->getScore() >= $data['value']) {
-            $evidence = new Evidence();
-            $now = new \DateTime();
-            $evidence->setNarrative($this->translator->trans(
-                'evidence_narrative_resource_score_above',
-                [
-                    '%date%' => $now->format('Y-m-d H:i:s'),
-                ],
-                'badge'
-            ));
-            $evidence->setRule($rule);
-            $evidence->setName(Rule::RESOURCE_SCORE_ABOVE);
-            $evidence->setResourceEvidence($evaluation);
-            $evidence->setUser($user);
+        if (isset($data)) {
+            $scoreProgress = 0;
+            if ($evaluation->getScoreMax()) {
+                $scoreProgress = ($evaluation->getScore() ?? 0) / $evaluation->getScoreMax() * 100;
+            }
 
-            $this->om->persist($evidence);
-            $this->om->flush();
+            if ($scoreProgress >= $data['value']) {
+                $evidence = new Evidence();
+                $now = new \DateTime();
+                $evidence->setNarrative($this->translator->trans(
+                    'evidence_narrative_resource_score_above',
+                    [
+                        '%date%' => $now->format('Y-m-d H:i:s'),
+                    ],
+                    'badge'
+                ));
+                $evidence->setRule($rule);
+                $evidence->setName(Rule::RESOURCE_SCORE_ABOVE);
+                $evidence->setResourceEvidence($evaluation);
+                $evidence->setUser($user);
 
-            $this->manager->verifyAssertion($user, $rule->getBadge());
+                $this->om->persist($evidence);
+                $this->om->flush();
+
+                $this->manager->verifyAssertion($user, $rule->getBadge());
+            }
         }
     }
 

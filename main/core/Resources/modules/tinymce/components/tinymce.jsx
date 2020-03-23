@@ -25,7 +25,7 @@ class Editor extends Component {
       tinymce.init(
         Object.assign({}, loadedConfig, {
           target: this.textarea,
-          ui_container: `#${this.props.id}-container`,
+          //ui_container: `#${this.props.id}-container`,
 
           // give access to the show modal action to tinymce plugins
           // it's not really aesthetic but there is no other way

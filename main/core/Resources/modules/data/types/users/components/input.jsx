@@ -1,13 +1,14 @@
 import React, {Fragment} from 'react'
 import isEmpty from 'lodash/isEmpty'
 
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+
+import {route} from '#/main/core/user/routing'
 import {UserCard} from '#/main/core/user/components/card'
 import {User as UserType} from '#/main/core/user/prop-types'
 import {MODAL_USERS} from '#/main/core/modals/users'
@@ -47,6 +48,11 @@ const UsersInput = props => {
             key={`user-card-${user.id}`}
             data={user}
             size="xs"
+            primaryAction={{
+              type: LINK_BUTTON,
+              label: trans('open', {}, 'actions'),
+              target: route(user)
+            }}
             actions={[
               {
                 name: 'delete',
@@ -87,22 +93,22 @@ const UsersInput = props => {
         />
       </Fragment>
     )
-  } else {
-    return (
-      <EmptyPlaceholder
-        icon="fa fa-user"
-        title={trans('no_user')}
-        size={props.size}
-      >
-        <UsersButton
-          {...props.picker}
-          disabled={props.disabled}
-          onChange={props.onChange}
-          size={props.size}
-        />
-      </EmptyPlaceholder>
-    )
   }
+
+  return (
+    <EmptyPlaceholder
+      icon="fa fa-user"
+      title={trans('no_user')}
+      size={props.size}
+    >
+      <UsersButton
+        {...props.picker}
+        disabled={props.disabled}
+        onChange={props.onChange}
+        size={props.size}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(UsersInput, DataInputTypes, {

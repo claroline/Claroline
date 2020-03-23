@@ -1,7 +1,1 @@
-{
-  "styles": {
-    "entry": {
-      "resource": "resources/scorm.less"
-    }
-  }
-}
+{}

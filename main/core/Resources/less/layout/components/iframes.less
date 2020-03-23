@@ -4,50 +4,20 @@ iframe {
     width: 100%;
 }
 
-html.iframe,
-body.iframe {
-    margin: 0 !important;
-    padding: 0 !important;
-    height: auto;
-    max-width: 100%;
-    background-color: transparent;
-}
+// used in url bundle
+// todo: use in scorm bundle
+// todo: use in bbb bundle
+// todo : use in web resource bundle
 
-html.claroline-app-iframe,
-html.claroline-app-iframe body {
-    height: 100%;
-}
-
-html.iframe {
-    overflow: hidden;
-}
-
-body.iframe {
+.claro-iframe-content-container {
+    height: 0;
     overflow: auto;
-    /*overflow-y: auto;*/
+}
 
-    // Hide some UI parts when rendered in an iframe (mostly for Path and Activities)
-    // This should not be done here
-    .carousel-control, // but why ?
-    /*
-        We keep it for now as sometimes the query param that permits to avoid server rendering is loosen in symfony
-        requests forwarding
-    */
-    #top_bar,
-    #left-bar,
-    .footer-container,
-    .breadcrumb,
-    .menu-xs,
-    /* end compatibility */
-
-    .page-header {
-        display: none !important;
-    }
-
-    // Remove content padding and margin
-    // (also remove it from the grid container)
-    .app-content {
-        padding: 0;
-        margin: 0;
-    }
+.claro-iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
 }

@@ -6,6 +6,5 @@ import {LtiResource} from '#/plugin/lti/resources/lti/containers/resource'
  */
 export default {
   component: LtiResource,
-  store: reducer,
-  styles: ['claroline-distribution-main-core-iframe']
+  store: reducer
 }

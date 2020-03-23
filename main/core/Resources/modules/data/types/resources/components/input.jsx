@@ -6,8 +6,9 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
+import {route} from '#/main/core/resource/routing'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
@@ -59,6 +60,11 @@ const ResourcesInput = props => {
             key={`resource-card-${resource.id}`}
             data={resource}
             size="xs"
+            primaryAction={{
+              type: LINK_BUTTON,
+              label: trans('open', {}, 'actions'),
+              target: route(resource)
+            }}
             actions={[
               {
                 name: 'delete',

@@ -31,14 +31,17 @@ const ResourceScoreAboveInput = (props) =>
       id={`${props.id}-score`}
       className="form-last"
       label={trans('score')}
+      help={trans('score_above_help', {}, 'badge')}
     >
       <NumberInput
         id={`${props.id}-score`}
         disabled={props.disabled}
         onChange={(value) => props.onChange({value: value})}
         min={0}
+        max={100}
         value={get(props.value, 'value')}
         size={props.size}
+        unit="%"
       />
     </FormGroup>
   </Fragment>

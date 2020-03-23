@@ -17,6 +17,5 @@ export const Creation = () => ({
 export default {
   component: UrlResource,
   menu: UrlMenu,
-  store: reducer,
-  styles: ['claroline-distribution-main-core-iframe']
+  store: reducer
 }

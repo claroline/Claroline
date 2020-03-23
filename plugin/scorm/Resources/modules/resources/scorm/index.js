@@ -16,6 +16,5 @@ export const Creation = () => ({
 export default {
   component: ScormResource,
   menu: ScormMenu,
-  store: reducer,
-  styles: ['claroline-distribution-plugin-scorm-resource']
+  store: reducer
 }

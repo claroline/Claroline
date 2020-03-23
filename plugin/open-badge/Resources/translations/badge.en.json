@@ -59,5 +59,6 @@
   "grant_users": "Grant to users",
   "badge_disabled_help": "This badge is disabled and cannot be granted.",
   "no_criteria": "No criteria has been defined",
-  "hide_recipients": "Hide the list of badge recipients"
+  "hide_recipients": "Hide the list of badge recipients",
+  "score_above_help": "This value represents the percentage of the total score to be obtained."
 }

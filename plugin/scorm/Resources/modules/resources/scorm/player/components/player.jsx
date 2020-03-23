@@ -11,14 +11,14 @@ import {getFirstOpenableSco} from '#/plugin/scorm/resources/scorm/utils'
 
 const ScormIframe = (props) =>
   <div
-    className="scorm-content-container"
+    className="claro-iframe-content-container"
     style={props.ratio ? {
       position: 'relative',
       paddingBottom: `${props.ratio}%`
     } : {}}
   >
     <iframe
-      className="scorm-iframe"
+      className="claro-iframe"
       src={`${props.baseUrl}/${props.sco.data.entryUrl}${props.sco.data.parameters ? props.sco.data.parameters : ''}`}
     />
   </div>
