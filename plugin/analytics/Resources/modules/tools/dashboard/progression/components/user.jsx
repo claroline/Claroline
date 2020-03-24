@@ -8,7 +8,7 @@ import {asset} from '#/main/app/config/asset'
 import {toKey} from '#/main/core/scaffolding/text'
 import {trans, displayDate, displayDuration, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentTitle} from '#/main/app/content/components/title'
@@ -133,6 +133,16 @@ class ProgressionUser extends Component {
           <ContentTitle
             title={displayUsername(get(this.props.workspaceEvaluation, 'user'))}
             backAction={this.props.backAction}
+            actions={[
+              {
+                name: 'export',
+                type: URL_BUTTON,
+                icon: 'fa fa-fw fa-download',
+                label: trans('export', {}, 'actions'),
+                target: ['apiv2_workspace_export_user_progression', {workspace: this.props.workspaceId, user: this.props.userId}],
+                group: trans('export')
+              }
+            ]}
           />
         }
 

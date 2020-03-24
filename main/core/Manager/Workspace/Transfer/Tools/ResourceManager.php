@@ -152,6 +152,7 @@ class ResourceManager implements ToolImporterInterface
         foreach ($nodes as $data) {
             $rights = $data['rights'];
             unset($data['rights']);
+            /** @var ResourceNode $node */
             $node = $this->om->getObject($data, ResourceNode::class) ?? new ResourceNode();
             // FIXME
             // I don't really understand why it's done like it but node should be deserialized in one time

@@ -194,13 +194,10 @@ class DashboardController extends AbstractSecurityController
             'page' => 0,
             'limit' => 10,
             'sortBy' => '-created',
-            'hiddenFilters' => [
-                'organization' => $this->loggedUser->getAdministratedOrganizations(),
-            ],
         ];
 
         return new JsonResponse(
-            $this->finder->search(User::class, $options)['data']
+            $this->finder->search(User::class, $this->addOrganizationFilter($options))['data']
         );
     }
 
@@ -208,9 +205,13 @@ class DashboardController extends AbstractSecurityController
     {
         $this->canOpenAdminTool('dashboard');
 
+        if (!isset($query['hiddenFilters'])) {
+            $query['hiddenFilters'] = [];
+        }
+
         $organizations = $this->getLoggedUserOrganizations();
         if (null !== $organizations) {
-            $query['hiddenFilters']['organization'] = $this->loggedUser->getAdministratedOrganizations();
+            $query['hiddenFilters']['organization'] = $organizations;
         }
 
         return $query;

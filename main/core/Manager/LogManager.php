@@ -122,7 +122,7 @@ class LogManager
 
         // Get batched logs
         while (0 === $count || $count < $total) {
-            $logs = $logs = $this->finder->search('Claroline\CoreBundle\Entity\Log\Log', $query, []);
+            $logs = $this->finder->search('Claroline\CoreBundle\Entity\Log\Log', $query, []);
             $total = $logs['totalResults'];
             $count += self::CSV_LOG_BATCH;
             ++$query['page'];

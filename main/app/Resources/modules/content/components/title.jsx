@@ -4,9 +4,10 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
+import {toKey} from '#/main/core/scaffolding/text'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {MENU_BUTTON} from '#/main/app/buttons'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 
 const HeadingWrapper = props  =>
   React.createElement(`h${props.level}`, Object.assign({},
@@ -61,16 +62,14 @@ const ContentTitle = props =>
     }
 
     {!isEmpty(props.actions) &&
-      <Button
+      <Toolbar
+        id={toKey(props.title)}
         className="h-toolbar"
-        type={MENU_BUTTON}
-        icon="fa fa-fw fa-ellipsis-v"
-        label={trans('show-more-actions', {}, 'actions')}
+        buttonName="btn"
         tooltip="bottom"
-        menu={{
-          align: 'right',
-          items: props.actions
-        }}
+        toolbar="more"
+        size="sm"
+        actions={props.actions}
       />
     }
   </HeadingWrapper>

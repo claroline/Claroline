@@ -42,7 +42,12 @@ class LogFinder extends AbstractFinder
                         $userJoin = true;
                         $qb->join('obj.doer', 'doer');
                     }
-                    $qb->andWhere("doer.uuid = :{$filterName}");
+
+                    if (is_numeric($filterValue)) {
+                        $qb->andWhere("doer.id = :{$filterName}");
+                    } else {
+                        $qb->andWhere("doer.uuid = :{$filterName}");
+                    }
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'doer.name':

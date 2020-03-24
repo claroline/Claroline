@@ -524,6 +524,7 @@ class WorkspaceManager
      */
     public function copy(Workspace $workspace, Workspace $newWorkspace, $model = false)
     {
+        /** @var TransferManager $transferManager */
         $transferManager = $this->container->get('claroline.manager.workspace.transfer');
 
         $fileBag = new FileBag();

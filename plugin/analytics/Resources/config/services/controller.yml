@@ -45,6 +45,7 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@security.token_storage'
+          - '@translator'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\AppBundle\API\FinderProvider'

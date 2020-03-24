@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {select} from 'd3-selection'
 import {axisLeft, axisBottom} from 'd3-axis'
 import {timeDay} from 'd3-time'
+
+import {number} from '#/main/app/intl/number'
 import {dateToDisplayFormat} from '#/main/app/intl/date'
 
 import {
@@ -58,6 +60,7 @@ class Axis extends Component {
               axis.tickValues(this.props.values)
           }
           case NUMBER_DATA_TYPE: {
+            axis.tickFormat(value => number(value, true))
             return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(5)
           }
 
@@ -70,6 +73,7 @@ class Axis extends Component {
 
       case AXIS_TYPE_Y: {
         let axis = axisLeft(this.props.scale)
+        axis.tickFormat(value => number(value, true))
 
         return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(5)
       }

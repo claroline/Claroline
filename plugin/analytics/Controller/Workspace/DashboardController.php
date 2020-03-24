@@ -14,14 +14,18 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\EventManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @EXT\Route("/dashboard")
@@ -33,6 +37,9 @@ class DashboardController
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    /** @var TranslatorInterface */
+    private $translator;
 
     /** @var ObjectManager */
     private $om;
@@ -51,6 +58,7 @@ class DashboardController
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param TokenStorageInterface         $tokenStorage
+     * @param TranslatorInterface           $translator
      * @param ObjectManager                 $om
      * @param SerializerProvider            $serializer
      * @param FinderProvider                $finder
@@ -60,6 +68,7 @@ class DashboardController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator,
         ObjectManager $om,
         SerializerProvider $serializer,
         FinderProvider $finder,
@@ -68,6 +77,7 @@ class DashboardController
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
         $this->om = $om;
         $this->serializer = $serializer;
         $this->finder = $finder;
@@ -286,6 +296,110 @@ class DashboardController
             'resourceEvaluations' => $this->finder->search(ResourceUserEvaluation::class, [
                 'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
             ])['data'],
+        ]);
+    }
+
+    /**
+     * @EXT\Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     *
+     * @param Workspace $workspace
+     * @param User      $user
+     *
+     * @return StreamedResponse
+     */
+    public function exportUserProgressionAction(Workspace $workspace, User $user)
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if (!$this->checkDashboardToolAccess('EDIT', $workspace) && (!$currentUser instanceof User || $currentUser->getId() !== $user->getId())) {
+            throw new AccessDeniedException();
+        }
+
+        /** @var Evaluation $workspaceEvaluation */
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy(['workspace' => $workspace, 'user' => $user]);
+        /** @var ResourceUserEvaluation[] $resourceUserEvaluations */
+        $resourceUserEvaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
+            'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
+            'sortBy' => '-date',
+        ])['data'];
+
+        $fileName = "progression-{$user->getFullName()}";
+        $fileName = TextNormalizer::toKey($fileName);
+
+        return new StreamedResponse(function () use ($workspace, $workspaceEvaluation, $resourceUserEvaluations) {
+            // Prepare CSV file
+            $handle = fopen('php://output', 'w+');
+
+            // Create header
+            fputcsv($handle, [
+                $this->translator->trans('name', [], 'platform'),
+                $this->translator->trans('type', [], 'platform'),
+                $this->translator->trans('date', [], 'platform'),
+                $this->translator->trans('status', [], 'platform'),
+                $this->translator->trans('progression', [], 'platform'),
+                $this->translator->trans('progressionMax', [], 'platform'),
+                $this->translator->trans('score', [], 'platform'),
+                $this->translator->trans('score_total', [], 'platform'),
+                $this->translator->trans('duration', [], 'platform'),
+            ], ';', '"');
+
+            // put Workspace evaluation
+            fputcsv($handle, [
+                $workspace->getName(),
+                $this->translator->trans('workspace', [], 'platform'),
+                DateNormalizer::normalize($workspaceEvaluation->getDate()),
+                $workspaceEvaluation->getStatus(),
+                $workspaceEvaluation->getProgression(),
+                $workspaceEvaluation->getProgressionMax(),
+                $workspaceEvaluation->getScore(),
+                $workspaceEvaluation->getScoreMax(),
+                $workspaceEvaluation->getDuration(),
+            ], ';', '"');
+
+            // Get evaluations
+            foreach ($resourceUserEvaluations as $resourceUserEvaluation) {
+                // put ResourceUserEvaluation
+                fputcsv($handle, [
+                    $resourceUserEvaluation->getResourceNode()->getName(),
+                    $this->translator->trans('resource', [], 'platform'),
+                    DateNormalizer::normalize($resourceUserEvaluation->getDate()),
+                    $resourceUserEvaluation->getStatus(),
+                    $resourceUserEvaluation->getProgression(),
+                    $resourceUserEvaluation->getProgressionMax(),
+                    $resourceUserEvaluation->getScore(),
+                    $resourceUserEvaluation->getScoreMax(),
+                    $resourceUserEvaluation->getDuration(),
+                ], ';', '"');
+
+                /** @var ResourceEvaluation[] $resourceEvaluations */
+                $resourceEvaluations = $this->finder->searchEntities(ResourceEvaluation::class, [
+                    'filters' => ['resourceUserEvaluation' => $resourceUserEvaluation],
+                    'sortBy' => '-date',
+                ])['data'];
+
+                foreach ($resourceEvaluations as $resourceEvaluation) {
+                    fputcsv($handle, [
+                        $resourceUserEvaluation->getResourceNode()->getName(),
+                        $this->translator->trans('attempt', [], 'platform'),
+                        DateNormalizer::normalize($resourceEvaluation->getDate()),
+                        $resourceEvaluation->getStatus(),
+                        $resourceEvaluation->getProgression(),
+                        $resourceEvaluation->getProgressionMax(),
+                        $resourceEvaluation->getScore(),
+                        $resourceEvaluation->getScoreMax(),
+                        $resourceEvaluation->getDuration(),
+                    ], ';', '"');
+                }
+            }
+
+            fclose($handle);
+
+            return $handle;
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
         ]);
     }
 

@@ -119,6 +119,7 @@ class ActionsChart extends Component {
                   label: trans('date'),
                   displayed: true,
                   primary: true,
+                  filterable: false,
                   options: {
                     time: true
                   }

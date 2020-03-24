@@ -38,7 +38,12 @@ class LogConnectResourceFinder extends AbstractFinder
                         $qb->join('obj.user', 'u');
                         $userJoined = true;
                     }
-                    $qb->andWhere("u.uuid = :{$filterName}");
+
+                    if (is_numeric($filterValue)) {
+                        $qb->andWhere("u.id = :{$filterName}");
+                    } else {
+                        $qb->andWhere("u.uuid = :{$filterName}");
+                    }
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'name':

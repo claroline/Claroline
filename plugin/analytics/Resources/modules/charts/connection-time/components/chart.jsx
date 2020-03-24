@@ -71,55 +71,57 @@ class ConnectionTimeChart extends Component {
             }
           </div>
 
-          <div className="panel-body text-right" style={{paddingTop: '11px'}}>
-            <Toolbar
-              id="activity-legend"
-              className="chart-legend"
-              buttonName="btn-link"
-              actions={[
-                {
-                  name: 'actions',
-                  type: CALLBACK_BUTTON,
-                  icon: <span className="action-icon fa fa-fw fa-circle icon-with-text-right" style={{color: schemeCategory20c[0]}} />,
-                  label: trans('Temps total'),
-                  callback: () => true
-                }, {
-                  name: 'visitors',
-                  type: CALLBACK_BUTTON,
-                  icon: <span className="action-icon fa fa-fw fa-circle icon-with-text-right" style={{color: schemeCategory20c[4]}} />,
-                  label: trans('Temps moyen'),
-                  callback: () => true
-                }
-              ]}
-            />
+          {false &&
+            <div className="panel-body text-right" style={{paddingTop: '11px'}}>
+              <Toolbar
+                id="activity-legend"
+                className="chart-legend"
+                buttonName="btn-link"
+                actions={[
+                  {
+                    name: 'actions',
+                    type: CALLBACK_BUTTON,
+                    icon: <span className="action-icon fa fa-fw fa-circle icon-with-text-right" style={{color: schemeCategory20c[0]}}/>,
+                    label: trans('Temps total'),
+                    callback: () => true
+                  }, {
+                    name: 'visitors',
+                    type: CALLBACK_BUTTON,
+                    icon: <span className="action-icon fa fa-fw fa-circle icon-with-text-right" style={{color: schemeCategory20c[4]}}/>,
+                    label: trans('Temps moyen'),
+                    callback: () => true
+                  }
+                ]}
+              />
 
-            <LineChart
-              data={[
-                this.props.data.total,
-                this.props.data.average
-              ]}
-              xAxisLabel={{
-                show: false,
-                text: trans('date'),
-                grid: false
-              }}
-              yAxisLabel={{
-                show: false,
-                text: trans('actions'),
-                grid: true
-              }}
-              height={250}
-              width={680}
-              showArea={true}
-              margin={{
-                left: 25,
-                top: 5,
-                right: 0,
-                bottom: 30
-              }}
-              colors={[schemeCategory20c[0], schemeCategory20c[4]]}
-            />
-          </div>
+              <LineChart
+                data={[
+                  this.props.data.total,
+                  this.props.data.average
+                ]}
+                xAxisLabel={{
+                  show: false,
+                  text: trans('date'),
+                  grid: false
+                }}
+                yAxisLabel={{
+                  show: false,
+                  text: trans('actions'),
+                  grid: true
+                }}
+                height={250}
+                width={680}
+                showArea={true}
+                margin={{
+                  left: 25,
+                  top: 5,
+                  right: 0,
+                  bottom: 30
+                }}
+                colors={[schemeCategory20c[0], schemeCategory20c[4]]}
+              />
+            </div>
+          }
         </div>
 
         <div className="panel panel-default embedded-list-section">
