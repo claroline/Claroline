@@ -72,6 +72,7 @@ const ResultsComponent = props =>
         type: 'choice',
         label: trans('status'),
         displayed: false,
+        displayable: false,
         filterable: true,
         sortable: false,
         options: {
@@ -83,7 +84,7 @@ const ResultsComponent = props =>
         name: 'completionStatus',
         type: 'string',
         label: trans('completion_status', {}, 'scorm'),
-        displayed: constants.SCORM_2004 === props.scorm.version,
+        displayed: true,
         filterable: false,
         sortable: constants.SCORM_2004 === props.scorm.version,
         calculated: (rowData) => trans(rowData.completionStatus, {}, 'scorm')
@@ -93,6 +94,7 @@ const ResultsComponent = props =>
         type: 'choice',
         label: trans('completion_status', {}, 'scorm'),
         displayed: false,
+        displayable: false,
         filterable: constants.SCORM_2004 === props.scorm.version,
         sortable: false,
         options: {
