@@ -8,7 +8,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions, selectors} from '#/main/core/administration/template/store'
-import {TemplateCard} from '#/main/core/administration/template/data/components/template-card'
+import {TemplateCard} from '#/main/core/data//types/template/components/card'
 
 const TemplatesComponent = (props) =>
   <ListData

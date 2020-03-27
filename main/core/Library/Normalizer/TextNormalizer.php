@@ -87,7 +87,7 @@ class TextNormalizer
         return $string;
     }
 
-    public static function toKey($string)
+    public static function toKey($string, int $length = null)
     {
         $key = static::stripDiacritics($string);
         // removes multiple whitespaces, new lines & tabs by single whitespace
@@ -99,6 +99,10 @@ class TextNormalizer
         $key = preg_replace('/[^a-zA-Z0-9\-]/', '', $key);
         // removes uppercase
         $key = strtolower($key);
+
+        if ($length) {
+            $key = substr($key, 0, $length);
+        }
 
         return $key;
     }

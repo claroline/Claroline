@@ -7,7 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {constants} from '#/main/core/administration/parameters/constants'
+import {constants} from '#/main/core/data/types/connection-message/constants'
 import {selectors} from '#/main/core/modals/connection-messages/store'
 
 const ConnectionMessagesModal = props => {

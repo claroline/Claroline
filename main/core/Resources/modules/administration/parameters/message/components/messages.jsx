@@ -6,7 +6,8 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 import {MODAL_CONNECTION} from '#/main/app/modals/connection'
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {constants} from '#/main/core/administration/parameters/constants'
+import {constants} from '#/main/core/data/types/connection-message/constants'
+import {ConnectionMessageCard} from '#/main/core/data/types/connection-message/components/card'
 
 const Messages = (props) =>
   <ListData
@@ -82,6 +83,7 @@ const Messages = (props) =>
         label: trans('hidden')
       }
     ]}
+    card={ConnectionMessageCard}
   />
 
 export {

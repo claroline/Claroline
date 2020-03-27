@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {TemplateType as TemplateTypeType} from '#/main/core/administration/template/prop-types'
+import {TemplateType as TemplateTypeTypes} from '#/main/core/data/types/template-type/prop-types'
 
 const TemplateTypeCard = props =>
   <DataCard
@@ -16,7 +16,9 @@ const TemplateTypeCard = props =>
   />
 
 TemplateTypeCard.propTypes = {
-  data: T.shape(TemplateTypeType.propTypes).isRequired
+  data: T.shape(
+    TemplateTypeTypes.propTypes
+  ).isRequired
 }
 
 export {

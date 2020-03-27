@@ -16,8 +16,8 @@ import {route as toolRoute} from '#/main/core/tool/routing'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {getActions} from '#/main/core/desktop'
-import {constants} from '#/main/core/administration/parameters/constants'
-import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/administration/parameters/prop-types'
+import {constants} from '#/main/core/data/types/connection-message/constants'
+import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/data/types/connection-message/prop-types'
 
 class ConnectionModal extends Component {
   constructor(props) {

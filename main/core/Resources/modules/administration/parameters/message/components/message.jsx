@@ -16,10 +16,11 @@ import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
 import {
-  ConnectionMessage as ConnectionMessageType,
-  Slide as SlideType
-} from '#/main/core/administration/parameters/prop-types'
-import {constants} from '#/main/core/administration/parameters/constants'
+  ConnectionMessage as ConnectionMessageTypes,
+  Slide as SlideTypes
+} from '#/main/core/data/types/connection-message/prop-types'
+
+import {constants} from '#/main/core/data/types/connection-message/constants'
 import {MODAL_SLIDE_FORM} from '#/main/core/administration/parameters/modals/slide'
 
 const restrictedByDates = (message) => get(message, 'restrictions.enableDates') || (!isEmpty(get(message, 'restrictions.dates')) && (!isEmpty(get(message, 'restrictions.dates.0')) || !isEmpty(get(message, 'restrictions.dates.1'))))
@@ -109,7 +110,9 @@ const SlidesForm = (props) =>
   </div>
 
 SlidesForm.propTypes = {
-  slides: T.arrayOf(T.shape(SlideType.propTypes)).isRequired,
+  slides: T.arrayOf(T.shape(
+    SlideTypes.propTypes
+  )).isRequired,
   disabled: T.bool.isRequired,
   createSlide: T.func.isRequired,
   updateProp: T.func.isRequired
@@ -224,7 +227,7 @@ Message.propTypes = {
   path: T.string,
   new: T.bool,
   message: T.shape(
-    ConnectionMessageType.propTypes
+    ConnectionMessageTypes.propTypes
   ),
   createSlide: T.func.isRequired,
   updateProp: T.func.isRequired

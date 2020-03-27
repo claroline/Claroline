@@ -2,16 +2,16 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
-import {selectors} from '#/main/core/modals/template-types/store'
-import {TemplateType as TemplateTypeTypes} from '#/main/core/data/types/template-type/prop-types'
-import {TemplateTypeCard} from '#/main/core/data/types/template-type/components/card'
+import {selectors} from '#/main/core/modals/templates/store'
+import {Template as TemplateTypes} from '#/main/core/data/types/template/prop-types'
+import {TemplateCard} from '#/main/core/data/types/template/components/card'
 
-const TemplateTypesModal = props => {
+const TemplatesModal = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
@@ -25,35 +25,33 @@ const TemplateTypesModal = props => {
       <ListData
         name={selectors.STORE_NAME}
         fetch={{
-          url: ['apiv2_template_type_list'],
+          url: ['apiv2_template_list'],
           autoload: true
         }}
         definition={[
           {
             name: 'name',
-            type: 'translation',
+            type: 'string',
             label: trans('name'),
             displayed: true,
             filterable: false,
             sortable: false,
+            calculated: (rowData) => trans(rowData.name, {}, 'template'),
             options: {
               domain: 'template'
             },
             primary: true
           }, {
             name: 'description',
-            type: 'translation',
+            type: 'string',
             label: trans('description'),
             displayed: true,
             filterable: false,
             sortable: false,
-            calculated: (rowData) => `${rowData.name}_desc`,
-            options: {
-              domain: 'template'
-            }
+            calculated: (rowData) => trans(`${rowData.name}_desc`, {}, 'template')
           }
         ]}
-        card={TemplateTypeCard}
+        card={TemplateCard}
       />
 
       <Button
@@ -68,22 +66,22 @@ const TemplateTypesModal = props => {
   )
 }
 
-TemplateTypesModal.propTypes = {
+TemplatesModal.propTypes = {
   title: T.string,
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
 
   // from store
   selected: T.arrayOf(T.shape(
-    TemplateTypeTypes.propTypes
+    TemplateTypes.propTypes
   )).isRequired,
   reset: T.func.isRequired
 }
 
-TemplateTypesModal.defaultProps = {
-  title: trans('template_types', {}, 'template')
+TemplatesModal.defaultProps = {
+  title: trans('templates', {}, 'template')
 }
 
 export {
-  TemplateTypesModal
+  TemplatesModal
 }

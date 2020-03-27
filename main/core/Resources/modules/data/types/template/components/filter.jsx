@@ -7,11 +7,9 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
+import {MODAL_TEMPLATES} from '#/main/core/modals/templates'
 
-// TODO : reuse explorer config (title, root, filters, etc.)
-
-const TemplateTypeFilter = (props) =>
+const TemplateFilter = (props) =>
   <span className="data-filter resource-filter">
     {props.search}
 
@@ -22,7 +20,7 @@ const TemplateTypeFilter = (props) =>
       icon="fa fa-fw fa-file-alt"
       label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
-      modal={[MODAL_TEMPLATE_TYPES, {
+      modal={[MODAL_TEMPLATES, {
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,
           label: trans('select', {}, 'actions'),
@@ -33,14 +31,10 @@ const TemplateTypeFilter = (props) =>
     />
   </span>
 
-implementPropTypes(TemplateTypeFilter, DataSearchTypes, {
-  /*search: T.shape({
-   id: T.string.isRequired,
-   name: T.string.isRequired
-   }),*/
+implementPropTypes(TemplateFilter, DataSearchTypes, {
   search: T.string
 })
 
 export {
-  TemplateTypeFilter
+  TemplateFilter
 }

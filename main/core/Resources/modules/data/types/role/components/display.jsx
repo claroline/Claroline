@@ -1,31 +1,26 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Role as RoleType} from '#/main/core/user/prop-types'
+import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 
-const RoleDisplay = (props) => !isEmpty(props.data) ?
-  <Fragment>
-    {props.data.map(role =>
-      <RoleCard
-        key={`group-card-${role.id}`}
-        data={role}
-        size="xs"
-      />
-    )}
-  </Fragment> :
+const RoleDisplay = (props) => props.data ?
+  <RoleCard
+    data={props.data}
+    size="xs"
+  /> :
   <EmptyPlaceholder
-    size="lg"
     icon="fa fa-id-card"
     title={trans('no_role')}
   />
 
 RoleDisplay.propTypes = {
-  data: T.arrayOf(T.shape(RoleType.propTypes))
+  data: T.arrayOf(T.shape(
+    RoleTypes.propTypes
+  ))
 }
 
 export {

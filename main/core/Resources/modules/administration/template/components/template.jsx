@@ -11,7 +11,7 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors} from '#/main/core/administration/template/store'
 import {constants} from '#/main/core/administration/template/constants'
-import {Template as TemplateType} from '#/main/core/administration/template/prop-types'
+import {Template as TemplateTypes} from '#/main/core/data/types/template/prop-types'
 
 const generateSections = (defaultLocale, locales) => {
   const sections = [
@@ -121,7 +121,9 @@ const TemplateForm = (props) =>
 TemplateForm.propTypes = {
   path: T.string.isRequired,
   new: T.bool.isRequired,
-  template: T.shape(TemplateType.propTypes).isRequired,
+  template: T.shape(
+    TemplateTypes.propTypes
+  ).isRequired,
   defaultLocale: T.string,
   locales: T.arrayOf(T.string)
 }

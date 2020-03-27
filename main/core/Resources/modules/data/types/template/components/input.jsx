@@ -3,23 +3,24 @@ import React, {Fragment} from 'react'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {route} from '#/main/core/administration/routing'
 
-import {TemplateTypeCard} from '#/main/core/data/types/template-type/components/card'
-import {TemplateType as TemplateTypeTypes} from '#/main/core/data/types/template-type/prop-types'
-import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
+import {TemplateCard} from '#/main/core/data/types/template/components/card'
+import {Template as TemplateTypes} from '#/main/core/data/types/template/prop-types'
+import {MODAL_TEMPLATES} from '#/main/core/modals/templates'
 
-const TemplateTypeButton = (props) =>
+const TemplateButton = (props) =>
   <Button
     className="btn btn-block"
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('add_template_type', {}, 'template')}
+    label={trans('add_template', {}, 'template')}
     disabled={props.disabled}
-    modal={[MODAL_TEMPLATE_TYPES, {
+    modal={[MODAL_TEMPLATES, {
       title: props.title,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
@@ -30,20 +31,25 @@ const TemplateTypeButton = (props) =>
     size={props.size}
   />
 
-TemplateTypeButton.propTypes = {
+TemplateButton.propTypes = {
   title: T.string,
   disabled: T.bool,
   onChange: T.func.isRequired,
   size: T.string
 }
 
-const TemplateTypeInput = props => {
+const TemplateInput = props => {
   if (props.value) {
     return (
       <Fragment>
-        <TemplateTypeCard
+        <TemplateCard
           size="xs"
           data={props.value}
+          primaryAction={{
+            type: LINK_BUTTON,
+            label: trans('open', {}, 'actions'),
+            target: route('templates_management')+'/form/'+props.data.id
+          }}
           actions={[
             {
               name: 'delete',
@@ -56,7 +62,7 @@ const TemplateTypeInput = props => {
           ]}
         />
 
-        <TemplateTypeButton
+        <TemplateButton
           {...props.picker}
           disabled={props.disabled}
           onChange={props.onChange}
@@ -69,10 +75,10 @@ const TemplateTypeInput = props => {
   return (
     <EmptyPlaceholder
       icon="fa fa-file-alt"
-      title={trans('no_template_type', {}, 'template')}
+      title={trans('no_template', {}, 'template')}
       size={props.size}
     >
-      <TemplateTypeButton
+      <TemplateButton
         {...props.picker}
         disabled={props.disabled}
         onChange={props.onChange}
@@ -82,18 +88,21 @@ const TemplateTypeInput = props => {
   )
 }
 
-implementPropTypes(TemplateTypeInput, DataInputTypes, {
+implementPropTypes(TemplateInput, DataInputTypes, {
   value: T.shape(
-    TemplateTypeTypes.propTypes
+    TemplateTypes.propTypes
   ),
   picker: T.shape({
-    title: T.string
+    title: T.string,
+    confirmText: T.string
   })
 }, {
   value: null,
-  picker: {}
+  picker: {
+    title: trans('templates', {}, 'template')
+  }
 })
 
 export {
-  TemplateTypeInput
+  TemplateInput
 }

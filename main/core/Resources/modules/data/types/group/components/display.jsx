@@ -1,30 +1,26 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Group as GroupType} from '#/main/core/user/prop-types'
+import {Group as GroupTypes} from '#/main/core/user/prop-types'
 import {GroupCard} from '#/main/core/user/data/components/group-card'
 
-const GroupDisplay = (props) => !isEmpty(props.data) ?
-  <Fragment>
-    {props.data.map(group =>
-      <GroupCard
-        key={`group-card-${group.id}`}
-        data={group}
-        size="xs"
-      />
-    )}
-  </Fragment> :
+const GroupDisplay = (props) => props.data ?
+  <GroupCard
+    data={props.data}
+    size="xs"
+  /> :
   <EmptyPlaceholder
     icon="fa fa-users"
     title={trans('no_group')}
   />
 
 GroupDisplay.propTypes = {
-  data: T.arrayOf(T.shape(GroupType.propTypes))
+  data: T.arrayOf(T.shape(
+    GroupTypes.propTypes
+  ))
 }
 
 export {

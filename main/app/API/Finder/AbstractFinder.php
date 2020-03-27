@@ -381,6 +381,9 @@ abstract class AbstractFinder implements FinderInterface
         if (is_string($filterValue)) {
             $qb->andWhere("UPPER(obj.{$property}) LIKE :{$property}");
             $qb->setParameter($property, '%'.strtoupper($filterValue).'%');
+        } elseif (is_array($filterValue)) {
+            $qb->andWhere("obj.{$property} IN (:{$property})");
+            $qb->setParameter($property, $filterValue);
         } else {
             $qb->andWhere("obj.{$property} = :{$property}");
             $qb->setParameter($property, $filterValue);
