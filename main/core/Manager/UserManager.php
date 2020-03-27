@@ -356,17 +356,19 @@ class UserManager
     public function setUserInitDate(User $user)
     {
         $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
-        $expirationDate = new \DateTime();
-        $expirationYear = (strtotime('2100-01-01')) ? 2100 : 2038;
+        if ($accountDuration) {
+            $expirationDate = new \DateTime();
+            $expirationYear = (strtotime('2100-01-01')) ? 2100 : 2038;
 
-        (null === $accountDuration) ?
-            $expirationDate->setDate($expirationYear, 1, 1) :
-            $expirationDate->add(new \DateInterval('P'.$accountDuration.'D'));
+            (null === $accountDuration) ?
+                $expirationDate->setDate($expirationYear, 1, 1) :
+                $expirationDate->add(new \DateInterval('P'.$accountDuration.'D'));
 
-        $user->setExpirationDate($expirationDate);
-        $user->setInitDate(new \DateTime());
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+            $user->setExpirationDate($expirationDate);
+            $user->setInitDate(new \DateTime());
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
+        }
     }
 
     public function getUserByUsernameOrMail($username, $email, $executeQuery = true)
