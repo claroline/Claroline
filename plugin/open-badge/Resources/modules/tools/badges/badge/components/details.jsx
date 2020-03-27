@@ -88,7 +88,8 @@ const BadgeDetailsComponent = (props) => {
                 name: 'user',
                 type: 'user',
                 label: trans('user'),
-                displayed: true
+                displayed: true,
+                sortable: false
               }, {
                 name: 'issuedOn',
                 label: trans('granted_date', {}, 'badge'),
