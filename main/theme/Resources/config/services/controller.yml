@@ -29,7 +29,9 @@ services:
                 arguments:
                   - '@service_container'
 
-    Claroline\ThemeBundle\Controller\ColorController: ~
+    Claroline\CoreBundle\Controller\ThemeController: ~
+
+    Claroline\ThemeBundle\Controller\ColorCollectionController: ~
 
     Claroline\ThemeBundle\Controller\IconController:
         arguments:

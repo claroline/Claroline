@@ -1,12 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
-import {Button} from '#/main/app/action/components/button'
-import {MENU_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
+import {ContentTabs} from '#/main/app/content/components/tabs'
 
 const ContentHeading = props =>
   <header className={classes('content-heading', props.className)}>
@@ -28,51 +25,16 @@ const ContentHeading = props =>
       {props.children}
     </div>
 
-    <ul className="nav nav-tabs">
-      {!isEmpty(props.backAction) &&
-        <li className="nav-back">
-          <Button
-            label={trans('back')}
-            {...props.backAction}
-            icon="fa fa-fw fa-arrow-left"
-            tooltip="bottom"
-          />
-        </li>
-      }
-
-      {props.sections.map(section =>
-        <li
-          key={section.name}
-          className={classes({
-            active: section.active
-          })}
-        >
-          <Button
-            {...section}
-          />
-        </li>
-      )}
-
-      {!isEmpty(props.actions) &&
-        <li className="nav-actions">
-          <Button
-            type={MENU_BUTTON}
-            icon="fa fa-fw fa-ellipsis-v"
-            label={trans('show-more-actions', {}, 'actions')}
-            tooltip="bottom"
-            menu={{
-              align: 'right',
-              items: props.actions
-            }}
-          />
-        </li>
-      }
-    </ul>
+    <ContentTabs
+      backAction={props.backAction}
+      sections={props.sections}
+      actions={props.actions}
+    />
   </header>
 
 ContentHeading.propTypes = {
   className: T.string,
-  level: T.number.isRequired, // TODO : implement
+  level: T.number.isRequired,
   displayLevel: T.number,
   image: T.node,
   title: T.string.isRequired,

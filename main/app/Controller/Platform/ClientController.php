@@ -85,7 +85,7 @@ class ClientController
             'impersonated' => $this->isImpersonated(),
 
             'header' => [
-                'menus' => array_values($this->configHandler->getParameter('header')),
+                'menus' => array_unique(array_values($this->configHandler->getParameter('header'))),
                 'display' => [
                     'name' => $this->configHandler->getParameter('name_active'),
                     'about' => $this->configHandler->getParameter('show_about_button'),

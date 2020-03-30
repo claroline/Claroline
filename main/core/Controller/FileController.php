@@ -38,6 +38,8 @@ use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @EXT\Route(options={"expose"=true})
+ *
+ * @todo merge with APINew\FileController
  */
 class FileController extends AbstractApiController
 {

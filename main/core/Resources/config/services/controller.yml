@@ -166,7 +166,7 @@ services:
           - '%claroline.param.workspace_log_dir%'
           - '@claroline.manager.log_connect'
 
-    Claroline\CoreBundle\Controller\APINew\ConnectionMessageController:
+    Claroline\CoreBundle\Controller\APINew\Platform\ConnectionMessageController:
         arguments:
           - '@claroline.manager.connection_message_manager'
 
@@ -190,7 +190,7 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.lock_manager'
 
-    Claroline\CoreBundle\Controller\APINew\ParametersController:
+    Claroline\CoreBundle\Controller\APINew\Platform\ParametersController:
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
@@ -198,7 +198,7 @@ services:
           - '@Claroline\CoreBundle\Manager\VersionManager'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
-    Claroline\CoreBundle\Controller\APINew\ScheduledTaskController: ~
+    Claroline\CoreBundle\Controller\APINew\Platform\ScheduledTaskController: ~
 
     Claroline\CoreBundle\Controller\APINew\SwaggerController:
         arguments:
@@ -207,8 +207,6 @@ services:
           - '@Claroline\AppBundle\API\SchemaProvider'
           - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
           - '%kernel.root_dir%'
-
-    Claroline\CoreBundle\Controller\APINew\ThemeController: ~
 
     Claroline\CoreBundle\Controller\APINew\TransferController:
         arguments:

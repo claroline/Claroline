@@ -25,23 +25,11 @@ const ParametersMenu = (props) =>
           target: props.path+'/',
           exact: true
         }, {
-          name: 'i18n',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-language',
-          label: trans('language'),
-          target: props.path+'/i18n'
-        }, {
           name: 'appearance',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-drafting-compass',
           label: trans('appearance'),
           target: props.path+'/appearance'
-        }, {
-          name: 'icons',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-icons',
-          label: trans('icons'),
-          target: props.path+'/icons'
         }, {
           name: 'technical',
           type: LINK_BUTTON,

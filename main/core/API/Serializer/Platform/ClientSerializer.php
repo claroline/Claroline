@@ -133,7 +133,7 @@ class ClientSerializer
         }
 
         $data = [
-            'logo' => $logo ? $logo->getUrl() : null,
+            'logo' => $logo ? $logo->getUrl() : null, // TODO : to move (maybe not can be considered platform meta)
             'name' => $this->config->getParameter('name'),
             'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale
@@ -142,9 +142,9 @@ class ClientSerializer
             'helpUrl' => $this->config->getParameter('help_url'),
             'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
             'serverUrl' => $this->platformManager->getUrl(),
-            'theme' => $this->serializeTheme(),
+            'theme' => $this->serializeTheme(), // TODO : to move
             'locale' => $this->serializeLocale(),
-            'display' => [
+            'display' => [ // TODO : to move
                 'breadcrumb' => $this->config->getParameter('display.breadcrumb'),
             ],
             'restrictions' => $this->config->getParameter('restrictions'),
@@ -176,8 +176,8 @@ class ClientSerializer
                 ];
             }, $this->oauthManager->getActiveServices()),
             'plugins' => $this->pluginManager->getEnabled(true),
-            'javascripts' => $this->config->getParameter('javascripts'),
-            'stylesheets' => $this->config->getParameter('stylesheets'),
+            'javascripts' => $this->config->getParameter('javascripts'), // TODO : this should not be exposed here
+            'stylesheets' => $this->config->getParameter('stylesheets'), // TODO : this should not be exposed here
         ];
 
         $event = new GenericDataEvent();

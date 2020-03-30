@@ -34,12 +34,29 @@ const Meta = (props) =>
           {
             name: 'display.name',
             type: 'string',
-            label: trans('name')
+            label: trans('name'),
+            required: true
           }, {
             name: 'display.secondary_name',
             type: 'string',
-            label: trans('secondary_name'),
-            required: false
+            label: trans('secondary_name')
+          }, {
+            name: 'locales.available',
+            type: 'locale',
+            label: trans('available_languages'),
+            required: true,
+            options: {
+              available: props.availableLocales,
+              multiple: true
+            }
+          }, {
+            name: 'locales.default',
+            type: 'locale',
+            label: trans('default_language'),
+            required: true,
+            options: {
+              available: props.availableLocales
+            }
           }
         ]
       }, {

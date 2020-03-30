@@ -292,6 +292,8 @@ class BadgeClassSerializer
 
     private function serializePermissions(BadgeClass $badge)
     {
+        // TODO : move all into BadgeClassVoter
+
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $issuingModes = $badge->getIssuingMode();
 
@@ -362,6 +364,14 @@ class BadgeClassSerializer
 
         foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
             if ('ROLE_ADMIN' === $role->getRole()) {
+                $isAdmin = true;
+            }
+        }
+
+        $workspace = $badge->getWorkspace();
+        if ($workspace) {
+            $managerRole = $workspace->getManagerRole();
+            if (in_array($managerRole, $roles)) {
                 $isAdmin = true;
             }
         }

@@ -8,13 +8,12 @@ import {Routes} from '#/main/app/router'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {Archive} from '#/main/core/administration/parameters/archive/containers/archive'
 import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
-import {I18n} from '#/main/core/administration/parameters/language/containers/i18n'
 import {Plugins} from '#/main/core/administration/parameters/plugin/containers/plugins'
 import {Messages} from '#/main/core/administration/parameters/message/components/messages'
 import {Message} from '#/main/core/administration/parameters/message/containers/message'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
-import {AppearanceMain} from '#/main/core/administration/parameters/appearance/containers/main'
-import {IconsMain} from '#/main/core/administration/parameters/icon/containers/main'
+
+import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
 
 const ParametersTool = (props) => {
   const parametersActions = []
@@ -30,16 +29,6 @@ const ParametersTool = (props) => {
         primary: true
       })
       break
-    case props.path+'/icons':
-      parametersActions.push({
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('add_icon_set'),
-        target: props.path+'/icons/form',
-        primary: true
-      })
-      break
   }
 
   return (
@@ -51,13 +40,11 @@ const ParametersTool = (props) => {
           path={props.path}
           routes={[
             {path: '/', exact: true, render: () => trans('general')},
-            {path: '/i18n',          render: () => trans('language')},
             {path: '/plugins',       render: () => trans('plugins')},
             {path: '/archives',      render: () => trans('archive')},
             {path: '/messages',      render: () => trans('connection_messages')},
             {path: '/technical',     render: () => trans('technical')},
-            {path: '/appearance',    render: () => trans('appearance')},
-            {path: '/icons',         render: () => trans('icons')}
+            {path: '/appearance',    render: () => trans('appearance')}
           ]}
         />
       }
@@ -69,9 +56,6 @@ const ParametersTool = (props) => {
             path: '/',
             exact: true,
             component: Meta
-          }, {
-            path: '/i18n',
-            component: I18n
           }, {
             path: '/plugins',
             component: Plugins
@@ -100,10 +84,7 @@ const ParametersTool = (props) => {
             component: Technical
           }, {
             path: '/appearance',
-            component: AppearanceMain
-          }, {
-            path: '/icons',
-            component: IconsMain
+            component: AppearanceTool
           }
         ]}
       />

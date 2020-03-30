@@ -7,7 +7,7 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {PLUGINS_LOAD} from '#/main/core/administration/parameters/store/actions'
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {reducer as iconsReducer} from '#/main/core/administration/parameters/icon/store/reducer'
+import {reducer as iconsReducer} from '#/main/theme/administration/appearance/icon/store/reducer'
 
 const reducer = combineReducers({
   lockedParameters: makeReducer([], {
