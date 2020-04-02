@@ -249,13 +249,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     protected $isMailValidated = false;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="hide_mail_warning", type="boolean")
-     */
-    protected $hideMailWarning = false;
-
-    /**
      * @ORM\Column(name="last_uri", length=255, nullable=true)
      */
     protected $lastUri;
@@ -1036,16 +1029,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function getEmailValidationHash()
     {
         return $this->emailValidationHash;
-    }
-
-    public function setHideMailWarning($hideMailWarning)
-    {
-        $this->hideMailWarning = $hideMailWarning;
-    }
-
-    public function getHideMailWarning()
-    {
-        return $this->hideMailWarning;
     }
 
     /**

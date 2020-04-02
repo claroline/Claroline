@@ -348,7 +348,6 @@ class UserSerializer extends GenericSerializer
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),
             'mailNotified' => $user->isMailNotified(),
-            'mailWarningHidden' => $user->getHideMailWarning(),
             'authentication' => $user->getAuthentication(),
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'removed' => $user->isRemoved(),

@@ -114,7 +114,6 @@ class UserCrud
 
         $mailValidated = $user->isMailValidated() ?? $this->config->getParameter('auto_validate_email');
         $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));
-        $user->setHideMailWarning($mailValidated);
         $user->setIsMailValidated($mailValidated);
 
         if ($this->mailManager->isMailerAvailable() && !in_array(Options::NO_EMAIL, $options)) {

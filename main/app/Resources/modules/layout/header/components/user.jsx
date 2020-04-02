@@ -55,7 +55,7 @@ const UserMenu = props =>
       </div>
     }
 
-    {props.authenticated && !get(props.currentUser, 'meta.mailValidated') && !get(props.currentUser, 'meta.mailWarningHidden') &&
+    {props.authenticated && !get(props.currentUser, 'meta.mailValidated') &&
       <div className="alert alert-warning">
         <div>
           {trans('email_not_validated', {email: props.currentUser.email})}
@@ -175,8 +175,7 @@ UserMenu.propTypes = {
       url: T.string.isRequired
     }),
     meta: T.shape({
-      mailValidated: T.bool,
-      mailWarningHidden: T.bool
+      mailValidated: T.bool
     }),
     roles: T.array
   }).isRequired,
@@ -260,8 +259,7 @@ HeaderUser.propTypes = {
       url: T.string.isRequired
     }),
     meta: T.shape({
-      mailValidated: T.bool,
-      mailWarningHidden: T.bool
+      mailValidated: T.bool
     }),
     roles: T.array
   }).isRequired,

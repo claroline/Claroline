@@ -542,7 +542,6 @@ class UserManager
 
     public function hideEmailValidation(User $user)
     {
-        $user->setHideMailWarning(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
@@ -599,6 +598,8 @@ class UserManager
 
     /**
      * This method will bind each users who don't already have an organization to the default one.
+     *
+     * @deprecated only used in Updater120304
      */
     public function bindUserToGroup()
     {
@@ -607,7 +608,8 @@ class UserManager
         $this->log('Add default group to users...');
         $this->objectManager->startFlushSuite();
         $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
-        $default = $this->objectManager->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
+        /** @var Group $default */
+        $default = $this->objectManager->getRepository(Group::class)->findOneBy(['name' => PlatformRoles::USER]);
         $i = 0;
 
         while ($offset < $countUsers) {
