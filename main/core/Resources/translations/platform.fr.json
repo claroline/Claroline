@@ -78,6 +78,11 @@
     "add_workspace": "Ajouter un espace d'activités",
     "add_workspace_model": "Ajouter un modèle d'espace d'activités",
     "address": "Adresse",
+    "address_street": "Rue",
+    "address_postal_code": "Code postal",
+    "address_city": "Ville",
+    "address_state": "Etat/Région",
+    "address_country": "Pays",
     "admin": "Administrateur",
     "admin_analytics_no_data": "Aucune donnée.",
     "admin_logs": "Suivi plateforme",
@@ -1723,5 +1728,6 @@
     "registration_validation_help": "Votre compte ne sera accessible qu'une fois que vous l'aurez activé en cliquant sur le lien qui vous a été envoyé par courriel.",
     "display_optional_fields": "Afficher les champs optionels",
     "my_progression": "Ma progression",
-    "useful_links": "Liens utiles"
+    "useful_links": "Liens utiles",
+    "contact_information": "Coordonnées"
 }

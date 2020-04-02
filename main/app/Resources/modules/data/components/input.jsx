@@ -2,6 +2,7 @@ import {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import identity from 'lodash/identity'
 
 import {makeCancelable} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
@@ -125,7 +126,8 @@ class DataInput extends Component {
           disabled: this.props.disabled,
           size: this.props.size,
           validating: this.props.validating,
-          onChange: this.onChange
+          onChange: this.onChange,
+          onError: this.props.onError || identity
         })
       )
     }

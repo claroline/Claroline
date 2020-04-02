@@ -9,7 +9,7 @@ const dataType = {
   name: 'choice',
   meta: {
     creatable: true,
-    icon: 'fa fa-fw fa fa-list',
+    icon: 'fa fa-fw fa-list',
     label: trans('choice', {}, 'data'),
     description: trans('choice_desc', {}, 'data')
   },

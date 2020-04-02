@@ -12,6 +12,7 @@ registry.add('ClarolineAppBundle', {
   },
   data: {
     types: {
+      'address'     : () => { return import(/* webpackChunkName: "app-data-type-address" */      '#/main/app/data/types/address') },
       'boolean'     : () => { return import(/* webpackChunkName: "app-data-type-boolean" */      '#/main/app/data/types/boolean') },
       'cascade'     : () => { return import(/* webpackChunkName: "app-data-type-cascade" */      '#/main/app/data/types/cascade') },
       'cascade-enum': () => { return import(/* webpackChunkName: "app-data-type-cascade-enum" */ '#/main/app/data/types/cascade-enum') },

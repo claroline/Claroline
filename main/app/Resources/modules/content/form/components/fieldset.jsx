@@ -36,11 +36,14 @@ class FormFieldset extends Component {
     }
   }
 
-  setErrors(name, error) {
+  setErrors(name, error, onError) {
     const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
     set(newErrors, name, error)
 
     this.props.setErrors(newErrors)
+    if (onError) {
+      onError(newErrors)
+    }
   }
 
   renderFields(fields) {
@@ -80,7 +83,7 @@ class FormFieldset extends Component {
           value={value}
           error={get(this.props.errors, field.name)}
           onChange={(value) => this.update(field.name, value, field.onChange)}
-          onError={(error) => this.setErrors(field.name, error)}
+          onError={(error) => this.setErrors(field.name, error, field.onError)}
         >
           {customInput}
         </DataInput>
@@ -117,7 +120,7 @@ FormFieldset.propTypes = {
   id: T.string,
   className: T.string,
   disabled: T.bool,
-  mode: T.string.isRequired,
+  mode: T.string,
   size: T.oneOf(['sm', 'lg']),
   errors: T.object,
   validating: T.bool,

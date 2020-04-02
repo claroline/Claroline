@@ -74,6 +74,11 @@
     "add_workspace": "Add a workspace",
     "add_workspace_model": "Add a workspace model",
     "address": "Address",
+    "address_street": "Street",
+    "address_postal_code": "Postal code",
+    "address_city": "City",
+    "address_state": "State / Region",
+    "address_country": "Country",
     "admin": "Administrator",
     "admin_analytics_no_data": "No data.",
     "admin_logs": "Platform logs",
@@ -1688,5 +1693,6 @@
     "period": "Period",
     "display_optional_fields": "Show optional fields",
     "my_progression": "My progression",
-    "useful_links": "Useful links"
+    "useful_links": "Useful links",
+    "contact_information": "Contact information"
 }
