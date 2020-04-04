@@ -385,7 +385,8 @@ class WorkspaceSerializer
         }
 
         if (isset($data['extra']) && isset($data['extra']['model']) && isset($data['extra']['model']['code'])) {
-            $model = $this->om->getRepository(Workspace::class)->findOneByCode($data['extra']['model']['code']);
+            /** @var Workspace $model */
+            $model = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $data['extra']['model']['code']]);
             $workspace->setWorkspaceModel($model);
         }
 

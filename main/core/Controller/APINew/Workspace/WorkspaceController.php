@@ -572,7 +572,7 @@ class WorkspaceController extends AbstractCrudController
         $fs = new Filesystem();
         $fs->mkDir($this->logDir);
 
-        return $this->logDir.DIRECTORY_SEPARATOR.$workspace->getCode().'.json';
+        return $this->logDir.DIRECTORY_SEPARATOR.$workspace->getUuid().'.json';
     }
 
     /**
