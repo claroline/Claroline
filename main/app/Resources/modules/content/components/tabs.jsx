@@ -62,7 +62,7 @@ ContentTabs.propTypes = {
   }),
   actions: T.arrayOf(T.shape({
     // TODO : action types
-  })),
+  }))
 }
 
 export {

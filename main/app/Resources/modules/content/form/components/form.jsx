@@ -4,11 +4,9 @@ import classes from 'classnames'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {Heading} from '#/main/core/layout/components/heading'
+import {ContentTitle} from '#/main/app/content/components/title'
 
 import {FormActions} from '#/main/app/content/form/components/actions'
-
-// todo : allow submit with enter
 
 const FormWrapper = props => props.embedded ?
   <fieldset id={props.id} className={classes('form data-form', props.className)}>
@@ -79,9 +77,11 @@ class Form extends Component {
     return (
       <FormWrapper id={this.props.id} embedded={this.props.embedded} className={this.props.className}>
         {this.props.title &&
-          <Heading level={this.props.level} displayLevel={this.props.displayLevel} className="h-title">
-            {this.props.title}
-          </Heading>
+          <ContentTitle
+            level={this.props.level}
+            displayLevel={this.props.displayLevel}
+            title={this.props.title}
+          />
         }
 
         {this.props.children}

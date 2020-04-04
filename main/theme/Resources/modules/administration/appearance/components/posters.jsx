@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-const AppearancePosters = (props) =>
+const AppearancePosters = () =>
   <div>
     posters
   </div>

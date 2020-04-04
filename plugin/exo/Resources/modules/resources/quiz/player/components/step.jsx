@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
@@ -12,13 +13,12 @@ const PlayerStep = props => {
   return (
     <div className="current-step">
       {props.showTitle &&
-        <h3 className="h2 h-title">
-          {numbering &&
-            <span className="h-numbering">{numbering}</span>
-          }
-
-          {props.title ? props.title : trans('step', {number: props.index + 1}, 'quiz')}
-        </h3>
+        <ContentTitle
+          level={3}
+          displayLevel={2}
+          numbering={numbering}
+          title={props.title ? props.title : trans('step', {number: props.index + 1}, 'quiz')}
+        />
       }
 
       {props.description &&

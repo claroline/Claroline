@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentTitle} from '#/main/app/content/components/title'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {ContentHtml} from '#/main/app/content/components/html'
@@ -28,7 +29,11 @@ const Chapter = props => {
       all={flattenChapters(props.treeData.children || [])}
     >
       <section className="current-chapter">
-        <h1 className="chapter-title h2 h-title">{props.chapter.title}</h1>
+        <ContentTitle
+          level={1}
+          displayLevel={2}
+          title={props.chapter.title}
+        />
 
         <div className="panel panel-default">
           <ContentHtml className="panel-body">

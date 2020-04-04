@@ -11,7 +11,7 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate, displayDuration, getTimeDiff} from '#/main/app/intl/date'
 import {hasPermission} from '#/main/app/security'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {Toolbar} from '#/main/app/action/components/toolbar'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/core/user/utils'
@@ -55,13 +55,15 @@ const PaperStep = props => {
   return (
     <Fragment>
       {props.showTitle &&
-        <h4 className={classes('h3 h-title', 0 === props.index && 'h-first')}>
-          {numbering &&
-            <span className="h-numbering">{numbering}</span>
-          }
-
-          {props.title || trans('step', {number: props.index + 1}, 'quiz')}
-        </h4>
+        <ContentTitle
+          className={classes({
+            'h-first': 0 === props.index
+          })}
+          level={4}
+          displayLevel={3}
+          numbering={numbering}
+          title={props.title || trans('step', {number: props.index + 1}, 'quiz')}
+        />
       }
 
       {props.items
@@ -121,55 +123,44 @@ PaperStep.propTypes = {
 
 const PaperComponent = props =>
   <div className="paper">
-    <h3 className="h2 h-title">
-      <div>
-        {trans('results', {}, 'quiz')}
-        <small style={{display: 'block', marginTop: '5px'}}>
-          {props.paper ?
-            trans('attempt', {number: get(props.paper, 'number', '?')}, 'quiz')
-            :
-            trans('attempt_loading', {}, 'quiz')
-          }
-        </small>
-      </div>
-
-      <Toolbar
-        id={props.paper && props.paper.id}
-        className="h-toolbar"
-        buttonName="btn"
-        tooltip="bottom"
-        toolbar="more"
-        size="sm"
-        actions={[
-          /*{
-            name: 'about',
-            type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-info',
-            label: trans('show-info', {}, 'actions'),
-            modal: []
-          },*/ {
-            name: 'delete',
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-trash-o',
-            label: trans('delete', {}, 'actions'),
-            displayed: props.admin,
-            callback: () => props.delete(props.quizId, props.paper).then(() => {
-              props.history.push(`${props.path}/papers`)
-            }),
-            confirm: {
-              title: trans('deletion'),
-              subtitle: trans('user_attempt', {
-                number: get(props.paper, 'number', '?'),
-                userName: displayUsername(get(props.paper, 'user'))
-              }, 'quiz'),
-              message: trans('remove_paper_confirm_message', {}, 'quiz')
-            },
-            dangerous: true,
-            group: trans('management')
-          }
-        ]}
-      />
-    </h3>
+    <ContentTitle
+      level={3}
+      displayLevel={2}
+      title={trans('results', {}, 'quiz')}
+      subtitle={props.paper ?
+        trans('attempt', {number: get(props.paper, 'number', '?')}, 'quiz')
+        :
+        trans('attempt_loading', {}, 'quiz')
+      }
+      actions={[
+        /*{
+         name: 'about',
+         type: MODAL_BUTTON,
+         icon: 'fa fa-fw fa-info',
+         label: trans('show-info', {}, 'actions'),
+         modal: []
+         },*/ {
+          name: 'delete',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-trash-o',
+          label: trans('delete', {}, 'actions'),
+          displayed: props.admin,
+          callback: () => props.delete(props.quizId, props.paper).then(() => {
+            props.history.push(`${props.path}/papers`)
+          }),
+          confirm: {
+            title: trans('deletion'),
+            subtitle: trans('user_attempt', {
+              number: get(props.paper, 'number', '?'),
+              userName: displayUsername(get(props.paper, 'user'))
+            }, 'quiz'),
+            message: trans('remove_paper_confirm_message', {}, 'quiz')
+          },
+          dangerous: true,
+          group: trans('management')
+        }
+      ]}
+    />
 
     <div className="row">
       <div className="col-md-4">

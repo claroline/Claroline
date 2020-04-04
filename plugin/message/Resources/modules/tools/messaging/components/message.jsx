@@ -12,6 +12,7 @@ import {now} from '#/main/app/intl/date'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
@@ -72,9 +73,10 @@ class MessageComponent extends Component {
 
     return (
       <Fragment>
-        <h2 className="h-title">
-          {this.props.message.object}
-        </h2>
+        <ContentTitle
+          level={2}
+          title={this.props.message.object}
+        />
 
         {messages
           .filter(message => !get(message, 'meta.removed') || message.id === this.props.currentId)

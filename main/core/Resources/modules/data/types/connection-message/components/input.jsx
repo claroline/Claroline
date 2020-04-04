@@ -18,7 +18,7 @@ const ConnectionMessageButton = props =>
     style={{marginTop: 10}}
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('add_group')}
+    label={trans('add_connection_message')}
     disabled={props.disabled}
     modal={[MODAL_CONNECTION_MESSAGES, {
       selectAction: (selected) => ({
@@ -47,7 +47,7 @@ const ConnectionMessageInput = props => {
           primaryAction={{
             type: LINK_BUTTON,
             label: trans('open', {}, 'actions'),
-            target: route('main_settings')+'/messages/form/'+props.data.id
+            target: route('main_settings')+'/messages/form/'+props.value.id
           }}
           actions={[
             {

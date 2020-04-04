@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
 import {trans} from '#/main/app/intl/translation'
+import {ContentTitle} from '#/main/app/content/components/title'
 
 import quizSelect from '#/plugin/exo/quiz/selectors'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
@@ -21,20 +22,19 @@ const Statistics = props =>
         return (
           <div key={idx} className="quiz-item item-paper">
             {props.showTitles &&
-              <h3 className="h4 h-title">
-                {numbering &&
-                  <span className="h-numbering">{numbering}</span>
-                }
-
-                {step.title || trans('step', {number: idx + 1}, 'quiz')}
-              </h3>
+              <ContentTitle
+                level={3}
+                displayLevel={4}
+                numbering={numbering}
+                title={step.title || trans('step', {number: idx + 1}, 'quiz')}
+              />
             }
 
             {step.items.map((item, idxItem) => {
               return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
                 <Panel key={item.id}>
                   {item.title &&
-                  <h4 className="item-title">{item.title}</h4>
+                    <h4 className="item-title">{item.title}</h4>
                   }
 
                   <ItemMetadata
@@ -42,17 +42,14 @@ const Statistics = props =>
                     numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
                   />
 
-                  {React.createElement(
-                    getDefinition(item.type).paper,
-                    {
-                      item,
-                      showYours: false,
-                      showExpected: false,
-                      showStats: true,
-                      showScore: false,
-                      stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
-                    }
-                  )}
+                  {React.createElement(getDefinition(item.type).paper, {
+                    item,
+                    showYours: false,
+                    showExpected: false,
+                    showStats: true,
+                    showScore: false,
+                    stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+                  })}
                 </Panel>
             })}
           </div>

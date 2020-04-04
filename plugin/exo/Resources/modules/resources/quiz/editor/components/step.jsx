@@ -5,8 +5,8 @@ import uniqBy from 'lodash/uniqBy'
 
 import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections} from '#/main/app/content/form/components/sections'
@@ -25,25 +25,13 @@ const EditorStep = props => {
 
   return (
     <Fragment>
-      <h3 className="h2 h-title">
-        {numbering &&
-          <span className="h-numbering">{numbering}</span>
-        }
-
-        {props.title || trans('step', {number: props.index + 1}, 'quiz')}
-
-        {0 !== props.actions.length &&
-          <Toolbar
-            id={props.id}
-            className="h-toolbar"
-            buttonName="btn"
-            tooltip="bottom"
-            toolbar="more"
-            size="sm"
-            actions={props.actions}
-          />
-        }
-      </h3>
+      <ContentTitle
+        level={3}
+        displayLevel={2}
+        numbering={numbering}
+        title={props.title || trans('step', {number: props.index + 1}, 'quiz')}
+        actions={props.actions}
+      />
 
       <FormData
         level={3}

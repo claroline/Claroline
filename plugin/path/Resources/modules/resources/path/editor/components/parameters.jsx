@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {constants} from '#/plugin/path/resources/path/constants'
@@ -11,15 +12,12 @@ import {selectors} from '#/plugin/path/resources/path/editor/store'
 
 const EditorParameters = props =>
   <Fragment>
-    <h3 className="h2 h-title">
-      {constants.NUMBERING_NONE !== get(props.path, 'display.numbering') &&
-        <span className="h-numbering">
-          <span className="fa fa-cog" />
-        </span>
-      }
-
-      {trans('parameters')}
-    </h3>
+    <ContentTitle
+      level={3}
+      displayLevel={2}
+      numbering={constants.NUMBERING_NONE !== get(props.path, 'display.numbering') ? <span className="fa fa-cog" /> : undefined}
+      title={trans('parameters')}
+    />
 
     <FormData
       level={3}

@@ -201,6 +201,8 @@
     "connection_message_creation": "Création d'un message à la connexion",
     "connection_message_edition": "Edition d'un message à la connexion",
     "connection_messages": "Messages à la connexion",
+    "connection_message": "Message à la connexion",
+    "no_connection_message": "Aucun message à la connexion",
     "connection_time": "Temps de connexion",
     "connections": "Nombre de connexions",
     "contact": "Contact",

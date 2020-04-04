@@ -1,6 +1,7 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 import {
   actions as listActions,
   select as listSelect
@@ -12,7 +13,8 @@ import {TemplatesModal as TemplatesModalComponent} from '#/main/core/modals/temp
 const TemplatesModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
+      selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME)),
+      currentLocale: configSelectors.param(state, 'locale.current')
     }),
     (dispatch) => ({
       reset() {

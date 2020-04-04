@@ -4,8 +4,8 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -15,23 +15,14 @@ import {selectors} from '#/plugin/path/resources/path/editor/store'
 
 const EditorStep = props =>
   <Fragment>
-    <h3 className="h2 h-title step-title">
-      {props.numbering &&
-        <span className="h-numbering">{props.numbering}</span>
-      }
-
-      {props.title}
-
-      <Toolbar
-        id={props.id}
-        className="h-toolbar"
-        buttonName="btn"
-        tooltip="bottom"
-        toolbar="more"
-        size="sm"
-        actions={props.actions}
-      />
-    </h3>
+    <ContentTitle
+      className="step-title"
+      level={3}
+      displayLevel={2}
+      numbering={props.numbering}
+      title={props.title}
+      actions={props.actions}
+    />
 
     <FormData
       level={3}

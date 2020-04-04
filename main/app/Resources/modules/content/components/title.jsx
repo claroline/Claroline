@@ -55,11 +55,13 @@ const ContentTitle = props =>
       <span className="h-numbering">{props.numbering}</span>
     }
 
-    {props.title}
+    <span>
+      {props.title}
 
-    {props.subtitle &&
-      <small>{props.subtitle}</small>
-    }
+      {props.subtitle &&
+        <small>{props.subtitle}</small>
+      }
+    </span>
 
     {!isEmpty(props.actions) &&
       <Toolbar
@@ -78,7 +80,7 @@ ContentTitle.propTypes = {
   className: T.string,
   level: T.number.isRequired,
   displayLevel: T.number,
-  numbering: T.string,
+  numbering: T.node,
   title: T.string.isRequired,
   subtitle: T.string,
   displayed: T.bool,

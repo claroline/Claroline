@@ -24,6 +24,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: left;
+
+    small {
+        display: block;
+        margin-top: 5px;
+    }
 }
 
 .h-numbering {
@@ -45,7 +50,7 @@
 }
 
 .btn.h-back {
-    margin-right: 10px;
+    margin-right: floor(@grid-gutter-width / 2);
     padding: @padding-base-horizontal;
     border-radius: 50%;
 }

@@ -24,7 +24,6 @@ class AppearanceParametersSerializer
      */
     public function serialize(AppearanceParameters $parameters, array $options = [])
     {
-
         return [
             'theme' => null,
             'icons' => null,
@@ -50,13 +49,12 @@ class AppearanceParametersSerializer
             ],
 
             'posters' => [
-                'ratio' => '5:1'
-            ]
+                'ratio' => '5:1',
+            ],
         ];
     }
 
     public function deserialize($data, AppearanceParameters $parameters, array $options = [])
     {
-        //$this->sipe('name', 'setName', $data, $parameters);
     }
 }

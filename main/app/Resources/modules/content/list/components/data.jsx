@@ -4,8 +4,8 @@ import invariant from 'invariant'
 import classes from 'classnames'
 import isEqual from 'lodash/isEqual'
 
-import {Heading} from '#/main/core/layout/components/heading'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {constants as listConst} from '#/main/app/content/list/constants'
@@ -155,9 +155,11 @@ class ListData extends Component {
     return (
       <div className={classes('data-list', this.props.className)}>
         {this.props.title &&
-          <Heading level={this.props.level} displayLevel={this.props.displayLevel} className="h-title">
-            {this.props.title}
-          </Heading>
+          <ContentTitle
+            level={this.props.level}
+            displayLevel={this.props.displayLevel}
+            title={this.props.title}
+          />
         }
 
         <ListHeader

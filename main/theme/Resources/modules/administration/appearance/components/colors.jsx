@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-const AppearanceColors = (props) =>
+const AppearanceColors = () =>
   <div>
     colors
   </div>

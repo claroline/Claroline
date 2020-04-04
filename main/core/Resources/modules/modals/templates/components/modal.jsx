@@ -16,7 +16,7 @@ const TemplatesModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'selected', 'selectAction', 'reset')}
+      {...omit(props, 'currentLocale', 'selected', 'selectAction', 'reset')}
       className="data-picker-modal"
       icon="fa fa-fw fa-file-alt"
       bsSize="lg"
@@ -25,7 +25,7 @@ const TemplatesModal = props => {
       <ListData
         name={selectors.STORE_NAME}
         fetch={{
-          url: ['apiv2_template_list'],
+          url: ['apiv2_lang_template_list', {lang: props.currentLocale}],
           autoload: true
         }}
         definition={[
@@ -72,6 +72,7 @@ TemplatesModal.propTypes = {
   fadeModal: T.func.isRequired,
 
   // from store
+  currentLocale: T.string.isRequired,
   selected: T.arrayOf(T.shape(
     TemplateTypes.propTypes
   )).isRequired,

@@ -196,6 +196,8 @@
     "connection_message_creation": "Creation of a message at connection",
     "connection_message_edition": "Edition of a message at connection",
     "connection_messages": "Messages at connection",
+    "connection_message": "Message at connection",
+    "no_connection_message": "No message at connection",
     "connection_time": "Connection time",
     "connections": "Connections",
     "contact": "Contact",

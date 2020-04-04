@@ -6,7 +6,7 @@ const store = (state) => state[STORE_NAME]
 
 const locales = (state) => configSelectors.param(state, 'locale.available')
 
-const defaultLocale = (state) => configSelectors.param(state, 'locale.default')
+const defaultLocale = (state) => configSelectors.param(state, 'locale.current')
 
 export const selectors = {
   STORE_NAME,

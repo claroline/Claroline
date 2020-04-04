@@ -185,7 +185,8 @@ const Meta = (props) =>
 Meta.propTypes = {
   path: T.string.isRequired,
   lockedParameters: T.arrayOf(T.string).isRequired,
-  updateProp: T.func.isRequired
+  updateProp: T.func.isRequired,
+  availableLocales: T.object
 }
 
 export {

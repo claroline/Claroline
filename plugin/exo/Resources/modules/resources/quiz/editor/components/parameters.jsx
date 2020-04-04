@@ -6,6 +6,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 import {NumberInput} from '#/main/app/data/types/number/components/input'
@@ -33,15 +34,12 @@ const EditorParameters = props => {
 
   return (
     <Fragment>
-      <h3 className="h2 h-title">
-        {constants.NUMBERING_NONE !== props.numberingType &&
-          <span className="h-numbering">
-            <span className="fa fa-cog" />
-          </span>
-        }
-
-        {trans('parameters')}
-      </h3>
+      <ContentTitle
+        level={3}
+        displayLevel={2}
+        numbering={constants.NUMBERING_NONE !== props.numberingType ? <span className="fa fa-cog" /> : undefined}
+        title={trans('parameters')}
+      />
 
       <FormData
         level={3}
