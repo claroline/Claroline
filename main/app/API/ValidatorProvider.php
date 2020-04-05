@@ -96,15 +96,14 @@ class ValidatorProvider
         if ($schema) {
             $validator = Validator::buildDefault();
             $errors = $validator->validate($this->toObject($data), $schema, '', [$mode]);
+            if (!empty($errors)) {
+                if ($throwException) {
+                    throw new InvalidDataException(
+                        sprintf('Invalid data for "%s".', $class),
+                        $errors
+                    );
+                }
 
-            if (!empty($errors) && $throwException) {
-                throw new InvalidDataException(
-                    sprintf('Invalid data for "%s".', $class),
-                    $errors
-                );
-            }
-
-            if (count($errors) > 0) {
                 return $errors;
             }
         }
@@ -123,11 +122,19 @@ class ValidatorProvider
                 }
             }
 
-            return $this->validateUnique($uniqueFields, $data, $mode, $class);
+            $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
+            if (!empty($errors) && $throwException) {
+                throw new InvalidDataException(
+                    sprintf('Invalid data for "%s".', $class),
+                    $errors
+                );
+            }
+
+            return $errors;
         }
 
-        //can be deduced from the mapping, but we won't know
-        //wich field is related to wich data prop in that case
+        // can be deduced from the mapping, but we won't know
+        // which field is related to which data prop in that case
         $uniqueFields = $validator->getUniqueFields();
         $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
 
