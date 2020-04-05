@@ -1696,5 +1696,6 @@
     "display_optional_fields": "Show optional fields",
     "my_progression": "My progression",
     "useful_links": "Useful links",
-    "contact_information": "Contact information"
+    "contact_information": "Contact information",
+    "reset_password_help": "Please specify the email address attached to your account so that we can send you a new password."
 }
