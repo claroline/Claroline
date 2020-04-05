@@ -11,6 +11,8 @@ import {selectors} from '#/main/app/security/password/send/store/selectors'
 const SendPasswordForm = (props) =>
   <div className="login-container">
     <div className="authentication-column account-authentication-column">
+      <p className="authentication-help">{trans('send_password_help')}</p>
+
       <FormData
         name={selectors.FORM_NAME}
         sections={[

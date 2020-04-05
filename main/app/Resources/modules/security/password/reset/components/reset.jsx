@@ -11,8 +11,6 @@ const ResetPasswordForm = (props) => {
   return (
     <div className="login-container">
       <div className="authentication-column account-authentication-column">
-        <p className="authentication-help">{trans('reset_password_help')}</p>
-
         <FormData
           name={selectors.FORM_NAME}
           sections={[
