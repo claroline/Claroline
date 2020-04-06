@@ -8,7 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Heading} from '#/main/core/layout/components/heading'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentMeta} from '#/main/app/content/components/meta'
 import {Form} from '#/main/app/content/form/components/form' // TODO : use container instead
 import {FormFieldset} from '#/main/app/content/form/components/fieldset'
@@ -123,9 +123,11 @@ const FormData = (props) => {
           key={primarySection.id || toKey(primarySection.title)}
           className={classes('form-primary-section panel panel-default', primarySection.className)}
         >
-          <Heading level={hLevel} displayed={false}>
-            {primarySection.title}
-          </Heading>
+          <ContentTitle
+            level={hLevel}
+            displayed={false}
+            title={primarySection.title}
+          />
 
           <FormFieldset
             id={getSectionId(primarySection, props.id)}

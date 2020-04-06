@@ -4,8 +4,8 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {toKey} from '#/main/core/scaffolding/text'
-import {Heading} from '#/main/core/layout/components/heading'
 import {ContentMeta} from '#/main/app/content/components/meta'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {Sections, Section} from '#/main/app/content/components/sections'
 
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/app/content/details/prop-types'
@@ -31,9 +31,11 @@ const DetailsData = props => {
   return (
     <div className={classes('data-details', props.className)}>
       {props.title &&
-        <Heading level={props.level} displayLevel={props.displayLevel}>
-          {props.title}
-        </Heading>
+        <ContentTitle
+          level={props.level}
+          displayLevel={props.displayLevel}
+          title={props.title}
+        />
       }
 
       {props.meta &&
@@ -47,9 +49,11 @@ const DetailsData = props => {
       {primarySections.map(primarySection =>
         <div key={toKey(primarySection.title)} className="panel panel-default primary-section">
           <div className="panel-body">
-            <Heading level={hLevel} displayed={false}>
-              {primarySection.title}
-            </Heading>
+            <ContentTitle
+              level={hLevel}
+              displayed={false}
+              title={primarySection.title}
+            />
 
             {primarySection.fields.map(field =>
               <DetailsProp

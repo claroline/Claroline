@@ -12,7 +12,7 @@ const BooleanDisplay = (props) =>
     }
 
     {!props.icon &&
-      <span className={classes('fa fa-fw', {
+      <span className={classes('fa fa-fw icon-with-text-right', {
         'fa-check': props.data,
         'fa-times': !props.data
       })} />

@@ -97,13 +97,11 @@ class DataInput extends Component {
 
   renderInput() {
     if (!this.state.loaded) {
-      // todo : better
       return trans('loading')
     }
 
     if (this.state.error) {
-      // todo : better
-      return 'error'
+      return trans('error')
     }
 
     if (this.props.children) {
