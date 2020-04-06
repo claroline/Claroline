@@ -529,6 +529,9 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function setUsername($username)
     {
         $this->username = $username;
+        if (empty($this->publicUrl)) {
+            $this->publicUrl = $this->generatePublicUrl();
+        }
 
         return $this;
     }
@@ -933,10 +936,11 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      */
     public function getPublicUrl()
     {
-        if (!empty($this->publicUrl)) {
-            return $this->publicUrl;
-        }
+        return $this->publicUrl;
+    }
 
+    private function generatePublicUrl()
+    {
         return TextNormalizer::stripDiacritics(
             strtolower(str_replace(' ', '-', $this->username))
         );
