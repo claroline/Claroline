@@ -3,12 +3,9 @@
 namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 
 class SerializerProvider
 {
-    use LoggableTrait;
-
     /**
      * The list of registered serializers in the platform.
      *
@@ -131,7 +128,7 @@ class SerializerProvider
             }
         }
 
-        false;
+        return false;
     }
 
     /**
@@ -184,10 +181,11 @@ class SerializerProvider
             $class = $meta->name;
         }
 
-        $serializer = $this->get($class);
-
-        if (method_exists($serializer, 'deserialize')) {
-            $serializer->deserialize($data, $object, $options);
+        if (!empty($class)) {
+            $serializer = $this->get($class);
+            if (method_exists($serializer, 'deserialize')) {
+                $serializer->deserialize($data, $object, $options);
+            }
         }
 
         return $object;
