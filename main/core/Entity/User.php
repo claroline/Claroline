@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -932,7 +933,13 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      */
     public function getPublicUrl()
     {
-        return $this->publicUrl;
+        if (!empty($this->publicUrl)) {
+            return $this->publicUrl;
+        }
+
+        return TextNormalizer::stripDiacritics(
+            strtolower(str_replace(' ', '-', $this->username))
+        );
     }
 
     /**

@@ -83,10 +83,6 @@ class UserCrud
     {
         $this->om->startFlushSuite();
 
-        if (empty($user->getPublicUrl())) {
-            $user->setPublicUrl($this->userManager->generatePublicUrl($user));
-        }
-
         if (empty($user->getLocale())) {
             $user->setLocale(
                 $this->config->getParameter('locales.default')

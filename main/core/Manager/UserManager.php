@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -328,19 +327,6 @@ class UserManager
         $user->setLocale($locale);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return string
-     */
-    public function generatePublicUrl(User $user)
-    {
-        $publicUrl = $user->getUsername();
-        $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
-
-        return TextNormalizer::stripDiacritics($publicUrl);
     }
 
     public function countUsersByRoleIncludingGroup(Role $role)
