@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
@@ -108,7 +108,7 @@ const ResourcesInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       id={props.id}
       icon="fa fa-folder"
       title={trans('no_resource', {}, 'resource')}
@@ -118,7 +118,7 @@ const ResourcesInput = props => {
         {...props.picker}
         onChange={props.onChange}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

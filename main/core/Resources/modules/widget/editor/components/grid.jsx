@@ -6,7 +6,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {WidgetEditor} from '#/main/core/widget/editor/components/widget'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
@@ -185,7 +185,7 @@ class WidgetGridEditor extends Component {
         )}
 
         {0 === this.props.widgets.length &&
-          <EmptyPlaceholder
+          <ContentPlaceholder
             size="lg"
             icon="fa fa-frown-o"
             title={trans('no_section')}

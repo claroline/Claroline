@@ -5,14 +5,14 @@ import {trans} from '#/main/app/intl/translation'
 
 import {Location as LocationType} from '#/main/core/user/prop-types'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const LocationDisplay = (props) => props.data ?
   <LocationCard
     data={props.data}
     size="xs"
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-location-arrow"
     title={trans('no_location')}
   />

@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {route} from '#/main/core/resource/routing'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -31,7 +31,7 @@ const ResourcesDisplay = (props) => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-folder"
       title={trans('no_resource', {}, 'resource')}
     />

@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 
@@ -40,7 +40,7 @@ const AnnouncesList = props =>
     )}
 
     {0 === props.posts.length &&
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-bullhorn"
         title={trans('no_announcement', {}, 'announcement')}

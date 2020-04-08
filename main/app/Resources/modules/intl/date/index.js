@@ -46,15 +46,6 @@ function getDisplayFormat(long = false, withTime = false) {
   return displayFormat
 }
 
-/**
- * Gets formated date from Date object
- * @param {Date} date
- * @returns {string} formatted date
- */
-function dateToDisplayFormat(date) {
-  return moment(date).format(getDisplayFormat())
-}
-
 function isValidDate(value, format = null) {
   if (format) {
     return moment(value, format, true).isValid()
@@ -80,6 +71,19 @@ function apiDate(displayDate, long = false, withTime = false) {
   }
 
   return date.format(getApiFormat())
+}
+
+/**
+ * Gets formatted date from Date object.
+ *
+ * @param {Date} date
+ * @param {boolean} long     - does the display date use the full text format ?
+ * @param {boolean} withTime - has it time ?
+ *
+ * @return {string} formatted date
+ */
+function dateToDisplayFormat(date, long = false, withTime = false) {
+  return moment(date).format(getDisplayFormat(long, withTime))
 }
 
 /**

@@ -5,7 +5,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {route} from '#/main/core/administration/routing'
 
 import {TemplateCard} from '#/main/core/data/types/template/components/card'
@@ -73,7 +73,7 @@ const TemplateInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-file-alt"
       title={trans('no_template', {}, 'template')}
       size={props.size}
@@ -84,7 +84,7 @@ const TemplateInput = props => {
         onChange={props.onChange}
         size={props.size}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

@@ -185,7 +185,9 @@ EntryActions.propTypes = {
 
 class EntryComponent extends Component {
   componentDidMount() {
-    this.props.fetchEntryUsersShared(this.props.entryId)
+    if (this.canShare()) {
+      this.props.fetchEntryUsersShared(this.props.entryId)
+    }
   }
 
   canViewMetadata() {

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 const SimpleWidget = props => {
@@ -13,7 +13,7 @@ const SimpleWidget = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       size="lg"
       icon="fa fa-file"
       title={trans('no_content')}

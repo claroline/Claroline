@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Notification as NotificationType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 import {NotificationCard} from '#/plugin/planned-notification/tools/planned-notification/notification/data/components/notification-card'
@@ -19,7 +19,7 @@ const NotificationsDisplay = (props) => !isEmpty(props.data) ?
       />
     )}
   </div> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     size="lg"
     icon="fa fa-bell"
     title={trans('no_notification', {}, 'planned_notification')}

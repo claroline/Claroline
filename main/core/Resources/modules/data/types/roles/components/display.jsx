@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const RolesDisplay = (props) => {
   if (!isEmpty(props.data)) {
@@ -24,7 +24,7 @@ const RolesDisplay = (props) => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-id-badge"
       title={trans('no_role')}
     />

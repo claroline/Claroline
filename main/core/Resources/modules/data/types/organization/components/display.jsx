@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Organization as OrganizationType} from '#/main/core/user/prop-types'
 import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
@@ -12,7 +12,7 @@ const OrganizationDisplay = (props) => props.data ?
     data={props.data}
     size="xs"
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-building"
     title={trans('no_organization')}
   />

@@ -10,7 +10,7 @@ import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const WorkspacesButton = props =>
   <Button
@@ -76,7 +76,7 @@ const WorkspaceInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-book"
       title={props.picker.model ? trans('no_workspace_model') : trans('no_workspace')}
       size={props.size}
@@ -87,7 +87,7 @@ const WorkspaceInput = props => {
         onChange={props.onChange}
         size={props.size}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

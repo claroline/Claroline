@@ -10,7 +10,7 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections} from '#/main/app/content/form/components/sections'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
@@ -59,7 +59,7 @@ const EditorStep = props => {
         ]}
       >
         {0 === props.items.length &&
-          <EmptyPlaceholder
+          <ContentPlaceholder
             size="lg"
             icon="fa fa-question"
             title={trans('no_item_info', {}, 'quiz')}

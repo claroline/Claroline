@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Scale as ScaleType} from '#/plugin/competency/administration/competency/prop-types'
 import {ScaleCard} from '#/plugin/competency/administration/competency/data/components/scale-card'
@@ -14,7 +14,7 @@ const ScaleDisplay = (props) => props.data ?
     size="sm"
     orientation="col"
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     size="lg"
     icon="fa fa-arrow-up"
     title={trans('scale.none', {}, 'competency')}

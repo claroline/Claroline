@@ -6,7 +6,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Ability as AbilityType} from '#/plugin/competency/administration/competency/prop-types'
 import {MODAL_ABILITIES_PICKER} from '#/plugin/competency/modals/abilities'
@@ -51,7 +51,7 @@ const AbilityInput = props => {
     )
   } else {
     return (
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-graduation-cap"
         title={trans('ability.none', {}, 'competency')}
@@ -71,7 +71,7 @@ const AbilityInput = props => {
           <span className="fa fa-fw fa-graduation-cap icon-with-text-right" />
           {trans('ability.select', {}, 'competency')}
         </ModalButton>
-      </EmptyPlaceholder>
+      </ContentPlaceholder>
     )
   }
 }

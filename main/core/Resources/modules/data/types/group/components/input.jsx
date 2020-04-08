@@ -6,7 +6,7 @@ import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {GroupCard} from '#/main/core/user/data/components/group-card'
 import {Group as GroupType} from '#/main/core/user/prop-types'
 import {MODAL_GROUPS} from '#/main/core/modals/groups'
@@ -69,7 +69,7 @@ const GroupInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-users"
       title={trans('no_group')}
       size={props.size}
@@ -80,7 +80,7 @@ const GroupInput = props => {
         disabled={props.disabled}
         onChange={props.onChange}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

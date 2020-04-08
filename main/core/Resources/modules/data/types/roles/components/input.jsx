@@ -10,7 +10,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const RolesButton = props =>
   <Button
@@ -93,7 +93,7 @@ const RolesInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-id-badge"
       title={trans('no_role')}
       size={props.size}
@@ -105,7 +105,7 @@ const RolesInput = props => {
           onChange={props.onChange}
         />
       }
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

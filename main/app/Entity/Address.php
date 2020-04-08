@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AppBundle\Entity\Meta;
+namespace Claroline\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

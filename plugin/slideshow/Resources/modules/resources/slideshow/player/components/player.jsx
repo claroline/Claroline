@@ -7,7 +7,7 @@ import Carousel from 'react-bootstrap/lib/Carousel'
 
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
@@ -15,7 +15,7 @@ import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-t
 const PlayerComponent = props => {
   if (0 === props.slides.length) {
     return (
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-image"
         title={trans('no_slide', {}, 'slideshow')}

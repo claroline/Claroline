@@ -14,7 +14,7 @@ PlaceholderWrapper.propTypes = {
   children: T.node.isRequired
 }
 
-const EmptyPlaceholder = props =>
+const ContentPlaceholder = props =>
   <PlaceholderWrapper
     id={props.id}
     className="empty-placeholder"
@@ -33,7 +33,7 @@ const EmptyPlaceholder = props =>
     </div>
   </PlaceholderWrapper>
 
-EmptyPlaceholder.propTypes = {
+ContentPlaceholder.propTypes = {
   id: T.string,
   icon: T.string,
   title: T.string.isRequired,
@@ -42,12 +42,12 @@ EmptyPlaceholder.propTypes = {
   children: T.node
 }
 
-EmptyPlaceholder.defaultProps = {
+ContentPlaceholder.defaultProps = {
   icon: 'fa fa-fw fa-hand-pointer-o',
   help: null,
   size: 'md'
 }
 
 export {
-  EmptyPlaceholder
+  ContentPlaceholder
 }

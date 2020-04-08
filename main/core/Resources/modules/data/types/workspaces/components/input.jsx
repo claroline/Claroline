@@ -6,7 +6,7 @@ import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {route} from '#/main/core/workspace/routing'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
@@ -98,7 +98,7 @@ const WorkspacesInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-book"
       title={trans('no_workspace')}
       size={props.size}
@@ -109,7 +109,7 @@ const WorkspacesInput = props => {
         onChange={props.onChange}
         size={props.size}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

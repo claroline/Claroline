@@ -6,7 +6,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Scale as ScaleType} from '#/plugin/competency/administration/competency/prop-types'
 import {MODAL_COMPETENCY_SCALES_PICKER} from '#/plugin/competency/modals/scales'
@@ -51,7 +51,7 @@ const ScaleInput = props => {
     )
   } else {
     return (
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-arrow-up"
         title={trans('scale.none', {}, 'competency')}
@@ -71,7 +71,7 @@ const ScaleInput = props => {
           <span className="fa fa-fw fa-arrow-up icon-with-text-right" />
           {trans('scale.select', {}, 'competency')}
         </ModalButton>
-      </EmptyPlaceholder>
+      </ContentPlaceholder>
     )
   }
 }

@@ -5,7 +5,7 @@ import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {route} from '#/main/core/user/routing'
 import {User as UserType} from '#/main/core/user/prop-types'
@@ -74,7 +74,7 @@ const UserInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-user"
       title={trans('no_user')}
       size={props.size}
@@ -85,7 +85,7 @@ const UserInput = props => {
         onChange={props.onChange}
         size={props.size}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

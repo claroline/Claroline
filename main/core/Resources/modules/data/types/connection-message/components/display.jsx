@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {route} from '#/main/core/administration/routing'
 
 import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/data/types/connection-message/prop-types'
@@ -21,7 +21,7 @@ const ConnectionMessageDisplay = (props) => !isEmpty(props.data) ?
       target: route('main_settings')+'/messages/form/'+props.data.id
     }}
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-comment-dots"
     title={trans('no_connection_message')}
   />

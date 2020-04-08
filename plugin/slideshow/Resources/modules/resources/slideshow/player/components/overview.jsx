@@ -10,7 +10,7 @@ import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {ContentHtml} from '#/main/app/content/components/html'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
@@ -35,7 +35,7 @@ const OverviewComponent = props =>
       <h3 className="h2">{trans('slides', {}, 'slideshow')}</h3>
 
       {0 === props.slides.length &&
-        <EmptyPlaceholder
+        <ContentPlaceholder
           size="lg"
           icon="fa fa-image"
           title={trans('no_slide', {}, 'slideshow')}

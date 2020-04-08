@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Group as GroupTypes} from '#/main/core/user/prop-types'
 import {GroupCard} from '#/main/core/user/data/components/group-card'
@@ -12,7 +12,7 @@ const GroupDisplay = (props) => props.data ?
     data={props.data}
     size="xs"
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-users"
     title={trans('no_group')}
   />

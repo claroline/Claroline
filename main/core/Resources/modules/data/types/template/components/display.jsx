@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {route} from '#/main/core/administration/routing'
 
 import {Template as TemplateTypes} from '#/main/core/data/types/template/prop-types'
@@ -19,7 +19,7 @@ const TemplateDisplay = (props) => props.data ?
       target: route('templates_management')+'/form/'+props.data.id
     }}
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-file-alt"
     title={trans('no_template', {}, 'template')}
   />

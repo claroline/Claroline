@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
@@ -12,7 +12,7 @@ const RoleDisplay = (props) => props.data ?
     data={props.data}
     size="xs"
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-id-card"
     title={trans('no_role')}
   />

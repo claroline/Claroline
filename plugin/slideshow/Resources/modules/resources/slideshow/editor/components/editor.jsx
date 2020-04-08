@@ -10,7 +10,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/editor/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
@@ -79,7 +79,7 @@ const EditorComponent = props =>
     ]}
   >
     {0 === props.slides.length &&
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-image"
         title={trans('no_slide', {}, 'slideshow')}

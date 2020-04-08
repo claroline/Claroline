@@ -6,7 +6,7 @@ import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
 import {Organization as OrganizationType} from '#/main/core/user/prop-types'
 import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
@@ -68,7 +68,7 @@ const OrganizationInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-building"
       title={trans('no_organization')}
       size={props.size}
@@ -79,7 +79,7 @@ const OrganizationInput = props => {
         size={props.size}
         onChange={props.onChange}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

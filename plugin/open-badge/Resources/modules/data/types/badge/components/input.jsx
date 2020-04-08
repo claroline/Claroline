@@ -6,7 +6,7 @@ import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {Badge as BadgeType} from '#/plugin/open-badge/prop-types'
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
 
@@ -58,7 +58,7 @@ const BadgeInput = props => {
     )
   } else {
     return (
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-book"
         title={trans('no_badge', {}, 'badge')}
@@ -69,7 +69,7 @@ const BadgeInput = props => {
             onChange={props.onChange}
           />
         }
-      </EmptyPlaceholder>
+      </ContentPlaceholder>
     )
   }
 }

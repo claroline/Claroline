@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Group as GroupType} from '#/main/core/user/prop-types'
 import {GroupCard} from '#/main/core/user/data/components/group-card'
@@ -24,7 +24,7 @@ const GroupsDisplay = (props) => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-users"
       title={trans('no_group')}
     />

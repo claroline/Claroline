@@ -6,7 +6,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 import {Location as LocationType} from '#/main/core/user/prop-types'
 import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
@@ -68,7 +68,7 @@ const LocationInput = props => {
   }
 
   return (
-    <EmptyPlaceholder
+    <ContentPlaceholder
       icon="fa fa-location-arrow"
       title={trans('no_location')}
       size={props.size}
@@ -79,7 +79,7 @@ const LocationInput = props => {
         disabled={props.disabled}
         onChange={props.onChange}
       />
-    </EmptyPlaceholder>
+    </ContentPlaceholder>
   )
 }
 

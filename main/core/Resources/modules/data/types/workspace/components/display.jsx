@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {route} from '#/main/core/workspace/routing'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
@@ -19,7 +19,7 @@ const WorkspaceDisplay = (props) => props.data ?
       target: route(props.data)
     }}
   /> :
-  <EmptyPlaceholder
+  <ContentPlaceholder
     icon="fa fa-book"
     title={trans('no_workspace')}
   />

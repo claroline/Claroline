@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
@@ -29,7 +29,7 @@ const restrictedByRoles = (message) => get(message, 'restrictions.enableRoles') 
 const SlidesForm = (props) =>
   <div className="slides-form">
     {0 === props.slides.length &&
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-image"
         title={trans('no_content')}

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/rss/resources/rss-feed/player/store/selectors'
 
@@ -11,7 +11,7 @@ const PlayerComponent = props => {
 
   if (0 === props.items.length) {
     return (
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         icon="fa fa-image"
         title={trans('no_item', {}, 'rss')}

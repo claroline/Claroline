@@ -12,7 +12,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app
 import {Alert} from '#/main/app/alert/components/alert'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentTitle} from '#/main/app/content/components/title'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/core/user/utils'
 import {DataCard} from '#/main/app/data/components/card'
@@ -161,7 +161,7 @@ class ProgressionUser extends Component {
 
           <div className="col-md-8">
             {isEmpty(this.props.resourceEvaluations) &&
-              <EmptyPlaceholder
+              <ContentPlaceholder
                 size="lg"
                 icon="fa fa-folder"
                 title={trans('no_started_resource', {}, 'resource')}

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {EmptyPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {constants} from '#/plugin/path/resources/path/constants'
 import {Path as PathTypes, Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
@@ -14,7 +14,7 @@ import {getNumbering, getStepUserProgression} from '#/plugin/path/resources/path
 const PlayerMain = props => {
   if (0 === props.steps.length) {
     return (
-      <EmptyPlaceholder
+      <ContentPlaceholder
         size="lg"
         title={trans('no_step', {}, 'path')}
       />
