@@ -90,6 +90,15 @@ class Create extends AbstractAction
             $roles[] = $workspace->getDefaultRole();
         }
 
+        if (isset($data['create'])) {
+            $create = explode(',', $data['create']);
+            $create = array_map(function ($type) {
+                return trim($type);
+            }, $create);
+
+            $permissions['create'] = $create;
+        }
+
         $rights = [];
         $roles = [];
         foreach ($roles as $role) {
