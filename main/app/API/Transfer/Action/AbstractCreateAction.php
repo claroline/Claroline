@@ -6,8 +6,14 @@ use Claroline\AppBundle\API\Crud;
 
 abstract class AbstractCreateAction extends AbstractAction
 {
+    /** @var Crud */
+    protected $crud;
+
     abstract public function getClass();
 
+    /**
+     * @param Crud $crud
+     */
     public function setCrud(Crud $crud)
     {
         $this->crud = $crud;

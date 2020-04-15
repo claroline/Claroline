@@ -8,5 +8,17 @@
     "facet": "Onglet du profil",
     "workspace": "Espace d'activités",
     "group": "Groupe",
-    "user": "Utilisateur"
+    "user": "Utilisateur",
+    "directory": "Dossier",
+
+    "directory_name": "Le nom du répertoire",
+    "directory_open": "Le droit d'ouverture [default: 0 (faux)]",
+    "directory_delete": "Le droit de suppression [default: 0 (faux)]",
+    "directory_edit": "Le droit d'édition [default: 0 (faux)]",
+    "directory_copy": "Le droit de copie [default: 0 (faux)]",
+    "directory_export": "Le droit d'export [default: 0 (faux)]",
+    "directory_administrate": "Le droit d'administration pour les collaborateurs",
+    "directory_user": "Un username s'il est le seul a y avoir accès",
+    "directory_role": "Clef de traduction du role (role par defaut si non défini)",
+    "directory_creation": "Liste des types de ressources autorisé à être créé (séparé par des virgules) - %types% - par defaut: tous"
 }

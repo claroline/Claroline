@@ -59,12 +59,14 @@ services:
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@translator'
 
     Claroline\CoreBundle\API\Transfer\Action\Directory\CreateOrUpdate:
         arguments:
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@translator'
 
     Claroline\CoreBundle\API\Transfer\Action\Facet\Create:
         arguments:

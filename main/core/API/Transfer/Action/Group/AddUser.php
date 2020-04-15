@@ -10,10 +10,16 @@ use Claroline\CoreBundle\Entity\User;
 
 class AddUser extends AbstractAction
 {
+    /** @var Crud */
+    private $crud;
+    /** @var ObjectManager */
+    private $om;
+
     /**
-     * Action constructor.
+     * AddUser constructor.
      *
-     * @param Crud $crud
+     * @param Crud          $crud
+     * @param ObjectManager $om
      */
     public function __construct(Crud $crud, ObjectManager $om)
     {

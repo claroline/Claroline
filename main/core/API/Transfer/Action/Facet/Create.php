@@ -23,6 +23,9 @@ class Create extends AbstractAction
 
     /**
      * @param array $data
+     * @param array $successData
+     *
+     * @return array|object
      */
     public function execute(array $data, &$successData = [])
     {
@@ -30,6 +33,9 @@ class Create extends AbstractAction
     }
 
     /**
+     * @param array $options
+     * @param array $extra
+     *
      * @return array
      */
     public function getSchema(array $options = [], array $extra = [])
