@@ -15,25 +15,40 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class Authenticator
 {
+    /** @var EncoderFactoryInterface */
     private $encodeFactory;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var UserProviderInterface */
+    private $userRepo;
 
+    /**
+     * Authenticator constructor.
+     *
+     * @param ObjectManager           $om
+     * @param TokenStorageInterface   $tokenStorage
+     * @param EncoderFactoryInterface $encodeFactory
+     */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         EncoderFactoryInterface $encodeFactory
     ) {
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->tokenStorage = $tokenStorage;
         $this->encodeFactory = $encodeFactory;
+
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     public function authenticate($username, $password, $validatePassword = true)
     {
         try {
+            /** @var UserInterface $user */
             $user = $this->userRepo->loadUserByUsername($username);
         } catch (\Exception $e) {
             return false;

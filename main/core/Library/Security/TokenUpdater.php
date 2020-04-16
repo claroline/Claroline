@@ -11,30 +11,37 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 class TokenUpdater
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var ObjectManager */
     private $om;
 
     /**
+     * TokenUpdater constructor.
+     *
      * @param TokenStorageInterface $tokenStorage
+     * @param ObjectManager         $om
      */
-    public function __construct(TokenStorageInterface $tokenStorage, $om)
+    public function __construct(TokenStorageInterface $tokenStorage, ObjectManager $om)
     {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
     }
 
-    public function update(AbstractToken $token)
+    public function update(TokenInterface $token)
     {
-        $usurpator = false;
-        $roles = $token->getRoles();
+        $usurper = false;
 
+        $roles = $token->getRoles();
         foreach ($roles as $role) {
             if ('ROLE_PREVIOUS_ADMIN' === $role->getRole()) {
                 return;
@@ -42,23 +49,23 @@ class TokenUpdater
 
             //May be better to check the class of the token.
             if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
-                $usurpator = true;
+                $usurper = true;
             }
         }
 
-        if ($usurpator) {
-            $this->updateUsurpator($token);
+        if ($usurper) {
+            $this->updateUsurper($token);
         } else {
             $this->updateNormal($token);
         }
     }
 
-    private function updateUsurpator($token)
+    private function updateUsurper(TokenInterface $token)
     {
-        //no implementation yet
+        // no implementation yet
     }
 
-    public function cancelUserUsurpation($token)
+    public function cancelUserUsurpation(TokenInterface $token)
     {
         $roles = $token->getRoles();
 
@@ -73,7 +80,7 @@ class TokenUpdater
         }
     }
 
-    public function cancelUsurpation($token)
+    public function cancelUsurpation(TokenInterface $token)
     {
         $user = $token->getUser();
         $this->om->refresh($user);
@@ -81,7 +88,7 @@ class TokenUpdater
         $this->tokenStorage->setToken($token);
     }
 
-    public function updateNormal($token)
+    public function updateNormal(TokenInterface $token)
     {
         if ($token) {
             $user = $token->getUser();
