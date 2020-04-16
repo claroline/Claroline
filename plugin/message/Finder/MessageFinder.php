@@ -101,6 +101,13 @@ class MessageFinder extends AbstractFinder
         return $qb;
     }
 
+    public function getExtraFieldMapping()
+    {
+        return [
+            'meta.date' => 'date',
+        ];
+    }
+
     public function getFilters()
     {
         return [

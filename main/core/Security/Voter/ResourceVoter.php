@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -41,6 +42,8 @@ class ResourceVoter implements VoterInterface
     private $specialActions;
     private $ut;
     private $maskManager;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
     private $resourceManager;
     private $rightsManager;
     private $restrictionsManager;
@@ -52,6 +55,7 @@ class ResourceVoter implements VoterInterface
      * @param TranslatorInterface         $translator
      * @param Utilities                   $ut
      * @param MaskManager                 $maskManager
+     * @param WorkspaceManager            $workspaceManager
      * @param ResourceManager             $resourceManager
      * @param RightsManager               $rightsManager
      * @param ResourceRestrictionsManager $restrictionsManager
@@ -61,6 +65,7 @@ class ResourceVoter implements VoterInterface
         TranslatorInterface $translator,
         Utilities $ut,
         MaskManager $maskManager,
+        WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         ResourceRestrictionsManager $restrictionsManager
@@ -71,6 +76,7 @@ class ResourceVoter implements VoterInterface
         $this->specialActions = ['move', 'create', 'copy'];
         $this->ut = $ut;
         $this->maskManager = $maskManager;
+        $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->restrictionsManager = $restrictionsManager;
@@ -215,7 +221,7 @@ class ResourceVoter implements VoterInterface
         }
 
         //the workspace manager he can do w/e he wants
-        if ($haveSameWorkspace && $ws && $this->isWorkspaceManager($ws, $token)) {
+        if ($haveSameWorkspace && $ws && $this->workspaceManager->isManager($ws, $token)) {
             return [];
         }
 
@@ -229,7 +235,7 @@ class ResourceVoter implements VoterInterface
         }
 
         //but it only work if he's not usurping a workspace role to see if everything is good
-        if ($timesCreator === count($nodes) && !$this->isUsurpatingWorkspaceRole($token)) {
+        if ($timesCreator === count($nodes) && !$this->workspaceManager->isImpersonated($token)) {
             return [];
         }
 
@@ -305,7 +311,7 @@ class ResourceVoter implements VoterInterface
         }
 
         //if I am the manager, I can do whatever I want
-        if ($this->isWorkspaceManager($workspace, $token)) {
+        if ($this->workspaceManager->isManager($workspace, $token)) {
             return $errors;
         }
 
@@ -397,24 +403,6 @@ class ResourceVoter implements VoterInterface
                 ],
                 'platform'
             );
-    }
-
-    protected function isWorkspaceManager(Workspace $workspace, TokenInterface $token)
-    {
-        $managerRoleName = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
-
-        return in_array($managerRoleName, $this->ut->getRoles($token)) ? true : false;
-    }
-
-    protected function isUsurpatingWorkspaceRole(TokenInterface $token)
-    {
-        foreach ($token->getRoles() as $role) {
-            if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private function validateAccesses($object)

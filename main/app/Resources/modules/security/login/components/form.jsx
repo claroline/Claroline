@@ -15,7 +15,8 @@ class LoginForm extends Component {
     super(props)
 
     this.state = {
-      sso: {}
+      sso: {},
+      inProgress: false
     }
   }
 
@@ -83,8 +84,12 @@ class LoginForm extends Component {
                 className="btn btn-block btn-emphasis"
                 type={CALLBACK_BUTTON}
                 htmlType="submit"
-                label={trans('login')}
-                callback={() => this.props.login(this.props.onLogin)}
+                label={!this.state.inProgress ? trans('login'):trans('login_in_progress')}
+                disabled={this.state.inProgress}
+                callback={() => {
+                  this.setState({inProgress: true})
+                  this.props.login(this.props.onLogin).then(() => this.setState({inProgress: false}))
+                }}
                 primary={true}
               />
             </FormData>

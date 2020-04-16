@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
@@ -33,6 +34,7 @@ class UserVoter extends AbstractVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
+            case self::CREATE: return $this->checkCreate($token, $object);
             case self::VIEW:   return $this->checkView($token, $object);
             case self::EDIT:   return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);
@@ -73,7 +75,7 @@ class UserVoter extends AbstractVoter
     private function checkView(TokenInterface $token, User $user)
     {
         return $this->isOrganizationManager($token, $user) ?
-              VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
 
     /**
@@ -85,7 +87,7 @@ class UserVoter extends AbstractVoter
     private function checkDelete(TokenInterface $token, User $user)
     {
         return $this->isOrganizationManager($token, $user) ?
-              VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
 
     /**
@@ -136,6 +138,7 @@ class UserVoter extends AbstractVoter
                 return $role->getRole();
             }, $token->getRoles());
             if (count(array_filter($collection->toArray(), function (Role $role) use ($currentRoles) {
+                // search for not allowed roles
                 return Role::PLATFORM_ROLE === $role->getType() && !in_array($role->getName(), $currentRoles);
             })) > 0) {
                 return VoterInterface::ACCESS_DENIED;
@@ -146,9 +149,37 @@ class UserVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        //maybe do something more complicated later
+        // maybe do something more complicated later
         return $this->isGranted(self::EDIT, $user) ?
             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
+
+    private function checkCreate(TokenInterface $token, User $user)
+    {
+        if ($this->hasAdminToolAccess($token, 'community')) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        if ($this->isOrganizationManager($token, $user)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        /** @var PlatformConfigurationHandler $config */
+        $config = $this->getContainer()->get(PlatformConfigurationHandler::class);
+        if ($config->getParameter('registration.self')) {
+            $defaultRole = $config->getParameter('registration.default_role');
+
+            // allow anonymous registration only if the user is created with the default role
+            if (0 === count(array_filter($user->getEntityRoles(), function (Role $role) use ($defaultRole) {
+                // search for not allowed roles
+                return Role::PLATFORM_ROLE === $role->getType() && $defaultRole !== $role->getName();
+            }))) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+            // TODO : this should also check the workspace roles come from public/registerable WS.
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     /**
@@ -156,7 +187,7 @@ class UserVoter extends AbstractVoter
      */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\User';
+        return User::class;
     }
 
     /**
@@ -164,6 +195,6 @@ class UserVoter extends AbstractVoter
      */
     public function getSupportedActions()
     {
-        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH, self::VIEW];
+        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH, self::VIEW];
     }
 }

@@ -2,8 +2,9 @@
 
 namespace Claroline\HistoryBundle\Listener;
 
+use Claroline\AppBundle\Manager\SecurityManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\HistoryBundle\Manager\HistoryManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -12,27 +13,27 @@ class WorkspaceListener
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var SecurityManager */
+    private $securityManager;
+
     /** @var HistoryManager */
     private $manager;
 
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-
     /**
-     * ResourceListener constructor.
+     * WorkspaceListener constructor.
      *
      * @param TokenStorageInterface $tokenStorage
+     * @param SecurityManager       $securityManager
      * @param HistoryManager        $manager
-     * @param WorkspaceManager      $workspaceManager
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        HistoryManager $manager,
-        WorkspaceManager $workspaceManager
+        SecurityManager $securityManager,
+        HistoryManager $manager
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->securityManager = $securityManager;
         $this->manager = $manager;
-        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -40,9 +41,9 @@ class WorkspaceListener
      */
     public function onOpen(OpenWorkspaceEvent $event)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' !== $user && !$this->workspaceManager->isImpersonated($this->tokenStorage->getToken())) {
+        if (!$this->securityManager->isAnonymous() && !$this->securityManager->isImpersonated()) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
             $this->manager->addWorkspace($event->getWorkspace(), $user);
         }
     }

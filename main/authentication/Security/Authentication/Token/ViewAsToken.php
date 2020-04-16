@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Token;
+namespace Claroline\AuthenticationBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
@@ -21,7 +21,6 @@ class ViewAsToken extends AbstractToken
 
         // If the user has roles, consider it authenticated
         $this->setAuthenticated(count($roles) > 0);
-        $this->workspaceName = '';
     }
 
     public function getCredentials()

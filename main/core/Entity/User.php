@@ -236,6 +236,13 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     protected $isRemoved = false;
 
     /**
+     * Avoids any modification on the user. It also excludes it from stats.
+     *
+     * @ORM\Column(name="is_locked", type="boolean")
+     */
+    protected $locked = false;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="is_mail_notified", type="boolean")
@@ -248,11 +255,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      * @ORM\Column(name="is_mail_validated", type="boolean")
      */
     protected $isMailValidated = false;
-
-    /**
-     * @ORM\Column(name="last_uri", length=255, nullable=true)
-     */
-    protected $lastUri;
 
     /**
      * @var string
@@ -321,6 +323,8 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
      *     inversedBy="users"
      * )
+     *
+     * @todo relation should not be declared here (only use Unidirectional)
      */
     protected $locations;
 
@@ -391,13 +395,11 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      */
     public function serialize()
     {
-        return serialize(
-            [
-                'id' => $this->id,
-                'username' => $this->username,
-                'roles' => $this->getRoles(),
-            ]
-        );
+        return serialize([
+            'id' => $this->id,
+            'username' => $this->username,
+            'roles' => $this->getRoles(),
+        ]);
     }
 
     /**
@@ -889,6 +891,16 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
         return true;
     }
 
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked)
+    {
+        $this->locked = $locked;
+    }
+
     public function isEnabled()
     {
         return $this->isEnabled;
@@ -907,16 +919,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function isMailNotified()
     {
         return $this->isMailNotified;
-    }
-
-    public function setLastUri($lastUri)
-    {
-        $this->lastUri = $lastUri;
-    }
-
-    public function getLastUri()
-    {
-        return $this->lastUri;
     }
 
     /**
@@ -1168,11 +1170,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function remove()
     {
         $this->setRemoved(true);
-    }
-
-    public function getIsRemoved()
-    {
-        return $this->isRemoved;
     }
 
     public function isRemoved()

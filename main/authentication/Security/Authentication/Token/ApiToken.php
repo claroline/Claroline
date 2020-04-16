@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Security\Authentication\Token;
+namespace Claroline\AuthenticationBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 

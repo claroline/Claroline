@@ -67,7 +67,7 @@ class DebugServiceCommand extends ContainerAwareCommand implements AdminCliComma
             $this->getContainer()->get('Claroline\CoreBundle\Listener\Doctrine\DebugListener')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DebugListener::DEBUG_ALL)->setVendor('Claroline');
         }
 
-        $this->getContainer()->get('Claroline\CoreBundle\Library\Security\Authenticator')->authenticate($input->getArgument('owner'), null, false);
+        $this->getContainer()->get('Claroline\AuthenticationBundle\Security\Authentication\Authenticator')->authenticate($input->getArgument('owner'), null, false);
         $variables = $input->getArgument('parameters');
         $args = [];
         $class = get_class($manager);

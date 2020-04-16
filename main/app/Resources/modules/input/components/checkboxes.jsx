@@ -21,7 +21,7 @@ const Checkboxes = props => {
   }
 
   return (
-    <fieldset id={props.id}>
+    <div id={props.id} className={props.className}>
       {choiceValues.map(choiceValue =>
         <Checkbox
           key={choiceValue}
@@ -43,7 +43,7 @@ const Checkboxes = props => {
           }}
         />
       )}
-    </fieldset>
+    </div>
   )
 }
 

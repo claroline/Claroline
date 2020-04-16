@@ -97,7 +97,8 @@ class UserCrud
             $user->addGroup($groupUser);
         }
 
-        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+        $defaultRole = $this->config->getParameter('registration.default_role') ?? PlatformRoles::USER;
+        $roleUser = $this->roleManager->getRoleByName($defaultRole);
         if ($roleUser) {
             $user->addRole($roleUser);
         }

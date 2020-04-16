@@ -189,6 +189,8 @@ class FormStepper extends Component {
           this.props.steps[this.state.activeStep].render()
         }
 
+        {this.props.children}
+
         <FormStepperFooter
           previousStep={this.props.steps[this.state.activeStep-1] ? this.state.activeStep-1 : undefined}
           nextStep={this.props.steps[this.state.activeStep+1] ? this.state.activeStep+1 : undefined}
@@ -213,7 +215,8 @@ FormStepper.propTypes = {
   })).isRequired,
   submit: T.shape(
     ActionTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  children: T.any
 }
 
 FormStepper.defaultProps = {

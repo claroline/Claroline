@@ -17,7 +17,7 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       login(callback) {
-        dispatch((dispatch, getState) => {
+        return dispatch((dispatch, getState) => {
           const formData = formSelectors.data(formSelectors.form(getState(), selectors.FORM_NAME))
 
           dispatch(formActions.submit(selectors.FORM_NAME))

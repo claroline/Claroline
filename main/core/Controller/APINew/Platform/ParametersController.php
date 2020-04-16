@@ -18,6 +18,7 @@ use Claroline\AppBundle\Event\Platform\EnableEvent;
 use Claroline\AppBundle\Event\Platform\ExtendEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\VersionManager;
@@ -96,8 +97,9 @@ class ParametersController
     /**
      * @EXT\Route("/info", name="apiv2_platform_info")
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function getAction()
+    public function getAction(User $currentUser = null)
     {
         $parameters = $this->serializer->serialize();
 
@@ -114,7 +116,7 @@ class ParametersController
         return new JsonResponse([
             'version' => $this->versionManager->getDistributionVersion(),
             'meta' => $parameters['meta'],
-            'analytics' => $analytics, // TODO : add analytics through eventing to avoid hard dependendy to a plugin
+            'analytics' => $analytics, // TODO : add analytics through eventing to avoid hard dependency to a plugin
         ]);
     }
 

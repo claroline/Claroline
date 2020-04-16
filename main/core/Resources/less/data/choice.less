@@ -1,0 +1,69 @@
+
+.choice-control {
+    .radio,
+    .radio-inline,
+    .checkbox,
+    .checkbox-inline {
+        margin: 0;
+
+        label {
+            // simulate a .form-control
+            .input-size(@input-height-base; @padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @input-border-radius);
+
+            width: 100%;
+            border: 1px solid transparent;
+            background: @gray-lighter;
+            .transition(~"border-color ease-in-out .15s, background ease-in-out .15s");
+
+            &:hover {
+                background: darken(@gray-lighter, 10%);
+            }
+        }
+
+        &.selected label {
+            color: @state-selected-text;
+            border: 1px solid @state-selected-border;
+            background: @state-selected-bg;
+            font-weight: bold;
+
+            // todo : merge with list selected
+            &:hover {
+                color: darken(@state-selected-text, 10%);
+                background: darken(@state-selected-bg, 10%);
+                border-color: darken(@state-selected-border, 10%);
+            }
+        }
+
+        &.disabled {
+            opacity: 0.9;
+        }
+    }
+
+    .radio + .radio,
+    .checkbox + .checkbox {
+        margin-top: 5px;
+    }
+
+    // sizing variants
+    &.sm {
+        .radio,
+        .radio-inline,
+        .checkbox,
+        .checkbox-inline {
+            label {
+                .input-size(@input-height-small; @padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @input-border-radius-small);
+            }
+        }
+    }
+
+    &.lg {
+        .radio,
+        .radio-inline,
+        .checkbox,
+        .checkbox-inline {
+            label {
+                .input-size(@input-height-large; @padding-large-vertical; @padding-large-horizontal; @font-size-large; @line-height-large; @input-border-radius-large);
+            }
+        }
+    }
+}

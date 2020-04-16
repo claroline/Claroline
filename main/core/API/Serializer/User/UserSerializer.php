@@ -416,6 +416,7 @@ class UserSerializer extends GenericSerializer
     private function serializeRestrictions(User $user)
     {
         return [
+            'locked' => $user->isLocked(),
             'disabled' => !$user->isEnabled(),
             'removed' => $user->isRemoved(),
             'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
@@ -426,6 +427,10 @@ class UserSerializer extends GenericSerializer
     {
         if (isset($restrictions['disabled'])) {
             $user->setIsEnabled(!$restrictions['disabled']);
+        }
+
+        if (isset($restrictions['locked'])) {
+            $user->setLocked($restrictions['locked']);
         }
 
         if (isset($restrictions['dates'])) {

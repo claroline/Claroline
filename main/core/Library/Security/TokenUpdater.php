@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 class TokenUpdater
 {
-    private $sc;
     private $om;
 
     /**

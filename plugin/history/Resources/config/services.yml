@@ -11,8 +11,8 @@ services:
     Claroline\HistoryBundle\Listener\WorkspaceListener:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
-            - '@claroline.manager.workspace_manager'
         tags:
             - { name: kernel.event_listener, event: workspace.open, method: onOpen }
 

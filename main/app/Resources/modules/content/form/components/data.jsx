@@ -7,6 +7,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MENU_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentMeta} from '#/main/app/content/components/meta'
@@ -129,21 +130,32 @@ const FormData = (props) => {
             title={primarySection.title}
           />
 
-          <FormFieldset
-            id={getSectionId(primarySection, props.id)}
-            className="panel-body"
-            mode={props.mode}
-            disabled={props.disabled || primarySection.disabled}
-            fields={primarySection.fields}
-            data={props.data}
-            errors={props.errors}
-            validating={props.validating}
-            updateProp={props.updateProp}
-            setErrors={props.setErrors}
-          >
-            {primarySection.component}
-            {!primarySection.component && primarySection.render && primarySection.render()}
-          </FormFieldset>
+          <div className="panel-body">
+            {!isEmpty(primarySection.actions) &&
+              <Toolbar
+                id={`${getSectionId(primarySection, props.id)}-actions`}
+                buttonName="btn"
+                className="text-right form-group"
+                size="sm"
+                actions={primarySection.actions}
+              />
+            }
+
+            <FormFieldset
+              id={getSectionId(primarySection, props.id)}
+              mode={props.mode}
+              disabled={props.disabled || primarySection.disabled}
+              fields={primarySection.fields}
+              data={props.data}
+              errors={props.errors}
+              validating={props.validating}
+              updateProp={props.updateProp}
+              setErrors={props.setErrors}
+            >
+              {primarySection.component}
+              {!primarySection.component && primarySection.render && primarySection.render()}
+            </FormFieldset>
+          </div>
         </div>
       )}
 

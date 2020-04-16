@@ -601,6 +601,7 @@
     "lock": "Verrouiller",
     "locked": "Verrouillé",
     "login": "Connexion",
+    "login_in_progress": "Connexion en cours...",
     "login_failure": "La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.",
     "login_with_third_party": "Connexion %name%",
     "login_with_third_party_btn": "%name%",

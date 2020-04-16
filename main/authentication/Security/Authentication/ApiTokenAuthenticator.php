@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\CoreBundle\Security\Authentication;
+namespace Claroline\AuthenticationBundle\Security\Authentication;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Security\Authentication\Token\ApiToken as SecurityApiToken;
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Authentication\Token\ApiToken as SecurityApiToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;

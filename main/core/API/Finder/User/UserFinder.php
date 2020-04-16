@@ -266,8 +266,8 @@ class UserFinder extends AbstractFinder
     public function getExtraFieldMapping()
     {
         return [
-          'name' => 'last_name',
-          'isDisabled' => 'is_enabled',
+            'name' => 'last_name',
+            'isDisabled' => 'is_enabled',
         ];
     }
 

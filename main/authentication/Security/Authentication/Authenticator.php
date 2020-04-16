@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security;
+namespace Claroline\AuthenticationBundle\Security\Authentication;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class Authenticator
 {
-    private $sc;
     private $encodeFactory;
     private $tokenStorage;
 

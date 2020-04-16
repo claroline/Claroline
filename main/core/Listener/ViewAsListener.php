@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
+use Claroline\AuthenticationBundle\Security\Authentication\Token\ViewAsToken;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -21,17 +21,33 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Role\Role;
 
 class ViewAsListener
 {
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var RoleManager */
     private $roleManager;
+    /** @var TokenUpdater */
     private $tokenUpdater;
+    /** @var UserManager */
     private $userManager;
 
+    /**
+     * ViewAsListener constructor.
+     *
+     * @param AuthorizationCheckerInterface $authorization
+     * @param TokenStorageInterface         $tokenStorage
+     * @param EntityManager                 $em
+     * @param RoleManager                   $roleManager
+     * @param TokenUpdater                  $tokenUpdater
+     * @param UserManager                   $userManager
+     */
     public function __construct(
-      AuthorizationCheckerInterface $authorization,
+        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         EntityManager $em,
         RoleManager $roleManager,
@@ -52,14 +68,14 @@ class ViewAsListener
         $attributes = $request->query->all();
 
         if (array_key_exists('view_as', $attributes)) {
-            //first, if we're already usurpating a user role with the sf2 function, we cancel this.
-            //ROLE_PREVIOUS_ADMIN means we're an administrator usurpating a user account.
+            // first, if we're already usurping a user role with the sf2 function, we cancel this.
+            // ROLE_PREVIOUS_ADMIN means we're an administrator usurping a user account.
 
             if ($this->authorization->isGranted('ROLE_PREVIOUS_ADMIN')) {
                 $this->tokenUpdater->cancelUserUsurpation($this->tokenStorage->getToken());
             }
 
-            //then we go as intended
+            // then we go as intended
             $viewAs = $attributes['view_as'];
             if ('exit' === $viewAs) {
                 if ($this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
@@ -79,7 +95,7 @@ class ViewAsListener
 
                 $managerRole = $this->roleManager->getManagerRole($role->getWorkspace());
 
-                $tokenRoles = array_map(function ($role) {
+                $tokenRoles = array_map(function (Role $role) {
                     return $role->getRole();
                 }, $this->tokenStorage->getToken()->getRoles());
 
@@ -88,11 +104,16 @@ class ViewAsListener
                         if ('ROLE_ANONYMOUS' === $baseRole) {
                             throw new \Exception('No implementation yet');
                         } else {
+                            // TODO : we may use a standard token. To check
                             $token = new ViewAsToken(
                               ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
                             );
-                            $token->setUser($this->userManager->getDefaultClarolineUser());
+                            // store original user id to retrieve it at end
                             $token->setAttribute('user_uuid', $this->tokenStorage->getToken()->getUser()->getUuid());
+                            // replace user
+                            $token->setUser($this->userManager->getDefaultClarolineUser());
+
+                            // set new token
                             $this->tokenStorage->setToken($token);
                         }
                     } else {

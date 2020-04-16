@@ -120,6 +120,11 @@ class WorkspaceController extends AbstractCrudController
         return 'workspace';
     }
 
+    public function getClass()
+    {
+        return Workspace::class;
+    }
+
     /**
      * @ApiDoc(
      *     description="The list of registerable workspaces for the current security token.",
@@ -563,19 +568,6 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
-     * @param Workspace $workspace
-     *
-     * @return string
-     */
-    private function getLogFile(Workspace $workspace)
-    {
-        $fs = new Filesystem();
-        $fs->mkDir($this->logDir);
-
-        return $this->logDir.DIRECTORY_SEPARATOR.$workspace->getUuid().'.json';
-    }
-
-    /**
      * @ApiDoc(
      *     description="List the configurable roles of a workspace for the current security token.",
      *     queryString={
@@ -730,8 +722,16 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    public function getClass()
+    /**
+     * @param Workspace $workspace
+     *
+     * @return string
+     */
+    private function getLogFile(Workspace $workspace)
     {
-        return Workspace::class;
+        $fs = new Filesystem();
+        $fs->mkDir($this->logDir);
+
+        return $this->logDir.DIRECTORY_SEPARATOR.$workspace->getUuid().'.json';
     }
 }

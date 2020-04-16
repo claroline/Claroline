@@ -249,7 +249,7 @@ services:
           - '@security.encoder_factory'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@translator'
-          - '@Claroline\CoreBundle\Library\Security\Authenticator'
+          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
           - '@claroline.manager.mail_manager'
           - '@router'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

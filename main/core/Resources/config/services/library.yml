@@ -120,9 +120,7 @@ services:
 
     Claroline\CoreBundle\Library\Session\DatabaseSessionValidator: ~
 
-    Claroline\CoreBundle\Library\Security\Utilities:
-        arguments:
-            - '@doctrine.orm.entity_manager'
+    Claroline\CoreBundle\Library\Security\Utilities: ~
 
     Claroline\CoreBundle\Library\RoutingHelper:
        arguments:

@@ -59,6 +59,7 @@ services:
             - '@translator'
             - '@Claroline\CoreBundle\Library\Security\Utilities'
             - '@claroline.manager.mask_manager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.manager.resource_restrictions'

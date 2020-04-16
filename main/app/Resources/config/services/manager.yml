@@ -9,6 +9,10 @@ services:
             - '@request_stack'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
+    Claroline\AppBundle\Manager\SecurityManager:
+        arguments:
+            - '@security.token_storage'
+
     Claroline\AppBundle\Manager\DatabaseManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

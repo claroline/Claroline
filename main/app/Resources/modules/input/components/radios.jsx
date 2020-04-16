@@ -12,7 +12,9 @@ const Radio = props =>
   <div
     className={classes({
       'radio'       : !props.inline,
-      'radio-inline': props.inline
+      'radio-inline': props.inline,
+      'selected': props.checked,
+      'disabled': props.disabled
     })}
   >
     <label htmlFor={props.id}>
@@ -57,7 +59,7 @@ const Radios = props => {
   }
 
   return (
-    <fieldset id={props.id}>
+    <div id={props.id} className={props.className}>
       {choiceValues.map(choiceValue =>
         <Radio
           key={choiceValue}
@@ -70,7 +72,7 @@ const Radios = props => {
           onChange={props.onChange}
         />
       )}
-    </fieldset>
+    </div>
   )
 }
 

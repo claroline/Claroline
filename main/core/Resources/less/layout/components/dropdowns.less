@@ -15,10 +15,13 @@
     .dropdown-checkbox {
         label {
             white-space: nowrap;
-            display: block;
             line-height: @line-height-base;
             padding: @dropdown-link-padding-v @dropdown-link-padding-h;
-            padding-left: 35px; // for the checkbox
+
+            input[type="radio"],
+            input[type="checkbox"] {
+                margin-right: @dropdown-link-padding-h;
+            }
         }
 
         &:hover,

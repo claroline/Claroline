@@ -590,6 +590,7 @@
     "lock": "Lock",
     "locked": "Locked",
     "login": "Login",
+    "login_in_progress": "Login in progress...",
     "login_failure": "Login has failed. Check if your username and password are correct.",
     "login_with_third_party": "Connect with %name%",
     "login_with_third_party_btn": "%name%",

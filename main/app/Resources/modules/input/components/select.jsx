@@ -20,7 +20,7 @@ const Select = props =>
   <select
     id={props.id}
     autoComplete={props.autoComplete}
-    className={classes('form-control', {
+    className={classes('form-control', props.className, {
       [`input-${props.size}`]: !!props.size})
     }
     value={props.value || ''}

@@ -4,6 +4,7 @@ namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
@@ -12,7 +13,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 /**
  * ClientController.
@@ -29,6 +29,9 @@ class ClientController
     /** @var PlatformConfigurationHandler */
     private $configHandler;
 
+    /** @var SecurityManager */
+    private $securityManager;
+
     /** @var SerializerProvider */
     private $serializer;
 
@@ -41,6 +44,7 @@ class ClientController
      * @param TokenStorageInterface        $tokenStorage
      * @param StrictDispatcher             $dispatcher
      * @param PlatformConfigurationHandler $configHandler
+     * @param SecurityManager              $securityManager
      * @param SerializerProvider           $serializer
      * @param ClientSerializer             $clientSerializer
      */
@@ -48,12 +52,14 @@ class ClientController
         TokenStorageInterface $tokenStorage,
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $configHandler,
+        SecurityManager $securityManager,
         SerializerProvider $serializer,
         ClientSerializer $clientSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->configHandler = $configHandler;
+        $this->securityManager = $securityManager;
         $this->serializer = $serializer;
         $this->clientSerializer = $clientSerializer;
     }
@@ -82,7 +88,7 @@ class ClientController
                 'message' => $this->configHandler->getParameter('maintenance.message'),
             ],
             'currentUser' => $currentUser,
-            'impersonated' => $this->isImpersonated(),
+            'impersonated' => $this->securityManager->isImpersonated(),
 
             'header' => [
                 'menus' => array_unique(array_values($this->configHandler->getParameter('header'))),
@@ -130,18 +136,5 @@ class ClientController
         $event = $this->dispatcher->dispatch('layout.inject.stylesheet', InjectStylesheetEvent::class);
 
         return $event->getContent();
-    }
-
-    private function isImpersonated()
-    {
-        if ($token = $this->tokenStorage->getToken()) {
-            foreach ($token->getRoles() as $role) {
-                if ($role instanceof SwitchUserRole) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

@@ -15,7 +15,7 @@ security:
         #   pattern: ^/(api|apiv2)/
         #   stateless: true
         #   simple_preauth:
-        #      authenticator: Claroline\CoreBundle\Security\Authentication\ApiTokenAuthenticator
+        #      authenticator: Claroline\AuthenticationBundle\Security\Authentication\ApiTokenAuthenticator
 
         main:
             pattern: ^/
@@ -24,7 +24,7 @@ security:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             # Allows IP authentication
             simple_preauth:
-                authenticator: Claroline\CoreBundle\Security\Authentication\IpAuthenticator
+                authenticator: Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator
             # Allows JSON authentication
             json_login:
                 check_path: /login

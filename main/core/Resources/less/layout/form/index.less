@@ -16,6 +16,11 @@
         }
     }
 }
+.page-content > .form-stepper {
+    &:first-child {
+        margin-top: @component-margin-bottom;
+    }
+}
 
 .form-mode {
     display: flex;
@@ -70,18 +75,21 @@
 
 .error-block-warning,
 .has-warning .error-block {
+    color: @state-warning-text;
     background: @state-warning-bg;
     border-color: @state-warning-border;
 }
 
 .error-block-danger,
 .has-error .error-block {
+    color: @state-danger-text;
     background: @state-danger-bg;
     border-color: @state-danger-border;
 }
 
 .validation-status {
     cursor: help;
+    margin: 0 @padding-base-horizontal;
 }
 
 

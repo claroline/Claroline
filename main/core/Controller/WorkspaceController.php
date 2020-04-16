@@ -182,6 +182,7 @@ class WorkspaceController
         }
 
         return new JsonResponse([
+            'impersonated' => $this->manager->isImpersonated($this->tokenStorage->getToken()),
             'workspace' => $this->serializer->serialize($workspace),
             'accessErrors' => $accessErrors,
         ]);

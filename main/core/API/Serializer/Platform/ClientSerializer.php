@@ -189,6 +189,7 @@ class ClientSerializer
 
     private function serializeLocale()
     {
+        // TODO : there is a method in LocaleManager to do that. Reuse it
         $request = $this->requestStack->getCurrentRequest();
 
         $currentUser = null;
@@ -198,7 +199,7 @@ class ClientSerializer
 
         // retrieve the current platform locale
         $defaultLocale = $this->config->getParameter('locales.default');
-        if ($currentUser instanceof User) { // TODO : there is a method to do that. Reuse it
+        if ($currentUser instanceof User) {
             // Get the locale for the logged user
             $locale = $currentUser->getLocale();
         } elseif (!empty($this->config->getParameter('locales.available')) && array_key_exists($request->getLocale(), $this->config->getParameter('locales.available'))) {

@@ -5,9 +5,11 @@ import classes from 'classnames'
 const Checkbox = props =>
   <div className={classes({
     'checkbox'       : !props.inline,
-    'checkbox-inline': props.inline
+    'checkbox-inline': props.inline,
+    'selected': props.checked,
+    'disabled': props.disabled
   }, props.className)}>
-    <label>
+    <label htmlFor={props.id}>
       <input
         id={props.id}
         type="checkbox"

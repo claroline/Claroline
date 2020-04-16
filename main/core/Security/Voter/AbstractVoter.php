@@ -31,6 +31,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     /** @var string */
     const EDIT = 'EDIT';
     /** @var string */
+    const ADMINISTRATE = 'ADMINISTRATE';
+    /** @var string */
     const DELETE = 'DELETE';
     /** @var string */
     const VIEW = 'VIEW';
@@ -220,13 +222,15 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
      */
     protected function isOrganizationManager(TokenInterface $token, $object)
     {
-        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
-        $objectOrganizations = $object->getOrganizations();
+        if ($token->getUser() instanceof User) {
+            $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
+            $objectOrganizations = $object->getOrganizations();
 
-        foreach ($adminOrganizations as $adminOrganization) {
-            foreach ($objectOrganizations as $objectOrganization) {
-                if ($objectOrganization === $adminOrganization) {
-                    return true;
+            foreach ($adminOrganizations as $adminOrganization) {
+                foreach ($objectOrganizations as $objectOrganization) {
+                    if ($objectOrganization === $adminOrganization) {
+                        return true;
+                    }
                 }
             }
         }
@@ -274,51 +278,50 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return $perm;
     }
 
-    //ready to be overrided
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
         //crud actions
         switch ($attributes[0]) {
-            case self::VIEW: return $this->checkView($token, $object);
-            case self::CREATE: return $this->checkCreation($token, $object);
-            case self::EDIT:   return $this->checkEdit($token, $object);
-            case self::DELETE: return $this->checkDelete($token, $object);
-            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+            case self::VIEW:         return $this->checkView($token, $object);
+            case self::CREATE:       return $this->checkCreation($token, $object);
+            case self::EDIT:         return $this->checkEdit($token, $object);
+            case self::ADMINISTRATE: return $this->checkAdministrate($token, $object);
+            case self::DELETE:       return $this->checkDelete($token, $object);
+            case self::PATCH:        return $this->checkPatch($token, $object, $collection);
         }
     }
 
-    //ready to be overrided
     private function checkView(TokenInterface $token, $object)
     {
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    //ready to be overrided
     private function checkCreation(TokenInterface $token, $object)
     {
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    //ready to be overrided
     private function checkEdit(TokenInterface $token, $object)
     {
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    //ready to be overrided
+    private function checkAdministrate(TokenInterface $token, $object)
+    {
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
     private function checkDelete(TokenInterface $token, $object)
     {
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    //ready to be overrided
     private function checkPatch(TokenInterface $token, $object, ObjectCollection $collection = null)
     {
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    //ready to be overrided
     public function getSupportedActions()
     {
         return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];

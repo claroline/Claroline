@@ -13,8 +13,8 @@ const ColumnsMenu = props =>
     <MenuItem header={true}>{trans('list_columns')}</MenuItem>
 
     {props.available.map(availableColumn =>
-      <li key={availableColumn.name} className="dropdown-checkbox" role="presentation">
-        <label className="checkbox-inline">
+      <li key={availableColumn.name} className="dropdown-checkbox checkbox" role="presentation">
+        <label>
           <input
             type="checkbox"
             checked={-1 !== props.current.indexOf(availableColumn.name)}

@@ -89,9 +89,6 @@ ListPrimaryAction.propTypes = {
 
 /**
  * Actions available for a single data item.
- *
- * @param props
- * @constructor
  */
 const ListActions = props =>
   <Toolbar
@@ -120,11 +117,6 @@ ListActions.propTypes = {
 
 /**
  * Bulk actions available for selected data items.
- *
- * @param props
- * @constructor
- *
- * @todo create and use an action bar
  */
 const ListBulkActions = props =>
   <div className="data-bulk-actions list-selected">

@@ -10,7 +10,6 @@ class PlatformManager
 {
     /** @var Request */
     private $request;
-
     /** @var PlatformConfigurationHandler */
     private $config;
 

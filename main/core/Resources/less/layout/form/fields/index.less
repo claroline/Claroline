@@ -31,18 +31,35 @@ input[type=checkbox] {
     cursor: text;
 }
 
-// Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
-// And so do not work as expected
+// rewrites Bootstrap checkboxes/radios in flex
+// TODO : manage inline mode in flex too
+.radio,
 .radio-inline,
+.checkbox,
 .checkbox-inline {
+    padding-left: 0; // remove bootstrap default
+
     label {
+        // Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
+        // And so do not work as expected
         font-weight: normal;
         cursor: pointer;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 0; // remove bootstrap default
+    }
+
+    // remove bootstrap default
+    input[type="radio"],
+    input[type="checkbox"] {
+        position: static;
+        margin: 0;
+        margin-right: @icon-text-spacer;
     }
 }
 
-// increase margin
 .radio-inline + .radio-inline,
 .checkbox-inline + .checkbox-inline {
-    margin-left: @grid-gutter-width;
+    margin-left: 5px; // same space than vertical
 }
