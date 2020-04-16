@@ -1,5 +1,7 @@
 import {connect} from 'react-redux'
 
+import {selectors as securitySelectors} from '#/main/app/security/store'
+
 import {PdfPlayer as PdfPlayerComponent} from '#/plugin/pdf-player/files/pdf/components/player'
 import {actions} from '#/plugin/pdf-player/files/pdf/store'
 
@@ -10,7 +12,9 @@ import {actions} from '#/plugin/pdf-player/files/pdf/store'
  * If you don't use redux in your implementation @see Resource functional component.
  */
 const PdfPlayer = connect(
-  null,
+  (state) => ({
+    currentUser: securitySelectors.currentUser(state)
+  }),
   (dispatch) => ({
     updateProgression(id, currentPage, totalPage) {
       dispatch(actions.updateProgression(id, currentPage, totalPage))

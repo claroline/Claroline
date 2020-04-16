@@ -41,7 +41,7 @@ class PdfPlayer extends Component {
       }
       page.render(renderContext)
 
-      if (updateProgression) {
+      if (this.props.currentUser && updateProgression) {
         this.props.updateProgression(this.props.file.id, this.state.page, this.state.pdf.numPages)
       }
     })
@@ -136,7 +136,8 @@ PdfPlayer.propTypes = {
   file: T.shape(
     PdfTypes.propTypes
   ).isRequired,
-  updateProgression: T.func.isRequired
+  updateProgression: T.func.isRequired,
+  currentUser: T.object
 }
 
 export {
