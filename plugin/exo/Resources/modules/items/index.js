@@ -22,7 +22,7 @@ function loadDefinition(type) {
  *
  * @return {Promise.<Array>}
  */
-function getItems() {
+function getItems(onlyEnabled = false) {
   // get all data types declared
   const itemTypes = getApps(APP_NAME)
 
@@ -30,7 +30,7 @@ function getItems() {
     // boot types applications
     Object.keys(itemTypes).map(type => itemTypes[type]())
   ).then(
-    (loadedTypes) => loadedTypes.map(loadDefinition)
+    (loadedTypes) => loadedTypes.filter(type => !onlyEnabled || undefined === type.default.disabled || !type.default.disabled).map(loadDefinition)
   )
 }
 

@@ -26,7 +26,7 @@ class CreationModal extends Component {
   }
 
   loadAvailableTypes() {
-    getItems().then(types => this.setState({types: types}))
+    getItems(true).then(types => this.setState({types: types}))
   }
 
   render() {

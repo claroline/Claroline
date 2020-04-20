@@ -88,6 +88,7 @@ export default {
   type: 'application/x.selection+json',
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
+  disabled: true, // because it is broken and should be fixed
 
   paper: SelectionPaper,
   player: SelectionPlayer,

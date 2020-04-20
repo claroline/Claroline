@@ -22,7 +22,7 @@ class AddMediaModal extends Component {
   }
 
   loadAvailableTypes() {
-    getItems().then(types => this.setState({types: types.filter(t => t.content)}))
+    getItems(true).then(types => this.setState({types: types.filter(t => t.content)}))
   }
 
   render() {
