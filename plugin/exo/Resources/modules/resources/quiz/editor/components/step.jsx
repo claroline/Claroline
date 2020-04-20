@@ -190,8 +190,10 @@ const EditorStep = props => {
                   item.hasExpectedAnswers = false
                 }
 
-                if (!props.hasExpectedAnswers || 'none' === props.score.type) {
-                  item.score = props.score
+                if (!props.hasExpectedAnswers || !props.score || 'none' === props.score.type) {
+                  item.score = {
+                    type: 'none'
+                  }
                 }
 
                 props.update('items', [].concat(props.items, [item]))
@@ -215,8 +217,10 @@ const EditorStep = props => {
                       item.hasExpectedAnswers = false
                     }
 
-                    if (!props.hasExpectedAnswers || 'none' === props.score.type) {
-                      item.score = props.score
+                    if (!props.hasExpectedAnswers || !props.score || 'none' === props.score.type) {
+                      item.score = {
+                        type: 'none'
+                      }
                     }
 
                     return item
@@ -252,7 +256,7 @@ EditorStep.propsTypes = {
   hasExpectedAnswers: T.bool.isRequired,
   score: T.shape({
     type: T.string.isRequired
-  }).isRequired,
+  }),
   items: T.arrayOf(T.shape({
     // TODO : prop types
   })),

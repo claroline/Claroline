@@ -68,6 +68,16 @@ function validate(quiz) {
     errors.parameters = paramErrors
   }
 
+  // validates Quiz score
+  const scoreErrors = {}
+  if (isEmpty(quiz.score) || isEmpty(quiz.score.type)) {
+    scoreErrors.type = tval('This value should not be blank.')
+  }
+
+  if (!isEmpty(scoreErrors)) {
+    errors.score = scoreErrors
+  }
+
   // validates Quiz picking
   const picking = quiz.picking
   const pickingErrors = {}

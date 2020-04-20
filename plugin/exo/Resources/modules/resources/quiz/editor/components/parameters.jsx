@@ -618,7 +618,7 @@ EditorParameters.propTypes = {
   quizType: T.string.isRequired,
   score: T.shape({
     type: T.string.isRequired
-  }).isRequired,
+  }),
   steps: T.arrayOf(T.shape({
     // TODO : prop types
   })),
