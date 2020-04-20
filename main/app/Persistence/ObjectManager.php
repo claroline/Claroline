@@ -24,7 +24,6 @@ class ObjectManager extends ObjectManagerDecorator
 {
     use LoggableTrait;
 
-    private $monolog;
     private $flushSuiteLevel = 0;
     private $supportsTransactions = false;
     private $hasEventManager = false;
@@ -32,12 +31,12 @@ class ObjectManager extends ObjectManagerDecorator
     private $activateLog = false;
     private $allowForceFlush = true;
     private $showFlushLevel = false;
-    private $ignoreForeignKeys = false;
 
     /**
      * ObjectManager constructor.
      *
      * @param ObjectManagerInterface $om
+     * @param LoggerInterface        $logger
      */
     public function __construct(ObjectManagerInterface $om, LoggerInterface $logger)
     {
@@ -46,7 +45,7 @@ class ObjectManager extends ObjectManagerDecorator
             = $this->hasEventManager
             = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
-        $this->monolog = $logger;
+        $this->logger = $logger;
     }
 
     /**
@@ -269,7 +268,7 @@ class ObjectManager extends ObjectManagerDecorator
         $objects = $query->getResult();
 
         if (($entityCount = count($objects)) !== ($idCount = count($list))) {
-            $this->monolog->warning("{$entityCount} out of {$idCount} ids don't match any existing object");
+            $this->logger->warning("{$entityCount} out of {$idCount} ids don't match any existing object");
         }
 
         if ($orderStrict) {
@@ -383,6 +382,8 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * @param string     $class
      * @param string|int $id
+     *
+     * @return object|null
      */
     public function find($class, $id)
     {
@@ -395,6 +396,12 @@ class ObjectManager extends ObjectManagerDecorator
 
     /**
      * Fetch an object from database according to the class and the id/uuid of the data.
+     *
+     * @param array  $data
+     * @param string $class
+     * @param array  $identifiers
+     *
+     * @return object|null
      */
     public function getObject(array $data, $class, array $identifiers = [])
     {
@@ -402,11 +409,11 @@ class ObjectManager extends ObjectManagerDecorator
 
         if (isset($data['id']) || isset($data['uuid'])) {
             if (isset($data['uuid'])) {
-                $object = $this->getRepository($class)->findOneByUuid($data['uuid']);
+                $object = $this->getRepository($class)->findOneBy(['uuid' => $data['uuid']]);
             } else {
                 $object = !is_numeric($data['id']) && property_exists($class, 'uuid') ?
-                $this->getRepository($class)->findOneByUuid($data['id']) :
-                $this->getRepository($class)->findOneById($data['id']);
+                $this->getRepository($class)->findOneBy(['uuid' => $data['id']]) :
+                $this->getRepository($class)->findOneBy(['id' => $data['id']]);
             }
 
             return $object;

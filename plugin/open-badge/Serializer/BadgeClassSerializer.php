@@ -159,7 +159,7 @@ class BadgeClassSerializer
     /**
      * Deserializes data into a Group entity.
      *
-     * @param \stdClass  $data
+     * @param array      $data
      * @param BadgeClass $badge
      * @param array      $options
      *
@@ -177,10 +177,13 @@ class BadgeClassSerializer
         $this->sipe('restrictions.hideRecipients', 'setHideRecipients', $data, $badge);
 
         if (isset($data['issuer'])) {
-            $badge->setIssuer($this->om->getObject($data['issuer'], Organization::class));
+            /** @var Organization $organization */
+            $organization = $this->om->getObject($data['issuer'], Organization::class);
+            $badge->setIssuer($organization);
         }
 
         if (isset($data['image']) && isset($data['image']['id'])) {
+            /** @var PublicFile $thumbnail */
             $thumbnail = $this->om->getObject($data['image'], PublicFile::class);
             $badge->setImage($data['image']['url']);
             $this->fileUt->createFileUse(
@@ -192,11 +195,13 @@ class BadgeClassSerializer
 
         if (isset($data['workspace']) && isset($data['workspace']['id'])) {
             /** @var Workspace $workspace */
-            $workspace = $this->om->getRepository(Workspace::class)->find($data['workspace']['id']);
-            $badge->setWorkspace($workspace);
-            //main orga maybe instead ? this is fishy
-            if (count($workspace->getOrganizations()) > 1) {
-                $badge->setIssuer($workspace->getOrganizations()[0]);
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+            if ($workspace) {
+                $badge->setWorkspace($workspace);
+                // main organization maybe instead ? this is fishy
+                if (count($workspace->getOrganizations()) > 1) {
+                    $badge->setIssuer($workspace->getOrganizations()[0]);
+                }
             }
         }
 

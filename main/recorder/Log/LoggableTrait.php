@@ -7,6 +7,7 @@ use Psr\Log\LogLevel;
 
 trait LoggableTrait
 {
+    /** @var LoggerInterface */
     protected $logger;
 
     public function log($message, $logLevel = null)
