@@ -1,21 +1,25 @@
 import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as formActions} from '#/main/app/content/form/store'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {selectors} from '#/main/core/tools/community/store/selectors'
 
 export const actions = {}
 
-actions.open = (formName, id = null, defaultProps) => {
-  if (id) {
-    return {
-      [API_REQUEST]: {
-        url: ['apiv2_user_get', {id}],
-        success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
-      }
+actions.open = (formName, publicUrl = null, defaultProps) => (dispatch, getState) => {
+  const current = formSelectors.data(formSelectors.form(getState(), formName))
+
+  if (current.publicUrl !== publicUrl) {
+    if (publicUrl) {
+      return dispatch({
+        [API_REQUEST]: {
+          url: ['apiv2_user_get', {id: publicUrl}],
+          success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
+        }
+      })
     }
-  } else {
-    return formActions.resetForm(formName, defaultProps, true)
+
+    dispatch(formActions.resetForm(formName, defaultProps, true))
   }
 }
 

@@ -1,31 +1,28 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 
-import {selectors as securitySelectors} from '#/main/app/security/store'
+export const TRACKING_INIT = 'TRACKING_INIT'
 
-const TRACKINGS_INIT = 'TRACKINGS_INIT'
+export const actions = {}
 
-const actions = {}
+actions.initTrackings = makeActionCreator(TRACKING_INIT, 'tracking')
 
-actions.initTrackings = makeActionCreator(TRACKINGS_INIT, 'trackings')
-
-actions.loadTrackings = (startDate, endDate) => (dispatch, getState) => {
-  const authenticatedUser = securitySelectors.currentUser(getState())
+actions.loadTracking = (userId, startDate = null, endDate = null) => (dispatch) => {
+  const params = {}
+  if (startDate) {
+    params.startDate = startDate
+  }
+  if (endDate) {
+    params.endDate = endDate
+  }
 
   return dispatch({
     [API_REQUEST]: {
-      url: url(['apiv2_user_trackings_list', {user: authenticatedUser.id}], {startDate: startDate, endDate: endDate}),
+      url: url(['apiv2_user_tracking_list', {user: userId}], params),
       request: {
         method: 'GET'
       },
-      success: (response, dispatch) => {
-        dispatch(actions.initTrackings(response.data))
-      }
+      success: (response) => dispatch(actions.initTrackings(response.data))
     }
   })
-}
-
-export {
-  actions,
-  TRACKINGS_INIT
 }

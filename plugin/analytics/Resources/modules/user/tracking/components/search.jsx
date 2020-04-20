@@ -6,6 +6,8 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {trans} from '#/main/app/intl/translation'
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group'
 
+// TODO : replace by standard search component
+
 const Search = props =>
   <div className="panel panel-default">
     <div className="panel-body">
@@ -32,7 +34,10 @@ const Search = props =>
       </div>
       <div className="col-md-6 col-xs-12">
         <CallbackButton
-          className="btn btn-primary traking-filter-button"
+          style={{
+            marginTop: '20px'
+          }}
+          className="btn btn-primary"
           callback={() => props.onSearch(props.startDate, props.endDate)}
         >
           {trans('filter')}

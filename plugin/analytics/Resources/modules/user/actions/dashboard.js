@@ -1,3 +1,4 @@
+import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
@@ -9,5 +10,6 @@ export default (users, nodesRefresher, path) => ({
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-tachometer',
   label: trans('show-dashboard', {}, 'actions'),
-  target: `${path}/${users[0].publicUrl}/dashboard`
+  target: `${path}/dashboard`,
+  displayed: hasPermission('edit', users[0])
 })

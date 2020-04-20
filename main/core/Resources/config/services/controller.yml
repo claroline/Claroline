@@ -124,8 +124,6 @@ services:
           - '@claroline.manager.mail_manager'
           - '@claroline.manager.registration_manager'
 
-    Claroline\CoreBundle\Controller\APINew\User\UserTrackingController: ~
-
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
         arguments:
           - '@security.authorization_checker'

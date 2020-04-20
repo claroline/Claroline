@@ -400,6 +400,7 @@ class UserSerializer extends GenericSerializer
         }
 
         return [
+            'open' => true,
             'contact' => !$isOwner,
             'edit' => $isAdmin || !empty($editRoles) || $isOwner,
             'administrate' => $isAdmin,

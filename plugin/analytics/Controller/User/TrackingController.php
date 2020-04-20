@@ -11,75 +11,74 @@
 
 namespace Claroline\AnalyticsBundle\Controller\User;
 
-use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\UserRepository;
-use Doctrine\ORM\NoResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @EXT\Route("/user/tracking")
+ * @EXT\Route("/user_tracking"),
  */
-class TrackingController extends Controller
+class TrackingController extends AbstractApiController
 {
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var ResourceUserEvaluation */
-    private $resourceUserEvaluationRepo;
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var FinderProvider */
+    private $finder;
 
     /**
-     * TrackingController constructor.
+     * UserTrackingController constructor.
      *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * @param FinderProvider $finder
      */
-    public function __construct(
-        ObjectManager $om,
-        SerializerProvider $serializer
-    ) {
-        $this->userRepo = $om->getRepository(User::class);
-        $this->resourceUserEvaluationRepo = $om->getRepository(ResourceUserEvaluation::class);
-        $this->serializer = $serializer;
+    public function __construct(FinderProvider $finder)
+    {
+        $this->finder = $finder;
     }
 
     /**
-     * Displays a user tracking.
+     * @ApiDoc(
+     *     description="List the objects of class ResourceUserEvaluation for a user.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     parameters={
+     *          {"name": "user", "type": {"string", "integer"}, "description": "The user uuid"}
+     *     }
+     * )
+     * @EXT\Route("/{user}/tracking/list", name="apiv2_user_tracking_list")
+     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
      *
-     * @EXT\Route("/{publicUrl}", name="claro_user_tracking")
-     * @EXT\Template("ClarolineCoreBundle:user:tracking.html.twig")
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @param User    $user
+     * @param Request $request
      *
-     * @param string $publicUrl
-     *
-     * @return array
+     * @return JsonResponse
      */
-    public function indexAction($publicUrl)
+    public function listAction(User $user, Request $request)
     {
-        $this->checkAccess();
+        $params = $request->query->all();
 
-        try {
-            $user = $this->userRepo->findOneByIdOrPublicUrl($publicUrl);
-            $evaluations = $this->resourceUserEvaluationRepo->findBy(['user' => $user], ['date' => 'desc']);
-
-            return [
-                'user' => $this->serializer->serialize($user),
-                'evaluations' => array_map(function (ResourceUserEvaluation $rue) {
-                    return $this->serializer->serialize($rue);
-                }, $evaluations),
-            ];
-        } catch (NoResultException $e) {
-            throw new NotFoundHttpException('Page not found');
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
         }
-    }
+        $params['hiddenFilters']['user'] = $user->getUuid();
+        if (!empty($params['startDate'])) {
+            $params['hiddenFilters']['fromDate'] = $params['startDate'];
+        }
 
-    private function checkAccess()
-    {
-        // todo check access
+        if (!empty($params['endDate'])) {
+            $params['hiddenFilters']['untilDate'] = $params['endDate'];
+        }
+
+        $params['sortBy'] = '-date';
+
+        return new JsonResponse(
+            $this->finder->search(ResourceUserEvaluation::class, $params)
+        );
     }
 }

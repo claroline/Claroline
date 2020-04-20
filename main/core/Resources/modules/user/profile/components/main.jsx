@@ -11,6 +11,9 @@ import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {ProfileEdit} from '#/main/core/user/profile/editor/components/main'
 import {ProfileShow} from '#/main/core/user/profile/player/components/main'
 
+// TODO : remove hard dependency to plugin
+import {Tracking} from '#/plugin/analytics/user/tracking/containers/main'
+
 const ProfileComponent = props => {
   if (!props.loaded) {
     return (
@@ -40,10 +43,11 @@ const ProfileComponent = props => {
             path: '/edit',
             component: ProfileEdit,
             disabled: !hasPermission('edit', props.user)
-          }/*, {
-            path: '/badges/:id',
-            component: ProfileBadgeList
-          }*/
+          }, {
+            path: '/dashboard',
+            component: Tracking,
+            disabled: !hasPermission('edit', props.user)
+          }
         ]}
         redirect={[
           {from: '/', exact: true, to: '/show/main'}

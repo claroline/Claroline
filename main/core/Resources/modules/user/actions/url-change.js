@@ -4,7 +4,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_USER_PUBLIC_URL} from '#/main/core/user/modals'
 
-export default (users, refresher, path, currentUser) => ({
+export default (users, refresher) => ({
   name: 'url-change',
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-link',

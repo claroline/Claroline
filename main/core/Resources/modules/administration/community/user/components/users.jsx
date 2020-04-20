@@ -2,6 +2,7 @@ import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -12,6 +13,7 @@ import {Alert} from '#/main/app/alert/components/alert'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {selectors} from '#/main/core/administration/community/user/store'
+import {route} from '#/main/core/user/routing'
 import {UserList, getUserListDefinition} from '#/main/core/administration/community/user/components/user-list'
 import {getActions} from '#/main/core/user/utils'
 
@@ -41,7 +43,19 @@ const UsersList = props =>
         add: () => props.invalidateList(`${baseSelectors.STORE_NAME}.users.list`),
         update: () => props.invalidateList(`${baseSelectors.STORE_NAME}.users.list`),
         delete: () => props.invalidateList(`${baseSelectors.STORE_NAME}.users.list`)
-      }, props.path, props.currentUser)}
+      }, props.path, props.currentUser).then((actions) => [].concat(actions, [
+        // TODO : reuse dynamic show-profile action
+        // it's not possible now because the action expects the tool has a route for the profile (which is not the case in admin)
+        {
+          name: 'show-profile',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-address-card',
+          label: trans('show_profile'),
+          target: route(rows[0]),
+          displayed: hasPermission('open', rows[0]),
+          scope: ['object']
+        }
+      ]))}
       definition={getUserListDefinition({platformRoles: props.platformRoles})}
       card={UserList.card}
     />

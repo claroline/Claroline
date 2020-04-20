@@ -1,144 +1,125 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import {schemeCategory20c} from 'd3-scale'
 
 import {asset} from '#/main/app/config/asset'
-import {trans} from '#/main/app/intl/translation'
-import {displayDate} from '#/main/app/intl/date'
-import {LinkButton} from '#/main/app/buttons/link/components/button'
+import {toKey} from '#/main/core/scaffolding/text'
+import {trans, number, displayDate, displayDuration} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {UserEvaluation as ResourceUserEvaluationTypes} from '#/main/core/resource/prop-types'
+import {DataCard} from '#/main/app/data/components/card'
+import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {route as resourceRoute} from '#/main/core/resource/routing'
-import {constants} from '#/main/core/user/tracking/constants'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
-import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
-const EventWrapper = props =>
-  <li className={classes('timeline-event-container', {
-    'timeline-event-success': [constants.STATUS_PASSED, constants.STATUS_COMPLETED].indexOf(props.status) > -1,
-    'timeline-event-partial': [constants.STATUS_PASSED, constants.STATUS_FAILED, constants.STATUS_COMPLETED].indexOf(props.status) === -1,
-    'timeline-event-failure': constants.STATUS_FAILED === props.status
-  })}>
-    <span className={classes('timeline-event-icon', constants.TRACKING_EVENTS[props.type].icon)} />
+import {constants} from '#/plugin/analytics/user/tracking/constants'
 
-    <div className="timeline-event">
-      <span className="timeline-event-date">
-        {displayDate(props.date, true, true)}
-      </span>
+const EvaluationEvent = props => {
+  let progression = 0
+  if (props.data.progression) {
+    progression = props.data.progression
+    if (props.data.progressionMax) {
+      progression = (progression / props.data.progressionMax) * 100
+    }
+  }
 
-      {props.status && <span className={classes('timeline-event-status', {
-        'fa fa-fw fa-check': [constants.STATUS_PASSED, constants.STATUS_COMPLETED].indexOf(props.status) > -1,
-        'fa fa-fw fa-minus': [constants.STATUS_PASSED, constants.STATUS_FAILED, constants.STATUS_COMPLETED].indexOf(props.status) === -1,
-        'fa fa-fw fa-times': constants.STATUS_FAILED === props.status
-      })} />}
+  return (
+    <li className={classes('timeline-event-container', {
+      'timeline-event-success': [constants.STATUS_PASSED, constants.STATUS_COMPLETED, constants.STATUS_PARTICIPATED].indexOf(props.data.status) > -1,
+      'timeline-event-partial': [constants.STATUS_PASSED, constants.STATUS_FAILED, constants.STATUS_COMPLETED, constants.STATUS_PARTICIPATED].indexOf(props.data.status) === -1,
+      'timeline-event-failure': constants.STATUS_FAILED === props.data.status
+    })}>
+      <span className={classes('timeline-event-icon', constants.TRACKING_EVENTS[props.type].icon)} />
 
-      <div className="timeline-event-block">
-        <div className="timeline-event-header">
-          <LinkButton
-            className="btn-link"
-            primary={true}
-            target={resourceRoute(props.resource)}
-          >
-            {props.resource.thumbnail ?
-              <img
-                src={asset(props.resource.thumbnail)}
-                alt="resource_icon"
-              /> :
-              <ResourceIcon
-                className="icon"
-                mimeType={props.resource.meta.mimeType}
-              />
-            }
-          </LinkButton>
-        </div>
+      <div className="timeline-event">
+        <span className="timeline-event-date">
+          {displayDate(props.date, true, true)}
+        </span>
 
-        <div className="timeline-event-content">
-          {React.createElement('h'+props.level, {
-            className: 'timeline-event-title'
-          }, [
-            props.title,
-            props.subtitle && <small key="event-subtitle">{props.subtitle}</small>
-          ])}
-
-          {props.children}
-        </div>
-
-        {props.progression && (!!props.progression[0] || !!props.progression[1]) &&
-          <div className="timeline-event-progression">
-            <ScoreGauge
-              type="user"
-              value={Math.round(props.progression[0])}
-              total={props.progression[1]}
-              width={70}
-              height={70}
-              displayValue={value => undefined === value || null === value ? '?' : value+''}
-            />
-          </div>
+        {props.data.status &&
+          <span className={classes('timeline-event-status', {
+            'fa fa-fw fa-check': [constants.STATUS_PASSED, constants.STATUS_COMPLETED, constants.STATUS_PARTICIPATED].indexOf(props.data.status) > -1,
+            'fa fa-fw fa-minus': [constants.STATUS_PASSED, constants.STATUS_FAILED, constants.STATUS_COMPLETED, constants.STATUS_PARTICIPATED].indexOf(props.data.status) === -1,
+            'fa fa-fw fa-times': constants.STATUS_FAILED === props.data.status
+          })} />
         }
+
+        <DataCard
+          id={props.data.resourceNode.id}
+          className="resource-evaluation-card"
+          poster={props.data.resourceNode.thumbnail ? asset(props.data.resourceNode.thumbnail.url) : null}
+          icon={
+            <LiquidGauge
+              id={`user-progression-${props.data.resourceNode.id}`}
+              type="user"
+              value={progression}
+              displayValue={(value) => number(value) + '%'}
+              width={60}
+              height={60}
+            />
+          }
+          title={props.data.resourceNode.name}
+          subtitle={trans(props.data.resourceNode.meta.type, {}, 'resource')}
+          actions={[
+            {
+              name: 'open',
+              type: LINK_BUTTON,
+              icon: 'fa fa-fw fa-external-link',
+              label: trans('open', {}, 'actions'),
+              target: resourceRoute(props.data.resourceNode)
+            }
+          ]}
+        >
+          <div className="resource-evaluation-details">
+            {[
+              {
+                icon: 'fa fa-fw fa-eye',
+                label: trans('views'),
+                value: number(props.data.nbOpenings)
+              }, {
+                icon: 'fa fa-fw fa-redo',
+                label: trans('attempts'),
+                value: number(props.data.nbAttempts)
+              }, {
+                icon: 'fa fa-fw fa-hourglass-half',
+                label: 'Temps passé',
+                value: displayDuration(props.data.duration) || trans('unknown')
+              }, {
+                icon: 'fa fa-fw fa-award',
+                label: trans('score'),
+                displayed: !!props.data.scoreMax,
+                value: (number(props.data.score) || 0) + ' / ' + number(props.data.scoreMax)
+              }
+            ]
+              .filter(item => undefined === item.displayed || item.displayed)
+              .map((item, index) => (
+                <article key={toKey(item.label)}>
+                  <span className={item.icon} style={{backgroundColor: schemeCategory20c[(index * 4) + 1]}} />
+                  <h5>
+                    <small>{item.label}</small>
+                    {item.value}
+                  </h5>
+                </article>
+              ))
+            }
+          </div>
+        </DataCard>
       </div>
-    </div>
-  </li>
-
-EventWrapper.propTypes = {
-  level: T.number.isRequired,
-  date: T.string.isRequired,
-  title: T.string.isRequired,
-  subtitle: T.string,
-  status: T.oneOf(constants.TRACKING_STATUS),
-  progression: T.array,
-  type: T.oneOf(
-    Object.keys(constants.TRACKING_EVENTS)
-  ).isRequired,
-  children: T.node.isRequired,
-  resource: T.shape({
-    autoId: T.number.isRequired,
-    id: T.string.isRequired,
-    name: T.string.isRequired,
-    thumbnail: T.string,
-    meta: T.shape({
-      type: T.string.isRequired,
-      mimeType: T.string.isRequired,
-      icon: T.string.isRequired
-    }).isRequired
-  })
+    </li>
+  )
 }
-
-const EvaluationEvent = props =>
-  <EventWrapper
-    title={props.data.resourceNode.name}
-    subtitle={trans(props.data.resourceNode.meta.type, {}, 'resource')}
-    level={props.level}
-    date={props.date}
-    status={props.status}
-    type={props.type}
-    progression={props.progression}
-    resource={props.data.resourceNode}
-  >
-    {trans('nb_attempts_participations', {}, 'platform')} : {props.data.nbAttempts}
-    <br/>
-    {trans('nb_openings', {}, 'platform')} : {props.data.nbOpenings}
-    <br/>
-    {trans('total_time', {}, 'platform')} : {props.data.duration ? `${props.data.duration} ${trans('seconds', {}, 'platform')}` : '-'}
-  </EventWrapper>
 
 EvaluationEvent.propTypes = {
   level: T.number.isRequired,
   date: T.string.isRequired,
-  status: T.oneOf(constants.TRACKING_STATUS),
   type: T.oneOf(
     Object.keys(constants.TRACKING_EVENTS)
   ).isRequired,
-  progression: T.array,
-  data: T.shape({
-    resourceNode: T.shape({
-      name: T.string.isRequired,
-      meta: T.shape({
-        type: T.string.isRequired
-      }).isRequired
-    }),
-    nbAttempts: T.number,
-    nbOpenings: T.number,
-    duration: T.number
-  })
+  children: T.node.isRequired,
+  data: T.shape(
+    ResourceUserEvaluationTypes.propTypes
+  )
 }
 
 const Timeline = props =>
@@ -146,6 +127,7 @@ const Timeline = props =>
     <li className="timeline-endpoint timeline-event-date">
       {trans('today', {}, 'platform')}
     </li>
+
     {props.events.map((event, eventIndex) =>
       <EvaluationEvent
         key={eventIndex}
@@ -153,6 +135,7 @@ const Timeline = props =>
         {...event}
       />
     )}
+
     {props.events.length > 0 &&
       <li className="timeline-endpoint timeline-event-date">
         {displayDate(props.events[props.events.length - 1].date, false)}
@@ -165,9 +148,9 @@ Timeline.propTypes = {
   events: T.arrayOf(T.shape({
     date: T.string.isRequired,
     type: T.string.isRequired,
-    status: T.string,
-    progression: T.array,
-    data: T.object
+    data: T.shape(
+      ResourceUserEvaluationTypes.propTypes
+    )
   })).isRequired
 }
 

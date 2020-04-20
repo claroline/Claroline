@@ -10,7 +10,6 @@
 @import "authentication"; // todo : should not be included in main theme file
 @import "message";
 @import "timeline";
-@import "tracking";
 
 // todo : try to merge all user-avatar styles here
 .user-avatar {
@@ -64,8 +63,11 @@
         margin-top: floor((@font-size-h2 * @headings-line-height) + (@line-height-computed / 2)); // because of the profile picture
     }
 
-    h2:first-of-type {
-        margin-top: 0;
+    .user-profile-content {
+        > .data-details > .h-title:first-child,
+        > h2:first-child {
+            margin-top: 0;
+        }
     }
 }
 

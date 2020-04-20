@@ -25,6 +25,8 @@ import {UserEvaluation as WorkspaceUserEvaluationTypes} from '#/main/core/worksp
 import {UserEvaluation as ResourceUserEvaluationTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCE_EVALUATIONS} from '#/plugin/analytics/tools/dashboard/progression/modals/resource-evaluations'
 
+// TODO : create a resource evaluation card and reuse it here and in user tracking
+
 const WorkspaceProgression = (props) => {
   let progression = 0
   if (props.workspaceEvaluation.progression) {

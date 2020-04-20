@@ -1,3 +1,4 @@
+import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
@@ -9,6 +10,7 @@ export default (users, refresher, path) => ({
   icon: 'fa fa-fw fa-address-card',
   label: trans('show_profile'),
   target: route(users[0], path),
+  displayed: hasPermission('open', users[0]),
   scope: ['object'],
   default: true
 })

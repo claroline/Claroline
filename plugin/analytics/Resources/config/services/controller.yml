@@ -38,8 +38,7 @@ services:
 
     Claroline\AnalyticsBundle\Controller\User\TrackingController:
         arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
 
     Claroline\AnalyticsBundle\Controller\Workspace\DashboardController:
         arguments:

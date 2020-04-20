@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, displayDuration} from '#/main/app/intl'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
 const Summary = props =>
@@ -12,11 +12,7 @@ const Summary = props =>
       </div>
       <div>
         <b>{trans('total_time')}</b> : {
-          props.evaluations.reduce((acc, evaluation) => {
-            const duration = evaluation.duration ? evaluation.duration : 0
-
-            return acc + duration
-          }, 0)
+          displayDuration(props.evaluations.reduce((acc, evaluation) => acc + (evaluation.duration || 0), 0))
         }
       </div>
     </div>
