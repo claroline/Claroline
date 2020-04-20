@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -12,51 +12,43 @@ import {selectors} from '#/main/core/resources/file/modals/form/store'
 
 // TODO : display old file
 
-class FileFormModal extends Component {
-  componentDidMount() {
-    this.props.resetForm()
-  }
-
-  render() {
-    return (
-      <Modal
-        {...omit(this.props, 'resourceNode', 'data', 'saveEnabled', 'resetForm', 'save', 'onChange')}
-        icon="fa fa-fw fa-exchange-alt"
-        title={trans('change_file', {}, 'resource')}
-      >
-        <FormData
-          name={selectors.STORE_NAME}
-          sections={[
+const FileFormModal = props =>
+  <Modal
+    {...omit(props, 'resourceNode', 'data', 'saveEnabled', 'resetForm', 'save', 'onChange')}
+    icon="fa fa-fw fa-exchange-alt"
+    title={trans('change_file', {}, 'resource')}
+    onEntering={() => props.resetForm()}
+  >
+    <FormData
+      name={selectors.STORE_NAME}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
             {
-              title: trans('general'),
-              primary: true,
-              fields: [
-                {
-                  name: 'file',
-                  type: 'file',
-                  label: trans('file'),
-                  required: true
-                }
-              ]
+              name: 'file',
+              type: 'file',
+              label: trans('file'),
+              required: true
             }
-          ]}
-        />
+          ]
+        }
+      ]}
+    />
 
-        <CallbackButton
-          className="modal-btn btn btn-primary"
-          disabled={!this.props.saveEnabled || !this.props.data.file}
-          callback={() => {
-            this.props.save(this.props.resourceNode, this.props.data.file, this.props.onChange)
-            this.props.fadeModal()
-          }}
-          primary={true}
-        >
-          {trans('save', {}, 'actions')}
-        </CallbackButton>
-      </Modal>
-    )
-  }
-}
+    <CallbackButton
+      className="modal-btn btn"
+      disabled={!props.saveEnabled || !props.data.file}
+      callback={() => {
+        props.save(props.resourceNode, props.data.file, props.onChange)
+        props.fadeModal()
+      }}
+      primary={true}
+    >
+      {trans('save', {}, 'actions')}
+    </CallbackButton>
+  </Modal>
 
 FileFormModal.propTypes = {
   resourceNode: T.shape(
