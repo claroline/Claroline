@@ -36,27 +36,24 @@ class UserSerializer extends GenericSerializer
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
-
     /** @var ObjectManager */
     protected $om;
-
     /** @var PlatformConfigurationHandler */
     private $config;
-
     /** @var FacetManager */
     private $facetManager;
-
     /** @var PublicFileSerializer */
     private $fileSerializer;
-
     /** @var ContainerInterface */
     private $container;
-
     /** @var StrictDispatcher */
     private $eventDispatcher;
+    /** @var OrganizationSerializer */
+    private $organizationSerializer;
+    /** @var FieldFacetValueSerializer */
+    private $fieldFacetValueSerializer;
 
     private $organizationRepo;
     /** @var RoleRepository */
@@ -73,6 +70,8 @@ class UserSerializer extends GenericSerializer
      * @param PublicFileSerializer          $fileSerializer
      * @param ContainerInterface            $container
      * @param StrictDispatcher              $eventDispatcher
+     * @param OrganizationSerializer        $organizationSerializer
+     * @param FieldFacetValueSerializer     $fieldFacetValueSerializer
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -402,7 +401,7 @@ class UserSerializer extends GenericSerializer
 
         return [
             'contact' => !$isOwner,
-            'edit' => $isAdmin || !empty($editRoles),
+            'edit' => $isAdmin || !empty($editRoles) || $isOwner,
             'administrate' => $isAdmin,
             'delete' => $isOwner || $isAdmin, // todo check platform param to now if current user can destroy is account
         ];

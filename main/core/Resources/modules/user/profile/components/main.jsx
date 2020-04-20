@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
+import {hasPermission} from '#/main/app/security'
 import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -38,8 +39,7 @@ const ProfileComponent = props => {
           }, {
             path: '/edit',
             component: ProfileEdit,
-            disabled: !props.currentUser || (props.user.username !== props.currentUser.username &&
-            props.currentUser.roles.filter(r => ['ROLE_ADMIN'].concat(props.parameters['roles_edition']).indexOf(r.name) > -1).length === 0)
+            disabled: !hasPermission('edit', props.user)
           }/*, {
             path: '/badges/:id',
             component: ProfileBadgeList

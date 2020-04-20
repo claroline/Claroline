@@ -1,5 +1,3 @@
-import get from 'lodash/get'
-
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -12,7 +10,7 @@ export default (users, refresher, path, currentUser) => ({
   icon: 'fa fa-fw fa-lock',
   label: trans('change_password'),
   scope: ['object'],
-  displayed: hasPermission('administrate', users[0]) || users[0].id === get(currentUser, 'id'),
+  displayed: hasPermission('edit', users[0]),
   modal: [MODAL_USER_PASSWORD, {
     user: users[0]
   }],
