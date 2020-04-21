@@ -519,5 +519,9 @@
     "papers_delete_message": "{1} Êtes-vous sûr de vouloir supprimer cette tentative ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% tentatives ?",
     "round_total_score": "Arrondir le score total à une valeur définie",
     "test_mode": "Vous êtes en train de passer l'exercice en mode Test.",
-    "test_mode_desc": "Dans ce mode vos résultats ne seront pas sauvegardés et ne seront donc pas accessible dans la section 'Liste des résultats'."
+    "test_mode_desc": "Dans ce mode vos résultats ne seront pas sauvegardés et ne seront donc pas accessible dans la section 'Liste des résultats'.",
+    "show_intermediate_scores": "Afficher les scores intermédiaires",
+    "per_step": "Par étape",
+    "per_tag": "Par tag",
+    "show_step_titles": "Afficher le titre des étapes"
 }

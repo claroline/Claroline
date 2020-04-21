@@ -1,15 +1,8 @@
 {
-  "webpack": {
-    "entry": {
-      "docimology": "docimology/index"
-    }
-  },
-
   "styles": {
     "entry": {
       "quiz-resource": "main.less",
-      "question-bank-tool": "bank/main.less",
-      "docimology": "docimology/main.less"
+      "question-bank-tool": "bank/main.less"
     }
   }
 }

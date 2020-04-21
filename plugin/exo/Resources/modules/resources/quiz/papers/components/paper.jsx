@@ -22,7 +22,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 
 import {calculateTotal} from '#/plugin/exo/items/score'
-import quizSelect from '#/plugin/exo/quiz/selectors'
+import {selectors as statSelectors} from '#/plugin/exo/resources/quiz/statistics/store'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
@@ -266,7 +266,7 @@ const Paper = withRouter(
         numberingType: selectors.currentNumbering(state),
         showExpectedAnswers: selectors.showExpectedAnswers(state),
         showStatistics: selectors.showStatistics(state),
-        stats: quizSelect.statistics(state)
+        stats: statSelectors.statistics(state)
       })
     },
     (dispatch) => ({

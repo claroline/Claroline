@@ -12,7 +12,8 @@ import {QuizResource as QuizResourceComponent} from '#/plugin/exo/resources/quiz
 import {reducer, selectors} from '#/plugin/exo/resources/quiz/store'
 
 import {actions as playerActions} from '#/plugin/exo/quiz/player/actions'
-import {actions as statisticsActions} from '#/plugin/exo/quiz/statistics/store'
+import {actions as statisticsActions} from '#/plugin/exo/resources/quiz/statistics/store'
+import {actions as docimologyActions} from '#/plugin/exo/docimology/store'
 
 const QuizResource = DragNDropContext(
   withRouter(
@@ -34,6 +35,9 @@ const QuizResource = DragNDropContext(
           },
           statistics(quizId) {
             dispatch(statisticsActions.fetchStatistics(quizId))
+          },
+          docimology(quizId) {
+            dispatch(docimologyActions.fetchDocimology(quizId))
           }
         })
       )(QuizResourceComponent)

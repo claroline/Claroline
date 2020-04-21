@@ -1,17 +1,14 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {PageFull} from '#/main/app/page/components/full'
-
-import {route as resourceRoute} from '#/main/core/resource/routing'
+import {ContentLoader} from '#/main/app/content/components/loader'
 import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge'
 
-import {select} from '#/plugin/exo/docimology/selectors'
+import {selectors} from '#/plugin/exo/docimology/store/selectors'
 
 const COLOR_SUCCESS = '#4F7302'
 const COLOR_WARNING = '#F0AD4E'
@@ -102,7 +99,7 @@ SuccessDistribution.propTypes = {
 
 const ScoreDistribution = props =>
   <div className="paper-score-distribution">
-    <h2>{trans('docimology_score_distribution')}</h2>
+    <h2>{trans('docimology_score_distribution', {}, 'quiz')}</h2>
     <div className="help-block">
       <span className="fa fa-fw fa-info-circle" />
       {trans('docimology_note_gauges_help', {}, 'quiz')}
@@ -179,8 +176,8 @@ const DifficultyIndex = props =>
       <div className="panel-body">
         <BarChart
           data={props.questionsDifficultyIndex}
-          width={720}
-          height={350}
+          width={1200}
+          height={250}
           margin={{top: 20, right: 20, bottom: 80, left: 80}}
           yAxisLabel={{
             show: true,
@@ -221,8 +218,8 @@ const DiscriminationIndex = props =>
       <div className="panel-body">
         <BarChart
           data={props.discriminationCoefficient}
-          width={720}
-          height={350}
+          width={1200}
+          height={250}
           margin={{top: 20, right: 20, bottom: 80, left: 80}}
           yAxisLabel={{
             show: true,
@@ -257,55 +254,45 @@ DiscriminationIndex.propTypes = {
   discriminationCoefficient: T.object.isRequired
 }
 
-const Docimology = props =>
-  <PageFull
-    title={props.quiz.title}
-    subtitle={trans('docimology', {}, 'quiz')}
-    actions={[
-      {
-        name: 'back',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-sign-out',
-        label: trans('back_to_the_quiz', {}, 'quiz'),
-        target: resourceRoute(props.resourceNode)
-      }
-    ]}
-  >
-    <GeneralStats
-      {...props}
-    />
+const DocimologyMain = props => {
+  if (isEmpty(props.statistics)) {
+    return (
+      <ContentLoader
+        className="row"
+        size="lg"
+        description="Nous chargeons la docimologie..."
+      />
+    )
+  }
 
-    <SuccessDistribution
-      {...props.statistics.paperSuccessDistribution}
-    />
+  return (
+    <Fragment>
+      <GeneralStats
+        statistics={props.statistics}
+      />
 
-    <ScoreDistribution
-      maxScore={props.statistics.maxScore}
-      paperScoreDistribution={props.statistics.paperScoreDistribution}
-      minMaxAndAvgScores={props.statistics.minMaxAndAvgScores}
-    />
+      <SuccessDistribution
+        {...props.statistics.paperSuccessDistribution}
+      />
 
-    <DifficultyIndex
-      questionsDifficultyIndex={props.statistics.questionsDifficultyIndex}
-    />
+      <ScoreDistribution
+        maxScore={props.statistics.maxScore}
+        paperScoreDistribution={props.statistics.paperScoreDistribution}
+        minMaxAndAvgScores={props.statistics.minMaxAndAvgScores}
+      />
 
-    <DiscriminationIndex
-      discriminationCoefficient={props.statistics.discriminationCoefficient}
-    />
-  </PageFull>
+      <DifficultyIndex
+        questionsDifficultyIndex={props.statistics.questionsDifficultyIndex}
+      />
 
-Docimology.propTypes = {
-  resourceNode: T.shape({
-    id: T.string.isRequired,
-    autoId: T.number.isRequired,
-    meta: T.shape({
-      type: T.string.isRequired
-    }).isRequired
-  }).isRequired,
-  quiz: T.shape({
-    id: T.string.isRequired,
-    title: T.string.isRequired
-  }).isRequired,
+      <DiscriminationIndex
+        discriminationCoefficient={props.statistics.discriminationCoefficient}
+      />
+    </Fragment>
+  )
+}
+
+DocimologyMain.propTypes = {
   statistics: T.shape({
     maxScore: T.number.isRequired,
     minMaxAndAvgScores: T.object.isRequired,
@@ -316,15 +303,6 @@ Docimology.propTypes = {
   }).isRequired
 }
 
-const ConnectedDocimology = connect(
-  (state) => ({
-    resourceNode: select.resourceNode(state),
-    quiz: select.quiz(state),
-    statistics: select.statistics(state)
-  }),
-  null
-)(Docimology)
-
 export {
-  ConnectedDocimology as Docimology
+  DocimologyMain
 }

@@ -148,6 +148,7 @@ class ExerciseSerializer
             'showEndConfirm' => $exercise->getShowEndConfirm(),
             'showEndPage' => $exercise->getShowEndPage(),
             'endNavigation' => $exercise->hasEndNavigation(),
+            'intermediateScores' => $exercise->getIntermediateScores(),
             'showMetadata' => $exercise->isMetadataVisible(),
             'showStatistics' => $exercise->hasStatistics(),
             'allPapersStatistics' => $exercise->isAllPapersStatistics(),
@@ -187,6 +188,7 @@ class ExerciseSerializer
         $this->sipe('showOverview', 'setShowOverview', $parameters, $exercise);
         $this->sipe('showEndConfirm', 'setShowEndConfirm', $parameters, $exercise);
         $this->sipe('showEndPage', 'setShowEndPage', $parameters, $exercise);
+        $this->sipe('intermediateScores', 'setIntermediateScores', $parameters, $exercise);
         $this->sipe('endMessage', 'setEndMessage', $parameters, $exercise);
         $this->sipe('endNavigation', 'setEndNavigation', $parameters, $exercise);
         $this->sipe('showMetadata', 'setMetadataVisible', $parameters, $exercise);

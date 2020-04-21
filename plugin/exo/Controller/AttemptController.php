@@ -171,13 +171,10 @@ class AttemptController extends AbstractController
             $this->resourceEvalManager->getResourceUserEvaluation($paper->getExercise()->getResourceNode(), $user) :
             null;
 
-        return new JsonResponse(
-            [
-                'paper' => $this->paperManager->serialize($paper),
-                'userEvaluation' => !empty($userEvaluation) ? $this->userEvalSerializer->serialize($userEvaluation) : null,
-            ],
-            200
-        );
+        return new JsonResponse([
+            'paper' => $this->paperManager->serialize($paper),
+            'userEvaluation' => !empty($userEvaluation) ? $this->userEvalSerializer->serialize($userEvaluation) : null,
+        ]);
     }
 
     /**

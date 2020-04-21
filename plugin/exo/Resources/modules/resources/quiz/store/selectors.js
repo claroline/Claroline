@@ -54,6 +54,11 @@ const numbering = createSelector(
   (parameters) => parameters.numbering
 )
 
+const showTitles = createSelector(
+  [parameters],
+  (parameters) => parameters.showTitles || false
+)
+
 const showStatistics = createSelector(
   [parameters],
   (parameters) => parameters.showStatistics || false
@@ -73,5 +78,6 @@ export const selectors = {
   empty,
   numbering,
   showStatistics,
+  showTitles,
   hasOverview
 }

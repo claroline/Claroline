@@ -9,12 +9,13 @@ import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 
 import {Player}     from '#/plugin/exo/quiz/player/components/player'
 import {AttemptEnd} from '#/plugin/exo/quiz/player/components/attempt-end'
-import {Statistics} from '#/plugin/exo/quiz/statistics/components/statistics'
 
-import {EditorMain}   from '#/plugin/exo/resources/quiz/editor/containers/main'
-import {OverviewMain} from '#/plugin/exo/resources/quiz/overview/containers/main'
-import {PapersMain}   from '#/plugin/exo/resources/quiz/papers/containers/main'
-import {CorrectionMain}   from '#/plugin/exo/resources/quiz/correction/containers/main'
+import {EditorMain}     from '#/plugin/exo/resources/quiz/editor/containers/main'
+import {OverviewMain}   from '#/plugin/exo/resources/quiz/overview/containers/main'
+import {PapersMain}     from '#/plugin/exo/resources/quiz/papers/containers/main'
+import {CorrectionMain} from '#/plugin/exo/resources/quiz/correction/containers/main'
+import {StatisticsMain} from '#/plugin/exo/resources/quiz/statistics/containers/main'
+import {DocimologyMain} from '#/plugin/exo/docimology/containers/main'
 
 const QuizResource = props =>
   <ResourcePage
@@ -79,14 +80,14 @@ const QuizResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-bar-chart',
         label: trans('show-statistics', {}, 'actions'),
-        displayed: props.papersAdmin,
+        displayed: props.papersAdmin && props.showStatistics,
         target: `${props.path}/statistics`
       }, {
-        type: URL_BUTTON,
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pie-chart',
         label: trans('view_docimology', {}, 'actions'),
         displayed: props.docimologyAdmin,
-        target: ['exercise_docimology', {id: props.quizId}]
+        target: `${props.path}/docimology`
       }
     ]}
 
@@ -121,8 +122,13 @@ const QuizResource = props =>
         component: CorrectionMain,
         disabled: !props.papersAdmin
       }, {
+        path: '/docimology',
+        component: DocimologyMain,
+        disabled: !props.docimologyAdmin,
+        onEnter: () => props.docimology(props.quizId)
+      }, {
         path: '/statistics',
-        component: Statistics,
+        component: StatisticsMain,
         disabled: !props.papersAdmin && !props.showStatistics,
         onEnter: () => props.statistics(props.quizId)
       }
@@ -146,7 +152,8 @@ QuizResource.propTypes = {
   registeredUser: T.bool.isRequired,
   hasOverview: T.bool.isRequired,
   testMode: T.func.isRequired,
-  statistics: T.func.isRequired
+  statistics: T.func.isRequired,
+  docimology: T.func.isRequired
 }
 
 export {

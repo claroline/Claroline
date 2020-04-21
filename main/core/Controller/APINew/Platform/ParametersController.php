@@ -18,7 +18,6 @@ use Claroline\AppBundle\Event\Platform\EnableEvent;
 use Claroline\AppBundle\Event\Platform\ExtendEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\VersionManager;

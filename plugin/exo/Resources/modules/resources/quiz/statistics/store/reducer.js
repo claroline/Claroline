@@ -1,6 +1,6 @@
 import {makeReducer} from '#/main/app/store/reducer'
 
-import {LOAD_STATISTICS} from '#/plugin/exo/quiz/statistics/store/actions'
+import {LOAD_STATISTICS} from '#/plugin/exo/resources/quiz/statistics/store/actions'
 
 const reducer = makeReducer({}, {
   [LOAD_STATISTICS]: (state, action) => action.stats

@@ -4,7 +4,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store'
 import {actions as papersActions} from '#/plugin/exo/resources/quiz/papers/store'
-import {actions as statisticsActions} from '#/plugin/exo/quiz/statistics/store'
+import {actions as statisticsActions} from '#/plugin/exo/resources/quiz/statistics/store'
 import {PapersMain as PapersMainComponent} from '#/plugin/exo/resources/quiz/papers/components/main'
 
 const PapersMain = connect(

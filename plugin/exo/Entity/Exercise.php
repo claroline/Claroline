@@ -112,6 +112,15 @@ class Exercise extends AbstractResource
     private $endMessage = '';
 
     /**
+     * Show intermediates scores by steps, by tags or not at all on the end page.
+     *
+     * @ORM\Column(name="intermediate_scores", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $intermediateScores = 'none';
+
+    /**
      * A message to display when a user has done all its attempts.
      *
      * @ORM\Column(name="attempts_reached_message", type="text", nullable=true)
@@ -437,6 +446,16 @@ class Exercise extends AbstractResource
     public function setEndMessage($endMessage)
     {
         $this->endMessage = $endMessage;
+    }
+
+    public function getIntermediateScores()
+    {
+        return $this->intermediateScores;
+    }
+
+    public function setIntermediateScores($intermediateScores)
+    {
+        $this->intermediateScores = $intermediateScores;
     }
 
     public function getEndMessage()

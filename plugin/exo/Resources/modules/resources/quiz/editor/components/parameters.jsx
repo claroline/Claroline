@@ -341,8 +341,7 @@ const EditorParameters = props => {
                 name: 'parameters.interruptible',
                 label: trans('allow_test_exit', {}, 'quiz'),
                 type: 'boolean',
-                disabled: (quiz) => get(quiz, 'parameters.timeLimited') || 0 < get(quiz, 'parameters.duration'),
-                help: ''
+                disabled: (quiz) => get(quiz, 'parameters.timeLimited') || 0 < get(quiz, 'parameters.duration')
                 // TODO : add help text
               }, {
                 name: 'parameters.showEndConfirm',
@@ -367,6 +366,18 @@ const EditorParameters = props => {
                     displayed: hasEnd,
                     options: {
                       workspace: props.workspace
+                    }
+                  }, {
+                    name: 'parameters.intermediateScores',
+                    type: 'choice',
+                    label: trans('show_intermediate_scores', {}, 'quiz'),
+                    displayed: hasEnd,
+                    options: {
+                      choices: {
+                        none: trans('none'),
+                        step: trans('per_step', {}, 'quiz'),
+                        tag: trans('per_tag', {}, 'quiz')
+                      }
                     }
                   }, {
                     name: 'parameters.endNavigation',

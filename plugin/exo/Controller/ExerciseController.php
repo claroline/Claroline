@@ -123,22 +123,18 @@ class ExerciseController extends AbstractController
      * Opens the docimology of a quiz.
      *
      * @EXT\Route("/{id}/docimology", name="exercise_docimology")
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     * @EXT\Template("UJMExoBundle:exercise:docimology.html.twig")
+     * @EXT\Method("GET")
      *
      * @param Exercise $exercise
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function docimologyOpenAction(Exercise $exercise)
+    public function docimologyAction(Exercise $exercise)
     {
-        return [
-            '_resource' => $exercise,
-            'resourceNode' => $exercise->getResourceNode(),
-            'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
-            'statistics' => $this->docimologyManager->getStatistics($exercise, 100),
-        ];
+        return new JsonResponse(
+            $this->docimologyManager->getStatistics($exercise, 100)
+        );
     }
 
     /**

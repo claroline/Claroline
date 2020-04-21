@@ -516,5 +516,9 @@
     "all_attempts": "All attempts",
     "attempt_loading": "Loading the attempt ...",
     "papers_delete_message": "{1} Are you sure you want to delete this attempt? | [2,Inf[ Are you sure you want to delete these %count% attempts?",
-    "round_total_score": "Round the total score to a defined value"
+    "round_total_score": "Round the total score to a defined value",
+    "show_intermediate_scores": "Show intermediate scores",
+    "per_step": "Per step",
+    "per_tag": "Per tag",
+    "show_step_titles": "Show title of steps"
 }

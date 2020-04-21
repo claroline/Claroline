@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
+import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 
 const STORE_NAME = 'correction'
 

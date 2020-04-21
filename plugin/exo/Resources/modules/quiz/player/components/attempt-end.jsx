@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
@@ -8,16 +8,93 @@ import {hasPermission} from '#/main/app/security'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {route} from '#/main/core/workspace/routing'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {calculateScore, calculateTotal} from '#/plugin/exo/items/score'
 
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 
 // TODO : merge with PlayerRestrictions
 // TODO : show number of attempts info
+
+const IntermediateScores = (props) => {
+  let intermediate = []
+  if ('tag' === props.mode) {
+    const all = [].concat(...props.steps.map(step => step.items || []))
+    intermediate = props.tags.map(tag => {
+      let score = 0
+      let total = 0
+      all.map(item => {
+        if (item.tags && -1 !== item.tags.indexOf(tag)) {
+          if (props.answers[item.id]) {
+            score += calculateScore(item, props.answers[item.id]) // this should retrieve value from api instead
+          }
+
+          total += calculateTotal(item)
+        }
+      })
+
+      return {
+        title: tag,
+        score: score,
+        total: total
+      }
+    })
+  } else if ('step' === props.mode) {
+    intermediate = props.steps.map((step, stepIndex) => {
+      let score = 0
+      let total = 0
+      step.items.map(item => {
+        if (props.answers[item.id]) {
+          score += calculateScore(item, props.answers[item.id]) // this should retrieve value from api instead
+        }
+
+        total += calculateTotal(item)
+      })
+
+      return {
+        title: step.title || trans('step', {number: stepIndex + 1}, 'quiz'), // this should also show numbering
+        score: score,
+        total: total
+      }
+    })
+  }
+
+  if (0 !== intermediate) {
+    return (
+      <ul className="list-group list-group-values">
+        {intermediate.map((intermediateScore, i) => (
+          <li key={i} className="list-group-item">
+            {intermediateScore.title}
+
+            <span className="value">
+              <ScoreBox className="pull-right" score={intermediateScore.score} scoreMax={intermediateScore.total}/>
+            </span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  return null
+}
+
+IntermediateScores.propTypes = {
+  mode: T.string,
+  steps: T.array,
+  tags: T.array,
+  answers: T.object
+}
+
+IntermediateScores.defaultProps = {
+  mode: 'none',
+  answers: {},
+  steps: []
+}
 
 const AttemptEndComponent = props =>
   <div className="quiz-player">
@@ -57,11 +134,20 @@ const AttemptEndComponent = props =>
         }
 
         {props.endMessage ?
-          <ContentHtml>{props.endMessage}</ContentHtml> :
-          <div>
-            <h2 className="h4">{trans('attempt_end_title', {}, 'quiz')}</h2>
+          <ContentHtml className="component-container">{props.endMessage}</ContentHtml> :
+          <Fragment>
+            <h2 className="h3">{trans('attempt_end_title', {}, 'quiz')}</h2>
             <p>{trans('attempt_end_info', {}, 'quiz')}</p>
-          </div>
+          </Fragment>
+        }
+
+        {props.showAttemptScore &&
+          <IntermediateScores
+            mode={get(props.paper, 'structure.parameters.intermediateScores')}
+            steps={props.paper.structure.steps}
+            tags={props.tags}
+            answers={props.answers}
+          />
         }
 
         {props.endNavigation &&
@@ -126,6 +212,8 @@ AttemptEndComponent.propTypes = {
     structure: T.object.isRequired,
     finished: T.bool.isRequired
   }).isRequired,
+  tags: T.array,
+  answers: T.object,
   testMode: T.bool.isRequired,
   hasMoreAttempts: T.bool.isRequired,
   endMessage: T.string,
@@ -144,6 +232,8 @@ const AttemptEnd = connect(
       path: resourceSelect.path(state),
       workspace: resourceSelect.workspace(state),
       paper: paper,
+      answers: playerSelect.answers(state),
+      tags: playerSelect.tags(state),
       testMode: playerSelect.testMode(state),
       hasMoreAttempts: playerSelect.hasMoreAttempts(state),
       endMessage: playerSelect.quizEndMessage(state),

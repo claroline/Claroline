@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect'
+import uniq from 'lodash/uniq'
 
 import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 import {selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/store/selectors'
@@ -220,10 +221,20 @@ const currentStepSend = createSelector(
   (currentStepTries, currentStepMaxAttempts) => currentStepTries < currentStepMaxAttempts || 0 === currentStepMaxAttempts
 )
 
+const items = createSelector(
+  [steps],
+  (steps) => [].concat(...steps.map(step => step.items || []))
+)
+
 // TODO : exclude content items
 const countItems = createSelector(
-  [steps],
-  (steps) => steps.reduce((totalCount, step) => totalCount + (step.items || []).reduce((itemCount) => itemCount + 1, 0), 0)
+  [items],
+  (items) => items.length
+)
+
+const tags = createSelector(
+  [items],
+  (items) => uniq(items.reduce((tags, item) => tags.concat(item.tags), []))
 )
 
 export const select = {
@@ -257,6 +268,7 @@ export const select = {
   hasMoreAttempts,
   maxAttempts,
   maxAttemptsPerDay,
+  items,
   countItems,
   answersEditable,
   isTimed,
@@ -264,5 +276,6 @@ export const select = {
   quizNumbering,
   showTitles,
   showCorrectionAt,
-  correctionDate
+  correctionDate,
+  tags
 }
