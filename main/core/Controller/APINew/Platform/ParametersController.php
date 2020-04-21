@@ -97,9 +97,8 @@ class ParametersController
     /**
      * @EXT\Route("/info", name="apiv2_platform_info")
      * @EXT\Method("GET")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function getAction(User $currentUser = null)
+    public function getAction()
     {
         $parameters = $this->serializer->serialize();
 

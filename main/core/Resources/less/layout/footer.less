@@ -1,10 +1,10 @@
 .app-footer-container {
+    // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
+    //z-index: 1;
     display: flex; // just to have child content taking full height
     width: 100%;
-
     margin-top: auto;
 
-    min-height: @footer-height;
     background: @footer-bg;
     color: @footer-color;
     border-top: 1px solid @footer-border-color;
@@ -34,8 +34,6 @@
     }
 
     .app-footer-brand {
-        min-height: @footer-height;
-        height: @footer-height; // because IE does not calculate proper centering with min-height
         padding: 0 floor(@grid-gutter-width / 2);
         margin-right: auto;
         display: flex;
