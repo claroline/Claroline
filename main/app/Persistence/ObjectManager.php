@@ -256,7 +256,7 @@ class ObjectManager extends ObjectManagerDecorator
      *
      * @todo make this method compatible with odm implementations
      */
-    public function findList($class, $property, array $list, $orderStrict = false)
+    public function findList($class, $property, array $list = [], $orderStrict = false)
     {
         if (0 === count($list)) {
             return [];

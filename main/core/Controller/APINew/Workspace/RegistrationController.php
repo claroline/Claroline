@@ -211,7 +211,7 @@ class RegistrationController extends AbstractApiController
      *     }
      * )
      * @EXT\Route(
-     *    "/{id}/users/unregistrate",
+     *    "/{id}/users/unregister",
      *    name="apiv2_workspace_unregister_users"
      * )
      * @EXT\Method("DELETE")
@@ -249,7 +249,7 @@ class RegistrationController extends AbstractApiController
      *     }
      * )
      * @EXT\Route(
-     *    "/{id}/groups/unregistrate",
+     *    "/{id}/groups/unregister",
      *    name="apiv2_workspace_unregister_groups"
      * )
      * @EXT\Method("DELETE")
@@ -288,7 +288,7 @@ class RegistrationController extends AbstractApiController
      *     }
      * )
      * @EXT\Route(
-     *    "/users/register/bulk/{role}",
+     *    "/users/register/{role}",
      *    name="apiv2_workspace_bulk_register_users"
      * )
      * @EXT\Method("PATCH")
@@ -327,7 +327,7 @@ class RegistrationController extends AbstractApiController
      *     }
      * )
      * @EXT\Route(
-     *    "/groups/register/bulk/{role}",
+     *    "/groups/register/{role}",
      *    name="apiv2_workspace_bulk_register_groups"
      * )
      * @EXT\Method("PATCH")
