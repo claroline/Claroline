@@ -145,6 +145,7 @@ class ExerciseSerializer
             'mandatoryQuestions' => $exercise->getMandatoryQuestions(),
             'answersEditable' => $exercise->isAnswersEditable(),
             'showOverview' => $exercise->getShowOverview(),
+            'showBack' => $exercise->getShowBack(),
             'showEndConfirm' => $exercise->getShowEndConfirm(),
             'showEndPage' => $exercise->getShowEndPage(),
             'endNavigation' => $exercise->hasEndNavigation(),
@@ -186,6 +187,7 @@ class ExerciseSerializer
         $this->sipe('anonymizeAttempts', 'setAnonymizeAttempts', $parameters, $exercise);
         $this->sipe('interruptible', 'setInterruptible', $parameters, $exercise);
         $this->sipe('showOverview', 'setShowOverview', $parameters, $exercise);
+        $this->sipe('showBack', 'setShowBack', $parameters, $exercise);
         $this->sipe('showEndConfirm', 'setShowEndConfirm', $parameters, $exercise);
         $this->sipe('showEndPage', 'setShowEndPage', $parameters, $exercise);
         $this->sipe('intermediateScores', 'setIntermediateScores', $parameters, $exercise);

@@ -85,6 +85,15 @@ class Exercise extends AbstractResource
     private $showOverview = true;
 
     /**
+     * Show back button in player.
+     *
+     * @ORM\Column(name="show_back", type="boolean")
+     *
+     * @var bool
+     */
+    private $showBack = true;
+
+    /**
      * Show an end page when the user has finished the quiz.
      *
      * @ORM\Column(name="show_end_page", type="boolean")
@@ -511,6 +520,26 @@ class Exercise extends AbstractResource
     public function getShowOverview()
     {
         return $this->showOverview;
+    }
+
+    /**
+     * Set show back.
+     *
+     * @param bool $showBack
+     */
+    public function setShowBack($showBack)
+    {
+        $this->showBack = $showBack;
+    }
+
+    /**
+     * Is back shown ?
+     *
+     * @return bool
+     */
+    public function getShowBack()
+    {
+        return $this->showBack;
     }
 
     /**

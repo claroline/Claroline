@@ -520,5 +520,6 @@
     "show_intermediate_scores": "Show intermediate scores",
     "per_step": "Per step",
     "per_tag": "Per tag",
-    "show_step_titles": "Show title of steps"
+    "show_step_titles": "Show title of steps",
+    "show_back": "Allow rollback"
 }

@@ -15,7 +15,7 @@ const PreviousButton = props =>
       scrollTo(`#resource-${props.resourceId} > .page-content`)
     }}
   >
-    <span className="fa fa-fw fa-angle-double-left" />
+    <span className="fa fa-fw fa-angle-double-left icon-with-text-right" />
     {trans('previous')}
   </button>
 
@@ -33,7 +33,7 @@ const NextButton = props =>
     }}
   >
     {trans('next')}
-    <span className="fa fa-fw fa-angle-double-right" />
+    <span className="fa fa-fw fa-angle-double-right icon-with-text-left" />
   </button>
 
 NextButton.propTypes = {
@@ -50,7 +50,7 @@ const ValidateButton = props =>
     }}
   >
     {trans('validate')}
-    <span className="fa fa-fw fa-angle-double-right" />
+    <span className="fa fa-fw fa-angle-double-right icon-with-text-left" />
   </button>
 
 ValidateButton.propTypes = {
@@ -66,7 +66,7 @@ const SubmitButton = props =>
       scrollTo(`#resource-${props.resourceId} > .page-content`)
     }}
   >
-    <span className="fa fa-fw fa-check" />
+    <span className="fa fa-fw fa-check icon-with-text-right" />
     {trans('validate')}
   </button>
 
@@ -83,7 +83,7 @@ const FinishButton = props =>
       scrollTo(`#resource-${props.resourceId} > .page-content`)
     }}
   >
-    <span className="fa fa-fw fa-sign-out" />
+    <span className="fa fa-fw fa-sign-out icon-with-text-right" />
     {trans('finish', {}, 'actions')}
   </button>
 
@@ -193,7 +193,7 @@ NotLastQuestionButton.propTypes = {
 const PlayerNav = props =>
   <nav className="player-nav component-container">
     <div className="backward">
-      {(props.previous) &&
+      {props.showBack && props.previous &&
         <PreviousButton onClick={() => props.navigateToAndValidate(props.previous)} resourceId={props.resourceId} />
       }
     </div>
@@ -218,6 +218,7 @@ const PlayerNav = props =>
 PlayerNav.propTypes = {
   next: T.object,
   previous: T.object,
+  showBack: T.bool,
   step: T.object.isRequired,
   navigateTo: T.func.isRequired,
   finish: T.func.isRequired,

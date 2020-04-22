@@ -218,6 +218,7 @@ class PlayerComponent extends Component {
             next={this.props.next}
             step={this.props.step}
             answers={this.props.answers}
+            showBack={this.props.showBack}
             showFeedback={this.props.showFeedback}
             feedbackEnabled={this.props.feedbackEnabled}
             navigateTo={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, false, false)}
@@ -267,6 +268,7 @@ PlayerComponent.propTypes = {
   }).isRequired,
   next: T.object,
   previous: T.object,
+  showBack: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
   showFeedback: T.bool.isRequired,
   showEndConfirm: T.bool.isRequired,
@@ -315,6 +317,7 @@ const Player = withRouter(connect(
       duration: select.duration(state),
       answersEditable: select.answersEditable(state),
       showStatistics: select.showStatistics(state),
+      showBack: select.showBack(state),
       showFeedback: select.showFeedback(state),
       showEndConfirm: select.showEndConfirm(state),
       feedbackEnabled: select.feedbackEnabled(state),

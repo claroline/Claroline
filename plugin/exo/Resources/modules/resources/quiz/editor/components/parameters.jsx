@@ -332,6 +332,10 @@ const EditorParameters = props => {
                 }
                 // TODO : add help text
               }, {
+                name: 'parameters.showBack',
+                label: trans('show_back', {}, 'quiz'),
+                type: 'boolean'
+              }, {
                 name: 'parameters.answersEditable',
                 label: trans('allow_to_edit_answers', {}, 'quiz'),
                 type: 'boolean',

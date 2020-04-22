@@ -85,6 +85,10 @@ const showFeedback = createSelector(
   [paperParameters],
   (parameters) => parameters.showFeedback || false
 )
+const showBack = createSelector(
+  [paperParameters],
+  (parameters) => parameters.showBack || false
+)
 const showStatistics = createSelector(
   [paperParameters],
   (parameters) => parameters.showStatistics || false
@@ -245,6 +249,7 @@ export const select = {
   steps,
   answers,
   showFeedback,
+  showBack,
   showEndConfirm,
   showStatistics,
   feedbackEnabled,
