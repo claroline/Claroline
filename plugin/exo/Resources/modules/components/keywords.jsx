@@ -12,6 +12,7 @@ import {DataError} from '#/main/app/data/components/error'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {DateInput} from '#/main/app/data/types/date/components/input'
 
 /**
  * Edits a Keyword.
@@ -51,15 +52,24 @@ class KeywordItem extends Component {
         }
 
         <div className="text-fields">
-          <input
-            type="text"
-            id={`keyword-${this.props.keyword._id}-text`}
-            title={trans('keyword', {}, 'quiz')}
-            value={this.props.keyword.text}
-            className="form-control"
-            placeholder={trans('keyword', {number: this.props.index + 1}, 'quiz')}
-            onChange={e => this.props.updateKeyword('text', e.target.value)}
-          />
+          {'date' === this.props.contentType ?
+            <DateInput
+              id={`keyword-${this.props.keyword._id}-text`}
+              placeholder={trans('keyword', {number: this.props.index + 1}, 'quiz')}
+              value={this.props.keyword.text}
+              onChange={value => this.props.updateKeyword('text', value)}
+            />
+            :
+            <input
+              type="text"
+              id={`keyword-${this.props.keyword._id}-text`}
+              title={trans('keyword', {}, 'quiz')}
+              value={this.props.keyword.text}
+              className="form-control"
+              placeholder={trans('keyword', {number: this.props.index + 1}, 'quiz')}
+              onChange={e => this.props.updateKeyword('text', e.target.value)}
+            />
+          }
 
           {this.state.showFeedback &&
             <HtmlInput
@@ -71,21 +81,23 @@ class KeywordItem extends Component {
           }
         </div>
 
-        <div className="keyword-case-sensitive">
-          <TooltipOverlay
-            id={`tooltip-${this.props.keyword._id}-keyword-case-sensitive`}
-            tip={trans('words_case_sensitive', {}, 'quiz')}
-          >
-            <input
-              id={`keyword-${this.props.keyword._id}-case-sensitive`}
-              type="checkbox"
-              disabled={!this.props.showCaseSensitive}
-              title={trans('words_case_sensitive', {}, 'quiz')}
-              checked={this.props.keyword.caseSensitive}
-              onChange={e => this.props.updateKeyword('caseSensitive', e.target.checked)}
-            />
-          </TooltipOverlay>
-        </div>
+        {'text' === this.props.contentType &&
+          <div className="keyword-case-sensitive">
+            <TooltipOverlay
+              id={`tooltip-${this.props.keyword._id}-keyword-case-sensitive`}
+              tip={trans('words_case_sensitive', {}, 'quiz')}
+            >
+              <input
+                id={`keyword-${this.props.keyword._id}-case-sensitive`}
+                type="checkbox"
+                disabled={!this.props.showCaseSensitive}
+                title={trans('words_case_sensitive', {}, 'quiz')}
+                checked={this.props.keyword.caseSensitive}
+                onChange={e => this.props.updateKeyword('caseSensitive', e.target.checked)}
+              />
+            </TooltipOverlay>
+          </div>
+        }
 
         <div className="right-controls">
           {this.props.showScore &&
@@ -137,6 +149,10 @@ KeywordItem.propTypes = {
     caseSensitive: T.bool,
     _deletable: T.bool.isRequired
   }).isRequired,
+  /**
+   * The simplified content type of the keyword (eg. text, date).
+   */
+  contentType: T.string.isRequired,
   showCaseSensitive: T.bool.isRequired,
   showScore: T.bool.isRequired,
   hasExpectedAnswers: T.bool.isRequired,
@@ -173,12 +189,14 @@ const KeywordItems = props =>
     {get(props, '_errors.score') &&
       <DataError error={props._errors.score} warnOnly={!props.validating} />
     }
+
     <ul>
       {props.keywords.map((keyword, index) =>
         <KeywordItem
           key={keyword._id}
           index={index}
           keyword={keyword}
+          contentType={props.contentType}
           showCaseSensitive={props.showCaseSensitive}
           showScore={props.showScore}
           hasExpectedAnswers={props.hasExpectedAnswers}
@@ -225,6 +243,11 @@ KeywordItems.propTypes = {
     caseSensitive: T.bool,
     _deletable: T.bool.isRequired
   })).isRequired,
+
+  /**
+   * The simplified content type of the keyword (eg. text, date).
+   */
+  contentType: T.string,
 
   /**
    * Current validation state.
@@ -324,6 +347,7 @@ const KeywordsPopover = props =>
       validating={props.validating}
       _errors={get(props, '_errors.keywords')}
       showCaseSensitive={props.showCaseSensitive}
+      contentType={props.contentType}
       showScore={props.showScore}
       hasExpectedAnswers={props.hasExpectedAnswers}
       addKeyword={props.addKeyword}
@@ -368,6 +392,11 @@ KeywordsPopover.propTypes = {
    * The collection of keywords for the solution
    */
   keywords: T.array.isRequired,
+
+  /**
+   * The simplified content type of the keyword (eg. text, date).
+   */
+  contentType: T.string.isRequired,
 
   /**
    * Current validation state.
@@ -445,7 +474,8 @@ KeywordsPopover.propTypes = {
 }
 
 KeywordsPopover.defaultProps = {
-  hasExpectedAnswers: true
+  hasExpectedAnswers: true,
+  contentType: 'text'
 }
 
 export {

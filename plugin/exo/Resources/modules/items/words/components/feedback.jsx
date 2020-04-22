@@ -10,6 +10,7 @@ export const WordsFeedback = props =>
       className="words-feedback"
       text={props.answer}
       solutions={props.item.solutions}
+      contentType={props.item.contentType}
       showScore={false}
       hasExpectedAnswers={props.item.hasExpectedAnswers}
     /> :
@@ -17,6 +18,7 @@ export const WordsFeedback = props =>
 
 WordsFeedback.propTypes = {
   item: T.shape({
+    contentType: T.string.isRequired,
     solutions: T.arrayOf(T.object).isRequired,
     hasExpectedAnswers: T.bool.isRequired
   }).isRequired,

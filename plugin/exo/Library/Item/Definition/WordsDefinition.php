@@ -183,13 +183,19 @@ class WordsDefinition extends AbstractDefinition
         return;
     }
 
-    private function containKeyword($string, Keyword $keyword)
+    private function containKeyword($string, Keyword $keyword, $contentType = 'text')
     {
         $found = false;
 
-        $flags = $keyword->isCaseSensitive() ? 'i' : '';
-        if (1 === preg_match('/'.$keyword->getText().'/'.$flags, $string)) {
-            $found = true;
+        switch ($contentType) {
+            case 'date':
+            case 'text':
+            default:
+                $flags = $keyword->isCaseSensitive() ? 'i' : '';
+                if (1 === preg_match('/'.$keyword->getText().'/'.$flags, $string)) {
+                    $found = true;
+                }
+                break;
         }
 
         return $found;

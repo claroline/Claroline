@@ -1,12 +1,15 @@
+import classes from 'classnames'
+import {displayDate} from '#/main/app/intl/date'
+
 export const utils = {}
 
-utils.split = (text, solutions, highlight = true, hasExpectedAnswers = true) => {
-  if (!text) return [{
+utils.split = (text, contentType = 'text', solutions, highlight = true, hasExpectedAnswers = true) => {
+  if (!text) return [/*{
     word: '#endoftext#',
     position: null,
     text,
     score: null
-  }]
+  }*/]
 
   const split = utils.getTextElements(text, solutions).filter(el => el.found)
 
@@ -35,23 +38,22 @@ utils.split = (text, solutions, highlight = true, hasExpectedAnswers = true) => 
       let regexFlag = 'g'
       if (!el.caseSensitive) regexFlag += 'i'
       const regex = new RegExp('(\\b' + el.word + '\\b)', regexFlag)
-      const icon = hasExpectedAnswers ?
-        el.score > 0 ?
-          'fa fa-fw fa-check' :
-          'fa fa-fw fa-times' :
-        ''
-      const replacer = `<strong><span class="${icon}"></span>$1</strong>`
+      const icon = classes({
+        'fa fa-fw fa-check': hasExpectedAnswers && el.score > 0,
+        'fa fa-fw fa-times': hasExpectedAnswers && el.score <= 0
+      })
+      const replacer = `<strong><span class="${icon}"></span>${'date' === contentType ? displayDate(el.word) : el.word}</strong>`
       el.text = el.text.replace(regex, replacer)
     })
   }
 
   //I want to remember the last element of the text so I add it as well to the array
-  split.push({
+  /*split.push({
     word: '#endoftext#',
     position: null,
     text,
     score: null
-  })
+  })*/
 
   return split
 }

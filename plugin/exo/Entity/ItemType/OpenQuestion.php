@@ -27,6 +27,13 @@ class OpenQuestion extends AbstractItem
     private $keywords;
 
     /**
+     * @ORM\Column()
+     *
+     * @var string
+     */
+    private $contentType = 'text';
+
+    /**
      * The max allowed length fot answers to this question.
      *
      * @ORM\Column(type="integer")
@@ -97,6 +104,22 @@ class OpenQuestion extends AbstractItem
         if ($this->keywords->contains($keyword)) {
             $this->keywords->removeElement($keyword);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param string $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
     }
 
     /**

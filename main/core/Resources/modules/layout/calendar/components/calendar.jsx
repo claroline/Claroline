@@ -197,7 +197,12 @@ class Calendar extends Component {
     })
 
     if (this.props.onChange) {
-      this.props.onChange(newDate.utc().format(getApiFormat()))
+      const date = newDate.utc()
+      if (!this.props.time) {
+        date.hours(0).minutes(0).seconds(0)
+      }
+
+      this.props.onChange(date.format(getApiFormat()))
     }
   }
 

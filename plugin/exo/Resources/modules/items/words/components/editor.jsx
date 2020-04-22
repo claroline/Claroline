@@ -16,6 +16,7 @@ const WordsEditor = (props) => {
       showScore={props.item.hasExpectedAnswers && props.hasAnswerScores}
       hasExpectedAnswers={props.item.hasExpectedAnswers}
       keywords={props.item.solutions}
+      contentType={props.item.contentType}
       validating={props.validating}
       addKeyword={() => {
         const solutions = cloneDeep(props.item.solutions)
@@ -65,10 +66,26 @@ const WordsEditor = (props) => {
               required: true,
               component: KeyWordItems
             }, {
-              name: '_wordsCaseSensitive',
-              type: 'boolean',
-              label: trans('words_show_case_sensitive_option', {}, 'quiz'),
-              required: true
+              name: 'contentType',
+              type: 'choice',
+              label: trans('type'),
+              required: true,
+              options: {
+                condensed: true,
+                choices: {
+                  text: trans('text'),
+                  date: trans('date')
+                }
+              },
+              linked: [
+                {
+                  name: '_wordsCaseSensitive',
+                  type: 'boolean',
+                  label: trans('words_show_case_sensitive_option', {}, 'quiz'),
+                  displayed: 'text' === props.item.contentType,
+                  required: true
+                }
+              ]
             }
           ]
         }

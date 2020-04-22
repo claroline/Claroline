@@ -21,7 +21,7 @@ class OpenQuestionSerializer
     public function serialize(OpenQuestion $openQuestion, array $options = [])
     {
         $serialized = [
-            'contentType' => 'text',
+            'contentType' => $openQuestion->getContentType(),
             'maxLength' => $openQuestion->getAnswerMaxLength(),
         ];
 
@@ -52,6 +52,7 @@ class OpenQuestionSerializer
             $openQuestion = new OpenQuestion();
         }
         $this->sipe('maxLength', 'setAnswerMaxLength', $data, $openQuestion);
+        $this->sipe('contentType', 'setContentType', $data, $openQuestion);
 
         return $openQuestion;
     }

@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 const WordsItem = {
   propTypes: {
     id: T.string.isRequired,
+    contentType: T.string.isRequired,
     solutions: T.arrayOf(T.shape({
       text: T.string.isRequired,
       caseSensitive: T.bool,
@@ -16,6 +17,7 @@ const WordsItem = {
     })
   },
   defaultProps: {
+    contentType: 'text',
     solutions: []
   }
 }

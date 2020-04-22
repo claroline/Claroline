@@ -42,7 +42,9 @@ class WordsQuestionSerializer
      */
     public function serialize(OpenQuestion $wordsQuestion, array $options = [])
     {
-        $serialized = [];
+        $serialized = [
+            'contentType' => $wordsQuestion->getContentType(),
+        ];
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
             $serialized['solutions'] = $this->serializeSolutions($wordsQuestion, $options);
@@ -65,6 +67,8 @@ class WordsQuestionSerializer
         if (empty($wordsQuestion)) {
             $wordsQuestion = new OpenQuestion();
         }
+
+        $this->sipe('contentType', 'setContentType', $data, $wordsQuestion);
 
         $this->deserializeSolutions($wordsQuestion, $data['solutions'], $options);
 
