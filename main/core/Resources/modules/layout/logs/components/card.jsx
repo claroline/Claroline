@@ -28,7 +28,7 @@ const LogCard = props =>
 LogCard.propTypes = {
   className: T.string,
   data: T.shape({
-    id: T.string.isRequired,
+    id: T.number.isRequired,
     dateLog: T.string.isRequired,
     doer: T.shape(
       UserTypes.propTypes

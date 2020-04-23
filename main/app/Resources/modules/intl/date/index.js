@@ -84,8 +84,6 @@ function apiDate(displayDate, long = false, withTime = false) {
  * @param {boolean} withTime - has it time ?
  *
  * @return {string} formatted date
- *
- * @depreacted use toDisplay()
  */
 function dateToDisplayFormat(date, long = false, withTime = false) {
   return moment(date).format(getDisplayFormat(long, withTime))

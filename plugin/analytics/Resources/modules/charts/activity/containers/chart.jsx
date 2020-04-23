@@ -12,8 +12,8 @@ const ActivityChart = withReducer(selectors.STORE_NAME, reducer)(
       data: selectors.data(state)
     }),
     (dispatch) => ({
-      fetchActivity(url) {
-        dispatch(actions.fetchActivity(url))
+      fetchActivity(url, start, end) {
+        dispatch(actions.fetchActivity(url, start, end))
       }
     })
   )(ActivityChartComponent)

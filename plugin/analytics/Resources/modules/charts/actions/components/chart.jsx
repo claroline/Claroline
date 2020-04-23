@@ -1,8 +1,9 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from 'd3-scale'
+import moment from 'moment'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, apiDate} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
@@ -12,10 +13,32 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 import {selectors} from '#/plugin/analytics/charts/actions/store/selectors'
 
 class ActionsChart extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      range: 'week'
+    }
+  }
+
   componentDidMount() {
     if (!this.props.loaded) {
-      this.props.fetchActions(this.props.url)
+      this.refreshData()
     }
+  }
+
+  changeRange(range) {
+    this.setState({range: range}, () => {
+      this.refreshData()
+    })
+  }
+
+  refreshData() {
+    this.props.fetchActions(
+      this.props.url,
+      apiDate(moment().startOf(this.state.range)),
+      apiDate(moment().endOf(this.state.range))
+    )
   }
 
   render() {
@@ -27,31 +50,31 @@ class ActionsChart extends Component {
               {trans('activity')}
             </h2>
 
-            {false && // TODO
-              <Toolbar
-                className="panel-actions"
-                buttonName="btn-link"
-                actions={[
-                  {
-                    name: 'week',
-                    type: CALLBACK_BUTTON,
-                    label: trans('range_week', {}, 'analytics'),
-                    callback: () => true,
-                    active: true
-                  }, {
-                    name: 'month',
-                    type: CALLBACK_BUTTON,
-                    label: trans('range_month', {}, 'analytics'),
-                    callback: () => true
-                  }, {
-                    name: 'year',
-                    type: CALLBACK_BUTTON,
-                    label: trans('range_year', {}, 'analytics'),
-                    callback: () => true
-                  }
-                ]}
-              />
-            }
+            <Toolbar
+              className="panel-actions"
+              buttonName="btn-link"
+              actions={[
+                {
+                  name: 'week',
+                  type: CALLBACK_BUTTON,
+                  label: trans('range_week', {}, 'analytics'),
+                  callback: () => this.changeRange('week'),
+                  active: 'week' === this.state.range
+                }, {
+                  name: 'month',
+                  type: CALLBACK_BUTTON,
+                  label: trans('range_month', {}, 'analytics'),
+                  callback: () => this.changeRange('month'),
+                  active: 'month' === this.state.range
+                }, {
+                  name: 'year',
+                  type: CALLBACK_BUTTON,
+                  label: trans('range_year', {}, 'analytics'),
+                  callback: () => this.changeRange('year'),
+                  active: 'year' === this.state.range
+                }
+              ]}
+            />
           </div>
 
           <div className="panel-body text-right">

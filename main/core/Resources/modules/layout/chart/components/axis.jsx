@@ -52,13 +52,14 @@ class Axis extends Component {
 
         switch (this.props.dataType) {
           case DATE_DATA_TYPE: {
-            axis.tickFormat(dateToDisplayFormat)
+            axis.tickFormat((value) => dateToDisplayFormat(value, false, false))
             let dist = Math.floor(this.props.values.length/10)
 
             return this.props.values.length > 10 ?
               axis.ticks(timeDay.filter(d => timeDay.count(0, d) % dist === Math.min(2, dist - 1))) :
               axis.tickValues(this.props.values)
           }
+
           case NUMBER_DATA_TYPE: {
             axis.tickFormat(value => number(value, true))
             return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(5)
@@ -77,7 +78,6 @@ class Axis extends Component {
 
         return this.props.ticksAsValues ? axis.tickValues(this.props.values) : axis.ticks(5)
       }
-
     }
   }
 

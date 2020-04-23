@@ -31,7 +31,6 @@ class WidgetGridEditor extends Component {
     this.setState({movingContentId: null})
   }
 
-
   render() {
     return (
       <div className="widgets-grid">
@@ -87,8 +86,6 @@ class WidgetGridEditor extends Component {
                 this.props.update(widgets)
                 this.props.update(oldWidgets, oldParentTabIndex)
               }
-
-
 
               this.stopMovingContent()
             }}
