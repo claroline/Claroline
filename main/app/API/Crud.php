@@ -27,6 +27,8 @@ class Crud
     // but I don't know if it will break things if I do it now
     const THROW_EXCEPTION = 'throw_exception';
 
+    const NO_PERMISSIONS = 'NO_PERMISSIONS';
+
     /** @var ObjectManager */
     private $om;
 
@@ -96,8 +98,10 @@ class Crud
         $object = new $class();
         $object = $this->serializer->deserialize($data, $object, $options);
 
-        // creates the entity if allowed
-        $this->checkPermission('CREATE', $object, [], true);
+        if (!in_array(static::NO_PERMISSIONS, $options)) {
+            // creates the entity if allowed
+            $this->checkPermission('CREATE', $object, [], true);
+        }
 
         if ($this->dispatch('create', 'pre', [$object, $options, $data])) {
             $this->om->save($object);
@@ -133,7 +137,9 @@ class Crud
         }
 
         $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
-        $this->checkPermission('EDIT', $oldObject, [], true);
+        if (!in_array(static::NO_PERMISSIONS, $options)) {
+            $this->checkPermission('EDIT', $oldObject, [], true);
+        }
         $oldData = $this->serializer->serialize($oldObject);
 
         if (!$oldData) {
@@ -160,7 +166,9 @@ class Crud
      */
     public function delete($object, array $options = [])
     {
-        $this->checkPermission('DELETE', $object, [], true);
+        if (!in_array(static::NO_PERMISSIONS, $options)) {
+            $this->checkPermission('DELETE', $object, [], true);
+        }
 
         if ($this->dispatch('delete', 'pre', [$object, $options])) {
             if (!in_array(Options::SOFT_DELETE, $options)) {
@@ -202,7 +210,10 @@ class Crud
      */
     public function copy($object, array $options = [], array $extra = [])
     {
-        $this->checkPermission('COPY', $object, [], true);
+        if (!in_array(static::NO_PERMISSIONS, $options)) {
+            $this->checkPermission('COPY', $object, [], true);
+        }
+
         $class = get_class($object);
         $new = new $class();
 
@@ -276,9 +287,11 @@ class Crud
             );
         }
 
-        //add the options to pass on here
-        $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
-        //we'll need to pass the $action and $data here aswell later
+        if (!in_array(static::NO_PERMISSIONS, $options)) {
+            //add the options to pass on here
+            $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
+            //we'll need to pass the $action and $data here aswell later
+        }
 
         foreach ($elements as $element) {
             if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
@@ -288,6 +301,7 @@ class Crud
                 $this->dispatch('patch', 'post', [$object, $options, $property, $element, $action]);
             }
         }
+
         $this->dispatch('patch', 'post_collection', [$object, $options, $property, $elements, $action]);
     }
 
@@ -311,9 +325,12 @@ class Crud
             );
         }
 
-        //add the options to pass on here
-        $this->checkPermission('PATCH', $object, [], true);
-        //we'll need to pass the $action and $data here aswell later
+        if (!in_array(static::NO_PERMISSIONS, $options)) {
+            //add the options to pass on here
+            $this->checkPermission('PATCH', $object, [], true);
+            //we'll need to pass the $action and $data here aswell later
+        }
+
         if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
             $object->$methodName($data);
 
