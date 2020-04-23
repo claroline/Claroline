@@ -18,8 +18,6 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 trait AskRolesTrait
 {
-    use AskRolesTrait;
-
     public function askRoles($all, $input, $output, $container, $helper)
     {
         $roles = $container->get('Claroline\AppBundle\Persistence\ObjectManager')

@@ -18,8 +18,6 @@ use Symfony\Component\Console\Question\Question;
 
 trait BaseCommandTrait
 {
-    use BaseCommandTrait;
-
     public function configureParams()
     {
         $args = [];
