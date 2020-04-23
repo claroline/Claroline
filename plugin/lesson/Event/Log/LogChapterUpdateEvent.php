@@ -2,14 +2,15 @@
 
 namespace Icap\LessonBundle\Event\Log;
 
-use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\LessonBundle\Entity\Lesson;
-use Icap\LessonBundle\Entity\Chapter;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
+use Icap\LessonBundle\Entity\Chapter;
+use Icap\LessonBundle\Entity\Lesson;
 
 class LogChapterUpdateEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
     const ACTION = 'resource-icap_lesson-chapter_update';
+
     protected $lesson;
 
     /**
@@ -21,14 +22,16 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
     {
         $this->lesson = $lesson;
 
-        $details = array(
-            'chapter' => array(
+        $details = [
+            'chapter' => [
                 'lesson' => $lesson->getId(),
                 'chapter' => $chapter->getId(),
                 'title' => $chapter->getTitle(),
+                'slug' => $chapter->getSlug(),
                 'changeSet' => $changeSet,
-            ),
-        );
+            ],
+        ];
+
         parent::__construct($lesson->getResourceNode(), $details);
     }
 
@@ -37,7 +40,7 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     /**
@@ -57,7 +60,7 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getIncludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -67,7 +70,7 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -97,12 +100,12 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->lesson->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }

@@ -2,10 +2,10 @@
 
 namespace Icap\LessonBundle\Event\Log;
 
-use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
-use Icap\LessonBundle\Entity\Lesson;
-use Icap\LessonBundle\Entity\Chapter;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
+use Icap\LessonBundle\Entity\Chapter;
+use Icap\LessonBundle\Entity\Lesson;
 
 class LogChapterReadEvent extends AbstractLogResourceEvent implements LogNotRepeatableInterface
 {
@@ -17,13 +17,15 @@ class LogChapterReadEvent extends AbstractLogResourceEvent implements LogNotRepe
      */
     public function __construct(Lesson $lesson, Chapter $chapter)
     {
-        $details = array(
-            'chapter' => array(
+        $details = [
+            'chapter' => [
                 'lesson' => $lesson->getId(),
                 'chapter' => $chapter->getId(),
                 'title' => $chapter->getTitle(),
-            ),
-        );
+                'slug' => $chapter->getSlug(),
+            ],
+        ];
+
         parent::__construct($lesson->getResourceNode(), $details);
     }
 
@@ -32,7 +34,7 @@ class LogChapterReadEvent extends AbstractLogResourceEvent implements LogNotRepe
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     public function getLogSignature()

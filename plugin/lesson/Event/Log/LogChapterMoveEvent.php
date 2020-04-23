@@ -2,9 +2,9 @@
 
 namespace Icap\LessonBundle\Event\Log;
 
-use Icap\LessonBundle\Entity\Lesson;
-use Icap\LessonBundle\Entity\Chapter;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Icap\LessonBundle\Entity\Chapter;
+use Icap\LessonBundle\Entity\Lesson;
 
 class LogChapterMoveEvent extends AbstractLogResourceEvent
 {
@@ -18,15 +18,17 @@ class LogChapterMoveEvent extends AbstractLogResourceEvent
      */
     public function __construct(Lesson $lesson, Chapter $chapter, Chapter $oldparent, Chapter $newparent)
     {
-        $details = array(
-            'chapter' => array(
+        $details = [
+            'chapter' => [
                 'lesson' => $lesson->getId(),
                 'chapter' => $chapter->getId(),
                 'title' => $chapter->getTitle(),
+                'slug' => $chapter->getSlug(),
                 'old_parent' => $oldparent->getTitle(),
                 'new_parent' => $newparent->getTitle(),
-            ),
-        );
+            ],
+        ];
+
         parent::__construct($lesson->getResourceNode(), $details);
     }
 
@@ -35,6 +37,6 @@ class LogChapterMoveEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

@@ -1,7 +1,7 @@
 {% if log.details.chapter is defined and log.details.chapter.chapter is defined and log.details.chapter.chapter != null %}
-    <a href="{{ path('icap_lesson_chapter', {'resourceId': log.details.chapter.lesson, 'chapterId': log.details.chapter.chapter }) }}">
+    <a href="{{ path('claro_index') }}#/desktop/workspaces/open/{{ log.resourceNode.workspace.slug }}/resources/{{ log.resourceNode.slug }}/{{ log.details.chapter.slug is defined ? log.details.chapter.slug : '' }}">
         <strong>{{ log.details.chapter.title }}</strong>
     </a>
 {% else %}
-       <strong>{{ log.details.chapter.title }}</strong>
+    <strong>{{ log.details.chapter.title }}</strong>
 {% endif %}
