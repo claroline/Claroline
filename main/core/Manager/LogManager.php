@@ -14,8 +14,11 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class LogManager
@@ -37,24 +40,30 @@ class LogManager
     /** @var ClaroUtilities */
     private $ut;
 
+    /** @var EventDispatcherInterface */
+    private $dispatcher;
+
     /**
      * LogManager constructor.
      *
-     * @param ObjectManager       $objectManager
-     * @param FinderProvider      $finder
-     * @param TranslatorInterface $translator
-     * @param ClaroUtilities      $ut
+     * @param ObjectManager            $objectManager
+     * @param FinderProvider           $finder
+     * @param TranslatorInterface      $translator
+     * @param ClaroUtilities           $ut
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         ObjectManager $objectManager,
         FinderProvider $finder,
         TranslatorInterface $translator,
-        ClaroUtilities $ut
+        ClaroUtilities $ut,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->translator = $translator;
         $this->om = $objectManager;
         $this->finder = $finder;
         $this->ut = $ut;
+        $this->dispatcher = $dispatcher;
 
         $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
     }
@@ -103,7 +112,7 @@ class LogManager
      *
      * @return bool|resource
      */
-    public function exportLogsToCsv($query)
+    public function exportLogsToCsv($query, $fileName = null)
     {
         // Initialize variables
         $query['limit'] = self::CSV_LOG_BATCH;
@@ -112,7 +121,7 @@ class LogManager
         $total = 0;
 
         // Prepare CSV file
-        $handle = fopen('php://output', 'w+');
+        $handle = fopen($fileName ?? 'php://output', 'w+');
         fputcsv($handle, [
             $this->translator->trans('date', [], 'platform'),
             $this->translator->trans('action', [], 'platform'),
@@ -122,21 +131,33 @@ class LogManager
 
         // Get batched logs
         while (0 === $count || $count < $total) {
-            $logs = $this->finder->search('Claroline\CoreBundle\Entity\Log\Log', $query, []);
+            $logs = $this->finder->searchEntities(Log::class, $query);
             $total = $logs['totalResults'];
             $count += self::CSV_LOG_BATCH;
             ++$query['page'];
 
+            /** @var Log $log */
             foreach ($logs['data'] as $log) {
+                // TODO : merge with serializer
+                // Get log description (depending on log sentence rendering)
+                $eventName = 'create_log_list_item_'.$log->getAction();
+                if (!$this->dispatcher->hasListeners($eventName)) {
+                    $eventName = 'create_log_list_item';
+                }
+
+                /** @var LogCreateDelegateViewEvent $event */
+                $event = $this->dispatcher->dispatch($eventName, new LogCreateDelegateViewEvent($log));
+                $description = trim(preg_replace('/\s\s+/', ' ', $event->getResponseContent()));
+
                 fputcsv($handle, [
-                    $log['dateLog'],
-                    $log['action'],
-                    $log['doer'] ? $log['doer']['name'] : '',
-                    $this->ut->html2Csv($log['description'], true),
+                    DateNormalizer::normalize($log->getDateLog()),
+                    $this->translator->trans('log_'.$log->getAction().'_shortname', [], 'log'),
+                    $log->getDoer() ? $log->getDoer()->getUsername() : '',
+                    $this->ut->html2Csv($description, true),
                 ], ';', '"');
             }
 
-            $this->om->clear('Claroline\CoreBundle\Entity\Log\Log');
+            $this->om->clear(Log::class);
         }
 
         fclose($handle);

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Command\Logs;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,8 +23,8 @@ class LogsFetcherCommand extends ContainerAwareCommand
     use BaseCommandTrait;
 
     private $params = [
-        'group' => 'group',
         'from' => 'from',
+        'filePath' => 'filePath',
     ];
 
     protected function configure()
@@ -31,52 +32,26 @@ class LogsFetcherCommand extends ContainerAwareCommand
         parent::configure();
 
         $this->setName('claroline:logs:fetch')
-            ->setDescription('Export logs by group');
+            ->setDescription('Export logs');
         $this->setDefinition(
             [
-                new InputArgument('group', InputArgument::REQUIRED, 'The group to fetch'),
                 //1472688000 1st sept 2016
-                new InputArgument('from', InputArgument::REQUIRED, 'timestamp from'),
+                new InputArgument('from', InputArgument::REQUIRED, 'date from (Y-m-d)'),
+                new InputArgument('filePath', InputArgument::REQUIRED, 'path to exported file'),
             ]
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('group');
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $logRepo = $om->getRepository('Claroline\CoreBundle\Entity\Log\Log');
-        $xlsExporter = $this->getContainer()->get('claroline.exporter.xls');
+        /** @var LogManager $logManager */
+        $logManager = $this->getContainer()->get('claroline.log.manager');
+        $logManager->exportLogsToCsv([
+            'filters' => [
+                'dateLog' => $input->getArgument('from') ?? null,
+            ],
+        ], $input->getArgument('filePath'));
 
-        $query = $logRepo->findFilteredLogsQuery(
-            'all',
-            [$input->getArgument('from'), time()],
-            null,
-            [],
-            null,
-            -1,
-            null,
-            null,
-            $name
-        );
-
-        $results = $query->getResult();
-
-        $titles = ['date', 'action', 'user', 'username', 'details'];
-
-        $lines = [];
-
-        foreach ($results as $result) {
-            $lines[] = [
-            $result->getDateLog()->format('d-m-Y H:i:s'),
-            $result->getAction(),
-            $result->getDoer()->getUsername(),
-            $result->getDoer()->getFirstName().' '.$result->getDoer()->getLastName(),
-            $this->getContainer()->get('claroline.log.manager')->getDetails($result),
-          ];
-        }
-
-        $path = $xlsExporter->export($titles, $lines);
-        $output->writeln('Check your file at '.$path);
+        $output->writeln('Check your file at '.$input->getArgument('filePath'));
     }
 }

@@ -169,6 +169,7 @@ services:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@translator'
           - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+          - '@event_dispatcher'
 
     claroline.log.manager:
         alias: Claroline\CoreBundle\Manager\LogManager
