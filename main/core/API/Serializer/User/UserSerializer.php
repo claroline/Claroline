@@ -466,6 +466,7 @@ class UserSerializer extends GenericSerializer
         // remove this later (with the Trait)
         $user = parent::deserialize($data, $user, $options);
 
+        $this->sipe('id', 'setUuid', $data, $user);
         $this->sipe('picture.url', 'setPicture', $data, $user);
         $this->sipe('username', 'setUserName', $data, $user);
         $this->sipe('firstName', 'setFirstName', $data, $user);
