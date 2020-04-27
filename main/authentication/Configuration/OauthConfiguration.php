@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AuthenticationBundle\Model\Oauth;
+namespace Claroline\AuthenticationBundle\Configuration;
 
 class OauthConfiguration
 {

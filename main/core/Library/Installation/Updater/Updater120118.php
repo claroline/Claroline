@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
+use Claroline\AuthenticationBundle\Configuration\OauthConfiguration;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;

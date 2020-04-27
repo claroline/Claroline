@@ -32,6 +32,7 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
     {
         $config = new ConfigurationBuilder();
         $bundleClass = get_class($bundle);
+
         $simpleConfigs = [
             'HWI\Bundle\OAuthBundle\HWIOAuthBundle' => 'hwi_oauth',
         ];
@@ -39,6 +40,8 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
         if (isset($simpleConfigs[$bundleClass])) {
             return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
         }
+
+        return false;
     }
 
     private function buildPath($file, $folder = 'suggested')

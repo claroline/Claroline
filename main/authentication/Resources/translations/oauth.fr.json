@@ -24,5 +24,6 @@
     "windows_live": "Windows Live",
     "generic": "OAuth2 Générique",
     "dropbox": "Dropbox",
-    "github": "GitHub"
+    "github": "GitHub",
+    "saml": "SAML"
 }

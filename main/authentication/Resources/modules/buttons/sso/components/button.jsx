@@ -10,10 +10,11 @@ import {URL_BUTTON} from '#/main/app/buttons'
 
 const SsoButton = props =>
   <Button
-    {...omit(props, 'service')}
     className={classes('btn-link btn-block btn-emphasis btn-third-party-login', props.service, props.className)}
     type={URL_BUTTON}
     target={['hwi_oauth_service_redirect', {service: props.service}]}
+
+    {...omit(props, 'service')}
   />
 
 implementPropTypes(SsoButton, ButtonTypes, {

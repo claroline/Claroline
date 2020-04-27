@@ -69,7 +69,7 @@ class OauthController extends AbstractCrudController
      *
      * @return RedirectResponse
      */
-    public function checkConnexionAction(Request $request)
+    public function checkConnectionAction(Request $request)
     {
         $session = $request->getSession();
         $service = $session->get('claroline.oauth.resource_owner');

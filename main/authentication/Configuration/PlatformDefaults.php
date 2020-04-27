@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AuthenticationBundle\Library;
+namespace Claroline\AuthenticationBundle\Configuration;
 
-use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
 use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 
 class PlatformDefaults implements ParameterProviderInterface
 {
     public function getDefaultParameters()
     {
-        $parameters = [];
+        $parameters = [
+            'external_authentication' => [],
+        ];
 
         foreach (OauthConfiguration::resourceOwners() as $resourceOwner) {
             $resourceOwnerStr = str_replace(' ', '_', strtolower($resourceOwner));

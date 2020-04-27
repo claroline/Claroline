@@ -12,7 +12,6 @@
 namespace Claroline\AuthenticationBundle\Security\Oauth\Hwi;
 
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\WindowsLiveResourceOwner as HWIWindowsLiveResourceOwner;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class WindowsLiveResourceOwner extends HWIWindowsLiveResourceOwner
@@ -27,18 +26,19 @@ class WindowsLiveResourceOwner extends HWIWindowsLiveResourceOwner
         ]);
     }
 
-    public function logout($redirectUrl)
+    public function revokeToken($token)
     {
-        if (!empty($this->options['revoke_token_url']) && $this->options['force_login'] === true) {
-            $redirectUrl = $this->normalizeUrl(
-                $this->options['revoke_token_url'],
-                [
-                    'client_id' => $this->options['client_id'],
-                    'redirect_uri' => $redirectUrl,
-                ]
-            );
+        if (!empty($this->options['revoke_token_url']) && true === $this->options['force_login']) {
+            $parameters = [
+                'client_id' => $this->options['client_id'],
+                'client_secret' => $this->options['client_secret'],
+            ];
+
+            $response = $this->httpRequest($this->normalizeUrl($this->options['revoke_token_url'], ['client_id' => $this->options['client_id']]), $parameters);
+
+            return 200 === $response->getStatusCode();
         }
 
-        return new RedirectResponse($redirectUrl);
+        return false;
     }
 }

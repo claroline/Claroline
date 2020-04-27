@@ -1,0 +1,39 @@
+parameters:
+    # config is filled with some platform options in ClarolineAuthenticationExtension
+    entity_id: 'claroline'
+    credentials: []
+    idp: []
+
+light_saml_symfony_bridge:
+    own:
+        entity_id: "%entity_id%" # It's filled from platform_options.json by SamlConfigPass
+        entity_descriptor_provider:
+            id: Claroline\SamlBundle\Security\EntityDescriptorProvider
+        credentials: "%credentials%" # It's filled from platform_options.json by SamlConfigPass
+    party:
+        idp:
+            files: "%idp%" # It's filled from platform_options.json by SamlConfigPass
+
+    store:
+        request: Claroline\SamlBundle\Security\Store\RequestStateStore
+        id_state: Claroline\SamlBundle\Security\Store\IdStore
+
+security:
+    firewalls:
+        main:
+            # Allows SAML authentication
+            logout:
+                invalidate_session: false
+                success_handler: Claroline\SamlBundle\Security\LogoutHandler
+                #handlers:
+                #    - Claroline\SamlBundle\Security\LogoutHandler
+
+            light_saml_sp:
+                provider: user_db # use the standard user provider
+                user_creator: Claroline\SamlBundle\Security\UserCreator
+                login_path: /saml/login
+                check_path: /saml/login_check
+                default_target_path: /
+                require_previous_session: false
+                success_handler: Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+                failure_handler: Claroline\CoreBundle\Listener\AuthenticationFailureHandler

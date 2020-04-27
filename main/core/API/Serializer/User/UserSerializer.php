@@ -46,14 +46,14 @@ class UserSerializer extends GenericSerializer
     private $facetManager;
     /** @var PublicFileSerializer */
     private $fileSerializer;
-    /** @var ContainerInterface */
-    private $container;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
     /** @var OrganizationSerializer */
     private $organizationSerializer;
     /** @var FieldFacetValueSerializer */
     private $fieldFacetValueSerializer;
+    /** @var ContainerInterface */
+    private $container;
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
 
     private $organizationRepo;
     /** @var RoleRepository */
@@ -144,10 +144,15 @@ class UserSerializer extends GenericSerializer
             return $this->serializePublic($user);
         }
 
+        $token = $this->tokenStorage->getToken();
+
         $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
-        $showEmail = !empty(array_filter($this->tokenStorage->getToken()->getRoles(), function (BaseRole $role) use ($showEmailRoles) {
-            return 'ROLE_ADMIN' === $role->getRole() || in_array($role->getRole(), $showEmailRoles);
-        }));
+        $showEmail = false;
+        if ($token) {
+            $showEmail = !empty(array_filter($token->getRoles(), function (BaseRole $role) use ($showEmailRoles) {
+                return 'ROLE_ADMIN' === $role->getRole() || in_array($role->getRole(), $showEmailRoles);
+            }));
+        }
 
         $serializedUser = [
             'autoId' => $user->getId(), //for old compatibility purposes
@@ -266,7 +271,7 @@ class UserSerializer extends GenericSerializer
         $publicUser = [];
 
         foreach ($settingsProfile as $property => $isViewable) {
-            if ($isViewable || $user === $this->tokenStorage->getToken()->getUser()) {
+            if ($isViewable || ($this->tokenStorage->getToken() && $user === $this->tokenStorage->getToken()->getUser())) {
                 switch ($property) {
                     case 'baseData':
                         $publicUser['lastName'] = $user->getLastName();
@@ -351,7 +356,6 @@ class UserSerializer extends GenericSerializer
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'removed' => $user->isRemoved(),
             'locale' => $locale,
-            'loggedIn' => $user === $this->tokenStorage->getToken()->getUser(),
         ];
     }
 
@@ -385,7 +389,9 @@ class UserSerializer extends GenericSerializer
      */
     private function serializePermissions(User $user)
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+
+        $currentUser = $token ? $token->getUser() : null;
 
         $isOwner = $currentUser instanceof User && $currentUser->getUuid() === $user->getUuid();
         $isAdmin = $this->authChecker->isGranted('ROLE_ADMIN'); // todo maybe add those who have access to UserManagement tool
@@ -393,8 +399,8 @@ class UserSerializer extends GenericSerializer
         // todo : move role check elsewhere
         $profileConfig = $this->config->getParameter('profile');
         $editRoles = [];
-        if (!empty($profileConfig['roles_edition'])) {
-            $editRoles = array_filter($this->tokenStorage->getToken()->getRoles(), function (BaseRole $role) use ($profileConfig) {
+        if ($token && !empty($profileConfig['roles_edition'])) {
+            $editRoles = array_filter($token->getRoles(), function (BaseRole $role) use ($profileConfig) {
                 return in_array($role->getRole(), $profileConfig['roles_edition']);
             });
         }

@@ -5,3 +5,7 @@ services:
         public: false
 
     Claroline\DevBundle\Manager\TranslationManager: ~
+
+    Claroline\DevBundle\Listener\DebugListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onResponse }

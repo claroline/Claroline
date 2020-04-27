@@ -4,8 +4,8 @@ services:
         autoconfigure: false
         public: true #because controller
 
-    Claroline\AuthenticationBundle\Library\LegacyParametersMapping:
+    Claroline\AuthenticationBundle\Configuration\LegacyParametersMapping:
         tags: ['claroline.configuration.mapping.legacy']
 
-    Claroline\AuthenticationBundle\Library\PlatformDefaults:
+    Claroline\AuthenticationBundle\Configuration\PlatformDefaults:
         tags: ['claroline.configuration']

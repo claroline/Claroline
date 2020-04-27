@@ -1,0 +1,34 @@
+services:
+    _defaults:
+        autowire: false #change to true
+        autoconfigure: false
+        public: true #because controller
+
+    # SAML
+    Claroline\SamlBundle\Security\EntityDescriptorProvider:
+        #factory: ['LightSaml\SymfonyBridgeBundle\Factory\OwnEntityDescriptorProviderFactory', 'build']
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@router'
+            - '%lightsaml.route.login_check%'
+            - '@lightsaml.own.credential_store'
+
+    Claroline\SamlBundle\Security\Store\IdStore:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@lightsaml.system.time_provider'
+
+    Claroline\SamlBundle\Security\Store\RequestStateStore:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    Claroline\SamlBundle\Security\UserCreator:
+        arguments:
+            - '%secret%'
+            - '@security.token_storage'
+            - '@lightsaml_sp.username_mapper.simple'
+            - '@Claroline\AppBundle\API\Crud'
+
+    Claroline\SamlBundle\Security\LogoutHandler:
+        calls:
+            - [setContainer, ['@service_container']]

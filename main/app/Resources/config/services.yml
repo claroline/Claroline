@@ -49,13 +49,11 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SchemaProvider'
 
-    Claroline\AppBundle\API\Listener\ApiListener:
+    Claroline\AppBundle\Listener\ApiListener:
         arguments:
             - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onError, priority: 99 }
-            - { name: kernel.event_listener, event: kernel.response, method: onResponse }
-
 
     Claroline\AppBundle\Command\AsyncCommand:
         arguments:

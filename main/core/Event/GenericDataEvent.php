@@ -41,7 +41,7 @@ class GenericDataEvent extends Event
                 $this->response = [];
             }
 
-            $this->response = array_merge($this->response, $response);
+            $this->response = array_merge_recursive($this->response, $response);
         }
     }
 }

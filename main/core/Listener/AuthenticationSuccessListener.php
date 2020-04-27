@@ -19,10 +19,13 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -41,6 +44,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     /** @var SerializerProvider */
     private $serializer;
 
+    /** @var RoutingHelper */
+    private $routingHelper;
+
     /** @var UserManager */
     private $userManager;
 
@@ -54,6 +60,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      * @param PlatformConfigurationHandler $config
      * @param StrictDispatcher             $eventDispatcher
      * @param SerializerProvider           $serializer
+     * @param RoutingHelper                $routingHelper
      * @param UserManager                  $userManager
      * @param ConnectionMessageManager     $messageManager
      */
@@ -62,6 +69,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         PlatformConfigurationHandler $config,
         StrictDispatcher $eventDispatcher,
         SerializerProvider $serializer,
+        RoutingHelper $routingHelper,
         UserManager $userManager,
         ConnectionMessageManager $messageManager
     ) {
@@ -69,6 +77,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->config = $config;
         $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
+        $this->routingHelper = $routingHelper;
         $this->userManager = $userManager;
         $this->messageManager = $messageManager;
     }
@@ -77,7 +86,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      * @param Request        $request
      * @param TokenInterface $token
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
@@ -90,11 +99,30 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->setLocale($user->getLocale());
         }
 
-        return new JsonResponse([
-            'user' => $this->serializer->serialize($user),
-            'redirect' => $this->getRedirection(),
-            'messages' => $this->messageManager->getConnectionMessagesByUser($user),
-        ]);
+        $redirect = $this->getRedirection();
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'user' => $this->serializer->serialize($user),
+                'redirect' => $redirect,
+                'messages' => $this->messageManager->getConnectionMessagesByUser($user),
+            ]);
+        }
+
+        switch ($redirect['type']) {
+            case 'url':
+                $redirectUrl = $redirect['data'];
+                break;
+            case 'workspace':
+                $redirectUrl = $this->routingHelper->workspacePath($redirect['data']);
+                break;
+            case 'desktop':
+            default:
+                $redirectUrl = $this->routingHelper->desktopPath();
+                break;
+        }
+
+        return new RedirectResponse($redirectUrl);
     }
 
     private function getRedirection()

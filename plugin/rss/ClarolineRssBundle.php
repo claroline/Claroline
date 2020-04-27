@@ -15,14 +15,4 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
 class ClarolineRssBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
-
-    public function getRequiredPlugins()
-    {
-        return [
-        ];
-    }
 }

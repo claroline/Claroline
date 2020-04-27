@@ -36,14 +36,13 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
 
     protected function configure()
     {
-        $this->setName('claroline:workspace:import_archive')
-            ->setDescription('Create a workspace from a zip archive (for debug purpose)');
-        $this->setDefinition(
-            [
+        $this
+            ->setName('claroline:workspace:import_archive')
+            ->setDescription('Create a workspace from a zip archive (for debug purpose)')
+            ->setDefinition([
                 new InputArgument('path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
-                new InputArgument('code', InputArgument::REQUIRED, 'The owner username'),
-            ]
-        );
+                new InputArgument('code', InputArgument::REQUIRED, 'The new workspace code.'),
+            ]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -139,7 +139,6 @@ class LoginForm extends Component {
   }
 }
 
-
 LoginForm.propTypes = {
   sso: T.arrayOf(T.shape({
     service: T.string.isRequired,

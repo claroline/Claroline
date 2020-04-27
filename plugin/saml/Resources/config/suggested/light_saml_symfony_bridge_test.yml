@@ -1,0 +1,10 @@
+imports:
+    - { resource: light_saml_symfony_bridge.yml }
+
+parameters:
+    entity_id: 'claroline'
+    credentials:
+      - certificate: "%kernel.root_dir%/../vendor/claroline/distribution/plugin/saml/Resources/config/saml.crt"
+        key: "%kernel.root_dir%/../vendor/claroline/distribution/plugin/saml/Resources/config/saml.pem"
+        password: ~
+    idp: []

@@ -20,11 +20,15 @@ security:
         main:
             pattern: ^/
             anonymous: ~
-            logout: true
+            logout:
+                path:   /logout
+                target: /
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
+
             # Allows IP authentication
             simple_preauth:
                 authenticator: Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator
+
             # Allows JSON authentication
             json_login:
                 check_path: /login
@@ -35,5 +39,6 @@ security:
         allow_if_all_abstain: false
 
     access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY }

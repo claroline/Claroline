@@ -290,6 +290,7 @@ services:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@claroline.manager.user_manager'
             - '@claroline.manager.connection_message_manager'
 

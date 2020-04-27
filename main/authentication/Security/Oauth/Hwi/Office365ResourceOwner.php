@@ -14,7 +14,6 @@ namespace Claroline\AuthenticationBundle\Security\Oauth\Hwi;
 use Buzz\Client\ClientInterface as HttpClientInterface;
 use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorageInterface;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GenericOAuth2ResourceOwner;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -109,23 +108,20 @@ class Office365ResourceOwner extends GenericOAuth2ResourceOwner
         return parent::getAuthorizationUrl($redirectUri, $extraParameters);
     }
 
-    /**
-     * Logouts User from resource Owner.
-     *
-     * @param $redirectUrl
-     *
-     * @return RedirectResponse
-     */
-    public function logout($redirectUrl)
+    public function revokeToken($token)
     {
         if (!empty($this->options['revoke_token_url']) && true === $this->options['force_login']) {
-            $redirectUrl = $this->normalizeUrl(
-                $this->options['revoke_token_url'],
-                ['post_logout_redirect_uri' => $redirectUrl]
-            );
+            $parameters = [
+                'client_id' => $this->options['client_id'],
+                'client_secret' => $this->options['client_secret'],
+            ];
+
+            $response = $this->httpRequest($this->normalizeUrl($this->options['revoke_token_url'], ['access_token' => $token]), $parameters);
+
+            return 200 === $response->getStatusCode();
         }
 
-        return new RedirectResponse($redirectUrl);
+        return false;
     }
 
     private function getApiVersion($apiVersion)

@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\API\Serializer\Platform;
 
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AuthenticationBundle\Manager\OauthManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -55,9 +54,6 @@ class ClientSerializer
     /** @var ResourceTypeSerializer */
     private $resourceTypeSerializer;
 
-    /** @var OauthManager */
-    private $oauthManager;
-
     /**
      * ClientSerializer constructor.
      *
@@ -72,7 +68,6 @@ class ClientSerializer
      * @param PluginManager                $pluginManager
      * @param IconSetManager               $iconManager
      * @param ResourceTypeSerializer       $resourceTypeSerializer
-     * @param OauthManager                 $oauthManager
      */
     public function __construct(
         $env,
@@ -86,8 +81,7 @@ class ClientSerializer
         VersionManager $versionManager,
         PluginManager $pluginManager,
         IconSetManager $iconManager,
-        ResourceTypeSerializer $resourceTypeSerializer,
-        OauthManager $oauthManager
+        ResourceTypeSerializer $resourceTypeSerializer
     ) {
         $this->env = $env;
         $this->tokenStorage = $tokenStorage;
@@ -100,7 +94,6 @@ class ClientSerializer
         $this->iconManager = $iconManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
         $this->eventDispatcher = $eventDispatcher;
-        $this->oauthManager = $oauthManager;
     }
 
     public function getName()
@@ -168,13 +161,6 @@ class ClientSerializer
             'admin' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
             ],
-            'sso' => array_map(function (array $sso) { // TODO : do it elsewhere
-                return [
-                    'service' => $sso['service'],
-                    'label' => isset($sso['display_name']) ? $sso['display_name'] : null,
-                    'primary' => isset($sso['client_primary']) ? $sso['client_primary'] : false,
-                ];
-            }, $this->oauthManager->getActiveServices()),
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'), // TODO : this should not be exposed here
             'stylesheets' => $this->config->getParameter('stylesheets'), // TODO : this should not be exposed here

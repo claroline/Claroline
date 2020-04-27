@@ -55,25 +55,13 @@ hwi_oauth:
                 realname:   fullname
                 username:   username
 
-
-
-    # an optional setting to configure a query string parameter which can be used to redirect
-    # the user after authentication, e.g. /connect/facebook?_destination=/my/destination will
-    # redirect the user to /my/destination after facebook authenticates them.  If this is not
-    # set then the user will be redirected to the original resource that they requested, or
-    # the base address if no resource was requested.  This is similar to the behaviour of
-    # [target_path_parameter for form login](http://symfony.com/doc/2.0/cookbook/security/form_login.html).
-    # target_path_parameter: _destination
-
-#services:
-#    hwi_oauth.user.provider:
-#        class: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
-
 security:
     firewalls:
         main:
             logout:
-                success_handler: Claroline\AuthenticationBundle\Security\Oauth\LogoutSuccessHandler
+                handlers:
+                    - Claroline\AuthenticationBundle\Security\Oauth\LogoutHandler
+
             oauth:
                 oauth_user_provider:
                     service: Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider
@@ -87,9 +75,8 @@ security:
                     twitter:      /login/check-twitter
                     windows_live: /login/check-windows
                     generic:      /login/check-generic
-                #success_handler:    Claroline\CoreBundle\Listener\AuthenticationSuccessListener
-                failure_handler:    Claroline\AuthenticationBundle\Security\Oauth\FailureHandler
+                success_handler:    Claroline\CoreBundle\Listener\AuthenticationSuccessListener
+                failure_handler:    Claroline\AuthenticationBundle\Security\Oauth\AuthenticationFailureHandler
                 login_path: /login
                 failure_path: /login
                 use_forward: false
-

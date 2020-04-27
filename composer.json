@@ -18,6 +18,7 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "ext-pdo_mysql": "*",
+        "claroline/json-quiz": "dev-master",
         "composer/composer": "1.6.5",
         "doctrine/data-fixtures": "1.3.1",
         "doctrine/dbal": "2.7.1",
@@ -31,7 +32,8 @@
         "icap/html-diff": "1.1.0",
         "jdorn/sql-formatter": "1.2.17",
         "jms/security-extra-bundle": "1.6.1",
-        "claroline/json-quiz": "dev-master",
+        "lightsaml/sp-bundle": "1.2.1",
+        "lightsaml/lightsaml-logout": "1.0.0",
         "meyfa/php-svg": "0.8.0",
         "postal/postal": "1.0",
         "psr/log": "1.0.2",
@@ -49,50 +51,6 @@
         "kriswallsmith/buzz": "^0.13",
         "php-http/httplug-bundle": "*",
         "php-http/guzzle6-adapter":"^1.1"
-    },
-    "replace": {
-        "claroline/distribution-bundle": "*",
-        "claroline/core-bundle": "*",
-        "claroline/bundle-recorder": "*",
-        "claroline/installation-bundle": "*",
-        "claroline/migration-bundle": "*",
-        "claroline/kernel-bundle": "*",
-        "claroline/web-installer": "*",
-        "claroline/theme-bundle": "*",
-        "claroline/agenda-bundle": "*",
-        "claroline/analytics-bundle": "*",
-        "claroline/announcement-bundle": "*",
-        "claroline/forum-bundle": "*",
-        "claroline/history-bundle": "*",
-        "claroline/image-player-bundle": "*",
-        "claroline/ldap-bundle": "*",
-        "claroline/message-bundle": "*",
-        "icap/notification-bundle": "*",
-        "claroline/pdf-player-bundle": "*",
-        "claroline/scorm-bundle": "*",
-        "claroline/tag-bundle": "*",
-        "claroline/team-bundle": "*",
-        "claroline/text-player-bundle": "*",
-        "claroline/video-player-bundle": "*",
-        "claroline/web-resource-bundle": "*",
-        "hevinci/favourite-bundle": "*",
-        "hevinci/competency-bundle": "*",
-        "hevinci/url-bundle": "*",
-        "icap/blog-bundle": "*",
-        "icap/dropzone-bundle": "*",
-        "icap/social-media-bundle": "*",
-        "icap/wiki-bundle": "*",
-        "icap/oauth-bundle": "*",
-        "icap/formula-plugin-bundle": "*",
-        "innova/path-bundle": "*",
-        "claroline/pdf-generator-bundle": "*",
-        "claroline/dev-bundle": "*",
-        "ujm/exo-bundle": "*",
-        "icap/lesson-bundle": "*",
-        "claroline/drop-zone-bundle": "*",
-        "claroline/link-bundle": "*",
-        "claroline/slideshow-bundle": "*",
-        "claroline/audio-player-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -142,6 +100,7 @@
             "Claroline\\PlannedNotificationBundle\\": "plugin/planned-notification",
             "Claroline\\LinkBundle\\": "plugin/link",
             "Claroline\\OpenBadgeBundle\\": "plugin/open-badge",
+            "Claroline\\SamlBundle\\": "plugin/saml",
             "Claroline\\SlideshowBundle\\": "plugin/slideshow",
             "Claroline\\AudioPlayerBundle\\": "plugin/audio-player"
         }
@@ -192,7 +151,8 @@
             "Claroline\\LinkBundle\\ClarolineLinkBundle",
             "Claroline\\SlideshowBundle\\ClarolineSlideshowBundle",
             "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle",
-            "Claroline\\AudioPlayerBundle\\ClarolineAudioPlayerBundle"
+            "Claroline\\AudioPlayerBundle\\ClarolineAudioPlayerBundle",
+            "Claroline\\SamlBundle\\ClarolineSamlBundle"
         ]
     }
 }

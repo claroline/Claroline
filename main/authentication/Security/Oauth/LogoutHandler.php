@@ -12,66 +12,58 @@
 namespace Claroline\AuthenticationBundle\Security\Oauth;
 
 use Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\AbstractResourceOwner;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
 
-/**
- * Class LogoutSuccessHandler.
- */
-class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
+class LogoutHandler implements LogoutHandlerInterface
 {
     /**
      * @var SessionInterface
      */
     private $session;
 
-    private $router;
-
     private $resourceOwnerFactory;
 
     /**
-     * LogoutSuccessHandler constructor.
+     * LogoutHandler constructor.
      *
      * @param SessionInterface     $session
-     * @param Router               $router
      * @param ResourceOwnerFactory $resourceOwnerFactory
      */
-    public function __construct(SessionInterface $session, Router $router, ResourceOwnerFactory $resourceOwnerFactory)
+    public function __construct(SessionInterface $session, ResourceOwnerFactory $resourceOwnerFactory)
     {
         $this->session = $session;
-        $this->router = $router;
         $this->resourceOwnerFactory = $resourceOwnerFactory;
     }
 
+
     /**
-     * Creates a Response object to send upon a successful logout.
+     * Logout user from SSO provider if needed.
      *
      * @param Request $request
-     *
-     * @return Response never null
+     * @param Response $response
+     * @param TokenInterface $token
      */
-    public function onLogoutSuccess(Request $request)
+    public function logout(Request $request, Response $response, TokenInterface $token)
     {
         $resourceOwnerToken = $this->session->get('claroline.oauth.resource_owner_token');
-        $redirectUrl = $this->router->generate('claro_index', [], true);
         if (!empty($resourceOwnerToken)) {
             try {
                 $resourceOwnerName = str_replace('_', '', ucwords($resourceOwnerToken['resourceOwnerName'], '_'));
+
+                /** @var AbstractResourceOwner $resourceOwner */
                 $resourceOwner = $this->resourceOwnerFactory->{'get'.$resourceOwnerName.'ResourceOwner'}();
-                if ('Office365' === $resourceOwnerName || 'WindowsLive' === $resourceOwnerName) {
-                    return $resourceOwner->logout($redirectUrl);
+                if ($resourceOwner) {
+                    $resourceOwner->revokeToken($resourceOwnerToken['token']);
                 }
-                $resourceOwner->revokeToken($resourceOwnerToken['token']);
             } catch (AuthenticationException $e) {
                 // Do nothing
             }
         }
-
-        return new RedirectResponse($redirectUrl);
     }
 }

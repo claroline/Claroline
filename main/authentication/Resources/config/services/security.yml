@@ -31,15 +31,14 @@ services:
             - '@security.http_utils'
             - '@session'
 
-    Claroline\AuthenticationBundle\Security\Oauth\FailureHandler:
+    Claroline\AuthenticationBundle\Security\Oauth\AuthenticationFailureHandler:
         arguments:
             - '@router'
             - '@translator'
 
-    Claroline\AuthenticationBundle\Security\Oauth\LogoutSuccessHandler:
+    Claroline\AuthenticationBundle\Security\Oauth\LogoutHandler:
         arguments:
             - '@session'
-            - '@router'
             - '@Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory'
 
     Claroline\AuthenticationBundle\Security\Oauth\OauthUserProvider:

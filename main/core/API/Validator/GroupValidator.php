@@ -7,6 +7,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 
 class GroupValidator implements ValidatorInterface
 {
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * GroupValidator constructor.
      *
@@ -15,7 +18,6 @@ class GroupValidator implements ValidatorInterface
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Group');
     }
 
     public function validate($data, $mode, array $options = [])

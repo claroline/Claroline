@@ -1,3 +1,4 @@
+# OAUTH
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
     prefix:   /connect
@@ -12,6 +13,7 @@ hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
     prefix:   /login
 
+# SSO specific routes
 dropbox_login:
     path: /login/check-dropbox
 
@@ -39,6 +41,7 @@ windows_live_login:
 oauth2_generic_login:
     path: /login/check-generic
 
+# Claroline API
 claro_authentication_api:
     resource: "@ClarolineAuthenticationBundle/Controller/"
     prefix: apiv2

@@ -11,7 +11,7 @@
 
 namespace Claroline\AuthenticationBundle\DependencyInjection\Compiler;
 
-use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
+use Claroline\AuthenticationBundle\Configuration\OauthConfiguration;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;

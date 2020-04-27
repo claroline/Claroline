@@ -27,12 +27,15 @@ class FacetRepository extends EntityRepository
      *
      * @return Facet[]
      */
-    public function findVisibleFacets(TokenInterface $token, $isRegistration = false)
+    public function findVisibleFacets(TokenInterface $token = null, $isRegistration = false)
     {
         // retrieves current user roles
-        $roleNames = array_map(function (Role $role) {
-            return $role->getRole();
-        }, $token->getRoles());
+        $roleNames = [];
+        if ($token) {
+            $roleNames = array_map(function (Role $role) {
+                return $role->getRole();
+            }, $token->getRoles());
+        }
 
         $qb = $this->createQueryBuilder('f');
 

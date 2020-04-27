@@ -10,7 +10,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
-use  Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
 
 class UserValidator implements ValidatorInterface
 {
@@ -43,7 +43,6 @@ class UserValidator implements ValidatorInterface
             return $errors;
         }
 
-        // todo validate Facet values
         //the big chunk of code allows us to know if the identifiers are already taken
         //and prohibits the use of an already used address email in a username field
 
@@ -70,6 +69,7 @@ class UserValidator implements ValidatorInterface
             }
         }
 
+        // todo validate Facet values
         if (in_array(Options::VALIDATE_FACET, $options)) {
             $facets = $this->profileSerializer->serialize([Options::REGISTRATION]);
             $required = [];
@@ -84,9 +84,8 @@ class UserValidator implements ValidatorInterface
                 }
             }
 
-            $utils = new ArrayUtils();
             foreach ($required as $field) {
-                if (!$utils->has($data, 'profile.'.$field['id'])) {
+                if (!ArrayUtils::has($data, 'profile.'.$field['id'])) {
                     $errors[] = [
                         'path' => 'profile/'.$field['id'],
                         'message' => 'The field '.$field['label'].' is required',

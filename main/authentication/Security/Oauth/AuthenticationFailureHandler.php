@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class FailureHandler implements AuthenticationFailureHandlerInterface
+class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
     /**
      * @var Router

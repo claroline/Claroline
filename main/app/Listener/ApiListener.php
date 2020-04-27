@@ -1,21 +1,16 @@
 <?php
 
-namespace Claroline\AppBundle\API\Listener;
+namespace Claroline\AppBundle\Listener;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * Move this somewhere else.
- */
 class ApiListener
 {
     /** @var TokenStorageInterface */
@@ -74,25 +69,6 @@ class ApiListener
 
                 $event->setResponse($response);
             }
-        }
-    }
-
-    /**
-     * If we're returning a JsonResponse, we can get the debug bar by passing ?debug=true on the query string.
-     *
-     * @param FilterResponseEvent $event
-     */
-    public function onResponse(FilterResponseEvent $event)
-    {
-        $request = $event->getRequest();
-        $debug = $request->query->get('debug');
-        $response = $event->getResponse();
-
-        //this is for debug purpose
-        if ($response instanceof JsonResponse && $debug) {
-            $new = new Response();
-            $new->setContent('<body>'.$response->getContent().'</body>');
-            $event->setResponse($new);
         }
     }
 }

@@ -23,7 +23,7 @@ class ClarolineAudioPlayerBundle extends DistributionPluginBundle
     public function getRequiredPlugins()
     {
         return [
-            'UJM\\ExoBundle\\UJMExoBundle',
+            'UJM\\ExoBundle\\UJMExoBundle', // FIXME : this should not be the case
         ];
     }
 }
