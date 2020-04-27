@@ -41,5 +41,6 @@
     "unpublish_link": "Klik hier om de instellingen te bewerken.",
     "unpublish_page": "Deze pagina is niet gepubliceerd !",
     "weeks_ago": "%count% week geleden|%count% weken geleden",
-    "years_ago": "%count% jaar geleden|%count% jaar geleden"
+    "years_ago": "%count% jaar geleden|%count% jaar geleden",
+    "add_tab": "Voeg een tabblad toe"
 }
