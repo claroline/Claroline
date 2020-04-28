@@ -1,5 +1,4 @@
 import isEmpty from 'lodash/isEmpty'
-import moment from 'moment'
 
 // TODO : remove the use of navigate() and do redirection in components.
 
@@ -14,6 +13,7 @@ import {normalize, denormalizeAnswers, denormalize} from '#/plugin/exo/quiz/play
 import {generateAttempt} from '#/plugin/exo/resources/quiz/player/attempt'
 import {actions as paperAction} from '#/plugin/exo/resources/quiz/papers/store/actions'
 import {calculateScore} from '#/plugin/exo/resources/quiz/papers/score'
+import {showCorrection} from '#/plugin/exo/resources/quiz/papers/restrictions'
 
 export const ATTEMPT_START  = 'ATTEMPT_START'
 export const ATTEMPT_FINISH = 'ATTEMPT_FINISH'
@@ -177,35 +177,24 @@ actions.handleAttemptEnd = (paper, navigate) => {
   return (dispatch, getState) => {
     // Finish the current attempt
     dispatch(actions.finishAttempt(paper))
-    dispatch(paperAction.addPaper(paper))
-    dispatch(paperAction.setCurrentPaper(paper))
+
+    const correctionAvailable = showCorrection(paper)
+    if (correctionAvailable) {
+      // we directly push current paper in the store to make it available to anonymous (they cannot load them from api)
+      dispatch(paperAction.addPaper(paper))
+      dispatch(paperAction.setCurrentPaper(paper))
+    }
 
     // We will decide here if we show the correction now or not and where we redirect the user
     if (playerSelectors.hasEndPage(getState())) {
       // Show the end page
       navigate('play/end')
+    } else if (correctionAvailable) {
+      // Open paper
+      navigate('papers/' + paper.id)
     } else {
-      // todo : reuse papers/restrictions.js
-      switch (playerSelectors.showCorrectionAt(getState())) {
-        case 'validation': {
-          navigate('papers/' + paper.id)
-          break
-        }
-        case 'date': {
-          const correctionDate = moment(playerSelectors.correctionDate(getState()))
-          const today = moment()
-          const showPaper = today.diff(correctionDate, 'days') >= 0
-
-          if (showPaper) {
-            navigate('papers/' + paper.id)
-          } else {
-            navigate('/')
-          }
-
-          break
-        }
-        default: navigate('/')
-      }
+      // Return to quiz home
+      navigate('/')
     }
   }
 }
