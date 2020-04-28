@@ -130,7 +130,7 @@ class PaperController
     {
         $this->assertHasPermission('OPEN', $exercise);
 
-        if (!$this->isAdmin($paper->getExercise()) && $paper->getUser() !== $user) {
+        if (!$this->isAdmin($paper->getExercise()) && ($paper->getUser() !== $user || !$this->paperManager->isSolutionAvailable($exercise, $paper))) {
             // Only administrator or the User attached can see a Paper
             throw new AccessDeniedException();
         }
