@@ -19,7 +19,7 @@ const UrlForm = props =>
         primary: true,
         fields: [
           {
-            name: 'url',
+            name: 'raw',
             label: trans('url', {}, 'url'),
             type: 'url',
             required: true

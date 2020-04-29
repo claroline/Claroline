@@ -15,7 +15,6 @@
     "last_name_desc": "Le nom de l'utilisateur cible",
     "no_template_type": "Aucun type de template",
     "no_template": "Aucun template",
-    "parameter": "Paramètre",
     "password_desc": "Le mot de passe de l'utilisateur cible",
     "password_initialization": "Initialisation du mot de passe",
     "password_initialization_desc": "Template utilisé pour le mail envoyé afin d'initialiser le mot de passe.",

@@ -13,10 +13,10 @@ namespace HeVinci\UrlBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use HeVinci\UrlBundle\Entity\Url;
-use  Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @Route("/url")
+ * @EXT\Route("/url")
  */
 class UrlController extends AbstractCrudController
 {

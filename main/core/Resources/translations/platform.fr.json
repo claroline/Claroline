@@ -777,6 +777,7 @@
     "panel_removed": "Panel supprimé avec succès",
     "panel_roles_edited": "Rôles du panel édités avec succès",
     "parameters": "Paramètres",
+    "parameter": "Paramètre",
     "parameters_save_error": "Une erreur est survenue pendant la sauvegarde des paramètres.",
     "parameters_save_success": "Paramètres sauvegardés avec succès.",
     "passed": "Réussi",

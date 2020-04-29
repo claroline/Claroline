@@ -95,7 +95,7 @@ const TemplateForm = (props) =>
         <table className="table table-bordered table-striped table-hover">
           <thead>
             <tr>
-              <th>{trans('parameter', {}, 'template')}</th>
+              <th>{trans('parameter')}</th>
               <th>{trans('description')}</th>
             </tr>
           </thead>

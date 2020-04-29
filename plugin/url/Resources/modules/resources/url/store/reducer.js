@@ -9,7 +9,7 @@ import {selectors as editorSelectors} from '#/plugin/url/resources/url/editor/st
 import {reducer as editorReducer} from '#/plugin/url/resources/url/editor/store/reducer'
 
 const reducer = combineReducers({
-  urlForm: editorReducer.urlForm,
+  editor: editorReducer,
   url: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.url,
     // replaces path data after success updates

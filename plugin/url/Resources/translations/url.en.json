@@ -2,6 +2,10 @@
     "iframe_desc": "Display URL in the resource",
     "redirect_desc": "Open URL in the current tab",
     "tab_desc": "Open URL in a new tab",
-    "url": "URL",
-    "https_iframe_help": "The URL must user HTTPS to be correctly displayed."
+    "https_iframe_help": "The URL must user HTTPS to be correctly displayed.",
+
+    "current_user_id_desc": "L'ID de l'utilisateur connecté.",
+    "current_user_username_desc": "Le nom d'utilisateur de l'utilisateur connecté.",
+    "current_user_first_name_desc": "Le prénom de l'utilisateur connecté.",
+    "current_user_last_name_desc": "Le nom de l'utilisateur connecté."
 }

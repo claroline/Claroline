@@ -1,19 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {selectors as formSelectors, actions as formActions} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
-
-import {selectors as resourceSelectors} from '#/main/core/resource/store'
-
-import {selectors} from '#/plugin/url/resources/url/editor/store'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {constants} from '#/plugin/scorm/resources/scorm/constants'
+import {selectors} from '#/plugin/url/resources/url/editor/store'
 
-const UrlForm = props =>
+const Editor = props =>
   <FormData
     level={5}
     name={selectors.FORM_NAME}
@@ -30,7 +26,7 @@ const UrlForm = props =>
         primary: true,
         fields: [
           {
-            name: 'url',
+            name: 'raw',
             label: trans('url', {}, 'url'),
             type: 'url',
             required: true
@@ -63,7 +59,7 @@ const UrlForm = props =>
               }, {
                 name: 'ratio',
                 type: 'number',
-                displayed: url => url.mode === 'iframe',
+                displayed: (url) => url.mode === 'iframe',
                 label: trans('display_ratio'),
                 options: {
                   min: 0,
@@ -76,28 +72,46 @@ const UrlForm = props =>
         ]
       }
     ]}
-  />
+  >
+    <FormSections level={3}>
+      <FormSection
+        icon="fa fa-fw fa-exchange-alt"
+        title={trans('parameters')}
+      >
+        <div className="alert alert-info">
+          {trans('placeholders_info', {}, 'url')}
+        </div>
 
-UrlForm.propTypes = {
+        <table className="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th>{trans('parameter')}</th>
+              <th>{trans('description')}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {props.availablePlaceholders.map((placeholder) =>
+              <tr key={placeholder}>
+                <td>{`%${placeholder}%`}</td>
+                <td>{trans(`${placeholder}_desc`, {}, 'url')}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </FormSection>
+    </FormSections>
+  </FormData>
+
+Editor.propTypes = {
   path: T.string.isRequired,
   url: T.shape({
     id: T.number.isRequired,
     mode: T.string
   }).isRequired,
+  availablePlaceholders: T.arrayOf(T.string),
   updateProp: T.func.isRequired
 }
-
-const Editor = connect(
-  (state) => ({
-    path: resourceSelectors.path(state),
-    url: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
-  }),
-  (dispatch) => ({
-    updateProp(propName, propValue) {
-      dispatch(formActions.updateProp(selectors.FORM_NAME, propName, propValue))
-    }
-  })
-)(UrlForm)
 
 export {
   Editor

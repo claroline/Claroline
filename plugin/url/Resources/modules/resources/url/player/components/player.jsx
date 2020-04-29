@@ -1,14 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {selectors} from '#/plugin/url/resources/url/store'
-
-class PlayerComponent extends Component {
+class Player extends Component {
   componentDidMount() {
     if (this.props.url.mode === 'redirect') {
       window.location.href = this.props.url.url
@@ -58,7 +55,7 @@ class PlayerComponent extends Component {
   }
 }
 
-PlayerComponent.propTypes = {
+Player.propTypes = {
   url: T.shape({
     id: T.number.isRequired,
     url: T.string.isRequired,
@@ -66,12 +63,6 @@ PlayerComponent.propTypes = {
     ratio: T.number.isRequired
   }).isRequired
 }
-
-const Player = connect(
-  state => ({
-    url: selectors.url(state)
-  })
-)(PlayerComponent)
 
 export {
   Player

@@ -2,6 +2,10 @@
     "iframe_desc": "Afficher l'URL au sein de la ressource",
     "redirect_desc": "Ouvrir l'URL dans l'onglet courant",
     "tab_desc": "Ouvrir l'URL dans un nouvel onglet",
-    "url": "URL",
-    "https_iframe_help": "L'URL doit utiliser le protocole HTTPS pour pouvoir s'afficher correctement."
+    "https_iframe_help": "L'URL doit utiliser le protocole HTTPS pour pouvoir s'afficher correctement.",
+
+    "current_user_id_desc": "The ID of the logged in user.",
+    "current_user_username_desc": "The username of the logged in user.",
+    "current_user_first_name_desc": "The first name of the logged in user.",
+    "current_user_last_name_desc": "The last name of the logged in user."
 }

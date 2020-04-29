@@ -11,28 +11,33 @@
 
 namespace Claroline\CoreBundle\Manager\Template;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class TemplateManager
 {
     /** @var ObjectManager */
     private $om;
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     private $templateTypeRepo;
     private $templateRepo;
 
     /**
-     * @param ObjectManager        $om
-     * @param ParametersSerializer $parametersSerializer
+     * TemplateManager constructor.
+     *
+     * @param ObjectManager                $om
+     * @param PlatformConfigurationHandler $config
      */
-    public function __construct(ObjectManager $om, ParametersSerializer $parametersSerializer)
-    {
+    public function __construct(
+        ObjectManager $om,
+        PlatformConfigurationHandler $config
+    ) {
         $this->om = $om;
-        $this->serializer = $parametersSerializer;
+        $this->config = $config;
 
         $this->templateTypeRepo = $om->getRepository(TemplateType::class);
         $this->templateRepo = $om->getRepository(Template::class);
@@ -59,12 +64,12 @@ class TemplateManager
      */
     public function getTemplate($templateTypeName, $placeholders = [], $locale = null, $mode = 'content')
     {
-        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         $result = '';
         $templateType = $this->templateTypeRepo->findOneBy(['name' => $templateTypeName]);
 
         // Checks if a template is associated to the template type
         if ($templateType && $templateType->getDefaultTemplate()) {
+            /** @var Template|null $template */
             $template = null;
 
             // Fetches template for the given type and locale
@@ -75,10 +80,10 @@ class TemplateManager
                     'lang' => $locale,
                 ]);
             }
+
             // If no template is found for the given locale or locale is null, uses default locale
             if (!$locale || !$template) {
-                $defaultLocale = isset($parameters['locales']['default']) ? $parameters['locales']['default'] : null;
-
+                $defaultLocale = $this->config->getParameter('locales.default');
                 if ($defaultLocale && $defaultLocale !== $locale) {
                     $template = $this->templateRepo->findOneBy([
                         'type' => $templateType,
@@ -87,18 +92,10 @@ class TemplateManager
                     ]);
                 }
             }
+
             // If a template is found
             if ($template) {
-                switch ($mode) {
-                    case 'content':
-                        $result = $this->replacePlaceholders($template->getContent(), $placeholders);
-                        break;
-                    case 'title':
-                        $result = $template->getTitle() ?
-                            $this->replacePlaceholders($template->getTitle(), $placeholders) :
-                            '';
-                        break;
-                }
+                $result = $this->getTemplateContent($template, $placeholders, $mode);
             }
         }
 
@@ -118,9 +115,7 @@ class TemplateManager
             case 'content':
                 return $this->replacePlaceholders($template->getContent(), $placeholders);
             case 'title':
-                return $template->getTitle() ?
-                    $this->replacePlaceholders($template->getTitle(), $placeholders) :
-                    '';
+                return $this->replacePlaceholders($template->getTitle() ?? '', $placeholders);
         }
 
         return '';
@@ -134,7 +129,6 @@ class TemplateManager
      */
     public function replacePlaceholders($text, $placeholders = [])
     {
-        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         $now = new \DateTime();
         $keys = [
             '%platform_name%',
@@ -143,10 +137,10 @@ class TemplateManager
             '%datetime%',
         ];
         $values = [
-            $parameters['display']['name'],
-            $parameters['internet']['platform_url'],
-            $now->format('Y-m-d'),
-            $now->format('Y-m-d H:i:s'),
+            $this->config->getParameter('display.name'),
+            $this->config->getParameter('internet.platform_url'),
+            $now->format('Y-m-d'), // should be in locale format
+            $now->format('Y-m-d H:i:s'), // should be in locale format
         ];
 
         foreach ($placeholders as $key => $value) {

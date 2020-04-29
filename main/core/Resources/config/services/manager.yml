@@ -449,7 +449,7 @@ services:
     Claroline\CoreBundle\Manager\Template\TemplateManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     claroline.manager.template_manager:
         alias: Claroline\CoreBundle\Manager\Template\TemplateManager

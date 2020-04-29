@@ -6,7 +6,5 @@ services:
 
     HeVinci\UrlBundle\Serializer\UrlSerializer:
         tags: [claroline.serializer]
-
-    claroline.serializer.url:
-         alias: HeVinci\UrlBundle\Serializer\UrlSerializer
-         public: true
+        arguments:
+            - '@HeVinci\UrlBundle\Manager\UrlManager'

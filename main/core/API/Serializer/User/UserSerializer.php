@@ -96,8 +96,8 @@ class UserSerializer extends GenericSerializer
         $this->organizationSerializer = $organizationSerializer;
         $this->fieldFacetValueSerializer = $fieldFacetValueSerializer;
 
-        $this->organizationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->organizationRepo = $om->getRepository(Organization::class);
+        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function getName()
@@ -139,11 +139,6 @@ class UserSerializer extends GenericSerializer
      */
     public function serialize($user, array $options = [])
     {
-        if (isset($options['public']) && $options['public']) {
-            // TODO : remove me (only used by BBBPlugin and it's not maintained)
-            return $this->serializePublic($user);
-        }
-
         $token = $this->tokenStorage->getToken();
 
         $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
@@ -155,9 +150,9 @@ class UserSerializer extends GenericSerializer
         }
 
         $serializedUser = [
-            'autoId' => $user->getId(), //for old compatibility purposes
+            'autoId' => $user->getId(),
             'id' => $user->getUuid(),
-            'name' => $user->getFirstName().' '.$user->getLastName(),
+            'name' => $user->getFullName(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
@@ -197,12 +192,12 @@ class UserSerializer extends GenericSerializer
                 'meta' => $this->serializeMeta($user),
                 'restrictions' => $this->serializeRestrictions($user),
                 'roles' => array_merge($userRoles, $groupRoles),
-                'groups' => array_map(function (Group $group) { // todo use group serializer with minimal option
+                'groups' => array_values(array_map(function (Group $group) { // todo use group serializer with minimal option
                     return [
                         'id' => $group->getUuid(),
                         'name' => $group->getName(),
                     ];
-                }, $user->getGroups()->toArray()),
+                }, $user->getGroups()->toArray())),
             ]);
 
             if ($user->getMainOrganization()) {
@@ -245,67 +240,15 @@ class UserSerializer extends GenericSerializer
         $unauthorizedKeys = array_keys($serializedUser);
 
         /** @var DecorateUserEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            'serialize_user',
-            'User\DecorateUser',
-            [
-                $user,
-                $unauthorizedKeys,
-            ]
-        );
+        $event = $this->eventDispatcher->dispatch('serialize_user', 'User\DecorateUser', [
+            $user,
+            $unauthorizedKeys,
+        ]);
 
         return array_merge(
             $serializedUser,
             $event->getInjectedData()
         );
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return array
-     */
-    private function serializePublic(User $user)
-    {
-        $settingsProfile = $this->facetManager->getVisiblePublicPreference();
-        $publicUser = [];
-
-        foreach ($settingsProfile as $property => $isViewable) {
-            if ($isViewable || ($this->tokenStorage->getToken() && $user === $this->tokenStorage->getToken()->getUser())) {
-                switch ($property) {
-                    case 'baseData':
-                        $publicUser['lastName'] = $user->getLastName();
-                        $publicUser['firstName'] = $user->getFirstName();
-                        $publicUser['fullName'] = $user->getFirstName().' '.$user->getLastName();
-                        $publicUser['username'] = $user->getUsername();
-                        $publicUser['picture'] = $user->getPicture();
-                        $publicUser['description'] = $user->getDescription();
-                        break;
-                    case 'email':
-                        $publicUser['mail'] = $user->getEmail();
-                        break;
-                    case 'phone':
-                        $publicUser['phone'] = $user->getPhone();
-                        break;
-                    case 'sendMail':
-                        $publicUser['mail'] = $user->getEmail();
-                        $publicUser['allowSendMail'] = true;
-                        break;
-                    case 'sendMessage':
-                        $publicUser['allowSendMessage'] = true;
-                        $publicUser['id'] = $user->getId();
-                        break;
-                }
-            }
-        }
-
-        $publicUser['groups'] = [];
-        //this should be protected by the visiblePublicPreference but it's not yet the case
-        foreach ($user->getGroups() as $group) {
-            $publicUser['groups'][] = ['name' => $group->getName(), 'id' => $group->getId()];
-        }
-
-        return $publicUser;
     }
 
     /**
@@ -497,6 +440,7 @@ class UserSerializer extends GenericSerializer
         //it's useful if we want to create a user with a list of roles
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
+                /** @var Role|null $role */
                 $role = null;
 
                 if (isset($roleData['id'])) {

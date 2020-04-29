@@ -6,7 +6,7 @@ services:
 
     HeVinci\UrlBundle\Listener\UrlListener:
         arguments:
-            - '@claroline.serializer.url'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@HeVinci\UrlBundle\Manager\UrlManager'
         tags:
             - { name: kernel.event_listener, event: resource.hevinci_url.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.hevinci_url.delete, method: onDelete }
