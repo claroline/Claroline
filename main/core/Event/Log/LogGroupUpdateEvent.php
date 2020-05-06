@@ -26,7 +26,7 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
      *      etc.
      * ).
      *
-     * Please respect lower caml case naming convention for property names
+     * Please respect lower camel case naming convention for property names
      */
     public function __construct($receiverGroup, $changeSet)
     {

@@ -44,7 +44,7 @@ services:
 
     Claroline\TagBundle\Listener\Administration\TagsListener:
         tags:
-            - { name: kernel.event_listener, event: administration_tool_claroline_tag_admin_tool, method: TagsListener }
+            - { name: kernel.event_listener, event: administration_tool_claroline_tag_admin_tool, method: onAdministrationToolOpen }
 
     Claroline\TagBundle\Listener\Resource\ResourceListener:
         arguments:

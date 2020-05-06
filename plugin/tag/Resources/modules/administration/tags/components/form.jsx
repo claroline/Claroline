@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -70,10 +70,6 @@ const TagFormComponent = (props) =>
         url: ['apiv2_tag_list_objects', {id: props.tagId}],
         autoload: props.tagId && !props.new
       }}
-      primaryAction={() => ({
-        type: URL_BUTTON,
-        target: props.path // TODO
-      })}
       delete={{
         url: ['apiv2_tag_remove_objects', {id: props.tagId}]
       }}

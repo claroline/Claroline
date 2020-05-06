@@ -30,7 +30,7 @@
     "resource_rights_custom_help": "Cette ressource a des droits personnalisés qui doivent être gérés dans l'onglet 'Avancé'.",
     "resource_rights_user": "Utilisateurs de la plateforme",
     "resource_rights_user_tip": "Cette ressource est accessible aux utilisateurs de la plateforme.",
-    "resource_rights_workspace": "Utilisateurs de l'espace",
+    "resource_rights_workspace": "Collaborateurs de l'espace",
     "resource_rights_workspace_tip": "Cette ressource est accessible aux utilisateurs de l'espace.",
     "resource_showIcon": "Afficher l'icône de la ressource dans l'entête",
     "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression.",

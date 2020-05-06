@@ -182,12 +182,7 @@ const SubjectsList = props =>
           displayed: rows[0].meta.closed && props.currentUser && (rows[0].meta.creator.id === props.currentUser.id || props.moderator)
         }
       ]}
-      card={(props) =>
-        <SubjectCard
-          {...props}
-          contentText={props.data.content}
-        />
-      }
+      card={SubjectCard}
     />
   </div>
 

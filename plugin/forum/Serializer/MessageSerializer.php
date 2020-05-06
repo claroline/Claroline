@@ -96,16 +96,13 @@ class MessageSerializer
             $data['subject'] = [
                 'id' => $subject->getUuid(),
                 'title' => $subject->getTitle(),
+                'poster' => $subject->getPoster() ? $this->fileSerializer->serialize($subject->getPoster()) : null,
             ];
 
             if ($subject->getForum() && $subject->getForum()->getResourceNode()) {
                 // required by the data source
                 $data['meta']['resource'] = $this->nodeSerializer->serialize($subject->getForum()->getResourceNode(), [Options::SERIALIZE_MINIMAL]);
             }
-
-            $data['meta']['poster'] = $subject->getPoster() ?
-              $this->fileSerializer->serialize($subject->getPoster()) :
-              null;
         }
 
         $data['meta']['flagged'] = $message->isFlagged();

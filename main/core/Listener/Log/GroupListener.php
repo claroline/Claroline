@@ -14,14 +14,30 @@ namespace Claroline\CoreBundle\Listener\Log;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 
 class GroupListener
 {
-    public function __construct(StrictDispatcher $dispatcher)
-    {
+    /** @var ObjectManager */
+    private $om;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
+    /**
+     * GroupListener constructor.
+     *
+     * @param ObjectManager    $om
+     * @param StrictDispatcher $dispatcher
+     */
+    public function __construct(
+        ObjectManager $om,
+        StrictDispatcher $dispatcher
+    ) {
+        $this->om = $om;
         $this->dispatcher = $dispatcher;
     }
 
@@ -39,11 +55,17 @@ class GroupListener
         $this->dispatcher->dispatch('log', 'Log\LogGroupDelete', [$group]);
     }
 
-    public function onGroupUpdate(DeleteEvent $event)
+    public function onGroupUpdate(UpdateEvent $event)
     {
         $group = $event->getObject();
 
-        $this->dispatcher->dispatch('log', 'Log\LogGroupUpdate', [$group]);
+        $uow = $this->om->getUnitOfWork();
+        $uow->computeChangeSets();
+        $changeSet = $uow->getEntityChangeSet($group);
+
+        if (count($changeSet) > 0) {
+            $this->dispatcher->dispatch('log', 'Log\LogGroupUpdate', [$group, $changeSet]);
+        }
     }
 
     public function onGroupPatch(PatchEvent $event)

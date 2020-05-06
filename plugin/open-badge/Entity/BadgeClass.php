@@ -307,7 +307,7 @@ class BadgeClass
         return $this->durationValidation;
     }
 
-    public function setWorkspace(Workspace $workspace)
+    public function setWorkspace(Workspace $workspace = null)
     {
         $this->workspace = $workspace;
     }

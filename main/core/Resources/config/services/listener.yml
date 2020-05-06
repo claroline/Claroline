@@ -310,6 +310,7 @@ services:
 
     Claroline\CoreBundle\Listener\Log\GroupListener:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: crud.post.create.group, method: onGroupCreate }

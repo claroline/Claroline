@@ -71,12 +71,7 @@ const FlaggedSubjectsComponent = (props) =>
         callback: () => props.unFlagSubject(rows[0])
       }
     ]}
-    card={(props) =>
-      <SubjectCard
-        {...props}
-        contentText={props.data.content}
-      />
-    }
+    card={SubjectCard}
   />
 
 FlaggedSubjectsComponent.propTypes = {

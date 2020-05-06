@@ -84,11 +84,7 @@ const BlockedSubjectsComponent = (props) =>
         callback: () => props.banUser(rows[0].meta.creator.id, props.forum.id)
       }
     ]}
-    card={(props) =>
-      <SubjectCard
-        {...props}
-      />
-    }
+    card={SubjectCard}
   />
 
 BlockedSubjectsComponent.propTypes = {

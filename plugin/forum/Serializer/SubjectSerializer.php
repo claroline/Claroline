@@ -130,6 +130,7 @@ class SubjectSerializer
     private function serializeMeta(Subject $subject, array $options = [])
     {
         return [
+            'moderation' => $subject->getModerated(),
             'views' => $subject->getViewCount(),
             'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
             'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,

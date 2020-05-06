@@ -14,6 +14,7 @@ namespace Claroline\AnnouncementBundle\Listener\Resource;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
+use Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -80,8 +81,10 @@ class AnnouncementListener
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
 
+        $canEdit = $this->authorization->isGranted('EDIT', $resource->getResourceNode());
+
         $event->setData([
-            'announcement' => $this->serializer->serialize($resource),
+            'announcement' => $this->serializer->serialize($resource, !$canEdit ? [AnnouncementAggregateSerializer::VISIBLE_POSTS_ONLY] : []),
             'workspaceRoles' => array_map(function (Role $role) {
                 return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $workspace->getRoles()->toArray()),

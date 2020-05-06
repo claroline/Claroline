@@ -30,7 +30,7 @@
     "resource_rights_custom_help": "This resource has custom rules that needs to be managed in 'Advanced' tab.",
     "resource_rights_user": "Platform users",
     "resource_rights_user_tip": "This resource is accessible by platform users.",
-    "resource_rights_workspace": "Workspace users",
+    "resource_rights_workspace": "Workspace collaborators",
     "resource_rights_workspace_tip": "This resource is accessible by workspace users.",
     "resource_showIcon": "Display the resource icon in the header",
     "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge.",

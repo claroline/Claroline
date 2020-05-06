@@ -193,15 +193,19 @@ class BadgeClassSerializer
             );
         }
 
-        if (isset($data['workspace']) && isset($data['workspace']['id'])) {
-            /** @var Workspace $workspace */
-            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
-            if ($workspace) {
-                $badge->setWorkspace($workspace);
-                // main organization maybe instead ? this is fishy
-                if (count($workspace->getOrganizations()) > 1) {
-                    $badge->setIssuer($workspace->getOrganizations()[0]);
+        if (isset($data['workspace'])) {
+            if (isset($data['workspace']['id'])) {
+                /** @var Workspace $workspace */
+                $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+                if ($workspace) {
+                    $badge->setWorkspace($workspace);
+                    // main organization maybe instead ? this is fishy
+                    if (count($workspace->getOrganizations()) > 1) {
+                        $badge->setIssuer($workspace->getOrganizations()[0]);
+                    }
                 }
+            } else {
+                $badge->setWorkspace(null);
             }
         }
 
