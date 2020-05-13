@@ -23,18 +23,18 @@ const BlogResource = props =>
         label: trans('show_overview'),
         target: props.path,
         exact: true
-      },{
+      }, {
         displayed : props.canEdit || props.canModerate,
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-gavel',
         label: trans('moderation', {}, 'icap_blog'),
         target: `${props.path}/moderation/posts`
-      },
-      {
+      }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
-        label: trans('pdf_export', {}, 'platform'),
+        label: trans('export-pdf', {}, 'actions'),
         displayed: props.canExport,
+        group: trans('transfer'),
         callback: () => props.downloadBlogPdf(props.blogId).then(pdfContent => {
           html2pdf()
             .set({
@@ -46,8 +46,7 @@ const BlogResource = props =>
             .from(pdfContent.content, 'string')
             .save()
         })
-      },
-      {
+      }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-rss',
         label: trans('rss_label', {}, 'icap_blog'),

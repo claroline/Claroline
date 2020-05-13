@@ -29,26 +29,22 @@ services:
                 arguments:
                   - '@service_container'
 
-    Icap\WikiBundle\Controller\API\ContributionController:
+    Icap\WikiBundle\Controller\ContributionController:
         arguments:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\WikiBundle\Manager\SectionManager'
           - '@Icap\WikiBundle\Manager\ContributionManager'
           - '@security.authorization_checker'
 
-    Icap\WikiBundle\Controller\API\SectionController:
+    Icap\WikiBundle\Controller\SectionController:
         arguments:
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\WikiBundle\Manager\SectionManager'
           - '@security.authorization_checker'
 
-    Icap\WikiBundle\Controller\API\WikiController:
+    Icap\WikiBundle\Controller\WikiController:
         arguments:
-          - '@Icap\WikiBundle\Manager\WikiManager'
           - '@security.authorization_checker'
-
-    Icap\WikiBundle\Controller\Resource\WikiController:
-        arguments:
-          - '@Icap\WikiBundle\Manager\SectionManager'
           - '@templating'
-          - '@security.authorization_checker'
+          - '@Icap\WikiBundle\Manager\WikiManager'
+          - '@Icap\WikiBundle\Manager\SectionManager'

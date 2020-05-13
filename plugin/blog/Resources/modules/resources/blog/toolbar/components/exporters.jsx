@@ -30,7 +30,7 @@ const ExportersComponent = props =>
             .save()
         })}
         className="label label-pdf white export-links">
-        <span className="fa fa-file-pdf-o" /> {trans('pdf_export', {}, 'platform')}
+        <span className="fa fa-file-pdf-o" /> {trans('export-pdf', {}, 'actions')}
       </a>
     </div>
   </div>

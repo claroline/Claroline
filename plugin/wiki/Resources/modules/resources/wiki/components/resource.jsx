@@ -31,7 +31,8 @@ const WikiResource = props =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
         displayed: props.canExport,
-        label: trans('pdf_export'),
+        label: trans('export-pdf', {}, 'actions'),
+        group: trans('transfer'),
         callback: () => props.downloadWikiPdf(props.wiki.id).then(pdfContent => {
           html2pdf()
             .set({

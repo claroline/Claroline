@@ -1,9 +1,10 @@
 <?php
 
-namespace Icap\WikiBundle\Controller\API;
+namespace Icap\WikiBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Section;
@@ -21,6 +22,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class SectionController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     /** @var FinderProvider */
     private $finder;
@@ -31,8 +33,9 @@ class SectionController
     /**
      * SectionController constructor.
      *
-     * @param FinderProvider $finder
-     * @param SectionManager $sectionManager
+     * @param FinderProvider                $finder
+     * @param SectionManager                $sectionManager
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         FinderProvider $finder,
@@ -42,6 +45,11 @@ class SectionController
         $this->finder = $finder;
         $this->sectionManager = $sectionManager;
         $this->authorization = $authorization;
+    }
+
+    public function getClass()
+    {
+        return Section::class;
     }
 
     /**
@@ -55,6 +63,7 @@ class SectionController
      * @EXT\Method({"GET"})
      *
      * @param Wiki $wiki
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -173,20 +182,21 @@ class SectionController
      * @EXT\Method({"DELETE"})
      *
      * @param Wiki    $wiki
+     * @param User    $user
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function deleteAction(Wiki $wiki, User $user, Request $request)
     {
-        $resourceNode = $wiki->getResourceNode();
-        $isAdmin = $this->checkPermission('EDIT', $resourceNode);
+        $content = $this->decodeRequest($request);
+
         $this->sectionManager->deleteSections(
             $wiki,
-            $request->get('ids'),
-            $request->get('children'),
-            $request->get('permanently'),
-            $isAdmin,
+            $content['ids'],
+            $content['children'],
+            $content['permanently'],
+            $this->checkPermission('EDIT', $wiki->getResourceNode()),
             $user
         );
 
@@ -226,7 +236,8 @@ class SectionController
      *     options={"mapping": {"wikiId": "uuid"}}
      * )
      *
-     * @param Wiki $wiki
+     * @param Wiki    $wiki
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -243,10 +254,5 @@ class SectionController
             $query,
             []
         ));
-    }
-
-    public function getClass()
-    {
-        return 'Icap\WikiBundle\Entity\Section';
     }
 }

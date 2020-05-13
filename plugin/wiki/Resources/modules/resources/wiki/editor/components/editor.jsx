@@ -18,7 +18,7 @@ const EditorComponent = props =>
     level={2}
     title={trans('parameters')}
     buttons={true}
-    target={() => ['apiv2_wiki_update_options', {id: props.wiki.id}]}
+    target={() => ['apiv2_wiki_update', {id: props.wiki.id}]}
     cancel={{
       type: LINK_BUTTON,
       target: props.path,

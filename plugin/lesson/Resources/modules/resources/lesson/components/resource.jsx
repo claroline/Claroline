@@ -42,7 +42,8 @@ class LessonResource extends Component {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-file-pdf-o',
             displayed: this.props.canExport,
-            label: trans('pdf_export'),
+            label: trans('export-pdf', {}, 'actions'),
+            group: trans('transfer'),
             callback: () => this.props.downloadLessonPdf(this.props.lesson.id).then(pdfContent => {
               html2pdf()
                 .set({

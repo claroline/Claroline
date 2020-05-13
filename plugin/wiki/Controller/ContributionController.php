@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\WikiBundle\Controller\API;
+namespace Icap\WikiBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
