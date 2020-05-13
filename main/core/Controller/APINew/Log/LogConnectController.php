@@ -184,7 +184,7 @@ class LogConnectController
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "id"}}
+     *     options={"mapping": {"workspace": "uuid"}}
      * )
      *
      * @param Workspace $workspace

@@ -124,7 +124,7 @@ class LogController
 
     /**
      * @EXT\Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv")
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      * @EXT\Method("GET")
      *
      * @param Request   $request
