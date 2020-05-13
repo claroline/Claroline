@@ -105,11 +105,13 @@ class FieldFacetValue
     }
 
     /**
-     * return $dateValue.
+     * @param bool $format
+     *
+     * @return \DateTime|string
      */
     public function getDateValue($format = true)
     {
-        if ($format) {
+        if ($format) { // TODO : this should not be done here
             return !empty($this->dateValue) ? $this->dateValue->format('Y-m-d\TH:i:s') : null;
         }
 

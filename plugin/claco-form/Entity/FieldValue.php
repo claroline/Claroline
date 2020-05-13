@@ -11,8 +11,9 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
@@ -28,14 +29,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class FieldValue
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(
@@ -44,34 +39,30 @@ class FieldValue
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
+     *
+     * @var Entry
      */
     protected $entry;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ClacoFormBundle\Entity\Field")
      * @ORM\JoinColumn(name="field_id", onDelete="CASCADE")
+     *
+     * @var Field
      */
     protected $field;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue")
      * @ORM\JoinColumn(name="field_facet_value_id", onDelete="CASCADE")
+     *
+     * @var FieldFacetValue
      */
     protected $fieldFacetValue;
 
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getEntry()
@@ -94,6 +85,9 @@ class FieldValue
         $this->field = $field;
     }
 
+    /**
+     * @return FieldFacetValue
+     */
     public function getFieldFacetValue()
     {
         return $this->fieldFacetValue;

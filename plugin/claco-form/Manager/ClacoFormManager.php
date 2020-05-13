@@ -58,17 +58,26 @@ class ClacoFormManager
 {
     use LoggableTrait;
 
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
+    /** @var FacetManager */
     private $facetManager;
+    /** @var Filesystem */
     private $fileSystem;
+    /** @var string */
     private $filesDir;
+    /** @var MessageManager */
     private $messageManager;
+    /** @var ObjectManager */
     private $om;
+    /** @var RouterInterface */
     private $router;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var TranslatorInterface */
     private $translator;
-    private $userManager;
 
     private $userRepo;
     private $categoryRepo;
@@ -1237,7 +1246,7 @@ class ClacoFormManager
             $newFieldFacetValue->setFieldFacet($fieldFacetLinks[$fieldFacetId]);
             $newFieldFacetValue->setUser($fieldFacetValue->getUser());
             $newFieldFacetValue->setArrayValue($fieldFacetValue->getArrayValue());
-            $newFieldFacetValue->setDateValue($fieldFacetValue->getDateValue());
+            $newFieldFacetValue->setDateValue($fieldFacetValue->getDateValue(false));
             $newFieldFacetValue->setFloatValue($fieldFacetValue->getFloatValue());
             $newFieldFacetValue->setStringValue($fieldFacetValue->getStringValue());
             $this->om->persist($newFieldFacetValue);
