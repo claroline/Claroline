@@ -12,6 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {notEmpty} from '#/main/app/data/types/validators'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {Form} from '#/main/app/content/form/components/form'
 import {DataInput} from '#/main/app/data/components/input'
@@ -238,7 +239,7 @@ class EntryFormComponent extends Component {
             validating={this.props.validating}
             save={{
               type: CALLBACK_BUTTON,
-              callback: () => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push, this.props.path)
+              callback: () => this.props.saveForm(this.props.entry, this.props.fields, this.props.isNew, this.props.history.push, this.props.path)
             }}
             cancel={{
               type: LINK_BUTTON,
@@ -283,7 +284,7 @@ class EntryFormComponent extends Component {
             sections={this.getSections()}
             save={{
               type: CALLBACK_BUTTON,
-              callback: () => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push, this.props.path)
+              callback: () => this.props.saveForm(this.props.entry, this.props.fields, this.props.isNew, this.props.history.push, this.props.path)
             }}
             cancel={{
               type: LINK_BUTTON,
@@ -359,15 +360,25 @@ const EntryForm = withRouter(connect(
     keywords: selectors.keywords(state)
   }),
   (dispatch) => ({
-    saveForm(entry, isNew, navigate, path) {
+    saveForm(entry, fields, isNew, navigate, path) {
+      // validate required fields
+      // TODO : this should be done by standard form validation (it's broken atm)
+      const errors = {
+        title: notEmpty(entry.title),
+        values: {}
+      }
+      const requiredFields = fields.filter(field => field.required)
+      errors.values = requiredFields.reduce((fieldErrors, field) => Object.assign(fieldErrors, {
+        [field.id]: notEmpty(entry.values[field.id])
+      }), {})
+
+      dispatch(formActions.setErrors(selectors.STORE_NAME+'.entries.current', errors))
+
       if (isNew) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME+'.entries.current', ['apiv2_clacoformentry_create'])).then(
-          (data) => {
-            navigate(`${path}/entries/${data.id}`)
-            dispatch(actions.addCreatedEntry(data))
-          },
-          () => true
-        )
+        dispatch(formActions.saveForm(selectors.STORE_NAME+'.entries.current', ['apiv2_clacoformentry_create'])).then((data) => {
+          navigate(`${path}/entries/${data.id}`)
+          dispatch(actions.addCreatedEntry(data))
+        }, () => true)
       } else {
         dispatch(formActions.saveForm(selectors.STORE_NAME+'.entries.current', ['apiv2_clacoformentry_update', {id: entry.id}]))
       }
