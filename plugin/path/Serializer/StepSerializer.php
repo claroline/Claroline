@@ -188,7 +188,9 @@ class StepSerializer
             // updates steps
             foreach ($data['children'] as $childIndex => $childData) {
                 if ($childData['id']) {
-                    $child = $step->getChild($childData['id']);
+                    // I need to get step from path to have access to all the steps in order
+                    // to manage steps moving
+                    $child = $step->getPath()->getStep($childData['id']);
                 }
 
                 if (empty($child)) {
@@ -206,7 +208,7 @@ class StepSerializer
             foreach ($currentChildren as $currentStep) {
                 if (!in_array($currentStep->getUuid(), $ids)) {
                     $currentStep->setPath(null);
-                    $currentStep->setParent(null);
+                    $step->removeChild($currentStep);
                 }
             }
         }
