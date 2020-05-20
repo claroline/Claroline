@@ -36,6 +36,11 @@ class MessageFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'published':
+                    $qb->andWhere('node.published = :published');
+                    $qb->andWhere('node.active = :published');
+                    $qb->setParameter('published', $filterValue);
+                    break;
                 case 'subject':
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->like('subject.id', ':'.$filterName),
@@ -101,11 +106,19 @@ class MessageFinder extends AbstractFinder
                 case 'workspace':
                     if (!$workspaceJoin) {
                         $qb->join('node.workspace', 'w');
-
                         $workspaceJoin = true;
                     }
 
                     $qb->andWhere("w.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'archived':
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->andWhere("w.archived = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'roles':

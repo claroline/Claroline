@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class AnnouncementSource
 {
@@ -48,12 +49,21 @@ class AnnouncementSource
         $options['hiddenFilters']['visible'] = true;
         $options['hiddenFilters']['published'] = true;
 
+        if (DataSource::CONTEXT_HOME === $event->getContext()) {
+            // only what is accessible by anonymous
+            $options['hiddenFilters']['roles'] = ['ROLE_ANONYMOUS'];
+        } else {
+            // filter by current user roles
+            $options['hiddenFilters']['roles'] = array_map(
+                function (Role $role) { return $role->getRole(); },
+                $this->tokenStorage->getToken()->getRoles()
+            );
+        }
+
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
-        } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
-            $options['hiddenFilters']['anonymous'] = true;
         } else {
-            $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+            $options['hiddenFilters']['archived'] = false;
         }
 
         $event->setData(

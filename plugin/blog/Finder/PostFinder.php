@@ -24,11 +24,14 @@ class PostFinder extends AbstractFinder
             switch ($filterName) {
                 case 'published':
                     if ($filterValue) {
+                        $qb->andWhere('node.published = :status');
+                        $qb->andWhere('node.active = :published');
                         $qb->andWhere('obj.status = :status');
                         $qb->andWhere('obj.publicationDate <= :endOfDay');
                         $qb->setParameter('status', true);
                         $qb->setParameter('endOfDay', new \DateTime('tomorrow'));
                     } else {
+                        $qb->andWhere('node.published = :status');
                         $qb->andWhere('obj.status = :status');
                         $qb->setParameter('status', false);
                     }
@@ -109,7 +112,6 @@ class PostFinder extends AbstractFinder
                 case '_managerRoles':
                     if (!$workspaceJoin) {
                         $qb->join('node.workspace', 'w');
-
                         $workspaceJoin = true;
                     }
 
@@ -128,18 +130,20 @@ class PostFinder extends AbstractFinder
                 case 'workspace':
                     if (!$workspaceJoin) {
                         $qb->join('node.workspace', 'w');
-
                         $workspaceJoin = true;
                     }
 
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'anonymous':
-                    $qb->join('node.rights', 'rights');
-                    $qb->join('rights.role', 'role');
-                    $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
-                    $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
+                case 'archived':
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->andWhere("w.archived = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class BlogPostsSource
 {
@@ -42,22 +43,24 @@ class BlogPostsSource
      */
     public function getData(GetDataEvent $event)
     {
-        $options = $event->getOptions() ? $event->getOptions() : [];
-        $options['hiddenFilters']['status'] = Statusable::STATUS_PUBLISHED;
+        $options = $event->getOptions() ?? [];
+        $options['hiddenFilters']['published'] = Statusable::STATUS_PUBLISHED;
 
-        $roles = DataSource::CONTEXT_HOME === $event->getContext() ?
-            ['ROLE_ANONYMOUS'] :
-            array_map(
-                function ($role) { return $role->getRole(); },
+        if (DataSource::CONTEXT_HOME === $event->getContext()) {
+            // only what is accessible by anonymous
+            $options['hiddenFilters']['roles'] = ['ROLE_ANONYMOUS'];
+        } else {
+            // filter by current user roles
+            $options['hiddenFilters']['roles'] = array_map(
+                function (Role $role) { return $role->getRole(); },
                 $this->tokenStorage->getToken()->getRoles()
             );
-
-        if (!in_array('ROLE_ADMIN', $roles)) {
-            $options['hiddenFilters']['roles'] = $roles;
         }
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+        } else {
+            $options['hiddenFilters']['archived'] = false;
         }
 
         $event->setData(

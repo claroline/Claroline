@@ -27,9 +27,11 @@ class AnnouncementFinder extends AbstractFinder
         $qb->leftJoin('obj.aggregate', 'a');
         $qb->leftJoin('a.resourceNode', 'node');
 
+        $workspaceJoin = false;
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'published':
+                    $qb->andWhere('node.active = :published');
                     $qb->andWhere('node.published = :published');
                     $qb->setParameter('published', $filterValue);
                     break;
@@ -39,9 +41,23 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->setParameter($filterName, '%'.$filterValue.'%');
                     break;
                 case 'workspace':
-                    $qb->leftJoin('node.workspace', 'w');
-                    $qb->andWhere("w.uuid like :{$filterName}");
-                    $qb->andWhere('w.archived = false');
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->andWhere("w.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'archived':
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->andWhere("w.archived = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'meta.publishedAt':
@@ -70,49 +86,45 @@ class AnnouncementFinder extends AbstractFinder
                         $qb->andWhere('obj.visible = true');
                     }
                     break;
-                case 'user':
-                    $byUserSearch = $byGroupSearch = $searches;
-                    $byUserSearch['_user'] = $filterValue;
-                    $byGroupSearch['_group'] = $filterValue;
-                    unset($byUserSearch['user']);
-                    unset($byGroupSearch['user']);
+                case 'roles':
+                    $managerRoles = [];
+                    $otherRoles = [];
 
-                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
+                    foreach ($filterValue as $roleName) {
+                        if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
+                            $managerRoles[] = $roleName;
+                        } else {
+                            $otherRoles[] = $roleName;
+                        }
+                    }
+
+                    $managerSearch = $roleSearch = $searches;
+                    $managerSearch['_managerRoles'] = $managerRoles;
+                    $roleSearch['_roles'] = $otherRoles;
+                    unset($managerSearch['roles']);
+                    unset($roleSearch['roles']);
+
+                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
+
                     break;
-                case '_user':
-                    $qb->leftJoin('node.workspace', 'w');
-                    $qb->andWhere('w.archived = false');
-                    $qb->leftJoin('w.roles', 'r');
-                    $qb->leftJoin('r.users', 'ru');
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('ru.uuid', ':_userUuid'),
-                        $qb->expr()->like('ru.id', ':_userId')
-                    ));
-                    $qb->andWhere('r.name != :roleUser');
-                    $qb->setParameter('_userUuid', $filterValue);
-                    $qb->setParameter('_userId', $filterValue);
-                    $qb->setParameter('roleUser', 'ROLE_USER');
+                case '_managerRoles':
+                    if (!$workspaceJoin) {
+                        $qb->join('node.workspace', 'w');
+
+                        $workspaceJoin = true;
+                    }
+
+                    $qb->leftJoin('w.roles', 'owr');
+                    $qb->andWhere('owr.name IN (:managerRoles)');
+
+                    $qb->setParameter('managerRoles', $filterValue);
                     break;
-                case '_group':
-                    $qb->leftJoin('node.workspace', 'w');
-                    $qb->andWhere('w.archived = false');
-                    $qb->leftJoin('w.roles', 'r');
-                    $qb->leftJoin('r.groups', 'rg');
-                    $qb->leftJoin('rg.users', 'rgu');
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->like('rgu.uuid', ':_groupUserId'),
-                        $qb->expr()->like('rgu.id', ':_groupUserUuid')
-                    ));
-                    $qb->andWhere('r.name != :roleUser');
-                    $qb->setParameter('_groupUserId', $filterValue);
-                    $qb->setParameter('_groupUserUuid', $filterValue);
-                    $qb->setParameter('roleUser', 'ROLE_USER');
-                    break;
-                case 'anonymous':
-                    $qb->join('node.rights', 'rights');
-                    $qb->join('rights.role', 'role');
-                    $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
+                case '_roles':
+                    $qb->leftJoin('node.rights', 'rights');
+                    $qb->join('rights.role', 'rightsr');
+                    $qb->andWhere('rightsr.name IN (:otherRoles)');
                     $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
+                    $qb->setParameter('otherRoles', $filterValue);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
