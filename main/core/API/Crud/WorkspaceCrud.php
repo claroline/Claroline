@@ -27,7 +27,16 @@ class WorkspaceCrud
     /**
      * WorkspaceCrud constructor.
      *
-     * @param WorkspaceManager $manager
+     * @param WorkspaceManager      $manager
+     * @param UserManager           $userManager
+     * @param TokenStorageInterface $tokenStorage
+     * @param ResourceManager       $resourceManager
+     * @param RoleManager           $roleManager
+     * @param OrganizationManager   $orgaManager
+     * @param ObjectManager         $om
+     * @param Crud                  $crud
+     * @param StrictDispatcher      $dispatcher
+     * @param LogListener           $logListener
      */
     public function __construct(
         WorkspaceManager $manager,
@@ -155,8 +164,10 @@ class WorkspaceCrud
     {
         $workspace = $event->getObject();
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $root->setName($workspace->getName());
-        $this->om->persist($root);
-        $this->om->flush();
+        if ($root) {
+            $root->setName($workspace->getName());
+            $this->om->persist($root);
+            $this->om->flush();
+        }
     }
 }

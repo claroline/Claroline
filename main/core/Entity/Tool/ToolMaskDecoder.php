@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolMaskDecoderRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolMaskDecoderRepository")
  * @ORM\Table(
  *     name="claro_tool_mask_decoder",
  *     uniqueConstraints={
@@ -26,23 +27,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ToolMaskDecoder
 {
-    public static $defaultActions = ['open', 'edit'];
-    public static $defaultValues = ['open' => 1, 'edit' => 2];
-    public static $defaultDeniedIconClass = [
-        'open' => 'fa fa-eye-slash',
-        'edit' => 'fa fa-edit',
-    ];
-    public static $defaultGrantedIconClass = [
-        'open' => 'fa fa-eye',
-        'edit' => 'fa fa-edit',
+    public static $defaultActions = ['open', 'edit', 'administrate'];
+    public static $defaultValues = [
+        'open' => 1,
+        'edit' => 2,
+        'administrate' => 4,
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(type="integer")
@@ -64,29 +56,24 @@ class ToolMaskDecoder
      */
     protected $tool;
 
-    /**
-     * @ORM\Column(name="granted_icon_class")
-     */
-    protected $grantedIconClass;
-
-    /**
-     * @ORM\Column(name="denied_icon_class")
-     */
-    protected $deniedIconClass;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
     public function getValue()
     {
         return $this->value;
     }
 
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**
@@ -97,43 +84,8 @@ class ToolMaskDecoder
         return $this->tool;
     }
 
-    public function getGrantedIconClass()
-    {
-        return $this->grantedIconClass;
-    }
-
-    public function getDeniedIconClass()
-    {
-        return $this->deniedIconClass;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
     public function setTool(Tool $tool)
     {
         $this->tool = $tool;
-    }
-
-    public function setGrantedIconClass($grantedIconClass)
-    {
-        $this->grantedIconClass = $grantedIconClass;
-    }
-
-    public function setDeniedIconClass($deniedIconClass)
-    {
-        $this->deniedIconClass = $deniedIconClass;
     }
 }

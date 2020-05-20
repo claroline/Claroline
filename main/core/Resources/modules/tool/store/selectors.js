@@ -30,6 +30,11 @@ const icon = createSelector(
   (store) => store.icon
 )
 
+const permissions = createSelector(
+  [store],
+  (store) => store.permissions
+)
+
 const context = createSelector(
   [store],
   (store) => store.currentContext
@@ -60,6 +65,7 @@ export const selectors = {
   basePath,
   path,
   icon,
+  permissions,
   context,
   contextType,
   contextData,

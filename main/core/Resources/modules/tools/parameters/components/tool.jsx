@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
-import {ToolsTool} from '#/main/core/tools/parameters/tools/containers/tool'
 // TODO : make it dynamic
 import {ExternalTool} from '#/main/core/tools/parameters/external/components/tool'
 import {TokensTool} from '#/main/core/tools/parameters/tokens/containers/tool'
@@ -13,10 +12,6 @@ const ParametersTool = (props) =>
     path={props.path}
     routes={[
       {
-        path: '/',
-        exact: true,
-        component: ToolsTool
-      }, {
         path: '/external',
         component: ExternalTool,
         disabled: true

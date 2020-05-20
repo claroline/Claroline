@@ -207,14 +207,17 @@ class TransferManager
         //we don't want new workspaces to be considered as models
         $data['meta']['model'] = false;
 
+        /** @var Workspace $workspace */
         $workspace = $this->serializer->deserialize($data, $workspace, $options);
 
         $this->log('Deserializing the roles...');
         $roles = [];
         foreach ($data['roles'] as $roleData) {
             $roleData['workspace']['id'] = $workspace->getUuid();
+            /** @var Role $role */
             $role = $this->serializer->deserialize($roleData, new Role());
             $role->setWorkspace($workspace);
+            $workspace->addRole($role);
             $this->om->persist($role);
             $roles[] = $role;
         }

@@ -10,7 +10,8 @@ const ToolPage = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       //loaded: selectors.loaded(state),
       name: selectors.name(state),
-      currentContext: selectors.context(state)
+      currentContext: selectors.context(state),
+      permissions: selectors.permissions(state)
     }),
     undefined,
     undefined,

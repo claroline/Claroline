@@ -1,41 +1,13 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-// TODO : some of this methods should be moved in the `user` module
-const roleAnonymous = () => 'ROLE_ANONYMOUS'
-const roleUser = () => 'ROLE_USER'
-const roleWorkspace = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGER_':'ROLE_WS_COLLABORATOR_')+workspace.id
-
-/**
- * Gets standard roles that have permissions on the ResourceNode.
- *
- * @param workspace
- *
- * @returns {Array}
- */
-const standardRoles = (workspace = null) => {
-  const roles = [roleAnonymous(), roleUser()]
-  if (workspace) {
-    roles.push(roleWorkspace(workspace))
-  }
-
-  return roles
-}
-
-const isWorkspaceRole = (roleName, workspace) => roleName.endsWith(workspace.id)
-
-const isStandardRole = (roleName, workspace = null) => {
-  if (roleAnonymous() === roleName || roleUser() === roleName) {
-    // it's a platform role
-    return true
-  }
-
-  if (workspace && isWorkspaceRole(roleName, workspace)) {
-    // it's a role of the resource Workspace
-    return true
-  }
-
-  return false
-}
+import {
+  roleAnonymous,
+  roleUser,
+  roleWorkspace,
+  standardRoles,
+  hasCustomRoles,
+  isWorkspaceRole
+} from '#/main/core/user/permissions'
 
 /**
  * Gets permissions object for a Role.
@@ -91,13 +63,12 @@ const roleHaveCustomPerms = (rolePerms) => {
  */
 const hasCustomRules = (perms, workspace = null) => {
   // checks if there are perms for custom roles
-  const standard = standardRoles(workspace)
-  const customRoles = perms.filter(rolePerm => !isStandardRole(rolePerm.name, workspace))
-  if (0 < customRoles.length) {
+  if (hasCustomRoles(perms, workspace)) {
     return true
   }
 
   // checks if standard roles have custom perms (aka. other perms than `open`)
+  const standard = standardRoles(workspace)
   const roleWithCustomRules = standard.filter(roleName => roleHaveCustomPerms(findRolePermissions(roleName, perms)))
 
   return 0 < roleWithCustomRules.length
@@ -165,12 +136,7 @@ const setSimpleAccessRule = (perms, rule, workspace = null) => {
 }
 
 export {
-  roleAnonymous,
-  roleUser,
-  roleWorkspace,
-  findRolePermissions,
   hasCustomRules,
   getSimpleAccessRule,
-  setSimpleAccessRule,
-  isStandardRole
+  setSimpleAccessRule
 }

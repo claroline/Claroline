@@ -35,30 +35,24 @@ const ToolRightsRow = props =>
     <div className="tool-rights-title">
       {trans(props.toolName, {}, 'tools')}
     </div>
+
     <div className="tool-rights-actions">
-      <Checkbox
-        key={`${props.toolName}-open`}
-        id={`${props.toolName}-open`}
-        label={trans('open')}
-        checked={props.canOpen}
-        onChange={checked => props.updateOpen(checked)}
-      />
-      <Checkbox
-        key={`${props.toolName}-edit`}
-        id={`${props.toolName}-edit`}
-        label={trans('edit')}
-        checked={props.canEdit}
-        onChange={checked => props.updateEdit(checked)}
-      />
+      {Object.keys(props.permissions).map((permName) =>
+        <Checkbox
+          key={permName}
+          id={`${props.toolName}-${permName}`}
+          label={trans(permName, {}, 'actions')}
+          checked={props.permissions[permName]}
+          onChange={checked => props.update(permName, checked)}
+        />
+      )}
     </div>
   </div>
 
 ToolRightsRow.propTypes = {
   toolName: T.string.isRequired,
-  canOpen: T.bool.isRequired,
-  canEdit: T.bool.isRequired,
-  updateOpen: T.func.isRequired,
-  updateEdit: T.func.isRequired
+  permissions: T.object,
+  update: T.func.isRequired
 }
 
 const ShortcutRow = props =>
@@ -164,10 +158,8 @@ class RoleForm extends Component {
                 <ToolRightsRow
                   key={`tool-rights-${toolName}`}
                   toolName={toolName}
-                  canOpen={this.props.role.tools[toolName]['open']}
-                  canEdit={this.props.role.tools[toolName]['edit']}
-                  updateOpen={checked => this.props.updateProp(`tools.${toolName}.open`, checked)}
-                  updateEdit={checked => this.props.updateProp(`tools.${toolName}.edit`, checked)}
+                  permissions={this.props.role.tools[toolName]}
+                  update={(perm, value) => this.props.updateProp(`tools.${toolName}.${perm}`, value)}
                 />
               )}
             </div>

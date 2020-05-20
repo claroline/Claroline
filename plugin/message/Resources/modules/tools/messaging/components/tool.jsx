@@ -18,7 +18,7 @@ import {Message} from '#/plugin/message/tools/messaging/components/message'
 
 const MessagingTool = (props) =>
   <ToolPage
-    toolbar="send add-contact | more"
+    primaryAction="send add-contact"
     actions={[
       {
         name: 'send',

@@ -182,7 +182,6 @@ services:
 
     Claroline\CoreBundle\Listener\Tool\CommunityListener:
         arguments:
-            - '@security.authorization_checker'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
             - '@claroline.manager.user_manager'
@@ -208,13 +207,6 @@ services:
             - { name: kernel.event_listener, event: open_tool_workspace_home, method: onDisplayWorkspace }
 
     Claroline\CoreBundle\Listener\Tool\ParametersListener:
-        arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@templating'
-            - '@security.token_storage'
-            - '@claroline.manager.tool_manager'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_parameters, method: onDisplayDesktopParameters }
 

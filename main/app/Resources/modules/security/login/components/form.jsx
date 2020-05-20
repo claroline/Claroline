@@ -43,10 +43,9 @@ class LoginForm extends Component {
           <div className="authentication-column account-authentication-column">
             {primarySso && this.state.sso[primarySso.service] &&
               <div className="primary-external-authentication-column">
-                {createElement(this.state.sso[primarySso.service].components.button, {
-                  service: primarySso.service,
+                {createElement(this.state.sso[primarySso.service].components.button, Object.assign({}, primarySso, {
                   label: primarySso.label || trans('login_with_third_party_btn', {name: trans(primarySso.service, {}, 'oauth')})
-                })}
+                }))}
               </div>
             }
 
@@ -114,11 +113,10 @@ class LoginForm extends Component {
               <p className="authentication-help">{trans('login_auth_sso')}</p>
 
               {otherSso.map(sso => this.state.sso[sso.service] ?
-                createElement(this.state.sso[sso.service].components.button, {
+                createElement(this.state.sso[sso.service].components.button, Object.assign({}, sso, {
                   key: sso.service,
-                  service: sso.service,
                   label: sso.label || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')})
-                }) : null
+                })) : null
               )}
             </div>
           }

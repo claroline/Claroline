@@ -16,6 +16,7 @@ import {MultipleTeamForm} from '#/plugin/team/tools/team/containers/multiple-tea
 
 const TeamTool = props =>
   <ToolPage
+    primaryAction="team-create"
     actions={[
       {
         name: 'team-create',

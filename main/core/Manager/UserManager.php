@@ -148,7 +148,7 @@ class UserManager
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
-        $created = $this->objectManager->getRepository(Workspace::class)->findOneByCode($user->getUsername());
+        $created = $this->objectManager->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
 
         if ($created) {
             $code = $user->getUsername().'~'.uniqid();
@@ -168,9 +168,9 @@ class UserManager
 
         $workspace->setPersonal(true);
 
-        //todo:add public file directory from the pws model
-
         $user->setPersonalWorkspace($workspace);
+        $user->addRole($workspace->getManagerRole());
+
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }

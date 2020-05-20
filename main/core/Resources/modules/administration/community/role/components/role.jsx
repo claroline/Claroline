@@ -8,16 +8,14 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {SelectGroup} from '#/main/core/layout/form/components/group/select-group'
 import {Checkbox} from '#/main/app/input/components/checkbox'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {constants} from '#/main/core/user/constants'
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {actions} from '#/main/core/administration/community/role/store'
@@ -167,18 +165,23 @@ const RoleForm = props =>
         >
           <div className="list-group" fill={true}>
             {Object.keys(props.role.desktopTools || {}).map(toolName =>
-              <SelectGroup
-                key={toolName}
-                className="list-group-item"
-                id={toolName}
-                label={trans(toolName, {}, 'tools')}
-                value={props.role.desktopTools[toolName]}
-                choices={{
-                  forced: trans('force_display'),
-                  hidden: trans('do_not_display')
-                }}
-                onChange={value => props.updateProp(`desktopTools.${toolName}`, value)}
-              />
+              <div key={toolName} className="tool-rights-row list-group-item">
+                <div className="tool-rights-title">
+                  {trans(toolName, {}, 'tools')}
+                </div>
+
+                <div className="tool-rights-actions">
+                  {Object.keys(props.role.desktopTools[toolName]).map((permName) =>
+                    <Checkbox
+                      key={permName}
+                      id={`${toolName}-${permName}`}
+                      label={trans(permName, {}, 'actions')}
+                      checked={props.role.desktopTools[toolName][permName]}
+                      onChange={checked => props.updateProp(`desktopTools.${toolName}.${permName}`, checked)}
+                    />
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </FormSection>

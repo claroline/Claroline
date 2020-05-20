@@ -47,11 +47,11 @@ function showScore(paper, admin = false) {
     }
 
     const showScoreAt = get(paper, 'structure.parameters.showScoreAt')
-    if (showScoreAt === constants.QUIZ_SCORE_AT_CORRECTION){
+    if (showScoreAt === constants.QUIZ_SCORE_AT_CORRECTION) {
       return showCorrection(paper, admin)
     }
 
-    if (showScoreAt === constants.QUIZ_SCORE_AT_VALIDATION){
+    if (showScoreAt === constants.QUIZ_SCORE_AT_VALIDATION) {
       return paper.finished
     }
   }

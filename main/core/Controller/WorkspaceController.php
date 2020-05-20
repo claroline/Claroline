@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -24,7 +25,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
@@ -129,10 +130,6 @@ class WorkspaceController
             throw new NotFoundHttpException('Workspace not found');
         }
 
-        // adds missing tools in the opened workspace
-        // it's done before the rights check, in case user should have access to a missing tool
-        $this->toolManager->addMissingWorkspaceTools($workspace);
-
         // switch to the workspace locale if needed
         $this->forceWorkspaceLang($workspace, $request);
 
@@ -145,13 +142,13 @@ class WorkspaceController
             $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
 
             // Get the list of enabled workspace tool
-            if ($this->manager->isManager($workspace, $this->tokenStorage->getToken())) {
+            if ($isManager) {
                 // gets all available tools
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
             } else {
                 // gets accessible tools by user
                 $currentRoles = $this->utils->getRoles($this->tokenStorage->getToken());
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, $currentRoles);
             }
 
             $userEvaluation = null;
@@ -205,13 +202,12 @@ class WorkspaceController
      */
     public function openToolAction(Workspace $workspace, $toolName)
     {
-        $tool = $this->toolManager->getToolByName($toolName);
-
-        if (!$tool) {
-            throw new NotFoundHttpException('Tool not found');
+        $orderedTool = $this->toolManager->getOrderedTool($toolName, Tool::WORKSPACE, $workspace->getUuid());
+        if (!$orderedTool) {
+            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $toolName));
         }
 
-        if (!$this->authorization->isGranted($toolName, $workspace)) {
+        if (!$this->authorization->isGranted('OPEN', $orderedTool)) {
             throw new AccessDeniedException();
         }
 
@@ -221,20 +217,14 @@ class WorkspaceController
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 
         return new JsonResponse(array_merge($event->getData(), [
-            'permissions' => [
-                'open' => $this->authorization->isGranted([$toolName, 'open'], $workspace),
-                'edit' => $this->authorization->isGranted([$toolName, 'edit'], $workspace),
-            ],
+            'permissions' => $this->toolManager->getCurrentPermissions($orderedTool),
         ]));
     }
 
     /**
      * Submit access code.
      *
-     * @EXT\Route(
-     *     "/unlock/{id}",
-     *     name="claro_workspace_unlock"
-     * )
+     * @EXT\Route("/unlock/{id}", name="claro_workspace_unlock")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "workspace",

@@ -15,7 +15,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

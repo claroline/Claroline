@@ -49,6 +49,7 @@ class SamlSsoListener
                         'service' => 'saml',
                         'label' => $buttonName,
                         'primary' => false,
+                        'idp' => $descriptor->getEntityID(),
                     ];
                 }, $parties),
             ]);

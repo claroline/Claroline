@@ -17,9 +17,10 @@ const RoleTab = props =>
       target: `${props.path}/roles`
     }]}
     subtitle={trans('roles')}
+    primaryAction="add"
     actions={[
       {
-        name: 'add_role',
+        name: 'add',
         type: LINK_BUTTON,
         label: trans('add_role'),
         icon: 'fa fa-plus',

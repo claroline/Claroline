@@ -159,10 +159,6 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return in_array($action, $this->getSupportedActions());
     }
 
-    /**********************************************/
-    /* WORTHLESS NOW BUT REQUIRED AND USED BY SF3 */
-    /**********************************************/
-
     /**
      * @param string $attribute
      *

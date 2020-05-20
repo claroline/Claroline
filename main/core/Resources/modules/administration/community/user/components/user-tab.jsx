@@ -22,6 +22,7 @@ const UserTabComponent = props =>
       target: `${props.path}/users`
     }]}
     subtitle={trans('users')}
+    primaryAction="add"
     actions={[
       {
         name: 'add',

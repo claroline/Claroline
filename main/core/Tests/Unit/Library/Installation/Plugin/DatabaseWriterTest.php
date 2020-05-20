@@ -32,8 +32,8 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->om->shouldReceive('getRepository')->andReturn($this->mock('Doctrine\ORM\EntityRepository'));
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
-        $this->tm = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
-        $this->tmd = $this->mock('Claroline\CoreBundle\Manager\ToolMaskDecoderManager');
+        $this->tm = $this->mock('Claroline\CoreBundle\Manager\Tool\ToolManager');
+        $this->tmd = $this->mock('Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager');
         $this->ism = $this->mock('Claroline\CoreBundle\Manager\IconSetManager');
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
         $this->kernel = $this->mock('Symfony\Component\HttpKernel\KernelInterface');

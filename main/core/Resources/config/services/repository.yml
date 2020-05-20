@@ -9,12 +9,12 @@ services:
             autowire: false
             tags: [doctrine.repository_service]
 
-    Claroline\CoreBundle\Repository\AdministrationToolRepository:
+    Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository:
         arguments:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
           - '@claroline.manager.plugin_manager'
 
-    Claroline\CoreBundle\Repository\OrderedToolRepository:
+    Claroline\CoreBundle\Repository\Tool\OrderedToolRepository:
         arguments:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
           - '@claroline.manager.plugin_manager'
@@ -29,7 +29,7 @@ services:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
           - '@claroline.manager.plugin_manager'
 
-    Claroline\CoreBundle\Repository\ToolRepository:
+    Claroline\CoreBundle\Repository\Tool\ToolRepository:
         arguments:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
           - '@claroline.manager.plugin_manager'

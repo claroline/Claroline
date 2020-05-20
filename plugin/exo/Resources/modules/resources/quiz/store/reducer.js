@@ -19,6 +19,9 @@ export const reducer = combineReducers({
     // replaces quiz data after success updates
     [`${FORM_SUBMIT_SUCCESS}/${editorSelectors.FORM_NAME}`]: (state, action) => action.updatedData
   }),
+  lastAttempt: makeReducer(null, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lastAttempt || state
+  }),
 
   // sections
   [playerSelectors.STORE_NAME]: playerReducer,

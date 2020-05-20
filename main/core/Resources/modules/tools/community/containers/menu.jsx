@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 
+import {hasPermission} from '#/main/app/security'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
@@ -9,7 +10,8 @@ const CommunityMenu = connect(
   (state) => ({
     contextType: toolSelectors.contextType(state),
     currentUser: securitySelectors.currentUser(state),
-    workspace: toolSelectors.contextData(state)
+    workspace: toolSelectors.contextData(state),
+    canAdministrate: hasPermission('administrate', toolSelectors.tool(state))
   })
 )(CommunityMenuComponent)
 

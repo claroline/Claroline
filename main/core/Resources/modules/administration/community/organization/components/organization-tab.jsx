@@ -21,6 +21,7 @@ const OrganizationTabComponent = props =>
       target: `${props.path}/organizations`
     }]}
     subtitle={trans('organizations')}
+    primaryAction="add"
     actions={[
       {
         name: 'add',

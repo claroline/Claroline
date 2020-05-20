@@ -14,7 +14,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,8 +33,6 @@ class UserCrud
     private $config;
     /** @var RoleManager */
     private $roleManager;
-    /** @var ToolManager */
-    private $toolManager;
     /** @var MailManager */
     private $mailManager;
     /** @var UserManager */
@@ -54,7 +51,6 @@ class UserCrud
         $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->roleManager = $container->get('claroline.manager.role_manager');
-        $this->toolManager = $container->get('claroline.manager.tool_manager');
         $this->mailManager = $container->get('claroline.manager.mail_manager');
         $this->userManager = $container->get('claroline.manager.user_manager');
         $this->organizationManager = $container->get('claroline.manager.organization.organization_manager');
@@ -102,12 +98,6 @@ class UserCrud
         if ($roleUser) {
             $user->addRole($roleUser);
         }
-
-        // create default desktop tools
-        $addedTools = $this->toolManager->addRequiredToolsToUser($user, 0);
-        $this->toolManager->addRequiredToolsToUser($user, 1);
-        $toolsRolesConfig = $this->toolManager->getUserDesktopToolsConfiguration($user);
-        $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig, $addedTools);
 
         $mailValidated = $user->isMailValidated() ?? $this->config->getParameter('auto_validate_email');
         $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));

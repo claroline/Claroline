@@ -73,15 +73,17 @@ function loadActions(resourceNodes, actions, nodesRefresher, path, currentUser) 
 /**
  * Gets the list of available actions for a resource.
  *
- * @param {Array}   resourceNodes  - the current resource node(s)
- * @param {object}  nodesRefresher - an object containing methods to update the node context
- * @param {string}  path           - the UI path where the resource is opened
- * @param {object}  currentUser    - the authenticated user
- * @param {boolean} withDefault    - include the default action (most of the time, it's not useful to get it)
+ * @param {Array}   resourceNodes   - the current resource node(s)
+ * @param {object}  nodesRefresher  - an object containing methods to update the node context
+ * @param {string}  path            - the UI path where the resource is opened
+ * @param {object}  currentUser     - the authenticated user
+ * @param {boolean} withDefault     - include the default action (most of the time, it's not useful to get it)
+ * @param {Array}   disabledActions
  *
  * @return {Promise.<Array>}
  */
 function getActions(resourceNodes, nodesRefresher, path, currentUser = null, withDefault = false, disabledActions = []) {
+  /** @var {Array} */
   const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
 
   const collectionActions = resourceTypes
@@ -136,20 +138,13 @@ function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null
  * Generates the toolbar for resources.
  *
  * @param {string|null} primaryAction - the name of a custom primary resource which will be appended to the toolbar.
- * @param {boolean}     fullscreen    - if true, the fullscreen button will be added in the toolbar.
  *
  * @return {string}
  */
-function getToolbar(primaryAction = null, fullscreen = true) {
+function getToolbar(primaryAction = null) {
   let toolbar = 'edit rights publish unpublish'
   if (primaryAction) {
     toolbar = primaryAction + ' | ' + toolbar
-  }
-
-  if (fullscreen) {
-    toolbar += ' | fullscreen more'
-  } else {
-    toolbar += ' | more'
   }
 
   return toolbar

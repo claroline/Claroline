@@ -15,16 +15,16 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -93,13 +93,8 @@ class DesktopController
             throw new AccessDeniedException();
         }
 
-        //this will need to change, I hope it's only temporary but there are a lot of users with missing Tools
-        //on our prod environments
-        $this->toolManager->addMissingDesktopTools($currentUser);
-
-        $tools = $this->toolManager->getUserDisplayedTools($currentUser);
-
-        if (0 === count($tools)) {
+        $orderedTools = $this->toolManager->getOrderedToolsByDesktop($currentUser);
+        if (0 === count($orderedTools)) {
             throw new AccessDeniedException('no tools');
         }
 
@@ -110,9 +105,9 @@ class DesktopController
 
         return new JsonResponse(array_merge($event->getResponse() ?? [], [
             'userProgression' => null,
-            'tools' => array_values(array_map(function (Tool $tool) {
-                return $this->serializer->serialize($tool, [Options::SERIALIZE_MINIMAL]);
-            }, $tools)),
+            'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
+                return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
+            }, $orderedTools)),
             'shortcuts' => isset($parameters['desktop_shortcuts']) ? $parameters['desktop_shortcuts'] : [],
         ]));
     }
@@ -128,13 +123,12 @@ class DesktopController
      */
     public function openToolAction($toolName)
     {
-        $tool = $this->toolManager->getToolByName($toolName);
-
-        if (!$tool) {
+        $orderedTool = $this->toolManager->getOrderedTool($toolName, Tool::DESKTOP);
+        if (!$orderedTool) {
             throw new NotFoundHttpException(sprintf('Tool "%s" not found', $toolName));
         }
 
-        if (!$this->authorization->isGranted('OPEN', $tool)) {
+        if (!$this->authorization->isGranted('OPEN', $orderedTool)) {
             throw new AccessDeniedException();
         }
 
@@ -144,10 +138,7 @@ class DesktopController
         $this->eventDispatcher->dispatch('log', new LogDesktopToolReadEvent($toolName));
 
         return new JsonResponse(array_merge($event->getData(), [
-            'permissions' => [
-                'open' => $this->authorization->isGranted('OPEN', $tool),
-                'edit' => $this->authorization->isGranted('EDIT', $tool),
-            ],
+            'permissions' => $this->toolManager->getCurrentPermissions($orderedTool),
         ]));
     }
 
@@ -163,35 +154,10 @@ class DesktopController
      */
     public function listToolsAction(User $currentUser = null)
     {
-        $tools = $this->toolManager->getDisplayedDesktopOrderedTools($currentUser);
+        $orderedTools = $this->toolManager->getOrderedToolsByDesktop($currentUser);
 
-        return new JsonResponse(array_values(array_map(function (Tool $tool) {
-            return [
-                'icon' => $tool->getClass(),
-                'name' => $tool->getName(),
-            ];
-        }, $tools)));
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/desktop/tool/configure",
-     *     name="apiv2_desktop_tools_configure",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("PUT")
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Request $request
-     * @param User    $user
-     *
-     * @return JsonResponse
-     */
-    public function configureUserOrderedToolsAction(Request $request, User $user)
-    {
-        $toolsConfig = $this->decodeRequest($request);
-        $this->toolManager->saveUserOrderedTools($user, $toolsConfig);
-
-        return new JsonResponse($toolsConfig);
+        return new JsonResponse(array_values(array_map(function (OrderedTool $orderedTool) {
+            return $this->serializer->serialize($orderedTool->getTool(), [Options::SERIALIZE_MINIMAL]);
+        }, $orderedTools)));
     }
 }

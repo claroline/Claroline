@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Manager\PluginManager;
@@ -18,6 +18,9 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class AdministrationToolRepository extends ServiceEntityRepository
 {
+    /** @var array */
+    private $bundles;
+
     public function __construct(RegistryInterface $registry, PluginManager $manager)
     {
         $this->bundles = $manager->getEnabled(true);
@@ -27,10 +30,10 @@ class AdministrationToolRepository extends ServiceEntityRepository
 
     public function findAll()
     {
-        $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
+        $dql = 'SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
             LEFT JOIN tool.plugin p
             WHERE CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-            OR tool.plugin is NULL";
+            OR tool.plugin is NULL';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('bundles', $this->bundles);
@@ -59,7 +62,7 @@ class AdministrationToolRepository extends ServiceEntityRepository
         if ($isAdmin) {
             return $this->findAll();
         } else {
-            $dql = "
+            $dql = '
                 SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
                 JOIN tool.roles role
                 LEFT JOIN tool.plugin p
@@ -68,7 +71,7 @@ class AdministrationToolRepository extends ServiceEntityRepository
                     CONCAT(p.vendorName, p.bundleName) IN (:bundles)
                     OR tool.plugin IS NULL
                 )
-            ";
+            ';
         }
 
         $query = $this->_em->createQuery($dql);

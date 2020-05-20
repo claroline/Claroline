@@ -11,39 +11,18 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Claroline\AppBundle\Entity\FromPlugin;
-use Claroline\AppBundle\Entity\Identifier\Id;
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolRepository")
  * @ORM\Table(
  *      name="claro_tools",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="tool_plugin_unique",columns={"name", "plugin_id"})}
  * )
  */
-class Tool
+class Tool extends AbstractTool
 {
-    use Id;
-    use Uuid;
-    use FromPlugin;
-
-    const ADMINISTRATION = 'administration';
-    const WORKSPACE = 'workspace';
-    const DESKTOP = 'desktop';
-
-    /**
-     * @ORM\Column()
-     */
-    protected $name;
-
-    /**
-     * @ORM\Column()
-     */
-    protected $class;
-
     /**
      * @ORM\Column(name="is_workspace_required", type="boolean")
      */
@@ -90,29 +69,15 @@ class Tool
     protected $isAnonymousExcluded = true;
 
     /**
-     * Unmapped var used for the tool configuration.
-     *
-     * @var bool
-     */
-    private $isVisible = true;
-
-    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder",
      *     mappedBy="tool",
      *     cascade={"persist", "remove"}
      * )
+     *
+     * @var ToolMaskDecoder[]|ArrayCollection
      */
     protected $maskDecoders;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\PwsToolConfig",
-     *     mappedBy="tool",
-     *     cascade={"remove"}
-     * )
-     */
-    protected $pwsToolConfig;
 
     /**
      * @ORM\OneToMany(
@@ -130,35 +95,10 @@ class Tool
      */
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
 
         $this->maskDecoders = new ArrayCollection();
-        $this->pwsToolConfig = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setClass($class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    public function getClass()
-    {
-        return $this->class;
     }
 
     public function setIsWorkspaceRequired($bool)
@@ -183,18 +123,6 @@ class Tool
     public function isDesktopRequired()
     {
         return $this->isDesktopRequired;
-    }
-
-    public function setVisible($bool)
-    {
-        $this->isVisible = $bool;
-
-        return $this;
-    }
-
-    public function isVisible()
-    {
-        return $this->isVisible;
     }
 
     public function setDisplayableInWorkspace($bool)
@@ -291,23 +219,8 @@ class Tool
         return $this->maskDecoders;
     }
 
-    public function addPwsToolConfig(PwsToolConfig $tr)
-    {
-        $this->pwsToolConfig->add($tr);
-    }
-
-    public function getPwsToolConfig()
-    {
-        return $this->pwsToolConfig;
-    }
-
     public function getOrderedTools()
     {
         return $this->orderedTools;
-    }
-
-    public function __toString()
-    {
-        return $this->getName();
     }
 }

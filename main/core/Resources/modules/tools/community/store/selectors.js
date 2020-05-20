@@ -1,12 +1,9 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
 
-import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 import {constants as toolConstants} from '#/main/core/tool/constants'
-
-import {getPermissionLevel} from '#/main/core/tools/community/permissions'
-import {constants} from '#/main/core/tools/community/constants'
 
 const STORE_NAME = 'community'
 
@@ -23,41 +20,31 @@ const loaded = createSelector(
 )
 
 const canCreate = createSelector(
-  [securitySelectors.currentUser, toolSelectors.contextType, toolSelectors.contextData],
-  (currentUser, contextType, contextData) => {
+  [toolSelectors.tool, toolSelectors.contextType, toolSelectors.contextData],
+  (tool, contextType, contextData) => {
+    const canCreate = hasPermission('create_user', tool)
     if (contextType === toolConstants.TOOL_WORKSPACE) {
-      const permLevel = getPermissionLevel(currentUser, contextData)
-
-      return !get(contextData, 'meta.model') && permLevel === constants.ADMIN
+      return !get(contextData, 'meta.model') && canCreate
     }
 
-    return false
+    return canCreate
   }
 )
 
 const canCreateRole = createSelector(
-  [securitySelectors.currentUser, toolSelectors.contextType, toolSelectors.contextData],
-  (currentUser, contextType, contextData) => {
-    if (contextType === toolConstants.TOOL_WORKSPACE) {
-      const permLevel = getPermissionLevel(currentUser, contextData)
-
-      return permLevel === constants.MANAGER || permLevel === constants.ADMIN
-    }
-
-    return false
-  }
+  [toolSelectors.tool],
+  (tool) => hasPermission('administrate', tool)
 )
 
 const canRegister = createSelector(
-  [securitySelectors.currentUser, toolSelectors.contextType, toolSelectors.contextData],
-  (currentUser, contextType, contextData) => {
+  [toolSelectors.tool, toolSelectors.contextType, toolSelectors.contextData],
+  (tool, contextType, contextData) => {
+    const canCreate = hasPermission('administrate', tool)
     if (contextType === toolConstants.TOOL_WORKSPACE) {
-      const permLevel = getPermissionLevel(currentUser, contextData)
-
-      return !get(contextData, 'meta.model') && (permLevel === constants.MANAGER || permLevel === constants.ADMIN)
+      return !get(contextData, 'meta.model') && canCreate
     }
 
-    return false
+    return canCreate
   }
 )
 

@@ -53,8 +53,8 @@ services:
             - '@claroline.manager.mask_manager'
             - '@filesystem'
             - '@kernel'
-            - '@claroline.manager.tool_manager'
-            - '@claroline.manager.tool_mask_decoder_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@claroline.manager.icon_set_manager'
 
     Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker:

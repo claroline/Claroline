@@ -21,6 +21,7 @@ const RoleTabComponent = props =>
       target: `${props.path}/roles`
     }]}
     subtitle={trans('roles')}
+    primaryAction="add"
     actions={[
       {
         name: 'add',

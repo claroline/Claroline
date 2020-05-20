@@ -14,6 +14,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {calculateScore, calculateTotal} from '#/plugin/exo/items/score'
+import {isQuestionType} from '#/plugin/exo/items/item-types'
 
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
@@ -29,7 +30,7 @@ const IntermediateScores = (props) => {
       let score = 0
       let total = 0
       all.map(item => {
-        if (item.tags && -1 !== item.tags.indexOf(tag)) {
+        if (isQuestionType(item.type) && item.tags && -1 !== item.tags.indexOf(tag)) {
           if (props.answers[item.id]) {
             score += calculateScore(item, props.answers[item.id]) // this should retrieve value from api instead
           }
@@ -49,11 +50,13 @@ const IntermediateScores = (props) => {
       let score = 0
       let total = 0
       step.items.map(item => {
-        if (props.answers[item.id]) {
-          score += calculateScore(item, props.answers[item.id]) // this should retrieve value from api instead
-        }
+        if (isQuestionType(item.type)) {
+          if (props.answers[item.id]) {
+            score += calculateScore(item, props.answers[item.id]) // this should retrieve value from api instead
+          }
 
-        total += calculateTotal(item)
+          total += calculateTotal(item)
+        }
       })
 
       return {

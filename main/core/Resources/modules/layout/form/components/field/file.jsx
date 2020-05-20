@@ -6,7 +6,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
 
-import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail'
+import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
 class FileComponent extends Component {
   constructor(props) {

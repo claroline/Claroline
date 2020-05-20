@@ -25,4 +25,4 @@ services:
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.rights_manager'
             - '@claroline.manager.role_manager'
-            - '@claroline.manager.tool_rights_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'

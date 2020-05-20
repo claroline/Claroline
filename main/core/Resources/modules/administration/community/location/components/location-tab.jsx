@@ -21,6 +21,7 @@ const LocationTabComponent = props =>
       target: `${props.path}/locations`
     }]}
     subtitle={trans('locations')}
+    primaryAction="add"
     actions={[
       {
         name: 'add',

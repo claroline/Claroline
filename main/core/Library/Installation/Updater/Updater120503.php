@@ -12,7 +12,8 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,7 +44,7 @@ class Updater120503 extends Updater
     {
         $toolManager = $this->container->get(ToolManager::class);
         $toolManager->setLogger($this->logger);
-        $toolManager->cleanOldTools();
+        $this->cleanOldTools();
     }
 
     private function updateNotificationsRefreshDelay()
@@ -71,5 +72,34 @@ class Updater120503 extends Updater
         $this->log($sql);
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
+    }
+
+    private function cleanOldTools()
+    {
+        $tools = [
+            'formalibre_reservation_agenda',
+            'formalibre_presence_tool',
+            'my-learning-objectives',
+            'my_portfolios',
+            'message',
+            'formalibre_bulletin_tool',
+            'innova_video_recorder_tool',
+            'innova_audio_recorder_tool',
+            'formalibre_pia_tool',
+            'badges',
+            'my_badges',
+            'all_my_badges',
+        ];
+
+        foreach ($tools as $tool) {
+            $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $tool]);
+
+            if ($tool) {
+                $this->log('Removing tool '.$tool->getName());
+                $this->om->remove($tool);
+            }
+        }
+
+        $this->om->flush();
     }
 }

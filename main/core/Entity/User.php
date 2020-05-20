@@ -586,7 +586,7 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      *
      * @param bool $areGroupsIncluded
      *
-     * @return array[string]
+     * @return string[]
      */
     public function getRoles($areGroupsIncluded = true)
     {

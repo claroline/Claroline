@@ -95,54 +95,6 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Selects nodes as arrays. Resource type, creator and icon are always added to the query.
-     *
-     * @param bool $withMaxPermissions Whether maximum permissions must be calculated and added to the result
-     * @param bool $withLastOpenDate
-     *
-     * @return ResourceQueryBuilder
-     */
-    public function selectAsArray($withMaxPermissions = false, $withLastOpenDate = false)
-    {
-        $this->init();
-        $this->resultAsArray = true;
-        $this->joinSingleRelatives = true;
-        $eol = PHP_EOL;
-        $this->selectClause =
-            "SELECT DISTINCT{$eol}".
-            "    node.id as id,{$eol}".
-            "    node.uuid as uuid,{$eol}".
-            "    node.name as name,{$eol}".
-            "    node.path as path,{$eol}".
-            "    IDENTITY(node.parent) as parent_id,{$eol}".
-            "    creator.username as creator_username,{$eol}".
-            "    creator.id as creator_id,{$eol}".
-            "    resourceType.name as type,{$eol}".
-            "    node.mimeType as mime_type,{$eol}".
-            "    node.index as index_dir,{$eol}".
-            "    node.creationDate as creation_date,{$eol}".
-            "    node.modificationDate as modification_date,{$eol}".
-            "    node.published as published,{$eol}".
-            "    node.accessibleFrom as accessible_from,{$eol}".
-            "    node.accessibleUntil as accessible_until,{$eol}".
-            "    node.deletable as deletable{$eol}";
-
-        if ($withMaxPermissions) {
-            $this->leftJoinRights = true;
-            $this->selectClause .= ",{$eol}rights.mask";
-        }
-
-        if ($withLastOpenDate) {
-            $this->leftJoinLogs = true;
-            $this->selectClause .= ",{$eol}log.dateLog as last_opened";
-        }
-
-        $this->selectClause .= $eol;
-
-        return $this;
-    }
-
-    /**
      * Filters nodes belonging to a given workspace.
      *
      * @param Workspace $workspace
@@ -153,15 +105,6 @@ class ResourceQueryBuilder
     {
         $this->addWhereClause('node.workspace = :workspace_id');
         $this->parameters[':workspace_id'] = $workspace->getId();
-
-        return $this;
-    }
-
-    public function addLastOpenDate(User $user)
-    {
-        $this->addWhereClause('log.doer = :doer_id');
-        $this->addWhereClause('log_node.id = node.id');
-        $this->parameters[':doer_id'] = $user->getId();
 
         return $this;
     }
@@ -197,47 +140,6 @@ class ResourceQueryBuilder
         if (!$includeGivenPath) {
             $this->addWhereClause('node.path <> :path');
             $this->parameters[':path'] = $path;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Filters nodes that can be opened.
-     *
-     * @return ResourceQueryBuilder
-     */
-    public function whereCanOpen()
-    {
-        $this->leftJoinRights = true;
-        $this->addWhereClause('BIT_AND(rights.mask, 1) = 1');
-
-        return $this;
-    }
-
-    /**
-     * Filters nodes of any of the given types.
-     *
-     * @param array[string] $types
-     *
-     * @return ResourceQueryBuilder
-     */
-    public function whereTypeIn(array $types)
-    {
-        if (count($types) > 0) {
-            $this->joinSingleRelatives = true;
-            $eol = PHP_EOL;
-            $clause = "{$eol}({$eol}";
-
-            for ($i = 0, $count = count($types); $i < $count; ++$i) {
-                $clause .= 0 === $i ?
-                    "resourceType.name = :type_{$i}" :
-                    "OR resourceType.name = :type_{$i}";
-                $clause .= $i < $count - 1 ? PHP_EOL : '';
-                $this->parameters[":type_{$i}"] = $types[$i];
-            }
-
-            $this->addWhereClause($clause.')');
         }
 
         return $this;

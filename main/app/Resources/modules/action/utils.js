@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
+import uniqWith from 'lodash/uniqWith'
 
 import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
@@ -66,19 +67,17 @@ function parseToolbar(toolbarConfig) {
  * @param {string} toolbarConfig
  * @param {Array}  actions
  * @param {string} scope
- *
- * @todo improve implementation (the part for more menu)
  */
 function buildToolbar(toolbarConfig, actions = [], scope) {
   let toolbar = []
 
   // filters toolbar actions
-  actions = actions.filter(action =>
+  actions = uniqWith(actions.filter(action =>
     // only get displayed actions
     (undefined === action.displayed || !!action.displayed)
     // only get actions for the requested scope
     && (!scope || isEmpty(action.scope) || -1 !== action.scope.indexOf(scope))
-  )
+  ), (a, b) => !isEmpty(a.name) && !isEmpty(b.name) && a.name === b.name)
 
   if (1 === actions.length) {
     // avoid creating a more dropdown if there is only one action
@@ -107,14 +106,14 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
             hasMore = true
 
             // create the more action
-            // we will fill menu later or remove the button of there is no remaining action
+            // we will fill menu later or remove the button if there is no remaining action
             return {
               name: 'more',
               type: MENU_BUTTON,
               icon: 'fa fa-fw fa-ellipsis-v',
               label: trans('show-more-actions', {}, 'actions'),
               menu: {
-                align: 'right' // I hope it wil not cause problems to not be able to configure it
+                align: 'right' // I hope it will not cause problems to not be able to configure it
               }
             }
           } else {

@@ -9,13 +9,12 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
-use UJM\ExoBundle\Manager\DocimologyManager;
+use UJM\ExoBundle\Manager\AttemptManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
 
 /**
@@ -32,17 +31,14 @@ class ExerciseListener
     /** @var PaperManager */
     private $paperManager;
 
-    /** @var DocimologyManager */
-    private $docimologyManager;
+    /** @var AttemptManager */
+    private $attemptManager;
 
     /** @var ObjectManager */
     private $om;
 
     /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
-
-    /** @var TwigEngine */
-    private $templating;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -56,10 +52,9 @@ class ExerciseListener
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
      * @param PaperManager                  $paperManager
-     * @param DocimologyManager             $docimologyManager
+     * @param AttemptManager                $attemptManager
      * @param ObjectManager                 $om
      * @param ResourceEvaluationManager     $resourceEvalManager
-     * @param TwigEngine                    $templating
      * @param TokenStorageInterface         $tokenStorage
      * @param SerializerProvider            $serializer
      */
@@ -67,20 +62,18 @@ class ExerciseListener
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
         PaperManager $paperManager,
-        DocimologyManager $docimologyManager,
+        AttemptManager $attemptManager,
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager,
-        TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         SerializerProvider $serializer
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
         $this->paperManager = $paperManager;
-        $this->docimologyManager = $docimologyManager;
+        $this->attemptManager = $attemptManager;
         $this->om = $om;
         $this->resourceEvalManager = $resourceEvalManager;
-        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
     }
@@ -104,10 +97,13 @@ class ExerciseListener
         }
 
         // fetch additional user data
+        $lastAttempt = null;
         $nbUserPapers = 0;
         $nbUserPapersDayCount = 0;
         $userEvaluation = null;
         if ($currentUser instanceof User) {
+            $lastAttempt = $this->attemptManager->getLastPaper($exercise, $currentUser);
+
             $nbUserPapers = (int) $this->paperManager->countUserFinishedPapers($exercise, $currentUser);
             $nbUserPapersDayCount = (int) $this->paperManager->countUserFinishedDayPapers($exercise, $currentUser);
             $userEvaluation = $this->serializer->serialize(
@@ -120,6 +116,7 @@ class ExerciseListener
             'paperCount' => (int) $this->paperManager->countExercisePapers($exercise),
 
             // user data
+            'lastAttempt' => $lastAttempt ? $this->paperManager->serialize($lastAttempt) : null,
             'userPaperCount' => $nbUserPapers,
             'userPaperDayCount' => $nbUserPapersDayCount,
             'userEvaluation' => $userEvaluation,

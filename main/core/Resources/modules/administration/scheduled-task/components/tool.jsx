@@ -12,9 +12,10 @@ import {ScheduledTask} from '#/main/core/administration/scheduled-task/component
 
 const ScheduledTaskTool = props =>
   <ToolPage
+    primaryAction="add"
     actions={[
       {
-        name: 'new_scheduled_task',
+        name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_scheduled_task'),

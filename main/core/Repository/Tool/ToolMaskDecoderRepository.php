@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
@@ -16,7 +16,12 @@ use Doctrine\ORM\EntityRepository;
 
 class ToolMaskDecoderRepository extends EntityRepository
 {
-    public function findMaskDecodersByTool(Tool $tool, $executeQuery = true)
+    /**
+     * @param Tool $tool
+     *
+     * @return ToolMaskDecoder[]
+     */
+    public function findMaskDecodersByTool(Tool $tool)
     {
         $dql = '
             SELECT tmd
@@ -27,26 +32,17 @@ class ToolMaskDecoderRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('tool', $tool);
 
-        return $executeQuery ? $query->getResult() : $query;
+        return $query->getResult();
     }
 
-    public function findAllMaskDecoders($executeQuery = true)
+    /**
+     * @param Tool   $tool
+     * @param string $name
+     *
+     * @return ToolMaskDecoder|null
+     */
+    public function findMaskDecoderByToolAndName(Tool $tool, $name)
     {
-        $dql = '
-            SELECT tmd
-            FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder tmd
-            ORDER BY tmd.value ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findMaskDecoderByToolAndName(
-        Tool $tool,
-        $name,
-        $executeQuery = true
-    ) {
         $dql = '
             SELECT tmd
             FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder tmd
@@ -58,10 +54,10 @@ class ToolMaskDecoderRepository extends EntityRepository
         $query->setParameter('tool', $tool);
         $query->setParameter('name', $name);
 
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
+        return $query->getOneOrNullResult();
     }
 
-    public function findCustomMaskDecodersByTool(Tool $tool, $executeQuery = true)
+    public function findCustomMaskDecodersByTool(Tool $tool)
     {
         $dql = '
             SELECT tmd
@@ -74,6 +70,6 @@ class ToolMaskDecoderRepository extends EntityRepository
         $query->setParameter('tool', $tool);
         $query->setParameter('defaultActions', ToolMaskDecoder::$defaultActions);
 
-        return $executeQuery ? $query->getResult() : $query;
+        return $query->getResult();
     }
 }

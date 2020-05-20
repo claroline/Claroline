@@ -20,22 +20,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\OrderedToolRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\OrderedToolRepository")
  * @ORM\Table(
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_tool_user_type",
- *             columns={"tool_id", "user_id", "ordered_tool_type"}
+ *             columns={"tool_id", "user_id"}
  *         ),
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_tool_ws_type",
- *             columns={"tool_id", "workspace_id", "ordered_tool_type"}
+ *             columns={"tool_id", "workspace_id"}
  *         )
  *     }
  * )
- * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
- * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
+ * @DoctrineAssert\UniqueEntity({"tool", "workspace"})
+ * @DoctrineAssert\UniqueEntity({"tool", "user"})
  */
 class OrderedTool
 {
@@ -68,13 +68,10 @@ class OrderedTool
 
     /**
      * @ORM\Column(name="display_order", type="integer")
+     *
+     * @var int
      */
     protected $order;
-
-    /**
-     * @ORM\Column(name="is_visible_in_desktop", type="boolean")
-     */
-    protected $isVisibleInDesktop = false;
 
     /**
      * @ORM\ManyToOne(
@@ -82,6 +79,8 @@ class OrderedTool
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var User
      */
     protected $user;
 
@@ -90,23 +89,33 @@ class OrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
      *     mappedBy="orderedTool"
      * )
+     *
+     * @var ToolRights[]|ArrayCollection
      */
     protected $rights;
 
     /**
-     * @ORM\Column(name="ordered_tool_type", type="integer")
-     */
-    protected $type = 0;
-
-    /**
      * @ORM\Column(name="is_locked", type="boolean")
+     *
+     * @var bool
      */
     protected $locked = false;
 
+    /**
+     * OrderedTool constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->rights = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return is_null($this->workspace) ?
+            $this->tool->getName() :
+            '['.$this->workspace->getName().'] '.$this->tool->getName();
     }
 
     public function setWorkspace(Workspace $ws = null)
@@ -152,16 +161,9 @@ class OrderedTool
         return $this->user;
     }
 
-    public function isVisibleInDesktop()
-    {
-        return $this->isVisibleInDesktop;
-    }
-
-    public function setVisibleInDesktop($isVisible)
-    {
-        $this->isVisibleInDesktop = $isVisible;
-    }
-
+    /**
+     * @return ToolRights[]|ArrayCollection
+     */
     public function getRights()
     {
         return $this->rights;
@@ -169,17 +171,16 @@ class OrderedTool
 
     public function addRight(ToolRights $right)
     {
-        $this->rights->add($right);
+        if (!$this->rights->contains($right)) {
+            $this->rights->add($right);
+        }
     }
 
-    public function getType()
+    public function removeRight(ToolRights $right)
     {
-        return $this->type;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
+        if ($this->rights->contains($right)) {
+            $this->rights->removeElement($right);
+        }
     }
 
     public function isLocked()
@@ -190,12 +191,5 @@ class OrderedTool
     public function setLocked($locked)
     {
         $this->locked = $locked;
-    }
-
-    public function __toString()
-    {
-        return is_null($this->workspace) ?
-            $this->tool->getName() :
-            '['.$this->workspace->getName().'] '.$this->tool->getName();
     }
 }

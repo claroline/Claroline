@@ -26,7 +26,7 @@ const AgendaTool = (props) => {
   return (
     <ToolPage
       subtitle={currentView.display(props.referenceDate)}
-      toolbar="add | previous range next | today | more"
+      primaryAction="add | previous range next | today"
       actions={[
         {
           name: 'previous',

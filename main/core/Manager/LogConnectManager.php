@@ -33,7 +33,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
-use Claroline\CoreBundle\Repository\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class LogConnectManager

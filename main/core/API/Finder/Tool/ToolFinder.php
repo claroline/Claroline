@@ -77,10 +77,6 @@ class ToolFinder extends AbstractFinder
                     $qb->andWhere("ot.type = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'personalWorkspace':
-                    $qb->join('obj.pwsToolConfig', 'ptc');
-                    $qb->andWhere($qb->expr()->eq('BIT_AND(ptc.mask, 1)', 1));
-                    break;
                 case 'roles':
                     if (!$otJoin) {
                         $qb->join('obj.orderedTools', 'ot');

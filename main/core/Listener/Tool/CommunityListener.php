@@ -15,12 +15,9 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\UserManager;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CommunityListener
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
     /** @var ParametersSerializer */
     private $parametersSerializer;
     /** @var ProfileSerializer */
@@ -31,18 +28,15 @@ class CommunityListener
     /**
      * CommunityListener constructor.
      *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ParametersSerializer          $parametersSerializer
-     * @param ProfileSerializer             $profileSerializer
-     * @param UserManager                   $userManager
+     * @param ParametersSerializer $parametersSerializer
+     * @param ProfileSerializer    $profileSerializer
+     * @param UserManager          $userManager
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
         ParametersSerializer $parametersSerializer,
         ProfileSerializer $profileSerializer,
         UserManager $userManager
     ) {
-        $this->authorization = $authorization;
         $this->parametersSerializer = $parametersSerializer;
         $this->profileSerializer = $profileSerializer;
         $this->userManager = $userManager;
@@ -58,10 +52,6 @@ class CommunityListener
         $event->setData([
             'profile' => $this->profileSerializer->serialize(),
             'parameters' => $this->parametersSerializer->serialize()['profile'],
-            'restrictions' => [
-                // TODO: computes rights more accurately
-                'hasUserManagementAccess' => $this->authorization->isGranted('ROLE_ADMIN'),
-            ],
             'usersLimitReached' => $this->userManager->hasReachedLimit(),
         ]);
 
@@ -76,7 +66,6 @@ class CommunityListener
         $event->setData([
             'profile' => $this->profileSerializer->serialize(),
             'parameters' => $this->parametersSerializer->serialize()['profile'],
-            'restrictions' => [],
             'usersLimitReached' => $this->userManager->hasReachedLimit(),
         ]);
 

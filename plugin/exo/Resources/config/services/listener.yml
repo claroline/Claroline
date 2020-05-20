@@ -20,10 +20,9 @@ services:
             - '@security.authorization_checker'
             - '@UJM\ExoBundle\Manager\ExerciseManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
-            - '@UJM\ExoBundle\Manager\DocimologyManager'
+            - '@UJM\ExoBundle\Manager\AttemptManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.resource_evaluation_manager'
-            - '@templating'
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:

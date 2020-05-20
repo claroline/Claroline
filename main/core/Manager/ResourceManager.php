@@ -424,7 +424,7 @@ class ResourceManager
             throw new ResourceMoveException('You cannot move a directory into itself');
         }
 
-        $descendants = $this->getDescendants($child);
+        $descendants = $this->resourceNodeRepo->findDescendants($child);
         foreach ($descendants as $descendant) {
             if ($parent === $descendant) {
                 throw new ResourceMoveException('You cannot move a directory into its descendants');
@@ -520,7 +520,7 @@ class ResourceManager
 
             //do it on every children aswell
             if ($isRecursive) {
-                $descendants = $this->resourceNodeRepo->findDescendants($node, true);
+                $descendants = $this->resourceNodeRepo->findDescendants($node);
                 $this->setPublishedStatus($descendants, $arePublished, false);
             }
         }
@@ -679,7 +679,7 @@ class ResourceManager
         }
 
         foreach ($dirs as $dir) {
-            $children = $this->getDescendants($dir);
+            $children = $this->resourceNodeRepo->findDescendants($dir);
 
             foreach ($children as $child) {
                 if ($child->isActive() &&
@@ -779,42 +779,13 @@ class ResourceManager
     }
 
     /**
-     * @param ResourceNode $node
-     * @param string[]     $roles
-     * @param mixed        $user
-     * @param bool         $withLastOpenDate
-     * @param bool         $canAdministrate
-     *
-     * @return array
-     */
-    public function getChildren(
-        ResourceNode $node,
-        array $roles,
-        $user,
-        $withLastOpenDate = false,
-        $canAdministrate = false
-    ) {
-        return $this->resourceNodeRepo->findChildren($node, $roles, $user, $withLastOpenDate, $canAdministrate);
-    }
-
-    /**
-     * @param ResourceNode $node
-     *
-     * @return array
-     */
-    public function getDescendants(ResourceNode $node)
-    {
-        return $this->resourceNodeRepo->findDescendants($node);
-    }
-
-    /**
      * @param string $name
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
      */
     public function getResourceTypeByName($name)
     {
-        return $this->resourceTypeRepo->findOneByName($name);
+        return $this->resourceTypeRepo->findOneBy(['name' => $name]);
     }
 
     /**

@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -34,21 +34,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Role extends BaseRole
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     const PLATFORM_ROLE = 1;
     const WS_ROLE = 2;
     const CUSTOM_ROLE = 3;
     const USER_ROLE = 4;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
 
     /**
      * @ORM\Column(unique=true)
@@ -84,6 +76,8 @@ class Role extends BaseRole
     protected $users;
 
     /**
+     * should be unidirectional.
+     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
      *     mappedBy="roles"
@@ -111,6 +105,8 @@ class Role extends BaseRole
     protected $type = self::PLATFORM_ROLE;
 
     /**
+     * should be unidirectional.
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceRights",
      *     mappedBy="role"
@@ -137,20 +133,14 @@ class Role extends BaseRole
     protected $maxUsers;
 
     /**
+     * should be unidirectional.
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
      *     mappedBy="role"
      * )
      */
     protected $toolRights;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\PwsToolConfig",
-     *     mappedBy="role"
-     * )
-     */
-    protected $pwsToolConfig;
 
     /**
      * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
@@ -160,6 +150,8 @@ class Role extends BaseRole
     protected $personalWorkspaceCreationEnabled = false;
 
     /**
+     * should be unidirectional.
+     *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Shortcuts",
      *     mappedBy="role",
@@ -172,19 +164,23 @@ class Role extends BaseRole
 
     public function __construct()
     {
+        parent::__construct('');
+
         $this->refreshUuid();
 
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->resourceRights = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
-        $this->pwsToolConfig = new ArrayCollection();
         $this->adminTools = new ArrayCollection();
         $this->shortcuts = new ArrayCollection();
     }
 
-    public function getId()
+    public function __toString(): string
     {
-        return $this->id;
+        $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
+
+        return "[{$this->getId()}]".$name;
     }
 
     /**
@@ -328,9 +324,6 @@ class Role extends BaseRole
         return $this->groups;
     }
 
-    /**
-     * @todo check the type is a Role class constant
-     */
     public function setType($type)
     {
         $this->type = $type;
@@ -381,16 +374,6 @@ class Role extends BaseRole
         return $this->toolRights;
     }
 
-    public function addPwsToolConfig(PwsToolConfig $tr)
-    {
-        $this->pwsToolConfig->add($tr);
-    }
-
-    public function getPwsToolConfig()
-    {
-        return $this->pwsToolConfig;
-    }
-
     public function getPersonalWorkspaceCreationEnabled()
     {
         return $this->personalWorkspaceCreationEnabled;
@@ -414,18 +397,6 @@ class Role extends BaseRole
     public function getAdminTools()
     {
         return $this->adminTools;
-    }
-
-    /**
-     * Debug purpose.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
-
-        return "[{$this->getId()}]".$name;
     }
 
     /**

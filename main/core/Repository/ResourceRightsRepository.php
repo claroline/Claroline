@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\EntityRepository;
 
 class ResourceRightsRepository extends EntityRepository
@@ -22,10 +20,10 @@ class ResourceRightsRepository extends EntityRepository
      * Returns the maximum rights on a given resource for a set of roles.
      * Used by the ResourceVoter.
      *
-     * @param array[string] $rights
-     * @param ResourceNode  $resource
+     * @param string[]     $roles
+     * @param ResourceNode $resource
      *
-     * @return array
+     * @return int
      */
     public function findMaximumRights(array $roles, ResourceNode $resource)
     {
@@ -104,105 +102,5 @@ class ResourceRightsRepository extends EntityRepository
         }
 
         return $query->getArrayResult();
-    }
-
-    /**
-     * @todo to be removed
-     *
-     * @return ResourceRights[]
-     */
-    public function findConfigurableRights(ResourceNode $resource)
-    {
-        $dql = "
-            SELECT rights
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resourceNode resource
-            JOIN rights.role role
-            WHERE resource.id = :resourceId
-            AND role.name <> :resourceManagerRole
-            AND role.type <> :roleType
-            ORDER BY role.name
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('resourceId', $resource->getId());
-        $query->setParameter(
-            'resourceManagerRole',
-            'ROLE_WS_MANAGER_'.$resource->getWorkspace()->getGuid()
-        );
-        $query->setParameter('roleType', Role::USER_ROLE);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns all the resource rights of a resource and its descendants.
-     *
-     * @param ResourceNode $resource
-     *
-     * @return array[ResourceRights]
-     */
-    public function findRecursiveByResource(ResourceNode $resource)
-    {
-        $dql = "
-            SELECT rights, role, resource
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resourceNode resource
-            JOIN rights.role role
-            WHERE resource.path LIKE :path
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('path', $resource->getPath().'%');
-
-        return $query->getResult();
-    }
-
-    /**
-     * Find ResourceRights for each descendant of a resource for a role.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
-     * @param \Claroline\CoreBundle\Entity\Role                  $role
-     *
-     * @return array
-     */
-    public function findRecursiveByResourceAndRole(ResourceNode $resource, Role $role)
-    {
-        $dql = "
-            SELECT rights, role, resource
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resourceNode resource
-            JOIN rights.role role
-            WHERE resource.path LIKE :path AND role.name = :roleName
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('path', $resource->getPath().'%');
-        $query->setParameter('roleName', $role->getName());
-
-        return $query->getResult();
-    }
-
-    public function findUserRolesResourceRights(
-        ResourceNode $resource,
-        array $keys,
-        $executeQuery = true
-    ) {
-        $dql = '
-            SELECT rights
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
-            JOIN rights.resourceNode resource
-            JOIN rights.role role
-            WHERE resource = :resource
-            AND role.type = :type
-            AND role.translationKey IN (:keys)
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('resource', $resource);
-        $query->setParameter('type', Role::USER_ROLE);
-        $query->setParameter('keys', $keys);
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 }

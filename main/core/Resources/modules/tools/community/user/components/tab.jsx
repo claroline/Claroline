@@ -22,13 +22,13 @@ const UserTab = props =>
       target: `${props.path}/users`
     }]}
     subtitle={trans('users')}
-    toolbar="register create | more"
+    primaryAction="register create"
     actions={[
       {
         name: 'register',
         type: MODAL_BUTTON,
         label: trans('register_users'),
-        icon: 'fa fa-plus',
+        icon: 'fa fa-user-plus',
         primary: true,
         displayed: props.canRegister,
 
@@ -57,10 +57,11 @@ const UserTab = props =>
       }, {
         name: 'create',
         type: LINK_BUTTON,
-        label: trans('create_user'),
-        icon: 'fa fa-pencil',
+        label: trans('create_user', {}, 'actions'),
+        icon: 'fa fa-plus',
         target: `${props.path}/users/form`,
-        displayed: props.canCreate && !props.limitReached
+        displayed: props.canCreate && !props.limitReached,
+        primary: true
       }, {
         name: 'export',
         type: URL_BUTTON,

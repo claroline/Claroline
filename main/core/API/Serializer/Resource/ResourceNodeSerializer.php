@@ -99,8 +99,8 @@ class ResourceNodeSerializer
     public function serialize(ResourceNode $resourceNode, array $options = [])
     {
         $serializedNode = [
-            'autoId' => $resourceNode->getId(),
             'id' => $resourceNode->getUuid(),
+            'autoId' => $resourceNode->getId(),
             'slug' => $resourceNode->getSlug(),
             'name' => $resourceNode->getName(),
             'path' => $resourceNode->getAncestors(),
@@ -117,8 +117,8 @@ class ResourceNodeSerializer
         if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
-                'slug' => $resourceNode->getWorkspace()->getSlug(),
                 'autoId' => $resourceNode->getWorkspace()->getId(),
+                'slug' => $resourceNode->getWorkspace()->getSlug(),
                 'name' => $resourceNode->getWorkspace()->getName(),
                 'code' => $resourceNode->getWorkspace()->getCode(),
             ];
@@ -169,15 +169,11 @@ class ResourceNodeSerializer
         }
 
         /** @var DecorateResourceNodeEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            'serialize_resource_node',
-            'Resource\DecorateResourceNode',
-            [
-                $resourceNode,
-                $unauthorizedKeys,
-                $options,
-            ]
-        );
+        $event = $this->eventDispatcher->dispatch('serialize_resource_node', 'Resource\DecorateResourceNode', [
+            $resourceNode,
+            $unauthorizedKeys,
+            $options,
+        ]);
 
         return array_merge($serializedNode, $event->getInjectedData());
     }
@@ -248,8 +244,8 @@ class ResourceNodeSerializer
 
         if (Shortcut::class === $resourceNode->getResourceType()->getClass()) {
             // required for opening the proper player in case of shortcut. This is not pretty but the players
-            // need the meta['type'] to be the target one to open the proper player/editor (they dont know what to do otherwise)
-            // unless we implement a "link" player wich will then the target and dispatch again.
+            // need the meta['type'] to be the target one to open the proper player/editor (they don't know what to do otherwise)
+            // unless we implement a "link" player which will then the target and dispatch again.
             // This is the easy way
             /** @var Shortcut $resource */
             $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ResourceNodeRepositoryTest extends RepositoryTestCase
 {
+    /** @var ResourceNodeRepository */
     private static $repo;
     private static $time;
     private static $roleManagerName;
@@ -80,60 +81,6 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     {
         $this->assertEquals(0, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
         $this->assertEquals(4, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
-        $this->assertEquals(5, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
-        $this->assertEquals(
-            2,
-            count(self::$repo->findDescendants(self::get('dir_3')->getResourceNode(), true, 't_dir'))
-        );
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testFindChildrenThrowsAnExceptionIfNoRolesAreGiven()
-    {
-        self::$repo->findChildren(
-            self::get('dir_1')->getResourceNode(),
-            [],
-            self::get('jane')
-        );
-    }
-
-    public function testFindChildrenReturnsEverythingIfTheUserIsAdmin()
-    {
-        $children = self::$repo->findChildren(
-            self::get('dir_1')->getResourceNode(),
-            ['ROLE_ADMIN'],
-            self::get('jane')
-        );
-
-        $this->assertEquals(2, count($children));
-        $this->assertEquals('dir_2', $children[0]['name']);
-        $this->assertEquals('dir_3', $children[1]['name']);
-    }
-
-    public function testFindChildrenReturnsEverythingIfTheUserIsManager()
-    {
-        $children = self::$repo->findChildren(
-            self::get('dir_1')->getResourceNode(),
-            [self::$roleManagerName],
-            self::get('jane')
-        );
-        $this->assertEquals(2, count($children));
-        $this->assertEquals('dir_2', $children[0]['name']);
-        $this->assertEquals('dir_3', $children[1]['name']);
-    }
-
-    public function testFindChildrenReturnsOpenableResources()
-    {
-        $children = self::$repo->findChildren(
-            self::get('dir_1')->getResourceNode(),
-            ['ROLE_1', 'ROLE_2'],
-            self::get('jane')
-        );
-        $this->assertEquals(1, count($children));
-        $this->assertEquals('dir_2', $children[0]['name']);
-        $this->assertEquals(3, $children[0]['mask']);
     }
 
     public function testFindMimeTypesWithMostResources()

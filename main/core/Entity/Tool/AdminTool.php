@@ -11,14 +11,12 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
-use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AdministrationToolRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository")
  * @ORM\Table(
  *      name="claro_admin_tools",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="admin_tool_plugin_unique",columns={"name", "plugin_id"})}
@@ -26,65 +24,32 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @todo merge with Tool entity
  */
-class AdminTool
+class AdminTool extends AbstractTool
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column()
-     */
-    protected $name;
-
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="adminTools"
      * )
      * @ORM\JoinTable(name="claro_admin_tool_role")
+     *
+     * @var Role[]|ArrayCollection
      */
     protected $roles;
 
     /**
-     * @ORM\Column()
+     * AdminTool constructor.
      */
-    protected $class;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
-    protected $plugin;
-
     public function __construct()
     {
-        $this->refreshUuid();
+        parent::__construct();
+
         $this->roles = new ArrayCollection();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
+    /**
+     * @param Role $role
+     */
     public function addRole(Role $role)
     {
         if (!$this->roles->contains($role)) {
@@ -92,6 +57,9 @@ class AdminTool
         }
     }
 
+    /**
+     * @param Role $role
+     */
     public function removeRole(Role $role)
     {
         if ($this->roles->contains($role)) {
@@ -99,33 +67,11 @@ class AdminTool
         }
     }
 
+    /**
+     * @return Role[]|ArrayCollection
+     */
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    public function setClass($class)
-    {
-        $this->class = $class;
-    }
-
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    public function setPlugin(Plugin $plugin)
-    {
-        $this->plugin = $plugin;
-    }
-
-    public function getPlugin()
-    {
-        return $this->plugin;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
     }
 }

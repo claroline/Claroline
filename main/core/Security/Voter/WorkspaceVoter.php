@@ -133,6 +133,7 @@ class WorkspaceVoter extends AbstractVoter
 
     private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace)
     {
+        /** @var WorkspaceManager $wm */
         $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
 
         return $wm->isManager($workspace, $token);

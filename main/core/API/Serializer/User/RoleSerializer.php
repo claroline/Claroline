@@ -10,13 +10,12 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
-use Claroline\CoreBundle\Entity\Tool\ToolRights;
-use Claroline\CoreBundle\Entity\Tool\ToolRole;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Repository\OrderedToolRepository;
-use Claroline\CoreBundle\Repository\ToolRightsRepository;
+use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Manager\Tool\ToolRightsManager;
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 
 class RoleSerializer
@@ -25,6 +24,12 @@ class RoleSerializer
 
     /** @var ObjectManager */
     private $om;
+
+    /** @var ToolMaskDecoderManager */
+    private $maskManager;
+
+    /** @var ToolRightsManager */
+    private $rightsManager;
 
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
@@ -44,16 +49,22 @@ class RoleSerializer
     /**
      * RoleSerializer constructor.
      *
-     * @param ObjectManager       $om
-     * @param WorkspaceSerializer $workspaceSerializer
-     * @param UserSerializer      $userSerializer
+     * @param ObjectManager          $om
+     * @param ToolMaskDecoderManager $maskManager
+     * @param ToolRightsManager      $rightsManager
+     * @param WorkspaceSerializer    $workspaceSerializer
+     * @param UserSerializer         $userSerializer
      */
     public function __construct(
         ObjectManager $om,
+        ToolMaskDecoderManager $maskManager,
+        ToolRightsManager $rightsManager,
         WorkspaceSerializer $workspaceSerializer,
         UserSerializer $userSerializer
     ) {
         $this->om = $om;
+        $this->maskManager = $maskManager;
+        $this->rightsManager = $rightsManager;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
 
@@ -141,7 +152,7 @@ class RoleSerializer
                 }
 
                 $serialized['adminTools'] = $adminTools;
-                $serialized['desktopTools'] = $this->serializeDesktopToolsConfig($role);
+                $serialized['desktopTools'] = $this->serializeTools($role);
             }
         }
 
@@ -158,14 +169,13 @@ class RoleSerializer
     public function serializeMeta(Role $role)
     {
         $meta = [
-           'readOnly' => $role->isReadOnly(),
-           'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
+            'readOnly' => $role->isReadOnly(),
+            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
+            'users' => 1,
        ];
 
         if (Role::USER_ROLE !== $role->getType()) {
             $meta['users'] = $this->userRepo->countUsersByRoleIncludingGroup($role);
-        } else {
-            $meta['users'] = 1;
         }
 
         return $meta;
@@ -193,54 +203,27 @@ class RoleSerializer
      *
      * @return array
      */
-    private function serializeTools(Role $role, $workspaceId)
+    private function serializeTools(Role $role, $workspaceId = null)
     {
         $tools = [];
-        $workspace = $this->om->getRepository(Workspace::class)->findBy(['uuid' => $workspaceId]);
-        $orderedTools = $this->orderedToolRepo->findBy(['workspace' => $workspace]);
+
+        if (!empty($workspaceId)) {
+            // get workspace tools
+            $workspace = $this->om->getRepository(Workspace::class)->findBy(['uuid' => $workspaceId]);
+            $orderedTools = $this->orderedToolRepo->findBy(['workspace' => $workspace]);
+        } else {
+            // get desktop tools
+            $orderedTools = $this->orderedToolRepo->findBy(['workspace' => null, 'user' => null]);
+        }
 
         foreach ($orderedTools as $orderedTool) {
             $toolRights = $this->toolRightsRepo->findBy(['role' => $role, 'orderedTool' => $orderedTool], ['id' => 'ASC']);
             $mask = 0 < count($toolRights) ? $toolRights[0]->getMask() : 0;
-            $toolName = $orderedTool->getTool()->getName();
-            $tools[$toolName] = [];
 
-            foreach (ToolMaskDecoder::$defaultActions as $action) {
-                $actionValue = ToolMaskDecoder::$defaultValues[$action];
-                $tools[$toolName][$action] = $mask & $actionValue ? true : false;
-            }
+            $tools[$orderedTool->getTool()->getName()] = $this->maskManager->decodeMask($mask, $orderedTool->getTool());
         }
 
         return $tools;
-    }
-
-    /**
-     * Serialize role configuration for desktop tools.
-     *
-     * @param Role $role
-     *
-     * @return array
-     */
-    private function serializeDesktopToolsConfig(Role $role)
-    {
-        $configs = [];
-        $desktopTools = $this->om->getRepository(Tool::class)->findBy(['isDisplayableInDesktop' => true]);
-        $toolsRole = $this->om->getRepository(ToolRole::class)->findBy(['role' => $role]);
-
-        foreach ($toolsRole as $toolRole) {
-            $toolName = $toolRole->getTool()->getName();
-
-            $configs[$toolName] = $toolRole->getDisplay();
-        }
-        foreach ($desktopTools as $desktopTool) {
-            $toolName = $desktopTool->getName();
-
-            if (!isset($configs[$toolName])) {
-                $configs[$toolName] = null;
-            }
-        }
-
-        return $configs;
     }
 
     /**
@@ -254,7 +237,6 @@ class RoleSerializer
      */
     public function deserialize($data, Role $role, array $options = [])
     {
-        // TODO : set readOnly based on role type
         if (!$role->isReadOnly()) {
             $this->sipe('name', 'setName', $data, $role);
 
@@ -295,8 +277,6 @@ class RoleSerializer
             }
         }
 
-        // TODO : set the user for ROLE_USER
-
         if (isset($data['adminTools'])) {
             $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
 
@@ -327,36 +307,17 @@ class RoleSerializer
                     }
 
                     if ($workspaceId) {
-                        /** @var OrderedTool $orderedTool */
                         $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $workspaceId]);
                         $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $toolName]);
 
+                        /** @var OrderedTool $orderedTool */
                         $orderedTool = $this->orderedToolRepo->findOneBy([
                             'tool' => $tool,
                             'workspace' => $workspace,
                         ]);
 
                         if ($orderedTool) {
-                            $toolRights = $this->om
-                                ->getRepository('ClarolineCoreBundle:Tool\ToolRights')
-                                ->findBy(['orderedTool' => $orderedTool, 'role' => $role], ['id' => 'ASC']);
-
-                            if (0 < count($toolRights)) {
-                                $rights = $toolRights[0];
-                            } else {
-                                $rights = new ToolRights();
-                                $rights->setRole($role);
-                                $rights->setOrderedTool($orderedTool);
-                            }
-                            $mask = 0;
-
-                            foreach (ToolMaskDecoder::$defaultActions as $action) {
-                                if (isset($toolData[$action]) && $toolData[$action]) {
-                                    $mask += ToolMaskDecoder::$defaultValues[$action];
-                                }
-                            }
-                            $rights->setMask($mask);
-                            $this->om->persist($rights);
+                            $this->rightsManager->setToolRights($orderedTool, $role, $this->maskManager->encodeMask($toolData, $orderedTool->getTool()));
                         }
                     }
                 }
@@ -369,16 +330,15 @@ class RoleSerializer
                 /** @var Tool $tool */
                 $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $toolName]);
 
-                if ($tool) {
-                    $toolRole = $this->om->getRepository(ToolRole::class)->findOneBy(['tool' => $tool, 'role' => $role]);
+                /** @var OrderedTool $orderedTool */
+                $orderedTool = $this->orderedToolRepo->findOneBy([
+                    'tool' => $tool,
+                    'workspace' => null,
+                    'user' => null,
+                ]);
 
-                    if (!$toolRole) {
-                        $toolRole = new ToolRole();
-                        $toolRole->setTool($tool);
-                        $toolRole->setRole($role);
-                    }
-                    $toolRole->setDisplay($toolData);
-                    $this->om->persist($toolRole);
+                if ($orderedTool) {
+                    $this->rightsManager->setToolRights($orderedTool, $role, $this->maskManager->encodeMask($toolData, $orderedTool->getTool()));
                 }
             }
         }

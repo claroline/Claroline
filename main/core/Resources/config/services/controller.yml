@@ -97,8 +97,10 @@ services:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@claroline.manager.tool_manager'
-          - '@claroline.manager.log_connect'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+          - '@Claroline\CoreBundle\Manager\LogConnectManager'
 
     Claroline\CoreBundle\Controller\APINew\User\GroupController: ~
 

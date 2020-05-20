@@ -38,7 +38,7 @@ class Updater060300 extends Updater
     private function createWidgetsManagementAdminTool()
     {
         $this->log('Creating Widgets management admin tool...');
-        $widgetsTools = $this->adminToolRepo->findByName('widgets_management');
+        $widgetsTools = $this->adminToolRepo->findBy(['name' => 'widgets_management']);
 
         if (0 === count($widgetsTools)) {
             $widgetsTool = new AdminTool();

@@ -13,8 +13,10 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
@@ -156,6 +158,7 @@ class UserVoter extends AbstractVoter
 
     private function checkCreate(TokenInterface $token, User $user)
     {
+        // allow creation to administrators
         if ($this->hasAdminToolAccess($token, 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
@@ -164,6 +167,20 @@ class UserVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
+        // allow creation for all of those who have the create right on a community tool
+        /** @var OrderedToolRepository $orderedToolRepo */
+        $orderedToolRepo = $this->getObjectManager()->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        /** @var OrderedTool[] $communityTools */
+        $communityTools = $orderedToolRepo->findByName('community');
+        foreach ($communityTools as $communityTool) {
+            // we do not take into account tool in personal ws, otherwise anyone will be granted
+            // (users are managers of their personal ws)
+            if ((empty($communityTool->getWorkspace()) || !$communityTool->getWorkspace()->isPersonal()) && $this->isGranted('CREATE_USER', $communityTool)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        // allow creation for self registration
         /** @var PlatformConfigurationHandler $config */
         $config = $this->getContainer()->get(PlatformConfigurationHandler::class);
         if ($config->getParameter('registration.self')) {

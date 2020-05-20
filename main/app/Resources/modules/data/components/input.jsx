@@ -92,7 +92,7 @@ class DataInput extends Component {
     }
 
     // forward updated value to the caller
-    return this.props.onChange(value)
+    this.props.onChange(value)
   }
 
   renderInput() {
@@ -176,7 +176,6 @@ DataInput.propTypes = {
   // field callbacks
   onChange: T.func.isRequired,
   onError: T.func,
-  validate: T.func,
 
   // customization
   // It will replace the render of the input.

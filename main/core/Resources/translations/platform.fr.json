@@ -242,8 +242,6 @@
     "create_new_user_account": "Création de votre compte Claroline Connect",
     "create_role": "Créer un rôle",
     "create_subcategory": "Créer une sous-catégorie",
-    "create_user": "Créer un utilisateur",
-    "create_users": "Créer les utilisateurs",
     "created_by": "Créé par %creator% le %creationDate%",
     "created_before": "Créé avant",
     "created_after": "Créé après",
@@ -1732,5 +1730,7 @@
     "my_progression": "Ma progression",
     "useful_links": "Liens utiles",
     "contact_information": "Coordonnées",
-    "send_password_help": "Veuillez spécifier l'adresse e-mail rattachée à votre compte afin que nous puissions vous envoyer un nouveau mot de passe."
+    "send_password_help": "Veuillez spécifier l'adresse e-mail rattachée à votre compte afin que nous puissions vous envoyer un nouveau mot de passe.",
+    "active": "Actif",
+    "inactive": "Inactif"
 }

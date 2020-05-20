@@ -272,6 +272,8 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
+          tool_rights:
+              - name: create_user
 
         - name: transfer
           class: exchange

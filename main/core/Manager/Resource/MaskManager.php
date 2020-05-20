@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager\Resource;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
-use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\ResourceMaskDecoderRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -213,20 +212,6 @@ class MaskManager
     }
 
     /**
-     * @param ResourceType $type
-     * @param int          $value
-     *
-     * @return MaskDecoder
-     */
-    public function getByValue(ResourceType $type, $value)
-    {
-        /** @var MaskDecoder $decoder */
-        $decoder = $this->maskRepo->findOneBy(['resourceType' => $type, 'value' => $value]);
-
-        return $decoder;
-    }
-
-    /**
      * Adds the default action to a resource type.
      *
      * @param ResourceType $type
@@ -287,20 +272,5 @@ class MaskManager
         }
 
         return $actions;
-    }
-
-    /**
-     * @param string       $name
-     * @param ResourceType $type
-     *
-     * @return MenuAction
-     */
-    public function getMenuFromNameAndResourceType($name, ResourceType $type)
-    {
-        if ($this->menuRepo->findOneBy(['name' => $name, 'resourceType' => $type])) {
-            return $this->menuRepo->findOneBy(['name' => $name, 'resourceType' => $type]);
-        }
-
-        return $this->menuRepo->findOneBy(['name' => $name]);
     }
 }

@@ -11,9 +11,10 @@ import {Template} from '#/main/core/administration/template/components/template'
 
 const TemplateTool = (props) =>
   <ToolPage
+    primaryAction="add"
     actions={[
       {
-        name: 'new_template',
+        name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_a_template'),

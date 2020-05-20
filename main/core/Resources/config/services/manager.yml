@@ -49,34 +49,24 @@ services:
         alias: Claroline\CoreBundle\Manager\UserManager
         public: true
 
-    Claroline\CoreBundle\Manager\ToolRightsManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.tool_mask_decoder_manager'
-
-    claroline.manager.tool_rights_manager:
-        alias: Claroline\CoreBundle\Manager\ToolRightsManager
-        public: true
-
-    Claroline\CoreBundle\Manager\ToolMaskDecoderManager:
+    Claroline\CoreBundle\Manager\Tool\ToolRightsManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    claroline.manager.tool_mask_decoder_manager:
-        alias: Claroline\CoreBundle\Manager\ToolMaskDecoderManager
-        public: true
-
-    Claroline\CoreBundle\Manager\ToolManager:
-        public: true
+    Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.role_manager'
-          - '@claroline.manager.tool_mask_decoder_manager'
-          - '@claroline.manager.tool_rights_manager'
-          - '@service_container'
+
+    Claroline\CoreBundle\Manager\Tool\ToolManager:
+        public: true
+        arguments:
+          - '@security.authorization_checker'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
 
     claroline.manager.tool_manager:
-        alias: Claroline\CoreBundle\Manager\ToolManager
+        alias: Claroline\CoreBundle\Manager\Tool\ToolManager
         public: true
 
     Claroline\CoreBundle\Manager\TermsOfServiceManager:

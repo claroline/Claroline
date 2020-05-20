@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
@@ -28,7 +27,7 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
  * @deprecated use OptimizedRightsManager instead
@@ -109,8 +108,7 @@ class RightsManager
      * @param ResourceNode $node
      * @param bool         $isRecursive
      * @param array        $creations
-     *
-     * @return ResourceRights[]
+     * @param bool         $log
      */
     public function editPerms($permissions, $role, ResourceNode $node, $isRecursive = false, array $creations = [], $log = true)
     {
@@ -154,24 +152,6 @@ class RightsManager
     }
 
     /**
-     * Set the permission for a resource right.
-     * The array of permissions should be defined that way:
-     * array('open' => true, 'edit' => false, ...).
-     *
-     * @param ResourceRights $rights
-     * @param array          $permissions
-     *
-     * @return ResourceRights
-     */
-    public function setPermissions(ResourceRights $rights, array $permissions)
-    {
-        $resourceType = $rights->getResourceNode()->getResourceType();
-        $rights->setMask($this->maskManager->encodeMask($permissions, $resourceType));
-
-        return $rights;
-    }
-
-    /**
      * @param string[]     $roles
      * @param ResourceNode $node
      *
@@ -184,18 +164,6 @@ class RightsManager
         return array_map(function (array $type) {
             return $type['name'];
         }, $creationRights);
-    }
-
-    /**
-     * @return ResourceType[]
-     *
-     * @deprecated
-     *
-     * @todo remove me I'm not related to Rights
-     */
-    public function getResourceTypes()
-    {
-        return $this->resourceTypeRepo->findAll();
     }
 
     /**
@@ -224,9 +192,10 @@ class RightsManager
             }
 
             $data = [
+                'id' => $rights->getId(),
                 'translationKey' => $role->getTranslationKey(),
                 'permissions' => $permissions,
-                'id' => $rights->getId(),
+                'workspace' => null,
             ];
 
             if (!in_array(Options::REFRESH_UUID, $options)) {
@@ -235,8 +204,6 @@ class RightsManager
 
             if ($role->getWorkspace()) {
                 $data['workspace']['code'] = $role->getWorkspace()->getCode();
-            } else {
-                $data['workspace'] = null;
             }
 
             return $data;
@@ -306,7 +273,7 @@ class RightsManager
             return false;
         }
 
-        $roleNames = array_map(function (RoleInterface $role) {
+        $roleNames = array_map(function (BaseRole $role) {
             return $role->getRole();
         }, $token->getRoles());
 
@@ -331,12 +298,12 @@ class RightsManager
         return false;
     }
 
-    //maybe use that one in the voter later because it's going to be usefull
+    //maybe use that one in the voter later because it's going to be useful
     public function getCurrentPermissionArray(ResourceNode $resourceNode)
     {
         $currentRoles = $this->tokenStorage->getToken()->getRoles();
 
-        $roleNames = array_map(function (RoleInterface $roleName) {
+        $roleNames = array_map(function (BaseRole $roleName) {
             return $roleName->getRole();
         }, $currentRoles);
 

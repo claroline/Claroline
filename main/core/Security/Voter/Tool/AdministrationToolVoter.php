@@ -9,13 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter\Tool;
 
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AdministrationToolVoter extends AbstractVoter implements VoterInterface
 {
+    /**
+     * @param TokenInterface $token
+     * @param AdminTool      $object
+     * @param array          $attributes
+     * @param array          $options
+     *
+     * @return int
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         $roles = $object->getRoles();
@@ -34,7 +44,7 @@ class AdministrationToolVoter extends AbstractVoter implements VoterInterface
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Tool\AdminTool';
+        return AdminTool::class;
     }
 
     public function getSupportedActions()

@@ -237,8 +237,6 @@
     "create_role": "Create a role",
     "create_security_token": "Create a security token",
     "create_subcategory": "Create a subcategory",
-    "create_user": "Create a user",
-    "create_users": "Create users",
     "created_by": "Created by %creator% on %creationDate%",
     "created_before": "Created before",
     "created_after": "Created after",
@@ -1697,5 +1695,7 @@
     "my_progression": "My progression",
     "useful_links": "Useful links",
     "contact_information": "Contact information",
-    "send_password_help": "Please specify the email address attached to your account so that we can send you a new password."
+    "send_password_help": "Please specify the email address attached to your account so that we can send you a new password.",
+    "active": "Active",
+    "inactive": "Inactive"
 }

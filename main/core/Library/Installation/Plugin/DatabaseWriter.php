@@ -18,19 +18,16 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\PluginRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -47,12 +44,19 @@ class DatabaseWriter
 {
     use LoggableTrait;
 
+    /** @var ObjectManager */
     private $em;
+    /** @var MaskManager */
     private $mm;
+    /** @var Filesystem */
     private $fileSystem;
+    /** @var string */
     private $kernelRootDir;
+    /** @var ToolManager */
     private $toolManager;
+    /** @var ToolMaskDecoderManager */
     private $toolMaskManager;
+    /** @var IconSetManager */
     private $iconSetManager;
 
     /** @var PluginRepository */
@@ -82,7 +86,6 @@ class DatabaseWriter
         $this->mm = $mm;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernel->getRootDir();
-        $this->modifyTemplate = 'test' !== $kernel->getEnvironment();
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;
         $this->iconSetManager = $iconSetManager;
@@ -374,7 +377,7 @@ class DatabaseWriter
         }
 
         $permissionMap = $this->mm->getPermissionMap($resourceType);
-        $defaults = $this->mm->getDefaultResourceActionsMask($resourceType);
+        $defaults = $this->mm->getDefaultResourceActionsMask();
         $oldActions = array_filter($permissionMap, function ($name) use ($defaults) {
             return !in_array($name, array_keys($defaults));
         });
@@ -616,15 +619,6 @@ class DatabaseWriter
     {
         $tool = new Tool();
         $this->persistTool($toolConfiguration, $plugin, $tool);
-
-        /** @var Role $roleUser */
-        $roleUser = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneBy(['name' => 'ROLE_USER']);
-        $mask = ToolMaskDecoder::$defaultValues['open'] + ToolMaskDecoder::$defaultValues['edit'];
-        $pws = new PwsToolConfig();
-        $pws->setTool($tool);
-        $pws->setRole($roleUser);
-        $pws->setMask($mask);
-        $this->em->persist($pws);
     }
 
     /**
@@ -637,11 +631,11 @@ class DatabaseWriter
         $this->log('Update the tool : "'.$toolConfiguration['name'].'".');
 
         $tool->setName($toolConfiguration['name']);
+        $tool->setPlugin($plugin);
         $tool->setDisplayableInDesktop($toolConfiguration['is_displayable_in_desktop']);
         $tool->setDisplayableInWorkspace($toolConfiguration['is_displayable_in_workspace']);
         $tool->setIsDesktopRequired(false);
         $tool->setIsWorkspaceRequired(false);
-        $tool->setPlugin($plugin);
         $tool->setExportable($toolConfiguration['is_exportable']);
         $tool->setIsConfigurableInWorkspace($toolConfiguration['is_configurable_in_workspace']);
         $tool->setIsConfigurableInDesktop($toolConfiguration['is_configurable_in_desktop']);
@@ -757,9 +751,7 @@ class DatabaseWriter
                 $this->toolMaskManager->createToolMaskDecoder(
                     $tool,
                     $right['name'],
-                    $value,
-                    $right['granted_icon_class'],
-                    $right['denied_icon_class']
+                    $value
                 );
                 ++$nb;
             }

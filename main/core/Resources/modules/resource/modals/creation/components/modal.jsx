@@ -32,7 +32,7 @@ class ResourceCreationModal extends Component {
   }
 
   renderStepTitle() {
-    switch(this.state.currentStep) {
+    switch (this.state.currentStep) {
       case constants.RESOURCE_CREATION_TYPE:
         return trans('new_resource_select', {}, 'resource')
       case constants.RESOURCE_CREATION_PARAMETERS:
@@ -43,7 +43,7 @@ class ResourceCreationModal extends Component {
   }
 
   renderStep() {
-    switch(this.state.currentStep) {
+    switch (this.state.currentStep) {
       case constants.RESOURCE_CREATION_TYPE:
         return (
           <ResourceType

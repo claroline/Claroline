@@ -1,10 +1,9 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router/components/routes'
 import {Route as RouteTypes} from '#/main/app/router/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
@@ -27,134 +26,108 @@ import {UserProgression} from '#/main/core/resource/components/user-progression'
 // FIXME
 import {DashboardMain} from '#/plugin/analytics/resource/dashboard/containers/main'
 
-class ResourcePage extends Component {
-  constructor(props) {
-    super(props)
-
-    // open resource in fullscreen if configured
-    this.state = {
-      fullscreen: !this.props.embedded && get(this.props.resourceNode, 'display.fullscreen')
-    }
+const ResourcePage = (props) => {
+  // remove workspace root from path (it's already known by the breadcrumb)
+  // find a better way to handle this
+  let ancestors
+  if (toolConst.TOOL_WORKSPACE === props.contextType) {
+    ancestors = props.resourceNode.path.slice(1)
+  } else {
+    ancestors = props.resourceNode.path.slice(0)
   }
 
-  toggleFullscreen() {
-    this.setState({fullscreen: !this.state.fullscreen})
-  }
-
-  render() {
-    // remove workspace root from path (it's already known by the breadcrumb)
-    // find a better way to handle this
-    let ancestors
-    if (toolConst.TOOL_WORKSPACE === this.props.contextType) {
-      ancestors = this.props.resourceNode.path.slice(1)
-    } else {
-      ancestors = this.props.resourceNode.path.slice(0)
+  const routes = [
+    {
+      path: '/dashboard',
+      component: DashboardMain
     }
+  ].concat(props.routes)
 
-    const routes = [
-      {
-        path: '/dashboard',
-        component: DashboardMain
+  return (
+    <ToolPage
+      id={`resource-${props.resourceNode.id}`}
+      className={classes('resource-page', `${props.resourceNode.meta.type}-page`)}
+      header={{
+        title: props.resourceNode.name,
+        description: props.resourceNode.meta ? props.resourceNode.meta.description : null
+      }}
+      embedded={props.embedded}
+      showHeader={props.embedded ? props.showHeader : true}
+      fullscreen={!props.embedded && get(props.resourceNode, 'display.fullscreen')}
+      title={props.resourceNode.name}
+      subtitle={props.subtitle}
+      path={[].concat(ancestors.map(ancestorNode => ({
+        type: LINK_BUTTON,
+        label: ancestorNode.name,
+        target: `${props.basePath}/${ancestorNode.slug}`
+      })), props.path)}
+      poster={props.resourceNode.poster ? props.resourceNode.poster.url : undefined}
+      icon={get(props.resourceNode, 'display.showIcon') && (props.userEvaluation ?
+        <UserProgression
+          userEvaluation={props.userEvaluation}
+          width={70}
+          height={70}
+        /> :
+        <ResourceIcon
+          mimeType={props.resourceNode.meta.mimeType}
+        />
+      )}
+      primaryAction={getToolbar(props.primaryAction, true)}
+      actions={getActions([props.resourceNode], {
+        add: () => {
+          props.reload()
+        },
+        update: (resourceNodes) => {
+          // checks if the action have modified the current node
+          const currentNode = resourceNodes.find(node => node.id === props.resourceNode.id)
+          if (currentNode) {
+            // grabs updated data
+            props.reload()
+          }
+        },
+        delete: (resourceNodes) => {
+          // checks if the action have deleted the current node
+          const currentNode = resourceNodes.find(node => node.id === props.resourceNode.id)
+          if (currentNode) {
+            let redirect
+            if (toolConst.TOOL_WORKSPACE === props.contextType && currentNode.workspace) {
+              redirect = workspaceRoute(currentNode.workspace, 'resources')
+            } else {
+              redirect = toolRoute('resources')
+            }
+
+            if (currentNode.parent) {
+              redirect += '/'+currentNode.parent.id
+            }
+
+            props.history.push(redirect)
+          }
+        }
+      }, props.basePath, props.currentUser, false, props.disabledActions).then((actions) => [].concat(props.customActions || [], actions))}
+    >
+      {!isEmpty(props.accessErrors) &&
+        <ResourceRestrictions
+          errors={props.accessErrors}
+          dismiss={props.dismissRestrictions}
+          managed={props.managed}
+          checkAccessCode={(code) => props.checkAccessCode(props.resourceNode, code, props.embedded)}
+        />
       }
-    ].concat(this.props.routes)
 
-    return (
-      <ToolPage
-        id={`resource-${this.props.resourceNode.id}`}
-        className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
-        header={{
-          title: this.props.resourceNode.name,
-          description: this.props.resourceNode.meta ? this.props.resourceNode.meta.description : null
-        }}
-        embedded={this.props.embedded}
-        showHeader={this.props.embedded ? this.props.showHeader : true}
-        fullscreen={this.state.fullscreen}
-        title={this.props.resourceNode.name}
-        subtitle={this.props.subtitle}
-        path={[].concat(ancestors.map(ancestorNode => ({
-          type: LINK_BUTTON,
-          label: ancestorNode.name,
-          target: `${this.props.basePath}/${ancestorNode.slug}`
-        })), this.props.path)}
-        poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
-        icon={get(this.props.resourceNode, 'display.showIcon') && (this.props.userEvaluation ?
-          <UserProgression
-            userEvaluation={this.props.userEvaluation}
-            width={70}
-            height={70}
-          /> :
-          <ResourceIcon
-            mimeType={this.props.resourceNode.meta.mimeType}
-          />
-        )}
-        toolbar={getToolbar(this.props.primaryAction, true)}
-        actions={getActions([this.props.resourceNode], {
-          add: () => {
-            this.props.reload()
-          },
-          update: (resourceNodes) => {
-            // checks if the action have modified the current node
-            const currentNode = resourceNodes.find(node => node.id === this.props.resourceNode.id)
-            if (currentNode) {
-              // grabs updated data
-              this.props.reload()
-            }
-          },
-          delete: (resourceNodes) => {
-            // checks if the action have deleted the current node
-            const currentNode = resourceNodes.find(node => node.id === this.props.resourceNode.id)
-            if (currentNode) {
-              let redirect
-              if (toolConst.TOOL_WORKSPACE === this.props.contextType && currentNode.workspace) {
-                redirect = workspaceRoute(currentNode.workspace, 'resources')
-              } else {
-                redirect = toolRoute('resources')
-              }
+      {isEmpty(props.accessErrors) && !isEmpty(routes) &&
+        <Routes
+          path={`${props.basePath}/${props.resourceNode.slug}`}
+          routes={routes}
+          redirect={props.redirect}
+        />
+      }
 
-              if (currentNode.parent) {
-                redirect += '/'+currentNode.parent.id
-              }
-
-              this.props.history.push(redirect)
-            }
-          }
-        }, this.props.basePath, this.props.currentUser, false, this.props.disabledActions).then((actions) => [].concat(this.props.customActions || [], actions, [
-          {
-            name: 'fullscreen',
-            type: 'callback',
-            icon: classes('fa fa-fw', {
-              'fa-expand': !this.state.fullscreen,
-              'fa-compress': this.state.fullscreen
-            }),
-            label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-            callback: this.toggleFullscreen.bind(this)
-          }
-        ]))}
-      >
-        {!isEmpty(this.props.accessErrors) &&
-          <ResourceRestrictions
-            errors={this.props.accessErrors}
-            dismiss={this.props.dismissRestrictions}
-            managed={this.props.managed}
-            checkAccessCode={(code) => this.props.checkAccessCode(this.props.resourceNode, code, this.props.embedded)}
-          />
-        }
-
-        {isEmpty(this.props.accessErrors) && !isEmpty(routes) &&
-          <Routes
-            path={`${this.props.basePath}/${this.props.resourceNode.slug}`}
-            routes={routes}
-            redirect={this.props.redirect}
-          />
-        }
-
-        {isEmpty(this.props.accessErrors) &&
-          this.props.children
-        }
-      </ToolPage>
-    )
-  }
-}
+      {isEmpty(props.accessErrors) &&
+        props.children
+      }
+    </ToolPage>
+  )
+} 
 
 ResourcePage.propTypes = {
   history: T.shape({
@@ -193,7 +166,8 @@ ResourcePage.propTypes = {
     UserEvaluationTypes.propTypes
   ),
 
-  // the name of the primary action of the resource (if we want to override the default one)
+  // the name of the primary action of the resource (if we want to override the default one).
+  // it can contain more than one action name
   primaryAction: T.string,
 
   customActions: T.arrayOf(T.shape(

@@ -16,6 +16,11 @@ class CurlManager
     public function exec($url, $payload = null, $type = 'GET', $options = [], $autoClose = true, &$ch = null)
     {
         $options[CURLOPT_RETURNTRANSFER] = true;
+
+        if ('GET' === $type && !empty($payload)) {
+            $url .= '?'.http_build_query($payload);
+        }
+
         $options[CURLOPT_URL] = $url;
 
         $ch = curl_init();

@@ -20,13 +20,17 @@ services:
 
     Claroline\CoreBundle\Security\Voter\Tool\Home\HomeTabVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\Tool\ToolVoter: ~
-
     Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetContainerVoter: ~
 
     Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetInstanceVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\AdministrationToolVoter: ~
+    Claroline\CoreBundle\Security\Voter\Tool\OrderedToolVoter:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+
+    Claroline\CoreBundle\Security\Voter\Tool\AdministrationToolVoter: ~
 
     Claroline\CoreBundle\Security\Voter\AdministratorVoter:
         tags: [security.voter]
@@ -68,16 +72,8 @@ services:
 
     Claroline\CoreBundle\Security\Voter\TextVoter: ~
 
-    #no tag here
     Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
 
     Claroline\CoreBundle\Security\Voter\UserVoter: ~
-
-    Claroline\CoreBundle\Security\Voter\WidgetVoter:
-        tags: [security.voter]
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@translator'
-            - '@claroline.manager.workspace_manager'
 
     Claroline\CoreBundle\Security\Voter\WorkspaceVoter: ~

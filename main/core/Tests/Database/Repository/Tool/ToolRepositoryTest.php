@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Tool;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
@@ -33,32 +33,10 @@ class ToolRepositoryTest extends RepositoryTestCase
         self::createDesktopTool(self::get('tool_2'), self::get('john'), 1);
     }
 
-    public function testFindDisplayedByRolesAndWorkspace()
-    {
-        $result = self::$repo->findDisplayedByRolesAndWorkspace(['ROLE_1'], self::get('ws_1'));
-        $this->assertEquals(1, count($result));
-    }
-
-    public function testFindDesktopDisplayedToolsByUser()
-    {
-        $result = self::$repo->findDesktopDisplayedToolsByUser(self::get('john'));
-        $this->assertEquals(1, count($result));
-        $this->assertEquals('tool_2', $result[0]->getName());
-    }
-
     public function testFindUndisplayedToolsByWorkspace()
     {
         $result = self::$repo->findUndisplayedToolsByWorkspace(self::get('ws_1'));
         $this->assertEquals(9, count($result));
-    }
-
-    public function testFindDisplayedToolsByWorkspace()
-    {
-        $result = self::$repo->findDisplayedToolsByWorkspace(self::get('ws_1'));
-        $this->assertEquals(2, count($result));
-        $toolNames = [$result[0]->getName(), $result[1]->getName()];
-        $this->assertContains('tool_1', $toolNames);
-        $this->assertContains('tool_2', $toolNames);
     }
 
     public function testCountDisplayedToolsByWorkspace()

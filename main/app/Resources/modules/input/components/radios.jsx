@@ -60,6 +60,18 @@ const Radios = props => {
 
   return (
     <div id={props.id} className={props.className}>
+      {!props.noEmpty &&
+        <Radio
+          key="empty-value"
+          id={`${props.id}-empty`}
+          label={props.placeholder || trans('none')}
+          value={null}
+          inline={props.inline}
+          checked={null === props.value}
+          onChange={props.onChange}
+        />
+      }
+
       {choiceValues.map(choiceValue =>
         <Radio
           key={choiceValue}
@@ -82,11 +94,13 @@ implementPropTypes(Radios, DataInputTypes, {
   // custom props
   choices: T.object.isRequired,
   disabledChoices: T.arrayOf(T.string),
-  inline: T.bool
+  inline: T.bool,
+  noEmpty: T.bool
 }, {
   value: '',
   disabledChoices: [],
-  inline: true
+  inline: true,
+  noEmpty: true
 })
 
 export {

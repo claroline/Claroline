@@ -21,7 +21,7 @@ const UserTab = connect(
     open(id = null, defaultRole) {
       dispatch(actions.open(selectors.FORM_NAME, id, {
         organization: null, // retrieve it with axel stuff
-        roles: [defaultRole]
+        roles: defaultRole ? [defaultRole] : []
       }))
     },
     addUsersToRoles(roles, users) {

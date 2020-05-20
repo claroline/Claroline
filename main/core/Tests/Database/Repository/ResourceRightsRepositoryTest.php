@@ -57,24 +57,4 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, count($creationRights));
         $this->assertEquals('t_dir', $creationRights[0]['name']);
     }
-
-    public function testFindNonAdminRights()
-    {
-        $this->markTestSkipped('That method will disappear soon');
-    }
-
-    public function testFindRecursiveByResource()
-    {
-        $rights = self::$repo->findRecursiveByResource(self::get('dir_1')->getResourceNode());
-        $this->assertEquals(3, count($rights));
-    }
-
-    public function testFindRecursiveByResourceAndRole()
-    {
-        $rights = self::$repo->findRecursiveByResourceAndRole(
-            self::get('dir_1')->getResourceNode(),
-            self::get('ROLE_1')
-        );
-        $this->assertEquals(2, count($rights));
-    }
 }

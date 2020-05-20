@@ -9,7 +9,7 @@ import {actions} from '#/main/app/api/store'
 
 import {FileDropContext} from '#/main/app/overlays/dnd/file-drop-context'
 import {getType} from '#/main/app/data/types/file/utils'
-import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail'
+import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
 // todo handle unzippable
 

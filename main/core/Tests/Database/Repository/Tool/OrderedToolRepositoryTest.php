@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Tool;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 

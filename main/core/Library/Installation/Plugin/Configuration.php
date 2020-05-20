@@ -336,8 +336,6 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('name')->isRequired()->end()
-                                    ->scalarNode('granted_icon_class')->isRequired()->end()
-                                    ->scalarNode('denied_icon_class')->isRequired()->end()
                                 ->end()
                             ->end()
                         ->end()

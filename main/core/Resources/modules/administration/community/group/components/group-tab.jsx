@@ -21,6 +21,7 @@ const GroupTabComponent = props =>
       target: `${props.path}/groups`
     }]}
     subtitle={trans('groups')}
+    primaryAction="add"
     actions={[
       {
         name: 'add',

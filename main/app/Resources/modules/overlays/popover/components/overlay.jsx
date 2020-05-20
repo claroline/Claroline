@@ -5,7 +5,6 @@ import {Provider, ReactReduxContext} from 'react-redux'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 import {Router} from '#/main/app/router'
-import {ModalOverlay} from '#/main/app/overlays/modal/containers/overlay'
 
 import {Popover} from '#/main/app/overlays/popover/components/popover'
 
@@ -26,8 +25,6 @@ const PopoverOverlay = props => !props.disabled ?
             <Provider store={store}>
               <Router>
                 {props.content}
-
-                <ModalOverlay key="modal" />
               </Router>
             </Provider>
           </Popover>

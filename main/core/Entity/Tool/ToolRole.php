@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,17 +25,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ToolRole
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     const FORCED = 'forced';
     const HIDDEN = 'hidden';
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Tool\Tool")
@@ -54,22 +49,24 @@ class ToolRole
 
     /**
      * @ORM\Column(name="display", nullable=true)
+     *
+     * @var string
      */
     protected $display;
 
     /**
      * @ORM\Column(name="tool_order", type="integer", nullable=true)
+     *
+     * @var int
      */
     protected $order;
 
+    /**
+     * ToolRole constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRightsRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolRightsRepository")
  * @ORM\Table(
  *     name="claro_tool_rights",
  *     uniqueConstraints={
