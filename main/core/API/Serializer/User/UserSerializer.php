@@ -211,15 +211,17 @@ class UserSerializer extends GenericSerializer
         }
 
         if (in_array(Options::SERIALIZE_FACET, $options)) {
+            /** @var FieldFacetValue[] $fields */
             $fields = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
                 ->findPlatformValuesByUser($user);
-            $serializedUser['profile'] = [];
 
-            /** @var FieldFacetValue $field */
-            foreach ($fields as $field) {
-                // we just flatten field facets in the base user structure
-                $serializedUser['profile'][$field->getFieldFacet()->getUuid()] = $field->getValue();
+            if (!empty($fields)) {
+                $serializedUser['profile'] = [];
+                foreach ($fields as $field) {
+                    // we just flatten field facets in the base user structure
+                    $serializedUser['profile'][$field->getFieldFacet()->getUuid()] = $field->getValue();
+                }
             }
         }
 
