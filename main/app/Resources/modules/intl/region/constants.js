@@ -807,11 +807,13 @@ const REGION_CODES = [
  *
  * @type {object}
  */
-const REGIONS = REGION_CODES.reduce((regions, regionCode) => {
-  regions[regionCode] = trans(regionCode, {}, 'regions')
+const REGIONS = REGION_CODES
+  .sort((a, b) => trans(a, {}, 'regions') <= trans(b, {}, 'regions') ? -1 : 1)
+  .reduce((regions, regionCode) => {
+    regions[regionCode] = trans(regionCode, {}, 'regions')
 
-  return regions
-}, {})
+    return regions
+  }, {})
 
 export const constants = {
   REGIONS,
