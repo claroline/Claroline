@@ -113,7 +113,7 @@ const isDropEnabledManual = createSelector(
 const isDropEnabledAuto = createSelector(
   [dropzone],
   (dropzone) => {
-    return dropzone.planning.drop && now() >= dropzone.planning.drop[0] && now() <= dropzone.planning.drop[1]
+    return dropzone.planning.drop && now(false) >= dropzone.planning.drop[0] && now(false) <= dropzone.planning.drop[1]
   }
 )
 
