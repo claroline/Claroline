@@ -355,9 +355,11 @@ class BadgeClassSerializer
                     break;
                 case BadgeClass::ISSUING_MODE_WORKSPACE:
                     $workspace = $badge->getWorkspace();
-                    $managerRole = $workspace->getManagerRole();
-                    if (in_array($managerRole, $roles)) {
-                        $assign = true;
+                    if ($workspace) {
+                        $managerRole = $workspace->getManagerRole();
+                        if (in_array($managerRole, $roles)) {
+                            $assign = true;
+                        }
                     }
                     break;
             }
