@@ -36,18 +36,6 @@ const canCreateRole = createSelector(
   (tool) => hasPermission('administrate', tool)
 )
 
-const canRegister = createSelector(
-  [toolSelectors.tool, toolSelectors.contextType, toolSelectors.contextData],
-  (tool, contextType, contextData) => {
-    const canCreate = hasPermission('administrate', tool)
-    if (contextType === toolConstants.TOOL_WORKSPACE) {
-      return !get(contextData, 'meta.model') && canCreate
-    }
-
-    return canCreate
-  }
-)
-
 const defaultRole = createSelector(
   [toolSelectors.contextType, toolSelectors.contextData],
   (contextType, contextData) => {
@@ -67,6 +55,5 @@ export const selectors = {
   restrictions,
   canCreate,
   canCreateRole,
-  canRegister,
   defaultRole
 }
