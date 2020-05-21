@@ -50,7 +50,8 @@
         "willdurand/js-translation-bundle": "2.6.6",
         "kriswallsmith/buzz": "^0.13",
         "php-http/httplug-bundle": "*",
-        "php-http/guzzle6-adapter":"^1.1"
+        "php-http/guzzle6-adapter":"^1.1",
+        "ocramius/package-versions": "^1.4.2"
     },
     "autoload": {
         "psr-4": {
