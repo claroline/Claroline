@@ -38,6 +38,7 @@ class Updater120543 extends Updater
     {
         $this->migrateDesktopToolsRights();
         $this->addMissingDesktopRights();
+        $this->removeDuplicatedOrderedTools();
     }
 
     private function migrateDesktopToolsRights()
@@ -114,5 +115,20 @@ class Updater120543 extends Updater
         }
 
         $this->om->flush();
+    }
+
+    private function removeDuplicatedOrderedTools()
+    {
+        $this->conn
+            ->prepare('
+                DELETE t1 FROM claro_ordered_tool t1
+                INNER JOIN claro_ordered_tool t2 
+                WHERE 
+                    t1.id < t2.id 
+                    AND t1.user_id IS NULL AND t2.user_id IS NULL
+                    AND t1.workspace_id IS NULL AND t2.workspace_id IS NULL
+                    AND t1.tool_id = t2.tool_id
+            ')
+            ->execute();
     }
 }
