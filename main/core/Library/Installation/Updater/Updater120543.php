@@ -56,18 +56,6 @@ class Updater120543 extends Updater
             ')
             ->execute();
 
-        // create rights for those who can access the tool
-        $this->conn
-            ->prepare('
-                INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id) 
-                SELECT r.id AS role_id, 1, ot.id 
-                FROM claro_tools_role AS tr
-                JOIN claro_tools AS t ON tr.tool_id = t.id
-                JOIN claro_ordered_tool AS ot ON (t.id = ot.tool_id AND ot.user_id IS NULL AND ot.workspace_id IS NULL)
-                WHERE tr.display IS NULL OR tr.display = "forced"
-            ')
-            ->execute();
-
         // create rights for those who cannot access the tool
         $this->conn
             ->prepare('
@@ -95,6 +83,13 @@ class Updater120543 extends Updater
                 ->fetchAll();
 
             foreach ($platformRoles as $platformRole) {
+                foreach ($orderedTool->getRights() as $right) {
+                    if ($right->getRole()->getId() === $platformRole->getId()) {
+                        // nothing to do
+                        break 2;
+                    }
+                }
+
                 $found = false;
                 foreach ($results as $result) {
                     if ($platformRole->getId() === $result['role_id']) {
