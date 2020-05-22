@@ -92,7 +92,7 @@ class Updater120543 extends Updater
 
                 $found = false;
                 foreach ($results as $result) {
-                    if ($platformRole->getId() == (int) $result['role_id']) {
+                    if ($platformRole->getId() === (int) $result['role_id']) {
                         $found = true;
                         break;
                     }
