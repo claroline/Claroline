@@ -15,6 +15,10 @@ class Version20200516081608 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
+            DELETE FROM claro_ordered_tool WHERE workspace_id IS NULL AND user_id IS NOT NULL
+        ');
+
+        $this->addSql('
             DROP INDEX ordered_tool_unique_tool_user_type ON claro_ordered_tool
         ');
         $this->addSql('

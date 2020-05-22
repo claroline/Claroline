@@ -28,19 +28,7 @@ class Updater120543 extends Updater
 
     public function postUpdate()
     {
-        $this->removeUserDesktopTools();
         $this->migrateDesktopToolsRights();
-    }
-
-    private function removeUserDesktopTools()
-    {
-        $this->log('Removes user desktop specific entities...');
-
-        $this->conn
-            ->prepare('
-                DELETE FROM claro_ordered_tool WHERE workspace_id IS NULL AND user_id IS NOT NULL
-            ')
-            ->execute();
     }
 
     private function migrateDesktopToolsRights()
