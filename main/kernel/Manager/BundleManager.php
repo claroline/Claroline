@@ -57,7 +57,7 @@ class BundleManager
         $updateMode = 'console' === $environment;
 
         foreach ($entries as $bundleClass => $isActive) {
-            if (($isActive || $fetchAll || $updateMode) && 'Claroline\KernelBundle\ClarolineKernelBundle' !== $bundleClass) {
+            if (((bool) $isActive || $fetchAll || $updateMode) && 'Claroline\KernelBundle\ClarolineKernelBundle' !== $bundleClass) {
                 if (class_exists($bundleClass)) {
                     $bundle = new $bundleClass($this->kernel);
 

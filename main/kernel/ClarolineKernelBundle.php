@@ -15,14 +15,18 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Manager\BundleManager;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 //When doing a unique depot, we should move this to the AppKernel class
 class ClarolineKernelBundle extends Bundle
 {
+    /** @var BundleManager */
     private $bundleManager;
+    /** @var KernelInterface */
     private $kernel;
+    private $bundlesFile;
 
-    public function __construct($kernel, $bundlesFile = null)
+    public function __construct(KernelInterface $kernel, $bundlesFile = null)
     {
         $this->kernel = $kernel;
 
@@ -40,8 +44,7 @@ class ClarolineKernelBundle extends Bundle
     {
         $bundles = [];
 
-        foreach ($this->bundleManager->getActiveBundles('test' === $this->kernel->getEnvironment()) as $bundle
-        ) {
+        foreach ($this->bundleManager->getActiveBundles('test' === $this->kernel->getEnvironment()) as $bundle) {
             $bundles[] = $bundle[BundleManager::BUNDLE_INSTANCE];
         }
 
@@ -54,7 +57,7 @@ class ClarolineKernelBundle extends Bundle
 
     public function loadConfigurations(LoaderInterface $loader)
     {
-        foreach ($this->bundleManager->getActiveBundles() as $bundle) {
+        foreach ($this->bundleManager->getActiveBundles('test' === $this->kernel->getEnvironment()) as $bundle) {
             foreach ($bundle[BundleManager::BUNDLE_CONFIG]->getContainerResources() as $resource) {
                 $loader->load(
                     $resource[ConfigurationBuilder::RESOURCE_OBJECT],
