@@ -4,11 +4,6 @@ const STORE_NAME = 'resourceDashboard'
 
 const store = (state) => state[STORE_NAME]
 
-const dashboard = createSelector(
-  [store],
-  (store) => store.dashboard
-)
-
 const chart = createSelector(
   [store],
   (store) => store.chart
@@ -16,7 +11,7 @@ const chart = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  store,
 
-  dashboard,
   chart
 }

@@ -12,7 +12,7 @@ const Logs = connect(
   state => ({
     resourceId: resourceSelectors.resourceNode(state).autoId,
     chart: dashboardSelectors.chart(state),
-    // actions: state.actions,
+    actions: dashboardSelectors.store(state).actions,
     queryString: listSelect.queryString(listSelect.list(state, dashboardSelectors.STORE_NAME + '.logs'))
   }),
   dispatch => ({

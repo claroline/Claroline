@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
@@ -13,7 +14,11 @@ import {MODAL_ROLES} from '#/main/core/modals/roles'
 import {selectors}   from '#/plugin/analytics/resource/dashboard/store/selectors'
 
 const Requirements = (props) =>
-  <div style={{marginTop: 20}}>
+  <Fragment>
+    <ContentTitle
+      title={trans('evaluation_requirements', {}, 'analytics')}
+    />
+
     <FormSections
       level={3}
       defaultOpened="roles-section"
@@ -106,7 +111,7 @@ const Requirements = (props) =>
         />
       </FormSection>
     </FormSections>
-  </div>
+  </Fragment>
 
 Requirements.propTypes = {
   path: T.string.isRequired,
