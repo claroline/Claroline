@@ -90,7 +90,11 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
 
     public function getCsvTitles(AbstractItem $question)
     {
-        return [$question->getQuestion()->getTitle() ?? $question->getQuestion()->getContentText()];
+        if (!empty($question->getQuestion()->getTitle())) {
+            return [$question->getQuestion()->getTitle()];
+        }
+
+        return [$question->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $question, Answer $answer)
