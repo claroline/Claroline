@@ -176,6 +176,13 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.data_source'
 
+    Claroline\CoreBundle\Controller\APINew\SavedSearchController:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@Claroline\AppBundle\API\Crud'
+
     Claroline\CoreBundle\Controller\APINew\FileController:
         arguments:
           - '@Claroline\AppBundle\Event\StrictDispatcher'

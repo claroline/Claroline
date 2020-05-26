@@ -26,6 +26,7 @@ class EmailInput extends PureComponent {
         autoComplete={this.props.autoComplete || 'email'}
         value={this.props.value || ''}
         disabled={this.props.disabled}
+        placeholder={this.props.placeholder}
         onChange={this.onChange}
       />
     )

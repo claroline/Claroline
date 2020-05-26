@@ -17,9 +17,7 @@ const BooleanFilter = (props) => {
       <Button
         className="btn btn-filter"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-check"
         label={trans('yes')}
-        tooltip="bottom"
         callback={() => props.updateSearch(true)}
         primary={props.isValid && searchValue}
         disabled={props.disabled}
@@ -29,9 +27,7 @@ const BooleanFilter = (props) => {
       <Button
         className="btn btn-filter"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-times"
         label={trans('no')}
-        tooltip="bottom"
         callback={() => props.updateSearch(false)}
         primary={props.isValid && !searchValue}
         disabled={props.disabled}

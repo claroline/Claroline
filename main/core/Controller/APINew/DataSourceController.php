@@ -27,7 +27,7 @@ class DataSourceController
     private $manager;
 
     /**
-     * WidgetController constructor.
+     * DataSourceController constructor.
      *
      * @param StrictDispatcher   $eventDispatcher
      * @param SerializerProvider $serializer

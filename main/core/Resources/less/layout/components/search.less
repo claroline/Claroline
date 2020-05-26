@@ -1,6 +1,28 @@
 .list-search {
     flex: 1;
     background: @list-controls-bg;
+
+    .search-icon {
+        font-size: @font-size-large;
+        padding: @padding-large-vertical @padding-large-horizontal;
+        height: @input-height-large;
+        line-height: @line-height-large;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-control {
+        flex: 1;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        text-overflow: ellipsis;
+
+        .input-size(@input-height-large; 0; @padding-large-horizontal; @font-size-large; @line-height-large; 0);
+
+        padding-left: 0; // ugly
+    }
 }
 
 .search-full {
@@ -18,17 +40,20 @@
 }
 
 .search-unified {
-    position: relative;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
     font-size: @font-size-large;
 
-    &.open {
-        .box-shadow(0 1px 2px rgba(0,0,0,.5)); // todo : use a var
+    .search-icon {
+        color: @gray; // same than btn default
     }
 
-    .search-icon {
+    .search-control {
+        padding-right: 0;
+    }
+
+    .search-btn {
         font-size: @font-size-large;
         padding: @padding-large-vertical @padding-large-horizontal;
         height: @input-height-large;
@@ -38,23 +63,42 @@
         justify-content: center;
     }
 
+    .search-form {
+        padding: 0;
+
+        .form-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            padding: 6px 15px;
+            margin: 0;
+            border-bottom: 1px solid #F0f0f0;
+
+            &:nth-of-type(odd) {
+                background: #fafafa;
+            }
+        }
+
+        .control-label {
+            font-size: @font-size-small;
+
+            text-align: right;
+            margin-bottom: 0;
+            margin-right: 15px;
+            width: 140px;
+        }
+
+        .data-filter {
+            flex: 1;
+        }
+    }
+
     .search-filters {
         flex: 1;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-    }
-
-    .search-control {
-        flex: 1;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        text-overflow: ellipsis;
-
-        .input-size(@input-height-large; 0; @padding-large-horizontal; @font-size-large; @line-height-large; 0);
-
-        padding-left: 0; // ugly
     }
 
     .search-filter {
@@ -97,75 +141,12 @@
         }
     }
 
-    .search-available-filters {
-        position: absolute;
-        z-index: @zindex-list-search;
-        top: 100%;
-        left: 0;
-        right: 0;
-        padding: 0;
-        margin: -1px 0 0;
-        font-size: @font-size-base;
-        background: @list-controls-bg;
-        .box-shadow(0 2px 2px rgba(0,0,0,.5)); // todo use a var
+    .search-toolbar {
+        text-align: right;
+    }
 
-
-        > li {
-            list-style-type: none;
-            border-top: 1px solid @list-controls-border;
-        }
-
-        .available-filter {
-            display: flex;
-            flex-wrap: wrap; // todo : enhance responsive. it's ugly on XS screen
-            justify-content: space-between;
-            padding: 0 @padding-large-horizontal;
-            color: @list-controls-color;
-        }
-
-        .available-filter-active {
-            &:hover,
-            &:focus {
-                background: @list-controls-active-bg;
-                color: @list-controls-active-color;
-            }
-        }
-
-        .available-filter-disabled {
-            background: @list-controls-disabled-bg;
-
-            .available-filter-prop {
-                color: @list-controls-disabled-color;
-                opacity: .5;
-            }
-        }
-
-        .available-filter-prop {
-            display: inline-block;
-            padding: 10px 0;
-            font-weight: bold;
-            color: @state-info-text;
-
-            small {
-                font-weight: normal;
-                color: @text-muted;
-            }
-
-            .fa-fw {
-                font-size: @font-size-small;
-                color: @gray;
-                margin-right: @padding-large-horizontal;
-            }
-        }
-
-        .available-filter-form {
-            display: flex;
-            align-items: center;
-
-            .available-filter-value {
-                font-style: italic;
-                padding: 10px 0;
-            }
-        }
+    .search-submit {
+        min-width: 240px;
+        border-radius: 0;
     }
 }

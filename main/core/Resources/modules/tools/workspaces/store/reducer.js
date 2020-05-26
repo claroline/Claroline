@@ -67,8 +67,7 @@ export const reducer = combineReducers({
    */
   managed: makeListReducer('workspaces.managed', {
     filters: [
-      {property: 'meta.personal', value: false},
-      {property: 'meta.model', value: false}
+      {property: 'personal', value: false}
     ],
     sortBy: {property: 'created', direction: -1}
   }, {

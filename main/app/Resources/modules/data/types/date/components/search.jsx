@@ -23,7 +23,7 @@ const DateSearch = props =>
       size="sm"
       disabled={props.disabled}
       menu={
-        <div className="dropdown-menu dropdown-menu-right">
+        <div className="dropdown-menu">
           <Calendar
             selected={props.isValid ? props.search : ''}
             onChange={props.updateSearch}

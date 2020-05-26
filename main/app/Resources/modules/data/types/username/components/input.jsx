@@ -19,6 +19,7 @@ const UsernameInput = props =>
       id={props.id}
       value={props.value}
       disabled={props.disabled}
+      placeholder={props.placeholder}
       onChange={props.onChange}
     />
   </div>

@@ -14,11 +14,16 @@ class MessageSerializer
 {
     use SerializerTrait;
 
+    /** @var ObjectManager */
+    private $om;
     /** @var UserSerializer */
     private $userSerializer;
 
     /**
+     * MessageSerializer constructor.
+     *
      * @param UserSerializer $userSerializer
+     * @param ObjectManager  $om
      */
     public function __construct(UserSerializer $userSerializer, ObjectManager $om)
     {

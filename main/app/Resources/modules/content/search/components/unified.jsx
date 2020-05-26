@@ -1,19 +1,18 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import isEmpty from 'lodash/isEmpty'
-import merge from 'lodash/merge'
+import omit from 'lodash/omit'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
-import {getType} from '#/main/app/data/types'
+import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons/callback'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {getType} from '#/main/app/data/types'
+
 import {getPropDefinition} from '#/main/app/content/list/utils'
-
-import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
-
-// TODO : reuse #/main/app/content/search/components/prop
+import {SearchProp} from '#/main/app/content/search/components/prop'
 
 const CurrentFilter = props =>
   <Await
@@ -52,223 +51,210 @@ CurrentFilter.defaultProps = {
   locked: false
 }
 
-const AvailableFilterActive = props =>
-  <a
-    className="available-filter available-filter-active"
-    role="button"
-    href=""
-    onClick={(e) => {
-      e.preventDefault()
-      props.onSelect()
-    }}
-  >
-    {props.children}
-  </a>
-
-AvailableFilterActive.propTypes = {
-  children: T.node.isRequired,
-  onSelect: T.func.isRequired
-}
-
-const AvailableFilterDisabled = props =>
-  <span className="available-filter available-filter-disabled">
-    {props.children}
-  </span>
-
-AvailableFilterDisabled.propTypes = {
-  children: T.node.isRequired
-}
-
-const AvailableFilterFlag = props => props.isValid ?
-  <span className="fa fa-fw" />
-  :
-  <TooltipOverlay
-    id={props.id}
-    tip={trans('list_search_invalid_filter')}
-    position="right"
-  >
-    <span className="cursor-help fa fa-fw fa-warning" />
-  </TooltipOverlay>
-
-AvailableFilterFlag.propTypes = {
-  id: T.string.isRequired,
-  isValid: T.bool.isRequired
-}
-
-class AvailableFilterContent extends Component {
+class SearchForm extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      isValidSearch: false
+      updated: false,
+      filters: props.current || []
     }
   }
 
-  componentDidMount() {
-    if (!isEmpty(this.props.currentSearch) && (this.props.definition.validate)) {
-      Promise.resolve(this.props.definition.validate(this.props.currentSearch, this.props.options)).then((result) => {
-        this.setState({isValidSearch: !result})
-      })
-    } else {
-      this.setState({isValidSearch: !isEmpty(this.props.currentSearch)})
+  componentDidUpdate(prevProps) {
+    if (prevProps.current !== this.props.current) {
+      this.setState({filters: this.props.current})
     }
+  }
+
+  updateFilter(property, value) {
+    let newFilters = [].concat(this.state.filters)
+    const filterPos = newFilters.findIndex(filter => filter.property === property)
+
+    let updated = false
+    if (undefined !== value && null !== value && (!value.hasOwnProperty('length') || 0 !== value.length)) {
+      if (-1 !== filterPos) {
+        updated = value !== newFilters[filterPos].value
+        newFilters[filterPos] = {
+          property: property,
+          value: value
+        }
+      } else {
+        newFilters.push({
+          property: property,
+          value: value
+        })
+        updated = true
+      }
+    } else {
+      if (-1 !== filterPos) {
+        newFilters.splice(filterPos, 1)
+        updated = true
+      }
+    }
+
+    this.setState({
+      updated: updated,
+      filters: newFilters
+    })
+  }
+
+  getFilterDefinition(property) {
+    return this.state.filters.find(filterDef => property === filterDef.property)
+  }
+
+  isFilterLocked(property) {
+    const filter = this.getFilterDefinition(property)
+    if (filter) {
+      return filter.locked || false
+    }
+
+    return false
+  }
+
+  getFilterValue(property) {
+    const filter = this.getFilterDefinition(property)
+    if (filter) {
+      return filter.value
+    }
+
+    return null
   }
 
   render() {
-    //const isValidSearch = !isEmpty(this.props.currentSearch) && (!this.props.definition.validate || !this.props.definition.validate(this.props.currentSearch, this.props.options))
-
-    //console.log(isValidSearch)
-
     return (
-      <li role="presentation">
-        {React.createElement(
-          this.state.isValidSearch ? AvailableFilterActive : AvailableFilterDisabled,
-          this.state.isValidSearch ? {onSelect: () => this.props.onSelect(this.props.definition.parse(this.props.currentSearch, this.props.options))} : {}, [
-            <span key="available-filter-prop" className="available-filter-prop">
-              <AvailableFilterFlag id={`${this.props.name}-filter-flag`} isValid={this.state.isValidSearch} />
-              {this.props.label} <small>({trans(this.props.type, {}, 'data')})</small>
-            </span>,
-            <span key="available-filter-form" className="available-filter-form">
-              {!this.props.definition.components.search &&
-                <span className="available-filter-value">{this.state.isValidSearch ? this.props.currentSearch : '-'}</span>
-              }
+      <div className="search-form dropdown-menu dropdown-menu-full">
+        {false &&
+          <ul className="nav nav-tabs">
+            <li className="active">
+              <a role="button" href="">Recherche avancée</a>
+            </li>
 
-              {this.props.definition.components.search &&
-                React.createElement(this.props.definition.components.search, merge({}, this.props.options, {
-                  search: this.props.currentSearch,
-                  isValid: this.state.isValidSearch,
-                  updateSearch: this.props.onSelect
-                }))
-              }
-            </span>
-          ]
+            <li>
+              <a role="button" href="">Mes recherches</a>
+            </li>
+          </ul>
+        }
+
+        {this.props.available.map(filter =>
+          <div key={filter.name} className="form-group">
+            <label className="control-label" htmlFor={toKey(filter.name)}>
+              {filter.label}
+            </label>
+
+            <SearchProp
+              id={toKey(filter.name)}
+
+              {...omit(filter)}
+
+              disabled={this.isFilterLocked(filter.alias || filter.name)}
+              currentSearch={this.getFilterValue(filter.alias || filter.name)}
+              updateSearch={(search) => this.updateFilter(filter.alias ? filter.alias : filter.name, search)}
+            />
+          </div>
         )}
-      </li>
+
+        <div className="search-toolbar">
+          {false &&
+            <Button
+              className="btn-link btn-emphasis"
+              type={CALLBACK_BUTTON}
+              label={trans('save', {}, 'actions')}
+              disabled={!this.state.updated}
+              callback={() => true}
+            />
+          }
+
+          <Button
+            className="btn btn-block btn-emphasis search-submit"
+            type={CALLBACK_BUTTON}
+            htmlType="submit"
+            label={trans('search', {}, 'actions')}
+            disabled={!this.state.updated && !this.props.updated}
+            callback={() => {
+              this.props.updateSearch(this.state.filters)
+              this.setState({updated: false})
+            }}
+            primary={true}
+          />
+        </div>
+      </div>
     )
   }
 }
 
-AvailableFilterContent.propTypes = {
-  name: T.string.isRequired,
-  label: T.string.isRequired,
-  type: T.string.isRequired,
-  currentSearch: T.string,
-  onSelect: T.func.isRequired,
-  options: T.object,
-  definition: T.shape({
-    // DataType
-    parse: T.func.isRequired,
-    validate: T.func.isRequired,
-    components: T.shape({
-      search: T.any // todo : find correct typing
-    })
-  }).isRequired
-}
-
-const AvailableFilter = (props) =>
-  <Await
-    for={getType(props.type)}
-    then={(definition) => (
-      <AvailableFilterContent {...props} definition={definition} />
-    )}
-  />
-
-AvailableFilter.propTypes = {
-  name: T.string.isRequired,
-  label: T.string.isRequired,
-  type: T.string.isRequired,
-  currentSearch: T.string,
-  onSelect: T.func.isRequired,
-  options: T.object
-}
-
-AvailableFilter.defaultProps = {
-  options: {}
-}
-
-const FiltersList = props =>
-  <menu className="search-available-filters">
-    {props.available.map(filter =>
-      <AvailableFilter
-        key={`available-filter-${filter.name}`}
-        name={filter.name}
-        label={filter.label}
-        type={filter.type}
-        options={filter.options}
-        currentSearch={props.currentSearch}
-        onSelect={(filterValue) => props.onSelect(filter.alias ? filter.alias : filter.name, filterValue)}
-      />
-    )}
-  </menu>
-
-FiltersList.propTypes = {
+SearchForm.propTypes = {
+  updated: T.bool,
   available: T.arrayOf(T.shape({
     name: T.string.isRequired,
-    alias: T.string,
-    type: T.string.isRequired,
-    label: T.string.isRequired,
     options: T.object
   })).isRequired,
-  currentSearch: T.string,
-  onSelect: T.func.isRequired
+  current: T.arrayOf(T.shape({
+    property: T.string.isRequired,
+    value: T.any,
+    locked: T.bool
+  })).isRequired,
+  updateSearch: T.func.isRequired
 }
 
-FiltersList.defaultProps = {
-  currentSearch: ''
-}
+/*<RootCloseWrapper
+ disabled={this.props.disabled || !this.state.opened}
+ event="click"
+ onRootClose={() => this.setState({opened : !this.state.opened})}
+ >*/
 
-/**
- * Data list search box.
- *
- * @param props
- * @constructor
- */
 class SearchUnified extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       opened: false,
-      currentSearch: ''
+      currentSearch: '',
+      updated: false
     }
 
-    this.addFilter = this.addFilter.bind(this)
     this.updateSearch = this.updateSearch.bind(this)
   }
 
-  componentDidMount() {
-    this.searchInput.focus()
-  }
-
-  addFilter(filterName, filterValue) {
-    // reset current search field
-    this.updateSearch('')
-
-    // focus again the search field to avoid clicks when adding multiple filters
-    this.searchInput.focus()
-
-    // update filters list
-    this.props.addFilter(filterName, filterValue)
-  }
-
   updateSearch(search) {
-    this.setState({currentSearch: search, opened: !isEmpty(search)})
+    this.setState({
+      currentSearch: search,
+      updated: 0 !== search.length
+    })
+  }
+
+  getFormFilters() {
+    const filters = cloneDeep(this.props.current)
+    if (0 !== this.state.currentSearch.length) {
+      // get the first available string filter which is not locked as default for now
+      const defaultFilter = this.props.available.find(filter => 'string' === filter.type && -1 === filters.findIndex(value => filter.name === value.property && value.locked))
+      if (defaultFilter) {
+        const valuePos = filters.findIndex(value => defaultFilter.name === value.property)
+        if (-1 !== valuePos) {
+          // update existing value
+          filters[valuePos].value = this.state.currentSearch
+        } else {
+          // push new filter
+          filters.push({
+            property: defaultFilter.alias || defaultFilter.name,
+            value: this.state.currentSearch
+          })
+        }
+      }
+    }
+
+    return filters
   }
 
   render() {
     return (
-      <div className={classes('list-search search-unified', {
-        open: this.state.opened
-      })}>
-        <Button
-          className="btn btn-link search-icon"
-          type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-search"
-          label={trans('filters')}
-          tooltip="bottom"
-          callback={() => this.setState({opened : !this.state.opened})}
-          disabled={this.props.disabled}
-        />
+      <form
+        className={classes('list-search search-unified dropdown', {
+          open: this.state.opened || 0 !== this.state.currentSearch.length
+        })}
+        action="#"
+      >
+        <span className="search-icon fa fa-search" />
 
         <div className="search-filters">
           {this.props.current.map(activeFilter => {
@@ -288,7 +274,6 @@ class SearchUnified extends Component {
           })}
 
           <input
-            ref={(input) => this.searchInput = input}
             type="text"
             className="form-control search-control"
             placeholder={trans('list_search_placeholder')}
@@ -298,25 +283,36 @@ class SearchUnified extends Component {
           />
         </div>
 
-        {this.state.opened &&
-          <FiltersList
-            available={this.props.available.filter(availableFilter =>
-              // removes locked filters
-              -1 === this.props.current.findIndex(currentFilter => (currentFilter.property === availableFilter.name || currentFilter.property === availableFilter.alias) && currentFilter.locked)
-            )}
-            currentSearch={this.state.currentSearch}
-            onSelect={this.addFilter}
-          />
-        }
-      </div>
+        <Button
+          className="btn btn-link dropdown-toggle search-btn"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-caret-down"
+          label={trans('filters')}
+          tooltip="bottom"
+          callback={() => this.setState({opened : !this.state.opened})}
+          disabled={this.props.disabled}
+        />
+
+        <SearchForm
+          updated={this.state.updated}
+          current={this.getFormFilters()}
+          available={this.props.available}
+          updateSearch={(filters) => {
+            this.props.resetFilters(filters)
+            this.setState({currentSearch: '', updated: false, opened: false})
+          }}
+        />
+      </form>
     )
   }
 }
 
 SearchUnified.propTypes = {
+  id: T.string.isRequired,
   disabled: T.bool,
   available: T.arrayOf(T.shape({
     name: T.string.isRequired,
+    type: T.string.isRequired,
     options: T.object
   })).isRequired,
   current: T.arrayOf(T.shape({
@@ -325,7 +321,8 @@ SearchUnified.propTypes = {
     locked: T.bool
   })).isRequired,
   addFilter: T.func.isRequired,
-  removeFilter: T.func.isRequired
+  removeFilter: T.func.isRequired,
+  resetFilters: T.func.isRequired
 }
 
 SearchUnified.defaultProps = {
