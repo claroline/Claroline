@@ -11,6 +11,7 @@ const UserTab = connect(
   state => ({
     path: toolSelectors.path(state),
     listQueryString: listSelectors.queryString(listSelectors.list(state, selectors.LIST_NAME)),
+    contextType: toolSelectors.contextType(state),
     contextData: toolSelectors.contextData(state),
     canCreate: communitySelectors.canCreate(state),
     defaultRole: communitySelectors.defaultRole(state),
