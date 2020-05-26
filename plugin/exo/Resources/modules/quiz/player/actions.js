@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
+import {now} from '#/main/app/intl/date'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {actions as resourceActions} from '#/main/core/resource/store/actions'
 
@@ -170,6 +171,12 @@ actions.processEnd = (paper, navigate) => (dispatch, getState) => {
     newPaper.score = calculateScore(newPaper)
   }
 
+  // save end date
+  newPaper.endDate = now(false)
+
+  // mark as finished
+  newPaper.finished = true
+
   dispatch(actions.handleAttemptEnd(newPaper, navigate))
 }
 
@@ -192,10 +199,10 @@ actions.handleAttemptEnd = (paper, navigate) => {
     } else if (correctionAvailable) {
       // Open paper
       navigate('papers/' + paper.id)
-    } else {
-      // Return to quiz home
-      navigate('/')
     }
+
+    // Return to quiz home
+    navigate('')
   }
 }
 

@@ -103,7 +103,7 @@ const AttemptEndComponent = props =>
   <div className="quiz-player">
     <div className="row">
       {props.showAttemptScore &&
-        <div className="col-md-3 text-center">
+        <div className="col-md-3 text-center" style={{marginTop: '20px'}}>
           <ScoreGauge
             type="user"
             value={get(props.paper, 'score')}

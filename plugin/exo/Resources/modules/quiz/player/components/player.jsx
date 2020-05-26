@@ -116,6 +116,8 @@ class PlayerComponent extends Component {
       fetching: true,
       error: false
     }
+
+    this.navigate = this.navigate.bind(this)
   }
 
   componentDidMount() {
@@ -126,6 +128,10 @@ class PlayerComponent extends Component {
         () => this.setState({fetching: false}),
         (error) => this.setState({fetching: false, error: error})
       )
+  }
+
+  navigate(path) {
+    this.props.history.push(this.props.path + '/' + path)
   }
 
   // TODO : better error display
@@ -171,7 +177,7 @@ class PlayerComponent extends Component {
                   totalTime={this.props.duration}
                   startDate={this.props.paper.startDate}
                   onTimeOver={() => {
-                    this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
+                    this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.navigate)
                     this.props.showTimeOverMessage()
                   }}
                   width={70}
@@ -231,7 +237,7 @@ class PlayerComponent extends Component {
               this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, true, confirm)
             }}
             submit={() => this.props.submit(this.props.quizId, this.props.paper.id, this.props.answers)}
-            finish={() => this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, this.props.showEndConfirm, this.props.history.push)}
+            finish={() => this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, this.props.showEndConfirm, this.navigate)}
             currentStepSend={this.props.currentStepSend}
           />
         }
