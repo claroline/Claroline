@@ -17,6 +17,9 @@
                 {% for field in fields %}
                     <th>{{ field.getName() }}</th>
                 {% endfor %}
+
+                <th>{{ 'username'|trans({}, 'platform') }}</th>
+                <th>{{ 'email'|trans({}, 'platform') }}</th>
             </tr>
 
             {% for entry in entries %}
@@ -35,6 +38,9 @@
                             {% endif %}
                         </td>
                     {% endfor %}
+
+                    <td>{{ entry['author_username'] }}</td>
+                    <td>{{ entry['author_email'] }}</td>
                 </tr>
             {% endfor %}
         </table>

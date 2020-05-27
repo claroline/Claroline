@@ -40,14 +40,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @todo : break me into multiple files
- */
 class ClacoFormController
 {
     use RequestDecoderTrait;
 
-    private $archiveDir;
     private $clacoFormManager;
     private $configHandler;
     private $filesDir;
@@ -66,7 +62,6 @@ class ClacoFormController
     private $entryUserSerializer;
 
     public function __construct(
-        $archiveDir,
         ClacoFormManager $clacoFormManager,
         PlatformConfigurationHandler $configHandler,
         $filesDir,
@@ -82,7 +77,6 @@ class ClacoFormController
         CommentSerializer $commentSerializer,
         EntryUserSerializer $entryUserSerializer
     ) {
-        $this->archiveDir = $archiveDir;
         $this->clacoFormManager = $clacoFormManager;
         $this->configHandler = $configHandler;
         $this->filesDir = $filesDir;
@@ -171,8 +165,9 @@ class ClacoFormController
     {
         $entries = [];
         $serializedEntries = [];
-        $entriesParams = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
 
+        /** @var Entry[] $entriesParams */
+        $entriesParams = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
         foreach ($entriesParams as $entryParam) {
             if (!$entryParam->isLocked()) {
                 $entries[] = $entryParam;
@@ -227,7 +222,8 @@ class ClacoFormController
      *
      * Changes status of entries
      *
-     * @param int $status
+     * @param int     $status
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -235,18 +231,20 @@ class ClacoFormController
     {
         $entries = [];
         $serializedEntries = [];
-        $entriesParams = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
 
+        /** @var Entry[] $entriesParams */
+        $entriesParams = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
         foreach ($entriesParams as $entryParam) {
             if (!$entryParam->isLocked()) {
                 $entries[] = $entryParam;
             }
         }
+
         foreach ($entries as $entry) {
             $this->clacoFormManager->checkEntryModeration($entry);
         }
-        $updatedEntries = $this->clacoFormManager->changeEntriesStatus($entries, intval($status));
 
+        $updatedEntries = $this->clacoFormManager->changeEntriesStatus($entries, intval($status));
         foreach ($updatedEntries as $entry) {
             $serializedEntries[] = $this->entrySerializer->serialize($entry);
         }
@@ -797,6 +795,7 @@ class ClacoFormController
      */
     public function entriesLockSwitchAction($locked, Request $request)
     {
+        /** @var Entry[] $entries */
         $entries = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
         $clacoForms = [];
 
@@ -915,9 +914,16 @@ class ClacoFormController
             $data['id'] = $entry->getId();
             $data['uuid'] = $entry->getUuid();
             $data['title'] = $entry->getTitle();
-            $data['author'] = empty($user) ?
-                $this->translator->trans('anonymous', [], 'platform') :
-                $user->getFirstName().' '.$user->getLastName();
+
+            $data['author'] = $this->translator->trans('anonymous', [], 'platform');
+            $data['author_username'] = null;
+            $data['author_email'] = null;
+            if (!empty($user)) {
+                $data['author'] = $user->getFirstName().' '.$user->getLastName();
+                $data['author_username'] = $user->getUsername();
+                $data['author_email'] = $user->getEmail();
+            }
+
             $data['publicationDate'] = empty($publicationDate) ? '' : $publicationDate->format('d/m/Y');
             $data['editionDate'] = empty($editionDate) ? '' : $editionDate->format('d/m/Y');
 
@@ -946,6 +952,7 @@ class ClacoFormController
                 }
                 $data[$field->getId()] = $value;
             }
+
             $entriesData[] = $data;
         }
 
@@ -1057,9 +1064,9 @@ class ClacoFormController
         foreach ($entries as $entry) {
             $fieldValues = $entry->getFieldValues();
 
-            foreach ($fieldValues as $fiedValue) {
-                $field = $fiedValue->getField();
-                $fieldFacetValue = $fiedValue->getFieldFacetValue();
+            foreach ($fieldValues as $fieldValue) {
+                $field = $fieldValue->getField();
+                $fieldFacetValue = $fieldValue->getFieldFacetValue();
 
                 if (FieldFacet::FILE_TYPE === $field->getType()) {
                     /* TODO: change this when FILE_TYPE can accept an array of files again */
@@ -1079,7 +1086,6 @@ class ClacoFormController
             }
         }
         $archive->close();
-        file_put_contents($this->archiveDir, $pathArch."\n", FILE_APPEND);
 
         return $pathArch;
     }
