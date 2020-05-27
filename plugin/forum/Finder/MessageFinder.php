@@ -38,8 +38,9 @@ class MessageFinder extends AbstractFinder
             switch ($filterName) {
                 case 'published':
                     $qb->andWhere('node.published = :published');
-                    $qb->andWhere('node.active = :published');
+                    $qb->andWhere('node.active = :active');
                     $qb->setParameter('published', $filterValue);
+                    $qb->setParameter('active', $filterValue);
                     break;
                 case 'subject':
                     $qb->andWhere($qb->expr()->orX(

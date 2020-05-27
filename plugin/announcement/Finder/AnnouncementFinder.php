@@ -31,8 +31,9 @@ class AnnouncementFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'published':
-                    $qb->andWhere('node.active = :published');
+                    $qb->andWhere('node.active = :active');
                     $qb->andWhere('node.published = :published');
+                    $qb->setParameter('active', $filterValue);
                     $qb->setParameter('published', $filterValue);
                     break;
                 case 'creator':

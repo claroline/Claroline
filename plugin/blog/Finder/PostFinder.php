@@ -24,15 +24,18 @@ class PostFinder extends AbstractFinder
             switch ($filterName) {
                 case 'published':
                     if ($filterValue) {
-                        $qb->andWhere('node.published = :status');
-                        $qb->andWhere('node.active = :published');
+                        $qb->andWhere('node.published = :published');
+                        $qb->andWhere('node.active = :active');
                         $qb->andWhere('obj.status = :status');
                         $qb->andWhere('obj.publicationDate <= :endOfDay');
+                        $qb->setParameter('published', true);
                         $qb->setParameter('status', true);
+                        $qb->setParameter('active', true);
                         $qb->setParameter('endOfDay', new \DateTime('tomorrow'));
                     } else {
-                        $qb->andWhere('node.published = :status');
+                        $qb->andWhere('node.published = :published');
                         $qb->andWhere('obj.status = :status');
+                        $qb->setParameter('published', false);
                         $qb->setParameter('status', false);
                     }
                     break;
