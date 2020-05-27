@@ -97,9 +97,14 @@ class PlatformConfigurationHandler
 
         ArrayUtils::set($this->parameters, $parameter, $value);
 
-        ksort($this->parameters);
-        $parameters = json_encode($this->parameters, JSON_PRETTY_PRINT);
-        file_put_contents($this->configFile, $parameters);
+        $this->saveParameters();
+    }
+
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = array_replace_recursive($this->parameters, $parameters);
+
+        $this->saveParameters();
     }
 
     public function addDefaultParameters(ParameterProviderInterface $config)
@@ -142,5 +147,12 @@ class PlatformConfigurationHandler
         }
 
         return $this->parameters;
+    }
+
+    protected function saveParameters()
+    {
+        ksort($this->parameters);
+        $parameters = json_encode($this->parameters, JSON_PRETTY_PRINT);
+        file_put_contents($this->configFile, $parameters);
     }
 }

@@ -63,7 +63,6 @@ class WorkspaceManager
     private $container;
     /** @var array */
     private $importData;
-    private $templateDirectory;
     private $shortcutsRepo;
 
     /**
@@ -94,7 +93,6 @@ class WorkspaceManager
         $this->workspaceOptionsRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceOptions');
         $this->container = $container;
         $this->importData = [];
-        $this->templateDirectory = $container->getParameter('claroline.param.templates_directory');
         $this->crud = $container->get('Claroline\AppBundle\API\Crud');
         $this->shortcutsRepo = $om->getRepository(Shortcuts::class);
     }

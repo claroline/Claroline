@@ -134,7 +134,7 @@ class Updater100000 extends Updater
 
             try {
                 $fs->rename(
-                  $this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory,
+                  $this->container->getParameter('claroline.param.web_directory').DIRECTORY_SEPARATOR.$directory,
                   $this->container->getParameter('claroline.param.data_web_dir').DIRECTORY_SEPARATOR.$directory
               );
             } catch (IOException $e) {
@@ -143,13 +143,13 @@ class Updater100000 extends Updater
                 }
             }
 
-            $this->log('Removing '.$this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory.'...');
-            $fs->remove($this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory);
+            $this->log('Removing '.$this->container->getParameter('claroline.param.web_directory').DIRECTORY_SEPARATOR.$directory.'...');
+            $fs->remove($this->container->getParameter('claroline.param.web_directory').DIRECTORY_SEPARATOR.$directory);
 
             try {
                 $fs->symlink(
                   $this->container->getParameter('claroline.param.data_web_dir').DIRECTORY_SEPARATOR.$directory,
-                  $this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory
+                  $this->container->getParameter('claroline.param.web_directory').DIRECTORY_SEPARATOR.$directory
               );
             } catch (IOException $e) {
                 if ($this->logger) {
@@ -162,7 +162,7 @@ class Updater100000 extends Updater
 
     private function saveLogos()
     {
-        $logos = new \DirectoryIterator($this->container->getParameter('claroline.param.logos_directory'));
+        $logos = new \DirectoryIterator($this->container->getParameter('claroline.param.uploads_directory').'/logos');
         $logoService = $this->container->get('claroline.common.logo_service');
         $ch = $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
 

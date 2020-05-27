@@ -23,8 +23,7 @@ parameters:
     icap.blog.widgetblog.class:                   Icap\BlogBundle\Entity\WidgetBlog
     icap.blog.widgettaglistblog_repository.class: Icap\BlogBundle\Repository\WidgetTagListBlogRepository
     icap.blog.widgettaglistblog.class:            Icap\BlogBundle\Entity\WidgetTagListBlog
-    icap.blog.banner_upload_directory:            "uploads/blogs"
-    icap.blog.banner_directory:                   "%claroline.param.web_directory%/%icap.blog.banner_upload_directory%"
+    icap.blog.banner_directory:                   "%claroline.param.uploads_directory%/blogs"
 
 services:
     icap.blog.tag_repository:

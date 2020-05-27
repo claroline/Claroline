@@ -32,9 +32,6 @@ class ParametersSerializer
     private $configHandler;
 
     /** @var string */
-    private $filePath;
-
-    /** @var string */
     private $archivePath;
 
     /**
@@ -45,7 +42,6 @@ class ParametersSerializer
      * @param FinderProvider               $finder
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $configHandler
-     * @param string                       $filePath
      * @param string                       $archivePath
      */
     public function __construct(
@@ -54,12 +50,10 @@ class ParametersSerializer
         IconSetManager $ism,
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
-        $filePath,
         $archivePath
     ) {
         $this->serializer = $serializer;
         $this->finder = $finder;
-        $this->filePath = $filePath;
         $this->configHandler = $configHandler;
         $this->om = $om;
         $this->ism = $ism;
@@ -111,11 +105,7 @@ class ParametersSerializer
         unset($data['tos']['text']);
         unset($data['archives']);
 
-        $data = array_replace_recursive($this->serialize([Options::SERIALIZE_MINIMAL]), $data);
-        ksort($data);
-        $data = json_encode($data, JSON_PRETTY_PRINT);
-
-        file_put_contents($this->filePath, $data);
+        $this->configHandler->setParameters($data);
 
         return $original;
     }

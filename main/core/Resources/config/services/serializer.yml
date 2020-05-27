@@ -21,7 +21,6 @@ services:
           - '@claroline.manager.icon_set_manager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '%claroline.param.platform_options%'
           - '%claroline.param.archive_directory%'
 
     Claroline\CoreBundle\API\Serializer\ObjectLockSerializer:

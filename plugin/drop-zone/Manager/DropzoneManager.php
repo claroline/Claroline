@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Document;
@@ -42,7 +43,7 @@ use Claroline\DropZoneBundle\Event\Log\LogDropStartEvent;
 use Claroline\DropZoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use Claroline\DropZoneBundle\Repository\DocumentRepository;
-use Claroline\DropZoneBundle\Repository\PlannedNotificationRepository;
+use Claroline\DropZoneBundle\Repository\DropRepository;
 use Claroline\TeamBundle\Entity\Team;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -51,44 +52,35 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DropzoneManager
 {
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+    /** @var RoleManager */
+    private $roleManager;
     /** @var Crud */
     private $crud;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var Filesystem */
     private $fileSystem;
-
+    /** @var string */
     private $filesDir;
-
     /** @var ObjectManager */
     private $om;
-
-    /**
-     * @var ResourceEvaluationManager
-     */
+    /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
-
-    private $archiveDir;
+    /** @var PlatformConfigurationHandler */
     private $configHandler;
 
-    /** @var PlannedNotificationRepository */
+    /** @var ResourceNodeRepository */
+    private $resourceNodeRepo;
+    /** @var DropRepository */
     private $dropRepo;
-
     /** @var CorrectionRepository */
     private $correctionRepo;
     private $dropzoneToolRepo;
     private $dropzoneToolDocumentRepo;
-
     /** @var DocumentRepository */
     private $documentRepo;
-
-    /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
-    /** @var RoleManager */
-    protected $roleManager;
-    private $resourceNodeRepo;
 
     /**
      * DropzoneManager constructor.
@@ -99,7 +91,6 @@ class DropzoneManager
      * @param string                       $filesDir
      * @param ObjectManager                $om
      * @param ResourceEvaluationManager    $resourceEvalManager
-     * @param string                       $archiveDir
      * @param PlatformConfigurationHandler $configHandler
      * @param EventDispatcherInterface     $eventDispatcher
      * @param RoleManager                  $roleManager
@@ -111,7 +102,6 @@ class DropzoneManager
         $filesDir,
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager,
-        $archiveDir,
         PlatformConfigurationHandler $configHandler,
         EventDispatcherInterface $eventDispatcher,
         RoleManager $roleManager
@@ -122,7 +112,6 @@ class DropzoneManager
         $this->filesDir = $filesDir;
         $this->om = $om;
         $this->resourceEvalManager = $resourceEvalManager;
-        $this->archiveDir = $archiveDir;
         $this->configHandler = $configHandler;
         $this->eventDispatcher = $eventDispatcher;
         $this->roleManager = $roleManager;
@@ -1414,7 +1403,6 @@ class DropzoneManager
             }
         }
         $archive->close();
-        file_put_contents($this->archiveDir, $pathArch."\n", FILE_APPEND);
 
         return $pathArch;
     }
@@ -1423,10 +1411,11 @@ class DropzoneManager
      * Copy a Dropzone resource.
      *
      * @param Dropzone $dropzone
+     * @param Dropzone $newDropzone
      *
      * @return Dropzone
      */
-    public function copyDropzone(Dropzone $dropzone, DropZone $newDropzone)
+    public function copyDropzone(Dropzone $dropzone, Dropzone $newDropzone)
     {
         foreach ($dropzone->getCriteria() as $criterion) {
             $newCriterion = new Criterion();

@@ -199,8 +199,8 @@ services:
 
     Claroline\CoreBundle\Manager\IPWhiteListManager:
         arguments:
-          - '%claroline.ip_white_list_file%'
-          - '%claroline.ip_range_white_list_file%'
+          - '%claroline.param.ip_white_list_file%'
+          - '%claroline.param.ip_range_white_list_file%'
 
     claroline.manager.ip_white_list_manager:
         alias: Claroline\CoreBundle\Manager\IPWhiteListManager
@@ -208,7 +208,7 @@ services:
 
     Claroline\CoreBundle\Manager\IconSetManager:
         arguments:
-          - '%claroline.param.web_dir%'
+          - '%claroline.param.web_directory%'
           - '%claroline.param.icon_sets_web_dir%'
           - '%claroline.param.icon_sets_directory%'
           - '@Claroline\AppBundle\Persistence\ObjectManager'

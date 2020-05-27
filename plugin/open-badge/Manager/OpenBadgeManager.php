@@ -26,9 +26,6 @@ class OpenBadgeManager
     /** @var WorkspaceManager */
     private $workspaceManager;
 
-    /** @var string */
-    private $webDir;
-
     /**
      * OpenBadgeManager constructor.
      *
@@ -36,21 +33,19 @@ class OpenBadgeManager
      * @param ObjectManager    $om
      * @param TemplateManager  $templateManager
      * @param WorkspaceManager $workspaceManager
-     * @param string           $webDir
+     * @param EngineInterface  $templating
      */
     public function __construct(
         Packages $assets,
         ObjectManager $om,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
-        $webDir,
         EngineInterface $templating
     ) {
         $this->assets = $assets;
         $this->om = $om;
         $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
-        $this->webDir = $webDir;
         $this->templating = $templating;
     }
 

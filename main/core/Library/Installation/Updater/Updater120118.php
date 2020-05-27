@@ -42,7 +42,7 @@ class Updater120118 extends Updater
 
     public function saveConfigAsJson()
     {
-        $file = $this->container->getParameter('claroline.param.platform_options_file');
+        $file = $this->container->getParameter('claroline.param.config_directory').'/platform_options.yml';
 
         if (!is_file($file)) {
             return;
@@ -56,7 +56,7 @@ class Updater120118 extends Updater
 
     public function serialize()
     {
-        $file = $this->container->getParameter('claroline.param.platform_options_file');
+        $file = $this->container->getParameter('claroline.param.config_directory').'/platform_options.yml';
         $content = file_get_contents($file);
         $parameters = Yaml::parse($content) ?: [];
 

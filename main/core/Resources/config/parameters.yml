@@ -1,41 +1,36 @@
-# This file contains the core container parameters. Most of them may be overwritten
-# in test environment (see app/config/config_test.yml)
-
+# This file contains the core container parameters.
 parameters:
-    claroline.param.bundle_sources: "%kernel.root_dir%/config/downloaded.json"
-    claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication/"
-    claroline.param.files_directory: "%kernel.root_dir%/../files"
-    claroline.param.public_files_directory: "%kernel.root_dir%/../files/data"
-    claroline.param.archive_directory: "%kernel.root_dir%/../files/archives"
-    claroline.param.icon_sets_directory: "%claroline.param.public_files_directory%/icon_sets"
-    claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
-    claroline.param.claroline_log: "%kernel.root_dir%/logs/claroline_debug.log"
-    claroline.param.import_log_dir: "%kernel.root_dir%/logs/transfer"
-    claroline.param.log_dir: "%kernel.root_dir%/logs/"
-    claroline.param.workspace_log_dir: "%kernel.root_dir%/logs/workspace"
-    claroline.param.root_directory: "%kernel.root_dir%/.."
-    claroline.param.web_directory: "%claroline.param.root_directory%/web"
-    claroline.param.web_js_directory: "%claroline.param.web_directory%/js"
-    claroline.param.web_bundles_directory: "%claroline.param.web_directory%/bundles"
-    claroline.param.thumbnails_directory: "%claroline.param.uploads_directory%/thumbnails" #legacy parameter. Used for some update
-    claroline.param.uploads_directory: "%claroline.param.web_dir%/uploads"
-    claroline.param.logos_directory: "%claroline.param.uploads_directory%/logos"
-    claroline.param.relative_thumbnail_base_path: "uploads/thumbnails"
-    claroline.param.templates_directory: "%claroline.param.files_directory%/templates/"
-    claroline.param.workspace.default: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/config/workspace.zip"
+    # Project base paths
+    claroline.param.root_directory:         "%kernel.root_dir%/.."
+    claroline.param.config_directory:       "%kernel.root_dir%/config"
+    claroline.param.vendor_directory:       "%claroline.param.root_directory%/vendor"
+    claroline.param.web_directory:          "%claroline.param.root_directory%/web"
+
+    # File paths
+    claroline.param.uploads_directory:      "%claroline.param.web_directory%/uploads"
+    claroline.param.files_directory:        "%claroline.param.root_directory%/files"
+    claroline.param.archive_directory:      "%claroline.param.files_directory%/archives"
+    claroline.param.public_files_directory: "%claroline.param.files_directory%/data"
+    claroline.param.icon_sets_directory:    "%claroline.param.public_files_directory%/icon_sets"
+    claroline.param.data_web_dir:           "%claroline.param.web_directory%/data"
+    claroline.param.icon_sets_web_dir:      "%claroline.param.data_web_dir%/icon_sets"
+
+    # Log paths
+    claroline.param.log_dir:           "%kernel.root_dir%/logs/"
+    claroline.param.import_log_dir:    "%claroline.param.log_dir%/transfer"
+    claroline.param.workspace_log_dir: "%claroline.param.log_dir%/workspace"
+
+    # Configuration provider
     claroline.param.platform_config_handler_class: "Claroline\\CoreBundle\\Library\\Configuration\\PlatformConfigurationHandler"
-    #deprecated. Use json instead
-    claroline.param.platform_options_file: "%kernel.root_dir%/config/platform_options.yml"
-    claroline.param.platform_options: "%kernel.root_dir%/config/platform_options.json"
-    claroline.param.web_dir: "%kernel.root_dir%/../web"
-    claroline.param.data_web_dir: "%kernel.root_dir%/../web/data"
-    claroline.param.icon_sets_web_dir: "%claroline.param.data_web_dir%/icon_sets"
-    claroline.param.platform_generated_archive_path: "%kernel.root_dir%/config/tmp_files"
-    #todo: add .param. in the pathaname
-    claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
-    claroline.ip_white_list_file: "%kernel.root_dir%/config/ip_white_list.yml"
-    claroline.cache_dir: "%kernel.root_dir%/cache"
-    claroline.param.home_custom_template_directory: "%kernel.root_dir%/Resources/ClarolineCoreBundle/views/Home/templates/custom"
-    claroline.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
-    claroline.api.sample.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/samples"
-    claroline.api.core_schema.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/schema"
+    claroline.param.platform_options:              "%claroline.param.config_directory%/platform_options.json"
+
+    # Base workspace model path
+    claroline.param.workspace.default: "%claroline.param.vendor_directory%/claroline/distribution/main/core/Resources/config/workspace.zip"
+
+    # IP config files (should be stored in DB)
+    claroline.param.ip_white_list_file:       "%kernel.root_dir%/config/ip_white_list.yml"
+    claroline.param.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
+
+    # Core plugin API descriptors
+    claroline.api.sample.dir:      "%claroline.param.vendor_directory%/claroline/distribution/main/core/Resources/samples"
+    claroline.api.core_schema.dir: "%claroline.param.vendor_directory%/claroline/distribution/main/core/Resources/schema"

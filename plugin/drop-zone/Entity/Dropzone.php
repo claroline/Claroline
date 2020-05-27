@@ -617,6 +617,9 @@ class Dropzone extends AbstractResource
         $this->notifyOnDrop = $notifyOnDrop;
     }
 
+    /**
+     * @return Criterion[]
+     */
     public function getCriteria()
     {
         return $this->criteria->toArray();
