@@ -12,6 +12,8 @@ use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -22,6 +24,9 @@ class ClientController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    /** @var EngineInterface */
+    private $templating;
 
     /** @var StrictDispatcher */
     private $dispatcher;
@@ -42,6 +47,7 @@ class ClientController
      * ClientController constructor.
      *
      * @param TokenStorageInterface        $tokenStorage
+     * @param EngineInterface              $templating
      * @param StrictDispatcher             $dispatcher
      * @param PlatformConfigurationHandler $configHandler
      * @param SecurityManager              $securityManager
@@ -50,6 +56,7 @@ class ClientController
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        EngineInterface $templating,
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $configHandler,
         SecurityManager $securityManager,
@@ -57,6 +64,7 @@ class ClientController
         ClientSerializer $clientSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
         $this->dispatcher = $dispatcher;
         $this->configHandler = $configHandler;
         $this->securityManager = $securityManager;
@@ -68,9 +76,8 @@ class ClientController
      * Renders the Claroline web application.
      *
      * @EXT\Route("/", name="claro_index")
-     * @EXT\Template("ClarolineAppBundle::index.html.twig")
      *
-     * @return array
+     * @return Response
      */
     public function indexAction()
     {
@@ -81,35 +88,37 @@ class ClientController
             );
         }
 
-        return [
-            'parameters' => $this->clientSerializer->serialize(),
-            'maintenance' => [
-                'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),
-                'message' => $this->configHandler->getParameter('maintenance.message'),
-            ],
-            'currentUser' => $currentUser,
-            'impersonated' => $this->securityManager->isImpersonated(),
-
-            'header' => [
-                'menus' => array_unique(array_values($this->configHandler->getParameter('header'))),
-                'display' => [
-                    'name' => $this->configHandler->getParameter('name_active'),
-                    'about' => $this->configHandler->getParameter('show_about_button'),
-                    'help' => $this->configHandler->getParameter('show_help_button'),
+        return new Response(
+            $this->templating->render('ClarolineAppBundle::index.html.twig', [
+                'parameters' => $this->clientSerializer->serialize(),
+                'maintenance' => [
+                    'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),
+                    'message' => $this->configHandler->getParameter('maintenance.message'),
                 ],
-            ],
-            'footer' => [
-                'content' => $this->configHandler->getParameter('footer.content'),
-                'display' => [
-                    'locale' => $this->configHandler->getParameter('footer.show_locale'),
-                    'help' => $this->configHandler->getParameter('footer.show_help'),
-                    'termsOfService' => $this->configHandler->getParameter('footer.show_terms_of_service'),
-                ],
-            ],
+                'currentUser' => $currentUser,
+                'impersonated' => $this->securityManager->isImpersonated(),
 
-            'injectedJavascripts' => $this->injectJavascript(),
-            'injectedStylesheets' => $this->injectStylesheet(),
-        ];
+                'header' => [
+                    'menus' => array_unique(array_values($this->configHandler->getParameter('header'))),
+                    'display' => [
+                        'name' => $this->configHandler->getParameter('name_active'),
+                        'about' => $this->configHandler->getParameter('show_about_button'),
+                        'help' => $this->configHandler->getParameter('show_help_button'),
+                    ],
+                ],
+                'footer' => [
+                    'content' => $this->configHandler->getParameter('footer.content'),
+                    'display' => [
+                        'locale' => $this->configHandler->getParameter('footer.show_locale'),
+                        'help' => $this->configHandler->getParameter('footer.show_help'),
+                        'termsOfService' => $this->configHandler->getParameter('footer.show_terms_of_service'),
+                    ],
+                ],
+
+                'injectedJavascripts' => $this->injectJavascript(),
+                'injectedStylesheets' => $this->injectStylesheet(),
+            ])
+        );
     }
 
     /**

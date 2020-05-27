@@ -67,7 +67,7 @@ class ViewAsListener
         $request = $event->getRequest();
         $attributes = $request->query->all();
 
-        if (array_key_exists('view_as', $attributes)) {
+        if ($event->isMasterRequest() && array_key_exists('view_as', $attributes)) {
             // first, if we're already usurping a user role with the sf2 function, we cancel this.
             // ROLE_PREVIOUS_ADMIN means we're an administrator usurping a user account.
 

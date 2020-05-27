@@ -32,6 +32,7 @@ services:
     Claroline\AppBundle\Controller\Platform\ClientController:
         arguments:
           - '@security.token_storage'
+          - '@templating'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\Manager\SecurityManager'

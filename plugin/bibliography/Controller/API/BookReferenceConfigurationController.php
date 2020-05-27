@@ -3,12 +3,10 @@
 namespace Icap\BibliographyBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @Route("/book_reference_configuration")
- * @Security("has_role('ROLE_ADMIN')")
+ * @EXT\Route("/book_reference_configuration")
  */
 class BookReferenceConfigurationController extends AbstractCrudController
 {
