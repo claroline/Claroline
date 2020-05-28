@@ -170,7 +170,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         $dql = '
             SELECT MAX(node.index)
             FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node
-            where node.parent = :node';
+            WHERE node.parent = :node';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('node', $node->getId());

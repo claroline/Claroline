@@ -11,15 +11,18 @@
 
 namespace Claroline\CoreBundle\Repository\Tool;
 
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
 class ToolRepositoryTest extends RepositoryTestCase
 {
+    /** @var ToolRepository */
     private static $repo;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
         self::$repo = self::getRepository('ClarolineCoreBundle:Tool\Tool');
 
         self::createUser('john');
@@ -36,7 +39,16 @@ class ToolRepositoryTest extends RepositoryTestCase
     public function testFindUndisplayedToolsByWorkspace()
     {
         $result = self::$repo->findUndisplayedToolsByWorkspace(self::get('ws_1'));
-        $this->assertEquals(9, count($result));
+        $toolNames = array_map(function (Tool $tool) {
+            return $tool->getName();
+        }, $result);
+
+        // I cannot check the number of tools returned because it can change over time.
+        // Also the claroline instance can contain plugins which inject tools from the outside of the distribution bundle.
+        // Instead I will just check for some of the expected tools from the core
+        $this->assertTrue(in_array('home', $toolNames));
+        $this->assertTrue(in_array('community', $toolNames));
+        $this->assertTrue(in_array('resources', $toolNames));
     }
 
     public function testCountDisplayedToolsByWorkspace()

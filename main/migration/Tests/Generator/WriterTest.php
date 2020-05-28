@@ -114,14 +114,18 @@ class WriterTest extends MockeryTestCase
         );
         $this->twigEnvironment->shouldReceive('addExtension');
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $bundlePath = vfsStream::url('root').'/bundle/path';
+        $bundlePath = implode(DIRECTORY_SEPARATOR, [vfsStream::url('root'), 'bundle', 'path']);
+
         $bundle->shouldReceive('getPath')->once()->andReturn($bundlePath);
+
         $this->fileSystem->shouldReceive('remove')
             ->once()
-            ->with(["{$bundlePath}/Migrations/some_driver/Version2.php"]);
+            ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Migrations', 'some_driver', 'Version2.php'])]);
+
         $this->fileSystem->shouldReceive('remove')
             ->once()
-            ->with(["{$bundlePath}/Migrations/some_driver/Version3.php"]);
+            ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Migrations', 'some_driver', 'Version3.php'])]);
+
         $writer = new Writer($this->fileSystem, $this->twigEnvironment, $this->twigEngine);
         $deletedVersions = $writer->deleteUpperMigrationClasses($bundle, 'some_driver', '1');
         $this->assertEquals(2, count($deletedVersions));
