@@ -17,7 +17,7 @@ export default {
     }),
     definition: [
       {
-        name: 'tool.name',
+        name: 'name',
         label: trans('name'),
         displayed: true,
         primary: true

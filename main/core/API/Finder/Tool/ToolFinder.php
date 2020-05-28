@@ -56,9 +56,8 @@ class ToolFinder extends AbstractFinder
                         $qb->join('obj.orderedTools', 'ot');
                         $otJoin = true;
                     }
-                    $qb->join('ot.user', 'u');
-                    $qb->andWhere("u.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
+
+                    $qb->andWhere('ot.user IS NULL AND ot.workspace IS NULL');
                     break;
                 case 'workspace':
                     if (!$otJoin) {
@@ -76,7 +75,7 @@ class ToolFinder extends AbstractFinder
                     }
                     $qb->join('ot.rights', 'r');
                     $qb->join('r.role', 'rr');
-                    $qb->andWhere($qb->expr()->eq('BIT_AND(r.mask, 1)', 1));
+                    $qb->andWhere('BIT_AND(r.mask, 1) = 1');
                     $qb->andWhere("rr.name IN (:{$filterName})");
                     $qb->setParameter($filterName, is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;

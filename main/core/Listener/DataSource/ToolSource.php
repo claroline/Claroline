@@ -51,27 +51,30 @@ class ToolSource
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
+        $user = $event->getUser();
+
+        $roles = ['ROLE_ANONYMOUS'];
+        if ($user) {
+            $roles = $user->getRoles();
+        }
 
         switch ($event->getContext()) {
             case DataSource::CONTEXT_DESKTOP:
-                $user = $event->getUser();
                 $options['hiddenFilters']['isDisplayableInDesktop'] = true;
                 $options['hiddenFilters']['user'] = $user->getUuid();
+
+                if (!in_array('ROLE_ADMIN', $roles)) {
+                    $options['hiddenFilters']['roles'] = $roles;
+                }
                 break;
+
             case DataSource::CONTEXT_WORKSPACE:
                 $workspace = $event->getWorkspace();
                 $isManager = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
                 $options['hiddenFilters']['isDisplayableInWorkspace'] = true;
                 $options['hiddenFilters']['workspace'] = $workspace->getUuid();
 
-                if ($workspace->isPersonal()) {
-                    $options['hiddenFilters']['personalWorkspace'] = true;
-                }
                 if (!$isManager) {
-                    $user = $this->tokenStorage->getToken()->getUser();
-                    $roles = 'anon.' === $user ?
-                        ['ROLE_ANONYMOUS'] :
-                        $user->getRoles();
                     $options['hiddenFilters']['roles'] = $roles;
                 }
                 break;
