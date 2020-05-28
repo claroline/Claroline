@@ -175,8 +175,8 @@ actions.createMessage = (subjectId, content, moderation) => (dispatch, getState)
           content: content,
           meta: {
             creator: securitySelectors.currentUser(getState()),
-            created: now(),
-            updated: now(),
+            created: now(false),
+            updated: now(false),
             moderation: moderation
           },
           comments: []
@@ -200,8 +200,8 @@ actions.createComment = (messageId, comment, moderation) => (dispatch, getState)
           content: comment,
           meta: {
             creator: securitySelectors.currentUser(getState()),
-            created: now(),
-            updated: now(),
+            created: now(false),
+            updated: now(false),
             moderation: moderation
           }
         })

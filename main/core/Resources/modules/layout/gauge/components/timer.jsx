@@ -66,6 +66,7 @@ class Timer extends Component {
         type={this.props.type}
         width={this.props.width}
         height={this.props.height}
+        preFilled={true}
       />
     )
   }

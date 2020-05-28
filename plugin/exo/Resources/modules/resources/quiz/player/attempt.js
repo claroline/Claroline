@@ -24,7 +24,7 @@ function generateAttempt(quiz, user, previousPaper = null) {
   const newPaper = {
     id: makeId(),
     finished: false,
-    startDate: now(),
+    startDate: now(false),
     endDate: null,
     user: user,
     number: previousPaper ? previousPaper.number + 1 : 1,

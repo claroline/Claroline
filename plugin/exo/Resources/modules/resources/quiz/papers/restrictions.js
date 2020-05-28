@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 
+import {now} from '#/main/app/intl/date'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 /**
@@ -23,10 +24,7 @@ function showCorrection(paper, admin = false) {
   }
 
   if (showCorrectionAt === constants.QUIZ_RESULTS_AT_DATE){
-    const today = Date.parse(new Date(Date.now()))
-    const parsedCorrectionDate = Date.parse(correctionDate)
-
-    return today >= parsedCorrectionDate
+    return now(false) >= correctionDate
   }
 
   return false

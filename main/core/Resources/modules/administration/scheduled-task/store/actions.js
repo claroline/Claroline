@@ -21,7 +21,7 @@ actions.open = (formName, id = null) => (dispatch) => {
     })
   } else {
     dispatch(formActions.resetForm(formName, {
-      scheduledDate: now()
+      scheduledDate: now(false)
     }, true))
   }
 }

@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater500002 extends Updater
+class Updater050002 extends Updater
 {
     private $om;
 

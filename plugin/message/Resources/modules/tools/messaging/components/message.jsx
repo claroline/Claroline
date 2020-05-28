@@ -55,7 +55,7 @@ class MessageComponent extends Component {
       receivers: this.state.all ? this.props.message.receivers : {
         users: [this.props.message.from]
       },
-      meta: {date : now()}
+      meta: {date : now(false)}
     })).then(() => this.setState({reply: false, all: false}))
   }
 

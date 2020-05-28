@@ -5,7 +5,7 @@ import {axisLeft, axisBottom} from 'd3-axis'
 import {timeDay} from 'd3-time'
 
 import {number} from '#/main/app/intl/number'
-import {dateToDisplayFormat} from '#/main/app/intl/date'
+import {displayDate} from '#/main/app/intl/date'
 
 import {
   AXIS_TYPE_X,
@@ -52,7 +52,7 @@ class Axis extends Component {
 
         switch (this.props.dataType) {
           case DATE_DATA_TYPE: {
-            axis.tickFormat((value) => dateToDisplayFormat(value, false, false))
+            axis.tickFormat((value) => displayDate(value, false, false))
             let dist = Math.floor(this.props.values.length/10)
 
             return this.props.values.length > 10 ?

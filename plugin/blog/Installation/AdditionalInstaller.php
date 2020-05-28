@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Installation;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Icap\BlogBundle\Installation\Updater\Updater120000;
 use Icap\BlogBundle\Installation\Updater\UpdaterMaster;
+use Icap\BlogBundle\Library\Installation\Updater\Updater120545;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
@@ -19,6 +20,12 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
         if (version_compare($currentVersion, '12.0.0', '<')) {
             $updater = new Updater120000($this->container);
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '12.5.45', '<')) {
+            $updater = new Updater120545($this->container);
             $updater->setLogger($this->logger);
             $updater->postUpdate();
         }

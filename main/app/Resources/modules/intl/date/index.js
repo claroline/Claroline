@@ -70,7 +70,7 @@ function apiDate(displayDate, long = false, withTime = false) {
     date.hours(0).minutes(0).seconds(0)
   } else {
     // This is causing a lost of 2 hours in date field of a form
-    // date = date.utc()
+    date = date.utc()
   }
 
   return date.format(getApiFormat())
@@ -99,7 +99,7 @@ function dateToDisplayFormat(date, long = false, withTime = false) {
  * @return {string} - the date in display format.
  */
 function displayDate(apiDate, long = false, withTime = false) {
-  return moment.utc(apiDate).format(getDisplayFormat(long, withTime))
+  return moment.utc(apiDate).local().format(getDisplayFormat(long, withTime))
 }
 
 function displayDuration(seconds, long = false) {
@@ -151,7 +151,7 @@ function now(local = true) {
 }
 
 function computeElapsedTime(startDate) {
-  return getTimeDiff(startDate, now())
+  return getTimeDiff(startDate, now(false))
 }
 
 function getTimeDiff(startDate, endDate) {

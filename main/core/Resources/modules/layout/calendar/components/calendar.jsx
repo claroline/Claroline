@@ -139,11 +139,11 @@ class Calendar extends Component {
 
   init() {
     // Get local current time as UTC current time
-    const now = moment.utc(moment().local().format(getApiFormat())).set('second', 0)
+    const now = moment().set('second', 0)
 
     let selected
     if (this.props.selected && isValidDate(this.props.selected, getApiFormat())) {
-      selected = moment.utc(this.props.selected)
+      selected = moment.utc(this.props.selected).local()
     }
 
     // get the date which will serve for calculating current displayed range

@@ -11,8 +11,9 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\User;
@@ -26,18 +27,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Announcement
 {
-    /**
-     * The unique identifier of the Announcement.
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
-
-    use UuidTrait;
+    use Id;
+    use Uuid;
     use Poster;
 
     /**
@@ -141,21 +132,6 @@ class Announcement
         $this->refreshUuid();
         $this->creationDate = new \DateTime();
         $this->roles = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set id.
-     *
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

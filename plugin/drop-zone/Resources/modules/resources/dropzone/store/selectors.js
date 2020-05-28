@@ -137,7 +137,7 @@ const isPeerReviewEnabledManual = createSelector(
 
 const isPeerReviewEnabledAuto = createSelector(
   [dropzone],
-  (dropzone) => dropzone.planning.review && now() >= dropzone.planning.review[0] && now() <= dropzone.planning.review[1]
+  (dropzone) => dropzone.planning.review && now(false) >= dropzone.planning.review[0] && now(false) <= dropzone.planning.review[1]
 )
 
 const isPeerReviewEnabled = createSelector(
@@ -161,7 +161,7 @@ const currentState = createSelector(
       currentState = dropzone.planning.state
     } else {
       // auto planning, calculate state from date ranges
-      const currentDate = now()
+      const currentDate = now(false)
       if (currentDate >= dropzone.planning.drop[0]) {
         if (constants.REVIEW_TYPE_MANAGER === dropzone.parameters.reviewType) {
           //manager review mode
@@ -231,10 +231,10 @@ const dropDisabledMessages = createSelector(
             messages.push(trans('drop_disabled_not_active', {}, 'dropzone'))
           }
         } else {
-          if (now() < dropzone.planning.drop[0]) {
+          if (now(false) < dropzone.planning.drop[0]) {
             // drop has not already started
             messages.push(trans('drop_disabled_not_started', {}, 'dropzone'))
-          } else if (now() > dropzone.planning.drop[1]) {
+          } else if (now(false) > dropzone.planning.drop[1]) {
             // drop has already finished
             messages.push(trans('drop_disabled_finished', {}, 'dropzone'))
           }
@@ -286,10 +286,10 @@ const peerReviewDisabledMessages = createSelector(
               messages.push(trans('review_disabled_not_active', {}, 'dropzone'))
             }
           } else {
-            if (now() < dropzone.planning.review[0]) {
+            if (now(false) < dropzone.planning.review[0]) {
               // drop has not already started
               messages.push(trans('review_disabled_not_started', {}, 'dropzone'))
-            } else if (now() > dropzone.planning.review[1]) {
+            } else if (now(false) > dropzone.planning.review[1]) {
               // drop has already finished
               messages.push(trans('review_disabled_finished', {}, 'dropzone'))
             }

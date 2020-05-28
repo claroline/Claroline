@@ -4,8 +4,8 @@ import {selectors as securitySelectors} from '#/main/app/security/store/selector
 import {selectors as configSelectors} from '#/main/app/config/store/selectors'
 
 const disabled = (state) => {
-  const started = !configSelectors.param(state, 'restrictions.dates[0]') || configSelectors.param(state, 'restrictions.dates[0]') < now()
-  const ended   = configSelectors.param(state, 'restrictions.dates[1]') && configSelectors.param(state, 'restrictions.dates[1]') < now()
+  const started = !configSelectors.param(state, 'restrictions.dates[0]') || configSelectors.param(state, 'restrictions.dates[0]') < now(false)
+  const ended   = configSelectors.param(state, 'restrictions.dates[1]') && configSelectors.param(state, 'restrictions.dates[1]') < now(false)
 
   return configSelectors.param(state, 'restrictions.disabled')
     || !started

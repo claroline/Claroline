@@ -12,8 +12,8 @@ import {PageSimple} from '#/main/app/page/components/simple'
 import {ContentHelp} from '#/main/app/content/components/help'
 
 const HomeDisabled = (props) => {
-  const started = get(props.restrictions, 'dates[0]') && get(props.restrictions, 'dates[0]') < now()
-  const ended   = get(props.restrictions, 'dates[1]') && get(props.restrictions, 'dates[1]') < now()
+  const started = get(props.restrictions, 'dates[0]') && get(props.restrictions, 'dates[0]') < now(false)
+  const ended   = get(props.restrictions, 'dates[1]') && get(props.restrictions, 'dates[1]') < now(false)
 
   return (
     <PageSimple>

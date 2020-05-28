@@ -3,7 +3,7 @@ import set from 'lodash/set'
 
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
-import {dateToDisplayFormat} from '#/main/app/intl/date'
+import {displayDate} from '#/main/app/intl/date'
 import {trans, tval} from '#/main/app/intl/translation'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as alertActions} from '#/main/app/overlays/alert/store'
@@ -71,7 +71,7 @@ actions.validateLock = (lock) => (dispatch, getState) => {
         title: trans('update_object'),
         dangerous: true,
         icon: 'fa fa-fw fa-check',
-        question: trans('object_currently_modified', {username: lock.user.username, date: dateToDisplayFormat(lock.updated)}),
+        question: trans('object_currently_modified', {username: lock.user.username, date: displayDate(lock.updated)}),
         confirmButtonText: trans('update_anyway'),
         handleConfirm: () => {
           dispatch(actions.lockItem(lock.className, lock.id))

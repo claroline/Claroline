@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle;
 
+use Claroline\AnnouncementBundle\Installation\AdditionalInstaller;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
 /**
@@ -18,4 +19,8 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
  */
 class ClarolineAnnouncementBundle extends DistributionPluginBundle
 {
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
+    }
 }
