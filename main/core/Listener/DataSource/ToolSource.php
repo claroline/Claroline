@@ -56,14 +56,12 @@ class ToolSource
             case DataSource::CONTEXT_DESKTOP:
                 $user = $event->getUser();
                 $options['hiddenFilters']['isDisplayableInDesktop'] = true;
-                $options['hiddenFilters']['orderedToolType'] = 0;
                 $options['hiddenFilters']['user'] = $user->getUuid();
                 break;
             case DataSource::CONTEXT_WORKSPACE:
                 $workspace = $event->getWorkspace();
                 $isManager = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
                 $options['hiddenFilters']['isDisplayableInWorkspace'] = true;
-                $options['hiddenFilters']['orderedToolType'] = 0;
                 $options['hiddenFilters']['workspace'] = $workspace->getUuid();
 
                 if ($workspace->isPersonal()) {

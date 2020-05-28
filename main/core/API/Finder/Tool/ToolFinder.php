@@ -69,14 +69,6 @@ class ToolFinder extends AbstractFinder
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'orderedToolType':
-                    if (!$otJoin) {
-                        $qb->join('obj.orderedTools', 'ot');
-                        $otJoin = true;
-                    }
-                    $qb->andWhere("ot.type = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
                 case 'roles':
                     if (!$otJoin) {
                         $qb->join('obj.orderedTools', 'ot');
