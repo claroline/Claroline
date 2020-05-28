@@ -199,10 +199,10 @@ actions.handleAttemptEnd = (paper, navigate) => {
     } else if (correctionAvailable) {
       // Open paper
       navigate('papers/' + paper.id)
+    } else {
+      // Return to quiz home
+      navigate('')
     }
-
-    // Return to quiz home
-    navigate('')
   }
 }
 
