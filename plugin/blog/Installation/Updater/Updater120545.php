@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Icap\BlogBundle\Library\Installation\Updater;
+namespace Icap\BlogBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Driver\Connection;

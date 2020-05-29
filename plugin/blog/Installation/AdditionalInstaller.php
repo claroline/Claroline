@@ -4,8 +4,8 @@ namespace Icap\BlogBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Icap\BlogBundle\Installation\Updater\Updater120000;
+use Icap\BlogBundle\Installation\Updater\Updater120545;
 use Icap\BlogBundle\Installation\Updater\UpdaterMaster;
-use Icap\BlogBundle\Library\Installation\Updater\Updater120545;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
