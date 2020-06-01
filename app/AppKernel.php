@@ -12,6 +12,8 @@ class AppKernel extends Kernel
     {	
 	parent::__construct($environment, $debug);
         $this->kernelBundle = new ClarolineKernelBundle($this);
+	    
+	date_default_timezone_set('UTC');
     }
 
     public function registerBundles()
