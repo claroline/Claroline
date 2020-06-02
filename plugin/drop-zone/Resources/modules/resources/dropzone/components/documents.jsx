@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {url} from '#/main/app/api'
-import {trans} from '#/main/app/intl/translation'
+import {trans, displayDate} from '#/main/app/intl'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {LinkButton} from '#/main/app/buttons/link'
 
@@ -46,7 +46,7 @@ const DocumentRow = props =>
 
     {props.showMeta &&
       <td className="document-date">
-        {props.document.dropDate}
+        {displayDate(props.document.dropDate, false, true)}
       </td>
     }
 

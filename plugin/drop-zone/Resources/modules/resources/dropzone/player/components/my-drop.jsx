@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, displayDate} from '#/main/app/intl'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -80,8 +80,8 @@ const Corrections = props =>
                 {getTitle(props.dropzone, c, idx + 1)}
               </a>
             </td>
-            <td>{c.startDate}</td>
-            <td>{c.endDate}</td>
+            <td>{displayDate(c.startDate, false, true)}</td>
+            <td>{displayDate(c.endDate, false, true)}</td>
             {props.dropzone.display.showScore &&
               <td>{c.score} / {props.dropzone.parameters.scoreMax}</td>
             }

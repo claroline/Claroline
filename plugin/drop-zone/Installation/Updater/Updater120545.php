@@ -35,28 +35,25 @@ class Updater120545 extends Updater
     {
         $this->log('Updates dropzone dates timezone...');
 
-        $this->conn
-            ->prepare('
-                UPDATE claro_dropzonebundle_dropzone SET drop_start_date = DATE_SUB(drop_start_date, INTERVAL 2 HOUR) WHERE drop_start_date IS NOT NULL
-            ')
-            ->execute();
+        $toUpdate = [
+            'claro_dropzonebundle_dropzone' => ['drop_start_date', 'drop_end_date', 'review_start_date', 'review_end_date'],
+            'claro_dropzonebundle_drop' => ['drop_date'],
+            'claro_dropzonebundle_document' => ['drop_date'],
+            'claro_dropzonebundle_drop_comment' => ['creation_date', 'edition_date'],
+            'claro_dropzonebundle_revision' => ['creation_date'],
+            'claro_dropzonebundle_correction' => ['start_date', 'last_edition_date', 'end_date'],
+        ];
 
-        $this->conn
-            ->prepare('
-                UPDATE claro_dropzonebundle_dropzone SET drop_end_date = DATE_SUB(drop_end_date, INTERVAL 2 HOUR) WHERE drop_end_date IS NOT NULL
-            ')
-            ->execute();
+        foreach ($toUpdate as $tableName => $columns) {
+            foreach ($columns as $column) {
+                $this->log(sprintf('Updates table "%s" and column "%s"...', $tableName, $column));
 
-        $this->conn
-            ->prepare('
-                UPDATE claro_dropzonebundle_dropzone SET review_start_date = DATE_SUB(review_start_date, INTERVAL 2 HOUR) WHERE review_start_date IS NOT NULL
-            ')
-            ->execute();
-
-        $this->conn
-            ->prepare('
-                UPDATE claro_dropzonebundle_dropzone SET review_end_date = DATE_SUB(review_end_date, INTERVAL 2 HOUR) WHERE review_end_date IS NOT NULL
-            ')
-            ->execute();
+                $this->conn
+                    ->prepare("
+                        UPDATE {$tableName} SET {$column} = DATE_SUB({$column}, INTERVAL 2 HOUR) WHERE {$column} IS NOT NULL
+                    ")
+                    ->execute();
+            }
+        }
     }
 }
