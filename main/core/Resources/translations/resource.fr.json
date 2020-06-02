@@ -60,5 +60,33 @@
     "evaluation_participated_status": "Vous avez participé à la ressource.",
     "evaluation_failed_status": "Vous n'avez pas réussi la ressource.",
     "evaluation_completed_status": "Vous avez terminé la ressource.",
-    "evaluation_passed_status": "Vous avez réussi la ressource."
+    "evaluation_passed_status": "Vous avez réussi la ressource.",
+
+    "restrictions": {
+        "dismiss_help": "En tant que gestionnaire vous pouvez toujours accéder à la ressource, même si les conditions d'accès ne sont pas satisfaites.",
+        "manager": "Vous êtes un gestionnaire de la ressource.",
+        "manager_help": "Vos droits de gestionnaire vous permettent d'accéder à toutes les fonctions de la ressource.",
+        "rights": "Vous pouvez accéder à cette ressource.",
+        "rights_help": "Vos droits vous permettent d'accéder à une ou plusieurs fonctions de la ressource.",
+        "no_rights": "Vous n'avez pas les droits nécessaires pour accéder à cette ressource.",
+        "no_rights_help": "Veuillez contacter un gestionnaire si vous pensez que vous devriez avoir accès à cette ressource.",
+        "published": "La ressource est publiée.",
+        "not_published": "La ressource n'est pas encore publiée.",
+        "not_published_help": "Veuillez patienter en attendant que l'un des gestionnaires publie la ressource.",
+        "deleted": "La ressource est supprimée.",
+        "deleted_help": "Vous ne pouvez plus accéder au contenu des ressources supprimées.",
+        "unlocked": "Vous avez déverrouillé la ressource.",
+        "locked": "L'accès requiert un code.",
+        "locked_help": "Veuillez saisir le code qui vous a été remis afin d'accéder à la ressource.",
+        "period_opened": "La période d'accès à la ressource est actuellement en cours.",
+        "period_opened_help": "La ressource est accessible du %start% au %end%.",
+        "period_not_limited": "La période d'accès à la ressource n'est pas limitée.",
+        "not_started": "La ressource n'est pas encore accessible.",
+        "not_started_help": "Veuillez patientez jusqu'au %date%.",
+        "ended": "La ressource n'est plus accessible.",
+        "ended_help": "L'accès est fermé depuis le %date%.",
+        "location_authorized": "Vous utilisez l'un des postes de travail authorisé.",
+        "location_unauthorized": "L'accès doit s'effectuer depuis un poste de travail authorisé.",
+        "location_unauthorized_help": "Veuillez utiliser l'un des postes de travail authorisés afin d'accéder à la ressource."
+    }
 }

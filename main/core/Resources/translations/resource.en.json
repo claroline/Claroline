@@ -60,5 +60,33 @@
     "evaluation_participated_status": "You have participated to the resource.",
     "evaluation_failed_status": "You did not pass the resource.",
     "evaluation_completed_status": "You have finished the resource.",
-    "evaluation_passed_status": "You have passed the resource."
+    "evaluation_passed_status": "You have passed the resource.",
+
+    "restrictions": {
+        "dismiss_help": "As a manager, you can still access the resource, even if the access conditions are not met.",
+        "manager": "You are a manager of this resource.",
+        "manager_help": "Your manager rights allow you to access all the features of the resource.",
+        "rights": "You can access to this resource.",
+        "rights_help": "Your rights allow you to access one or more features of the resource.",
+        "no_rights": "You do not own the necessary rights to access this resource.",
+        "no_rights_help": "Please contact a manager if you think you should have access to this resource.",
+        "published": "The resource is published.",
+        "not_published": "The resource is not published.",
+        "not_published_help": "Please wait while one of the managers publishes the resource.",
+        "deleted": "The resource is deleted.",
+        "deleted_help": "You can no longer access the content of deleted resources.",
+        "unlocked": "You have unlocked the resource.",
+        "locked": "Access requires a code.",
+        "locked_help": "Please enter the code given to you in order to access the resource.",
+        "period_opened": "The access period to the resource is currently in progress.",
+        "period_opened_help": "The resource is accessible from %start% to %end%.",
+        "period_not_limited": "The access period to the resource is not limited.",
+        "not_started": "The resource is not yet accessible.",
+        "not_started_help": "Please wait until %date%.",
+        "ended": "The resource is no longer accessible.",
+        "ended_help": "Access is closed since %date%.",
+        "location_authorized": "You are using one of the authorized workstations.",
+        "location_unauthorized": "Access must be from an authorized workstation.",
+        "location_unauthorized_help": "Please use one of the authorized workstations to access the resource."
+    }
 }

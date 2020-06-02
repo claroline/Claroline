@@ -2,7 +2,7 @@ import React, {Component, Fragment}from 'react'
 import {PropTypes as T} from 'prop-types'
 import isUndefined from 'lodash/isUndefined'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, displayDate} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
@@ -41,12 +41,12 @@ class ResourceRestrictions extends Component {
           icon="fa fa-fw fa-id-badge"
           failed={this.props.errors.noRights}
           success={{
-            title: this.props.managed ? 'Vous êtes un gestionnaire de la ressource.' : 'Vous pouvez accéder à cette ressource.',
-            help: this.props.managed ? 'Vos droits de gestionnaires vous permettents d\'accéder à toutes les fonctions de la ressource' : 'Vos droits vous permettent d\'accéder à une ou plusieurs fonctions de la ressource.'
+            title: trans(this.props.managed ? 'restrictions.manager' : 'restrictions.rights', {}, 'resource'),
+            help: trans(this.props.managed ? 'restrictions.manager_help' : 'restrictions.rights_help', {}, 'resource'),
           }}
           fail={{
-            title: 'Vous n\'avez pas les droits nécessaires pour accéder à cette ressource.',
-            help: 'Veuillez contacter un gestionnaire si vous pensez que vous devriez avoir accès à cette ressource.'
+            title: trans('restrictions.no_rights', {}, 'resource'),
+            help: trans('restrictions.no_rights_help', {}, 'resource')
           }}
         />
 
@@ -54,12 +54,11 @@ class ResourceRestrictions extends Component {
           icon="fa fa-fw fa-eye"
           failed={this.props.errors.deleted || this.props.errors.notPublished}
           success={{
-            title: 'La ressource est publiée.',
-            help: ''
+            title: trans('restrictions.published', {}, 'resource')
           }}
           fail={{
-            title: this.props.errors.deleted ? 'La ressource est supprimée.' : 'La ressource n\'est pas encore publiée.',
-            help: this.props.errors.deleted ? 'Vous ne pouvez plus accéder au contenu des ressources supprimées' : 'Veuillez patienter en attendant que l\'un des gestionnaires publie la ressource.'
+            title: trans(this.props.errors.deleted ? 'restrictions.deleted' : 'restrictions.not_published', {}, 'resource'),
+            help: trans(this.props.errors.deleted ? 'restrictions.deleted_help' : 'restrictions.not_published_help', {}, 'resource')
           }}
         />
 
@@ -68,12 +67,17 @@ class ResourceRestrictions extends Component {
             icon="fa fa-fw fa-calendar"
             failed={this.props.errors.notStarted || this.props.errors.ended}
             success={{
-              title: '',
-              help: ''
+              title: trans('restrictions.period_opened', {}, 'resource'),
+              help: (this.props.errors.startDate || this.props.errors.endDate) ? trans('restrictions.period_opened_help', {
+                start: this.props.errors.startDate ? displayDate(this.props.errors.startDate, false, true) : `(${trans('empty_value')})`,
+                end: this.props.errors.endDate ? displayDate(this.props.errors.endDate, false, true) : `(${trans('empty_value')})`
+              }, 'resource') : trans('restrictions.period_not_limited', {}, 'resource')
             }}
             fail={{
-              title: this.props.errors.notStarted ? 'La ressource n\'est pas encore accessible.' : 'La ressource n\'est plus accessible.',
-              help: this.props.errors.notStarted ? `Veuillez patientez jusqu'au ${this.props.errors.startDate}` : ''
+              title: trans(this.props.errors.notStarted ? 'restrictions.not_started' : 'restrictions.ended_help', {}, 'resource'),
+              help: this.props.errors.notStarted ?
+                trans('restrictions.not_started_help', {date: displayDate(this.props.errors.startDate, false, true)}, 'resource') :
+                trans('restrictions.ended_help', {date: displayDate(this.props.errors.endDate, false, true)}, 'resource')
             }}
           />
         }
@@ -84,13 +88,12 @@ class ResourceRestrictions extends Component {
             onlyWarn={true}
             failed={this.props.errors.locked}
             success={{
-              title: 'Vous avez déverrouillé la ressource.',
-              help: ''
+              title: trans('restrictions.unlocked', {}, 'resource')
             }}
             fail={{
-              title: 'L\'accès requiert un code.',
+              title: trans('restrictions.locked', {}, 'resource'),
               help: this.props.errors.locked && !(this.props.errors.noRights || this.props.errors.notPublished || this.props.errors.deleted || this.props.errors.notStarted || this.props.errors.ended) ?
-                'Veuillez saisir le code qui vous a été remis afin d\'accéder à la ressource' :
+                trans('restrictions.locked_help', {}, 'resource') :
                 ''
             }}
           >
@@ -107,7 +110,7 @@ class ResourceRestrictions extends Component {
                   type={CALLBACK_BUTTON}
                   icon="fa fa-fw fa-sign-in-alt"
                   disabled={!this.state.codeAccess}
-                  label={trans('Accéder à la ressource', {}, 'actions')}
+                  label={trans('open-resource', {}, 'actions')}
                   callback={this.submitCodeAccess}
                   primary={true}
                 />
@@ -122,12 +125,11 @@ class ResourceRestrictions extends Component {
             onlyWarn={true}
             failed={this.props.errors.invalidLocation}
             success={{
-              title: 'Vous utilisez l\'un des postes de de travail authorisé.',
-              help: ''
+              title: trans('restrictions.location_authorized', {}, 'resource')
             }}
             fail={{
-              title: 'L\'accès doit s\'effectuer depuis un poste de travail authorisé.',
-              help: 'Veuillez utiliser l\'un des postes de travail authorisés afin d\'accéder à la ressource.'
+              title: trans('restrictions.location_unauthorized', {}, 'resource'),
+              help: trans('restrictions.location_unauthorized_help', {}, 'resource')
             }}
           />
         }
@@ -137,7 +139,7 @@ class ResourceRestrictions extends Component {
             className="btn btn-block btn-emphasis"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-sign-in-alt"
-            label={trans('Accéder à la ressource', {}, 'actions')}
+            label={trans('open-resource', {}, 'actions')}
             callback={this.props.dismiss}
             primary={true}
           />
@@ -145,7 +147,7 @@ class ResourceRestrictions extends Component {
 
         {this.props.managed &&
           <ContentHelp
-            help="En tant que gestionnaire vous pouvez toujours accéder à la ressource, même si les conditions d'accès ne sont pas satisfaites."
+            help={trans('restrictions.dismiss_help', {}, 'resource')}
           />
         }
       </div>

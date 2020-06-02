@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -85,13 +86,9 @@ class ResourceRestrictionsManager
 
             if (!empty($resourceNode->getAccessibleFrom()) || !empty($resourceNode->getAccessibleUntil())) {
                 $errors['notStarted'] = !$this->isStarted($resourceNode);
-                $errors['startDate'] = $resourceNode->getAccessibleFrom() ?
-                    $resourceNode->getAccessibleFrom()->format('d/m/Y') :
-                    null;
+                $errors['startDate'] = DateNormalizer::normalize($resourceNode->getAccessibleFrom());
                 $errors['ended'] = $this->isEnded($resourceNode);
-                $errors['endDate'] = $resourceNode->getAccessibleUntil() ?
-                    $resourceNode->getAccessibleUntil()->format('d/m/Y') :
-                    null;
+                $errors['endDate'] = DateNormalizer::normalize($resourceNode->getAccessibleUntil());
             }
 
             if (!empty($resourceNode->getAllowedIps())) {
