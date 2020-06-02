@@ -79,7 +79,7 @@ const Editor = props =>
         title={trans('parameters')}
       >
         <div className="alert alert-info">
-          {trans('placeholders_info', {}, 'url')}
+          {trans('placeholders_info', {}, 'template')}
         </div>
 
         <table className="table table-bordered table-striped table-hover">
@@ -94,7 +94,7 @@ const Editor = props =>
             {props.availablePlaceholders.map((placeholder) =>
               <tr key={placeholder}>
                 <td>{`%${placeholder}%`}</td>
-                <td>{trans(`${placeholder}_desc`, {}, 'url')}</td>
+                <td>{trans(`${placeholder}_desc`, {}, 'template')}</td>
               </tr>
             )}
           </tbody>

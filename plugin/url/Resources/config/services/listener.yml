@@ -7,6 +7,6 @@ services:
     HeVinci\UrlBundle\Listener\UrlListener:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@HeVinci\UrlBundle\Manager\UrlManager'
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
         tags:
             - { name: kernel.event_listener, event: resource.hevinci_url.load, method: onLoad }

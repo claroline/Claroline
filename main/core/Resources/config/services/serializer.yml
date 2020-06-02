@@ -241,6 +241,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@security.token_storage'
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     Claroline\CoreBundle\API\Serializer\Resource\Types\FileSerializer:
         tags: [claroline.serializer]

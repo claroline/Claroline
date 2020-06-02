@@ -1,9 +1,0 @@
-services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
-    HeVinci\UrlBundle\Manager\UrlManager:
-        arguments:
-            - '@security.token_storage'

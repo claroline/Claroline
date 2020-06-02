@@ -20,7 +20,7 @@
     "password_initialization_desc": "Template utilisé pour le mail envoyé afin d'initialiser le mot de passe.",
     "password_initialization_link_desc": "Le lien pour initialiser le mot de passe",
     "password_reset_link_desc": "Le lien pour réinitialiser le mot de passe",
-    "placeholders_info": "Les paramètres suivants peuvent être utilisés dans le titre et le contenu du template. Ils seront remplacés par leur valeur associée.",
+    "placeholders_info": "Les paramètres suivants peuvent être utilisés et seront remplacés par leur valeur associée.",
     "platform_name_desc": "Le nom de la plateforme",
     "platform_role_registration": "Inscription à un rôle de la plateforme",
     "platform_role_registration_desc": "Template utilisé pour le mail envoyé lors de l'inscription à un rôle de la plateforme.",
@@ -40,5 +40,10 @@
     "workspace_code_desc": "Le code de l'espace d'activités",
     "workspace_name_desc": "Le nom de l'espace d'activités",
     "workspace_registration": "Inscription à un espace d'activités",
-    "workspace_registration_desc": "Template utilisé pour le mail envoyé lors de l'inscription à un espace d'activités."
+    "workspace_registration_desc": "Template utilisé pour le mail envoyé lors de l'inscription à un espace d'activités.",
+
+    "current_user_id_desc": "L'ID de l'utilisateur connecté.",
+    "current_user_username_desc": "Le nom d'utilisateur de l'utilisateur connecté.",
+    "current_user_first_name_desc": "Le prénom de l'utilisateur connecté.",
+    "current_user_last_name_desc": "Le nom de l'utilisateur connecté."
 }

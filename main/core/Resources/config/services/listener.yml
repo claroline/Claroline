@@ -153,6 +153,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
         tags:
             - { name: kernel.event_listener, event: resource.text.load, method: load }
             - { name: kernel.event_listener, event: resource.text.delete, method: delete }

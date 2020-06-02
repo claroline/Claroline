@@ -436,10 +436,16 @@ services:
         alias: Claroline\CoreBundle\Manager\Theme\ThemeBuilderManager
         public: true
 
+    Claroline\CoreBundle\Manager\Template\PlaceholderManager:
+        arguments:
+          - '@security.token_storage'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
     Claroline\CoreBundle\Manager\Template\TemplateManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     claroline.manager.template_manager:
         alias: Claroline\CoreBundle\Manager\Template\TemplateManager

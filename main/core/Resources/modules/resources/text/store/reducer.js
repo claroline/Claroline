@@ -8,7 +8,7 @@ import {selectors as editorSelectors} from '#/main/core/resources/text/editor/st
 import {reducer as editorReducer} from '#/main/core/resources/text/editor/store/reducer'
 
 const reducer = combineReducers({
-  textForm: editorReducer.textForm,
+  editor: editorReducer,
   text: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'text')]: (state, action) => action.resourceData.text,
     // replaces path data after success updates

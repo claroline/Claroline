@@ -22,6 +22,8 @@ class TemplateManager
     private $om;
     /** @var PlatformConfigurationHandler */
     private $config;
+    /** @var PlaceholderManager */
+    private $placeholderManager;
 
     private $templateTypeRepo;
     private $templateRepo;
@@ -31,13 +33,16 @@ class TemplateManager
      *
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $config
+     * @param PlaceholderManager           $placeholderManager
      */
     public function __construct(
         ObjectManager $om,
-        PlatformConfigurationHandler $config
+        PlatformConfigurationHandler $config,
+        PlaceholderManager $placeholderManager
     ) {
         $this->om = $om;
         $this->config = $config;
+        $this->placeholderManager = $placeholderManager;
 
         $this->templateTypeRepo = $om->getRepository(TemplateType::class);
         $this->templateRepo = $om->getRepository(Template::class);
@@ -113,41 +118,11 @@ class TemplateManager
     {
         switch ($mode) {
             case 'content':
-                return $this->replacePlaceholders($template->getContent(), $placeholders);
+                return $this->placeholderManager->replacePlaceholders($template->getContent(), $placeholders);
             case 'title':
-                return $this->replacePlaceholders($template->getTitle() ?? '', $placeholders);
+                return $this->placeholderManager->replacePlaceholders($template->getTitle() ?? '', $placeholders);
         }
 
         return '';
-    }
-
-    /**
-     * @param string $text
-     * @param array  $placeholders
-     *
-     * @return string
-     */
-    public function replacePlaceholders($text, $placeholders = [])
-    {
-        $now = new \DateTime();
-        $keys = [
-            '%platform_name%',
-            '%platform_url%',
-            '%date%',
-            '%datetime%',
-        ];
-        $values = [
-            $this->config->getParameter('display.name'),
-            $this->config->getParameter('internet.platform_url'),
-            $now->format('Y-m-d'), // should be in locale format
-            $now->format('Y-m-d H:i:s'), // should be in locale format
-        ];
-
-        foreach ($placeholders as $key => $value) {
-            $keys[] = '%'.$key.'%';
-            $values[] = $value;
-        }
-
-        return str_replace($keys, $values, $text);
     }
 }

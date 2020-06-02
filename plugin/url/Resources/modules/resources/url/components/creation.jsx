@@ -20,7 +20,7 @@ const UrlForm = props =>
         fields: [
           {
             name: 'raw',
-            label: trans('url', {}, 'url'),
+            label: trans('url'),
             type: 'url',
             required: true
           }, {

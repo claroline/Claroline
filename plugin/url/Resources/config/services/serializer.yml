@@ -7,4 +7,4 @@ services:
     HeVinci\UrlBundle\Serializer\UrlSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@HeVinci\UrlBundle\Manager\UrlManager'
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'

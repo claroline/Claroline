@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TextSerializer
@@ -11,14 +12,21 @@ class TextSerializer
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var PlaceholderManager */
+    private $placeholderManager;
+
     /**
      * TextSerializer constructor.
      *
      * @param TokenStorageInterface $tokenStorage
+     * @param PlaceholderManager    $placeholderManager
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        PlaceholderManager $placeholderManager
+    ) {
         $this->tokenStorage = $tokenStorage;
+        $this->placeholderManager = $placeholderManager;
     }
 
     public function getSchema()
@@ -42,7 +50,8 @@ class TextSerializer
     {
         return [
             'id' => $text->getId(),
-            'content' => $text->getContent(),
+            'raw' => $text->getContent(),
+            'content' => $this->placeholderManager->replacePlaceholders($text->getContent() ?? ''),
             'meta' => [
                 'version' => $text->getVersion(),
             ],
@@ -59,9 +68,9 @@ class TextSerializer
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (isset($data['content'])) {
+        if (isset($data['raw'])) {
             $revision = new Revision();
-            $revision->setContent($data['content']);
+            $revision->setContent($data['raw']);
             $revision->setUser('anon.' === $user ? null : $user);
             $revision->setText($text);
             $version = $text->getVersion() + 1;

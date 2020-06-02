@@ -15,27 +15,32 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 
 class TextListener
 {
     /** @var ObjectManager */
     private $om;
-
     /** @var SerializerProvider */
     private $serializer;
+    /** @var PlaceholderManager */
+    private $placeholderManager;
 
     /**
      * TextListener constructor.
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
+     * @param PlaceholderManager $placeholderManager
      */
     public function __construct(
         ObjectManager $om,
-        SerializerProvider $serializer)
+        SerializerProvider $serializer,
+        PlaceholderManager $placeholderManager)
     {
         $this->om = $om;
         $this->serializer = $serializer;
+        $this->placeholderManager = $placeholderManager;
     }
 
     /**
@@ -47,6 +52,7 @@ class TextListener
     {
         $event->setData([
             'text' => $this->serializer->serialize($event->getResource()),
+            'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
         ]);
 
         $event->stopPropagation();

@@ -5,6 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors} from '#/main/core/resources/text/editor/store'
@@ -31,7 +32,7 @@ const EditorComponent = (props) =>
         primary: true,
         fields: [
           {
-            name: 'content',
+            name: 'raw',
             type: 'html',
             label: trans('text'),
             hideLabel: true,
@@ -44,21 +45,52 @@ const EditorComponent = (props) =>
         ]
       }
     ]}
-  />
+  >
+    <FormSections level={3}>
+      <FormSection
+        icon="fa fa-fw fa-exchange-alt"
+        title={trans('parameters')}
+      >
+        <div className="alert alert-info">
+          {trans('placeholders_info', {}, 'template')}
+        </div>
+
+        <table className="table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th>{trans('parameter')}</th>
+              <th>{trans('description')}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {props.availablePlaceholders.map((placeholder) =>
+              <tr key={placeholder}>
+                <td>{`%${placeholder}%`}</td>
+                <td>{trans(`${placeholder}_desc`, {}, 'template')}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </FormSection>
+    </FormSections>
+  </FormData>
 
 EditorComponent.propTypes = {
   path: T.string.isRequired,
   workspace: T.object,
   text: T.shape(
     TextTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  availablePlaceholders: T.arrayOf(T.string)
 }
 
 const Editor = connect(
   state => ({
     path: resourceSelectors.path(state),
     workspace: resourceSelectors.workspace(state),
-    text: selectors.text(state)
+    text: selectors.text(state),
+    availablePlaceholders: selectors.availablePlaceholders(state)
   })
 )(EditorComponent)
 

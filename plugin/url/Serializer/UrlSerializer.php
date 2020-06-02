@@ -3,24 +3,24 @@
 namespace HeVinci\UrlBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use HeVinci\UrlBundle\Entity\Url;
-use HeVinci\UrlBundle\Manager\UrlManager;
 
 class UrlSerializer
 {
     use SerializerTrait;
 
-    /** @var UrlManager */
-    private $urlManager;
+    /** @var PlaceholderManager */
+    private $placeholderManager;
 
     /**
      * UrlSerializer constructor.
      *
-     * @param UrlManager $urlManager
+     * @param PlaceholderManager $placeholderManager
      */
-    public function __construct(UrlManager $urlManager)
+    public function __construct(PlaceholderManager $placeholderManager)
     {
-        $this->urlManager = $urlManager;
+        $this->placeholderManager = $placeholderManager;
     }
 
     public function getName()
@@ -38,7 +38,7 @@ class UrlSerializer
         return [
             'id' => $url->getId(),
             'raw' => $url->getUrl(),
-            'url' => $this->urlManager->replacePlaceholders($url->getUrl()),
+            'url' => $this->placeholderManager->replacePlaceholders($url->getUrl() ?? ''),
             'mode' => $url->getMode() ?? Url::OPEN_REDIRECT,
             'ratio' => $url->getRatio() ?? 56.25,
         ];

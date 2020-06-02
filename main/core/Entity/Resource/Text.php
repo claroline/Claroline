@@ -35,9 +35,6 @@ class Text extends AbstractResource
      */
     protected $revisions;
 
-    /** @var string */
-    protected $text;
-
     public function __construct()
     {
         $this->version = 1;
@@ -67,26 +64,6 @@ class Text extends AbstractResource
     public function removeRevision($revision)
     {
         $this->revisions->removeElement($revision);
-    }
-
-    /**
-     * Required for the formtype.
-     *
-     * @param string $text
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-    }
-
-    /**
-     * Required for the formtype.
-     *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
     }
 
     /**
