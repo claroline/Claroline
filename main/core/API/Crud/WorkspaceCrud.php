@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\API\Crud;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
@@ -108,7 +107,6 @@ class WorkspaceCrud
     public function preCreate(CreateEvent $event)
     {
         $workspace = $this->manager->createWorkspace($event->getObject());
-        $options = $event->getOptions();
 
         $user = $this->tokenStorage->getToken() ?
             $this->tokenStorage->getToken()->getUser() :
@@ -124,8 +122,6 @@ class WorkspaceCrud
                 $this->organizationManager->getDefault();
             $workspace->addOrganization($organization);
         }
-
-
 
         $this->om->flush();
 

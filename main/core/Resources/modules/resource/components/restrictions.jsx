@@ -42,7 +42,7 @@ class ResourceRestrictions extends Component {
           failed={this.props.errors.noRights}
           success={{
             title: trans(this.props.managed ? 'restrictions.manager' : 'restrictions.rights', {}, 'resource'),
-            help: trans(this.props.managed ? 'restrictions.manager_help' : 'restrictions.rights_help', {}, 'resource'),
+            help: trans(this.props.managed ? 'restrictions.manager_help' : 'restrictions.rights_help', {}, 'resource')
           }}
           fail={{
             title: trans('restrictions.no_rights', {}, 'resource'),
@@ -166,7 +166,8 @@ ResourceRestrictions.propTypes = {
     notStarted: T.bool,
     ended: T.bool,
     invalidLocation: T.bool,
-    startDate: T.string
+    startDate: T.string,
+    endDate: T.string
   }).isRequired,
   dismiss: T.func.isRequired,
   checkAccessCode: T.func
