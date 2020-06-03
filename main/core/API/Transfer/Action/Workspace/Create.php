@@ -15,26 +15,39 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 
 class Create extends AbstractAction
 {
+    /** @var ObjectManager */
+    private $om;
+    /** @var Crud */
+    private $crud;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+    /** @var WorkspaceSerializer */
+    private $serializer;
+
     /**
-     * Action constructor.
+     * Create constructor.
      *
-     * @param Crud $crud
+     * @param ObjectManager       $om
+     * @param Crud                $crud
+     * @param WorkspaceManager    $workspaceManager
+     * @param WorkspaceSerializer $serializer
      */
-    public function __construct(ObjectManager $om, Crud $crud, WorkspaceManager $workspaceManager, WorkspaceSerializer $serializer)
-    {
-        $this->crud = $crud;
+    public function __construct(
+        ObjectManager $om,
+        Crud $crud,
+        WorkspaceManager $workspaceManager,
+        WorkspaceSerializer $serializer
+    ) {
         $this->om = $om;
+        $this->crud = $crud;
         $this->workspaceManager = $workspaceManager;
         $this->serializer = $serializer;
     }
 
     public function execute(array $data, &$successData = [])
     {
-        $workspace = $this->crud->create(
-            $this->getClass(),
-            $data,
-            [Options::LIGHT_COPY]
-        );
+        /** @var Workspace $workspace */
+        $workspace = $this->crud->create($this->getClass(), $data);
 
         if (isset($data['model'])) {
             $model = $this->om->getRepository(Workspace::class)->findOneBy($data['model']);
@@ -51,6 +64,7 @@ class Create extends AbstractAction
         //add organizations here
         if (isset($data['organizations'])) {
             foreach ($data['organizations'] as $organizationData) {
+                /** @var Organization $organization */
                 $organization = $this->om->getRepository(Organization::class)->findOneBy($organizationData);
                 $workspace->addOrganization($organization);
                 $this->om->persist($workspace);
@@ -72,14 +86,14 @@ class Create extends AbstractAction
         $this->om->flush();
 
         $successData['create'][] = [
-          'data' => $data,
-          'log' => $this->getAction()[0].' created.',
+            'data' => $data,
+            'log' => $this->getAction()[0].' created.',
         ];
     }
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Workspace\Workspace';
+        return Workspace::class;
     }
 
     public function getAction()
@@ -94,7 +108,7 @@ class Create extends AbstractAction
 
     public function getOptions()
     {
-        //in an ideal world this should be removedn but for now it's an easy fix
+        //in an ideal world this should be removed but for now it's an easy fix
         return [Options::FORCE_FLUSH];
     }
 

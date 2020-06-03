@@ -96,7 +96,7 @@ class TransferManager
      */
     public function create(array $data, Workspace $workspace)
     {
-        $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
+        $options = [Options::REFRESH_UUID];
         // gets entity from raw data.
         $workspace = $this->deserialize($data, $workspace, $options);
         // creates the entity if allowed

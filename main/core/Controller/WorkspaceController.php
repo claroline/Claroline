@@ -132,6 +132,7 @@ class WorkspaceController
 
         // switch to the workspace locale if needed
         $this->forceWorkspaceLang($workspace, $request);
+        $this->toolManager->addMissingWorkspaceTools($workspace);
 
         $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);

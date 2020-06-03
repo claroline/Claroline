@@ -276,11 +276,7 @@ class WorkspaceController extends AbstractCrudController
         }
 
         /** @var Workspace $workspace */
-        $workspace = $this->crud->create(
-            $class,
-            $data,
-            [Options::LIGHT_COPY]
-        );
+        $workspace = $this->crud->create($class, $data);
 
         if (is_array($workspace)) {
             return new JsonResponse($workspace, 400);

@@ -42,8 +42,6 @@ final class Options
     /****************/
 
     //do something better with these options
-
-    const LIGHT_COPY = 'light_copy';
     const SOFT_DELETE = 'soft_delete';
     const FORCE_FLUSH = 'force_flush';
 

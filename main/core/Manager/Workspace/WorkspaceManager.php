@@ -127,7 +127,7 @@ class WorkspaceManager
                 $this->container->get('security.token_storage')->getToken()->getUser() instanceof User &&
                 $this->container->get('security.token_storage')->getToken()->getUser()->getMainOrganization()
             ) {
-                //we want a min organization
+                //we want a main organization
                 $workspace->addOrganization($this->container->get('security.token_storage')->getToken()->getUser()->getMainOrganization());
                 $this->om->persist($workspace);
                 $this->om->flush();
@@ -517,11 +517,8 @@ class WorkspaceManager
             unset($data['name']);
         }
 
-        $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
-        // gets entity from raw data.
-
         /** @var Workspace $workspaceCopy */
-        $workspaceCopy = $transferManager->deserialize($data, $newWorkspace, $options, $fileBag);
+        $workspaceCopy = $transferManager->deserialize($data, $newWorkspace, [Options::REFRESH_UUID], $fileBag);
 
         $workspaceCopy->setModel($model);
 

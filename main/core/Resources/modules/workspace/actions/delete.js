@@ -25,20 +25,6 @@ export default (workspaces, refresher) => ({
       method: 'DELETE'
     },
     success: () => refresher.delete(workspaces)
-    // todo : make custom errors work (I can not dispatch actions from here)
-    /*error: (data, status, dispatch) => {
-      if (data.errors) {
-        Object.values(data.errors).forEach(message => dispatch(
-          alertActions.addAlert(
-            'workspace-deletion',
-            alertConstants.ALERT_STATUS_WARNING,
-            actionConstants.ACTION_DELETE,
-            null,
-            message
-          )
-        ))
-      }
-    }*/
   },
   group: trans('management'),
   scope: ['object', 'collection']

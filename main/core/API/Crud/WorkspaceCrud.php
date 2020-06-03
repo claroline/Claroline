@@ -125,17 +125,7 @@ class WorkspaceCrud
             $workspace->addOrganization($organization);
         }
 
-        //this is for workspace creation: TODO remove that because it's very confusing
-        //make a search on LIGHT_COPY you'll find what will probably need a change
-        if (in_array(Options::LIGHT_COPY, $options)) {
-            $this->om->flush();
 
-            return $workspace;
-        }
-
-        //is this part ever fired anymore ? I don't know
-
-        $workspace = $this->manager->copy($model, $workspace, false);
 
         $this->om->flush();
 
