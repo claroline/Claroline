@@ -118,7 +118,7 @@ class ActionsChart extends Component {
                   type: 'enum-plus',
                   label: trans('action'),
                   options: {
-                    choices: this.props.data.types,
+                    choices: this.props.data.types || [],
                     transDomain: 'log'
                   }
                 }, {
