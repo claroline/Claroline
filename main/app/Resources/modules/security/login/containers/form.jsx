@@ -28,7 +28,7 @@ const LoginForm = withReducer(selectors.STORE_NAME, reducer)(
                 callback(response)
               }
             },
-            () => dispatch(formActions.setErrors(selectors.FORM_NAME, {password: trans('Votre identifiant ou votre mot de passe est incorrect.', {}, 'validators')}))
+            (response) => dispatch(formActions.setErrors(selectors.FORM_NAME, {password: trans(response, {}, 'security')}))
           )
         })
       }
