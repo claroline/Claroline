@@ -2,6 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+// TODO : avoid hard dependency
+import html2pdf from 'html2pdf.js'
+
 import {matchPath} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -35,6 +38,24 @@ const LessonMenu = props => {
           onClick: props.autoClose,
           displayed: props.editable,
           group: trans('management')
+        }, {
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-file-pdf-o',
+          displayed: props.canExport,
+          label: trans('export-pdf', {}, 'actions'),
+          group: trans('transfer'),
+          onClick: props.autoClose,
+          callback: () => props.downloadChapterPdf(chapter.id).then(pdfContent => {
+            html2pdf()
+              .set({
+                filename: pdfContent.name,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 4 },
+                enableLinks: true
+              })
+              .from(pdfContent.content, 'string')
+              .save()
+          })
         }, {
           name: 'delete',
           type: CALLBACK_BUTTON,
@@ -80,9 +101,11 @@ LessonMenu.propTypes = {
   }).isRequired,
   path: T.string.isRequired,
   editable: T.bool.isRequired,
+  canExport: T.bool.isRequired,
   lesson: T.object.isRequired,
   tree: T.any.isRequired,
   delete: T.func.isRequired,
+  downloadChapterPdf: T.func.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

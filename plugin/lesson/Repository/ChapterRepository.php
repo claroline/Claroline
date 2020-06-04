@@ -9,6 +9,7 @@
 
 namespace Icap\LessonBundle\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
@@ -17,18 +18,23 @@ class ChapterRepository extends NestedTreeRepository
 {
     public function getFirstChapter(Lesson $lesson)
     {
-        return $this->findOneBy(array('lesson' => $lesson, 'root' => $lesson->getRoot()->getId(), 'left' => 2));
+        return $this->findOneBy([
+            'lesson' => $lesson,
+            'root' => $lesson->getRoot()->getId(),
+            'left' => 2,
+        ]);
     }
 
-    public function getChapterTree(Chapter $chapter)
+    public function getChapterTree(Chapter $chapter, bool $includeChapter = true)
     {
-        return $this->childrenHierarchy($chapter, false, array(), true);
+        return $this->childrenHierarchy($chapter, false, [], $includeChapter);
     }
 
     /**
      * @param Chapter $chapter
+     * @param string  $fields
      *
-     * @return Tree $tree
+     * @return array
      */
     public function buildChapterTree(Chapter $chapter, $fields = 'chapter')
     {
@@ -37,10 +43,8 @@ class ChapterRepository extends NestedTreeRepository
             ->andWhere('chapter.root = :rootId')
             ->orderBy('chapter.root, chapter.left', 'ASC')
             ->setParameter('rootId', $chapter->getId());
-        $options = array('decorate' => false);
-        $tree = $this->buildTree($queryBuilder->getQuery()->getArrayResult(), $options);
 
-        return $tree;
+        return $this->buildTree($queryBuilder->getQuery()->getArrayResult(), ['decorate' => false]);
     }
 
     public function getChapterAndChapterChildren(Chapter $chapter)
@@ -61,7 +65,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }
@@ -84,7 +88,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }
@@ -97,7 +101,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }
@@ -121,7 +125,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }
@@ -147,7 +151,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }
@@ -168,7 +172,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setParameter(2, $lessonId)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }
@@ -189,7 +193,7 @@ class ChapterRepository extends NestedTreeRepository
                 ->setParameter(2, $lessonId)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        } catch (NoResultException $e) {
             return;
         }
     }

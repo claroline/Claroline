@@ -14,9 +14,13 @@ const LessonMenu = withRouter(
     (state) => ({
       lesson: selectors.lesson(state),
       tree: selectors.treeData(state),
-      editable: hasPermission('edit', resourceSelectors.resourceNode(state))
+      editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
+      canExport: selectors.canExport(state)
     }),
     (dispatch) => ({
+      downloadChapterPdf(chapterId) {
+        return dispatch(actions.downloadChapterPdf(chapterId))
+      },
       delete: (lessonId, chapterSlug, chapterTitle, history, path) => {
         dispatch(modalActions.showModal(MODAL_LESSON_CHAPTER_DELETE, {
           chapterTitle: chapterTitle,

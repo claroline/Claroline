@@ -3,9 +3,9 @@
         {% import _self as macro %}
         <li id="li-{{ chapter.id }}" data-chapter="{{ chapter.id }}">
             <a href="#chapter-{{chapter.id}}">
-                {{prefix ~ loop.index}}&nbsp;{{ chapter.title }}
+                {{prefix ~ loop.index ~ delimeter}}&nbsp;{{ chapter.title }}
             </a>
-            <ul id="ul-{{ chapter.id }}" class="no-bullet-list" data-chapter="{{ chapter.id }}">
+            <ul id="ul-{{ chapter.id }}" class="lesson-chapters-summary" data-chapter="{{ chapter.id }}">
                 {% if chapter.__children is not empty %}
                     {{ macro.lesson_contents_pdf(chapter.__children, delimeter, prefix ~ loop.index ~ delimeter) }}
                 {% endif %}
@@ -16,6 +16,6 @@
 
 {% import _self as macro %}
 
-<ul id="lesson-contents-list" data-chapter="{{ rootId }}" class="no-bullet-list">
+<ul id="lesson-contents-list" data-chapter="{{ rootId }}" class="lesson-chapters-summary">
     {{ macro.lesson_contents_pdf(chapters, delimeter, "") }}
 </ul>

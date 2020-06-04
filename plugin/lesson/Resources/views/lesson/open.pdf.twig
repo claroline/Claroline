@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-lesson-pdf.css') }}" />
-</head>
-<body>
-<div class="page-header">
-    <h1>{{ _resource.resourceNode.name }}</h1>
-</div>
+    <head>
+        <meta charset="utf-8">
+        <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
+        <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-lesson-pdf.css') }}" />
+    </head>
 
-{% if tree is not empty and tree[0] is not empty and tree[0].__children is not empty %}
-    <div class="pdf-contents" style="margin-top:15px;">
-        <div class="pdf-contents-inner well">
-            <div class="pdf-contents-title">
-                {{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
+    <body>
+        <div class="container">
+            <div class="page-header">
+                <h1>{{ _resource.resourceNode.name }}</h1>
             </div>
-            {% include "IcapLessonBundle:lesson:lessonContents.pdf.twig" with {'chapters' : tree[0].__children, 'delimeter' : '.', 'rootId' : tree[0].id} %}
+
+            {% if tree is not empty and tree[0] is not empty %}
+                {% if tree[0].__children is not empty %}
+                <div class="pdf-contents" style="margin-top:15px;">
+                    <div class="pdf-contents-inner well">
+                        <div class="pdf-contents-title">
+                            {{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
+                        </div>
+                        {% include "IcapLessonBundle:lesson:lessonContents.pdf.twig" with {'chapters' : tree, 'delimeter' : '.', 'rootId' : ''} %}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                    {% endif %}
+
+                <div class="lesson-chapters">
+                    {% include "IcapLessonBundle:lesson:lessonChapters.pdf.twig" with {'chapters' : tree, 'lessonId' : _resource.id} %}
+                </div>
+            {% endif %}
         </div>
-        <div class="clearfix"></div>
-    </div>
-    <div class="lesson-chapters">
-        {% include "IcapLessonBundle:lesson:lessonChapters.pdf.twig" with {'chapters' : tree[0].__children, 'lessonId' : _resource.id} %}
-    </div>
-{% endif %}
-</body>
+    </body>
 </html>

@@ -120,3 +120,12 @@ actions.downloadLessonPdf = (lessonId) => ({
     }
   }
 })
+
+actions.downloadChapterPdf = (chapterId) => ({
+  [API_REQUEST]: {
+    url: ['icap_lesson_chapter_export_pdf', {chapter: chapterId}],
+    request: {
+      method: 'GET'
+    }
+  }
+})

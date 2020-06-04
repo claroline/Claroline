@@ -9,7 +9,7 @@
 
 namespace Icap\LessonBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Lesson extends AbstractResource
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
