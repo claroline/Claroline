@@ -394,7 +394,6 @@ class UserSerializer extends GenericSerializer
 
     /**
      * Deserialize method.
-     * TODO This is only a partial implementation.
      *
      * @param array     $data
      * @param User|null $user

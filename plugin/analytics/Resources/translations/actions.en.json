@@ -1,5 +1,5 @@
 {
-  "show-dashboard": "Show dashboard",
+  "show_dashboard": "Show dashboard",
   "show-participants": "Show participants",
   "export-connections": "Export connection times (.csv)",
   "export-actions": "Export actions (.csv)",

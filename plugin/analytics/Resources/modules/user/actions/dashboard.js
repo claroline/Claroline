@@ -9,7 +9,7 @@ export default (users, nodesRefresher, path) => ({
   name: 'dashboard',
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-tachometer',
-  label: trans('show-dashboard', {}, 'actions'),
+  label: trans('show_dashboard', {}, 'actions'),
   target: `${path}/dashboard`,
-  displayed: hasPermission('edit', users[0])
+  displayed: hasPermission('show_dashboard', users[0])
 })

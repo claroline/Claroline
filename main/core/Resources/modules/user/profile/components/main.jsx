@@ -46,7 +46,7 @@ const ProfileComponent = props => {
           }, {
             path: '/dashboard',
             component: Tracking,
-            disabled: !hasPermission('edit', props.user)
+            disabled: !hasPermission('show_dashboard', props.user)
           }
         ]}
         redirect={[

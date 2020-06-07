@@ -8,6 +8,6 @@ export default (resourceNodes, nodesRefresher, path) => ({
   name: 'dashboard',
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-tachometer',
-  label: trans('show-dashboard', {}, 'actions'),
+  label: trans('show_dashboard', {}, 'actions'),
   target: `${path}/${resourceNodes[0].slug}/dashboard`
 })

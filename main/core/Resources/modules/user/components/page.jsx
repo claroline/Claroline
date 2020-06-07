@@ -14,8 +14,6 @@ import {PageSimple} from '#/main/app/page/components/simple'
 import {PageContent} from '#/main/core/layout/page'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
-// TODO : use dynamic actions list
-
 const UserPageHeader = props =>
   <header className={classes('page-header', props.className)}>
     <div className="page-header-picture">
@@ -80,15 +78,7 @@ const UserPage = props =>
                 target: props.path + '/edit',
                 displayed: hasPermission('edit', props.user),
                 primary: true
-              }/*, {
-                name: 'show-badges',
-                type: URL_BUTTON,
-                icon: 'fa fa-trophy',
-                label: trans('user-badges'),
-                group: trans('badges'),
-                target: '#/badges/'+props.user.id,
-                displayed: false // TODO : restore
-              }*/
+              }
             ].concat(actions))
         }
         scope="object"
@@ -111,7 +101,12 @@ implementPropTypes(UserPage, PageTypes, {
   children: T.node.isRequired,
   path: T.string.isRequired,
   showBreadcrumb: T.bool.isRequired,
-  breadcrumb: T.array // TODO : correct prop type
+  breadcrumb: T.arrayOf(T.shape({
+    type: T.string,
+    label: T.string.isRequired,
+    displayed: T.bool,
+    target: T.oneOfType([T.string, T.array])
+  }))
 }, {
   breadcrumb: []
 })
