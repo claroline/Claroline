@@ -54,6 +54,8 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
   this.apiLastError = 'scorm_12' === scormData.version ? '301' : '0'
   this.scoData = Array.isArray(tracking['details']) ? {} : Object.assign({}, tracking['details'])
 
+  console.log(sco)
+
   if ('scorm_12' === scormData.version) {
     this.scoData['cmi.core.student_id'] = currentUser ? currentUser.autoId : -1
     this.scoData['cmi.core.student_name'] = currentUser ? `${currentUser.firstName}, ${currentUser.lastName}` : 'anon., anon.'
@@ -80,6 +82,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
     this.scoData['cmi.student_data.mastery_score'] = null !== sco.data.scoreToPassInt ? sco.data.scoreToPassInt : ''
     this.scoData['cmi.student_data.max_time_allowed'] = null !== sco.data.maxTimeAllowed ? sco.data.maxTimeAllowed : ''
     this.scoData['cmi.student_data.time_limit_action'] = null !== sco.data.timeLimitAction ? sco.data.timeLimitAction : ''
+    this.scoData['cmi.progress_measure'] = tracking['progression'] ? tracking['progression'] / 100 : 0
   } else {
     this.scoData['cmi.learner_id'] = currentUser ? currentUser.autoId : -1
     this.scoData['cmi.learner_name'] = currentUser ? `${currentUser.firstName}, ${currentUser.lastName}` : 'anon., anon.'
@@ -95,6 +98,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
     this.scoData['cmi.mode'] = 'normal'
     this.scoData['cmi.objectives._children'] = 'id,score,success_status,completion_status,progress_measure,description'
     this.scoData['cmi.score._children'] = 'scaled,raw,min,max'
+    this.scoData['cmi.progress_measure'] = tracking['progression'] ? tracking['progression'] / 100 : 0
 
     if (undefined === this.scoData['cmi.comments_from_learner']) {
       this.scoData['cmi.comments_from_learner'] = {}
@@ -201,6 +205,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
         case 'cmi.student_data.mastery_score' :
         case 'cmi.student_data.max_time_allowed' :
         case 'cmi.student_data.time_limit_action' :
+        case 'cmi.progress_measure':
           this.apiLastError = '0'
 
           return this.scoData[arg] ? this.scoData[arg] : ''
@@ -290,6 +295,10 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
           }
           this.scoData[argName] = argValue
           this.apiLastError = '0'
+
+          return 'true'
+        case 'cmi.progress_measure' :
+          this.scoData[argName] = argValue
 
           return 'true'
         case 'cmi.core.exit' :
@@ -551,6 +560,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
       case 'cmi.score._children':
       case 'cmi.time_limit_action':
       case 'cmi.total_time':
+      case 'cmi_progress_measure':
         this.apiLastError = '0'
 
         return this.scoData[arg]
@@ -559,7 +569,6 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
       case 'cmi.learner_preference.language':
       case 'cmi.learner_preference.delivery_speed':
       case 'cmi.learner_preference.audio_captioning':
-      case 'cmi.progress_measure':
       case 'cmi.score.scaled':
       case 'cmi.score.raw':
       case 'cmi.score.max':
@@ -575,6 +584,9 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
         this.apiLastError = '0'
 
         return this.scoData[arg]
+
+      case 'cmi.progress_measure':
+        return this.scoData[arg] ? this.scoData[arg] / 100 : this.scoData[arg]
 
       default:
         splitted = arg.split('.')
@@ -978,7 +990,7 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
           argFloatValue = parseFloat(argValue)
 
           if (0 <= argFloatValue && 1 >= argFloatValue) {
-            this.scoData[argName] = argFloatValue
+            this.scoData[argName] = argFloatValue * 100
             this.apiLastError = '0'
 
             return 'true'

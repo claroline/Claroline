@@ -63,6 +63,13 @@ class ScoTracking
     protected $scoreMax;
 
     /**
+     * @ORM\Column(type="float")
+     *
+     * @var float
+     */
+    protected $progression = 0;
+
+    /**
      * For Scorm 2004 only.
      *
      * @ORM\Column(name="score_scaled", type="decimal", precision=10, scale=7, nullable=true)
@@ -385,6 +392,16 @@ class ScoTracking
     public function setLatestDate(\DateTime $latestDate = null)
     {
         $this->latestDate = $latestDate;
+    }
+
+    public function getProgression()
+    {
+        return $this->progression;
+    }
+
+    public function setProgression($progression)
+    {
+        $this->progression = $progression;
     }
 
     public function getFormattedTotalTime()

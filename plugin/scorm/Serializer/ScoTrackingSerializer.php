@@ -14,6 +14,7 @@ namespace Claroline\ScormBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\ScormBundle\Entity\ScoTracking;
 
 class ScoTrackingSerializer
@@ -74,7 +75,8 @@ class ScoTrackingSerializer
             'lessonMode' => $scoTracking->getLessonMode(),
             'isLocked' => $scoTracking->getIsLocked(),
             'details' => $scoTracking->getDetails(),
-            'latestDate' => $scoTracking->getLatestDate() ? $scoTracking->getLatestDate()->format('Y-m-d\TH:i:s') : null,
+            'latestDate' => DateNormalizer::normalize($scoTracking->getLatestDate()),
+            'progression' => $scoTracking->getProgression(),
         ];
     }
 }

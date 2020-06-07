@@ -244,6 +244,8 @@ class ScormManager
                 $lessonStatus = isset($data['cmi.core.lesson_status']) ? $data['cmi.core.lesson_status'] : null;
                 $sessionTime = isset($data['cmi.core.session_time']) ? $data['cmi.core.session_time'] : null;
                 $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
+                $progression = isset($data['cmi.progress_measure']) ? floatval($data['cmi.progress_measure']) : 0;
+
                 $tracking->setDetails($data);
                 $tracking->setEntry($data['cmi.core.entry']);
                 $tracking->setExitMode($data['cmi.core.exit']);
@@ -282,6 +284,11 @@ class ScormManager
                             $bestStatus = $lessonStatus;
                         }
                     }
+
+                    if ($progression > $tracking->getProgression()) {
+                        $tracking->setProgression($progression);
+                    }
+
                     $data['sco'] = $sco->getUuid();
                     $data['lessonStatus'] = $lessonStatus;
                     $data['scoreMax'] = $scoreMax;
@@ -291,6 +298,7 @@ class ScormManager
                     $data['totalTime'] = $totalTimeInHundredth;
                     $data['bestScore'] = $bestScore;
                     $data['bestStatus'] = $bestStatus;
+                    $data['progression'] = $progression;
                     $event = new LogScormResultEvent($sco->getScorm(), $user, $data);
                     $this->eventDispatcher->dispatch($event, 'log');
 
@@ -323,6 +331,7 @@ class ScormManager
                     $scoreMin = isset($data['cmi.score.min']) ? intval($data['cmi.score.min']) : null;
                     $scoreMax = isset($data['cmi.score.max']) ? intval($data['cmi.score.max']) : null;
                     $scoreScaled = isset($data['cmi.score.scaled']) ? floatval($data['cmi.score.scaled']) : null;
+                    $progression = isset($data['cmi.progress_measure']) ? floatval($data['cmi.progress_measure']) : 0;
                     $bestScore = $tracking->getScoreRaw();
 
                     // Computes total time
@@ -348,6 +357,10 @@ class ScormManager
                         $tracking->setScoreMin($scoreMin);
                         $tracking->setScoreMax($scoreMax);
                         $tracking->setScoreScaled($scoreScaled);
+                    }
+
+                    if ($progression > $tracking->getProgression()) {
+                        $tracking->setProgression($progression);
                     }
 
                     // Update best success status and completion status
@@ -379,6 +392,7 @@ class ScormManager
                     $data['totalTime'] = $totalTimeInterval;
                     $data['result'] = $scoreRaw;
                     $data['resultMax'] = $scoreMax;
+                    $data['progression'] = $progression;
                     $event = new LogScormResultEvent($sco->getScorm(), $user, $data);
                     $this->eventDispatcher->dispatch($event, 'log');
 
@@ -468,6 +482,7 @@ class ScormManager
             $tracking->getUser(),
             $tracking->getLatestDate(),
             [
+                'progression' => $data['progression'],
                 'status' => $status,
                 'score' => $score,
                 'scoreMin' => $scoreMin,

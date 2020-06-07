@@ -229,7 +229,9 @@ class ScormLib
                     $sco->setScoreToPassDecimal($item->nodeValue);
                     break;
                 case 'adlcp:completionThreshold':
-                    $sco->setCompletionThreshold($item->nodeValue);
+                    if ($item->nodeValue && !is_nan($item->nodeValue)) {
+                        $sco->setCompletionThreshold(floatval($item->nodeValue));
+                    }
                     break;
             }
             $item = $item->nextSibling;

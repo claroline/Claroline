@@ -18,7 +18,6 @@ const ScormMenu = props =>
       routes={[
         {
           path: '/play',
-          component: PlayerMenu,
           render() {
             const Menu = (
               <PlayerMenu autoClose={props.autoClose} />

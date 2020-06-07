@@ -37,7 +37,10 @@ const ResultsComponent = props =>
         type: 'date',
         label: trans('last_session_date', {}, 'scorm'),
         displayed: true,
-        filterable: false
+        filterable: false,
+        options: {
+          time: true
+        }
       }, {
         name: 'totalTime',
         type: 'string',
@@ -81,25 +84,13 @@ const ResultsComponent = props =>
             constants.LESSON_STATUS_LIST_2004
         }
       }, {
-        name: 'completionStatus',
+        name: 'progression',
         type: 'string',
         label: trans('completion_status', {}, 'scorm'),
         displayed: true,
         filterable: false,
         sortable: constants.SCORM_2004 === props.scorm.version,
-        calculated: (rowData) => trans(rowData.completionStatus, {}, 'scorm')
-      }, {
-        name: 'completionStatusSelect',
-        alias: 'completionStatus',
-        type: 'choice',
-        label: trans('completion_status', {}, 'scorm'),
-        displayed: false,
-        displayable: false,
-        filterable: constants.SCORM_2004 === props.scorm.version,
-        sortable: false,
-        options: {
-          choices: constants.COMPLETION_STATUS_LIST_2004
-        }
+        calculated: (rowData) => rowData.progression + '%'
       }
     ]}
   />
