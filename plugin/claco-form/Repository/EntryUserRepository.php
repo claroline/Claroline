@@ -12,11 +12,18 @@
 namespace Claroline\ClacoFormBundle\Repository;
 
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
+use Claroline\ClacoFormBundle\Entity\EntryUser;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class EntryUserRepository extends EntityRepository
 {
+    /**
+     * @param ClacoForm $clacoForm
+     * @param User      $user
+     *
+     * @return EntryUser[]
+     */
     public function findSharedEntryUserByClacoFormAndUser(ClacoForm $clacoForm, User $user)
     {
         $dql = '
@@ -35,6 +42,11 @@ class EntryUserRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @param ClacoForm $clacoForm
+     *
+     * @return EntryUser[]
+     */
     public function findSharedEntriesUsersByClacoForm(ClacoForm $clacoForm)
     {
         $dql = '

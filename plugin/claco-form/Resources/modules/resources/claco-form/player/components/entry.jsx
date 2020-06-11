@@ -18,8 +18,10 @@ import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {UserCard} from '#/main/core/user/components/card'
 import {MODAL_USERS} from '#/main/core/modals/users'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {UserMicro} from '#/main/core/user/components/micro'
@@ -124,7 +126,7 @@ const EntryActions = props =>
           selectAction: (users) => ({
             type: CALLBACK_BUTTON,
             label: trans('share', {}, 'actions'),
-            callback: () => props.share(users[0])
+            callback: () => props.share(users.map(user => user.id))
           })
         }],
         displayed: props.canShare,
@@ -184,12 +186,6 @@ EntryActions.propTypes = {
 }
 
 class EntryComponent extends Component {
-  componentDidMount() {
-    if (this.canShare()) {
-      this.props.fetchEntryUsersShared(this.props.entryId)
-    }
-  }
-
   canViewMetadata() {
     return this.canShare() ||
       this.props.displayMetadata === 'all' ||
@@ -339,7 +335,7 @@ class EntryComponent extends Component {
                           .from(pdfContent.content, 'string')
                           .save()
                       })}
-                      share={(user) => this.props.shareEntry(this.props.entryId, user.id)}
+                      share={(users) => this.props.shareEntry(this.props.entryId, users)}
                       delete={() => this.props.deleteEntry(this.props.entry)}
                       toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}
                       toggleLock={() => this.props.switchEntryLock(this.props.entry.id)}
@@ -407,7 +403,7 @@ class EntryComponent extends Component {
           }
         </div>
 
-        {this.canShare() && 0 < this.props.sharedUsers.length &&
+        {this.canShare() &&
           <FormSections level={3}>
             <FormSection
               id="shared-users"
@@ -415,20 +411,36 @@ class EntryComponent extends Component {
               icon="fa fa-fw fa-share-alt"
               title={trans('shared_with', {}, 'clacoform')}
             >
-              {this.props.sharedUsers.map(u =>
-                <div key={`shared-${u.id}`}>
-                  {u.firstName} {u.lastName}
-                  <Button
-                    className="btn-link"
-                    type={CALLBACK_BUTTON}
-                    icon="fa fa-fw fa-trash-o"
-                    label={trans('unshare', {}, 'clacoform')}
-                    tooltip="left"
-                    dangerous={true}
-                    callback={() => this.props.unshareEntry(this.props.entryId, u.id)}
-                  />
-                </div>
-              )}
+              <ListData
+                name={`${selectors.STORE_NAME}.entries.sharedUsers`}
+                fetch={{
+                  url: ['claro_claco_form_entry_shared_users_list', {entry: this.props.entryId}],
+                  autoload: true
+                }}
+                delete={{
+                  url: ['claro_claco_form_entry_user_unshare', {entry: this.props.entryId}]
+                }}
+                definition={[
+                  {
+                    name: 'username',
+                    type: 'username',
+                    label: trans('username'),
+                    displayed: true,
+                    primary: true
+                  }, {
+                    name: 'lastName',
+                    type: 'string',
+                    label: trans('last_name'),
+                    displayed: true
+                  }, {
+                    name: 'firstName',
+                    type: 'string',
+                    label: trans('first_name'),
+                    displayed: true
+                  }
+                ]}
+                card={UserCard}
+              />
             </FormSection>
           </FormSections>
         }
@@ -488,13 +500,11 @@ EntryComponent.propTypes = {
   downloadEntryPdf: T.func.isRequired,
   changeEntryOwner: T.func.isRequired,
   shareEntry: T.func.isRequired,
-  unshareEntry: T.func.isRequired,
   updateEntryUserProp: T.func.isRequired,
   saveEntryUser: T.func.isRequired,
   fetchEntryUsersShared: T.func.isRequired,
   showModal: T.func.isRequired,
-  history: T.object.isRequired,
-  sharedUsers: T.arrayOf(T.object)
+  history: T.object.isRequired
 }
 
 const Entry = withRouter(connect(
@@ -505,7 +515,6 @@ const Entry = withRouter(connect(
     entryId: ownProps.match.params.id || formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')).id,
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entryUser: selectors.entryUser(state),
-    sharedUsers: selectors.entryUsersShared(state),
 
     canEdit: hasPermission('edit', resourceSelectors.resourceNode(state)),
     canEditEntry: selectors.canEditCurrentEntry(state),
@@ -548,11 +557,8 @@ const Entry = withRouter(connect(
     changeEntryOwner(entryId, userId) {
       dispatch(actions.changeEntryOwner(entryId, userId))
     },
-    shareEntry(entryId, userId) {
-      dispatch(actions.shareEntry(entryId, userId))
-    },
-    unshareEntry(entryId, userId) {
-      dispatch(actions.unshareEntry(entryId, userId))
+    shareEntry(entryId, users) {
+      dispatch(actions.shareEntry(entryId, users))
     },
     updateEntryUserProp(property, value) {
       dispatch(actions.editAndSaveEntryUser(property, value))

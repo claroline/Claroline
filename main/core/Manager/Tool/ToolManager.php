@@ -133,7 +133,7 @@ class ToolManager
     {
         $decoders = $this->toolMaskManager->getMaskDecodersByTool($orderedTool->getTool());
 
-        // certainly not the optimal way to generate it, but is avoids to replicate logic from OrderedToolVoter
+        // certainly not the optimal way to generate it, but it avoids to replicate logic from OrderedToolVoter
         $perms = [];
         foreach ($decoders as $decoder) {
             $perms[$decoder->getName()] = $this->authorization->isGranted($decoder->getName(), $orderedTool);

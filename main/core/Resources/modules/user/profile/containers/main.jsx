@@ -17,7 +17,7 @@ const Profile = withRouter(
       // retrieve tool rights and pass it to the user page
       const user = selectors.data(selectors.details(state, select.FORM_NAME))
       const toolPerms = toolSelectors.permissions(state)
-      
+
       return ({
         currentContext: toolSelectors.context(state),
         path: toolSelectors.path(state) + '/profile',

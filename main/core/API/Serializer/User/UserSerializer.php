@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\Serializer\GenericSerializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -21,16 +20,15 @@ use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
+use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
-/**
- * @todo remove parent class
- */
-class UserSerializer extends GenericSerializer
+class UserSerializer
 {
     use SerializerTrait;
 
@@ -58,6 +56,10 @@ class UserSerializer extends GenericSerializer
     private $organizationRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var FieldFacetRepository */
+    private $fieldFacetRepo;
+    /** @var FieldFacetValueRepository */
+    private $fieldFacetValueRepo;
 
     /**
      * UserManager constructor.
@@ -98,6 +100,8 @@ class UserSerializer extends GenericSerializer
 
         $this->organizationRepo = $om->getRepository(Organization::class);
         $this->roleRepo = $om->getRepository(Role::class);
+        $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
+        $this->fieldFacetValueRepo = $om->getRepository(FieldFacetValue::class);
     }
 
     public function getName()
@@ -211,11 +215,7 @@ class UserSerializer extends GenericSerializer
         }
 
         if (in_array(Options::SERIALIZE_FACET, $options)) {
-            /** @var FieldFacetValue[] $fields */
-            $fields = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
-                ->findPlatformValuesByUser($user);
-
+            $fields = $this->fieldFacetValueRepo->findPlatformValuesByUser($user);
             if (!empty($fields)) {
                 $serializedUser['profile'] = [];
                 foreach ($fields as $field) {
@@ -384,6 +384,10 @@ class UserSerializer extends GenericSerializer
             $user->setLocked($restrictions['locked']);
         }
 
+        if (isset($restrictions['removed'])) {
+            $user->setRemoved(!$restrictions['removed']);
+        }
+
         if (isset($restrictions['dates'])) {
             $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
 
@@ -407,9 +411,6 @@ class UserSerializer extends GenericSerializer
             $user = new User();
         }
 
-        // remove this later (with the Trait)
-        $user = parent::deserialize($data, $user, $options);
-
         $this->sipe('id', 'setUuid', $data, $user);
         $this->sipe('picture.url', 'setPicture', $data, $user);
         $this->sipe('username', 'setUserName', $data, $user);
@@ -417,6 +418,10 @@ class UserSerializer extends GenericSerializer
         $this->sipe('lastName', 'setLastName', $data, $user);
         $this->sipe('email', 'setEmail', $data, $user);
         $this->sipe('code', 'setCode', $data, $user);
+        $this->sipe('locale', 'setLocale', $data, $user);
+        $this->sipe('phone', 'setPhone', $data, $user);
+        $this->sipe('administrativeCode', 'setAdministrativeCode', $data, $user);
+
         //don't trim the password just in case
         $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);
 
@@ -429,6 +434,7 @@ class UserSerializer extends GenericSerializer
         }
 
         if (isset($data['mainOrganization'])) {
+            /** @var Organization $organization */
             $organization = $this->om->getObject($data['mainOrganization'], Organization::class, ['code']);
 
             if ($organization) {
@@ -464,11 +470,11 @@ class UserSerializer extends GenericSerializer
 
                             if (!$workspaceManager->isUserInValidationQueue($roleWs, $user)) {
                                 //for some reason the workspace add manager queue is broken here. Probably it's the log fault
-                                $wksrq = new WorkspaceRegistrationQueue();
-                                $wksrq->setUser($user);
-                                $wksrq->setRole($role);
-                                $wksrq->setWorkspace($roleWs);
-                                $this->om->persist($wksrq);
+                                $queue = new WorkspaceRegistrationQueue();
+                                $queue->setUser($user);
+                                $queue->setRole($role);
+                                $queue->setWorkspace($roleWs);
+                                $this->om->persist($queue);
                             }
                         }
                     } else {
@@ -481,8 +487,9 @@ class UserSerializer extends GenericSerializer
         //only add groups here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['groups'])) {
-            foreach ($data['groups'] as $group) {
-                $group = $this->om->getObject($group, Group::class, ['name']);
+            foreach ($data['groups'] as $groupData) {
+                /** @var Group $group */
+                $group = $this->om->getObject($groupData, Group::class, ['name']);
 
                 if ($group && $group->getId()) {
                     $user->addGroup($group);
@@ -511,11 +518,7 @@ class UserSerializer extends GenericSerializer
             }
         }
 
-        $fieldFacets = $this->om
-            ->getRepository(FieldFacet::class)
-            ->findPlatformFieldFacets();
-
-        /** @var FieldFacet $fieldFacet */
+        $fieldFacets = $this->fieldFacetRepo->findPlatformFieldFacets();
         foreach ($fieldFacets as $fieldFacet) {
             if (isset($data['profile']) && isset($data['profile'][$fieldFacet->getUuid()])) {
                 /** @var FieldFacetValue $fieldFacetValue */

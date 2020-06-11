@@ -163,6 +163,7 @@ class ListData extends Component {
         }
 
         <ListHeader
+          id={this.props.id}
           disabled={0 === this.props.totalResults}
           display={displayTool}
           columns={columnsTool}
@@ -207,6 +208,7 @@ class ListData extends Component {
 }
 
 ListData.propTypes = {
+  id: T.string.isRequired,
   level: T.number,
   displayLevel: T.number,
   className: T.string,

@@ -193,6 +193,25 @@
     padding: 0 floor(@grid-gutter-width / 2);
 }
 
+.page-icon {
+    .tool-icon,
+    .resource-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: hsla(0,0%,100%,.6);
+        border-radius: 50%;
+        font-size: 32px;
+        padding: floor(@grid-gutter-width / 2);
+        .box-shadow(0 0px 4px rgba(0,0,0,.5));
+    }
+
+    .tool-icon {
+        height: 100%;
+        width: 100%;
+    }
+}
+
 @media (max-width: @screen-sm-min) {
     .page-header {
         flex-wrap: wrap;

@@ -5,6 +5,9 @@ namespace Claroline\CoreBundle\API\Serializer\Widget\Type;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Widget\Type\ListWidget;
 
+/**
+ * @todo : find a way to merge with directory serializer
+ */
 class ListWidgetSerializer
 {
     use SerializerTrait;
@@ -21,7 +24,6 @@ class ListWidgetSerializer
 
     public function serialize(ListWidget $widget, array $options = []): array
     {
-        // todo : find a way to merge with directory serializer
         return [
             'maxResults' => $widget->getMaxResults(),
 
@@ -53,7 +55,6 @@ class ListWidgetSerializer
             // grid config
             'card' => [
                 'display' => $widget->getCard(),
-                'mapping' => [], // TODO
             ],
         ];
     }
@@ -62,7 +63,6 @@ class ListWidgetSerializer
     {
         $this->sipe('maxResults', 'setMaxResults', $data, $widget);
 
-        // todo : find a way to merge with directory serializer
         $this->sipe('count', 'setCount', $data, $widget);
         $this->sipe('actions', 'setActions', $data, $widget);
 

@@ -96,7 +96,9 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@event_dispatcher'
+          - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
           - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
           - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
@@ -311,7 +313,6 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.tool_manager'
           - '@translator'
-          - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.workspace_restrictions'
           - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'

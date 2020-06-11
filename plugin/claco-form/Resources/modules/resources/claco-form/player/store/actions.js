@@ -22,9 +22,6 @@ const ENTRY_CATEGORY_REMOVE = 'ENTRY_CATEGORY_REMOVE'
 const ENTRY_KEYWORD_ADD = 'ENTRY_KEYWORD_ADD'
 const ENTRY_KEYWORD_REMOVE = 'ENTRY_KEYWORD_REMOVE'
 const USED_COUNTRIES_LOAD = 'USED_COUNTRIES_LOAD'
-const ENTRY_USERS_SHARED_LOAD = 'ENTRY_USERS_SHARED_LOAD'
-const ENTRY_USERS_SHARED_ADD = 'ENTRY_USERS_SHARED_ADD'
-const ENTRY_USERS_SHARED_REMOVE = 'ENTRY_USERS_SHARED_REMOVE'
 
 const actions = {}
 
@@ -41,9 +38,6 @@ actions.removeCategory = makeActionCreator(ENTRY_CATEGORY_REMOVE, 'categoryId')
 actions.addKeyword = makeActionCreator(ENTRY_KEYWORD_ADD, 'keyword')
 actions.removeKeyword = makeActionCreator(ENTRY_KEYWORD_REMOVE, 'keywordId')
 actions.loadUsedCountries = makeActionCreator(USED_COUNTRIES_LOAD, 'countries')
-actions.loadEntryUsersShared = makeActionCreator(ENTRY_USERS_SHARED_LOAD, 'users')
-actions.addEntryUserShared = makeActionCreator(ENTRY_USERS_SHARED_ADD, 'user')
-actions.removeEntryUserShared = makeActionCreator(ENTRY_USERS_SHARED_REMOVE, 'userId')
 
 actions.deleteEntries = (entries) => (dispatch) => {
   dispatch({
@@ -178,26 +172,14 @@ actions.changeEntryOwner = (entryId, userId) => ({
   }
 })
 
-actions.shareEntry = (entryId, userId) => (dispatch) => {
+actions.shareEntry = (entryId, users) => (dispatch) => {
   dispatch({
     [API_REQUEST]: {
-      url: ['claro_claco_form_entry_user_share', {entry: entryId, user: userId}],
+      url: url(['claro_claco_form_entry_users_share', {entry: entryId}], {ids: users}),
       request: {
         method: 'PUT'
       },
-      success: (data, dispatch) => dispatch(actions.addEntryUserShared(data))
-    }
-  })
-}
-
-actions.unshareEntry = (entryId, userId) => (dispatch) => {
-  dispatch({
-    [API_REQUEST]: {
-      url: ['claro_claco_form_entry_user_unshare', {entry: entryId, user: userId}],
-      request: {
-        method: 'PUT'
-      },
-      success: (data, dispatch) => dispatch(actions.removeEntryUserShared(userId))
+      success: (data, dispatch) => dispatch(listActions.invalidateData(selectors.STORE_NAME+'.entries.sharedUsers'))
     }
   })
 }
@@ -255,20 +237,6 @@ actions.loadAllUsedCountries = (clacoFormId) => ({
   }
 })
 
-actions.fetchEntryUsersShared = (entryId) => (dispatch) => {
-  dispatch({
-    [API_REQUEST]: {
-      url: url(['claro_claco_form_entry_shared_users_list', {entry: entryId}]),
-      request: {
-        method: 'GET'
-      },
-      success: (data, dispatch) => {
-        dispatch(actions.loadEntryUsersShared(data.users))
-      }
-    }
-  })
-}
-
 export {
   actions,
   ENTRIES_UPDATE,
@@ -284,8 +252,5 @@ export {
   ENTRY_CATEGORY_REMOVE,
   ENTRY_KEYWORD_ADD,
   ENTRY_KEYWORD_REMOVE,
-  USED_COUNTRIES_LOAD,
-  ENTRY_USERS_SHARED_LOAD,
-  ENTRY_USERS_SHARED_ADD,
-  ENTRY_USERS_SHARED_REMOVE
+  USED_COUNTRIES_LOAD
 }

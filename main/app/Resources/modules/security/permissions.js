@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 /**
  * Checks if the user a the specified role.
  *
@@ -32,7 +34,7 @@ function isAdmin(user) {
  * @return {boolean}
  */
 function hasPermission(permission, object) {
-  return !!object.permissions[permission]
+  return get(object.permissions, permission, false)
 }
 
 export {

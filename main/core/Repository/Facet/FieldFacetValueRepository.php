@@ -11,11 +11,17 @@
 
 namespace Claroline\CoreBundle\Repository\Facet;
 
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class FieldFacetValueRepository extends EntityRepository
 {
+    /**
+     * @param User $user
+     *
+     * @return FieldFacetValue[]
+     */
     public function findPlatformValuesByUser(User $user)
     {
         return $this->_em

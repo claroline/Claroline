@@ -16,6 +16,7 @@ class DataSourceSerializer
         return [
             'id' => $dataSource->getUuid(),
             'name' => $dataSource->getName(),
+            'type' => $dataSource->getType(),
             'meta' => [
                 'context' => $dataSource->getContext(),
             ],

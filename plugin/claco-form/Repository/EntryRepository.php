@@ -17,6 +17,13 @@ use Doctrine\ORM\EntityRepository;
 
 class EntryRepository extends EntityRepository
 {
+    /**
+     * @param ClacoForm   $clacoForm
+     * @param string|null $startDate
+     * @param string|null $endDate
+     *
+     * @return Entry[]
+     */
     public function findPublishedEntriesByDates(ClacoForm $clacoForm, $startDate = null, $endDate = null)
     {
         $dql = '
@@ -50,6 +57,14 @@ class EntryRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @param ClacoForm   $clacoForm
+     * @param array       $categoriesIds
+     * @param string|null $startDate
+     * @param string|null $endDate
+     *
+     * @return Entry[]
+     */
     public function findPublishedEntriesByCategoriesAndDates(ClacoForm $clacoForm, $categoriesIds = [], $startDate = null, $endDate = null)
     {
         $dql = '

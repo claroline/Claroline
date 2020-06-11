@@ -94,6 +94,9 @@ class Category
         $this->clacoForm = $clacoForm;
     }
 
+    /**
+     * @return User[]
+     */
     public function getManagers()
     {
         return $this->managers->toArray();

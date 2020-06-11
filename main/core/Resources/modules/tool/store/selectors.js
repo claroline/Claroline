@@ -25,14 +25,14 @@ const path = createSelector(
   (basePath, name) => basePath + '/' + name
 )
 
-const icon = createSelector(
+const toolData = createSelector(
   [store],
-  (store) => store.icon
+  (store) => store.data
 )
 
 const permissions = createSelector(
-  [store],
-  (store) => store.permissions
+  [toolData],
+  (toolData) => toolData.permissions
 )
 
 const context = createSelector(
@@ -64,7 +64,7 @@ export const selectors = {
   name,
   basePath,
   path,
-  icon,
+  toolData,
   permissions,
   context,
   contextType,

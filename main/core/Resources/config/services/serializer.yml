@@ -4,16 +4,6 @@ services:
         autoconfigure: true
         public: true
 
-    _instanceof:
-        Claroline\AppBundle\API\Serializer\GenericSerializer:
-            calls:
-                - method: setAnnotationReader
-                  arguments:
-                     - '@annotation_reader'
-                - method: setObjectManager
-                  arguments:
-                     - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:
         arguments:
           - '@Claroline\AppBundle\API\SerializerProvider'
@@ -185,6 +175,13 @@ services:
 
     Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer:
         tags: [claroline.serializer]
+
+    Claroline\CoreBundle\API\Serializer\Tool\OrderedToolSerializer:
+        tags: [claroline.serializer]
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+          - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer:
         tags: [claroline.serializer]

@@ -16,7 +16,7 @@ const CommunityTool = withRouter(
       contextType: toolSelectors.contextType(state),
       currentUser: securitySelectors.currentUser(state),
       workspace: toolSelectors.contextData(state),
-      canAdministrate: hasPermission('administrate', toolSelectors.tool(state))
+      canAdministrate: hasPermission('administrate', toolSelectors.toolData(state))
     }),
     (dispatch) => ({
       loadUser(publicUrl) {

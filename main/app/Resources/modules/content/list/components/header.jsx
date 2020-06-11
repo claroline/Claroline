@@ -21,6 +21,7 @@ const ListHeader = props =>
   <div className="list-header">
     {!isEmpty(props.customActions) &&
       <Toolbar
+        id={props.id + '-toolbar'}
         className="list-toolbar"
         buttonName="list-header-btn btn btn-link"
         tooltip="bottom"
@@ -30,6 +31,7 @@ const ListHeader = props =>
 
     {props.filters &&
       <Search
+        id={props.id + '-search'}
         {...props.filters}
         disabled={props.disabled && isEmpty(props.filters.current)}
       />
@@ -55,6 +57,7 @@ const ListHeader = props =>
   </div>
 
 ListHeader.propTypes = {
+  id: T.string.isRequired,
   disabled: T.bool,
   display: T.shape({
     current: T.oneOf(Object.keys(constants.DISPLAY_MODES)).isRequired,

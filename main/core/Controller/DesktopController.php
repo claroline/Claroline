@@ -138,7 +138,7 @@ class DesktopController
         $this->eventDispatcher->dispatch('log', new LogDesktopToolReadEvent($toolName));
 
         return new JsonResponse(array_merge($event->getData(), [
-            'permissions' => $this->toolManager->getCurrentPermissions($orderedTool),
+            'data' => $this->serializer->serialize($orderedTool),
         ]));
     }
 

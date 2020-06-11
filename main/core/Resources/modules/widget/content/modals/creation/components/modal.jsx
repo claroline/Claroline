@@ -22,7 +22,6 @@ const ContentCreationModal = props => {
   const renderStepTitle = () => {
     switch(props.currentStep) {
       case 'widget':
-        return trans('new_widget_select', {}, 'widget')
       case 'dataSource':
         return trans('new_widget_select', {}, 'widget')
       case 'parameters':
@@ -31,7 +30,9 @@ const ContentCreationModal = props => {
   }
 
   const renderStep = () => {
-    switch(props.currentStep) {
+    const currentType = props.availableTypes.find(type => type.name === props.instance.type)
+
+    switch (props.currentStep) {
       case 'widget':
         return (
           <ContentType
@@ -51,7 +52,7 @@ const ContentCreationModal = props => {
       case 'dataSource':
         return (
           <ContentSource
-            sources={props.availableSources}
+            sources={props.availableSources.filter(source => -1 !== currentType.sources.indexOf(source.type))}
             select={(dataSource) => {
               props.update('source', dataSource.name)
               props.changeStep('parameters')

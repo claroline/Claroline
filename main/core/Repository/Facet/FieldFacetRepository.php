@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Facet;
 
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Doctrine\ORM\EntityRepository;
 
 class FieldFacetRepository extends EntityRepository
@@ -34,6 +35,9 @@ class FieldFacetRepository extends EntityRepository
         return $res;
     }
 
+    /**
+     * @return FieldFacet[]
+     */
     public function findPlatformFieldFacets()
     {
         $dql = '

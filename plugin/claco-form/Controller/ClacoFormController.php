@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -18,6 +19,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Entity\EntryUser;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\ClacoFormBundle\Serializer\CommentSerializer;
@@ -45,6 +47,8 @@ class ClacoFormController
 {
     use RequestDecoderTrait;
 
+    /** @var FinderProvider */
+    private $finder;
     private $clacoFormManager;
     private $configHandler;
     private $filesDir;
@@ -63,6 +67,7 @@ class ClacoFormController
     private $entryUserSerializer;
 
     public function __construct(
+        FinderProvider $finder,
         ClacoFormManager $clacoFormManager,
         PlatformConfigurationHandler $configHandler,
         $filesDir,
@@ -78,6 +83,7 @@ class ClacoFormController
         CommentSerializer $commentSerializer,
         EntryUserSerializer $entryUserSerializer
     ) {
+        $this->finder = $finder;
         $this->clacoFormManager = $clacoFormManager;
         $this->configHandler = $configHandler;
         $this->filesDir = $filesDir;
@@ -274,6 +280,7 @@ class ClacoFormController
     public function entryCommentsRetrieveAction(Entry $entry)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         if ('anon.' === $user) {
@@ -376,7 +383,7 @@ class ClacoFormController
         $this->clacoFormManager->checkCommentEditionRight($comment);
         $this->clacoFormManager->deleteComment($comment);
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -503,7 +510,7 @@ class ClacoFormController
         }
         $this->clacoFormManager->persistEntryUser($entryUser);
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -560,28 +567,31 @@ class ClacoFormController
      *     class="ClarolineClacoFormBundle:Entry",
      *     options={"mapping": {"entry": "uuid"}}
      * )
-     * @EXT\ParamConverter("user", converter="current_user")
      *
      * Retrieves list of users the entry is shared with
      *
      * @param Entry $entry
-     * @param User  $user
      *
      * @return JsonResponse
      */
-    public function entrySharedUsersListAction(Entry $entry, User $user)
+    public function entrySharedUsersListAction(Entry $entry)
     {
         $this->clacoFormManager->checkEntryShareRight($entry);
-        $users = $this->clacoFormManager->getSharedEntryUsers($entry);
-        $serializedUsers = array_map(function (User $user) {
-            return $this->serializer->serialize($user, [Options::SERIALIZE_MINIMAL]);
-        }, $users);
-        $whitelist = $this->userManager->getAllVisibleUsersIdsForUserPicker($user);
 
-        return new JsonResponse(['users' => $serializedUsers, 'whitelist' => $whitelist], 200);
+        $results = $this->finder->searchEntities(EntryUser::class, [
+            'hiddenFilters' => ['entry' => $entry, 'shared' => true],
+        ]);
+
+        return new JsonResponse(array_merge($results, [
+            'data' => array_map(function (EntryUser $entryUser) {
+                return $this->serializer->serialize($entryUser->getUser(), [Options::SERIALIZE_MINIMAL]);
+            }, $results['data']),
+        ]));
     }
 
     /**
+     * Shares entry ownership to users.
+     *
      * @EXT\Route(
      *     "/claco/form/entry/{entry}/users/share",
      *     name="claro_claco_form_entry_users_share",
@@ -593,59 +603,28 @@ class ClacoFormController
      *     options={"mapping": {"entry": "uuid"}}
      * )
      *
-     * Shares entry ownership to users
-     *
-     * @param Entry $entry
+     * @param Entry   $entry
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function entryUsersShareAction(Entry $entry)
+    public function entryUsersShareAction(Entry $entry, Request $request)
     {
         $this->clacoFormManager->checkEntryShareRight($entry);
-        $usersIds = $this->request->request->get('usersIds', false);
 
+        $usersIds = $request->get('ids', false);
         if ($usersIds) {
             $this->clacoFormManager->shareEntryWithUsers($entry, $usersIds);
         }
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse(null, 204);
     }
 
     /**
+     * Unshares entry ownership from user.
+     *
      * @EXT\Route(
-     *     "/claco/form/entry/{entry}/user/{user}/share",
-     *     name="claro_claco_form_entry_user_share",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "entry",
-     *     class="ClarolineClacoFormBundle:Entry",
-     *     options={"mapping": {"entry": "uuid"}}
-     * )
-     * @EXT\ParamConverter(
-     *     "user",
-     *     class="ClarolineCoreBundle:User",
-     *     options={"mapping": {"user": "uuid"}}
-     * )
-     *
-     * Shares entry ownership to user
-     *
-     * @param Entry $entry
-     * @param User  $user
-     *
-     * @return JsonResponse
-     */
-    public function entryUserShareAction(Entry $entry, User $user)
-    {
-        $this->clacoFormManager->checkEntryShareRight($entry);
-        $this->clacoFormManager->switchEntryUserShared($entry, $user, true);
-
-        return new JsonResponse($this->serializer->serialize($user, [Options::SERIALIZE_MINIMAL]), 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/entry/{entry}/user/{user}/unshare",
+     *     "/claco/form/entry/{entry}/unshare",
      *     name="claro_claco_form_entry_user_unshare",
      *     options = {"expose"=true}
      * )
@@ -654,25 +633,25 @@ class ClacoFormController
      *     class="ClarolineClacoFormBundle:Entry",
      *     options={"mapping": {"entry": "uuid"}}
      * )
-     * @EXT\ParamConverter(
-     *     "user",
-     *     class="ClarolineCoreBundle:User",
-     *     options={"mapping": {"user": "uuid"}}
-     * )
      *
-     * Unshares entry ownership from user
-     *
-     * @param Entry $entry
-     * @param User  $user
+     * @param Entry   $entry
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function entryUserUnshareAction(Entry $entry, User $user)
+    public function entryUserUnshareAction(Entry $entry, Request $request)
     {
         $this->clacoFormManager->checkEntryShareRight($entry);
-        $this->clacoFormManager->switchEntryUserShared($entry, $user, false);
 
-        return new JsonResponse('success', 200);
+        $users = $this->decodeIdsString($request, User::class);
+        foreach ($users as $user) {
+            try {
+                $this->clacoFormManager->switchEntryUserShared($entry, $user, false);
+            } catch (\Exception $e) {
+            }
+        }
+
+        return new JsonResponse(null, 204);
     }
 
     /**

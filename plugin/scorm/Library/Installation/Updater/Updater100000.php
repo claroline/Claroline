@@ -46,7 +46,6 @@ class Updater100000 extends Updater
             foreach ($entities as $entity) {
                 $node = $entity->getResourceNode();
                 $node->setFullscreen($entity->getHideTopBar());
-                $node->getCloseTarget($entity->getExitMode());
                 ++$i;
 
                 $this->om->persist($entity);

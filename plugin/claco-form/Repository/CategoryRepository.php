@@ -11,12 +11,19 @@
 
 namespace Claroline\ClacoFormBundle\Repository;
 
+use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository
 {
+    /**
+     * @param ClacoForm $clacoForm
+     * @param User      $manager
+     *
+     * @return Category[]
+     */
     public function findCategoriesByManager(ClacoForm $clacoForm, User $manager)
     {
         $dql = '
@@ -34,6 +41,11 @@ class CategoryRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * @param User $manager
+     *
+     * @return Category[]
+     */
     public function findAllCategoriesByManager(User $manager)
     {
         $dql = '

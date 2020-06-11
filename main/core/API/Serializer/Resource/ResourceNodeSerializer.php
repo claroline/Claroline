@@ -268,8 +268,6 @@ class ResourceNodeSerializer
         return [
             'fullscreen' => $resourceNode->isFullscreen(),
             'showIcon' => $resourceNode->getShowIcon(),
-            'closable' => $resourceNode->isClosable(),
-            'closeTarget' => $resourceNode->getCloseTarget(),
         ];
     }
 
@@ -346,8 +344,6 @@ class ResourceNodeSerializer
         // display
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $resourceNode);
         $this->sipe('display.showIcon', 'setShowIcon', $data, $resourceNode);
-        $this->sipe('display.closable', 'setClosable', $data, $resourceNode);
-        $this->sipe('display.closeTarget', 'setCloseTarget', $data, $resourceNode);
 
         // restrictions
         $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);

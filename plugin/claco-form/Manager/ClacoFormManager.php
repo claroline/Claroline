@@ -32,6 +32,14 @@ use Claroline\ClacoFormBundle\Event\Log\LogEntryLockSwitchEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryStatusChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryUserChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogKeywordCreateEvent;
+use Claroline\ClacoFormBundle\Repository\CategoryRepository;
+use Claroline\ClacoFormBundle\Repository\ClacoFormRepository;
+use Claroline\ClacoFormBundle\Repository\CommentRepository;
+use Claroline\ClacoFormBundle\Repository\EntryRepository;
+use Claroline\ClacoFormBundle\Repository\EntryUserRepository;
+use Claroline\ClacoFormBundle\Repository\FieldRepository;
+use Claroline\ClacoFormBundle\Repository\FieldValueRepository;
+use Claroline\ClacoFormBundle\Repository\KeywordRepository;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
@@ -39,6 +47,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -79,15 +88,24 @@ class ClacoFormManager
     /** @var TranslatorInterface */
     private $translator;
 
+    /** @var UserRepository */
     private $userRepo;
+    /** @var CategoryRepository */
     private $categoryRepo;
+    /** @var ClacoFormRepository */
     private $clacoFormRepo;
+    /** @var CommentRepository */
     private $commentRepo;
+    /** @var EntryRepository */
     private $entryRepo;
+    /** @var EntryUserRepository */
     private $entryUserRepo;
     private $fieldChoiceCategoryRepo;
+    /** @var FieldRepository */
     private $fieldRepo;
+    /** @var FieldValueRepository */
     private $fieldValueRepo;
+    /** @var KeywordRepository */
     private $keywordRepo;
 
     /**
@@ -790,6 +808,8 @@ class ClacoFormManager
         $url = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).
             '#desktop/resources/'.$node->getSlug().'/entries/'.$entry->getUuid();
 
+        $subject = '';
+        $content = '';
         switch ($type) {
             case 'edition':
                 $sendMessage = true;
@@ -833,6 +853,7 @@ class ClacoFormManager
                 $commentsRoles = $clacoForm->getCommentsDisplayRoles();
 
                 if ($sendMessage && count($commentsRoles) > 0) {
+                    /** @var EntryUser[] $entryUsers */
                     $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyComment' => true]);
 
                     foreach ($entryUsers as $entryUser) {
@@ -860,6 +881,7 @@ class ClacoFormManager
                 }
                 break;
         }
+
         if ($sendMessage && count($receivers) > 0) {
             $message = $this->messageManager->create($content, $subject, $receivers);
             $this->messageManager->send($message);
@@ -946,18 +968,6 @@ class ClacoFormManager
         return $convertedStr;
     }
 
-    public function getSharedEntryUsers(Entry $entry)
-    {
-        $users = [];
-        $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'shared' => true]);
-
-        foreach ($entryUsers as $entryUser) {
-            $users[] = $entryUser->getUser();
-        }
-
-        return $users;
-    }
-
     public function switchEntryUserShared(Entry $entry, User $user, $shared)
     {
         $this->om->startFlushSuite();
@@ -973,12 +983,12 @@ class ClacoFormManager
 
         foreach ($usersIds as $userId) {
             /** @var User $user */
-            $user = $this->userRepo->find($userId);
-
+            $user = $this->userRepo->findOneBy(['uuid' => $userId]);
             if (!empty($user)) {
                 $this->switchEntryUserShared($entry, $user, true);
             }
         }
+
         $this->om->endFlushSuite();
     }
 
@@ -1453,6 +1463,7 @@ class ClacoFormManager
     public function hasEntryAccessRight(Entry $entry)
     {
         $clacoForm = $entry->getClacoForm();
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $isAnon = 'anon.' === $user;
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
@@ -1470,6 +1481,7 @@ class ClacoFormManager
 
     public function hasEntryEditionRight(Entry $entry)
     {
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $clacoForm = $entry->getClacoForm();
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
@@ -1488,6 +1500,7 @@ class ClacoFormManager
 
     public function hasEntryModerationRight(Entry $entry)
     {
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $clacoForm = $entry->getClacoForm();
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
@@ -1566,6 +1579,7 @@ class ClacoFormManager
 
     public function hasEntryOwnership(Entry $entry)
     {
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $isAnon = 'anon.' === $user;
         $isOwner = !empty($entry->getUser()) && !$isAnon && $entry->getUser()->getId() === $user->getId();
@@ -1674,7 +1688,8 @@ class ClacoFormManager
      */
     public function replaceEntryUser(User $from, User $to)
     {
-        $entries = $this->entryRepo->findByUser($from);
+        /** @var Entry[] $entries */
+        $entries = $this->entryRepo->findBy(['user' => $from]);
 
         if (count($entries) > 0) {
             foreach ($entries as $entry) {
@@ -1697,7 +1712,8 @@ class ClacoFormManager
      */
     public function replaceEntryUserUser(User $from, User $to)
     {
-        $entryUsers = $this->entryUserRepo->findByUser($from);
+        /** @var EntryUser[] $entryUsers */
+        $entryUsers = $this->entryUserRepo->findBy(['user' => $from]);
 
         if (count($entryUsers) > 0) {
             foreach ($entryUsers as $entryUser) {

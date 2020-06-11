@@ -231,18 +231,6 @@ class ResourceNode
     protected $fullscreen = false;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
-    protected $closable = false;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(nullable=false, type="integer")
-     */
-    protected $closeTarget = 0;
-
-    /**
      * @ORM\Column(type="json_array", nullable=true)
      *
      * @todo split IPS & access code into 2 props.
@@ -773,31 +761,6 @@ class ResourceNode
         return $this->getFullscreen();
     }
 
-    public function getClosable()
-    {
-        return $this->closable;
-    }
-
-    public function isClosable()
-    {
-        return $this->getClosable();
-    }
-
-    public function setClosable($closable)
-    {
-        $this->closable = $closable;
-    }
-
-    public function getCloseTarget()
-    {
-        return $this->closeTarget;
-    }
-
-    public function setCloseTarget($closeTarget)
-    {
-        $this->closeTarget = $closeTarget;
-    }
-
     public function setAllowedIps($ips)
     {
         $this->accesses['ip'] = [
@@ -906,6 +869,8 @@ class ResourceNode
 
     /**
      * @ORM\PreFlush
+     *
+     * @param PreFlushEventArgs $args
      */
     public function preFlush(PreFlushEventArgs $args)
     {

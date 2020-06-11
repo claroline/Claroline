@@ -18,7 +18,6 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
@@ -30,7 +29,6 @@ use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -194,16 +192,6 @@ class UserManager
         return $user;
     }
 
-    /**
-     * @param \Symfony\Component\Security\Core\User\UserInterface $user
-     *
-     * @return User
-     */
-    public function refreshUser(UserInterface $user)
-    {
-        return $this->userRepo->refreshUser($user);
-    }
-
     public function countUsersForPlatformRoles($organizations = null)
     {
         $roles = $this->roleManager->getAllPlatformRoles();
@@ -228,18 +216,6 @@ class UserManager
     }
 
     /**
-     * @param int[] $ids
-     *
-     * @deprecated ObjectManager can handle it
-     *
-     * @return User[]
-     */
-    public function getUsersByIds(array $ids)
-    {
-        return $this->objectManager->findByIds('Claroline\CoreBundle\Entity\User', $ids);
-    }
-
-    /**
      * @param int $max
      *
      * @return User[]
@@ -259,11 +235,6 @@ class UserManager
         return $this->userRepo->findUsersOwnersOfMostWorkspaces($max, $organizations);
     }
 
-    public function getUsersExcludingRoles(array $roles, $offset = null, $limit = null)
-    {
-        return $this->userRepo->findUsersExcludingRoles($roles, $offset, $limit);
-    }
-
     /**
      * @param string $resetPassword
      *
@@ -279,9 +250,6 @@ class UserManager
 
     /**
      * @param string $validationHash
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
      *
      * @return User
      */
@@ -414,120 +382,11 @@ class UserManager
         $this->objectManager->flush();
     }
 
-    public function persistUserOptions(UserOptions $options)
-    {
-        $this->objectManager->persist($options);
-        $this->objectManager->flush();
-    }
-
-    public function getUserOptions(User $user)
-    {
-        $options = $user->getOptions();
-
-        if (is_null($options)) {
-            $options = new UserOptions();
-            $options->setUser($user);
-            $this->objectManager->persist($options);
-            $user->setOptions($options);
-            $this->objectManager->persist($user);
-            $this->objectManager->flush();
-        }
-
-        return $options;
-    }
-
-    // TODO : remove me, only used by claco form which should use standard picker
-    public function getAllVisibleUsersIdsForUserPicker(User $user)
-    {
-        $usersIds = [];
-        $roles = $this->generateRoleRestrictions($user);
-        $groups = $this->generateGroupRestrictions($user);
-        $workspaces = $this->generateWorkspaceRestrictions($user);
-        $users = $this->userRepo->findUsersForUserPicker(
-            '',
-            false,
-            false,
-            false,
-            'lastName',
-            'ASC',
-            $roles,
-            $groups,
-            $workspaces
-        );
-
-        /** @var User $user */
-        foreach ($users as $user) {
-            $usersIds[] = $user->getId();
-        }
-
-        return $usersIds;
-    }
-
-    private function generateRoleRestrictions(User $user)
-    {
-        $restrictions = [];
-
-        if (!$user->hasRole('ROLE_ADMIN')) {
-            $wsRoles = $this->roleManager->getWorkspaceRolesByUser($user);
-
-            foreach ($wsRoles as $wsRole) {
-                $wsRoleId = $wsRole->getId();
-                $workspace = $wsRole->getWorkspace();
-                $guid = $workspace->getGuid();
-                $managerRoleName = 'ROLE_WS_MANAGER_'.$guid;
-
-                if ($wsRole->getName() === $managerRoleName) {
-                    $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
-
-                    foreach ($workspaceRoles as $workspaceRole) {
-                        $workspaceRoleId = $workspaceRole->getId();
-
-                        if (!isset($restrictions[$workspaceRoleId])) {
-                            $restrictions[$workspaceRoleId] = $workspaceRole;
-                        }
-                    }
-                } elseif (!isset($restrictions[$wsRoleId])) {
-                    $restrictions[$wsRoleId] = $wsRole;
-                }
-            }
-        }
-
-        return $restrictions;
-    }
-
-    private function generateGroupRestrictions(User $user)
-    {
-        $restrictions = [];
-
-        if (!$user->hasRole('ROLE_ADMIN')) {
-            $restrictions = $user->getGroups()->toArray();
-        }
-
-        return $restrictions;
-    }
-
-    private function generateWorkspaceRestrictions(User $user)
-    {
-        $restrictions = [];
-
-        if (!$user->hasRole('ROLE_ADMIN')) {
-            $restrictions = $this->workspaceManager->getWorkspacesByUser($user);
-        }
-
-        return $restrictions;
-    }
-
     public function initializePassword(User $user)
     {
         $user->setHashTime(time());
         $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
         $user->setResetPasswordHash($password);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-    }
-
-    public function hideEmailValidation(User $user)
-    {
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }

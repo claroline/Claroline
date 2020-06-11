@@ -74,7 +74,7 @@ class ResourceRestrictions extends Component {
               }, 'resource') : trans('restrictions.period_not_limited', {}, 'resource')
             }}
             fail={{
-              title: trans(this.props.errors.notStarted ? 'restrictions.not_started' : 'restrictions.ended_help', {}, 'resource'),
+              title: trans(this.props.errors.notStarted ? 'restrictions.not_started' : 'restrictions.ended', {}, 'resource'),
               help: this.props.errors.notStarted ?
                 trans('restrictions.not_started_help', {date: displayDate(this.props.errors.startDate, false, true)}, 'resource') :
                 trans('restrictions.ended_help', {date: displayDate(this.props.errors.endDate, false, true)}, 'resource')

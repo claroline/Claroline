@@ -10,6 +10,7 @@ services:
             - '@Claroline\MessageBundle\Manager\ContactManager'
         tags:
             - { name: kernel.event_listener, event: open_tool_desktop_messaging, method: onDisplayDesktop }
+            - { name: kernel.event_listener, event: desktop.messaging.configure, method: onConfigureDesktop }
 
     Claroline\MessageBundle\Listener\MessageListener:
         arguments:

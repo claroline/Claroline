@@ -92,11 +92,6 @@ const usedCountries = createSelector(
   (entries) => entries.countries
 )
 
-const entryUsersShared = createSelector(
-  [entries],
-  (entries) => entries.entryUsersShared
-)
-
 const canEdit = createSelector(
   resourceSelect.resourceNode,
   (resourceNode) => hasPermission('edit', resourceNode)
@@ -310,7 +305,6 @@ export const selectors = {
   myRoles,
   entryUser,
   usedCountries,
-  entryUsersShared,
   canGeneratePdf,
   message,
   listConfiguration,

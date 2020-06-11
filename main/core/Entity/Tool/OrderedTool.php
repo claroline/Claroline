@@ -13,6 +13,8 @@ namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,6 +43,18 @@ class OrderedTool
 {
     use Id;
     use Uuid;
+    // meta
+    use Thumbnail;
+    use Poster;
+
+    /**
+     * Display resource icon/evaluation when the resource is rendered.
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private $showIcon = false;
 
     /**
      * @ORM\ManyToOne(
@@ -52,7 +66,7 @@ class OrderedTool
      *
      * @var Workspace
      */
-    protected $workspace;
+    private $workspace;
 
     /**
      * @ORM\ManyToOne(
@@ -64,14 +78,14 @@ class OrderedTool
      *
      * @var Tool
      */
-    protected $tool;
+    private $tool;
 
     /**
      * @ORM\Column(name="display_order", type="integer")
      *
      * @var int
      */
-    protected $order;
+    private $order;
 
     /**
      * @ORM\ManyToOne(
@@ -82,7 +96,7 @@ class OrderedTool
      *
      * @var User
      */
-    protected $user;
+    private $user;
 
     /**
      * @ORM\OneToMany(
@@ -92,14 +106,7 @@ class OrderedTool
      *
      * @var ToolRights[]|ArrayCollection
      */
-    protected $rights;
-
-    /**
-     * @ORM\Column(name="is_locked", type="boolean")
-     *
-     * @var bool
-     */
-    protected $locked = false;
+    private $rights;
 
     /**
      * OrderedTool constructor.
@@ -111,23 +118,44 @@ class OrderedTool
         $this->rights = new ArrayCollection();
     }
 
-    public function __toString()
+    public function getShowIcon()
     {
-        return is_null($this->workspace) ?
-            $this->tool->getName() :
-            '['.$this->workspace->getName().'] '.$this->tool->getName();
+        return $this->showIcon;
     }
 
+    public function setShowIcon($showIcon)
+    {
+        $this->showIcon = $showIcon;
+    }
+
+    public function __toString()
+    {
+        if (!empty($this->workspace)) {
+            return '['.$this->workspace->getName().'] '.$this->tool->getName();
+        }
+
+        return $this->tool->getName();
+    }
+
+    /**
+     * @param Workspace|null $ws
+     */
     public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
     }
 
+    /**
+     * @return Workspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;
     }
 
+    /**
+     * @param Tool $tool
+     */
     public function setTool(Tool $tool)
     {
         $this->tool = $tool;
@@ -141,21 +169,33 @@ class OrderedTool
         return $this->tool;
     }
 
+    /**
+     * @param int $order
+     */
     public function setOrder($order)
     {
         $this->order = $order;
     }
 
+    /**
+     * @return int
+     */
     public function getOrder()
     {
         return $this->order;
     }
 
+    /**
+     * @param User|null $user
+     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -169,6 +209,9 @@ class OrderedTool
         return $this->rights;
     }
 
+    /**
+     * @param ToolRights $right
+     */
     public function addRight(ToolRights $right)
     {
         if (!$this->rights->contains($right)) {
@@ -176,20 +219,13 @@ class OrderedTool
         }
     }
 
+    /**
+     * @param ToolRights $right
+     */
     public function removeRight(ToolRights $right)
     {
         if ($this->rights->contains($right)) {
             $this->rights->removeElement($right);
         }
-    }
-
-    public function isLocked()
-    {
-        return $this->locked;
-    }
-
-    public function setLocked($locked)
-    {
-        $this->locked = $locked;
     }
 }

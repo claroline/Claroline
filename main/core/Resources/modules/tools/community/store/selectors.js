@@ -20,7 +20,7 @@ const loaded = createSelector(
 )
 
 const canCreate = createSelector(
-  [toolSelectors.tool, toolSelectors.contextType, toolSelectors.contextData],
+  [toolSelectors.toolData, toolSelectors.contextType, toolSelectors.contextData],
   (tool, contextType, contextData) => {
     const canCreate = hasPermission('create_user', tool)
     if (contextType === toolConstants.TOOL_WORKSPACE) {
@@ -32,7 +32,7 @@ const canCreate = createSelector(
 )
 
 const canCreateRole = createSelector(
-  [toolSelectors.tool],
+  [toolSelectors.toolData],
   (tool) => hasPermission('administrate', tool)
 )
 

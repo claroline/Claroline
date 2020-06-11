@@ -2,6 +2,7 @@ import {connect as baseConnect} from 'react-redux'
 import invariant from 'invariant'
 import isEqual from 'lodash/isEqual'
 
+import {toKey} from '#/main/core/scaffolding/text'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
@@ -153,6 +154,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     displayLevel:  ownProps.displayLevel,
     className:     ownProps.className,
     title:         ownProps.title,
+    id:            toKey(ownProps.name),
     name:          ownProps.name,
     fetch:         ownProps.fetch,
     definition:    ownProps.definition,

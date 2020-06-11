@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
-use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -38,6 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -59,8 +59,6 @@ class WorkspaceController
     private $toolManager;
     /** @var TranslatorInterface */
     private $translator;
-    /** @var Utilities */
-    private $utils;
     /** @var WorkspaceManager */
     private $manager;
     /** @var WorkspaceRestrictionsManager */
@@ -78,7 +76,6 @@ class WorkspaceController
      * @param SerializerProvider            $serializer
      * @param ToolManager                   $toolManager
      * @param TranslatorInterface           $translator
-     * @param Utilities                     $utils
      * @param WorkspaceManager              $manager
      * @param WorkspaceRestrictionsManager  $restrictionsManager
      * @param EvaluationManager             $evaluationManager
@@ -91,7 +88,6 @@ class WorkspaceController
         SerializerProvider $serializer,
         ToolManager $toolManager,
         TranslatorInterface $translator,
-        Utilities $utils,
         WorkspaceManager $manager,
         WorkspaceRestrictionsManager $restrictionsManager,
         EvaluationManager $evaluationManager
@@ -103,7 +99,6 @@ class WorkspaceController
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
-        $this->utils = $utils;
         $this->manager = $manager;
         $this->restrictionsManager = $restrictionsManager;
         $this->evaluationManager = $evaluationManager;
@@ -148,8 +143,9 @@ class WorkspaceController
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
             } else {
                 // gets accessible tools by user
-                $currentRoles = $this->utils->getRoles($this->tokenStorage->getToken());
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, $currentRoles);
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, array_map(function (Role $role) {
+                    return $role->getRole();
+                }, $this->tokenStorage->getToken()->getRoles()));
             }
 
             $userEvaluation = null;
@@ -218,7 +214,7 @@ class WorkspaceController
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
 
         return new JsonResponse(array_merge($event->getData(), [
-            'permissions' => $this->toolManager->getCurrentPermissions($orderedTool),
+            'data' => $this->serializer->serialize($orderedTool),
         ]));
     }
 

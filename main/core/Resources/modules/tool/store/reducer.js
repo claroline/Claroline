@@ -23,8 +23,8 @@ const reducer = combineReducers({
     [TOOL_OPEN]: (state, action) => action.context,
     [TOOL_CLOSE]: () => ({})
   }),
-  permissions: makeReducer({}, {
-    [TOOL_LOAD]: (state, action) => action.toolData.permissions || {}
+  data: makeReducer({}, {
+    [TOOL_LOAD]: (state, action) => action.toolData.data || {}
   })
 })
 

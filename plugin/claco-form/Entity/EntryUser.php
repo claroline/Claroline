@@ -35,12 +35,16 @@ class EntryUser
      *     inversedBy="entryUsers"
      * )
      * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
+     *
+     * @var Entry
      */
     protected $entry;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
+     *
+     * @var User
      */
     protected $user;
 
@@ -79,6 +83,9 @@ class EntryUser
         $this->id = $id;
     }
 
+    /**
+     * @return Entry
+     */
     public function getEntry()
     {
         return $this->entry;
@@ -89,6 +96,9 @@ class EntryUser
         $this->entry = $entry;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;

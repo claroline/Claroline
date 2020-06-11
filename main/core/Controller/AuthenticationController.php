@@ -177,19 +177,4 @@ class AuthenticationController
 
         return new JsonResponse();
     }
-
-    /**
-     * @EXT\Route(
-     *     "/hide/email/validation",
-     *     name="claro_security_validate_email_hide",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     */
-    public function hideEmailConfirmationAction(User $user)
-    {
-        $this->userManager->hideEmailValidation($user);
-
-        return new JsonResponse('success');
-    }
 }

@@ -551,13 +551,10 @@ class ScormManager
                 $newNode->setAccessibleFrom($node->getAccessibleFrom());
                 $newNode->setAccessibleUntil($node->getAccessibleUntil());
                 $newNode->setAuthor($node->getAuthor());
-                $newNode->setClosable($node->getClosable());
-                $newNode->setCloseTarget($node->getCloseTarget());
                 $newNode->setCreationDate($node->getCreationDate());
                 $newNode->setCreator($node->getCreator());
                 $newNode->setDescription($node->getDescription());
                 $newNode->setFullscreen($node->getFullscreen());
-                $newNode->setIcon($node->getIcon());
                 $newNode->setIndex($node->getIndex());
                 $newNode->setLicense($node->getLicense());
                 $newNode->setMimeType('custom/claroline_scorm');
@@ -751,13 +748,10 @@ class ScormManager
                 $newNode->setAccessibleFrom($node->getAccessibleFrom());
                 $newNode->setAccessibleUntil($node->getAccessibleUntil());
                 $newNode->setAuthor($node->getAuthor());
-                $newNode->setClosable($node->getClosable());
-                $newNode->setCloseTarget($node->getCloseTarget());
                 $newNode->setCreationDate($node->getCreationDate());
                 $newNode->setCreator($node->getCreator());
                 $newNode->setDescription($node->getDescription());
                 $newNode->setFullscreen($node->getFullscreen());
-                $newNode->setIcon($node->getIcon());
                 $newNode->setIndex($node->getIndex());
                 $newNode->setLicense($node->getLicense());
                 $newNode->setMimeType('custom/claroline_scorm');

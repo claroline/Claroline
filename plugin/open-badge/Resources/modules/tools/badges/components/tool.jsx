@@ -15,6 +15,7 @@ import {AssertionDetails} from '#/plugin/open-badge/tools/badges/assertion/compo
 
 const BadgeTool = props =>
   <ToolPage
+    primaryAction="new"
     actions={[
       {
         name: 'new',

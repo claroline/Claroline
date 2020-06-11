@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Tool;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\Tool\ToolRightsManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -43,8 +44,12 @@ class ToolController extends AbstractApiController
     private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var StrictDispatcher */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
+    /** @var Crud */
+    private $crud;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var ToolManager */
     private $toolManager;
     /** @var ToolRightsManager */
@@ -62,7 +67,9 @@ class ToolController extends AbstractApiController
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om
-     * @param StrictDispatcher              $eventDispatcher
+     * @param EventDispatcherInterface      $eventDispatcher
+     * @param Crud                          $crud
+     * @param SerializerProvider            $serializer
      * @param ToolManager                   $toolManager
      * @param ToolRightsManager             $rightsManager
      * @param ToolMaskDecoderManager        $maskManager
@@ -71,7 +78,9 @@ class ToolController extends AbstractApiController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
+        Crud $crud,
+        SerializerProvider $serializer,
         ToolManager $toolManager,
         ToolRightsManager $rightsManager,
         ToolMaskDecoderManager $maskManager,
@@ -80,6 +89,8 @@ class ToolController extends AbstractApiController
         $this->authorization = $authorization;
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
+        $this->crud = $crud;
+        $this->serializer = $serializer;
         $this->toolManager = $toolManager;
         $this->rightsManager = $rightsManager;
         $this->maskManager = $maskManager;
@@ -101,11 +112,19 @@ class ToolController extends AbstractApiController
      */
     public function configureAction(Request $request, $name, $context, $contextId = null)
     {
-        /** @var Tool|AdminTool $tool */
-        $tool = $this->getTool($name, $context);
-        if (!$this->authorization->isGranted('EDIT', $tool)) {
+        /** @var OrderedTool|null $orderedTool */
+        $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
+        if (!$orderedTool) {
+            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $name));
+        }
+
+        if (!$this->authorization->isGranted('EDIT', $orderedTool)) {
             throw new AccessDeniedException();
         }
+
+        $data = $this->decodeRequest($request);
+
+        $this->crud->update(OrderedTool::class, $data, [Crud::THROW_EXCEPTION]);
 
         $contextObject = null;
         if (Tool::WORKSPACE === $context) {
@@ -113,11 +132,11 @@ class ToolController extends AbstractApiController
         }
 
         /** @var ConfigureToolEvent $event */
-        $event = $this->eventDispatcher->dispatch($context.'.'.$name.'.configure', new ConfigureToolEvent($this->decodeRequest($request), $contextObject));
+        $event = $this->eventDispatcher->dispatch($context.'.'.$name.'.configure', new ConfigureToolEvent($data, $contextObject));
 
-        return new JsonResponse(
-            $event->getData()
-        );
+        return new JsonResponse(array_merge($event->getData(), [
+            'data' => $this->serializer->serialize($orderedTool),
+        ]));
     }
 
     /**
@@ -231,26 +250,5 @@ class ToolController extends AbstractApiController
         }
 
         return new JsonResponse(null, 204);
-    }
-
-    private function getTool($name, $context)
-    {
-        /** @var Tool|AdminTool $tool */
-        $tool = null;
-        switch ($context) {
-            case Tool::ADMINISTRATION:
-                $tool = $this->toolManager->getAdminToolByName($name);
-                break;
-            case Tool::WORKSPACE:
-            default:
-                $tool = $this->toolManager->getToolByName($name);
-                break;
-        }
-
-        if (!$tool) {
-            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $name));
-        }
-
-        return $tool;
     }
 }
