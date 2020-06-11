@@ -11,18 +11,14 @@ services:
             - '@security.token_storage'
             - '@security.encoder_factory'
 
-    Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator:
-        calls:
-            - method: inject
-              arguments:
-                  - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-                  - '@claroline.manager.ip_white_list_manager'
+    Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@claroline.manager.ip_white_list_manager'
 
-    Claroline\AuthenticationBundle\Security\Authentication\ApiTokenAuthenticator:
-        calls:
-            - method: inject
-              arguments:
-                  - '@Claroline\AppBundle\Persistence\ObjectManager'
+    Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     # OAuth
     Claroline\AuthenticationBundle\Security\Oauth\Hwi\ResourceOwnerFactory:
@@ -30,6 +26,7 @@ services:
             - '@Claroline\AuthenticationBundle\Manager\OauthManager'
             - '@security.http_utils'
             - '@session'
+            - '@guzzle_client.hwi_oauth.methods_client'
 
     Claroline\AuthenticationBundle\Security\Oauth\AuthenticationFailureHandler:
         arguments:
@@ -46,3 +43,23 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@session'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    guzzle_client.hwi_oauth:
+        class: Http\Adapter\Guzzle6\Client
+        factory:
+            - Http\Adapter\Guzzle6\Client
+            - createWithConfig
+        arguments:
+            - timeout: 10
+              verify_peer: true
+              max_redirects: 5
+              ignore_errors: true
+
+    guzzle_client.hwi_oauth.message_factory:
+        class: Http\Message\MessageFactory\GuzzleMessageFactory
+
+    guzzle_client.hwi_oauth.methods_client:
+        class: Http\Client\Common\HttpMethodsClient
+        arguments:
+            - '@guzzle_client.hwi_oauth'
+            - '@guzzle_client.hwi_oauth.message_factory'

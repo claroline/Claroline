@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Cryptography;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -77,7 +78,7 @@ class ApiToken
     /**
      * Get the value of User.
      *
-     * @return mixed
+     * @return User
      */
     public function getUser()
     {
@@ -87,7 +88,7 @@ class ApiToken
     /**
      * Set the value of User.
      *
-     * @param mixed user
+     * @param User user
      *
      * @return self
      */

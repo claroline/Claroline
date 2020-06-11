@@ -11,7 +11,7 @@
 
 namespace Claroline\AuthenticationBundle\Security\Oauth\Hwi;
 
-use Buzz\Client\ClientInterface as HttpClientInterface;
+use Http\Client\Common\HttpMethodsClient;
 use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorageInterface;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GenericOAuth2ResourceOwner;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +46,7 @@ class Office365ResourceOwner extends GenericOAuth2ResourceOwner
      * {@inheritdoc}
      */
     public function __construct(
-        HttpClientInterface $httpClient,
+        HttpMethodsClient $httpClient,
         HttpUtils $httpUtils,
         array $options,
         $name,

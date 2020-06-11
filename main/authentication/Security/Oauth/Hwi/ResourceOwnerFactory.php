@@ -11,28 +11,31 @@
 
 namespace Claroline\AuthenticationBundle\Security\Oauth\Hwi;
 
-use Buzz\Client\Curl;
 use Claroline\AuthenticationBundle\Manager\OauthManager;
+use Http\Client\Common\HttpMethodsClient;
 use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorage\SessionStorage;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GoogleResourceOwner;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\LinkedinResourceOwner;
+use Psr\Http\Client\ClientInterface;
 
 class ResourceOwnerFactory
 {
+    private $httpClient;
     private $httpUtils;
     private $oauthManager;
     private $session;
 
     /**
-     * @param OauthManager $oauthManager
      * @param $httpUtils
      * @param $session
+     * @param ClientInterface $httpClient
      */
-    public function __construct(OauthManager $oauthManager, $httpUtils, $session)
+    public function __construct(OauthManager $oauthManager, $httpUtils, $session, HttpMethodsClient $httpClient)
     {
         $this->oauthManager = $oauthManager;
         $this->httpUtils = $httpUtils;
         $this->session = $session;
+        $this->httpClient = $httpClient;
     }
 
     public function getFacebookResourceOwner()
@@ -44,7 +47,7 @@ class ResourceOwnerFactory
             $options['auth_type'] = 'reauthenticate';
         }
         $owner = new FacebookResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -64,7 +67,7 @@ class ResourceOwnerFactory
     {
         $config = $this->oauthManager->getConfiguration('twitter');
         $owner = new TwitterResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -91,7 +94,7 @@ class ResourceOwnerFactory
             $options['prompt'] = 'select_account';
         }
         $owner = new GoogleResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -110,7 +113,7 @@ class ResourceOwnerFactory
     {
         $config = $this->oauthManager->getConfiguration('linkedin');
         $owner = new LinkedinResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -135,7 +138,7 @@ class ResourceOwnerFactory
     {
         $config = $this->oauthManager->getConfiguration('windows_live');
         $owner = new WindowsLiveResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -160,7 +163,7 @@ class ResourceOwnerFactory
     {
         $config = $this->oauthManager->getConfiguration('office_365');
         $owner = new Office365ResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -190,7 +193,7 @@ class ResourceOwnerFactory
         ];
 
         $owner = new GenericResourceOwner(
-            $this->createClientHttp(),
+            $this->httpClient,
             $this->httpUtils,
             [
                 'client_id' => $config->getClientId(),
@@ -207,16 +210,5 @@ class ResourceOwnerFactory
         );
 
         return $owner;
-    }
-
-    private function createClientHttp()
-    {
-        $httpClient = new Curl();
-        $httpClient->setVerifyPeer(true);
-        $httpClient->setTimeout(10);
-        $httpClient->setMaxRedirects(5);
-        $httpClient->setIgnoreErrors(true);
-
-        return $httpClient;
     }
 }

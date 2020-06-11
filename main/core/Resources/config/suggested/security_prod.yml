@@ -19,15 +19,18 @@ security:
 
         main:
             pattern: ^/
+            logout_on_user_change: true
             anonymous: ~
             logout:
                 path:   /logout
                 target: /
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
 
-            # Allows IP authentication
-            simple_preauth:
-                authenticator: Claroline\AuthenticationBundle\Security\Authentication\IpAuthenticator
+            guard:
+                authenticators:
+                    - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator'
+                    - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator'
+                entry_point: 'Claroline\AuthenticationBundle\Security\Authentication\Guard\ApiTokenAuthenticator'
 
             # Allows JSON authentication
             json_login:
