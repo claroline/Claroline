@@ -24,7 +24,7 @@ actions.getFavourites = () => ({
 
 actions.deleteFavourite = (object, type) => ({
   [API_REQUEST]: {
-    url: ['workspaces' === object ? 'hevinci_favourite_workspaces_toggle':'hevinci_favourite_resources_toggle', {ids: [object.id]}],
+    url: ['workspaces' === type ? 'hevinci_favourite_workspaces_toggle':'hevinci_favourite_resources_toggle', {ids: [object.id]}],
     request: {
       method: 'PUT'
     },

@@ -76,7 +76,7 @@ const FavouritesDropdown = props =>
             confirm: {
               title: trans('delete_favorite', {}, 'favourite'),
               subtitle: result.name,
-              message: trans('delete_resource_message', {}, 'favourite')
+              message: trans('workspaces' === props.section ? 'delete_workspace_message' : 'delete_resource_message', {}, 'favourite')
             },
             dangerous: true
           }
