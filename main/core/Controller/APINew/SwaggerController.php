@@ -13,55 +13,69 @@ namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SchemaProvider;
-use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Claroline\AppBundle\Manager\PlatformManager;
+use Claroline\AppBundle\Routing\Documentator;
+use Claroline\AppBundle\Routing\Finder;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @Route("/swagger")
+ * @EXT\Route("/swagger")
  */
 class SwaggerController
 {
+    /** @var Finder */
+    private $routerFinder;
+    /** @var Documentator */
+    private $documentator;
+    /** @var SchemaProvider */
+    private $schemaProvider;
+    /** @var PlatformManager */
+    private $platformManager;
+    /** @var string */
+    private $rootDir;
+
     /**
-     * ParametersController constructor.
+     * SwaggerController constructor.
+     *
+     * @param Finder          $routerFinder
+     * @param Documentator    $documentator
+     * @param SchemaProvider  $schemaProvider
+     * @param PlatformManager $platformManager
+     * @param string          $rootDir
      */
-    public function __construct($routerFinder, $documentator, SchemaProvider $schemaProvider, ClientSerializer $configuration, $rootDir)
-    {
+    public function __construct(
+        Finder $routerFinder,
+        Documentator $documentator,
+        SchemaProvider $schemaProvider,
+        PlatformManager $platformManager,
+        string $rootDir
+    ) {
         $this->routerFinder = $routerFinder;
         $this->documentator = $documentator;
         $this->schemaProvider = $schemaProvider;
-        $this->configuration = $configuration;
+        $this->platformManager = $platformManager;
         $this->rootDir = $rootDir.'/..';
-        $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';
     }
 
     /**
-     * @Route("", name="apiv2_swagger_get")
-     * @Method("GET")
+     * @EXT\Route("", name="apiv2_swagger_get")
+     * @EXT\Method("GET")
      */
     public function getApiAction()
     {
-        $config = $this->configuration->serialize();
-
         $swagger = [
-          'swagger' => '2.0',
-          'info' => [
-              'version' => 'v2',
-              'title' => 'Claroline API',
-              'description' => 'Claroline API',
-              'termsOfService' => 'None',
-              'contact' => [
-                  'name' => 'Claroline',
-                  'url' => 'www.claroline.net',
-                  'email' => 'claroline@ovh.com',
-              ],
-              'license' => [
-                  'name' => 'GPL-3.0-or-later',
-                  'url' => 'https://www.gnu.org/licenses/gpl-3.0.fr.html',
-              ],
-          ],
-          'basePath' => $config['swagger']['base'],
+            'swagger' => '2.0',
+            'info' => [
+                'version' => '2.0',
+                'title' => 'Claroline API',
+                'termsOfService' => null,
+                'license' => [
+                    'name' => 'GPL-3.0-or-later',
+                    'url' => 'https://www.gnu.org/licenses/gpl-3.0.fr.html',
+                ],
+            ],
+            'basePath' => $this->platformManager->getUrl(),
         ];
 
         $classes = $this->routerFinder->getHandledClasses();
@@ -88,12 +102,12 @@ class SwaggerController
                 $listSchema = $this->schemaProvider->loadSchema($absolutePath);
                 $listSchema = json_decode(json_encode($listSchema), true);
                 $listSchema['properties']['data'] = [
-                  'type' => 'array',
-                  'description' => 'the object list',
-                  'uniqueItems' => true,
-                  'items' => [
-                    '$ref' => '#/definitions/'.$class,
-                  ],
+                    'type' => 'array',
+                    'description' => 'the object list',
+                    'uniqueItems' => true,
+                    'items' => [
+                        '$ref' => '#/definitions/'.$class,
+                    ],
                 ];
 
                 $swagger['extendedModels'][$class]['list'] = $listSchema;

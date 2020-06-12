@@ -34,7 +34,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "svg4everybody": "^2.1.2",
-    "swagger-ui-react": "*",
+    "swagger-ui-react": "3.23.11",
     "tinycolor2": "^1.4.1",
     "tinymce": "^4.9.3",
     "tinymce-codemirror": "git://github.com/christiaan/tinymce-codemirror.git#20c1bbe708",

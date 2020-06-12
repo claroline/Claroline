@@ -151,9 +151,6 @@ class ClientSerializer
                 }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
                 'softDelete' => $this->config->getParameter('resource.soft_delete'),
             ],
-            'swagger' => [
-                'base' => $this->config->getParameter('swagger.base'),
-            ],
             'desktop' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('desktop.default_tool'),
                 'showProgression' => $this->config->getParameter('desktop.show_progression'),

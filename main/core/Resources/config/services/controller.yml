@@ -212,7 +212,7 @@ services:
           - '@Claroline\AppBundle\Routing\Finder'
           - '@Claroline\AppBundle\Routing\Documentator'
           - '@Claroline\AppBundle\API\SchemaProvider'
-          - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
+          - '@Claroline\AppBundle\Manager\PlatformManager'
           - '%kernel.root_dir%'
 
     Claroline\CoreBundle\Controller\APINew\TransferController:
