@@ -2,9 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {matchPath} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -45,17 +42,7 @@ const LessonMenu = props => {
           label: trans('export-pdf', {}, 'actions'),
           group: trans('transfer'),
           onClick: props.autoClose,
-          callback: () => props.downloadChapterPdf(chapter.id).then(pdfContent => {
-            html2pdf()
-              .set({
-                filename: pdfContent.name,
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 4 },
-                enableLinks: true
-              })
-              .from(pdfContent.content, 'string')
-              .save()
-          })
+          callback: () => props.downloadChapterPdf(chapter.id)
         }, {
           name: 'delete',
           type: CALLBACK_BUTTON,

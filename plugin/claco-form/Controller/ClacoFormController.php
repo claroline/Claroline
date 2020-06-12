@@ -26,6 +26,7 @@ use Claroline\ClacoFormBundle\Serializer\EntryUserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Dompdf\Dompdf;
@@ -523,23 +524,29 @@ class ClacoFormController
      * @param Entry $entry
      * @param User  $user
      *
-     * @return Response
+     * @return StreamedResponse
      */
     public function entryPdfDownloadAction(Entry $entry, User $user)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
 
-        $name = $entry->getTitle();
-        $content = $this->generatePdfForEntry($entry, $user);
-
-        $dompdf = new Dompdf();
-        $dompdf->set_option('isHtml5ParserEnabled', true);
-        $dompdf->set_option('isRemoteEnabled', true);
-        $dompdf->loadHtml($content);
+        $domPdf = new Dompdf([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+        $domPdf->loadHtml($this->generatePdfForEntry($entry, $user));
 
         // Render the HTML as PDF
-        $dompdf->render();
-        $dompdf->stream($name);
+        $domPdf->render();
+
+        $fileName = TextNormalizer::toKey($entry->getTitle());
+
+        return new StreamedResponse(function () use ($domPdf, $fileName) {
+            echo $domPdf->output();
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
+        ]);
     }
 
     /**

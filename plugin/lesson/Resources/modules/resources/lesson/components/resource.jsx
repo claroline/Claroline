@@ -11,9 +11,6 @@ import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapt
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
 import {Editor} from '#/plugin/lesson/resources/lesson/editor/components/editor'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 class LessonResource extends Component {
   constructor(props) {
     super(props)
@@ -44,17 +41,7 @@ class LessonResource extends Component {
             displayed: this.props.canExport,
             label: trans('export-pdf', {}, 'actions'),
             group: trans('transfer'),
-            callback: () => this.props.downloadLessonPdf(this.props.lesson.id).then(pdfContent => {
-              html2pdf()
-                .set({
-                  filename: pdfContent.name,
-                  image: { type: 'jpeg', quality: 1 },
-                  html2canvas: { scale: 4 },
-                  enableLinks: true
-                })
-                .from(pdfContent.content, 'string')
-                .save()
-            })
+            callback: () => this.props.downloadLessonPdf(this.props.lesson.id)
           }
         ]}
         redirect={[
