@@ -27,7 +27,9 @@ export default {
         displayed: true,
         type: 'choice',
         options: {
-          choices: getTypes().reduce((resourceTypes, current) => Object.assign(resourceTypes, {[current.name]: trans(current.name, {}, 'resource')}), {}),
+          choices: getTypes()
+            .sort((a, b) => trans(a.name, {}, 'resource') >= trans(b.name, {}, 'resource') ? 1 : -1)
+            .reduce((resourceTypes, current) => Object.assign(resourceTypes, {[current.name]: trans(current.name, {}, 'resource')}), {}),
           condensed: true
         }
       }, {
