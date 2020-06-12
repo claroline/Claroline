@@ -50,7 +50,7 @@ const ProfileComponent = props => {
           }
         ]}
         redirect={[
-          {from: '/', exact: true, to: '/show/main'}
+          {from: '/', exact: true, to: '/show'}
         ]}
       />
     </UserPage>

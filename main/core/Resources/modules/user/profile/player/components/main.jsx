@@ -22,14 +22,14 @@ const ProfileShowComponent = props =>
         />
 
         {props.facets && 1 < props.facets.length &&
-        <Vertical
-          basePath={route(props.user, props.path) + '/show'}
-          tabs={props.facets.map(facet => ({
-            icon: facet.icon,
-            title: facet.title,
-            path: `/${facet.id}`
-          }))}
-        />
+          <Vertical
+            basePath={route(props.user, props.path) + '/show'}
+            tabs={props.facets.map(facet => ({
+              icon: facet.icon,
+              title: facet.title,
+              path: `/${facet.id}`
+            }))}
+          />
         }
       </Fragment>
     }
