@@ -17,6 +17,9 @@ const TemplatesModal = withReducer(selectors.STORE_NAME, reducer)(
       currentLocale: configSelectors.param(state, 'locale.current')
     }),
     (dispatch) => ({
+      resetFilters(filters) {
+        dispatch(listActions.resetFilters(selectors.STORE_NAME, filters))
+      },
       reset() {
         dispatch(listActions.resetSelect(selectors.STORE_NAME))
         dispatch(listActions.invalidateData(selectors.STORE_NAME))
