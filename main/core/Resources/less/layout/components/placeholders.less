@@ -7,14 +7,17 @@
     justify-content: center;
     background: rgba(255, 255, 255, 0.5); // todo use a var
     border-radius: 50%;
+
+    + .placeholder-body {
+        border-width: 0;
+        border-color: @placeholder-border-color;
+        border-style: solid;
+        padding-left: floor(@grid-gutter-width / 2);
+    }
 }
 
 .placeholder-body {
     flex: 1;
-    border-width: 0;
-    border-color: @placeholder-border-color;
-    border-style: solid;
-    padding-left: floor(@grid-gutter-width / 2);
     text-align: center;
 }
 
