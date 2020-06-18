@@ -39,6 +39,7 @@ const DataCellContent = props => {
     // use custom component defined in the type definition
     cellRendering = React.createElement(props.definition.components.table, merge({}, props.column.options || {}, {
       id: toKey(props.column.name + '-' + props.rowData.id),
+      label: props.column.label,
       data: cellData
     }))
   } else {

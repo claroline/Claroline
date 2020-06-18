@@ -12,7 +12,7 @@ import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
 // TODO : reuse explorer config (title, root, filters, etc.)
 
 const TemplateTypeFilter = (props) =>
-  <span className="data-filter resource-filter">
+  <span className="data-filter template-type-filter">
     {props.search}
 
     <Button

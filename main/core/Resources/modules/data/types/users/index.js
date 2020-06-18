@@ -1,5 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 
+import {UserFilter} from '#/main/core//data/types/user/components/filter'
+
+import {UsersCell} from '#/main/core/data/types/users/components/cell'
 import {UsersDisplay} from '#/main/core/data/types/users/components/display'
 import {UsersInput} from '#/main/core/data/types/users/components/input'
 
@@ -12,7 +15,9 @@ const dataType = {
   },
   components: {
     details: UsersDisplay,
-    input: UsersInput
+    input: UsersInput,
+    table: UsersCell,
+    search: UserFilter
   }
 }
 

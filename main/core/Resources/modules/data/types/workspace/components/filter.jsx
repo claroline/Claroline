@@ -12,7 +12,7 @@ import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 // TODO : reuse explorer config (title, root, filters, etc.)
 
 const WorkspaceFilter = (props) =>
-  <span className="data-filter resource-filter">
+  <span className="data-filter workspace-filter">
     {props.search}
 
     <Button

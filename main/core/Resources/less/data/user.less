@@ -1,5 +1,19 @@
+.users-cell {
+    > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    .dropdown-menu {
+        .user-micro {
+            display: flex !important;
+        }
+    }
+}
 
 .table {
+    .users-cell,
     .user-cell {
         padding: 0 @table-cell-padding !important;
     }
@@ -15,6 +29,7 @@
 }
 
 .table-condensed {
+    .users-cell,
     .user-cell {
         padding: 0 @table-condensed-cell-padding !important;
     }

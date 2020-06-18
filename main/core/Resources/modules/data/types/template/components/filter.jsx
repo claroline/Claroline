@@ -10,7 +10,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_TEMPLATES} from '#/main/core/modals/templates'
 
 const TemplateFilter = (props) =>
-  <span className="data-filter resource-filter">
+  <span className="data-filter template-filter">
     {props.search}
 
     <Button

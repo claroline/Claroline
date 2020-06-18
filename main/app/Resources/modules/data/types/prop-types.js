@@ -154,6 +154,8 @@ const DataProperty = {
 
 const DataCell = {
   propTypes: {
+    id: T.string,
+    label: T.string,
     data: T.any
   },
   defaultTypes: {

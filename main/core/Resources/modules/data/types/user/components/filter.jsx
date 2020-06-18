@@ -10,7 +10,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_USERS} from '#/main/core/modals/users'
 
 const UserFilter = (props) =>
-  <span className="data-filter resource-filter">
+  <span className="data-filter user-filter">
     {props.search}
 
     <Button
