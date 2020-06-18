@@ -56,7 +56,7 @@ class Updater120547 extends Updater
             if ($widget && !empty($widget->getFilters())) {
                 $filters = $widget->getFilters();
                 foreach ($filters as $index => $value) {
-                    if (isset($value['property']) && 'parent' === $value['property'] && is_numeric($value['value'])) {
+                    if (isset($value['property']) && 'parent' === $value['property'] && !empty($value['value']) && is_numeric($value['value'])) {
                         /** @var ResourceNode $node */
                         $node = $this->om->getRepository(ResourceNode::class)->find($value['value']);
 
