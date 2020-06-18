@@ -65,7 +65,7 @@ const ContentTitle = props =>
 
     {!isEmpty(props.actions) &&
       <Toolbar
-        id={toKey(props.title)}
+        id={props.id || toKey(props.title)}
         className="h-toolbar"
         buttonName="btn"
         tooltip="bottom"
@@ -77,11 +77,12 @@ const ContentTitle = props =>
   </HeadingWrapper>
 
 ContentTitle.propTypes = {
+  id: T.string,
   className: T.string,
   level: T.number.isRequired,
   displayLevel: T.number,
   numbering: T.node,
-  title: T.string.isRequired,
+  title: T.node.isRequired,
   subtitle: T.string,
   displayed: T.bool,
   align: T.oneOf(['left', 'center', 'right']),

@@ -15,9 +15,7 @@ const ButtonComponent = props => {
 
   invariant(undefined !== button, `You have requested a non existent button "${props.type}".`)
 
-  return React.createElement(button, Object.assign(
-    omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript')
-  ), [
+  return React.createElement(button, omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript'), [
     (props.icon && typeof props.icon === 'string') &&
       <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
     (props.icon && typeof props.icon !== 'string') && cloneElement(props.icon, {key: 'button-icon'}),
