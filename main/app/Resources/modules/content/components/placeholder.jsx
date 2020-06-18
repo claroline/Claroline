@@ -20,7 +20,9 @@ const ContentPlaceholder = props =>
     className="empty-placeholder"
     size={props.size}
   >
-    <span className={`placeholder-icon ${props.icon}`} />
+    {props.icon &&
+      <span className={`placeholder-icon ${props.icon}`} />
+    }
 
     <div className="placeholder-body">
       <span className="placeholder-title">{props.title}</span>
@@ -43,7 +45,7 @@ ContentPlaceholder.propTypes = {
 }
 
 ContentPlaceholder.defaultProps = {
-  icon: 'fa fa-fw fa-hand-pointer-o',
+  //icon: 'fa fa-fw fa-hand-pointer-o',
   help: null,
   size: 'md'
 }
