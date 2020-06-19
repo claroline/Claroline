@@ -14,10 +14,6 @@
             border: 1px solid transparent;
             background: @gray-lighter;
             .transition(~"border-color ease-in-out .15s, background ease-in-out .15s");
-
-            &:hover {
-                background: darken(@gray-lighter, 10%);
-            }
         }
 
         &.selected label {
@@ -25,17 +21,23 @@
             border: 1px solid @state-selected-border;
             background: @state-selected-bg;
             font-weight: bold;
-
-            // todo : merge with list selected
-            &:hover {
-                color: darken(@state-selected-text, 10%);
-                background: darken(@state-selected-bg, 10%);
-                border-color: darken(@state-selected-border, 10%);
-            }
         }
 
         &.disabled {
             opacity: 0.9;
+        }
+
+        &:not(.disabled) {
+            label:hover {
+                background: darken(@gray-lighter, 10%);
+            }
+
+            // todo : merge with list selected
+            &.selected label:hover {
+                color: darken(@state-selected-text, 10%);
+                background: darken(@state-selected-bg, 10%);
+                border-color: darken(@state-selected-border, 10%);
+            }
         }
     }
 
