@@ -11,13 +11,23 @@
     }
 
     &.user-message-left {
+        .user-message-sender {
+            order: 1;
+        }
+
         .user-message {
+            order: 2;
             margin-left: 30px;
         }
     }
 
     &.user-message-right {
+        .user-message-sender {
+            order: 2;
+        }
+
         .user-message {
+            order: 1;
             margin-right: 30px;
         }
     }
@@ -79,11 +89,13 @@
     background: @user-message-bg;
     border: 1px solid @user-message-border;
     border-radius: @user-message-border-radius;
+}
 
-    // black magic 1 : create a triangle the same color than .user-message to create a bubble
-    // black magic 2 : create another triangle 1px larger the same color than .user-message border to simulate border
+// black magic 1 : create a triangle the same color than .user-message to create a bubble
+// black magic 2 : create another triangle 1px larger the same color than .user-message border to simulate border
 
-    &:before {
+.user-message-left {
+    .user-message:before {
         position: absolute;
         left: -16px;
         top: 14px;
@@ -95,7 +107,7 @@
         border-width: 16px 16px 16px 0;
         border-color: transparent @user-message-border transparent transparent;
     }
-    &:after {
+    .user-message:after {
         position: absolute;
         left: -15px;
         top: 15px;
@@ -106,6 +118,33 @@
         border-style: solid;
         border-width: 15px 15px 15px 0;
         border-color: transparent @user-message-bg transparent transparent;
+    }
+}
+
+.user-message-right {
+    .user-message:before {
+        position: absolute;
+        right: -16px;
+        top: 14px;
+        content: " ";
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 16px 0 16px 16px;
+        border-color: transparent transparent transparent @user-message-border;
+    }
+    .user-message:after {
+        position: absolute;
+        right: -15px;
+        top: 15px;
+        content: " ";
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 15px 0 15px 15px;
+        border-color: transparent transparent transparent @user-message-bg;
     }
 }
 

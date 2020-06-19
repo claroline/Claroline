@@ -22,24 +22,33 @@ import {UserAvatar} from '#/main/core/user/components/avatar'
  * Representation of a User message.
  * Can be used in comments, messages, etc.
  *
- * @todo maybe allow a title for forums
- *
  * @param props
  * @constructor
  */
 const UserMessage = props => {
   const actions = props.actions.filter(action => action.displayed)
 
+  let SenderComponent
+  if (props.user) {
+    SenderComponent = (
+      <LinkButton target={route(props.user)} className="user-message-sender">
+        <UserAvatar picture={props.user && props.user.picture} alt={false} />
+      </LinkButton>
+    )
+  } else {
+    SenderComponent = (
+      <span className="user-message-sender">
+        <UserAvatar alt={false} />
+      </span>
+    )
+  }
+
   return (
     <div className={classes('user-message-container', props.className, {
       'user-message-left': 'left' === props.position,
       'user-message-right': 'right' === props.position
     })}>
-      {'left' === props.position && props.user &&
-        <LinkButton target={route(props.user)}>
-          <UserAvatar picture={props.user && props.user.picture} alt={false} />
-        </LinkButton>
-      }
+      {SenderComponent}
 
       <div className="user-message">
         <div className="user-message-meta">
@@ -74,12 +83,6 @@ const UserMessage = props => {
           props.content
         )}
       </div>
-
-      {'right' === props.position && props.user &&
-        <LinkButton target={route(props.user)}>
-          <UserAvatar picture={props.user && props.user.picture} alt={false} />
-        </LinkButton>
-      }
     </div>
   )
 }
