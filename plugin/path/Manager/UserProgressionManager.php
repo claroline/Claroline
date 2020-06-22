@@ -186,7 +186,7 @@ class UserProgressionManager
      *
      * @return array
      */
-    private function computeResourceUserEvaluation(Path $path, array $data = [])
+    public function computeResourceUserEvaluation(Path $path, array $data = [])
     {
         $steps = array_map(function (Step $step) {
             return $step->getUuid();
