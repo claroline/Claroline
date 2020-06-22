@@ -10,6 +10,7 @@ const PlayerMenu = withRouter(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
+      overview: selectors.showOverview(state),
       steps: selectors.steps(state)
     })
   )(PlayerMenuComponent)
