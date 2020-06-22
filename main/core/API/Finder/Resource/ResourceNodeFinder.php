@@ -213,9 +213,10 @@ class ResourceNodeFinder extends AbstractFinder
     public function getExtraFieldMapping()
     {
         return [
-          'meta.updated' => 'creation_date',
-          'meta.created' => 'modification_date',
-          'meta.published' => 'published',
+            'meta.updated' => 'creation_date',
+            'meta.created' => 'modification_date',
+            'meta.published' => 'published',
+            'meta.views' => 'views',
         ];
     }
 
@@ -224,7 +225,7 @@ class ResourceNodeFinder extends AbstractFinder
     {
         return [
             //the alias is currently removed by doctrine
-          'ort.name',
+            'ort.name',
         ];
     }
 
@@ -233,7 +234,7 @@ class ResourceNodeFinder extends AbstractFinder
     {
         return [
             'c1_.name' => 'resourceType',
-          ];
+        ];
     }
 
     public function getFilters()

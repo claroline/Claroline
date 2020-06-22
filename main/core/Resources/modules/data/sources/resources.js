@@ -36,6 +36,10 @@ export default {
         name: 'parent',
         label: trans('parent'),
         type: 'resource'
+      }, {
+        name: 'meta.views',
+        type: 'number',
+        label: trans('views')
       }, { // todo : find a way to display it only to those who have 'administrate' right
         name: 'meta.published',
         alias: 'published',
