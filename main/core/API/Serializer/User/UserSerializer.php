@@ -299,7 +299,6 @@ class UserSerializer
             'mailNotified' => $user->isMailNotified(),
             'authentication' => $user->getAuthentication(),
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
-            'removed' => $user->isRemoved(),
             'locale' => $locale,
         ];
     }
@@ -385,7 +384,7 @@ class UserSerializer
         }
 
         if (isset($restrictions['removed'])) {
-            $user->setRemoved(!$restrictions['removed']);
+            $user->setRemoved($restrictions['removed']);
         }
 
         if (isset($restrictions['dates'])) {

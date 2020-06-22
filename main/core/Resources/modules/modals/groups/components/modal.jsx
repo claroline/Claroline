@@ -56,7 +56,7 @@ GroupsModal.propTypes = {
 }
 
 GroupsModal.defaultProps = {
-  url: ['apiv2_group_list_registerable'], //apiv2_group_list_registerable = filter by current user organizations
+  url: ['apiv2_group_list'],
   title: trans('groups')
 }
 

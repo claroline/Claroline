@@ -349,6 +349,7 @@
     "editable_facet_form_explanation": "Le champ \"Modifiable\" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.",
     "edition_only": "Seulement la modification",
     "email": "Courriel",
+    "emails": "Courriels",
     "email_confirmation_message": "La plateforme ne peut pas vous envoyer tous les courriels tant que votre adresse n'a pas été confirmée.",
     "email_found_at": "Le courriel %email% a été trouvé aux lignes %lines%",
     "email_not_validated": "L'adresse e-mail (%email%) n'a pas été validée.",

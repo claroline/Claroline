@@ -33,7 +33,6 @@ const GroupTab = props =>
 
         // select groups to register
         modal: [MODAL_GROUPS, {
-          url: ['apiv2_group_list_registerable'],
           title: trans('register_groups'),
           subtitle: trans('workspace_register_select_groups'),
           selectAction: (selectedGroups) => ({

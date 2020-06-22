@@ -9,16 +9,6 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/tools/community/store/selectors'
 
 const reducer = combineReducers({
-  picker: makeListReducer(selectors.STORE_NAME + '.roles.picker', {}, {
-    invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-    })
-  }),
-  workspacePicker: makeListReducer(selectors.STORE_NAME + '.roles.workspacePicker', {}, {
-    invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-    })
-  }),
   list: makeListReducer(selectors.STORE_NAME + '.roles.list', {}, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.roles.current']: () => true, // todo : find better

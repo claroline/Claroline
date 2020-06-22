@@ -10,11 +10,6 @@ import {selectors as baseSelectors} from '#/main/core/administration/community/s
 import {USER_COMPARE} from '#/main/core/administration/community/user/store/actions'
 
 const reducer = combineReducers({
-  picker: makeListReducer(baseSelectors.STORE_NAME+'.users.picker', {}, {
-    invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'community')]: () => true
-    })
-  }),
   list: makeListReducer(baseSelectors.STORE_NAME+'.users.list', {
     sortBy: {property: 'created', direction: -1}
   }, {

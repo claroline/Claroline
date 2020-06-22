@@ -19,65 +19,53 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/group")
+ * @EXT\Route("/group")
  */
 class GroupController extends AbstractCrudController
 {
+    use HasUsersTrait;
+    use HasRolesTrait;
+    use HasOrganizationsTrait;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
+    /**
+     * GroupController constructor.
+     *
+     * @param TokenStorageInterface         $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
+     */
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
+    }
+
     public function getName()
     {
         return 'group';
     }
 
-    /**
-     * @Route(
-     *    "/list/registerable",
-     *    name="apiv2_group_list_registerable"
-     * )
-     * @Method("GET")
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @ApiDoc(
-     *     description="List the objects of class $class.",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     response={"$list"}
-     * )
-     *
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
-     */
-    public function listRegisterableGroupAction(User $user, Request $request)
+    public function getClass()
     {
-        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
-          [] :
-          ['organization' => array_map(function (Organization $organization) {
-              return $organization->getUuid();
-          }, $user->getOrganizations())];
-
-        return new JsonResponse($this->finder->search(
-            Group::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters])
-        ));
+        return Group::class;
     }
 
     /**
-     * @Route(
-     *    "/list/managed",
-     *    name="apiv2_group_list_managed"
-     * )
-     * @Method("GET")
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @ApiDoc(
      *     description="List the objects of class $class.",
      *     queryString={
@@ -89,17 +77,48 @@ class GroupController extends AbstractCrudController
      *     response={"$list"}
      * )
      *
-     * @param Workspace $workspace
+     * @param Request $request
+     * @param string  $class
+     *
+     * @return JsonResponse
+     */
+    public function listAction(Request $request, $class)
+    {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
+        return parent::listAction($request, $class);
+    }
+
+    /**
+     * @EXT\Route("/list/managed", name="apiv2_group_list_managed")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @ApiDoc(
+     *     description="List the objects of class $class.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     response={"$list"}
+     * )
+     *
+     * @param User    $user
+     * @param Request $request
      *
      * @return JsonResponse
      */
     public function listManagedAction(User $user, Request $request)
     {
-        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
-          [] :
-          ['organization' => array_map(function (Organization $organization) {
-              return $organization->getUuid();
-          }, $user->getAdministratedOrganizations()->toArray())];
+        $filters = [];
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $filters['organization'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
 
         return new JsonResponse($this->finder->search(
             Group::class,
@@ -108,22 +127,20 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *    "/password/reset",
-     *    name="apiv2_group_initialize_password"
-     * )
-     * @Method("POST")
+     * @EXT\Route("/password/reset", name="apiv2_group_initialize_password")
+     * @EXT\Method("POST")
      *
-     * @param Workspace $workspace
+     * @param Request $request
      *
      * @return JsonResponse
      */
     public function resetPasswordAction(Request $request)
     {
+        /** @var Group[] $groups */
         $groups = $this->decodeIdsString($request, Group::class);
+
         $this->om->startFlushSuite();
         $i = 0;
-
         foreach ($groups as $group) {
             foreach ($group->getUsers() as $user) {
                 $this->container->get('claroline.manager.user_manager')->sendResetPassword($user);
@@ -137,15 +154,21 @@ class GroupController extends AbstractCrudController
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 
-    use HasUsersTrait;
-    use HasRolesTrait;
-    use HasOrganizationsTrait;
-
-    public function getClass()
+    protected function getDefaultHiddenFilters()
     {
-        return Group::class;
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            return [
+                'organization' => array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getOrganizations()),
+            ];
+        }
+
+        return [];
     }
 }

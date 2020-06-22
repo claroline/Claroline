@@ -19,7 +19,7 @@ const UsersList = props =>
   <ListData
     name={selectors.LIST_NAME}
     fetch={{
-      url: !isEmpty(props.workspace) ? ['apiv2_workspace_list_users', {id: props.workspace.id}] : ['apiv2_visible_users_list'],
+      url: !isEmpty(props.workspace) ? ['apiv2_workspace_list_users', {id: props.workspace.id}] : ['apiv2_user_list'],
       autoload: true
     }}
     primaryAction={(row) => ({

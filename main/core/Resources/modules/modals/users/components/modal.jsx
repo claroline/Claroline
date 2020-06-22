@@ -80,6 +80,13 @@ const UsersModal = props => {
             displayed: false,
             displayable: false,
             sortable: false
+          }, {
+            name: 'emails',
+            label: trans('emails'),
+            type: 'string',
+            displayed: false,
+            displayable: false,
+            sortable: false
           }
         ]}
         card={UserCard}
@@ -108,7 +115,7 @@ UsersModal.propTypes = {
 }
 
 UsersModal.defaultProps = {
-  url: ['apiv2_user_list_registerable'], // = filter by current user organizations
+  url: ['apiv2_user_list'],
   title: trans('users')
 }
 

@@ -20,7 +20,6 @@ const GroupButton = props =>
     label={trans('add_group')}
     disabled={props.disabled}
     modal={[MODAL_GROUPS, {
-      url: ['apiv2_group_list_registerable'],
       title: props.title,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,

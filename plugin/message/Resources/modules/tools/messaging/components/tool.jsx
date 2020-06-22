@@ -33,7 +33,6 @@ const MessagingTool = (props) =>
         icon: 'fa fa-fw fa-user-plus',
         label: trans('new-contact', {}, 'actions'),
         modal: [MODAL_USERS, {
-          url: ['apiv2_visible_users_list'],
           selectAction: (users) => ({
             type: CALLBACK_BUTTON,
             label: trans('add-contact', {}, 'actions'),

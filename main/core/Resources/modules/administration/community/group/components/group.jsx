@@ -3,20 +3,19 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {MODAL_TEXT_SEARCH} from '#/main/core/modals/text'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '#/main/core/administration/community/group/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
+import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_ROLES} from '#/main/core/modals/roles'
+import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
 import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
 import {RoleList} from '#/main/core/administration/community/role/components/role-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
@@ -60,16 +59,17 @@ const GroupForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add-users',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
-            callback: () => props.pickUsers(props.group.id)
-          },
-          {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-plus',
-            label: trans('bulk_add_users'),
-            callback: () => props.bulkPickUsers(props.group.id)
+            modal: [MODAL_USERS, {
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addUsers(props.group.id, selected)
+              })
+            }]
           }
         ]}
       >
@@ -99,10 +99,17 @@ const GroupForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add-roles',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_roles'),
-            callback: () => props.pickRoles(props.group.id)
+            modal: [MODAL_ROLES, {
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addRoles(props.group.id, selected)
+              })
+            }]
           }
         ]}
       >
@@ -132,10 +139,17 @@ const GroupForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add-organizations',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_organizations'),
-            callback: () => props.pickOrganizations(props.group.id)
+            modal: [MODAL_ORGANIZATIONS, {
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addOrganizations(props.group.id, selected)
+              })
+            }]
           }
         ]}
       >
@@ -166,10 +180,9 @@ GroupForm.propTypes = {
   group: T.shape({
     id: T.string
   }).isRequired,
-  pickUsers: T.func.isRequired,
-  bulkPickUsers: T.func.isRequired,
-  pickRoles: T.func.isRequired,
-  pickOrganizations: T.func.isRequired
+  addUsers: T.func.isRequired,
+  addRoles: T.func.isRequired,
+  addOrganizations: T.func.isRequired
 }
 
 const Group = connect(
@@ -179,64 +192,14 @@ const Group = connect(
     group: formSelect.data(formSelect.form(state, baseSelectors.STORE_NAME+'.groups.current'))
   }),
   dispatch =>({
-    pickUsers(groupId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_users'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.users.picker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addUsers(groupId, selected))
-      }))
+    addUsers(groupId, selected) {
+      dispatch(actions.addUsers(groupId, selected.map(row => row.id)))
     },
-    bulkPickUsers(groupId) {
-      dispatch(modalActions.showModal(MODAL_TEXT_SEARCH, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_users'),
-        name: baseSelectors.STORE_NAME+'.users.bulk',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list_registerable'],
-          autoload: false
-        },
-        handleSelect: (selected) => dispatch(actions.addUsers(groupId, selected))
-      }))
+    addRoles(groupId, selected) {
+      dispatch(actions.addRoles(groupId, selected.map(row => row.id)))
     },
-    pickRoles(groupId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-id-badge',
-        title: trans('add_roles'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.roles.picker',
-        definition: RoleList.definition,
-        card: RoleList.card,
-        fetch: {
-          url: ['apiv2_role_platform_grantable_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addRoles(groupId, selected))
-      }))
-    },
-    pickOrganizations(groupId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-buildings',
-        title: trans('add_organizations'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.organizations.picker',
-        definition: OrganizationList.definition,
-        card: OrganizationList.card,
-        fetch: {
-          url: ['apiv2_organization_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addOrganizations(groupId, selected))
-      }))
+    addOrganizations(groupId, selected) {
+      dispatch(actions.addOrganizations(groupId, selected.map(row => row.id)))
     }
   })
 )(GroupForm)

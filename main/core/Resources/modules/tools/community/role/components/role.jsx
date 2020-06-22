@@ -4,8 +4,6 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -27,6 +25,8 @@ import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
+import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_GROUPS} from '#/main/core/modals/groups'
 
 // TODO : merge with main/core/administration/community/role/components/role
 
@@ -173,12 +173,18 @@ class RoleForm extends Component {
               disabled={this.props.new}
               actions={[
                 {
-                  name: 'add',
-                  type: CALLBACK_BUTTON,
+                  name: 'add-users',
+                  type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-plus',
                   label: trans('add_user'),
-                  callback: () => this.props.pickUsers(this.props.role.id),
-                  disabled: this.props.role.restrictions && null !== this.props.role.restrictions.maxUsers && this.props.role.restrictions.maxUsers <= this.props.role.meta.users
+                  disabled: this.props.role.restrictions && null !== this.props.role.restrictions.maxUsers && this.props.role.restrictions.maxUsers <= this.props.role.meta.users,
+                  modal: [MODAL_USERS, {
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('add', {}, 'actions'),
+                      callback: () => this.props.addUsers(this.props.role.id, selected)
+                    })
+                  }]
                 }
               ]}
             >
@@ -206,11 +212,17 @@ class RoleForm extends Component {
               disabled={this.props.new}
               actions={[
                 {
-                  name: 'add',
-                  type: CALLBACK_BUTTON,
+                  name: 'add-groups',
+                  type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-plus',
                   label: trans('add_group'),
-                  callback: () => this.props.pickGroups(this.props.role.id)
+                  modal: [MODAL_GROUPS, {
+                    selectAction: (selected) => ({
+                      type: CALLBACK_BUTTON,
+                      label: trans('add', {}, 'actions'),
+                      callback: () => this.props.addGroups(this.props.role.id, selected)
+                    })
+                  }]
                 }
               ]}
             >
@@ -293,8 +305,8 @@ RoleForm.propTypes = {
     }))
   })),
   updateProp: T.func.isRequired,
-  pickUsers: T.func.isRequired,
-  pickGroups: T.func.isRequired,
+  addUsers: T.func.isRequired,
+  addGroups: T.func.isRequired,
   addShortcuts: T.func.isRequired,
   removeShortcut: T.func.isRequired
 }
@@ -311,35 +323,11 @@ const Role = connect(
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(selectors.STORE_NAME + '.roles.current', propName, propValue))
     },
-    pickUsers(roleId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_users'),
-        confirmText: trans('add'),
-        name: selectors.STORE_NAME + '.users.picker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list_registerable'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addUsers(roleId, selected))
-      }))
+    addUsers(roleId, selected) {
+      dispatch(actions.addUsers(roleId, selected.map(row => row.id)))
     },
-    pickGroups(roleId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-users',
-        title: trans('add_groups'),
-        confirmText: trans('add'),
-        name: selectors.STORE_NAME + '.groups.picker',
-        definition: GroupList.definition,
-        card: GroupList.card,
-        fetch: {
-          url: ['apiv2_group_list_registerable'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addGroups(roleId, selected))
-      }))
+    addGroups(roleId, selected) {
+      dispatch(actions.addGroups(roleId, selected.map(row => row.id)))
     },
     addShortcuts(workspaceId, roleId, shortcuts) {
       dispatch(workspaceActions.addShortcuts(workspaceId, roleId, shortcuts))

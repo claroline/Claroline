@@ -8,16 +8,18 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
-import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions} from '#/main/core/administration/community/location/store'
 import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
+
+import {MODAL_USERS} from '#/main/core/modals/users'
+import {MODAL_GROUPS} from '#/main/core/modals/groups'
+import {MODAL_ORGANIZATIONS} from '#/main/core/modals/organizations'
 
 import {locationTypes} from '#/main/core/administration/community/location/constants'
 
@@ -76,10 +78,17 @@ const LocationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add-users',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
-            callback: () => props.pickUsers(props.location.id)
+            modal: [MODAL_USERS, {
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addUsers(props.location.id, selected)
+              })
+            }]
           }
         ]}
       >
@@ -109,10 +118,18 @@ const LocationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add-groups',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
-            callback: () => props.pickGroups(props.location.id)
+            modal: [MODAL_GROUPS, {
+              url: ['apiv2_group_list'],
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addGroups(props.location.id, selected)
+              })
+            }]
           }
         ]}
       >
@@ -142,10 +159,17 @@ const LocationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            name: 'add-organizations',
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_organizations'),
-            callback: () => props.pickOrganizations(props.location.id)
+            modal: [MODAL_ORGANIZATIONS, {
+              selectAction: (selected) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('add', {}, 'actions'),
+                callback: () => props.addOrganizations(props.location.id, selected)
+              })
+            }]
           }
         ]}
       >
@@ -176,9 +200,9 @@ LocationForm.propTypes = {
   location: T.shape({
     id: T.string
   }).isRequired,
-  pickUsers: T.func.isRequired,
-  pickGroups: T.func.isRequired,
-  pickOrganizations: T.func.isRequired
+  addUsers: T.func.isRequired,
+  addGroups: T.func.isRequired,
+  addOrganizations: T.func.isRequired
 }
 
 const Location = connect(
@@ -188,50 +212,14 @@ const Location = connect(
     location: formSelect.data(formSelect.form(state, baseSelectors.STORE_NAME+'.locations.current'))
   }),
   dispatch =>({
-    pickUsers(locationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-user',
-        title: trans('add_users'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.users.picker',
-        definition: UserList.definition,
-        card: UserList.card,
-        fetch: {
-          url: ['apiv2_user_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addUsers(locationId, selected))
-      }))
+    addUsers(locationId, selected) {
+      dispatch(actions.addUsers(locationId, selected.map(row => row.id)))
     },
-    pickGroups(locationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-users',
-        title: trans('add_groups'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.groups.picker',
-        definition: GroupList.definition,
-        card: GroupList.card,
-        fetch: {
-          url: ['apiv2_group_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addGroups(locationId, selected))
-      }))
+    addGroups(locationId, selected) {
+      dispatch(actions.addGroups(locationId, selected.map(row => row.id)))
     },
-    pickOrganizations(locationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
-        icon: 'fa fa-fw fa-buildings',
-        title: trans('add_organizations'),
-        confirmText: trans('add'),
-        name: baseSelectors.STORE_NAME+'.organizations.picker',
-        definition: OrganizationList.definition,
-        card: OrganizationList.card,
-        fetch: {
-          url: ['apiv2_organization_list'],
-          autoload: true
-        },
-        handleSelect: (selected) => dispatch(actions.addOrganizations(locationId, selected))
-      }))
+    addOrganizations(locationId, selected) {
+      dispatch(actions.addOrganizations(locationId, selected.map(row => row.id)))
     }
   })
 )(LocationForm)

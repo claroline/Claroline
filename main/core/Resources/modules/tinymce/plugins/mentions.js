@@ -148,7 +148,7 @@ AutoComplete.prototype = {
 
   search: function (query, process) {
     if (query && 0 < query.length) {
-      fetch(url(['apiv2_visible_users_list'], {
+      fetch(url(['apiv2_user_list'], {
         filters: {
           [this.options.queryBy]: query
         },

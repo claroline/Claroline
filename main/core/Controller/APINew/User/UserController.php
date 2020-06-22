@@ -303,52 +303,6 @@ class UserController extends AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Get the list of user in that share the current user organizations (and sub organizations).",
-     *     queryString={
-     *         "$finder=Claroline\CoreBundle\Entity\User&!recursiveOrXOrganization",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     }
-     * )
-     * @EXT\Route("/list/registerable", name="apiv2_user_list_registerable")
-     * @EXT\Method({"GET", "POST"})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function listRegisterableAction(User $user, Request $request)
-    {
-        $filters = $this->authChecker->isGranted('ROLE_ADMIN') ?
-          [] :
-          ['recursiveOrXOrganization' => array_map(function (Organization $organization) {
-              return $organization->getUuid();
-          }, $user->getOrganizations())];
-
-        //here we look to the posted search data
-
-        $data = json_decode($request->getContent(), true);
-
-        if (isset($data['textSearch'])) {
-            $text = $data['textSearch'];
-            $data = array_map(function ($data) {
-                //trim and do other stuff here
-                return $data;
-            }, str_getcsv($text, PHP_EOL));
-            $filters['globalSearch'] = $data;
-        }
-
-        return new JsonResponse($this->finder->search(
-            User::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters])
-        ));
-    }
-
-    /**
-     * @ApiDoc(
      *     description="Get the list of user in that share the current user managed organizations (and sub organizations).",
      *     queryString={
      *         "$finder=Claroline\CoreBundle\Entity\User&!recursiveOrXOrganization",
@@ -541,5 +495,20 @@ class UserController extends AbstractCrudController
           'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|current|\/)).*'],
           'exist' => [],
         ]);
+    }
+
+    protected function getDefaultHiddenFilters()
+    {
+        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            return [
+                'recursiveOrXOrganization' => array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getOrganizations()),
+            ];
+        }
+
+        return [];
     }
 }

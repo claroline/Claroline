@@ -10,11 +10,6 @@ import {constants} from '#/main/core/user/constants'
 import {selectors} from '#/main/core/tools/community/store/selectors'
 
 const reducer = combineReducers({
-  picker: makeListReducer(selectors.STORE_NAME + '.groups.picker', {}, {
-    invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-    })
-  }),
   list: makeListReducer(selectors.STORE_NAME + '.groups.list', {}, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.groups.current']: () => true, // todo : find better

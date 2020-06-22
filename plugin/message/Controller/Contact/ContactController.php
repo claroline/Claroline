@@ -101,31 +101,6 @@ class ContactController extends AbstractCrudController
         return new JsonResponse($serializedContacts);
     }
 
-    /**
-     * @EXT\Route(
-     *     "/visible/users/list/{picker}",
-     *     name="apiv2_visible_users_list"
-     * )
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $currentUser
-     * @param Request $request
-     * @param int     $picker
-     *
-     * @return JsonResponse
-     */
-    public function visibleUsersListAction(User $currentUser, Request $request, $picker = 0)
-    {
-        $params = $request->query->all();
-
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [];
-        }
-        $params['hiddenFilters']['contactable'] = true;
-
-        return new JsonResponse($this->finder->search(User::class, $params), 200);
-    }
-
     public function getClass()
     {
         return Contact::class;

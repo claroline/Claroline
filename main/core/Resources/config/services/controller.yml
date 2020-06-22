@@ -104,7 +104,10 @@ services:
           - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
           - '@Claroline\CoreBundle\Manager\LogConnectManager'
 
-    Claroline\CoreBundle\Controller\APINew\User\GroupController: ~
+    Claroline\CoreBundle\Controller\APINew\User\GroupController:
+        arguments:
+          - '@security.token_storage'
+          - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\APINew\User\LocationController: ~
 
@@ -116,7 +119,9 @@ services:
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
-    Claroline\CoreBundle\Controller\APINew\User\RoleController: ~
+    Claroline\CoreBundle\Controller\APINew\User\RoleController:
+        arguments:
+          - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\APINew\User\UserController:
         arguments:

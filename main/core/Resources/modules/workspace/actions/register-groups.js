@@ -19,7 +19,6 @@ export default (workspaces, refresher) => ({
   // open a modal to select the list of groups to register
   modal: [MODAL_GROUPS, {
     title: trans('register_groups'),
-    url: ['apiv2_group_list_registerable'],
 
     // load the list of common roles for selected workspaces
     selectAction: (groups) => ({

@@ -126,29 +126,26 @@ class UserFinder extends AbstractFinder
                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                    break;
 
-               case 'organizationNameUser':
-                  $qb->leftJoin('obj.userOrganizationReferences', 'orefu');
-                  $qb->leftJoin('orefu.organization', 'ou');
-                  $qb->andWhere('UPPER(ou.name) LIKE :organizationName');
-                  $qb->setParameter('organizationName', '%'.strtoupper($filterValue).'%');
-                  break;
-
+                case 'organizationNameUser':
+                    $qb->leftJoin('obj.userOrganizationReferences', 'orefu');
+                    $qb->leftJoin('orefu.organization', 'ou');
+                    $qb->andWhere('UPPER(ou.name) LIKE :organizationName');
+                    $qb->setParameter('organizationName', '%'.strtoupper($filterValue).'%');
+                    break;
                 case '_organizationNameGroup':
-                   $qb->leftJoin('obj.groups', 'ugroup');
-                   $qb->leftJoin('ugroup.organizations', 'ogroup');
-                   $qb->andWhere('UPPER(ogroup.name) LIKE :organizationNameGroup');
-                   $qb->setParameter('organizationNameGroup', '%'.strtoupper($filterValue).'%');
-                   break;
-
+                    $qb->leftJoin('obj.groups', 'ugroup');
+                    $qb->leftJoin('ugroup.organizations', 'ogroup');
+                    $qb->andWhere('UPPER(ogroup.name) LIKE :organizationNameGroup');
+                    $qb->setParameter('organizationNameGroup', '%'.strtoupper($filterValue).'%');
+                    break;
                 case 'unionOrganizationName':
-                  $byUserSearch = $byGroupSearch = $searches;
-                  $byUserSearch['organizationNameUser'] = $filterValue;
-                  $byGroupSearch['_organizationNameGroup'] = $filterValue;
-                  unset($byUserSearch['unionOrganizationName']);
-                  unset($byGroupSearch['unionOrganizationName']);
+                    $byUserSearch = $byGroupSearch = $searches;
+                    $byUserSearch['organizationNameUser'] = $filterValue;
+                    $byGroupSearch['_organizationNameGroup'] = $filterValue;
+                    unset($byUserSearch['unionOrganizationName']);
+                    unset($byGroupSearch['unionOrganizationName']);
 
-                  return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
-
+                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
                 case 'recursiveOrXOrganization':
                     $value = is_array($filterValue) ? $filterValue : [$filterValue];
                     $roots = $this->om->findList(Organization::class, 'uuid', $value);
@@ -223,12 +220,18 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere("UPPER(gn.name) LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
-                case 'globalSearch':
+                case 'emails':
                     $qb->orWhere($qb->expr()->orX(
                         $qb->expr()->in('obj.email', ':globalSearch'),
                         $qb->expr()->in('obj.username', ':globalSearch')
                     ));
-                    $qb->setParameter('globalSearch', $filterValue);
+
+                    $data = array_map(function ($data) {
+                        //trim and do other stuff here
+                        return $data;
+                    }, str_getcsv($filterValue));
+
+                    $qb->setParameter('emails', $data);
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

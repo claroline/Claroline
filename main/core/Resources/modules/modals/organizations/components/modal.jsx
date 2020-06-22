@@ -56,7 +56,7 @@ OrganizationsModal.propTypes = {
 }
 
 OrganizationsModal.defaultProps = {
-  url: ['apiv2_organization_list'], //apiv2_group_list_registerable = filter by current user organizations
+  url: ['apiv2_organization_list'],
   title: trans('organizations')
 }
 

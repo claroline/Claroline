@@ -66,6 +66,7 @@ class MenuMain extends Component {
               {this.props.backAction &&
                 <Button
                   {...this.props.backAction}
+                  id="app-menu-back"
                   className="app-menu-back"
                   icon="fa fa-arrow-left"
                   tooltip="right"

@@ -11,11 +11,6 @@ import {selectors as baseSelectors} from '#/main/core/administration/community/s
 import {constants} from '#/main/core/user/constants'
 
 const reducer = combineReducers({
-  picker: makeListReducer(baseSelectors.STORE_NAME+'.roles.picker', {}, {
-    invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'community')]: () => true
-    })
-  }),
   list: makeListReducer(baseSelectors.STORE_NAME+'.roles.list', {
     filters: [{property: 'type', value: constants.ROLE_PLATFORM}]
   }, {

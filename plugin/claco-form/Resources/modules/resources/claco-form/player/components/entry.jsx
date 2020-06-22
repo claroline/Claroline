@@ -74,7 +74,6 @@ const EntryActions = props =>
         label: trans('change_entry_owner', {}, 'clacoform'),
         callback: props.changeOwner,
         modal: [MODAL_USERS, {
-          url: ['apiv2_visible_users_list'],
           selectAction: (users) => ({
             type: CALLBACK_BUTTON,
             label: trans('change_entry_owner', {}, 'clacoform'),
@@ -122,7 +121,6 @@ const EntryActions = props =>
         label: trans('share', {}, 'actions'),
         callback: props.share,
         modal: [MODAL_USERS, {
-          url: ['apiv2_visible_users_list'],
           selectAction: (users) => ({
             type: CALLBACK_BUTTON,
             label: trans('share', {}, 'actions'),
