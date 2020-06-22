@@ -3,6 +3,8 @@
     <head>
         <meta charset="utf-8">
         <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-lesson-pdf.css') }}" />
     </head>
 
@@ -13,17 +15,17 @@
             </div>
 
             {% if tree is not empty and tree[0] is not empty %}
-                {% if tree[0].__children is not empty %}
-                <div class="pdf-contents" style="margin-top:15px;">
-                    <div class="pdf-contents-inner well">
-                        <div class="pdf-contents-title">
-                            {{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
+                {% if tree|length > 1 or tree[0].__children is not empty %}
+                    <div class="pdf-contents" style="margin-top:15px;">
+                        <div class="pdf-contents-inner well">
+                            <div class="pdf-contents-title">
+                                {{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
+                            </div>
+                            {% include "IcapLessonBundle:lesson:lessonContents.pdf.twig" with {'chapters' : tree, 'delimeter' : '.', 'rootId' : ''} %}
                         </div>
-                        {% include "IcapLessonBundle:lesson:lessonContents.pdf.twig" with {'chapters' : tree, 'delimeter' : '.', 'rootId' : ''} %}
+                        <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                </div>
-                    {% endif %}
+                {% endif %}
 
                 <div class="lesson-chapters">
                     {% include "IcapLessonBundle:lesson:lessonChapters.pdf.twig" with {'chapters' : tree, 'lessonId' : _resource.id} %}
