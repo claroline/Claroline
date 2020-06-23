@@ -72,7 +72,7 @@ class CorrectionManager
             /** @var Answer $answer */
             foreach ($paper->getAnswers() as $answer) {
                 if (null === $answer->getScore()) {
-                    $answers[] = $this->answerManager->serialize($answer);
+                    $answers[] = $this->answerManager->serialize($answer, ['hints' => $paper->getHints()]);
 
                     // For now we only get one definition for a question
                     // As the papers are ordered by start date DESC, we will get the most recent version of the question

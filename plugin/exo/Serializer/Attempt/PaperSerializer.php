@@ -131,18 +131,7 @@ class PaperSerializer
     private function serializeAnswers(Paper $paper, array $options = [])
     {
         // We need to inject the hints available in the structure
-        $options['hints'] = [];
-        $decoded = $paper->getStructure(true);
-
-        foreach ($decoded['steps'] as $step) {
-            foreach ($step['items'] as $item) {
-                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item['type'])) {
-                    foreach ($item['hints'] as $hint) {
-                        $options['hints'][$hint['id']] = $hint;
-                    }
-                }
-            }
-        }
+        $options['hints'] = $paper->getHints();
 
         return array_map(function (Answer $answer) use ($options) {
             return $this->answerSerializer->serialize($answer, $options);

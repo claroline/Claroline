@@ -31,6 +31,8 @@ import {Paper as PaperTypes} from '#/plugin/exo/resources/quiz/papers/prop-types
 import {actions, selectors} from '#/plugin/exo/resources/quiz/papers/store'
 import ScoreNone from '#/plugin/exo/scores/none'
 
+// TODO : show used hints
+
 function getAnswer(itemId, answers) {
   const answer = answers.find(answer => answer.questionId === itemId)
 

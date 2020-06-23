@@ -361,6 +361,29 @@ class Paper
     }
 
     /**
+     * Get all the hints available in the paper structure.
+     *
+     * @return array
+     */
+    public function getHints()
+    {
+        $hints = [];
+
+        $decoded = $this->getDecodedStructure();
+        foreach ($decoded['steps'] as $step) {
+            foreach ($step['items'] as $item) {
+                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item['type'])) {
+                    foreach ($item['hints'] as $hint) {
+                        $hints[$hint['id']] = $hint;
+                    }
+                }
+            }
+        }
+
+        return $hints;
+    }
+
+    /**
      * Gets the answer to a question if any exist.
      *
      * @param string $questionUuid

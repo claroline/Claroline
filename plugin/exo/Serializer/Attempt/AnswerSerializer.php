@@ -24,13 +24,20 @@ class AnswerSerializer
      */
     public function serialize(Answer $answer, array $options = [])
     {
+        $usedHints = [];
+        if (isset($options['hints'])) {
+            foreach ($answer->getUsedHints() as $hintId) {
+                if (isset($options['hints'][$hintId])) {
+                    $usedHints[] = $options['hints'][$hintId];
+                }
+            }
+        }
+
         $serialized = [
             'id' => $answer->getUuid(),
             'questionId' => $answer->getQuestionId(),
             'tries' => $answer->getTries(),
-            'usedHints' => array_map(function ($hintId) use ($options) {
-                return $options['hints'][$hintId];
-            }, $answer->getUsedHints()),
+            'usedHints' => $usedHints,
         ];
 
         if (!empty($answer->getData())) {
@@ -82,6 +89,7 @@ class AnswerSerializer
                 $answer->addUsedHint($usedHint['id']);
             }
         }
+
         if (!empty($data['data'])) {
             $answer->setData(json_encode($data['data']));
         }
