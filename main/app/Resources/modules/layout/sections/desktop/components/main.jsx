@@ -1,49 +1,63 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
-
 import {ToolMain} from '#/main/core/tool/containers/main'
 
-const DesktopMain = (props) =>
-  <Await
-    for={props.open(props.loaded)}
-    placeholder={
-      <ContentLoader
-        size="lg"
-        description="Nous chargeons votre bureau..."
-      />
+class DesktopMain extends Component {
+  componentDidMount() {
+    if (!this.props.loaded) {
+      this.props.open()
     }
-    then={() => (
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.props.loaded && prevProps.loaded) {
+      this.props.open()
+    }
+  }
+
+  render() {
+    if (!this.props.loaded) {
+      return (
+        <ContentLoader
+          size="lg"
+          description={trans('loading', {}, 'desktop')}
+        />
+      )
+    }
+
+    return (
       <Routes
         path="/desktop"
         routes={[
           {
             path: '/:toolName',
             onEnter: (params = {}) => {
-              if (-1 !== props.tools.findIndex(tool => tool.name === params.toolName)) {
+              if (-1 !== this.props.tools.findIndex(tool => tool.name === params.toolName)) {
                 // tool is enabled for the desktop
-                props.openTool(params.toolName)
-              } else if (0 !== props.tools.length) {
+                this.props.openTool(params.toolName)
+              } else if (0 !== this.props.tools.length) {
                 // tool is disabled (or does not exist) for the desktop
                 // let's go to the default opening of the desktop
-                props.history.replace('/desktop')
+                this.props.history.replace('/desktop')
               } else {
                 // user has access to no desktop tool send him back to home
-                props.history.replace('/')
+                this.props.history.replace('/')
               }
             },
             component: ToolMain
           }
         ]}
         redirect={[
-          {from: '/', exact: true, to: `/${props.defaultOpening}`, disabled: !props.defaultOpening}
+          {from: '/', exact: true, to: `/${this.props.defaultOpening}`, disabled: !this.props.defaultOpening}
         ]}
       />
-    )}
-  />
+    )
+  }
+}
 
 DesktopMain.propTypes = {
   history: T.shape({

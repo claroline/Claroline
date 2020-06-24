@@ -18,12 +18,8 @@ const DesktopMain = withRouter(
         tools: selectors.tools(state)
       }),
       (dispatch) => ({
-        open(loaded) {
-          if (loaded) {
-            return Promise.resolve(true)
-          }
-
-          return dispatch(actions.open())
+        open() {
+          dispatch(actions.open())
         },
         openTool(toolName) {
           dispatch(toolActions.open(toolName, {

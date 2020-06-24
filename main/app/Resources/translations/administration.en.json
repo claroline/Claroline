@@ -1,4 +1,5 @@
 {
+  "loading": "We are loading the administration...",
   "maintenance_mode": "Maintenance mode",
   "maintenance_mode_alert": "The maintenance mode of the platform is enabled.",
   "maintenance_mode_activation": "The maintenance mode allows you to temporarily disable access to your platform. The user interface and the API will no longer be accessible.",
