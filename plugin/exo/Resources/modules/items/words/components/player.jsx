@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, displayDate} from '#/main/app/intl'
-import {DateInput} from '#/main/app/data/types/date/components/input'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 import {ContentHelp} from '#/main/app/content/components/help'

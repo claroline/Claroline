@@ -39,10 +39,14 @@ const IntermediateScores = (props) => {
         }
       })
 
+      if (props.total) {
+        score = (score * props.total) / total
+      }
+
       return {
         title: tag,
         score: score,
-        total: total
+        total: props.total ? props.total : total
       }
     })
   } else if ('step' === props.mode) {
@@ -59,10 +63,14 @@ const IntermediateScores = (props) => {
         }
       })
 
+      if (props.total) {
+        score = (score * props.total) / total
+      }
+
       return {
         title: step.title || trans('step', {number: stepIndex + 1}, 'quiz'), // this should also show numbering
         score: score,
-        total: total
+        total: props.total ? props.total : total
       }
     })
   }
@@ -90,6 +98,7 @@ IntermediateScores.propTypes = {
   mode: T.string,
   steps: T.array,
   tags: T.array,
+  total: T.number,
   answers: T.object
 }
 
@@ -150,6 +159,7 @@ const AttemptEndComponent = props =>
             steps={props.paper.structure.steps}
             tags={props.tags}
             answers={props.answers}
+            total={get(props.paper, 'structure.score.total')}
           />
         }
 
