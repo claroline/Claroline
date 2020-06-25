@@ -24,7 +24,7 @@ const TeamTool = withRouter(
         dispatch(actions.openForm(selectors.STORE_NAME + '.teams.current', id, {
           id: makeId(),
           workspace: {
-            uuid: workspaceId
+            id: workspaceId
           },
           selfRegistration: teamParams.selfRegistration,
           selfUnregistration: teamParams.selfUnregistration,
