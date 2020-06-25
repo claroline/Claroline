@@ -80,6 +80,15 @@ class LogManager
         return $this->logRepository->findOneBy(['id' => $id]);
     }
 
+    public function getData(array $finderParams = [])
+    {
+        // get filters
+        $filters = FinderProvider::parseQueryParams($finderParams)['allFilters'];
+        $unique = isset($filters['unique']) ? filter_var($filters['unique'], FILTER_VALIDATE_BOOLEAN) : false;
+
+        return $this->logRepository->fetchChartData($filters, $unique);
+    }
+
     /**
      * Get chart data given a list/array of filters.
      *

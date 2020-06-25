@@ -71,6 +71,38 @@ class LogFinder extends AbstractFinder
                     ));
                     $qb->setParameter('doer', '%'.strtoupper($filterValue).'%');
                     break;
+                case 'doerRoles':
+                    if (!$userJoin) {
+                        $userJoin = true;
+                        $qb->join('obj.doer', 'doer');
+                    }
+
+                    $qb
+                        ->join('doer.roles', 'roles')
+                        ->andWhere('roles.id IN (:roleIds)')
+                        ->setParameter('roleIds', $filterValue);
+
+                    break;
+                case 'doerActive':
+                    if (!$userJoin) {
+                        $userJoin = true;
+                        $qb->join('obj.doer', 'doer');
+                    }
+                    $qb->andWhere('doer.isRemoved = false');
+                    $qb->andWhere('doer.isEnabled = true');
+
+                    break;
+                case 'doerCreated':
+                    if (!$userJoin) {
+                        $userJoin = true;
+                        $qb->join('obj.doer', 'doer');
+                    }
+
+                    $qb
+                        ->andWhere('doer.created <= :date')
+                        ->setParameter('date', $filterValue);
+
+                    break;
                 case 'dateLog':
                     $qb->andWhere('obj.dateLog >= :dateFrom')
                         ->setParameter('dateFrom', $filterValue);

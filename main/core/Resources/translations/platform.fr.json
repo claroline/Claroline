@@ -203,7 +203,7 @@
     "connection_message": "Message à la connexion",
     "no_connection_message": "Aucun message à la connexion",
     "connection_time": "Temps de connexion",
-    "connections": "Nombre de connexions",
+    "connections": "Connexions",
     "contact": "Contact",
     "content": "Contenu",
     "content_creation": "Création de contenu",
@@ -1732,5 +1732,7 @@
     "contact_information": "Coordonnées",
     "send_password_help": "Veuillez spécifier l'adresse e-mail rattachée à votre compte afin que nous puissions vous envoyer un nouveau mot de passe.",
     "active": "Actif",
-    "inactive": "Inactif"
+    "inactive": "Inactif",
+    "per_day": "par jour",
+    "per_day_short": "/jour"
 }

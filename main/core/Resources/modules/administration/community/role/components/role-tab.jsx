@@ -9,7 +9,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as baseSelectors} from '#/main/core/administration/community/store'
-import {Role}    from '#/main/core/administration/community/role/components/role'
+import {Role}    from '#/main/core/administration/community/role/containers/role'
 import {Roles}   from '#/main/core/administration/community/role/components/roles'
 import {actions} from '#/main/core/administration/community/role/store'
 

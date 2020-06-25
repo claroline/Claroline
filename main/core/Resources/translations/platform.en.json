@@ -1697,5 +1697,7 @@
     "contact_information": "Contact information",
     "send_password_help": "Please specify the email address attached to your account so that we can send you a new password.",
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "per_day": "per day",
+    "per_day_short": "/day"
 }

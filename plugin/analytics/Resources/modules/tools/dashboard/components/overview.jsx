@@ -40,7 +40,7 @@ const DashboardOverview = (props) =>
         <span className="fa fa-clock" style={{backgroundColor: schemeCategory20c[9]}} />
 
         <h1 className="h3">
-          <small>{trans('Connexions')}</small>
+          <small>{trans('connections')}</small>
           {props.count.connections.count} {props.count.connections.avgTime ? '('+trans('connection_avg_time', {time: displayDuration(props.count.connections.avgTime)}, 'analytics')+')' : ''}
         </h1>
       </div>

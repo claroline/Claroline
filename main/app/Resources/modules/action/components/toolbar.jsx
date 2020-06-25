@@ -24,7 +24,7 @@ const StaticToolbar = props => {
   const toolbar = buildToolbar(props.toolbar, props.actions, props.scope)
 
   return (0 !== toolbar.length &&
-    <nav role="toolbar" className={props.className}>
+    <nav role="toolbar" className={props.className} style={props.style}>
       {toolbar.map((group, groupIndex) => [
         0 !== groupIndex &&
           <span

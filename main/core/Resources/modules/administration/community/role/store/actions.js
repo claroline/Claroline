@@ -14,7 +14,8 @@ actions.open = (formName, id = null) => (dispatch) => {
     dispatch({
       [API_REQUEST]: {
         url: ['apiv2_role_get', {id}],
-        success: (response, dispatch) => {
+        silent: true,
+        success: (response) => {
           dispatch(formActions.resetForm(formName, response, false))
         }
       }
@@ -47,5 +48,11 @@ actions.addGroups = (id, groups) => ({
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.roles.list'))
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME+'.roles.current.groups'))
     }
+  }
+})
+
+actions.fetchStatistics = (id, year) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_role_analytics', {id: id, year: year}]
   }
 })

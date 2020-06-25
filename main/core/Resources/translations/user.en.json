@@ -1,0 +1,5 @@
+{
+  "role_analytics_users_help": "Number of active users with this role.",
+  "role_analytics_connections_help": "Number of unique connections per day of users with this role.",
+  "role_analytics_actions_help": "Number of actions performed by users with this role."
+}

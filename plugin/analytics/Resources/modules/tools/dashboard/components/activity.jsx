@@ -51,7 +51,7 @@ const DashboardActivity = (props) =>
         <span className="fa fa-power-off" style={{backgroundColor: schemeCategory20c[1]}} />
 
         <h1 className="h3">
-          <small>{trans('Connexions')}</small>
+          <small>{trans('connections')}</small>
           {props.count.connections.count}
         </h1>
       </div>

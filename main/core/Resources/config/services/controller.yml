@@ -122,6 +122,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\User\RoleController:
         arguments:
           - '@security.authorization_checker'
+          - '@Claroline\CoreBundle\Manager\LogManager'
 
     Claroline\CoreBundle\Controller\APINew\User\UserController:
         arguments:

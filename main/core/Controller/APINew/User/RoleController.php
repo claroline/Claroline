@@ -16,6 +16,8 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\LogManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,14 +35,21 @@ class RoleController extends AbstractCrudController
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
+    /** @var LogManager */
+    private $logManager;
+
     /**
      * RoleController constructor.
      *
      * @param AuthorizationCheckerInterface $authorization
+     * @param LogManager                    $logManager
      */
-    public function __construct(AuthorizationCheckerInterface $authorization)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        LogManager $logManager
+    ) {
         $this->authorization = $authorization;
+        $this->logManager = $logManager;
     }
 
     public function getName()
@@ -77,6 +86,66 @@ class RoleController extends AbstractCrudController
         }
 
         return parent::listAction($request, $class);
+    }
+
+    /**
+     * @EXT\Route("/{id}/analytics/{year}", name="apiv2_role_analytics")
+     * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param User   $currentUser
+     * @param Role   $role
+     * @param string $year
+     *
+     * @return JsonResponse
+     */
+    public function analyticsAction(User $currentUser, Role $role, $year)
+    {
+        // get values for user administrated organizations
+        $organizations = null;
+        $defaultFilters = [];
+        if (!$currentUser->hasRole('ROLE_ADMIN')) {
+            $organizations = $currentUser->getAdministratedOrganizations();
+            $defaultFilters = [
+                'organization' => $organizations,
+            ];
+        }
+
+        $connections = $this->logManager->getData([
+            'hiddenFilters' => array_merge($defaultFilters, [
+                'doerActive' => true,
+                'doerCreated' => $year.'-12-31',
+                'doerRoles' => [$role->getId()],
+                'action' => 'user-login',
+                'unique' => true,
+
+                // filter for current year
+                'dateLog' => $year.'-01-01',
+                'dateTo' => $year.'-12-31',
+            ]),
+        ]);
+
+        $actions = $this->logManager->getData([
+            'hiddenFilters' => array_merge($defaultFilters, [
+                'doerActive' => true,
+                'doerCreated' => $year.'-12-31',
+                'doerRoles' => [$role->getId()],
+
+                // filter for current year
+                'dateLog' => $year.'-01-01',
+                'dateTo' => $year.'-12-31',
+            ]),
+        ]);
+
+        return new JsonResponse([
+            'users' => $this->om->getRepository(User::class)->countUsersByRole($role, null, $organizations, $year.'-12-31'),
+            'connections' => array_reduce($connections, function (int $total, array $connection) {
+                return $total + ($connection['total'] ?? 0);
+            }, 0),
+            'actions' => array_reduce($actions, function (int $total, array $action) {
+                return $total + ($action['total'] ?? 0);
+            }, 0),
+        ]);
     }
 
     protected function getDefaultHiddenFilters()
