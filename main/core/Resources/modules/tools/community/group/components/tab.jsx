@@ -21,7 +21,7 @@ const GroupTab = props =>
       target: `${props.path}/groups`
     }]}
     subtitle={trans('groups')}
-    primaryAction="register_groups create_group"
+    primaryAction="register_groups"
     actions={[
       {
         name: 'register_groups',
@@ -53,13 +53,6 @@ const GroupTab = props =>
             }]
           })
         }]
-      }, {
-        name: 'create_group',
-        type: LINK_BUTTON,
-        label: trans('create_group'),
-        icon: 'fa fa-pencil',
-        target: `${props.path}/groups/form`,
-        displayed: props.canCreate
       }
     ]}
   >
@@ -71,9 +64,9 @@ const GroupTab = props =>
           exact: true,
           component: Groups
         }, {
-          path: '/groups/form/:id?',
+          path: '/groups/:id',
           component: Group,
-          onEnter: (params) => props.open(params.id || null, props.defaultRole)
+          onEnter: (params) => props.open(params.id)
         }
       ]}
     />
@@ -83,11 +76,9 @@ GroupTab.propTypes = {
   path: T.string.isRequired,
   contextData: T.object,
 
-  canCreate: T.bool.isRequired,
   canRegister: T.bool.isRequired,
   open: T.func.isRequired,
-  addGroupsToRoles: T.func.isRequired,
-  defaultRole: T.object
+  addGroupsToRoles: T.func.isRequired
 }
 
 export {

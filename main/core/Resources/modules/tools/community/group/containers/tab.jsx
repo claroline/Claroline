@@ -1,6 +1,5 @@
 import {connect} from 'react-redux'
 
-import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors as communitySelectors} from '#/main/core/tools/community/store'
@@ -11,18 +10,11 @@ const GroupTab = connect(
   state => ({
     path: toolSelectors.path(state),
     contextData: toolSelectors.contextData(state),
-    canCreate: hasPermission('administrate', toolSelectors.tool(state)),
-    canRegister: hasPermission('administrate', toolSelectors.tool(state)),
-    defaultRole: communitySelectors.defaultRole(state)
+    canRegister: communitySelectors.canCreate(state)
   }),
   dispatch => ({
-    open(id = null, defaultRole) {
-      const defaultValue = {
-        organization: null, // retrieve it with axel stuff
-        roles: [defaultRole]
-      }
-
-      dispatch(actions.open(selectors.FORM_NAME, id, defaultValue))
+    open(id = null) {
+      dispatch(actions.open(selectors.FORM_NAME, id))
     },
     addGroupsToRoles(roles, groups) {
       roles.map(role => dispatch(actions.addGroupsToRole(role, groups)))

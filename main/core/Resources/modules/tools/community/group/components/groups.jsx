@@ -17,7 +17,7 @@ const GroupsList = props =>
     name={selectors.LIST_NAME}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: `${props.path}/groups/form/${row.id}`
+      target: `${props.path}/groups/${row.id}`
     })}
     fetch={{
       url: ['apiv2_workspace_list_groups', {id: props.workspace.id}],
