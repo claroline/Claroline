@@ -34,8 +34,9 @@ if (file_exists($file = __DIR__.'/../app/config/ip_white_list.yml')) {
 if (!$maintenanceMode || $authorized) {
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
     $kernel = new AppKernel('prod', false);
-    $kernel->handle($request)->send();
-//$kernel->terminate($request, $response);
+    $response = $kernel->handle($request);
+    $response->send();
+    $kernel->terminate($request, $response);
 } else {
     $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
     $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
