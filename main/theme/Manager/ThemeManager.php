@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager\Theme;
+namespace Claroline\ThemeBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer;
@@ -49,6 +49,7 @@ class ThemeManager
      * @param PlatformConfigurationHandler  $config
      * @param string                        $kernelDir
      * @param ThemeSerializer               $serializer
+     * @param PluginManager                 $pm
      */
     public function __construct(
         ObjectManager $om,
@@ -257,18 +258,12 @@ class ThemeManager
      */
     public function all($onlyEnabled = false)
     {
+        /** @var Theme[] $themes */
         $themes = $this->repository->findAll();
 
         if ($onlyEnabled) {
-            $themes = array_filter($themes, function ($theme) {
-                return $theme->isEnabled();
-            });
-
-            $pm = $this->pm;
-            //then according to plugins
-
-            $themes = array_filter($themes, function ($theme) use ($pm) {
-                return $pm->isLoaded($theme->getPlugin());
+            $themes = array_filter($themes, function (Theme $theme) {
+                return $theme->isEnabled() && $this->pm->isLoaded($theme->getPlugin());
             });
         }
 

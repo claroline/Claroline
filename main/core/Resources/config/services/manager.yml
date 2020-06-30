@@ -413,29 +413,6 @@ services:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\Home
         public: true
 
-    Claroline\CoreBundle\Manager\Theme\ThemeManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@security.authorization_checker'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '%kernel.root_dir%'
-          - '@Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer'
-          - '@claroline.manager.plugin_manager'
-
-    claroline.manager.theme_manager:
-        alias: Claroline\CoreBundle\Manager\Theme\ThemeManager
-        public: true
-
-    Claroline\CoreBundle\Manager\Theme\ThemeBuilderManager:
-        arguments:
-          - '@kernel'
-          - '%claroline.param.files_directory%'
-          - '%kernel.root_dir%'
-
-    claroline.manager.theme_builder:
-        alias: Claroline\CoreBundle\Manager\Theme\ThemeBuilderManager
-        public: true
-
     Claroline\CoreBundle\Manager\Template\PlaceholderManager:
         arguments:
           - '@security.token_storage'

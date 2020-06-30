@@ -11,8 +11,8 @@
 
 namespace Claroline\ThemeBundle\Command;
 
-use Claroline\CoreBundle\Manager\Theme\ThemeBuilderManager;
-use Claroline\CoreBundle\Manager\Theme\ThemeManager;
+use Claroline\ThemeBundle\Manager\ThemeBuilderManager;
+use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

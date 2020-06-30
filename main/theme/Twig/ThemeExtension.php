@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Twig;
+namespace Claroline\ThemeBundle\Twig;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\Theme\ThemeManager;
+use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 
 class ThemeExtension extends \Twig_Extension

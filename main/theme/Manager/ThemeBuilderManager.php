@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager\Theme;
+namespace Claroline\ThemeBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Symfony\Component\HttpKernel\KernelInterface;

@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: [twig.extension]
+
+    Claroline\ThemeBundle\Twig\ThemeExtension:
+       arguments:
+           - '@twig.extension.assets'
+           - '@claroline.manager.theme_manager'
+           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+           - '%kernel.root_dir%'
