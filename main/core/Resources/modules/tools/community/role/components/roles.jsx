@@ -25,7 +25,7 @@ const RolesList = props =>
     })}
     delete={{
       url: ['apiv2_role_delete_bulk'],
-      disabled: rows => !!rows.find(row => row.name && (row.name.indexOf('COLLABORATOR') > -1 || row.name.indexOf('MANAGER') > -1))
+      disabled: rows => !!rows.find(row => row.name && (row.name.indexOf('ROLE_WS_COLLABORATOR_') > -1 || row.name.indexOf('ROLE_WS_MANAGER_') > -1))
     }}
     definition={[
       {

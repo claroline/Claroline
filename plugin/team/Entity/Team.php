@@ -55,7 +55,7 @@ class Team
 
     /**
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"}
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
@@ -85,7 +85,7 @@ class Team
 
     /**
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"}
      * )
      * @ORM\JoinColumn(name="team_manager_role", nullable=true, onDelete="SET NULL")
      *
