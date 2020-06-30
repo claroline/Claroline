@@ -3,7 +3,7 @@
 namespace UJM\LtiBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use UJM\LtiBundle\Library\Installation\AdditionalInstaller;
+use UJM\LtiBundle\Installation\AdditionalInstaller;
 
 class UJMLtiBundle extends DistributionPluginBundle
 {

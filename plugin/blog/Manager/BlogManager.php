@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\File\File;
 class BlogManager
 {
     private $objectManager;
-    private $uploadDir;
     private $repo;
     private $memberRepo;
     private $eventDispatcher;
@@ -30,7 +29,6 @@ class BlogManager
 
     public function __construct(
         ObjectManager $objectManager,
-        $uploadDir,
         BlogRepository $repo,
         MemberRepository $memberRepo,
         EventDispatcherInterface $eventDispatcher,
@@ -38,7 +36,6 @@ class BlogManager
         FileUtilities $fileUtils)
     {
         $this->objectManager = $objectManager;
-        $this->uploadDir = $uploadDir;
         $this->repo = $repo;
         $this->memberRepo = $memberRepo;
         $this->eventDispatcher = $eventDispatcher;
@@ -410,23 +407,6 @@ class BlogManager
         $this->objectManager->flush();
 
         return $this->objectManager->getUnitOfWork();
-    }
-
-    public function getBlogBannerPath(BlogOptions $options)
-    {
-        if (null !== $options->getBannerBackgroundImage()) {
-            $bannerPath = $this->uploadDir.DIRECTORY_SEPARATOR.$options->getBannerBackgroundImage();
-            if (file_exists($bannerPath)) {
-                return $bannerPath;
-            }
-        }
-
-        return null;
-    }
-
-    public function getBlogBannerWebPath(BlogOptions $options)
-    {
-        return $options->getBannerBackgroundImage() ? $this->uploadDir.'/'.$options->getBannerBackgroundImage() : null;
     }
 
     /**

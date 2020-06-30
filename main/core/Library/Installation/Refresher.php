@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Composer\Script\Event;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,6 +43,8 @@ class Refresher
 
     public function refresh($environment, $clearCache = true)
     {
+        $this->buildSymlinks();
+
         $this->installAssets();
         $this->dumpAssets($environment);
 
@@ -78,6 +81,12 @@ class Refresher
           ->run(new ArrayInput(['command' => 'claroline:theme:build']), $this->output);
     }
 
+    public function buildSymlinks()
+    {
+        $this->linkPublicFiles();
+        $this->linkPackageFiles();
+    }
+
     public function clearCache($environment = null)
     {
         if ($this->output) {
@@ -101,7 +110,7 @@ class Refresher
         static::removeContentFrom($cacheDir);
     }
 
-    public static function removeContentFrom($directory)
+    private static function removeContentFrom($directory)
     {
         if (is_dir($directory)) {
             $fileSystem = new Filesystem();
@@ -112,6 +121,39 @@ class Refresher
                     $fileSystem->remove($item->getPathname());
                 }
             }
+        }
+    }
+
+    private function linkPublicFiles()
+    {
+        // create symlink for public files
+        $dataWebDir = $this->container->getParameter('claroline.param.data_web_dir');
+        $fileSystem = $this->container->get('filesystem');
+        $publicFilesDir = $this->container->getParameter('claroline.param.public_files_directory');
+
+        if (!$fileSystem->exists($dataWebDir)) {
+            $this->output->writeln('Creating symlink to public directory of files directory in web directory...');
+            $fileSystem->symlink($publicFilesDir, $dataWebDir);
+        } else {
+            if (!is_link($dataWebDir)) {
+                //we could remove it manually but it might be risky
+                $this->output->writeln('Symlink from web/data to files/data could not be created, please remove your web/data folder manually', LogLevel::ERROR);
+            } else {
+                $this->output->writeln('Web folder symlinks validated...');
+            }
+        }
+    }
+
+    private function linkPackageFiles()
+    {
+        $fileSystem = $this->container->get('filesystem');
+        $webDir = $this->container->getParameter('claroline.param.web_directory');
+
+        if (!$fileSystem->exists($webDir.'/packages')) {
+            $this->output->writeln('Creating symlink to '.$webDir.'/packages');
+            $fileSystem->symlink($webDir.'/../node_modules', $webDir.'/packages');
+        } elseif (!is_link($webDir.'/packages')) {
+            $this->output->writeln('Couldn\'t create symlink to from node_modules to web/packages. You must remove web/packages or create the link manually');
         }
     }
 }

@@ -42,7 +42,8 @@ class FixtureLoader
      * "DataFixtures/ORM" or "DataFixtures" directory within the bundle. Note
      * that fixtures are always appended (no purge/truncation).
      *
-     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param BundleInterface $bundle
+     * @param string          $fixturesDirectory
      *
      * @return bool True if some fixtures have been found and executed, false otherwise
      */

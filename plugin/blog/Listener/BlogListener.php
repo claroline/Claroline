@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -88,19 +87,6 @@ class BlogListener
           'tags' => $blogManager->getTags($blog, $postsData),
           'blog' => $this->container->get('Claroline\AppBundle\API\SerializerProvider')->serialize($blog),
         ]);
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
-        /** @var Blog $blog */
-        $blog = $event->getResource();
-        $options = $blog->getOptions();
-        @unlink($this->container->getParameter('icap.blog.banner_directory').DIRECTORY_SEPARATOR.$options->getBannerBackgroundImage());
 
         $event->stopPropagation();
     }

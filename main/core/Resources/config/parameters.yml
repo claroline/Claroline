@@ -7,10 +7,10 @@ parameters:
     claroline.param.web_directory:          "%claroline.param.root_directory%/web"
 
     # File paths
-    claroline.param.uploads_directory:      "%claroline.param.web_directory%/uploads"
     claroline.param.files_directory:        "%claroline.param.root_directory%/files"
     claroline.param.archive_directory:      "%claroline.param.files_directory%/archives"
     claroline.param.public_files_directory: "%claroline.param.files_directory%/data"
+    claroline.param.uploads_directory:      "%claroline.param.public_files_directory%/uploads"
     claroline.param.icon_sets_directory:    "%claroline.param.public_files_directory%/icon_sets"
     claroline.param.data_web_dir:           "%claroline.param.web_directory%/data"
     claroline.param.icon_sets_web_dir:      "%claroline.param.data_web_dir%/icon_sets"

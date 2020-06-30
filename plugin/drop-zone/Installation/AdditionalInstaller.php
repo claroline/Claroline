@@ -12,22 +12,7 @@
 namespace Claroline\DropZoneBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
+class AdditionalInstaller extends BaseInstaller
 {
-    public function postUpdate($currentVersion, $targetVersion)
-    {
-        if (version_compare($currentVersion, '12.4.2', '<')) {
-            $updater = new Updater\Updater120402($this->container, $this->logger);
-            $updater->setLogger($this->logger);
-            $updater->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '12.5.45', '<')) {
-            $updater = new Updater\Updater120545($this->container, $this->logger);
-            $updater->setLogger($this->logger);
-            $updater->postUpdate();
-        }
-    }
 }

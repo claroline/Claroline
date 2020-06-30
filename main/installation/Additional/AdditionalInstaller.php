@@ -12,9 +12,10 @@
 namespace Claroline\InstallationBundle\Additional;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-abstract class AdditionalInstaller implements AdditionalInstallerInterface
+abstract class AdditionalInstaller implements ContainerAwareInterface, AdditionalInstallerInterface
 {
     use LoggableTrait;
     use ContainerAwareTrait;

@@ -55,10 +55,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onError, priority: 99 }
 
-    Claroline\AppBundle\Command\AsyncCommand:
-        arguments:
-            - '%kernel.root_dir%'
-
     Claroline\AppBundle\Persistence\ObjectManager:
         arguments:
             - '@doctrine.orm.entity_manager'

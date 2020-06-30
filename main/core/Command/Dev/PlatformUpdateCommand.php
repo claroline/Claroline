@@ -56,7 +56,13 @@ class PlatformUpdateCommand extends ContainerAwareCommand
                 'no_theme',
                 't',
                 InputOption::VALUE_NONE,
-                'When set to true, themes won\'t be rebuild'
+                'When set to true, themes won\'t be rebuilt'
+            )
+            ->addOption(
+                'no_symlink',
+                's',
+                InputOption::VALUE_NONE,
+                'When set to true, symlinks won\'t be rebuilt'
             )
             ->addOption(
                 'no_create_database',
@@ -73,23 +79,33 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var Refresher $refresher */
+        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
+        $refresher->setOutput($output);
+
         MaintenanceHandler::enableMaintenance();
 
         $output->writeln(
             sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s'))
         );
 
+        $this->setLocale();
+
         if (!$input->getOption('no_create_database')) {
             $databaseCreator = new CreateDatabaseDoctrineCommand();
             $databaseCreator->setContainer($this->getContainer());
             $databaseCreator->run(new ArrayInput([]), $output);
+        }
+
+        if (!$input->getOption('no_symlink')) {
+            $refresher->buildSymlinks();
         }
 
         $verbosityLevelMap = [
@@ -125,10 +141,6 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             $installer->updateFromComposerInfo();
         }
 
-        /** @var Refresher $refresher */
-        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
-        $refresher->setOutput($output);
-
         // clear cache
         if ($input->getOption('clear_cache')) {
             $refresher->clearCache($this->getContainer()->getParameter('kernel.environment'));
@@ -150,5 +162,17 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $output->writeln(
             sprintf('<comment>%s - Platform updated.</comment>', date('H:i:s'))
         );
+
+        return 0;
+    }
+
+    private function setLocale()
+    {
+        $ch = $this->getContainer()->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
+        $locale = $ch->getParameter('locales.default');
+        if ($locale) {
+            $translator = $this->getContainer()->get('translator');
+            $translator->setLocale($locale);
+        }
     }
 }

@@ -12,7 +12,7 @@
 namespace Claroline\ScormBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Claroline\ScormBundle\Library\Installation\AdditionalInstaller;
+use Claroline\ScormBundle\Installation\AdditionalInstaller;
 
 class ClarolineScormBundle extends DistributionPluginBundle
 {
