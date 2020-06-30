@@ -4,7 +4,7 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=7.2,<7.4",
-        "claroline/distribution": "12.5.x-dev"
+        "claroline/distribution": "13.x-dev"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "2.14",
@@ -41,8 +41,7 @@
         ],
         "fetch-dev": [
             "composer install --prefer-source",
-            "npm install",
-            "npm install fullcalendar"
+            "npm install"
         ],
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
