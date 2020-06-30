@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Theme;
+namespace Claroline\ThemeBundle\Command;
 
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

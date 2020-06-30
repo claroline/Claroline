@@ -9,22 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\Dev;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 
-class CleanIpWhiteListCommand extends ContainerAwareCommand
+class DisableMaintenanceCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('claroline:white_list:clean')
-            ->setDescription('Cleans the ip white list file');
+        $this->setName('claroline:maintenance:disable')
+            ->setDescription('Disable maintenance mode');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('claroline.manager.ip_white_list_manager')->cleanWhiteList();
+        MaintenanceHandler::disableMaintenance();
     }
 }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Dev;
+namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -18,11 +18,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ExportWorkspaceModelCommand extends ContainerAwareCommand implements AdminCliCommand
+class ExportCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:workspace:archive-export')
+        $this->setName('claroline:workspace:export')
             ->setDescription('export workspace archive');
         $this->setDefinition(
             [
@@ -36,6 +36,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
         $container = $this->getContainer();
         $workspace = $container->get('doctrine.orm.entity_manager')->getRepository(Workspace::class)->findOneByCode($input->getArgument('code'));
         $path = $container->get('claroline.manager.workspace.transfer')->export($workspace);
+
         $output->writeln($path);
     }
 }

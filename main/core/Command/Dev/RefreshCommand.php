@@ -9,23 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\Dev;
 
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 
-class DisableMaintenanceCommand extends ContainerAwareCommand
+class RefreshCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:maintenance:disable')
-            ->setDescription('Disable maintenance mode');
+        $this->setName('claroline:refresh')
+            ->setDescription('Installs/dumps the assets and empties the cache.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        MaintenanceHandler::disableMaintenance();
+        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
+        $refresher->setOutput($output);
+        $refresher->refresh($input->getOption('env'));
     }
 }

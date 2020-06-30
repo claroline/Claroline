@@ -1027,29 +1027,6 @@ class ClacoFormManager
         return $data;
     }
 
-    public function refactorTemplateWithUuid(ClacoForm $clacoForm)
-    {
-        $template = $clacoForm->getTemplate();
-
-        if ($template) {
-            $matches = [];
-
-            if (preg_match_all('#%field_[0-9]+%#', $template, $matches) && 0 < count($matches)) {
-                foreach ($matches[0] as $match) {
-                    $id = trim($match, '%field_');
-                    $field = $this->fieldRepo->findOneBy(['id' => $id]);
-
-                    if ($field) {
-                        $template = str_replace($match, '%field_'.$field->getUuid().'%', $template);
-                    }
-                }
-            }
-            $clacoForm->setTemplate($template);
-            $this->om->persist($clacoForm);
-            $this->om->flush();
-        }
-    }
-
     public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm)
     {
         $categoryLinks = [];

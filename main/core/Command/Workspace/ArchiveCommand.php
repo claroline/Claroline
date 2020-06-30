@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Archive;
+namespace Claroline\CoreBundle\Command\Workspace;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ArchiveWorkspaceCommand extends ContainerAwareCommand
+class ArchiveCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:workspace:archive-export')
+        $this->setName('claroline:workspace:archive')
             ->setDescription('Archive workspace by request')
             ->setDefinition([
                 new InputArgument('dql', InputArgument::REQUIRED, 'The dql request - ie: "SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w WHERE w.name LIKE \'%fifi%\'"'

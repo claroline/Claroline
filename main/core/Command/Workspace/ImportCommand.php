@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Dev;
+namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Logger\ConsoleLogger;
@@ -23,9 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Creates an user, optionaly with a specific role (default to simple user).
+ * Creates an user, optionally with a specific role (default to simple user).
  */
-class ImportWorkspaceModelCommand extends ContainerAwareCommand implements AdminCliCommand
+class ImportCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     use BaseCommandTrait;
 
@@ -37,7 +37,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
     protected function configure()
     {
         $this
-            ->setName('claroline:workspace:import_archive')
+            ->setName('claroline:workspace:import')
             ->setDescription('Create a workspace from a zip archive (for debug purpose)')
             ->setDefinition([
                 new InputArgument('path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),

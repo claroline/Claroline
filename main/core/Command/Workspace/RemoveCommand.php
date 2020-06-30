@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\Removal;
+namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\CoreBundle\Command\Traits\AskRolesTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
-class RemoveWorkspaceCommand extends ContainerAwareCommand
+class RemoveCommand extends ContainerAwareCommand
 {
     private $force = false;
     private $output = null;
@@ -34,7 +34,7 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('claroline:remove:workspaces')
+        $this->setName('claroline:workspace:remove')
             ->setDescription('Remove workspaces');
         $this->addOption(
             'personal',
@@ -188,6 +188,7 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
             $this->getOutput()->writeln("{$workspace->getId()}: {$workspace->getName()} - {$workspace->getCode()} ");
         }
 
+        $continue = false;
         if (!$this->getForce()) {
             $count = count($workspaces);
             $question = new ConfirmationQuestion("Do you really want to remove theses {$count} workspaces ? y/n [y] ", true);

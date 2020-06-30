@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
+namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DefaultWorkspaceCommand extends ContainerAwareCommand implements AdminCliCommand
+class BuildDefaultsCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     protected function configure()
     {

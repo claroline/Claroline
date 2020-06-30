@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\CoreBundle\Library\Installation\PlatformInstaller;
 use Claroline\CoreBundle\Library\Installation\Refresher;
@@ -136,6 +136,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
         // dump static assets
         if (!$input->getOption('no_asset')) {
+            $refresher->installAssets();
             $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
         }
 

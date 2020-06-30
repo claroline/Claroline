@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -61,21 +60,6 @@ class TestUpdateCommand extends ContainerAwareCommand
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-
-        //for historical reasons, CoreBundle might not be installed yet...
-        if ('ClarolineCoreBundle' === $bundleName) {
-            $om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
-            $plugin = $om->getRepository('ClarolineCoreBundle:Plugin')->findOneBy([
-              'vendorName' => 'Claroline', 'bundleName' => 'CoreBundle',
-            ]);
-            if (!$plugin) {
-                $plugin = new Plugin();
-                $plugin->setBundleName('CoreBundle');
-                $plugin->setVendorName('Claroline');
-                $om->persist($plugin);
-                $om->flush();
-            }
-        }
 
         /** @var \Claroline\InstallationBundle\Manager\InstallationManager|\Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
         $installer = $this->getContainer()->get($installerType);

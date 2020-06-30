@@ -332,8 +332,6 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             }
         }
 
-        $this->container->get('Claroline\CoreBundle\Library\Installation\Refresher')->installAssets();
-
         $om = $this->container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($this->logger);
