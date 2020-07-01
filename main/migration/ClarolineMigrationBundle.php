@@ -17,7 +17,7 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineMigrationBundle extends Bundle implements AutoConfigurableInterface
 {
-    public function supports($environement)
+    public function supports($environment)
     {
         return true;
     }
