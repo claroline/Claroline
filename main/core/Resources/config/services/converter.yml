@@ -9,10 +9,3 @@ services:
             - '@security.token_storage'
         tags:
             - { name: request.param_converter, converter: current_user, priority: false }
-
-    Claroline\CoreBundle\Converter\AuthenticatedUserConverter:
-        arguments:
-            - '@security.token_storage'
-            - '@translator'
-        tags:
-            - { name: request.param_converter, priority: 500 }
