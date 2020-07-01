@@ -1,0 +1,30 @@
+services:
+    claroline.migration.manager:
+        class: %claroline.migration_manager.class%
+        arguments:
+            - '@claroline.migration.generator'
+            - '@claroline.migration.writer'
+            - '@claroline.migration.migrator'
+
+    claroline.migration.generator:
+        class: %claroline.migration_generator.class%
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.migration.doctrine_schema_tool'
+
+    claroline.migration.writer:
+        class: %claroline.migration_writer.class%
+        arguments:
+            - '@filesystem'
+            - '@twig'
+            - '@templating'
+
+    claroline.migration.migrator:
+        class: %claroline.migration_migrator.class%
+        arguments:
+            - '@doctrine.dbal.default_connection'
+
+    claroline.migration.doctrine_schema_tool:
+        class: %claroline.migration_schema_tool.class%
+        arguments:
+            - '@doctrine.orm.entity_manager'

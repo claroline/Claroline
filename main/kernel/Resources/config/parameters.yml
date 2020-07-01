@@ -1,0 +1,2 @@
+parameters:
+    claroline.installation_loader.class: Claroline\KernelBundle\Routing\DynamicLoader

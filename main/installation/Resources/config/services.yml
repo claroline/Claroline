@@ -1,0 +1,25 @@
+services:
+    claroline.installation.manager:
+        class: %claroline.installation_manager.class%
+        arguments:
+            - '@service_container'
+            - '@claroline.migration.manager'
+            - '@claroline.installation.fixture_loader'
+            - '%kernel.environment%'
+
+    claroline.installation.fixture_loader:
+        class: %claroline.installation_fixture_loader.class%
+        arguments:
+            - '@service_container'
+            - '@claroline.doctrine_fixture_executor'
+
+    claroline.symfony_fixture_loader:
+        shared: false
+        class: %claroline.symfony_fixture_loader.class%
+        arguments:
+            - '@service_container'
+
+    claroline.doctrine_fixture_executor:
+        class: %claroline.doctrine_fixture_executor.class%
+        arguments:
+            - '@doctrine.orm.entity_manager'
