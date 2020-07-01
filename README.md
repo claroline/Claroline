@@ -13,8 +13,3 @@ provides:
 
 1. the core bundles and components needed to get a working platform;
 2. the plugin bundles officially supported by the Claroline Consortium.
-
-## TODO
-
-- [ ] check if PdfGeneratorBundle is usable before activation (requires wkhtmltopdf)
-- [ ] add install and doc sections (require claroline/Claroline to be updated as well)
