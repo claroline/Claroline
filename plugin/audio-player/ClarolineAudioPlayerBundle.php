@@ -15,11 +15,6 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
 class ClarolineAudioPlayerBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
-
     public function getRequiredPlugins()
     {
         return [

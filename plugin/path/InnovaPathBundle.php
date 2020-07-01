@@ -14,11 +14,4 @@ class InnovaPathBundle extends DistributionPluginBundle
     {
         return new AdditionalInstaller();
     }
-
-    public function getRequiredPlugins()
-    {
-        return [
-            'Claroline\\TagBundle\\ClarolineTagBundle',
-        ];
-    }
 }

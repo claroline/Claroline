@@ -18,11 +18,6 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
  */
 class ClarolinePlannedNotificationBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
-
     public function isActiveByDefault()
     {
         return false;

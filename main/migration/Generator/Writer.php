@@ -15,7 +15,7 @@ use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Twig_Environment;
+use Twig\Environment;
 
 /**
  * Class responsible for writing bundle migration queries in a migration class file.
@@ -24,7 +24,7 @@ class Writer
 {
     /** @var Filesystem */
     private $fileSystem;
-    /** @var Twig_Environment */
+    /** @var Environment */
     private $twigEnvironment;
     /** @var TwigEngine */
     private $twigEngine;
@@ -34,13 +34,13 @@ class Writer
     /**
      * Writer constructor.
      *
-     * @param Filesystem       $fileSystem
-     * @param Twig_Environment $environment
-     * @param TwigEngine       $engine
+     * @param Filesystem  $fileSystem
+     * @param Environment $environment
+     * @param TwigEngine  $engine
      */
     public function __construct(
         Filesystem $fileSystem,
-        Twig_Environment $environment,
+        Environment $environment,
         TwigEngine $engine
     ) {
         $this->fileSystem = $fileSystem;
@@ -63,9 +63,9 @@ class Writer
             $this->hasSqlExtension = true;
         }
 
-        $targetDir = "{$bundle->getPath()}/Migrations/{$driverName}";
+        $targetDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]);
         $class = "Version{$version}";
-        $namespace = "{$bundle->getNamespace()}\\Migrations\\{$driverName}";
+        $namespace = "{$bundle->getNamespace()}\\Installation\\Migrations\\{$driverName}";
         $classFile = "{$targetDir}/{$class}.php";
 
         if (!$this->fileSystem->exists($targetDir)) {
@@ -98,7 +98,7 @@ class Writer
      */
     public function deleteUpperMigrationClasses(Bundle $bundle, $driverName, $referenceVersion)
     {
-        $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Migrations', $driverName]));
+        $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]));
         $deletedVersions = [];
 
         foreach ($migrations as $migration) {

@@ -105,14 +105,14 @@ class Migrator
         $currentVersion = $config->getCurrentVersion();
         $migration = new Migration($config);
 
-        if ($version === self::VERSION_FARTHEST) {
-            return $migration->migrate($direction === self::DIRECTION_UP ? null : '0');
-        } elseif ($version === self::VERSION_NEAREST) {
+        if (self::VERSION_FARTHEST === $version) {
+            return $migration->migrate(self::DIRECTION_UP === $direction ? null : '0');
+        } elseif (self::VERSION_NEAREST === $version) {
             $availableVersions = $config->getAvailableVersions($bundle);
             array_unshift($availableVersions, '0');
             $nearestVersion = false;
 
-            if ($direction === self::DIRECTION_DOWN) {
+            if (self::DIRECTION_DOWN === $direction) {
                 $availableVersions = array_reverse($availableVersions);
             }
 
@@ -128,11 +128,11 @@ class Migrator
                 }
             }
 
-            return $nearestVersion === false ? [] : $migration->migrate($nearestVersion);
+            return false === $nearestVersion ? [] : $migration->migrate($nearestVersion);
         } elseif (!is_numeric($version)) {
             throw new InvalidVersionException($version);
-        } elseif ($version > $currentVersion && $direction === self::DIRECTION_DOWN
-            || $version < $currentVersion && $direction === self::DIRECTION_UP) {
+        } elseif ($version > $currentVersion && self::DIRECTION_DOWN === $direction
+            || $version < $currentVersion && self::DIRECTION_UP === $direction) {
             throw new InvalidDirectionException($direction);
         } else {
             return $migration->migrate($version);
@@ -147,9 +147,9 @@ class Migrator
 
         $driverName = $this->connection->getDriver()->getName();
 
-        $migrationsDir = "{$bundle->getPath()}/Migrations/{$driverName}";
+        $migrationsDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]);
         $migrationsName = "{$bundle->getName()} migration";
-        $migrationsNamespace = "{$bundle->getNamespace()}\\Migrations\\{$driverName}";
+        $migrationsNamespace = "{$bundle->getNamespace()}\\Installation\\Migrations\\{$driverName}";
         $migrationsTableName = 'doctrine_'.strtolower($bundle->getName()).'_versions';
 
         $config = new Configuration($this->connection);

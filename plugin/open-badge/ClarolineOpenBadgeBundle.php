@@ -30,9 +30,4 @@ class ClarolineOpenBadgeBundle extends DistributionPluginBundle
     {
         return 'DataFixtures/PostInstall';
     }
-
-    public function getRequiredPlugins()
-    {
-        return ['Claroline\\CoreBundle\\ClarolineCoreBundle'];
-    }
 }

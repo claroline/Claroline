@@ -19,11 +19,6 @@ use Claroline\DropZoneBundle\Installation\AdditionalInstaller;
  */
 class ClarolineDropZoneBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
-
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();

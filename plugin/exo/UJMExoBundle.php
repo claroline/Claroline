@@ -28,4 +28,9 @@ class UJMExoBundle extends DistributionPluginBundle
 
         $container->addCompilerPass(new ItemDefinitionsPass());
     }
+
+    public function getRequiredPlugins()
+    {
+        return ['Claroline\\TagBundle\\ClarolineTagBundle'];
+    }
 }

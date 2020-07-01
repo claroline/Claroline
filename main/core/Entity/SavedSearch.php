@@ -16,8 +16,7 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
- * @ORM\Table(name="claro_saved_search")
+ * TODO : finish implementation.
  */
 class SavedSearch
 {
