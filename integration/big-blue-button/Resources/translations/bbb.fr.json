@@ -1,0 +1,37 @@
+{
+    "activate_meeting": "Activer la salle",
+    "active_meetings": "Les salles actives",
+    "allow_recording": "Autoriser l'enregistrement",
+    "connecting_to_meeting": "Connexion à la salle en cours...",
+    "end_meeting": "Fermer la salle",
+    "end_message": "Message de fin",
+    "meeting_id": "Identifiant de la salle",
+    "meeting_name": "Nom de la salle",
+    "meetings_limit": "Limite de salles",
+    "nb_participants": "Nombre de participants",
+    "meeting_participants_limit": "Nombre de participants par salle",
+    "participants_limit": "Limite de participants de la plateforme",
+    "podcast": "Podcast",
+    "presentation": "Présentation",
+    "processed": "Bientôt disponible",
+    "processing": "En cours de traitement...",
+    "recordings": "Enregistrements",
+    "wait_for_moderator": "Attendre un modérateur",
+    "welcome_message": "Message d'accueil",
+
+    "meeting_is_closed": "Cette classe virtuelle est fermée.",
+    "waiting_for_moderator": "La salle requiert qu'au moins un modérateur soit présent. Veuillez patienter le temps qu'un modérateur rejoigne la salle.",
+    "meeting_disabled": "La salle est actuellement désactivée. Veuillez patienter le temps qu'un gestionnaire la réactive.",
+    "meetings_limit_reached": "Le nombre limite de salles a été atteint. Veuillez patienter le temps que des salles se libèrent.",
+    "max_meeting_participants_reached": "Le nombre limite de participants de cette salle a été atteint. Veuillez patientez le temps que des places se libèrent.",
+    "max_platform_participants_reached": "Le nombre limite de participants de la plateforme a été atteint. Veuillez patientez le temps que des places se libèrent.",
+    "max_server_participants_reached": "Le nombre limite de participants du serveur a été atteint. Veuillez patientez le temps que des places se libèrent.",
+
+    "join": "Rejoindre la salle",
+    "meeting_cannot_join": "Vous ne pouvez pas rejoindre la classe virtuelle.",
+    "no_active_meeting": "Aucune classe virtuelle n'est ouverte pour le moment.",
+    "no_record": "Aucun enregistrement n'a été fait dans cette salle.",
+
+    "allow_custom_usernames": "Autoriser les utilisateurs à modifier leur nom d'utilisateur dans la salle",
+    "open_meeting_in_new_tab": "Ouvrir dans un nouvel onglet"
+}

@@ -1,0 +1,37 @@
+{
+    "activate_meeting": "Activate meeting",
+    "active_meetings": "Active meetings",
+    "allow_record": "Allow recording",
+    "connecting_to_meeting": "Connecting to meeting...",
+    "end_meeting": "Close meeting",
+    "end_message": "End message",
+    "meeting_id": "Meeting ID",
+    "meeting_name": "Meeting name",
+    "meetings_limit": "Limit of meetings",
+    "nb_participants": "Number of participants",
+    "meeting_participants_limit": "Number of participants per meeting",
+    "participants_limit": "Limit of participants of the platform",
+    "podcast": "Podcast",
+    "presentation": "Presentation",
+    "processed": "Available soon",
+    "processing": "Processing...",
+    "recordings": "Recordings",
+    "wait_for_moderator": "Wait for moderator",
+    "welcome_message": "Welcome message",
+
+    "meeting_is_closed": "The meeting is closed.",
+    "waiting_for_moderator": "The meeting requires that at least one moderator be present. Please wait for a moderator to join the meeting.",
+    "meeting_disabled": "The meeting is currently deactivated. Please wait while a manager reactivates it.",
+    "meetings_limit_reached": "The limit number of meetings has been reached. Please wait while the meetings become available.",
+    "max_meeting_participants_reached": "The limit number of participants in this meeting has been reached. Please wait while places become available.",
+    "max_platform_participants_reached": "The limit number of platform participants has been reached. Please wait while places become available.",
+    "max_server_participants_reached": "The limit for server participants has been reached. Please wait while places become available.",
+
+    "join": "Join the meeting",
+    "meeting_cannot_join": "You can not join this meeting.",
+    "no_active_meeting": "No meeting is open at the moment.",
+    "no_record": "No recordings were made in this room.",
+
+    "allow_custom_usernames": "Allow users to change their username in the room",
+    "open_meeting_in_new_tab": "Open in a new tab"
+}

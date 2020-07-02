@@ -100,7 +100,8 @@
             "Claroline\\SamlBundle\\": "plugin/saml",
             "Claroline\\SlideshowBundle\\": "plugin/slideshow",
             "Claroline\\AudioPlayerBundle\\": "plugin/audio-player",
-            "Claroline\\CursusBundle\\": "plugin/cursus"
+            "Claroline\\CursusBundle\\": "plugin/cursus",
+            "Claroline\\BigBlueButtonBundle\\": "integration/big-blue-button"
         }
     },
     "extra": {
@@ -149,7 +150,8 @@
             "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle",
             "Claroline\\AudioPlayerBundle\\ClarolineAudioPlayerBundle",
             "Claroline\\SamlBundle\\ClarolineSamlBundle",
-            "Claroline\\CursusBundle\\ClarolineCursusBundle"
+            "Claroline\\CursusBundle\\ClarolineCursusBundle",
+            "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle"
         ]
     }
 }
