@@ -5,8 +5,6 @@ namespace Innova\PathBundle\Entity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
-use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,41 +22,6 @@ class Step
     use Id;
     use Uuid;
     use Poster;
-
-    /**
-     * Activity of this step.
-     *
-     * @var Activity
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", cascade={"persist"})
-     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @deprecated
-     */
-    protected $activity;
-
-    /**
-     * Parameters for this step.
-     *
-     * @var ActivityParameters
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters", cascade={"all"})
-     * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @deprecated
-     */
-    protected $parameters;
-
-    /**
-     * Min height of Activity.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="activity_height", type="integer", nullable=true)
-     *
-     * @deprecated
-     */
-    protected $activityHeight;
 
     /**
      * Order of the steps relative to his siblings in the path.
@@ -172,52 +135,6 @@ class Step
 
         $this->children = new ArrayCollection();
         $this->secondaryResources = new ArrayCollection();
-    }
-
-    /**
-     * Get activity.
-     *
-     * @return Activity
-     */
-    public function getActivity()
-    {
-        return $this->activity;
-    }
-
-    /**
-     * Set activity.
-     *
-     * @param Activity $activity
-     *
-     * @return Step
-     */
-    public function setActivity(Activity $activity)
-    {
-        $this->activity = $activity;
-
-        return $this;
-    }
-
-    /**
-     * Get activity parameters.
-     *
-     * @return ActivityParameters
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param ActivityParameters $parameters
-     *
-     * @return Step
-     */
-    public function setParameters(ActivityParameters $parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
     }
 
     /**
@@ -388,30 +305,6 @@ class Step
     public function emptyChildren()
     {
         $this->children->clear();
-
-        return $this;
-    }
-
-    /**
-     * Get min height for activity display.
-     *
-     * @return int
-     */
-    public function getActivityHeight()
-    {
-        return $this->activityHeight;
-    }
-
-    /**
-     * Set min height for activity display.
-     *
-     * @param int $activityHeight
-     *
-     * @return $this
-     */
-    public function setActivityHeight($activityHeight)
-    {
-        $this->activityHeight = $activityHeight;
 
         return $this;
     }

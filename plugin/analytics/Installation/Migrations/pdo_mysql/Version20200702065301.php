@@ -27,7 +27,7 @@ class Version20200702065301 extends AbstractMigration
                     PRIMARY KEY(id)
                 ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
             ');
-            
+
             $this->addSql('
                 ALTER TABLE claro_widget_progression 
                 ADD CONSTRAINT FK_7F12EAC4AB7B5A55 FOREIGN KEY (widgetInstance_id) 
