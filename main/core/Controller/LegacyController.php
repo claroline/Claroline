@@ -37,6 +37,7 @@ class LegacyController
      *
      * @EXT\Route("/resources/show/{type}/{id}")
      * @EXT\Route("/resources/show/{id}")
+     * @EXT\Route("/workspaces/{workspaceId}/open/tool/resource_manager/{id}")
      * @EXT\Method("GET")
      *
      * @param string $id
