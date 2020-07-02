@@ -99,7 +99,8 @@
             "Claroline\\OpenBadgeBundle\\": "plugin/open-badge",
             "Claroline\\SamlBundle\\": "plugin/saml",
             "Claroline\\SlideshowBundle\\": "plugin/slideshow",
-            "Claroline\\AudioPlayerBundle\\": "plugin/audio-player"
+            "Claroline\\AudioPlayerBundle\\": "plugin/audio-player",
+            "Claroline\\CursusBundle\\": "plugin/cursus"
         }
     },
     "extra": {
@@ -147,7 +148,8 @@
             "Claroline\\SlideshowBundle\\ClarolineSlideshowBundle",
             "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle",
             "Claroline\\AudioPlayerBundle\\ClarolineAudioPlayerBundle",
-            "Claroline\\SamlBundle\\ClarolineSamlBundle"
+            "Claroline\\SamlBundle\\ClarolineSamlBundle",
+            "Claroline\\CursusBundle\\ClarolineCursusBundle"
         ]
     }
 }

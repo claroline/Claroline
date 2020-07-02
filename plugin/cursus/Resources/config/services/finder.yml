@@ -1,0 +1,39 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    _instanceof:
+        Claroline\AppBundle\API\Finder\AbstractFinder:
+            tags: [claroline.finder]
+            calls:
+                - method: setObjectManager
+                  arguments:
+                     - '@Claroline\AppBundle\Persistence\ObjectManager'
+                - method: setEntityManager
+                  arguments:
+                     - '@doctrine.orm.entity_manager'
+                - method: setEventDispatcher
+                  arguments:
+                     - '@Claroline\AppBundle\Event\StrictDispatcher'
+
+    Claroline\CursusBundle\Finder\CourseFinder: ~
+
+    Claroline\CursusBundle\Finder\CursusFinder: ~
+
+    Claroline\CursusBundle\Finder\CursusGroupFinder: ~
+
+    Claroline\CursusBundle\Finder\CursusUserFinder: ~
+
+    Claroline\CursusBundle\Finder\SessionEventFinder: ~
+
+    Claroline\CursusBundle\Finder\SessionEventUserFinder: ~
+
+    Claroline\CursusBundle\Finder\SessionFinder: ~
+
+    Claroline\CursusBundle\Finder\SessionGroupFinder: ~
+
+    Claroline\CursusBundle\Finder\SessionQueueFinder: ~
+
+    Claroline\CursusBundle\Finder\SessionUserFinder: ~

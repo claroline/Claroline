@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "catalog-session": "catalog/session/bootstrap"
+    }
+  }
+}

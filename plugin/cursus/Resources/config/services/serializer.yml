@@ -1,0 +1,67 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: ['claroline.serializer']
+
+    Claroline\CursusBundle\Serializer\CourseQueueSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\CourseSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.token_storage'
+
+    Claroline\CursusBundle\Serializer\CursusGroupSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\CursusSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.token_storage'
+
+    Claroline\CursusBundle\Serializer\CursusUserSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionEventCommentSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionEventSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionEventSetSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionEventUserSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionGroupSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionQueueSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CursusBundle\Manager\CursusManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+
+    Claroline\CursusBundle\Serializer\SessionUserSerializer:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'

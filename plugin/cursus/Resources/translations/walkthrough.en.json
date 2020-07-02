@@ -1,0 +1,10 @@
+{
+  "workspace": {
+    "tools": {
+      "claroline_session_events_tool": {
+        "documentation": "",
+        "message": "The tool is being refactored and will be available later."
+      }
+    }
+  }
+}

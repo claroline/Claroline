@@ -1,0 +1,10 @@
+{
+  "workspace": {
+    "tools": {
+      "claroline_session_events_tool": {
+        "documentation": "",
+        "message": "L’outil est en cours de refonte. Il sera disponible ultérieurement."
+      }
+    }
+  }
+}

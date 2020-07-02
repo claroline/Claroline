@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+        tags: ['claroline.crud']
+
+    Claroline\CursusBundle\Crud\CourseCrud:
+        arguments:
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_cursusbundle_entity_course, method: postCreate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_cursusbundle_entity_course, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_cursusbundle_entity_course, method: preDelete }
+
+    Claroline\CursusBundle\Crud\CursusCrud:
+        arguments:
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_cursusbundle_entity_cursus, method: postCreate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_cursusbundle_entity_cursus, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_cursusbundle_entity_cursus, method: preDelete }
+
+    Claroline\CursusBundle\Crud\SessionCrud:
+        arguments:
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_cursusbundle_entity_coursesession, method: postCreate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_cursusbundle_entity_coursesession, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_cursusbundle_entity_coursesession, method: preDelete }
+
+    Claroline\CursusBundle\Crud\SessionEventCrud:
+        arguments:
+            - '@event_dispatcher'
+        tags:
+            - { name: kernel.event_listener, event: crud_post_create_object_claroline_cursusbundle_entity_sessionevent, method: postCreate }
+            - { name: kernel.event_listener, event: crud_post_update_object_claroline_cursusbundle_entity_sessionevent, method: postUpdate }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_cursusbundle_entity_sessionevent, method: preDelete }

@@ -1,0 +1,44 @@
+plugin:
+    has_options: false
+
+    admin_tools:
+        - name: claroline_cursus_tool
+          class: institution
+
+    tools:
+        - name: claroline_session_events_tool
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          class: clock-o
+
+        - name: cursus
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          class: institution
+
+    data_sources:
+        - name: public_course_sessions
+          type: list
+          context: [workspace, desktop, home]
+          tags: [community, event]
+
+        - name: my_course_sessions
+          type: list
+          context: [desktop]
+          tags: [community, event]
+
+    templates:
+        - name: session_invitation
+          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, session_trainers]
+        - name: session_event_invitation
+          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, event_name, event_description, event_start, event_end, event_location_name, event_location_address, event_location_extra, event_trainers]
+        - name: session_certificate
+          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, session_trainers, events_list]
+        - name: session_event_certificate
+          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, event_name, event_description, event_start, event_end, event_location_name, event_location_address, event_location_extra, event_trainers]
+        - name: session_certificate_mail
+          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, session_trainers, events_list, certificate_link]
+        - name: session_event_certificate_mail
+          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, event_name, event_description, event_start, event_end, event_location_name, event_location_address, event_location_extra, event_trainers, certificate_link]
+        - name: admin_certificate_mail
+          placeholders: [certificates_link]
