@@ -17,7 +17,7 @@ Requirements
 
 For a development installation, you'll need at least:
 
-- PHP >= 7.1 with the following extensions:
+- PHP >= 7.2,<7.4 with the following extensions:
     - curl
     - fileinfo
     - [gd][gd]
@@ -119,7 +119,7 @@ running. You can start it with:
 Obviously, you'll also need a PHP-enabled web server to serve the application.
 Two alternatives are available.
 
-### 1. Using PHP's built-in web server
+### 1. Using PHP's built-in web server (not tested)
 
 This is the simplest way of serving the application during
 development. To start the server, use the command provided by the symfony
