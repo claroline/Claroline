@@ -4,11 +4,11 @@ namespace Icap\WikiBundle\Listener\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Evaluation\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -31,6 +31,9 @@ class WikiListener
     /** @var ObjectManager */
     private $om;
 
+    /** @var WikiSerializer */
+    private $serializer;
+
     /** @var WikiManager */
     private $wikiManager;
 
@@ -43,12 +46,13 @@ class WikiListener
     /**
      * WikiListener constructor.
      *
-     * @param TokenStorageInterface     $tokenStorage
-     * @param ObjectManager             $objectManager
-     * @param SerializerProvider        $serializer
-     * @param WikiManager               $wikiManager
-     * @param SectionManager            $sectionManager
-     * @param ResourceEvaluationManager $evaluationManager
+     * @param TokenStorageInterface         $tokenStorage
+     * @param ObjectManager                 $objectManager
+     * @param WikiSerializer                $serializer
+     * @param WikiManager                   $wikiManager
+     * @param SectionManager                $sectionManager
+     * @param ResourceEvaluationManager     $evaluationManager
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -94,17 +98,6 @@ class WikiListener
     }
 
     /**
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
-        $this->om->remove($event->getResource());
-        $this->om->flush();
-
-        $event->stopPropagation();
-    }
-
-    /**
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
@@ -119,6 +112,7 @@ class WikiListener
 
     public function onExport(ExportObjectEvent $exportEvent)
     {
+        /** @var Wiki $wiki */
         $wiki = $exportEvent->getObject();
 
         $data = [
@@ -131,6 +125,7 @@ class WikiListener
     public function onImport(ImportObjectEvent $event)
     {
         $data = $event->getData();
+        /** @var Wiki $wiki */
         $wiki = $event->getObject();
 
         $rootSection = $data['_data']['root'];

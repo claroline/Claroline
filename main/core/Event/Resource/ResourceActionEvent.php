@@ -11,15 +11,23 @@
 
 namespace Claroline\CoreBundle\Event\Resource;
 
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * An event which is dispatched when an action is requested on a Resource.
  */
-class ResourceActionEvent extends ResourceEvent
+class ResourceActionEvent extends Event implements MandatoryEventInterface
 {
+    /** @var AbstractResource */
+    private $resource;
+
+    /** @var ResourceNode */
+    private $resourceNode;
+
     /**
      * The data passed to the action (eg. new data).
      *
@@ -70,11 +78,34 @@ class ResourceActionEvent extends ResourceEvent
         array $files = null,
         ResourceNode $resourceNode = null)
     {
-        parent::__construct($resource, $resourceNode);
+        $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
 
         $this->data = $data;
         $this->files = $files;
         $this->options = $options;
+    }
+
+    /**
+     * @return AbstractResource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResourceNode()
+    {
+        if ($this->resourceNode) {
+            return $this->resourceNode;
+        } elseif ($this->resource) {
+            return $this->resource->getResourceNode();
+        } else {
+            return null;
+        }
     }
 
     /**

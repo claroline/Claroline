@@ -15,7 +15,6 @@ services:
           - '@security.authorization_checker'
        tags:
           - { name: kernel.event_listener, event: resource.icap_wiki.load, method: load }
-          - { name: kernel.event_listener, event: resource.icap_wiki.delete, method: onDelete }
           - { name: kernel.event_listener, event: resource.icap_wiki.copy, method: onCopy }
           - { name: kernel.event_listener, event: transfer.icap_wiki.export, method: onExport }
           - { name: kernel.event_listener, event: transfer.icap_wiki.import.after, method: onImport }

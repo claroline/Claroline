@@ -9,4 +9,3 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.claro_slideshow.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.claro_slideshow.delete, method: onDelete }

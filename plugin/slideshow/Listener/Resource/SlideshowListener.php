@@ -3,7 +3,6 @@
 namespace Claroline\SlideshowBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
 
@@ -38,18 +37,6 @@ class SlideshowListener
         $event->setData([
             'slideshow' => $this->serializer->serialize($slideshow),
         ]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Fired when a ResourceNode of type Slideshow is deleted.
-     *
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
-        // TODO : implement
-
         $event->stopPropagation();
     }
 }

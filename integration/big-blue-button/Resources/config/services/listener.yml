@@ -12,4 +12,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: resource.claroline_big_blue_button.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.claroline_big_blue_button.delete, method: onDelete }
-            - { name: kernel.event_listener, event: resource.claroline_big_blue_button.soft_delete, method: onSoftDelete }

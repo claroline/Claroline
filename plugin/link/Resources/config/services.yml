@@ -28,4 +28,3 @@ services:
             - { name: kernel.event_listener, event: resource.shortcut.load, method: load }
             - { name: kernel.event_listener, event: resource.shortcut.open, method: open }
             - { name: kernel.event_listener, event: resource.shortcut.export, method: export }
-            - { name: kernel.event_listener, event: resource.shortcut.delete, method: delete }

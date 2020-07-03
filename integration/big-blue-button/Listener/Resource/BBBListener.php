@@ -16,7 +16,6 @@ use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\SoftDeleteResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class BBBListener
@@ -82,18 +81,6 @@ class BBBListener
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
-    {
-        /** @var BBB $bbb */
-        $bbb = $event->getResource();
-        $this->bbbManager->deleteMeetingRecordings($bbb);
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param SoftDeleteResourceEvent $event
-     */
-    public function onSoftDelete(SoftDeleteResourceEvent $event)
     {
         /** @var BBB $bbb */
         $bbb = $event->getResource();

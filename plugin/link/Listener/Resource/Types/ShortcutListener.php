@@ -11,7 +11,6 @@
 
 namespace Claroline\LinkBundle\Listener\Resource\Types;
 
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
@@ -66,15 +65,5 @@ class ShortcutListener
         $targetEvent = $this->resourceLifecycle->export($shortcut->getTarget());
 
         $event->setData($targetEvent->getData());
-    }
-
-    /**
-     * Removes a shortcut.
-     *
-     * @param DeleteResourceEvent $event
-     */
-    public function delete(DeleteResourceEvent $event)
-    {
-        $event->stopPropagation();
     }
 }

@@ -34,6 +34,7 @@ const ParametersTool = (props) => {
   return (
     <ToolPage
       className="main-settings-container"
+      primaryAction="add"
       actions={parametersActions}
       subtitle={
         <Routes

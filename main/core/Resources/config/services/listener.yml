@@ -124,8 +124,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
-            - { name: kernel.event_listener, event: resource.directory.create, method: onCreate }
-            - { name: kernel.event_listener, event: resource.directory.delete, method: onDelete }
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
         arguments:
@@ -156,7 +154,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
         tags:
             - { name: kernel.event_listener, event: resource.text.load, method: load }
-            - { name: kernel.event_listener, event: resource.text.delete, method: delete }
 
     Claroline\CoreBundle\Listener\Resource\ResourceListener:
         arguments:

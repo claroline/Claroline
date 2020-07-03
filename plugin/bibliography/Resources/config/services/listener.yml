@@ -10,4 +10,3 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: resource.icap_bibliography.load, method: load }
-            - { name: kernel.event_listener, event: resource.icap_bibliography.delete, method: onDelete }

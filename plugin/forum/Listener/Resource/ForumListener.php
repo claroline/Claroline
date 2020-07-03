@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\ForumBundle\Entity\Forum;
@@ -97,16 +96,6 @@ class ForumListener
             'isValidatedUser' => $isValidatedUser,
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * Deletes a forum resource.
-     *
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
         $event->stopPropagation();
     }
 

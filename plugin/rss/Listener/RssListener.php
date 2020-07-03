@@ -3,7 +3,6 @@
 namespace Claroline\RssBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 
 class RssListener
@@ -32,14 +31,6 @@ class RssListener
             'rssFeed' => $this->serializer->serialize($rss),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
         $event->stopPropagation();
     }
 }

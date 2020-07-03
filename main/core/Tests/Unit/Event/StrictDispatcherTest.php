@@ -36,7 +36,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
-        $claroDispatcher->dispatch('notObserved', 'Resource\Resource', []);
+        $claroDispatcher->dispatch('notObserved', 'Resource\ResourceAction', []);
     }
 
     /**

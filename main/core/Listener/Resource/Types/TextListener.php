@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 
@@ -55,14 +54,6 @@ class TextListener
             'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param DeleteResourceEvent $event
-     */
-    public function delete(DeleteResourceEvent $event)
-    {
         $event->stopPropagation();
     }
 }

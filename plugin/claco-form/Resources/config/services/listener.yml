@@ -20,7 +20,6 @@ services:
             - { name: kernel.event_listener, event: transfer.claroline_claco_form.export, method: onExport }
             - { name: kernel.event_listener, event: transfer.claroline_claco_form.import.before, method: onImportBefore }
             - { name: kernel.event_listener, event: transfer.claroline_claco_form.import.after, method: onImportAfter }
-            - { name: kernel.event_listener, event: resource.claroline_claco_form.delete, method: onDelete }
 
     Claroline\ClacoFormBundle\Listener\UserListener:
         arguments:

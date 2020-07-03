@@ -13,7 +13,7 @@ class AnnouncementAggregateCrud
     }
 
     /**
-     * @param CreateEvent $event
+     * @param DeleteEvent $event
      */
     public function preDelete(DeleteEvent $event)
     {

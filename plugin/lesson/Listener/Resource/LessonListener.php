@@ -7,7 +7,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\LessonBundle\Entity\Chapter;
@@ -153,13 +152,5 @@ class LessonListener
         $this->om->persist($chapter);
 
         return $chapter;
-    }
-
-    /**
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
-        $event->stopPropagation();
     }
 }

@@ -4,7 +4,6 @@ namespace Icap\BibliographyBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 
 class BibliographyListener
@@ -40,14 +39,6 @@ class BibliographyListener
             'bookReference' => $this->serializer->serialize($event->getResource()),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
         $event->stopPropagation();
     }
 }

@@ -19,8 +19,6 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
@@ -164,25 +162,5 @@ class DirectoryListener
             ],
             201
         ));
-    }
-
-    /**
-     * Creates a new directory.
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        $event->stopPropagation();
-    }
-
-    /**
-     * Removes a directory.
-     *
-     * @param deleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
-        $event->stopPropagation();
     }
 }

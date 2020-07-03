@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\UserEvaluationEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -86,16 +85,6 @@ class PathListener
                 $this->userProgressionManager->getResourceUserEvaluation($path, $user)
             ) : null,
         ]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Fired when a ResourceNode of type Path is deleted.
-     *
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
         $event->stopPropagation();
     }
 
