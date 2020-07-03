@@ -153,10 +153,10 @@ class AgendaManager
     /**
      * Imports ical files.
      *
-     * @param UploadedFile $file
+     * @param UploadedFile $fileData
      * @param Workspace    $workspace
      *
-     * @return int number of events saved
+     * @return Event[]
      */
     public function import($fileData, $workspace = null)
     {
@@ -176,10 +176,11 @@ class AgendaManager
             $e->setUser($this->tokenStorage->getToken()->getUser());
             $e->setPriority('#01A9DB');
             $this->om->persist($e);
-            //the flush is required to generate an id
-            $this->om->flush();
+
             $entities[] = $e;
         }
+
+        $this->om->flush();
 
         return $entities;
     }

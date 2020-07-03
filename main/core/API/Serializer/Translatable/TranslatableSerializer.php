@@ -75,7 +75,6 @@ class TranslatableSerializer
             $content->setTranslatableLocale($locale);
             $content->setModified();
             $this->om->persist($content);
-            $this->om->flush();
         }
 
         if (isset($options['property'])) {
@@ -86,9 +85,10 @@ class TranslatableSerializer
                 $content->setTranslatableLocale($locale);
                 $content->setModified();
                 $this->om->persist($content);
-                $this->om->flush();
             }
         }
+
+        $this->om->flush();
 
         $this->sipe('type', 'setType', $data, $content);
         $content->setTranslatableLocale($this->localeManager->getUserLocale($this->container->get('request_stack')->getMasterRequest()));
