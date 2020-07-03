@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
@@ -123,6 +124,9 @@ class ConnectionModal extends Component {
                       }
                     })
                     .filter(link => !!link)
+                    .map(shortcut => merge({}, shortcut, {
+                      onClick: () => this.props.fadeModal()
+                    }))
                 })}
               />
             }
