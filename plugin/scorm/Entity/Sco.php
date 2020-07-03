@@ -37,6 +37,8 @@ class Sco
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
+     *
+     * @var Scorm
      */
     protected $scorm;
 
@@ -146,6 +148,9 @@ class Sco
         $this->id = $id;
     }
 
+    /**
+     * @return Scorm
+     */
     public function getScorm()
     {
         return $this->scorm;

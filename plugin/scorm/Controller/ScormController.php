@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ScormBundle\Controller\API;
+namespace Claroline\ScormBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;

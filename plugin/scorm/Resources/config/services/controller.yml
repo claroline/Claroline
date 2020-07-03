@@ -29,7 +29,7 @@ services:
                 arguments:
                   - '@service_container'
 
-    Claroline\ScormBundle\Controller\API\ScormController:
+    Claroline\ScormBundle\Controller\ScormController:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\API\FinderProvider'

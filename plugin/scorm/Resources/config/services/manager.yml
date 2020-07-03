@@ -7,11 +7,9 @@ services:
     Claroline\ScormBundle\Manager\ScormManager:
        arguments:
           - '@event_dispatcher'
-          - '@filesystem'
           - '%claroline.param.files_directory%'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.resource_evaluation_manager'
-          - '@claroline.manager.resource_manager'
           - '@Claroline\ScormBundle\Library\ScormLib'
           - '@claroline.serializer.scorm'
           - '@claroline.serializer.scorm.sco'

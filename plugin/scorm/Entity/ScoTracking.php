@@ -11,7 +11,8 @@
 
 namespace Claroline\ScormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,39 +22,43 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ScoTracking
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
+     *
+     * @var User
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Sco")
      * @ORM\JoinColumn(name="sco_id", onDelete="CASCADE", nullable=false)
+     *
+     * @var Sco
      */
     protected $sco;
 
     /**
      * @ORM\Column(name="score_raw", type="integer", nullable=true)
+     *
+     * @var int
      */
     protected $scoreRaw;
 
     /**
      * @ORM\Column(name="score_min", type="integer", nullable=true)
+     *
+     * @var int
      */
     protected $scoreMin;
 
     /**
      * @ORM\Column(name="score_max", type="integer", nullable=true)
+     *
+     * @var int
      */
     protected $scoreMax;
 
@@ -161,16 +166,6 @@ class ScoTracking
         $this->refreshUuid();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
     public function getUser()
     {
         return $this->user;
@@ -181,6 +176,9 @@ class ScoTracking
         $this->user = $user;
     }
 
+    /**
+     * @return Sco
+     */
     public function getSco()
     {
         return $this->sco;

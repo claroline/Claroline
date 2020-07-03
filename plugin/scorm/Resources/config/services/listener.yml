@@ -4,20 +4,6 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\ScormBundle\Listener\Scorm12Listener:
-        arguments:
-            - '@service_container'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_scorm_12.delete, method: onDelete }
-
-    Claroline\ScormBundle\Listener\Scorm2004Listener:
-        arguments:
-            - '@service_container'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_scorm_2004.delete, method: onDelete }
-
     Claroline\ScormBundle\Listener\ScormListener:
         arguments:
             - '%claroline.param.files_directory%'
