@@ -11,15 +11,19 @@ const editorTabs = (state) => {
     .sort((a, b) => a.position - b.position)
 }
 
-const currentTabIndex = createSelector(
-  [editorTabs, homeSelectors.currentTabId],
-  (editorTabs, currentTabId) => editorTabs.findIndex(tab => currentTabId === tab.slug)
-)
+const currentTabIndex = (state) => {
+  const currentTabId = homeSelectors.currentTabId(state)
+  const tabs = formSelectors.data(formSelectors.form(state, FORM_NAME)) || []
 
-const currentTab = createSelector(
-  [editorTabs, currentTabIndex],
-  (editorTabs, currentTabIndex) => editorTabs[currentTabIndex]
-)
+  return tabs.findIndex(tab => currentTabId === tab.slug)
+}
+
+const currentTab = (state) => {
+  const currentIndex = currentTabIndex(state)
+  const tabs = formSelectors.data(formSelectors.form(state, FORM_NAME)) || []
+
+  return tabs[currentIndex]
+}
 
 const currentTabTitle = createSelector(
   [homeSelectors.context, currentTab],
