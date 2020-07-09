@@ -11,7 +11,7 @@ const ProgressionMain = connect(
   (state) => ({
     path: toolSelectors.path(state),
     workspaceId: toolSelectors.contextId(state),
-    canConfigure: hasPermission('edit', toolSelectors.tool(state)),
+    canConfigure: hasPermission('edit', toolSelectors.toolData(state)),
     currentUserId: securitySelectors.currentUserId(state)
   }),
   (dispatch) => ({
