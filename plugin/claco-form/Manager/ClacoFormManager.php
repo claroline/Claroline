@@ -46,7 +46,6 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -71,8 +70,6 @@ class ClacoFormManager
     private $authorization;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
-    /** @var FacetManager */
-    private $facetManager;
     /** @var Filesystem */
     private $fileSystem;
     /** @var string */
@@ -113,7 +110,6 @@ class ClacoFormManager
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param EventDispatcherInterface      $eventDispatcher
-     * @param FacetManager                  $facetManager
      * @param Filesystem                    $fileSystem
      * @param string                        $filesDir
      * @param MessageManager                $messageManager
@@ -125,7 +121,6 @@ class ClacoFormManager
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
-        FacetManager $facetManager,
         Filesystem $fileSystem,
         $filesDir,
         MessageManager $messageManager,
@@ -136,7 +131,6 @@ class ClacoFormManager
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
-        $this->facetManager = $facetManager;
         $this->fileSystem = $fileSystem;
         $this->filesDir = $filesDir;
         $this->messageManager = $messageManager;

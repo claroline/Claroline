@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_role_options")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleOptionsRepository")
+ * @ORM\Entity()
  */
 class RoleOptions
 {

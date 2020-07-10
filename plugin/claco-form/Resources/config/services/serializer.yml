@@ -20,7 +20,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer'
-            - '@claroline.manager.facet_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer:

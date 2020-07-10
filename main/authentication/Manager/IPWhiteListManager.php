@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\AuthenticationBundle\Manager;
 
 use Symfony\Component\Yaml\Yaml;
 

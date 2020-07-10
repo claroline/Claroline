@@ -10,7 +10,6 @@ use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetChoiceSerializer;
 use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
-use Claroline\CoreBundle\Manager\FacetManager;
 
 class FieldSerializer
 {
@@ -22,9 +21,6 @@ class FieldSerializer
     /** @var FieldFacetChoiceSerializer */
     private $fieldFacetChoiceSerializer;
 
-    /** @var FacetManager */
-    private $facetManager;
-
     /** @var ObjectManager */
     private $om;
 
@@ -35,18 +31,15 @@ class FieldSerializer
      *
      * @param FieldFacetSerializer       $fieldFacetSerializer
      * @param FieldFacetChoiceSerializer $fieldFacetChoiceSerializer
-     * @param FacetManager               $facetManager
      * @param ObjectManager              $om
      */
     public function __construct(
         FieldFacetSerializer $fieldFacetSerializer,
         FieldFacetChoiceSerializer $fieldFacetChoiceSerializer,
-        FacetManager $facetManager,
         ObjectManager $om
     ) {
         $this->fieldFacetSerializer = $fieldFacetSerializer;
         $this->fieldFacetChoiceSerializer = $fieldFacetChoiceSerializer;
-        $this->facetManager = $facetManager;
         $this->om = $om;
 
         $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');

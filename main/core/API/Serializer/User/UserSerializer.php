@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -40,8 +39,6 @@ class UserSerializer
     protected $om;
     /** @var PlatformConfigurationHandler */
     private $config;
-    /** @var FacetManager */
-    private $facetManager;
     /** @var PublicFileSerializer */
     private $fileSerializer;
     /** @var OrganizationSerializer */
@@ -68,7 +65,6 @@ class UserSerializer
      * @param AuthorizationCheckerInterface $authChecker
      * @param ObjectManager                 $om
      * @param PlatformConfigurationHandler  $config
-     * @param FacetManager                  $facetManager
      * @param PublicFileSerializer          $fileSerializer
      * @param ContainerInterface            $container
      * @param StrictDispatcher              $eventDispatcher
@@ -80,7 +76,6 @@ class UserSerializer
         AuthorizationCheckerInterface $authChecker,
         ObjectManager $om,
         PlatformConfigurationHandler $config,
-        FacetManager $facetManager,
         PublicFileSerializer $fileSerializer,
         ContainerInterface $container,
         StrictDispatcher $eventDispatcher,
@@ -91,7 +86,6 @@ class UserSerializer
         $this->authChecker = $authChecker;
         $this->om = $om;
         $this->config = $config;
-        $this->facetManager = $facetManager;
         $this->fileSerializer = $fileSerializer;
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;

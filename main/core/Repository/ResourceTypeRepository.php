@@ -19,6 +19,9 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class ResourceTypeRepository extends ServiceEntityRepository
 {
+    /** @var array */
+    private $bundles;
+
     public function __construct(RegistryInterface $registry, PluginManager $manager)
     {
         $this->bundles = $manager->getEnabled(true);
@@ -136,18 +139,22 @@ class ResourceTypeRepository extends ServiceEntityRepository
      * Returns enabled resource types by their names.
      *
      * @param array $names
+     * @param bool  $enabled
      *
      * @return ResourceType[]
      */
-    public function findEnabledResourceTypesByNames(array $names)
+    public function findByNames(array $names, bool $enabled = true)
     {
         if (count($names) > 0) {
             $dql = '
                 SELECT r
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceType r
-                WHERE r.isEnabled = true
-                AND r.name IN (:names)
+                WHERE r.name IN (:names) 
             ';
+
+            if ($enabled) {
+                $dql .= ' AND r.isEnabled = true';
+            }
 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('names', $names);

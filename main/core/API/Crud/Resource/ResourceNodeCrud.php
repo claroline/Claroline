@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @todo manage correct renaming : see $this->resourceManager->rename($resourceNode, $data['name'], true);
  * @todo correct manage publication see : $this->resourceManager->setPublishedStatus([$resourceNode], $meta['published']);
  */
 class ResourceNodeCrud
@@ -29,7 +28,14 @@ class ResourceNodeCrud
     /**
      * ResourceNodeCrud constructor.
      *
-     * @param TokenStorageInterface $tokenStorage
+     * @param TokenStorageInterface    $tokenStorage
+     * @param ObjectManager            $om
+     * @param Crud                     $crud
+     * @param StrictDispatcher         $dispatcher
+     * @param ResourceLifecycleManager $lifeCycleManager
+     * @param ResourceManager          $resourceManager
+     * @param ResourceNodeSerializer   $serializer
+     * @param string                   $filesDirectory
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -53,27 +59,25 @@ class ResourceNodeCrud
 
     /**
      * @param CreateEvent $event
-     *
-     * @return ResourceNode
      */
     public function preCreate(CreateEvent $event)
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
 
+        // compute unique name for resource
+        $name = $this->resourceManager->getUniqueName($resourceNode, $resourceNode->getParent());
+        $resourceNode->setName($name);
+
         // set the creator of the resource
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {
             $resourceNode->setCreator($user);
         }
-
-        return $resourceNode;
     }
 
     /**
      * @param DeleteEvent $event
-     *
-     * @return ResourceNode
      */
     public function preDelete(DeleteEvent $event)
     {
@@ -207,8 +211,14 @@ class ResourceNodeCrud
         $newNode->setCreator($user);
         //unmapped but allow to retrieve it with the entity without any request for the following code
         $newNode->setResource($copy);
+
+        // link new node to its parent
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
+
+        // compute unique name for resource
+        $name = $this->resourceManager->getUniqueName($newNode, $newParent, true);
+        $newNode->setName($name);
 
         $this->lifeCycleManager->copy($resource, $copy);
 

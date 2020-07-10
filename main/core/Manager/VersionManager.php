@@ -30,22 +30,18 @@ class VersionManager
     private $om;
     /** @var VersionRepository */
     private $repo;
-    /** @var string */
-    private $installedRepoFile;
 
     /**
      * VersionManager constructor.
      *
      * @param ObjectManager $om
-     * @param string        $kernelDir
      */
     public function __construct(
-        ObjectManager $om,
-        $kernelDir
+        ObjectManager $om
     ) {
         $this->om = $om;
+
         $this->repo = $this->om->getRepository('ClarolineCoreBundle:Update\Version');
-        $this->installedRepoFile = $kernelDir.'/../vendor/composer/installed.json';
     }
 
     public function register(InstallableInterface $bundle)

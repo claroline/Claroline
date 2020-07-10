@@ -123,7 +123,6 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@claroline.manager.facet_manager'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@service_container'
             - '@Claroline\AppBundle\Event\StrictDispatcher'

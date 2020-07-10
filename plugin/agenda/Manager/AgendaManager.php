@@ -188,7 +188,7 @@ class AgendaManager
     /**
      * @param array $events
      *
-     * @return Twig view in ics format
+     * @return string view in ics format
      */
     private function writeCalendar(array $events)
     {

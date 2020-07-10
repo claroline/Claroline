@@ -63,7 +63,7 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
             $userRepo->findEnabledUsersByUsernames($usernames) :
             $userRepo->findBy(['isEnabled' => true, 'isRemoved' => false]);
         $resourceTypes = count($types) > 0 ?
-            $resourceTypeRepo->findEnabledResourceTypesByNames($types) :
+            $resourceTypeRepo->findByNames($types) :
             $resourceTypeRepo->findBy(['isEnabled' => true]);
         $startDate = null;
 

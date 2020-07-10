@@ -25,7 +25,6 @@ services:
     Claroline\CoreBundle\Manager\VersionManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '%kernel.root_dir%'
 
     claroline.manager.version_manager:
         alias: Claroline\CoreBundle\Manager\VersionManager
@@ -81,14 +80,6 @@ services:
         alias: Claroline\CoreBundle\Manager\TermsOfServiceManager
         public: true
 
-    Claroline\CoreBundle\Manager\SecurityTokenManager:
-        arguments:
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    claroline.manager.security_token_manager:
-        alias: Claroline\CoreBundle\Manager\SecurityTokenManager
-        public: true
-
     Claroline\CoreBundle\Manager\RoleManager:
         public: true
         arguments:
@@ -105,18 +96,13 @@ services:
 
     Claroline\CoreBundle\Manager\ResourceManager:
         arguments:
-          - '@claroline.manager.role_manager'
-          - '@service_container'
+          - '@security.authorization_checker'
           - '@claroline.manager.rights_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-          - '@Claroline\CoreBundle\Library\Security\Utilities'
-          - '@translator'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@claroline.manager.resource_lifecycle'
           - '@Claroline\AppBundle\API\Crud'
+          - '@claroline.manager.temp_file'
 
     claroline.manager.resource_manager:
         alias: Claroline\CoreBundle\Manager\ResourceManager
@@ -197,15 +183,6 @@ services:
         alias: Claroline\CoreBundle\Manager\LocaleManager
         public: true
 
-    Claroline\CoreBundle\Manager\IPWhiteListManager:
-        arguments:
-          - '%claroline.param.ip_white_list_file%'
-          - '%claroline.param.ip_range_white_list_file%'
-
-    claroline.manager.ip_white_list_manager:
-        alias: Claroline\CoreBundle\Manager\IPWhiteListManager
-        public: true
-
     Claroline\CoreBundle\Manager\IconSetManager:
         arguments:
           - '%claroline.param.web_directory%'
@@ -230,18 +207,6 @@ services:
 
     claroline.manager.file_manager:
         alias: Claroline\CoreBundle\Manager\FileManager
-        public: true
-
-    Claroline\CoreBundle\Manager\FacetManager:
-        arguments:
-          - '@security.token_storage'
-          - '@security.authorization_checker'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@translator'
-          - '@service_container'
-
-    claroline.manager.facet_manager:
-        alias: Claroline\CoreBundle\Manager\FacetManager
         public: true
 
     Claroline\CoreBundle\Manager\EventManager:
@@ -297,14 +262,6 @@ services:
 
     claroline.manager.connection_message_manager:
         alias: Claroline\CoreBundle\Manager\ConnectionMessageManager
-        public: true
-
-    Claroline\CoreBundle\Manager\AuthenticationManager:
-        arguments:
-          - '@service_container'
-
-    claroline.common.authentication_manager:
-        alias: Claroline\CoreBundle\Manager\AuthenticationManager
         public: true
 
     Claroline\CoreBundle\Manager\ApiManager:

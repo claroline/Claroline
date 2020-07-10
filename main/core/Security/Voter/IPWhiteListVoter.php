@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
-use Claroline\CoreBundle\Manager\IPWhiteListManager;
+use Claroline\AuthenticationBundle\Manager\IPWhiteListManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 

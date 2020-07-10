@@ -2,8 +2,8 @@
 
 namespace Claroline\AuthenticationBundle\Security\Authentication\Guard;
 
+use Claroline\AuthenticationBundle\Manager\IPWhiteListManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

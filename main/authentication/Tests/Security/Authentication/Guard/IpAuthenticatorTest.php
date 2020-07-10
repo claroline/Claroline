@@ -2,11 +2,11 @@
 
 namespace Claroline\AuthenticationBundle\Tests\Tests\Functional;
 
+use Claroline\AuthenticationBundle\Manager\IPWhiteListManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;

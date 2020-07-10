@@ -8,7 +8,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@event_dispatcher'
-            - '@claroline.manager.facet_manager'
             - '@filesystem'
             - '%claroline.param.files_directory%'
             - '@Claroline\MessageBundle\Manager\MessageManager'

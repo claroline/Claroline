@@ -29,6 +29,7 @@ class ClarolineAuthenticationExtension extends Extension
         $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
 
+        $loader->load('parameters.yml');
         $loader->load('services.yml');
     }
 }
