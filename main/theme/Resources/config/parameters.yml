@@ -1,0 +1,5 @@
+# This file contains the core container parameters.
+parameters:
+    # Icon paths
+    claroline.param.icon_sets_directory:    "%claroline.param.public_files_directory%/icon_sets"
+    claroline.param.icon_sets_web_dir:      "%claroline.param.data_web_dir%/icon_sets"

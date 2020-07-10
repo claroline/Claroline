@@ -737,35 +737,6 @@ class Version20200701074159 extends AbstractMigration
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ');
-        $this->addSql("
-            CREATE TABLE claro_icon_set (
-                id INT AUTO_INCREMENT NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                cname VARCHAR(255) NOT NULL, 
-                is_default TINYINT(1) NOT NULL, 
-                is_active TINYINT(1) NOT NULL, 
-                type VARCHAR(255) DEFAULT NULL, 
-                editable TINYINT(1) DEFAULT '0' NOT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                UNIQUE INDEX UNIQ_D91D0EE67D75B9A (cname), 
-                UNIQUE INDEX UNIQ_D91D0EED17F50A6 (uuid), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql('
-            CREATE TABLE claro_icon_item (
-                id INT AUTO_INCREMENT NOT NULL, 
-                icon_set_id INT DEFAULT NULL, 
-                name VARCHAR(255) DEFAULT NULL, 
-                class VARCHAR(255) DEFAULT NULL, 
-                mime_type VARCHAR(255) DEFAULT NULL, 
-                relative_url VARCHAR(255) NOT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                UNIQUE INDEX UNIQ_D727F16BD17F50A6 (uuid), 
-                INDEX IDX_D727F16B48D16F3B (icon_set_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
         $this->addSql('
             CREATE TABLE claro_content_translation (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -986,23 +957,6 @@ class Version20200701074159 extends AbstractMigration
                 type VARCHAR(255) DEFAULT NULL, 
                 created DATETIME NOT NULL, 
                 modified DATETIME NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
-        $this->addSql('
-            CREATE TABLE claro_theme (
-                id INT AUTO_INCREMENT NOT NULL, 
-                plugin_id INT DEFAULT NULL, 
-                user_id INT DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                description LONGTEXT DEFAULT NULL, 
-                enabled TINYINT(1) NOT NULL, 
-                is_default TINYINT(1) NOT NULL, 
-                extending_default TINYINT(1) NOT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                UNIQUE INDEX UNIQ_1D76301AD17F50A6 (uuid), 
-                INDEX IDX_1D76301AEC942BCF (plugin_id), 
-                INDEX IDX_1D76301AA76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ');
@@ -1994,12 +1948,7 @@ class Version20200701074159 extends AbstractMigration
             REFERENCES claro_plugin (id) 
             ON DELETE CASCADE
         ');
-        $this->addSql('
-            ALTER TABLE claro_icon_item 
-            ADD CONSTRAINT FK_D727F16B48D16F3B FOREIGN KEY (icon_set_id) 
-            REFERENCES claro_icon_set (id) 
-            ON DELETE CASCADE
-        ');
+
         $this->addSql('
             ALTER TABLE claro_connection_message_slide 
             ADD CONSTRAINT FK_DBB5C281537A1329 FOREIGN KEY (message_id) 
@@ -2112,18 +2061,6 @@ class Version20200701074159 extends AbstractMigration
             ALTER TABLE claro_activity_secondary_resources 
             ADD CONSTRAINT FK_713242A777C292AE FOREIGN KEY (resourcenode_id) 
             REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE claro_theme 
-            ADD CONSTRAINT FK_1D76301AEC942BCF FOREIGN KEY (plugin_id) 
-            REFERENCES claro_plugin (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE claro_theme 
-            ADD CONSTRAINT FK_1D76301AA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
             ON DELETE CASCADE
         ');
         $this->addSql('
@@ -2610,10 +2547,6 @@ class Version20200701074159 extends AbstractMigration
             DROP FOREIGN KEY FK_CBEC498A76ED395
         ');
         $this->addSql('
-            ALTER TABLE claro_theme 
-            DROP FOREIGN KEY FK_1D76301AA76ED395
-        ');
-        $this->addSql('
             ALTER TABLE claro_activity_evaluation 
             DROP FOREIGN KEY FK_F75EC869A76ED395
         ');
@@ -2914,10 +2847,6 @@ class Version20200701074159 extends AbstractMigration
             DROP FOREIGN KEY FK_60F90965EC942BCF
         ');
         $this->addSql('
-            ALTER TABLE claro_theme 
-            DROP FOREIGN KEY FK_1D76301AEC942BCF
-        ');
-        $this->addSql('
             ALTER TABLE claro_data_source 
             DROP FOREIGN KEY FK_B4A87F0BEC942BCF
         ');
@@ -2968,10 +2897,6 @@ class Version20200701074159 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_tool_mask_decoder 
             DROP FOREIGN KEY FK_323623448F7B22CC
-        ');
-        $this->addSql('
-            ALTER TABLE claro_icon_item 
-            DROP FOREIGN KEY FK_D727F16B48D16F3B
         ');
         $this->addSql('
             ALTER TABLE claro_connection_message_slide 
@@ -3215,12 +3140,6 @@ class Version20200701074159 extends AbstractMigration
             DROP TABLE claro_tools
         ');
         $this->addSql('
-            DROP TABLE claro_icon_set
-        ');
-        $this->addSql('
-            DROP TABLE claro_icon_item
-        ');
-        $this->addSql('
             DROP TABLE claro_content_translation
         ');
         $this->addSql('
@@ -3264,9 +3183,6 @@ class Version20200701074159 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE claro_content
-        ');
-        $this->addSql('
-            DROP TABLE claro_theme
         ');
         $this->addSql('
             DROP TABLE claro_activity_evaluation

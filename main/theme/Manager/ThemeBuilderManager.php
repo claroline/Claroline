@@ -11,7 +11,7 @@
 
 namespace Claroline\ThemeBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Theme\Theme;
+use Claroline\ThemeBundle\Entity\Theme;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -141,6 +141,7 @@ class ThemeBuilderManager
             $compileCmd .= ' --no-cache';
         }
 
+        $out = null;
         exec($compileCmd, $out);
 
         return $out;

@@ -10,8 +10,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilename;
-use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -48,9 +46,6 @@ class ClientSerializer
     /** @var PluginManager */
     private $pluginManager;
 
-    /** @var IconSetManager */
-    private $iconManager;
-
     /** @var ResourceTypeSerializer */
     private $resourceTypeSerializer;
 
@@ -66,7 +61,6 @@ class ClientSerializer
      * @param PlatformManager              $platformManager
      * @param VersionManager               $versionManager
      * @param PluginManager                $pluginManager
-     * @param IconSetManager               $iconManager
      * @param ResourceTypeSerializer       $resourceTypeSerializer
      */
     public function __construct(
@@ -80,7 +74,6 @@ class ClientSerializer
         PlatformManager $platformManager,
         VersionManager $versionManager,
         PluginManager $pluginManager,
-        IconSetManager $iconManager,
         ResourceTypeSerializer $resourceTypeSerializer
     ) {
         $this->env = $env;
@@ -91,7 +84,6 @@ class ClientSerializer
         $this->platformManager = $platformManager;
         $this->versionManager = $versionManager;
         $this->pluginManager = $pluginManager;
-        $this->iconManager = $iconManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -135,7 +127,6 @@ class ClientSerializer
             'helpUrl' => $this->config->getParameter('help_url'),
             'selfRegistration' => $this->config->getParameter('registration.self') && !$usersLimitReached,
             'serverUrl' => $this->platformManager->getUrl(),
-            'theme' => $this->serializeTheme(), // TODO : to move
             'locale' => $this->serializeLocale(),
             'display' => [ // TODO : to move
                 'breadcrumb' => $this->config->getParameter('display.breadcrumb'),
@@ -194,26 +185,6 @@ class ClientSerializer
             'default' => $defaultLocale,
             'current' => $locale ?? $defaultLocale,
             'available' => $this->config->getParameter('locales.available'),
-        ];
-    }
-
-    private function serializeTheme()
-    {
-        $icons = $this->iconManager->getIconSetIconsByType(
-            $this->iconManager->getActiveResourceIconSet()
-        );
-
-        return [
-            'name' => strtolower($this->config->getParameter('theme')),
-            'icons' => array_map(function (ResourceIconItemFilename $icon) {
-                return [
-                    'mimeTypes' => $icon->getMimeTypes(),
-                    'url' => $icon->getRelativeUrl(),
-                ];
-            }, array_values(array_merge(
-                $icons->getDefaultIcons()->getAllIcons(),
-                $icons->getSetIcons()->getAllIcons()
-            ))),
         ];
     }
 }

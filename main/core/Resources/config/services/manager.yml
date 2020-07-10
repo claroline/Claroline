@@ -183,18 +183,6 @@ services:
         alias: Claroline\CoreBundle\Manager\LocaleManager
         public: true
 
-    Claroline\CoreBundle\Manager\IconSetManager:
-        arguments:
-          - '%claroline.param.web_directory%'
-          - '%claroline.param.icon_sets_web_dir%'
-          - '%claroline.param.icon_sets_directory%'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-
-    claroline.manager.icon_set_manager:
-        alias: Claroline\CoreBundle\Manager\IconSetManager
-        public: true
-
     Claroline\CoreBundle\Manager\FileManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'

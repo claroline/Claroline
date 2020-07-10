@@ -234,7 +234,7 @@ services:
           - '@claroline.manager.widget_manager'
           - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
-    Claroline\CoreBundle\Controller\Administration\ArchiveController:
+    Claroline\CoreBundle\Controller\APINew\Platform\ArchiveController:
         arguments:
           - '%claroline.param.archive_directory%'
         tags: ['security.secure_service']
@@ -322,11 +322,3 @@ services:
           - '@claroline.manager.workspace_manager'
           - '@claroline.manager.workspace_restrictions'
           - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
-
-    Claroline\CoreBundle\Controller\APINew\Icon\IconSetController: ~
-
-    Claroline\CoreBundle\Controller\APINew\Icon\IconItemController:
-        arguments:
-          - '@security.authorization_checker'
-          - '@claroline.manager.icon_set_manager'
-          - '@claroline.manager.tool_manager'

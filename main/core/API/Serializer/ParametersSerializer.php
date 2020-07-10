@@ -9,7 +9,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\IconSetManager;
 
 /**
  * Serializes platform parameters.
@@ -18,19 +17,12 @@ class ParametersSerializer
 {
     /** @var ObjectManager */
     private $om;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var FinderProvider */
     private $finder;
-
-    /** @var IconSetManager */
-    private $ism;
-
     /** @var PlatformConfigurationHandler */
     private $configHandler;
-
     /** @var string */
     private $archivePath;
 
@@ -38,7 +30,6 @@ class ParametersSerializer
      * ParametersSerializer constructor.
      *
      * @param SerializerProvider           $serializer
-     * @param IconSetManager               $ism
      * @param FinderProvider               $finder
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $configHandler
@@ -47,7 +38,6 @@ class ParametersSerializer
     public function __construct(
         SerializerProvider $serializer, // bad
         FinderProvider $finder, // bad
-        IconSetManager $ism,
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
         $archivePath
@@ -56,7 +46,6 @@ class ParametersSerializer
         $this->finder = $finder;
         $this->configHandler = $configHandler;
         $this->om = $om;
-        $this->ism = $ism;
         $this->archivePath = $archivePath;
     }
 

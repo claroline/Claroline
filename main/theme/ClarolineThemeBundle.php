@@ -6,8 +6,4 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
 class ClarolineThemeBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return false;
-    }
 }

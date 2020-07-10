@@ -8,7 +8,6 @@ services:
         arguments:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\AppBundle\API\FinderProvider'
-          - '@claroline.manager.icon_set_manager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '%claroline.param.archive_directory%'
@@ -249,12 +248,6 @@ services:
     Claroline\CoreBundle\API\Serializer\Resource\Types\DirectorySerializer:
         tags: [claroline.serializer]
 
-    Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-
     Claroline\CoreBundle\API\Serializer\Platform\PluginSerializer:
         tags: [claroline.serializer]
 
@@ -269,7 +262,6 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@claroline.manager.version_manager'
             - '@claroline.manager.plugin_manager'
-            - '@claroline.manager.icon_set_manager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:
@@ -353,11 +345,3 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
-
-    Claroline\CoreBundle\API\Serializer\Icon\IconSetSerializer:
-        tags: [claroline.serializer]
-
-    Claroline\CoreBundle\API\Serializer\Icon\IconItemSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\Icon\IconSetSerializer'

@@ -12,13 +12,13 @@
 namespace Claroline\ThemeBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer;
-use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\PluginManager;
-use Claroline\CoreBundle\Repository\Theme\ThemeRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Claroline\ThemeBundle\Entity\Theme;
+use Claroline\ThemeBundle\Repository\ThemeRepository;
+use Claroline\ThemeBundle\Serializer\ThemeSerializer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -60,7 +60,7 @@ class ThemeManager
         PluginManager $pm
     ) {
         $this->om = $om;
-        $this->repository = $this->om->getRepository('ClarolineCoreBundle:Theme\Theme');
+        $this->repository = $this->om->getRepository(Theme::class);
         $this->authorization = $authorization;
         $this->config = $config;
         $this->themeDir = $kernelDir.'/../web/themes';

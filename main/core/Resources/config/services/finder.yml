@@ -20,8 +20,6 @@ services:
 
     Claroline\CoreBundle\API\Finder\TransferFinder: ~
 
-    Claroline\CoreBundle\API\Finder\ThemeFinder: ~
-
     Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder:
         arguments:
           - '@security.authorization_checker'
@@ -110,7 +108,3 @@ services:
           - '@security.token_storage'
 
     Claroline\CoreBundle\API\Finder\ConnectionMessage\ConnectionMessageFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Icon\IconSetFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Icon\IconItemFinder: ~

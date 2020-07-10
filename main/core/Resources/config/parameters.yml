@@ -11,9 +11,7 @@ parameters:
     claroline.param.archive_directory:      "%claroline.param.files_directory%/archives"
     claroline.param.public_files_directory: "%claroline.param.files_directory%/data"
     claroline.param.uploads_directory:      "%claroline.param.public_files_directory%/uploads"
-    claroline.param.icon_sets_directory:    "%claroline.param.public_files_directory%/icon_sets"
     claroline.param.data_web_dir:           "%claroline.param.web_directory%/data"
-    claroline.param.icon_sets_web_dir:      "%claroline.param.data_web_dir%/icon_sets"
 
     # Log paths
     claroline.param.log_dir:           "%kernel.root_dir%/logs/"
@@ -26,10 +24,6 @@ parameters:
 
     # Base workspace model path
     claroline.param.workspace.default: "%claroline.param.vendor_directory%/claroline/distribution/main/core/Resources/config/workspace.zip"
-
-    # IP config files (should be stored in DB)
-    claroline.param.ip_white_list_file:       "%kernel.root_dir%/config/ip_white_list.yml"
-    claroline.param.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
 
     # Core plugin API descriptors
     claroline.api.sample.dir:      "%claroline.param.vendor_directory%/claroline/distribution/main/core/Resources/samples"

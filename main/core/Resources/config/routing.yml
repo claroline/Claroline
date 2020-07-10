@@ -1,11 +1,3 @@
-claro_security_login:
-    path: /login
-    options: { expose: true }
-
-claro_security_logout:
-    path: /logout
-    options: { expose: true }
-
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
@@ -46,13 +38,6 @@ claro_file:
     resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation
     prefix: file
-
-claro_admin_archives:
-    resource: "@ClarolineCoreBundle/Controller/Administration/ArchiveController.php"
-    prefix: archive
-    type: annotation
-    options:
-        expose: true
 
 claro_new_api:
     resource: "@ClarolineCoreBundle/Controller/APINew/"

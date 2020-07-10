@@ -19,16 +19,16 @@ use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
-use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
-use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\PluginRepository;
+use Claroline\ThemeBundle\Entity\Theme;
+use Claroline\ThemeBundle\Manager\IconSetManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
@@ -671,7 +671,7 @@ class DatabaseWriter
      */
     private function updateTheme($themeConfiguration, Plugin $plugin)
     {
-        $theme = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')
+        $theme = $this->em->getRepository('ClarolineThemeBundle:Theme')
             ->findOneBy(['name' => $themeConfiguration['name']]);
 
         if (null === $theme) {

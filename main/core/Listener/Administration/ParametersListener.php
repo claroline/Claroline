@@ -4,11 +4,11 @@ namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
-use Claroline\CoreBundle\Entity\Icon\IconSet;
-use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\ThemeBundle\Entity\Icon\IconSet;
+use Claroline\ThemeBundle\Library\Icon\IconSetTypeEnum;
+use Claroline\ThemeBundle\Manager\IconSetManager;
 
 class ParametersListener
 {

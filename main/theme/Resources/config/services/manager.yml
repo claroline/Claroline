@@ -9,7 +9,7 @@ services:
           - '@security.authorization_checker'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '%kernel.root_dir%'
-          - '@Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer'
+          - '@Claroline\ThemeBundle\Serializer\ThemeSerializer'
           - '@claroline.manager.plugin_manager'
 
     claroline.manager.theme_manager:
@@ -24,4 +24,16 @@ services:
 
     claroline.manager.theme_builder:
         alias: Claroline\ThemeBundle\Manager\ThemeBuilderManager
+        public: true
+
+    Claroline\ThemeBundle\Manager\IconSetManager:
+        arguments:
+          - '%claroline.param.web_directory%'
+          - '%claroline.param.icon_sets_web_dir%'
+          - '%claroline.param.icon_sets_directory%'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    claroline.manager.icon_set_manager:
+        alias: Claroline\ThemeBundle\Manager\IconSetManager
         public: true

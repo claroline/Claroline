@@ -36,3 +36,11 @@ services:
     Claroline\ThemeBundle\Controller\IconController:
         arguments:
           - '%kernel.root_dir%'
+
+    Claroline\ThemeBundle\Controller\Icon\IconSetController: ~
+
+    Claroline\ThemeBundle\Controller\Icon\IconItemController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@Claroline\ThemeBundle\Manager\IconSetManager'
+          - '@claroline.manager.tool_manager'
