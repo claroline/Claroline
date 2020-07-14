@@ -24,11 +24,12 @@ services:
 
     Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetInstanceVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\Tool\OrderedToolVoter:
+    Claroline\CoreBundle\Security\Voter\Tool\ToolVoter:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+
+    Claroline\CoreBundle\Security\Voter\Tool\OrderedToolVoter: ~
 
     Claroline\CoreBundle\Security\Voter\Tool\AdministrationToolVoter: ~
 
