@@ -388,4 +388,24 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Returns the list of workspace codes starting with $prefix.
+     * Useful to auto generate unique workspace codes.
+     *
+     * @param string $prefix
+     *
+     * @return string[]
+     */
+    public function findWorkspaceCodesWithPrefix($prefix)
+    {
+        return array_map(function (array $ws) { return $ws['code']; }, $this->_em->createQuery('
+                SELECT UPPER(w.code) AS code
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                WHERE UPPER(w.code) LIKE :search
+            ')
+            ->setParameter('search', strtoupper($prefix).'%')
+            ->getResult()
+        );
+    }
 }

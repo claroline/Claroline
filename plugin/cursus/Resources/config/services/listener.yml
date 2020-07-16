@@ -8,7 +8,7 @@ services:
     Claroline\CursusBundle\Listener\CursusListener:
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CursusBundle\Manager\CursusManager'
+            - '@Claroline\CursusBundle\Manager\CourseManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@claroline.manager.tool_manager'
             - '@translator'
@@ -17,12 +17,6 @@ services:
             - { name: kernel.event_listener, event: open_tool_workspace_claroline_session_events_tool, method: onDisplayWorkspaceSessionEventTool }
             - { name: kernel.event_listener, event: claroline_external_agenda_events, method: onAgendaEventsRequest }
             - { name: kernel.event_listener, event: open_tool_desktop_cursus, method: onDisplayDesktopCursusTool }
-
-    Claroline\CursusBundle\Listener\ApiListener:
-        arguments:
-            - '@Claroline\CursusBundle\Manager\CursusManager'
-        tags:
-            - { name: kernel.event_listener, event: merge_users, method: onMerge }
 
     Claroline\CursusBundle\Listener\DataSource\PublicSessionSource:
         arguments:

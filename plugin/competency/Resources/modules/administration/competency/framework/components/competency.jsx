@@ -49,7 +49,7 @@ const CompetencyComponent = (props) =>
       <FormSections level={3}>
         <FormSection
           className="embedded-list-section"
-          icon="fa fa-fw fa-graduation-cap"
+          icon="fa fa-fw fa-atom"
           title={trans('abilities', {}, 'competency')}
           disabled={props.new}
           actions={[

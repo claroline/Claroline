@@ -10,7 +10,7 @@ const AbilityCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    icon="fa fa-graduation-cap"
+    icon="fa fa-atom"
     title={props.data.name}
     subtitle={trans('ability.min_resource_count', {}, 'competency') + ' : ' + props.data.minResourceCount}
   />

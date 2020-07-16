@@ -27,14 +27,12 @@ class LogCourseDeleteEvent extends LogGenericEvent
         $details['publicRegistration'] = $course->getPublicRegistration();
         $details['publicUnregistration'] = $course->getPublicUnregistration();
         $details['registrationValidation'] = $course->getRegistrationValidation();
-        $details['icon'] = $course->getIcon();
         $details['tutorRoleName'] = $course->getTutorRoleName();
         $details['learnerRoleName'] = $course->getLearnerRoleName();
         $details['userValidation'] = $course->getUserValidation();
         $details['organizationValidation'] = $course->getOrganizationValidation();
         $details['maxUsers'] = $course->getMaxUsers();
         $details['defaultSessionDuration'] = $course->getDefaultSessionDuration();
-        $details['withSessionEvent'] = $course->getWithSessionEvent();
         $details['organizations'] = [];
         $workspace = $course->getWorkspace();
         $workspaceModel = $course->getWorkspaceModel();

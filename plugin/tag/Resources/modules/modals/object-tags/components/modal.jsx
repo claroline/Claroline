@@ -32,9 +32,9 @@ const ObjectTagsModal = props =>
       }
 
       {0 !== props.tags.length &&
-        <ul className="tags">
+        <ul className="tags-list">
           {props.tags.map(tag =>
-            <li key={tag.id} className="tag" style={{borderColor: tag.color}}>
+            <li key={tag.id} className="tag-item" style={{borderColor: tag.color}}>
               <span className="tag-color" style={{backgroundColor: tag.color}} />
 
               <div className="tag-meta">

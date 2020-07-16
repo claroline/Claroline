@@ -105,27 +105,27 @@ function displayDate(apiDate, long = false, withTime = false) {
 function displayDuration(seconds, long = false) {
   const time = moment.duration({seconds: seconds})
 
-  let timeString = ''
+  const timeParts = []
   if ( 0 !== time.years()) {
-    timeString += time.years() + trans(long ? 'years':'years_short')
+    timeParts.push(time.years() + trans(long ? 'years':'years_short'))
   }
   if (0 !== time.months()) {
-    timeString += time.months() + trans(long ? 'months':'months_short')
+    timeParts.push(time.months() + trans(long ? 'months':'months_short'))
   }
   if (0 !== time.days()) {
-    timeString += time.days() + trans(long ? 'days':'days_short')
+    timeParts.push(time.days() + trans(long ? 'days':'days_short'))
   }
   if (0 !== time.hours()) {
-    timeString += time.hours() + trans(long ? 'hours':'hours_short')
+    timeParts.push(time.hours() + trans(long ? 'hours':'hours_short'))
   }
   if (0 !== time.minutes()) {
-    timeString += time.minutes() + trans(long ? 'minutes':'minutes_short')
+    timeParts.push(time.minutes() + trans(long ? 'minutes':'minutes_short'))
   }
   if (0 !== time.seconds()) {
-    timeString += time.seconds() + trans(long ? 'seconds':'seconds_short')
+    timeParts.push(time.seconds() + trans(long ? 'seconds':'seconds_short'))
   }
 
-  return timeString
+  return timeParts.join(long ? ' ' : '')
 }
 
 /**

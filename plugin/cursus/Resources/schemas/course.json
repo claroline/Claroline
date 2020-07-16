@@ -6,9 +6,9 @@
       "type": "string",
       "description": "The course uuid"
     },
-    "title": {
+    "name": {
       "type": "string",
-      "description": "The course title",
+      "description": "The course name",
       "minLength": 1
     },
     "code": {
@@ -53,7 +53,7 @@
           "type": ["string", "null"],
           "description": "The course icon"
         },
-        "defaultSessionDuration": {
+        "duration": {
           "type": "integer",
           "description": "The default duration in days of session"
         },
@@ -66,12 +66,12 @@
           "description": "The course display order"
         }
       },
-      "required": ["defaultSessionDuration", "withSessionEvent", "order"]
+      "required": ["order"]
     },
     "restrictions": {
       "type": "object",
       "properties": {
-        "maxUsers": {
+        "users": {
           "type": ["integer", "null"],
           "description": "The maximum amount of users the course can have"
         }
@@ -99,7 +99,7 @@
       "required": ["publicRegistration", "publicUnregistration", "registrationValidation", "userValidation", "organizationValidation"]
     }
   },
-  "required": ["code", "title"],
+  "required": ["code", "name"],
   "claroline": {
     "ids": ["id", "code"]
   }

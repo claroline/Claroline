@@ -10,7 +10,7 @@ const CompetencyCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    icon="fa fa-graduation-cap"
+    icon="fa fa-atom"
     title={props.data.name}
     subtitle={props.data.scale.name}
     contentText={props.data.description}
@@ -27,11 +27,11 @@ const CompetencyTreeCard = props =>
     <DataCard
       {...props}
       id={props.data.id}
-      icon="fa fa-graduation-cap"
+      icon="fa fa-atom"
       title={props.data.name}
       subtitle={props.data.scale.name}
       flags={[
-        props.data.abilities && 0 < props.data.abilities.length && ['fa fa-graduation-cap', trans('ability.contains_desc', {}, 'competency')]
+        props.data.abilities && 0 < props.data.abilities.length && ['fa fa-atom', trans('ability.contains_desc', {}, 'competency')]
       ].filter(flag => !!flag)}
       contentText={props.data.description}
     />

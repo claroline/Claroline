@@ -109,7 +109,7 @@ const Team = props =>
       {props.team.teamManagerRole &&
         <FormSection
           className="embedded-list-section"
-          icon="fa fa-fw fa-graduation-cap"
+          icon="fa fa-fw fa-atom"
           title={trans('team_managers', {}, 'team')}
         >
           <ListData

@@ -1,0 +1,27 @@
+// find a better naming
+// TODO : replace subscription-resume by this
+.content-resume {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background: @gray-lighter;
+  margin-bottom: @component-margin-bottom;
+  border-radius: @border-radius-base;
+
+  .content-resume-info {
+    padding: @panel-body-padding;
+  }
+
+  .content-resume-title {
+    font-weight: 900;
+    margin: 0;
+
+    > small {
+      display: block;
+    }
+  }
+
+  .content-resume-primary {
+    flex: 1;
+  }
+}

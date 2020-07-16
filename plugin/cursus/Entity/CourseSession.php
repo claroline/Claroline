@@ -11,7 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,7 +25,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CourseSession extends AbstractCourseSession
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
+
+    // TODO : location
+    // TODO : secondary resources
 
     const SESSION_NOT_STARTED = 0;
     const SESSION_OPEN = 1;
@@ -34,15 +39,10 @@ class CourseSession extends AbstractCourseSession
     const REGISTRATION_PUBLIC = 2;
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column(name="session_name")
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $name;
 
@@ -52,6 +52,8 @@ class CourseSession extends AbstractCourseSession
      *     inversedBy="sessions"
      * )
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var Course
      */
     protected $course;
 
@@ -60,6 +62,8 @@ class CourseSession extends AbstractCourseSession
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
      * @ORM\JoinColumn(name="learner_role_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Role
      */
     protected $learnerRole;
 
@@ -68,6 +72,8 @@ class CourseSession extends AbstractCourseSession
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
      * @ORM\JoinColumn(name="tutor_role_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Role
      */
     protected $tutorRole;
 
@@ -76,6 +82,8 @@ class CourseSession extends AbstractCourseSession
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus"
      * )
      * @ORM\JoinTable(name="claro_cursus_sessions")
+     *
+     * @var Cursus
      */
     protected $cursus;
 
@@ -91,16 +99,22 @@ class CourseSession extends AbstractCourseSession
 
     /**
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
+     *
+     * @var \DateTime
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     protected $endDate;
 
@@ -119,11 +133,6 @@ class CourseSession extends AbstractCourseSession
      * )
      */
     protected $sessionGroups;
-
-    /**
-     * For bulletin.
-     */
-    protected $extra = [];
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -158,22 +167,13 @@ class CourseSession extends AbstractCourseSession
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->creationDate = new \DateTime();
         $this->cursus = new ArrayCollection();
         $this->sessionUsers = new ArrayCollection();
         $this->sessionGroups = new ArrayCollection();
         $this->validators = new ArrayCollection();
         $this->events = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getName()
@@ -186,6 +186,9 @@ class CourseSession extends AbstractCourseSession
         $this->name = $name;
     }
 
+    /**
+     * @return Course
+     */
     public function getCourse()
     {
         return $this->course;
@@ -283,6 +286,9 @@ class CourseSession extends AbstractCourseSession
         $this->creationDate = $creationDate;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getStartDate()
     {
         return $this->startDate;
@@ -293,6 +299,9 @@ class CourseSession extends AbstractCourseSession
         $this->startDate = $startDate;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getEndDate()
     {
         return $this->endDate;
@@ -360,16 +369,6 @@ class CourseSession extends AbstractCourseSession
         return $shortTitle.' - '.$this->getName();
     }
 
-    public function setExtra(array $extra)
-    {
-        $this->extra = $extra;
-    }
-
-    public function getExtra()
-    {
-        return $this->extra;
-    }
-
     public function getValidators()
     {
         return $this->validators->toArray();
@@ -413,6 +412,9 @@ class CourseSession extends AbstractCourseSession
         return parent::hasValidation() || 0 < count($this->getValidators());
     }
 
+    /**
+     * @return SessionEvent[]|ArrayCollection
+     */
     public function getEvents()
     {
         return $this->events;
@@ -479,6 +481,6 @@ class CourseSession extends AbstractCourseSession
 
     public function __toString()
     {
-        return $this->getName();
+        return $this->name;
     }
 }

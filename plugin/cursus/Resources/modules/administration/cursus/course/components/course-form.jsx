@@ -68,15 +68,11 @@ const CourseFormComponent = (props) =>
         title: trans('parameters'),
         fields: [
           {
-            name: 'meta.withSessionEvent',
-            type: 'boolean',
-            label: trans('with_session_event', {}, 'cursus')
-          }, {
-            name: 'meta.workspace',
+            name: 'workspace',
             type: 'workspace',
             label: trans('workspace')
           }, {
-            name: 'meta.workspaceModel',
+            name: 'workspaceModel',
             type: 'workspace',
             label: trans('workspace_model'),
             options: {
@@ -85,28 +81,28 @@ const CourseFormComponent = (props) =>
                 title: trans('workspace_model')
               }
             },
-            displayed: (course) => !course.meta || !course.meta.workspace
+            displayed: (course) => !course.workspace
           }, {
             name: 'meta.tutorRoleName',
             type: 'string',
             label: trans('tutor_role', {}, 'cursus'),
-            displayed: (course) => !course.meta || (!course.meta.workspace && !course.meta.workspaceModel)
+            displayed: (course) => !course.workspace && !course.workspaceModel
           }, {
             name: 'meta.learnerRoleName',
             type: 'string',
             label: trans('learner_role', {}, 'cursus'),
-            displayed: (course) => !course.meta || (!course.meta.workspace && !course.meta.workspaceModel)
+            displayed: (course) => !course.workspace && !course.workspaceModel
           }, {
             name: 'meta.tutorRoleName',
             type: 'choice',
             label: trans('tutor_role', {}, 'cursus'),
-            displayed: (course) => course.meta && course.meta.workspace && course.meta.workspace.roles,
+            displayed: (course) => course.workspace && course.workspace.roles,
             required: true,
             options: {
               condensed: true,
               multiple: false,
-              choices: props.course && props.course.meta && props.course.meta.workspace && props.course.meta.workspace.roles ?
-                props.course.meta.workspace.roles.reduce((acc, role) => {
+              choices: props.course && props.course.workspace && props.course.workspace.roles ?
+                props.course.workspace.roles.reduce((acc, role) => {
                   if (2 === role.type) {
                     acc[role.translationKey] = trans(role.translationKey)
                   }
@@ -119,13 +115,13 @@ const CourseFormComponent = (props) =>
             name: 'meta.learnerRoleName',
             type: 'choice',
             label: trans('learner_role', {}, 'cursus'),
-            displayed: (course) => course.meta && course.meta.workspace && course.meta.workspace.roles,
+            displayed: (course) => course.meta && course.workspace && course.workspace.roles,
             required: true,
             options: {
               condensed: true,
               multiple: false,
-              choices: props.course && props.course.meta && props.course.meta.workspace && props.course.meta.workspace.roles ?
-                props.course.meta.workspace.roles.reduce((acc, role) => {
+              choices: props.course && props.course.meta && props.course.workspace && props.course.workspace.roles ?
+                props.course.workspace.roles.reduce((acc, role) => {
                   if (2 === role.type) {
                     acc[role.translationKey] = trans(role.translationKey)
                   }
@@ -138,13 +134,13 @@ const CourseFormComponent = (props) =>
             name: 'meta.tutorRoleName',
             type: 'choice',
             label: trans('tutor_role', {}, 'cursus'),
-            displayed: (course) => course.meta && !course.meta.workspace && course.meta.workspaceModel && course.meta.workspaceModel.roles,
+            displayed: (course) => course.meta && !course.workspace && course.workspaceModel && course.workspaceModel.roles,
             required: true,
             options: {
               condensed: true,
               multiple: false,
-              choices: props.course && props.course.meta && props.course.meta.workspaceModel && props.course.meta.workspaceModel.roles ?
-                props.course.meta.workspaceModel.roles.reduce((acc, role) => {
+              choices: props.course && props.course.meta && props.course.workspaceModel && props.course.workspaceModel.roles ?
+                props.course.workspaceModel.roles.reduce((acc, role) => {
                   if (2 === role.type) {
                     acc[role.translationKey] = trans(role.translationKey)
                   }
@@ -157,13 +153,13 @@ const CourseFormComponent = (props) =>
             name: 'meta.learnerRoleName',
             type: 'choice',
             label: trans('learner_role', {}, 'cursus'),
-            displayed: (course) => course.meta && !course.meta.workspace && course.meta.workspaceModel && course.meta.workspaceModel.roles,
+            displayed: (course) => course.meta && !course.workspace && course.workspaceModel && course.workspaceModel.roles,
             required: true,
             options: {
               condensed: true,
               multiple: false,
-              choices: props.course && props.course.meta && props.course.meta.workspaceModel && props.course.meta.workspaceModel.roles ?
-                props.course.meta.workspaceModel.roles.reduce((acc, role) => {
+              choices: props.course && props.course.meta && props.course.workspaceModel && props.course.workspaceModel.roles ?
+                props.course.workspaceModel.roles.reduce((acc, role) => {
                   if (2 === role.type) {
                     acc[role.translationKey] = trans(role.translationKey)
                   }
@@ -222,12 +218,12 @@ const CourseFormComponent = (props) =>
         ]
       }, {
         icon: 'fa fa-fw fa-key',
-        title: trans('restrictions'),
+        title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.maxUsers',
+            name: 'restrictions.users',
             type: 'number',
-            label: trans('maxUsers'),
+            label: trans('users_count'),
             options: {
               min: 0
             }

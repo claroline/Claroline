@@ -757,4 +757,28 @@ class WorkspaceManager
             $this->om->flush();
         }
     }
+
+    /**
+     * Generates an unique workspace code from given one by iterating it.
+     *
+     * @param string $code
+     *
+     * @return string
+     */
+    public function getUniqueCode($code)
+    {
+        $existingCodes = $this->workspaceRepo->findWorkspaceCodesWithPrefix($code);
+
+        $index = count($existingCodes) + 1;
+        $currentCode = $code.'_'.$index;
+        $upperCurrentCode = strtoupper($currentCode);
+
+        while (in_array($upperCurrentCode, $existingCodes)) {
+            ++$index;
+            $currentCode = $code.'_'.$index;
+            $upperCurrentCode = strtoupper($currentCode);
+        }
+
+        return $currentCode;
+    }
 }

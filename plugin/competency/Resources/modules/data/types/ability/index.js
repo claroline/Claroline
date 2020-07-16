@@ -6,7 +6,7 @@ import {AbilityInput} from '#/plugin/competency/data/types/ability/components/in
 const dataType = {
   name: 'ability',
   meta: {
-    icon: 'fa fa-fw fa fa-graduation-cap',
+    icon: 'fa fa-fw fa fa-atom',
     label: trans('ability', {}, 'data'),
     description: trans('ability_desc', {}, 'data')
   },

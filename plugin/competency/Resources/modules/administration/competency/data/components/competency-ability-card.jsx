@@ -9,7 +9,7 @@ const CompetencyAbilityCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    icon="fa fa-graduation-cap"
+    icon="fa fa-atom"
     title={props.data.ability.name}
     subtitle={props.data.level.name}
   />

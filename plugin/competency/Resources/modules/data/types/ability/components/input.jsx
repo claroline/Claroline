@@ -44,7 +44,7 @@ const AbilityInput = props => {
             })
           }]}
         >
-          <span className="fa fa-fw fa-graduation-cap icon-with-text-right" />
+          <span className="fa fa-fw fa-atom icon-with-text-right" />
           {trans('ability.select', {}, 'competency')}
         </ModalButton>
       </div>
@@ -53,7 +53,7 @@ const AbilityInput = props => {
     return (
       <ContentPlaceholder
         size="lg"
-        icon="fa fa-graduation-cap"
+        icon="fa fa-atom"
         title={trans('ability.none', {}, 'competency')}
       >
         <ModalButton
@@ -68,7 +68,7 @@ const AbilityInput = props => {
             })
           }]}
         >
-          <span className="fa fa-fw fa-graduation-cap icon-with-text-right" />
+          <span className="fa fa-fw fa-atom icon-with-text-right" />
           {trans('ability.select', {}, 'competency')}
         </ModalButton>
       </ContentPlaceholder>

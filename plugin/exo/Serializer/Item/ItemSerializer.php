@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Serializer\Item;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -519,7 +520,7 @@ class ItemSerializer
      */
     private function deserializeTags(Item $question, array $tags = [], array $options = [])
     {
-        if (in_array(Transfer::PERSIST_TAG, $options)) {
+        if (in_array(Options::PERSIST_TAG, $options)) {
             $user = null;
 
             if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {

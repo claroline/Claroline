@@ -15,10 +15,12 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Entity\Organization\Location;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Repository\Organization\LocationRepository;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\SessionEvent;
-use Claroline\CursusBundle\Entity\SessionEventSet;
+use Doctrine\Common\Persistence\ObjectRepository;
 
 class SessionEventSerializer
 {
@@ -31,9 +33,7 @@ class SessionEventSerializer
 
     /** @var LocationRepository */
     private $locationRepo;
-    /** @var SessionEventSetRepository */
-    private $eventSetRepo;
-    /** @var CourseSessionRepository */
+    /** @var ObjectRepository */
     private $sessionRepo;
 
     /**
@@ -47,18 +47,9 @@ class SessionEventSerializer
         $this->om = $om;
         $this->serializer = $serializer;
 
-        $this->locationRepo = $om->getRepository('Claroline\CoreBundle\Entity\Organization\Location');
-        $this->eventSetRepo = $om->getRepository('Claroline\CursusBundle\Entity\SessionEventSet');
-        $this->sessionRepo = $om->getRepository('Claroline\CursusBundle\Entity\CourseSession');
+        $this->locationRepo = $om->getRepository(Location::class);
+        $this->sessionRepo = $om->getRepository(CourseSession::class);
     }
-
-//    /**
-//     * @return string
-//     */
-//    public function getSchema()
-//    {
-//        return '#/plugin/cursus/session-event.json';
-//    }
 
     /**
      * @param SessionEvent $event
@@ -80,17 +71,13 @@ class SessionEventSerializer
                 'meta' => [
                     'type' => $event->getType(),
                     'session' => $this->serializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]),
-                    'set' => $event->getEventSet() ? $event->getEventSet()->getName() : null,
                     'location' => $event->getLocation() ? $this->serializer->serialize($event->getLocation()) : null,
                     'locationExtra' => $event->getLocationExtra(),
                     'isEvent' => SessionEvent::TYPE_EVENT === $event->getType(),
                 ],
                 'restrictions' => [
                     'maxUsers' => $event->getMaxUsers(),
-                    'dates' => [
-                        $event->getStartDate() ? DateNormalizer::normalize($event->getStartDate()) : null,
-                        $event->getEndDate() ? DateNormalizer::normalize($event->getEndDate()) : null,
-                    ],
+                    'dates' => DateRangeNormalizer::normalize($event->getStartDate(), $event->getEndDate()),
                 ],
                 'registration' => [
                     'registrationType' => $event->getRegistrationType(),
@@ -121,40 +108,23 @@ class SessionEventSerializer
 
         $this->sipe('registration.registrationType', 'setRegistrationType', $data, $event);
 
-        $type = isset($data['meta']['isEvent']) && $data['meta']['isEvent'] ? SessionEvent::TYPE_EVENT : SessionEvent::TYPE_NONE;
-        $event->setType($type);
+        if (isset($data['restrictions']['dates'])) {
+            $dates = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 
-        $startDate = isset($data['restrictions']['dates'][0]) ?
-            DateNormalizer::denormalize($data['restrictions']['dates'][0]) :
-            null;
-        $endDate = isset($data['restrictions']['dates'][1]) ?
-            DateNormalizer::denormalize($data['restrictions']['dates'][1]) :
-            null;
-        $event->setStartDate($startDate);
-        $event->setEndDate($endDate);
+            $event->setStartDate($dates[0]);
+            $event->setEndDate($dates[1]);
+        }
 
         $session = $event->getSession();
-
         if (empty($session) && isset($data['meta']['session']['id'])) {
+            /** @var CourseSession $session */
             $session = $this->sessionRepo->findOneBy(['uuid' => $data['meta']['session']['id']]);
 
             if ($session) {
                 $event->setSession($session);
             }
         }
-        if ($session && isset($data['meta']['set']) && !empty($data['meta']['set'])) {
-            $eventSet = $this->eventSetRepo->findOneBy(['session' => $session, 'name' => $data['meta']['set']]);
 
-            if (empty($eventSet)) {
-                $eventSet = new SessionEventSet();
-                $eventSet->setSession($session);
-                $eventSet->setName($data['meta']['set']);
-                $this->om->persist($eventSet);
-            }
-            $event->setEventSet($eventSet);
-        } else {
-            $event->setEventSet(null);
-        }
         if (isset($data['meta']['location']) && isset($data['meta']['location']['id'])) {
             $location = $this->locationRepo->findOneBy(['uuid' => $data['meta']['location']['id']]);
             $event->setLocation($location);

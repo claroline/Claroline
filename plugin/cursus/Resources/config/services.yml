@@ -6,6 +6,7 @@ imports:
     - { resource: services/controller.yml }
     - { resource: services/crud.yml }
     - { resource: services/listener.yml }
+    - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
 
 services:
@@ -16,14 +17,3 @@ services:
 
     Claroline\CursusBundle\Configuration\PlatformDefaults:
         tags: ['claroline.configuration']
-
-    Claroline\CursusBundle\Manager\CursusManager:
-        arguments:
-            - '@event_dispatcher'
-            - '@claroline.manager.mail_manager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.manager.role_manager'
-            - '@router'
-            - '@claroline.manager.template_manager'
-            - '@security.token_storage'
-            - '@claroline.manager.workspace_manager'

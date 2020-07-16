@@ -41,10 +41,10 @@ const SessionEventList = {
       label: trans('end_date'),
       displayed: true
     }, {
-      name: 'restrictions.maxUsers',
+      name: 'restrictions.users',
       alias: 'maxUsers',
       type: 'number',
-      label: trans('maxUsers'),
+      label: trans('max_participants', {}, 'cursus'),
       displayed: true
     }, {
       name: 'registration.registrationType',

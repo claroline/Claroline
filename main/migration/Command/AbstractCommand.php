@@ -11,7 +11,6 @@
 
 namespace Claroline\MigrationBundle\Command;
 
-use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\MigrationBundle\Manager\Manager;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
@@ -22,8 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
 {
-    use BaseCommandTrait;
-
     private $manager;
 
     public function setManager(Manager $manager)

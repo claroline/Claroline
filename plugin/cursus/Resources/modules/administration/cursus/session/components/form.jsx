@@ -1,16 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
-
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {FormData} from '#/main/app/content/form/containers/data'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {constants} from '#/plugin/cursus/administration/cursus/constants'
-import {Session as SessionType} from '#/plugin/cursus/administration/cursus/prop-types'
 
-const SessionFormComponent = (props) =>
+const SessionForm = (props) =>
   <FormData
     {...props}
     sections={[
@@ -29,17 +26,24 @@ const SessionFormComponent = (props) =>
             label: trans('code'),
             required: true
           }, {
+            name: 'restrictions.dates',
+            type: 'date-range',
+            label: trans('access_dates'),
+            required: true
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-info',
+        title: trans('information'),
+        fields: [
+          {
             name: 'description',
             type: 'html',
             label: trans('description')
           }, {
-            name: 'restrictions.dates',
-            type: 'date-range',
-            label: trans('access_dates'),
-            required: true,
-            options: {
-              time: true
-            }
+            name: 'meta.default',
+            type: 'boolean',
+            label: trans('default_session', {}, 'cursus')
           }, {
             name: 'meta.course.title',
             type: 'string',
@@ -49,13 +53,17 @@ const SessionFormComponent = (props) =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-cogs',
-        title: trans('parameters'),
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
         fields: [
           {
-            name: 'meta.defaultSession',
-            type: 'boolean',
-            label: trans('default_session', {}, 'cursus')
+            name: 'poster',
+            type: 'image',
+            label: trans('poster')
+          }, {
+            name: 'thumbnail',
+            type: 'image',
+            label: trans('thumbnail')
           }, {
             name: 'meta.order',
             type: 'number',
@@ -64,10 +72,6 @@ const SessionFormComponent = (props) =>
             options: {
               min: 0
             }
-          }, {
-            name: 'meta.color',
-            type: 'color',
-            label: trans('color')
           }
         ]
       }, {
@@ -107,15 +111,30 @@ const SessionFormComponent = (props) =>
         ]
       }, {
         icon: 'fa fa-fw fa-key',
-        title: trans('restrictions'),
+        title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.maxUsers',
-            type: 'number',
-            label: trans('maxUsers'),
-            options: {
-              min: 0
-            }
+            name: 'restrictions._restrictUsers',
+            type: 'boolean',
+            label: trans('restrict_users_count'),
+            calculated: (course) => get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
+            onChange: (value) => {
+              if (!value) {
+                props.update(props.name, 'restrictions.users', null)
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.users',
+                type: 'number',
+                label: trans('users_count'),
+                required: true,
+                displayed: (course) => get(course, 'restrictions.users') || get(course, 'restrictions._restrictUsers'),
+                options: {
+                  min: 0
+                }
+              }
+            ]
           }
         ]
       }
@@ -124,18 +143,11 @@ const SessionFormComponent = (props) =>
     {props.children}
   </FormData>
 
-SessionFormComponent.propTypes = {
-  new: T.bool.isRequired,
-  session: T.shape(SessionType.propTypes).isRequired,
-  children: T.any
+SessionForm.propTypes = {
+  name: T.string.isRequired,
+  children: T.any,
+  update: T.func.isRequired
 }
-
-const SessionForm = connect(
-  (state, ownProps) => ({
-    new: formSelect.isNew(formSelect.form(state, ownProps.name)),
-    session: formSelect.data(formSelect.form(state, ownProps.name))
-  })
-)(SessionFormComponent)
 
 export {
   SessionForm

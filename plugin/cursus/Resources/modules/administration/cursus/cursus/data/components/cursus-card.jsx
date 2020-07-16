@@ -5,8 +5,6 @@ import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {Cursus as CursusType} from '#/plugin/cursus/administration/cursus/prop-types'
-
 const CursusCard = props =>
   <DataCard
     {...props}
@@ -23,7 +21,17 @@ const CursusCard = props =>
   />
 
 CursusCard.propTypes = {
-  data: T.shape(CursusType.propTypes).isRequired
+  data: T.shape({
+    id: T.string.isRequired,
+    title: T.string,
+    code: T.string,
+    description: T.string,
+    meta: T.shape({
+      icon: T.string,
+      course: T.object,
+      blocking: T.bool
+    })
+  }).isRequired
 }
 
 export {

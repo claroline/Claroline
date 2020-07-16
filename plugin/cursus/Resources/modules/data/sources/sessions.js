@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/plugin/cursus/tools/cursus/catalog/session/routing'
+import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/administration/cursus/session/data/components/session-card'
 
 export default {
@@ -44,10 +44,10 @@ export default {
         label: trans('end_date'),
         displayed: true
       }, {
-        name: 'restrictions.maxUsers',
+        name: 'restrictions.users',
         alias: 'maxUsers',
         type: 'number',
-        label: trans('maxUsers'),
+        label: trans('max_participants', {}, 'cursus'),
         displayed: true
       }, {
         name: 'registration.publicRegistration',

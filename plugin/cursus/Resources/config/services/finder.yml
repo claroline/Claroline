@@ -20,8 +20,6 @@ services:
 
     Claroline\CursusBundle\Finder\CourseFinder: ~
 
-    Claroline\CursusBundle\Finder\CursusFinder: ~
-
     Claroline\CursusBundle\Finder\CursusGroupFinder: ~
 
     Claroline\CursusBundle\Finder\CursusUserFinder: ~

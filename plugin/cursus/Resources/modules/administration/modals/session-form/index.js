@@ -1,11 +1,11 @@
 /**
  * Session form modal.
- * Displays a form to create a course session.
+ * Displays a form to create/edit a course session.
  */
 
 import {registry} from '#/main/app/modals/registry'
 
-import {SessionFormModal} from '#/plugin/cursus/administration/modals/session-form/components/modal'
+import {SessionFormModal} from '#/plugin/cursus/administration/modals/session-form/containers/modal'
 
 const MODAL_SESSION_FORM = 'MODAL_SESSION_FORM'
 

@@ -11,7 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,27 +25,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SessionEvent
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     const TYPE_NONE = 0;
     const TYPE_EVENT = 1;
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column(name="event_name")
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $code;
 
@@ -55,27 +54,37 @@ class SessionEvent
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var CourseSession
      */
     protected $session;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=false)
+     *
+     * @var \DateTime
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=false)
+     *
+     * @var \DateTime
      */
     protected $endDate;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     protected $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Location
      */
     protected $location;
 
@@ -85,16 +94,10 @@ class SessionEvent
     protected $locationExtra;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CursusBundle\Entity\SessionEventComment",
-     *     mappedBy="sessionEvent"
-     * )
-     */
-    protected $comments;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_cursusbundle_session_event_tutors")
+     *
+     * @var User[]|ArrayCollection
      */
     protected $tutors;
 
@@ -121,31 +124,12 @@ class SessionEvent
      */
     protected $type = self::TYPE_NONE;
 
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CursusBundle\Entity\SessionEventSet",
-     *     inversedBy="events"
-     * )
-     * @ORM\JoinColumn(name="event_set", nullable=true, onDelete="SET NULL")
-     */
-    protected $eventSet;
-
     public function __construct()
     {
         $this->refreshUuid();
-        $this->comments = new ArrayCollection();
+
         $this->sessionEventUsers = new ArrayCollection();
         $this->tutors = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getName()
@@ -229,6 +213,9 @@ class SessionEvent
         $this->description = $description;
     }
 
+    /**
+     * @return Location
+     */
     public function getLocation()
     {
         return $this->location;
@@ -249,11 +236,9 @@ class SessionEvent
         $this->locationExtra = $locationExtra;
     }
 
-    public function getComments()
-    {
-        return $this->comments->toArray();
-    }
-
+    /**
+     * @return User[]
+     */
     public function getTutors()
     {
         return $this->tutors->toArray();
@@ -315,20 +300,5 @@ class SessionEvent
     public function setType($type)
     {
         $this->type = $type;
-    }
-
-    public function getEventSet()
-    {
-        return $this->eventSet;
-    }
-
-    public function setEventSet(SessionEventSet $eventSet = null)
-    {
-        $this->eventSet = $eventSet;
-    }
-
-    public static function getSearchableFields()
-    {
-        return ['name'];
     }
 }

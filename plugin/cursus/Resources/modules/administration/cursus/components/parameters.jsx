@@ -44,14 +44,6 @@ const ParametersComponent = (props) =>
             type: 'boolean',
             label: trans('disable_session_event_registration', {}, 'cursus')
           }, {
-            name: 'cursus.enable_courses_profile_tab',
-            type: 'boolean',
-            label: trans('enable_courses_tab_in_profile', {}, 'cursus')
-          }, {
-            name: 'cursus.enable_ws_in_courses_profile_tab',
-            type: 'boolean',
-            label: trans('enable_workspace_in_courses_tab_in_profile', {}, 'cursus')
-          }, {
             name: 'cursus.session_default_total',
             type: 'number',
             label: trans('session_default_total', {}, 'cursus'),
@@ -65,10 +57,6 @@ const ParametersComponent = (props) =>
             options: {
               min: 0
             }
-          }, {
-            name: 'cursus.display_user_events_in_desktop_agenda',
-            type: 'boolean',
-            label: trans('display_user_events_in_desktop_agenda', {}, 'cursus')
           }
         ]
       }

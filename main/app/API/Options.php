@@ -44,6 +44,7 @@ final class Options
     //do something better with these options
     const SOFT_DELETE = 'soft_delete';
     const FORCE_FLUSH = 'force_flush';
+    const PERSIST_TAG = 'persistTag';
 
     //for user
     const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';

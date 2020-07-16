@@ -113,11 +113,6 @@ class Cursus
     protected $cursusGroups;
 
     /**
-     * @ORM\Column(nullable=true)
-     */
-    protected $icon;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
@@ -276,16 +271,6 @@ class Cursus
     public function getCursusGroups()
     {
         return $this->cursusGroups->toArray();
-    }
-
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
     }
 
     public function getWorkspace()

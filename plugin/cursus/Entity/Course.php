@@ -11,12 +11,13 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,38 +28,54 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Course extends AbstractCourseSession
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
      */
-    protected $title;
+    private $title;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
-     * )
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(length=128, unique=true)
+     *
+     * @var string
+     */
+    private $slug;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="children")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     *
+     * @var Course
+     */
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Course", mappedBy="parent")
+     * @ORM\OrderBy({"displayOrder" = "ASC"})
+     *
+     * @var Course[]|ArrayCollection
+     */
+    private $children;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
      */
-    protected $workspaceModel;
+    private $workspaceModel;
 
     /**
      * @ORM\Column(name="tutor_role_name", nullable=true)
      */
-    protected $tutorRoleName;
+    private $tutorRoleName;
 
     /**
      * @ORM\Column(name="learner_role_name", nullable=true)
      */
-    protected $learnerRoleName;
+    private $learnerRoleName;
 
     /**
      * @ORM\OneToMany(
@@ -66,23 +83,12 @@ class Course extends AbstractCourseSession
      *     mappedBy="course"
      * )
      */
-    protected $sessions;
-
-    /**
-     * @ORM\Column(nullable=true)
-     */
-    protected $icon;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinTable(name="claro_cursusbundle_course_validators")
-     */
-    protected $validators;
+    private $sessions;
 
     /**
      * @ORM\Column(name="session_duration", nullable=false, type="integer", options={"default" = 1})
      */
-    protected $defaultSessionDuration = 1;
+    private $defaultSessionDuration = 1;
 
     /**
      * @ORM\Column(name="with_session_event", type="boolean", options={"default" = 1})
@@ -95,32 +101,18 @@ class Course extends AbstractCourseSession
      * )
      * @ORM\JoinTable(name="claro_cursusbundle_course_organizations")
      */
-    protected $organizations;
+    private $organizations;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
-     *     mappedBy="course"
-     * )
+     * Course constructor.
      */
-    protected $cursus;
-
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->sessions = new ArrayCollection();
-        $this->validators = new ArrayCollection();
         $this->organizations = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
+        $this->children = new ArrayCollection();
     }
 
     public function getTitle()
@@ -131,6 +123,16 @@ class Course extends AbstractCourseSession
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    public function setSlug($slug = null)
+    {
+        $this->slug = $slug;
     }
 
     public function getWorkspaceModel()
@@ -182,49 +184,6 @@ class Course extends AbstractCourseSession
         return $defaultSession;
     }
 
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-    }
-
-    public function getValidators()
-    {
-        return $this->validators->toArray();
-    }
-
-    public function addValidator(User $validator)
-    {
-        if (!$this->validators->contains($validator)) {
-            $this->validators->add($validator);
-        }
-
-        return $this;
-    }
-
-    public function removeValidator(User $validator)
-    {
-        if ($this->validators->contains($validator)) {
-            $this->validators->removeElement($validator);
-        }
-
-        return $this;
-    }
-
-    public function emptyValidators()
-    {
-        $this->validators->clear();
-    }
-
-    public function hasValidation()
-    {
-        return parent::hasValidation() || 0 < count($this->getValidators());
-    }
-
     public function getDefaultSessionDuration()
     {
         return $this->defaultSessionDuration;
@@ -271,6 +230,35 @@ class Course extends AbstractCourseSession
     public function emptyOrganizations()
     {
         $this->organizations->clear();
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent(Course $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function addChild(Course $course)
+    {
+        if (!$this->children->contains($course)) {
+            $this->children->add($course);
+        }
+    }
+
+    public function removeChild(Course $course)
+    {
+        if ($this->children->contains($course)) {
+            $this->children->removeElement($course);
+        }
     }
 
     public function __toString()

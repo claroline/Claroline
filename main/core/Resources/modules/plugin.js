@@ -136,21 +136,22 @@ registry.add('ClarolineCoreBundle', {
 
   data: {
     types: {
-      'organization'      : () => { return import(/* webpackChunkName: "core-data-type-organization" */       '#/main/core/data/types/organization') },
-      'resource'          : () => { return import(/* webpackChunkName: "core-data-type-resource" */           '#/main/core/data/types/resource') },
-      'resources'         : () => { return import(/* webpackChunkName: "core-data-type-resources" */          '#/main/core/data/types/resources') },
-      'user'              : () => { return import(/* webpackChunkName: "core-data-type-user" */               '#/main/core/data/types/user') },
-      'users'             : () => { return import(/* webpackChunkName: "core-data-type-users" */              '#/main/core/data/types/users') },
-      'workspace'         : () => { return import(/* webpackChunkName: "core-data-type-workspace" */          '#/main/core/data/types/workspace') },
-      'workspaces'        : () => { return import(/* webpackChunkName: "core-data-type-workspaces" */         '#/main/core/data/types/workspaces') },
+      'connection-message': () => { return import(/* webpackChunkName: "core-data-type-connection-message" */ '#/main/core/data/types/connection-message') },
       'group'             : () => { return import(/* webpackChunkName: "core-data-type-group" */              '#/main/core/data/types/group') },
       'groups'            : () => { return import(/* webpackChunkName: "core-data-type-groups" */             '#/main/core/data/types/groups') },
       'location'          : () => { return import(/* webpackChunkName: "core-data-type-location" */           '#/main/core/data/types/location') },
-      'template_type'     : () => { return import(/* webpackChunkName: "core-data-type-template-type" */      '#/main/core/data/types/template-type') },
-      'template'          : () => { return import(/* webpackChunkName: "core-data-type-template" */           '#/main/core/data/types/template') },
+      'organization'      : () => { return import(/* webpackChunkName: "core-data-type-organization" */       '#/main/core/data/types/organization') },
+      'organizations'     : () => { return import(/* webpackChunkName: "core-data-type-organizations" */      '#/main/core/data/types/organizations') },
+      'resource'          : () => { return import(/* webpackChunkName: "core-data-type-resource" */           '#/main/core/data/types/resource') },
+      'resources'         : () => { return import(/* webpackChunkName: "core-data-type-resources" */          '#/main/core/data/types/resources') },
       'role'              : () => { return import(/* webpackChunkName: "core-data-type-role" */               '#/main/core/data/types/role') },
       'roles'             : () => { return import(/* webpackChunkName: "core-data-type-roles" */              '#/main/core/data/types/roles') },
-      'connection-message': () => { return import(/* webpackChunkName: "core-data-type-connection-message" */ '#/main/core/data/types/connection-message') }
+      'template'          : () => { return import(/* webpackChunkName: "core-data-type-template" */           '#/main/core/data/types/template') },
+      'template_type'     : () => { return import(/* webpackChunkName: "core-data-type-template-type" */      '#/main/core/data/types/template-type') },
+      'user'              : () => { return import(/* webpackChunkName: "core-data-type-user" */               '#/main/core/data/types/user') },
+      'users'             : () => { return import(/* webpackChunkName: "core-data-type-users" */              '#/main/core/data/types/users') },
+      'workspace'         : () => { return import(/* webpackChunkName: "core-data-type-workspace" */          '#/main/core/data/types/workspace') },
+      'workspaces'        : () => { return import(/* webpackChunkName: "core-data-type-workspaces" */         '#/main/core/data/types/workspaces') }
     },
     sources: {
       'resources'    : () => { return import(/* webpackChunkName: "core-data-source-resources" */    '#/main/core/data/sources/resources') },

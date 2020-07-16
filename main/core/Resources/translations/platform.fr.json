@@ -1496,6 +1496,7 @@
     "access_max_users": "Restreindre le nombre d'utilisateurs",
     "restrict_max_resources": "Restreindre le nombre de ressources",
     "points": "[0,1] %count% point|]1,Inf[ %count% points",
+    "date_range": "Du %start% au %end%",
     "date_range_start": "à partir du",
     "date_range_end": "jusqu'au",
     "show_overview": "Aller à l'accueil",

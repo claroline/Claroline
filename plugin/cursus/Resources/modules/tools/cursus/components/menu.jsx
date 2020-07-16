@@ -12,52 +12,38 @@ const CursusMenu = (props) =>
     {...omit(props, 'path')}
     title={trans('cursus', {}, 'tools')}
   >
-    {false &&
-      <Toolbar
-        className="list-group"
-        buttonName="list-group-item"
-        actions={[
-          {
-            name: 'courses',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-tasks',
-            label: trans('courses', {}, 'cursus'),
-            target: props.path + '/courses'
-          }, {
-            name: 'sessions',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-cubes',
-            label: trans('sessions', {}, 'cursus'),
-            target: props.path + '/sessions'
-          }, {
-            name: 'session_events',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-clock-o',
-            label: trans('session_events', {}, 'cursus'),
-            target: props.path + '/events'
-          }, {
-            name: 'cursus',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-database',
-            label: trans('cursus', {}, 'cursus'),
-            target: props.path + '/cursus'
-          }, {
-            name: 'queues',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-hourglass-o',
-            label: trans('pending_for_validation', {}, 'cursus'),
-            target: props.path + '/queues'
-          }, {
-            name: 'parameters',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-cog',
-            label: trans('parameters'),
-            target: props.path + '/parameters'
-          }
-        ]}
-        onClick={props.autoClose}
-      />
-    }
+    <Toolbar
+      className="list-group"
+      buttonName="list-group-item"
+      actions={[
+        {
+          name: 'catalog',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-list',
+          label: trans('catalog', {}, 'cursus'),
+          target: props.path + '/catalog'
+        }, {
+          name: 'sessions',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-calendar-week',
+          label: trans('sessions', {}, 'cursus'),
+          target: props.path + '/sessions'
+        }, {
+          name: 'session_events',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-clock',
+          label: trans('session_events', {}, 'cursus'),
+          target: props.path + '/events'
+        }, {
+          name: 'pending',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-user-plus',
+          label: trans('pending_registrations'),
+          target: props.path + '/pending'
+        }
+      ]}
+      onClick={props.autoClose}
+    />
   </MenuSection>
 
 CursusMenu.propTypes = {

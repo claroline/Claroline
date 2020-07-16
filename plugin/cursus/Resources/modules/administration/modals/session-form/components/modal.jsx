@@ -1,60 +1,55 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
-import {
-  actions as formActions,
-  selectors as formSelect
-} from '#/main/app/content/form/store'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {selectors} from '#/plugin/cursus/administration/cursus/store'
+import {selectors} from '#/plugin/cursus/administration/modals/session-form/store'
 import {SessionForm} from '#/plugin/cursus/administration/cursus/session/components/form'
 
-const SessionFormModalComponent = props =>
+const SessionFormModal = props =>
   <Modal
-    {...omit(props, 'saveEnabled', 'saveSession')}
-    icon="fa fa-fw fa-cog"
+    {...omit(props, 'session', 'course', 'saveEnabled', 'loadSession', 'saveSession', 'onSave')}
+    icon="fa fa-fw fa-plus"
     title={trans('session', {}, 'cursus')}
+    onEntering={() => props.loadSession(props.session, props.course)}
   >
     <SessionForm
-      name={selectors.STORE_NAME + '.sessions.current'}
-    />
-
-    <Button
-      className="modal-btn btn btn-primary"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled}
-      callback={() => {
-        props.saveSession()
-        props.fadeModal()
-      }}
-    />
+      name={selectors.STORE_NAME}
+    >
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled}
+        callback={() => props.saveSession(props.session ? props.session.id : null, (data) => {
+          props.onSave(data)
+          props.fadeModal()
+        })}
+      />
+    </SessionForm>
   </Modal>
 
-SessionFormModalComponent.propTypes = {
+SessionFormModal.propTypes = {
+  session: T.shape({
+    id: T.string.isRequired
+  }),
+  course: T.shape({
+
+  }),
   saveEnabled: T.bool.isRequired,
+  loadSession: T.func.isRequired,
   saveSession: T.func.isRequired,
+  onSave: T.func.isRequired,
+
+  // from modal
   fadeModal: T.func.isRequired
 }
-
-const SessionFormModal = connect(
-  (state) => ({
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.sessions.current'))
-  }),
-  (dispatch) => ({
-    saveSession() {
-      dispatch(formActions.saveForm(selectors.STORE_NAME + '.sessions.current', ['apiv2_cursus_session_create']))
-    }
-  })
-)(SessionFormModalComponent)
 
 export {
   SessionFormModal

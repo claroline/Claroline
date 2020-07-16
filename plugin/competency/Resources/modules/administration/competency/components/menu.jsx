@@ -19,7 +19,7 @@ const CompetencyMenu = (props) =>
         {
           name: 'frameworks',
           type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-graduation-cap',
+          icon: 'fa fa-fw fa-atom',
           label: trans('competencies', {}, 'tools'),
           target: props.path + '/frameworks'
         }, {

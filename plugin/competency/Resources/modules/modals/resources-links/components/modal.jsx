@@ -18,7 +18,7 @@ import {MODAL_ABILITIES_PICKER} from '#/plugin/competency/modals/abilities'
 const ResourcesLinksModal = (props) =>
   <Modal
     {...omit(props, 'nodeId', 'competencies', 'abilities', 'loadCompetencies', 'associateCompetency', 'dissociateCompetency', 'loadAbilities', 'associateAbility', 'dissociateAbility')}
-    icon="fa fa-fw fa-graduation-cap"
+    icon="fa fa-fw fa-atom"
     title={trans('competencies.associated', {}, 'competency')}
     onEntering={() => {
       props.loadCompetencies(props.nodeId)

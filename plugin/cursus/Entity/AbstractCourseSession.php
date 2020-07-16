@@ -11,6 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,6 +22,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class AbstractCourseSession
 {
+    use Poster;
+    use Thumbnail;
+
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()

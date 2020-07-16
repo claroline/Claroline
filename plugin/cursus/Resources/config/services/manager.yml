@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    Claroline\CursusBundle\Configuration\PlatformDefaults:
+        tags: ['claroline.configuration']
+
+    Claroline\CursusBundle\Manager\CourseManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.manager.role_manager'
+            - '@security.token_storage'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
+
+    Claroline\CursusBundle\Manager\SessionManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@claroline.manager.mail_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@claroline.manager.role_manager'
+            - '@router'
+            - '@claroline.manager.template_manager'
+            - '@security.token_storage'
+            - '@claroline.manager.workspace_manager'
+            - '@Claroline\CursusBundle\Manager\SessionEventManager'
+
+    Claroline\CursusBundle\Manager\SessionEventManager:
+        arguments:
+            - '@event_dispatcher'
+            - '@claroline.manager.mail_manager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@router'
+            - '@claroline.manager.template_manager'
+            - '@security.token_storage'

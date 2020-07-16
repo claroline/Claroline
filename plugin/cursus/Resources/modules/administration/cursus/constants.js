@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-const DEFAULT_ORDER = 500
+const DEFAULT_ORDER = 1
 
 const SESSION_NOT_STARTED = 0
 const SESSION_OPEN = 1

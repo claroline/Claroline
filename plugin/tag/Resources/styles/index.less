@@ -7,12 +7,12 @@
 // Modal
 // ---
 
-.tags {
+.tags-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
 
-    .tag {
+    .tag-item {
         display: flex;
         justify-content: stretch;
         border: 1px solid @gray-light;
@@ -153,5 +153,12 @@
         &:hover {
             background: #efefef;
         }
+    }
+}
+
+.tag-cell,
+.tags {
+    .tag + .tag {
+        margin-left: 5px;
     }
 }

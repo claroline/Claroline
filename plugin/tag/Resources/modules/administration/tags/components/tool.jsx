@@ -11,12 +11,13 @@ import {TagList} from '#/plugin/tag/administration/tags/components/list'
 
 const TagsTool = (props) =>
   <ToolPage
+    primaryAction="add"
     actions={[
       {
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
-        label: trans('add_tag', {}, 'tag'),
+        label: trans('add-tag', {}, 'actions'),
         target: `${props.path}/new`,
         primary: true
       }

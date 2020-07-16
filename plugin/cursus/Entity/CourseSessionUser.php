@@ -11,7 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,24 +30,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CourseSessionUser
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     const TYPE_LEARNER = 0;
     const TYPE_TEACHER = 1;
     const TYPE_PENDING_LEARNER = 2;
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var User
      */
     protected $user;
 
@@ -56,11 +53,15 @@ class CourseSessionUser
      *     inversedBy="sessionUsers"
      * )
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var CourseSession
      */
     protected $session;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime", nullable=false)
+     *
+     * @var \DateTime
      */
     protected $registrationDate;
 
@@ -75,16 +76,9 @@ class CourseSessionUser
         $this->registrationDate = new \DateTime();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;

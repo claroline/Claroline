@@ -32,32 +32,20 @@ services:
     Claroline\CursusBundle\Controller\CourseController:
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
             - '@claroline.manager.tool_manager'
-
-    Claroline\CursusBundle\Controller\CursusController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CursusBundle\Manager\CursusManager'
-            - '@claroline.manager.tool_manager'
+            - '@Claroline\CursusBundle\Manager\CourseManager'
 
     Claroline\CursusBundle\Controller\SessionController:
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CursusBundle\Manager\CursusManager'
-            - '@claroline.manager.tool_manager'
             - '@translator'
+            - '@claroline.manager.tool_manager'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
 
     Claroline\CursusBundle\Controller\SessionEventController:
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CursusBundle\Manager\CursusManager'
-            - '@claroline.manager.tool_manager'
             - '@translator'
-
-    Claroline\CursusBundle\Controller\CatalogController:
-        arguments:
-            - '@Claroline\CursusBundle\Manager\CursusManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@claroline.manager.tool_manager'
+            - '@Claroline\CursusBundle\Manager\SessionEventManager'

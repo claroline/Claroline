@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
+use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -20,11 +21,10 @@ class CourseVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
-            case self::CREATE:
-            case self::EDIT:
-            case self::DELETE:
-            case self::PATCH:
-            case self::OPEN:
+            case self::CREATE: // EDIT right on tool
+            case self::EDIT: // admin of organization | EDIT right on tool
+            case self::DELETE: // admin of organization | EDIT right on tool
+            case self::OPEN: // member of organization & OPEN right on tool
             case self::VIEW:
                 return $this->hasAdminToolAccess($token, 'claroline_cursus_tool') ?
                     VoterInterface::ACCESS_GRANTED :
@@ -36,11 +36,11 @@ class CourseVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\CursusBundle\Entity\Course';
+        return Course::class;
     }
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
     }
 }

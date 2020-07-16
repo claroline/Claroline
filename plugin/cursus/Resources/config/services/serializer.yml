@@ -11,35 +11,23 @@ services:
 
     Claroline\CursusBundle\Serializer\CourseSerializer:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\CursusBundle\Serializer\CursusGroupSerializer:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
 
-    Claroline\CursusBundle\Serializer\CursusSerializer:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@security.token_storage'
-
     Claroline\CursusBundle\Serializer\CursusUserSerializer:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
 
-    Claroline\CursusBundle\Serializer\SessionEventCommentSerializer:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
     Claroline\CursusBundle\Serializer\SessionEventSerializer:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
-    Claroline\CursusBundle\Serializer\SessionEventSetSerializer:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
@@ -59,8 +47,10 @@ services:
     Claroline\CursusBundle\Serializer\SessionSerializer:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CursusBundle\Manager\CursusManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CursusBundle\Serializer\CourseSerializer'
 
     Claroline\CursusBundle\Serializer\SessionUserSerializer:
         arguments:

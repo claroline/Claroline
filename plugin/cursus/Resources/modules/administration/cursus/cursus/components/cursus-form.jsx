@@ -12,7 +12,6 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {OrganizationList} from '#/main/core/administration/community/organization/components/organization-list'
 
-import {Cursus as CursusType} from '#/plugin/cursus/administration/cursus/prop-types'
 import {selectors} from '#/plugin/cursus/administration/cursus/store'
 import {actions} from '#/plugin/cursus/administration/cursus/cursus/store'
 
@@ -56,14 +55,10 @@ const CursusFormComponent = (props) =>
         title: trans('parameters'),
         fields: [
           {
-            name: 'meta.workspace',
+            name: 'workspace',
             type: 'workspace',
             label: trans('workspace')
           }, {
-          //   name: 'meta.icon',
-          //   type: 'file',
-          //   label: trans('icon')
-          // }, {
             name: 'meta.blocking',
             type: 'boolean',
             label: trans('blocking', {}, 'cursus'),
@@ -124,7 +119,9 @@ const CursusFormComponent = (props) =>
 CursusFormComponent.propTypes = {
   path: T.string.isRequired,
   new: T.bool.isRequired,
-  cursus: T.shape(CursusType.propTypes).isRequired,
+  cursus: T.shape({
+    id: T.string
+  }).isRequired,
   addOrganizations: T.func.isRequired,
   addUsers: T.func.isRequired,
   addGroups: T.func.isRequired

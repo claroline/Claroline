@@ -9,7 +9,7 @@ const TagCell = (props) => {
     return (
       <Fragment>
         {props.data.map(tag =>
-          <span key={toKey(tag)} className="label label-info">{tag}</span>
+          <span key={toKey(tag)} className="tag label label-info">{tag}</span>
         )}
       </Fragment>
     )

@@ -6,7 +6,7 @@ import {MODAL_COMPETENCY_RESOURCES_LINKS} from '#/plugin/competency/modals/resou
 export default (resourceNodes) => ({
   name: 'manage_competencies',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-graduation-cap',
+  icon: 'fa fa-fw fa-atom',
   label: trans('competency.associate', {}, 'competency'),
   modal: [MODAL_COMPETENCY_RESOURCES_LINKS, {
     nodeId: resourceNodes[0].id

@@ -16,16 +16,15 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Claroline\CursusBundle\Manager\CursusManager;
+use Claroline\CursusBundle\Manager\CourseManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CursusListener
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var CursusManager */
+    /** @var CourseManager */
     private $cursusManager;
     /** @var ParametersSerializer */
     private $parametersSerializer;
@@ -36,14 +35,14 @@ class CursusListener
 
     /**
      * @param AuthorizationCheckerInterface $authorization
-     * @param CursusManager                 $cursusManager
+     * @param CourseManager                 $cursusManager
      * @param ParametersSerializer          $parametersSerializer
      * @param ToolManager                   $toolManager
      * @param TranslatorInterface           $translator
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        CursusManager $cursusManager,
+        CourseManager $cursusManager,
         ParametersSerializer $parametersSerializer,
         ToolManager $toolManager,
         TranslatorInterface $translator
@@ -60,11 +59,6 @@ class CursusListener
      */
     public function onAdministrationToolOpen(OpenToolEvent $event)
     {
-        $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool');
-
-        if (is_null($cursusTool) || !$this->authorization->isGranted('OPEN', $cursusTool)) {
-            throw new AccessDeniedException();
-        }
         $event->setData([
             'parameters' => $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]),
         ]);
@@ -77,6 +71,17 @@ class CursusListener
     public function onDisplayWorkspaceSessionEventTool(OpenToolEvent $event)
     {
         $event->setData([]);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @param OpenToolEvent $event
+     */
+    public function onDisplayDesktopCursusTool(OpenToolEvent $event)
+    {
+        $event->setData([
+            'parameters' => $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]),
+        ]);
         $event->stopPropagation();
     }
 
@@ -152,16 +157,5 @@ class CursusListener
             ];
         }
         $event->setResponse($events);
-    }
-
-    /**
-     * @param OpenToolEvent $event
-     */
-    public function onDisplayDesktopCursusTool(OpenToolEvent $event)
-    {
-        $event->setData([
-            'parameters' => $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]),
-        ]);
-        $event->stopPropagation();
     }
 }

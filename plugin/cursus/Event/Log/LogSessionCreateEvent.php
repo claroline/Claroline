@@ -34,7 +34,6 @@ class LogSessionCreateEvent extends LogGenericEvent
         $details['registrationValidation'] = $session->getRegistrationValidation();
         $details['startDate'] = $session->getStartDate();
         $details['endDate'] = $session->getEndDate();
-        $details['extra'] = $session->getExtra();
         $details['userValidation'] = $session->getUserValidation();
         $details['organizationValidation'] = $session->getOrganizationValidation();
         $details['maxUsers'] = $session->getMaxUsers();

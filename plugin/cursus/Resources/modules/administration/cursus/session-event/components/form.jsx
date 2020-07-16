@@ -84,9 +84,9 @@ const SessionEventFormComponent = (props) =>
               time: true
             }
           }, {
-            name: 'restrictions.maxUsers',
+            name: 'restrictions.users',
             type: 'number',
-            label: trans('maxUsers'),
+            label: trans('users_count'),
             options: {
               min: 0
             },

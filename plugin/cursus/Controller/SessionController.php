@@ -21,7 +21,7 @@ use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\SessionEvent;
-use Claroline\CursusBundle\Manager\CursusManager;
+use Claroline\CursusBundle\Manager\SessionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,36 +35,32 @@ use Symfony\Component\Translation\TranslatorInterface;
 class SessionController extends AbstractCrudController
 {
     /** @var AuthorizationCheckerInterface */
-    protected $authorization;
-
-    /** @var CursusManager */
-    private $cursusManager;
-
-    /** @var ToolManager */
-    private $toolManager;
-
+    private $authorization;
     /** @var TranslatorInterface */
     private $translator;
+    /** @var ToolManager */
+    private $toolManager;
+    /** @var SessionManager */
+    private $manager;
 
     /**
      * SessionController constructor.
      *
-     *
      * @param AuthorizationCheckerInterface $authorization
-     * @param CursusManager                 $cursusManager
-     * @param ToolManager                   $toolManager
      * @param TranslatorInterface           $translator
+     * @param ToolManager                   $toolManager
+     * @param SessionManager                $manager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        CursusManager $cursusManager,
+        TranslatorInterface $translator,
         ToolManager $toolManager,
-        TranslatorInterface $translator
+        SessionManager $manager
     ) {
         $this->authorization = $authorization;
-        $this->cursusManager = $cursusManager;
-        $this->toolManager = $toolManager;
         $this->translator = $translator;
+        $this->toolManager = $toolManager;
+        $this->manager = $manager;
     }
 
     public function getName()
@@ -214,12 +210,12 @@ class SessionController extends AbstractCrudController
         $users = $this->decodeIdsString($request, User::class);
         $nbUsers = count($users);
 
-        if (CourseSessionUser::TYPE_LEARNER === $typeInt && !$this->cursusManager->checkSessionCapacity($session, $nbUsers)) {
+        if (CourseSessionUser::TYPE_LEARNER === $typeInt && !$this->manager->checkSessionCapacity($session, $nbUsers)) {
             $errors = [$this->translator->trans('users_limit_reached', ['%count%' => $nbUsers], 'cursus')];
 
             return new JsonResponse(['errors' => $errors], 405);
         } else {
-            $sessionUsers = $this->cursusManager->addUsersToSession($session, $users, $typeInt);
+            $sessionUsers = $this->manager->addUsersToSession($session, $users, $typeInt);
 
             return new JsonResponse(array_map(function (CourseSessionUser $sessionUser) {
                 return $this->serializer->serialize($sessionUser);
@@ -242,7 +238,7 @@ class SessionController extends AbstractCrudController
     {
         $this->checkToolAccess();
         $sessionUsers = $this->decodeIdsString($request, CourseSessionUser::class);
-        $this->cursusManager->deleteEntities($sessionUsers);
+        $this->manager->deleteEntities($sessionUsers);
 
         return new JsonResponse();
     }
@@ -310,12 +306,12 @@ class SessionController extends AbstractCrudController
             $nbUsers += count($group->getUsers()->toArray());
         }
 
-        if (CourseSessionGroup::TYPE_LEARNER === $typeInt && !$this->cursusManager->checkSessionCapacity($session, $nbUsers)) {
+        if (CourseSessionGroup::TYPE_LEARNER === $typeInt && !$this->manager->checkSessionCapacity($session, $nbUsers)) {
             $errors = [$this->translator->trans('users_limit_reached', ['%count%' => $nbUsers], 'cursus')];
 
             return new JsonResponse(['errors' => $errors], 405);
         } else {
-            $sessionGroups = $this->cursusManager->addGroupsToSession($session, $groups, $typeInt);
+            $sessionGroups = $this->manager->addGroupsToSession($session, $groups, $typeInt);
 
             return new JsonResponse(array_map(function (CourseSessionGroup $sessionGroup) {
                 return $this->serializer->serialize($sessionGroup);
@@ -338,7 +334,7 @@ class SessionController extends AbstractCrudController
     {
         $this->checkToolAccess();
         $sessionGroups = $this->decodeIdsString($request, CourseSessionGroup::class);
-        $this->cursusManager->deleteEntities($sessionGroups);
+        $this->manager->deleteEntities($sessionGroups);
 
         return new JsonResponse();
     }
@@ -366,7 +362,7 @@ class SessionController extends AbstractCrudController
         if (!$session->getPublicRegistration()) {
             throw new AccessDeniedException();
         }
-        $result = $this->cursusManager->registerUserToSession($session, $user);
+        $result = $this->manager->registerUserToSession($session, $user);
         $data = null;
 
         if ($result instanceof CourseSessionRegistrationQueue) {
@@ -425,7 +421,7 @@ class SessionController extends AbstractCrudController
     {
         $this->checkToolAccess();
         $sessionQueues = $this->decodeIdsString($request, CourseSessionRegistrationQueue::class);
-        $this->cursusManager->deleteEntities($sessionQueues);
+        $this->manager->deleteEntities($sessionQueues);
 
         return new JsonResponse();
     }
@@ -450,8 +446,8 @@ class SessionController extends AbstractCrudController
     {
         $this->checkToolAccess();
 
-        if ($this->cursusManager->checkSessionCapacity($queue->getSession())) {
-            $this->cursusManager->validateSessionQueue($queue);
+        if ($this->manager->checkSessionCapacity($queue->getSession())) {
+            $this->manager->validateSessionQueue($queue);
 
             return new JsonResponse();
         } else {
@@ -480,7 +476,7 @@ class SessionController extends AbstractCrudController
     public function inviteAllAction(CourseSession $session)
     {
         $this->checkToolAccess();
-        $this->cursusManager->inviteAllSessionLearners($session);
+        $this->manager->inviteAllSessionLearners($session);
 
         return new JsonResponse();
     }
@@ -506,7 +502,7 @@ class SessionController extends AbstractCrudController
     {
         $this->checkToolAccess();
         $users = $this->decodeIdsString($request, User::class);
-        $this->cursusManager->sendSessionInvitation($session, $users);
+        $this->manager->sendSessionInvitation($session, $users);
 
         return new JsonResponse();
     }
@@ -541,7 +537,7 @@ class SessionController extends AbstractCrudController
                 $users[$user->getUuid()] = $user;
             }
         }
-        $this->cursusManager->sendSessionInvitation($session, $users);
+        $this->manager->sendSessionInvitation($session, $users);
 
         return new JsonResponse();
     }
@@ -565,7 +561,7 @@ class SessionController extends AbstractCrudController
     public function generateAllCertificatesAction(CourseSession $session)
     {
         $this->checkToolAccess();
-        $this->cursusManager->generateAllSessionCertificates($session);
+        $this->manager->generateAllSessionCertificates($session);
 
         return new JsonResponse();
     }
@@ -591,7 +587,7 @@ class SessionController extends AbstractCrudController
     {
         $this->checkToolAccess();
         $users = $this->decodeIdsString($request, User::class);
-        $this->cursusManager->generateSessionCertificates($session, $users);
+        $this->manager->generateSessionCertificates($session, $users);
 
         return new JsonResponse();
     }
@@ -626,7 +622,7 @@ class SessionController extends AbstractCrudController
                 $users[$user->getUuid()] = $user;
             }
         }
-        $this->cursusManager->generateSessionCertificates($session, $users);
+        $this->manager->generateSessionCertificates($session, $users);
 
         return new JsonResponse();
     }

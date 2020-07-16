@@ -35,10 +35,6 @@
         "type": {
           "type": "integer",
           "description": "The session event type"
-        },
-        "set": {
-          "type": ["string", "null"],
-          "description": "The session event set"
         }
       }
     },

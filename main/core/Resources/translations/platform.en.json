@@ -1463,6 +1463,7 @@
     "role_personalWorkspaceCreation_help": "A new Personal Workspace will be automatically generated for users created with this Role.",
     "restrict_max_resources": "Restrict number of resources",
     "points": "[0,1] %count% point|]1,Inf[ %count% points",
+    "date_range": "From %start% to %end%",
     "date_range_start": "from",
     "date_range_end": "to",
     "show_overview": "Go to overview",

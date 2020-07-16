@@ -3,7 +3,7 @@ plugin:
 
     admin_tools:
         - name: claroline_cursus_tool
-          class: institution
+          class: graduation-cap
 
     tools:
         - name: claroline_session_events_tool
@@ -14,7 +14,7 @@ plugin:
         - name: cursus
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
-          class: institution
+          class: graduation-cap
 
     data_sources:
         - name: public_course_sessions

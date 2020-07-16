@@ -1,13 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import cloneDeep from 'lodash/cloneDeep'
 import set from 'lodash/set'
 
 import {Routes} from '#/main/app/router'
 import {makeId} from '#/main/core/scaffolding/id'
 
-import {Cursus as CursusType} from '#/plugin/cursus/administration/cursus/prop-types'
 import {selectors} from '#/plugin/cursus/administration/cursus/store'
 import {actions} from '#/plugin/cursus/administration/cursus/cursus/store'
 import {Cursus} from '#/plugin/cursus/administration/cursus/cursus/components/cursus'
@@ -64,7 +62,7 @@ const CursusTab = connect(
   null,
   (dispatch) => ({
     openForm(id = null, parentId = null) {
-      const defaultProps = cloneDeep(CursusType.defaultProps)
+      const defaultProps = {} //cloneDeep(CursusType.defaultProps)
       set(defaultProps, 'id', makeId())
       dispatch(actions.open(selectors.STORE_NAME + '.cursus.current', defaultProps, id, parentId))
     },

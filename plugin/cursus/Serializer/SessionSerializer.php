@@ -13,13 +13,15 @@ namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
+use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
-use Claroline\CursusBundle\Entity\SessionEvent;
-use Claroline\CursusBundle\Manager\CursusManager;
 
 class SessionSerializer
 {
@@ -27,43 +29,49 @@ class SessionSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var CursusManager */
-    private $cursusManager;
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
+    /** @var RoleSerializer */
+    private $roleSerializer;
+    /** @var WorkspaceSerializer */
+    private $workspaceSerializer;
+    /** @var CourseSerializer */
+    private $courseSerializer;
 
-    /** @var CourseRepository */
     private $courseRepo;
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
 
     /**
      * SessionSerializer constructor.
      *
-     * @param ObjectManager      $om
-     * @param CursusManager      $cursusManager
-     * @param SerializerProvider $serializer
+     * @param ObjectManager        $om
+     * @param PublicFileSerializer $fileSerializer
+     * @param RoleSerializer       $roleSerializer
+     * @param WorkspaceSerializer  $workspaceSerializer
+     * @param CourseSerializer     $courseSerializer
      */
     public function __construct(
         ObjectManager $om,
-        CursusManager $cursusManager,
-        SerializerProvider $serializer
+        PublicFileSerializer $fileSerializer,
+        RoleSerializer $roleSerializer,
+        WorkspaceSerializer $workspaceSerializer,
+        CourseSerializer $courseSerializer
     ) {
         $this->om = $om;
-        $this->cursusManager = $cursusManager;
-        $this->serializer = $serializer;
+        $this->fileSerializer = $fileSerializer;
+        $this->roleSerializer = $roleSerializer;
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->courseSerializer = $courseSerializer;
 
-        $this->courseRepo = $om->getRepository('Claroline\CursusBundle\Entity\Course');
-        $this->workspaceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $this->courseRepo = $om->getRepository(Course::class);
     }
 
-//    /**
-//     * @return string
-//     */
-//    public function getSchema()
-//    {
-//        return '#/plugin/cursus/session.json';
-//    }
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/plugin/cursus/session.json';
+    }
 
     /**
      * @param CourseSession $session
@@ -78,36 +86,36 @@ class SessionSerializer
             'code' => $session->getCode(),
             'name' => $session->getName(),
             'description' => $session->getDescription(),
+            'poster' => $this->serializePoster($session),
+            'thumbnail' => $this->serializeThumbnail($session),
+            'workspace' => $session->getWorkspace() ?
+                $this->workspaceSerializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                null,
+            'restrictions' => [
+                'users' => $session->getMaxUsers(),
+                'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
+            ],
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'meta' => [
+                    'default' => $session->isDefaultSession(),
+                    'order' => $session->getDisplayOrder(),
+
                     'type' => $session->getType(),
-                    'course' => $this->serializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
-                    'workspace' => $session->getWorkspace() ?
-                        $this->serializer->serialize($session->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
-                        null,
+                    'course' => $this->courseSerializer->serialize($session->getCourse(), [Options::SERIALIZE_MINIMAL]),
                     'learnerRole' => $session->getLearnerRole() ?
-                        $this->serializer->serialize($session->getLearnerRole(), [Options::SERIALIZE_MINIMAL]) :
+                        $this->roleSerializer->serialize($session->getLearnerRole(), [Options::SERIALIZE_MINIMAL]) :
                         null,
                     'tutorRole' => $session->getTutorRole() ?
-                        $this->serializer->serialize($session->getTutorRole(), [Options::SERIALIZE_MINIMAL]) :
+                        $this->roleSerializer->serialize($session->getTutorRole(), [Options::SERIALIZE_MINIMAL]) :
                         null,
                     'sessionStatus' => $session->getSessionStatus(),
-                    'defaultSession' => $session->isDefaultSession(),
                     'creationDate' => DateNormalizer::normalize($session->getCreationDate()),
-                    'order' => $session->getDisplayOrder(),
                     'color' => $session->getColor(),
-                    'total' => $session->getTotal(),
+                    //'total' => $session->getTotal(),
                     'certificated' => $session->getCertificated(),
-                ],
-                'restrictions' => [
-                    'maxUsers' => $session->getMaxUsers(),
-                    'dates' => [
-                        $session->getStartDate() ? DateNormalizer::normalize($session->getStartDate()) : null,
-                        $session->getEndDate() ? DateNormalizer::normalize($session->getEndDate()) : null,
-                    ],
                 ],
                 'registration' => [
                     'publicRegistration' => $session->getPublicRegistration(),
@@ -129,22 +137,22 @@ class SessionSerializer
      *
      * @return CourseSession
      */
-    public function deserialize($data, CourseSession $session)
+    public function deserialize(array $data, CourseSession $session)
     {
         $this->sipe('id', 'setUuid', $data, $session);
         $this->sipe('code', 'setCode', $data, $session);
         $this->sipe('name', 'setName', $data, $session);
         $this->sipe('description', 'setDescription', $data, $session);
 
+        $this->sipe('meta.default', 'setDefaultSession', $data, $session);
         $this->sipe('meta.type', 'setType', $data, $session);
         $this->sipe('meta.sessionStatus', 'setSessionStatus', $data, $session);
-        $this->sipe('meta.defaultSession', 'setDefaultSession', $data, $session);
         $this->sipe('meta.order', 'setDisplayOrder', $data, $session);
         $this->sipe('meta.color', 'setColor', $data, $session);
-        $this->sipe('meta.total', 'setTotal', $data, $session);
+        //$this->sipe('meta.total', 'setTotal', $data, $session);
         $this->sipe('meta.certificated', 'setCertificated', $data, $session);
 
-        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $session);
+        $this->sipe('restrictions.users', 'setMaxUsers', $data, $session);
 
         $this->sipe('registration.publicRegistration', 'setPublicRegistration', $data, $session);
         $this->sipe('registration.publicUnregistration', 'setPublicUnregistration', $data, $session);
@@ -153,76 +161,63 @@ class SessionSerializer
         $this->sipe('registration.organizationValidation', 'setOrganizationValidation', $data, $session);
         $this->sipe('registration.eventRegistrationType', 'setEventRegistrationType', $data, $session);
 
-        $startDate = isset($data['restrictions']['dates'][0]) ?
-            DateNormalizer::denormalize($data['restrictions']['dates'][0]) :
-            null;
-        $endDate = isset($data['restrictions']['dates'][1]) ?
-            DateNormalizer::denormalize($data['restrictions']['dates'][1]) :
-            null;
-        $session->setStartDate($startDate);
-        $session->setEndDate($endDate);
+        if (isset($data['restrictions']['dates'])) {
+            $dates = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
+
+            $session->setStartDate($dates[0]);
+            $session->setEndDate($dates[1]);
+        }
+
+        if (isset($data['poster'])) {
+            $session->setPoster($data['poster']['url'] ?? null);
+        }
+
+        if (isset($data['thumbnail'])) {
+            $session->setThumbnail($data['thumbnail']['url'] ?? null);
+        }
 
         $course = $session->getCourse();
         // Sets course at creation
         if (empty($course) && isset($data['meta']['course']['id'])) {
+            /** @var Course $course */
             $course = $this->courseRepo->findOneBy(['uuid' => $data['meta']['course']['id']]);
-
             if ($course) {
                 $session->setCourse($course);
             }
-            // Creates default session event
-            if ($course->getWithSessionEvent()) {
-                $eventData = [
-                    'name' => $session->getName(),
-                    'code' => $session->getCode(),
-                    'meta' => [
-                        'type' => SessionEvent::TYPE_NONE,
-                    ],
-                    'restrictions' => [
-                        'dates' => [
-                            $session->getStartDate() ? DateNormalizer::normalize($session->getStartDate()) : null,
-                            $session->getEndDate() ? DateNormalizer::normalize($session->getEndDate()) : null,
-                        ],
-                    ],
-                    'registration' => [
-                        'registrationType' => $session->getEventRegistrationType(),
-                    ],
-                ];
-                $event = $this->serializer->get(SessionEvent::class)->deserialize($eventData, new SessionEvent());
-                $event->setSession($session);
-                $this->om->persist($event);
-            }
-        }
-        // Removes default session flag on all other sessions if this one is the default one
-        if ($session->isDefaultSession()) {
-            $this->cursusManager->resetDefaultSessionByCourse($course, $session);
-        }
-
-        $workspace = $session->getWorkspace();
-        // Creates workspace, roles and default session event at creation
-        if (empty($workspace) && !empty($course)) {
-            $workspace = $course->getWorkspace();
-
-            if (empty($workspace)) {
-                $workspace = $this->cursusManager->generateWorkspace($session);
-            }
-            $session->setWorkspace($workspace);
-
-            $learnerRole = $this->cursusManager->generateRoleForSession(
-                $workspace,
-                $course->getLearnerRoleName(),
-                'learner'
-            );
-            $session->setLearnerRole($learnerRole);
-
-            $tutorRole = $this->cursusManager->generateRoleForSession(
-                $workspace,
-                $course->getTutorRoleName(),
-                'manager'
-            );
-            $session->setTutorRole($tutorRole);
         }
 
         return $session;
+    }
+
+    private function serializePoster(CourseSession $session)
+    {
+        if (!empty($session->getPoster())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $session->getPoster()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
+    }
+
+    private function serializeThumbnail(CourseSession $session)
+    {
+        if (!empty($session->getThumbnail())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $session->getThumbnail()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
     }
 }

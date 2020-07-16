@@ -294,6 +294,7 @@ class ResourceNodeSerializer
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
+        $this->sipe('slug', 'setSlug', $data, $resourceNode);
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $resourceNode);

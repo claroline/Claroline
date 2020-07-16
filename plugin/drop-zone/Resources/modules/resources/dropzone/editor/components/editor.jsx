@@ -259,8 +259,8 @@ const EditorComponent = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-graduation-cap',
-        title: trans('notation'),
+        icon: 'fa fa-fw fa-percent',
+        title: trans('score'),
         fields: [
           {
             name: 'parameters.scoreMax',

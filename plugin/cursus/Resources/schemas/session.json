@@ -40,7 +40,7 @@
           "type": "integer",
           "description": "The session status"
         },
-        "defaultSession": {
+        "default": {
           "type": "boolean",
           "description": "Whether the session is the default one"
         },
@@ -52,16 +52,11 @@
           "type": ["string", "null"],
           "description": "The session color"
         },
-        "total": {
-          "type": "integer",
-          "description": "The session total"
-        },
         "certificated": {
           "type": "boolean",
           "description": "Whether the session is certificated or not"
         }
-      },
-      "required": ["defaultSession", "order", "certificated"]
+      }
     },
     "restrictions": {
       "type": "object",
@@ -76,7 +71,8 @@
             "type": ["string", "null"]
           }
         }
-      }
+      },
+      "required": ["dates"]
     },
     "registration": {
       "type": "object",

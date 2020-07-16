@@ -11,7 +11,7 @@ export default {
   parameters: {
     primaryAction: (session) => ({
       type: URL_BUTTON,
-      target: `#${workspaceRoute(session.meta.workspace)}`
+      target: `#${workspaceRoute(session.workspace)}`
     }),
     definition: [
       {
@@ -45,10 +45,10 @@ export default {
         label: trans('end_date'),
         displayed: true
       }, {
-        name: 'restrictions.maxUsers',
+        name: 'restrictions.users',
         alias: 'maxUsers',
         type: 'number',
-        label: trans('maxUsers'),
+        label: trans('max_participants', {}, 'cursus'),
         displayed: true
       }, {
         name: 'registration.publicRegistration',
