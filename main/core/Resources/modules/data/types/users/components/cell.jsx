@@ -13,7 +13,7 @@ const UsersCell = props => {
 
   if (1 === props.data.length) {
     return (
-      <UserMicro {...props.data} link={true} />
+      <UserMicro {...props.data[0]} link={true} />
     )
   }
 
