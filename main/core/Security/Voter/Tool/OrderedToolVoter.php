@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * Checks if the current token can access a tool configured in a Workspace or Desktop
@@ -33,11 +34,17 @@ class OrderedToolVoter extends AbstractVoter
     {
         if (!empty($object->getWorkspace())) {
             // let the workspace voter decide
-            return $this->isGranted([$object->getTool()->getName(), $attributes[0]], $object->getWorkspace());
+            $isGranted = $this->isGranted([$object->getTool()->getName(), $attributes[0]], $object->getWorkspace());
+        } else {
+            // let the base tool voter decide
+            $isGranted = $this->isGranted($attributes[0], $object->getTool());
         }
 
-        // let the base tool voter decide
-        return $this->isGranted($attributes[0], $object->getTool());
+        if ($isGranted) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()

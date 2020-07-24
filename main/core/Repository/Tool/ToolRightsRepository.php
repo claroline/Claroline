@@ -10,7 +10,8 @@
 
 namespace Claroline\CoreBundle\Repository\Tool;
 
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class ToolRightsRepository extends EntityRepository
@@ -19,12 +20,13 @@ class ToolRightsRepository extends EntityRepository
      * Returns the maximum rights on a given resource for a set of roles.
      * Used by the ResourceVoter.
      *
-     * @param string[]    $roles
-     * @param OrderedTool $orderedTool
+     * @param string[]  $roles
+     * @param Tool      $tool
+     * @param Workspace $workspace
      *
      * @return int
      */
-    public function findMaximumRights(array $roles, OrderedTool $orderedTool)
+    public function findMaximumRights(array $roles, Tool $tool, Workspace $workspace = null)
     {
         //add the role anonymous for everyone !
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
@@ -36,25 +38,29 @@ class ToolRightsRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Tool\ToolRights AS tr
             JOIN tr.role AS role
             JOIN tr.orderedTool AS ot
-            WHERE ';
+            JOIN ot.tool AS t
+            WHERE t.id = :toolId
+              AND role.name IN (:roles)
+        ';
 
-        $index = 0;
-
-        foreach ($roles as $key => $role) {
-            $dql .= 0 !== $index ? ' OR ' : '';
-            $dql .= "ot.id = {$orderedTool->getId()} AND role.name = :role{$key}";
-            ++$index;
+        if (!empty($workspace)) {
+            $dql .= ' AND ot.workspace = :workspace';
+        } else {
+            $dql .= ' AND ot.workspace IS NULL';
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->_em
+            ->createQuery($dql)
+            ->setParameter('toolId', $tool->getId())
+            ->setParameter('roles', $roles);
 
-        foreach ($roles as $key => $role) {
-            $query->setParameter("role{$key}", $role);
+        if (!empty($workspace)) {
+            $query->setParameter('workspace', $workspace);
         }
 
         $results = $query->getResult();
-        $mask = 0;
 
+        $mask = 0;
         foreach ($results as $result) {
             $mask |= $result['mask'];
         }
