@@ -33,7 +33,7 @@ const Radio = props =>
 
 Radio.propTypes = {
   id: T.oneOfType([T.string, T.number]).isRequired,
-  label: T.string.isRequired,
+  label: T.node.isRequired,
   value: T.oneOfType([T.string, T.number]),
   inline: T.bool,
   checked: T.bool,

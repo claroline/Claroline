@@ -277,6 +277,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
+
         //crud actions
         switch ($attributes[0]) {
             case self::VIEW:         return $this->checkView($token, $object);
@@ -286,6 +287,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
             case self::DELETE:       return $this->checkDelete($token, $object);
             case self::PATCH:        return $this->checkPatch($token, $object, $collection);
         }
+
+        return VoterInterface::ACCESS_GRANTED;
     }
 
     private function checkView(TokenInterface $token, $object)
@@ -320,6 +323,6 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }
