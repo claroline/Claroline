@@ -2,17 +2,7 @@
 
 require_once __DIR__.'/../app/autoload.php';
 
-// Use APC for autoloading to improve performance.
-// Change 'sf2' to a unique prefix in order to prevent cache key conflicts
-// with other applications also using APC.
-/*
-$apcLoader = new ApcClassLoader('sf2', $loader);
-$loader->unregister();
-$apcLoader->register(true);
-*/
-
-require_once __DIR__.'/../app/AppKernel.php';
-
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
 $maintenanceMode = file_exists(__DIR__.'/../app/config/.update');
@@ -32,7 +22,7 @@ if (file_exists($file = __DIR__.'/../app/config/ip_white_list.yml')) {
 }
 
 if (!$maintenanceMode || $authorized) {
-    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+    $request = Request::createFromGlobals();
     $kernel = new AppKernel('prod', false);
     $response = $kernel->handle($request);
     $response->send();
