@@ -2,6 +2,7 @@
 
 require_once __DIR__.'/../app/autoload.php';
 
+use App\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
@@ -15,9 +16,8 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 }
 
 require_once __DIR__.'/../app/bootstrap.php.cache';
-require_once __DIR__.'/../app/AppKernel.php';
 
-$kernel = new AppKernel('test', true);
+$kernel = new Kernel('test', true);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
