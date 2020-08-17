@@ -12,7 +12,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -26,18 +26,20 @@ class WorkspaceCrud
     /**
      * WorkspaceCrud constructor.
      *
-     * @param WorkspaceManager      $manager
-     * @param UserManager           $userManager
-     * @param TokenStorageInterface $tokenStorage
-     * @param ResourceManager       $resourceManager
-     * @param RoleManager           $roleManager
-     * @param OrganizationManager   $orgaManager
-     * @param ObjectManager         $om
-     * @param Crud                  $crud
-     * @param StrictDispatcher      $dispatcher
-     * @param LogListener           $logListener
+     * @param PlatformConfigurationHandler $config
+     * @param WorkspaceManager             $manager
+     * @param UserManager                  $userManager
+     * @param TokenStorageInterface        $tokenStorage
+     * @param ResourceManager              $resourceManager
+     * @param RoleManager                  $roleManager
+     * @param OrganizationManager          $orgaManager
+     * @param ObjectManager                $om
+     * @param Crud                         $crud
+     * @param StrictDispatcher             $dispatcher
+     * @param LogListener                  $logListener
      */
     public function __construct(
+        PlatformConfigurationHandler $config,
         WorkspaceManager $manager,
         UserManager $userManager,
         TokenStorageInterface $tokenStorage,
@@ -49,6 +51,7 @@ class WorkspaceCrud
         StrictDispatcher $dispatcher,
         LogListener $logListener
     ) {
+        $this->config = $config;
         $this->manager = $manager;
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
@@ -59,6 +62,66 @@ class WorkspaceCrud
         $this->crud = $crud;
         $this->dispatcher = $dispatcher;
         $this->logListener = $logListener;
+    }
+
+    /**
+     * @param CreateEvent $event
+     */
+    public function preCreate(CreateEvent $event)
+    {
+        $this->logListener->disable();
+
+        $workspace = $event->getObject();
+
+        $user = $this->tokenStorage->getToken() ?
+            $this->tokenStorage->getToken()->getUser() :
+            $this->userManager->getDefaultClarolineAdmin();
+        $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
+        $workspace->setWorkspaceModel($model);
+
+        if ($user instanceof User) {
+            $workspace->setCreator($user);
+
+            $organization = $user->getMainOrganization() ?
+                $user->getMainOrganization() :
+                $this->organizationManager->getDefault();
+            $workspace->addOrganization($organization);
+        }
+
+        $workspace->setMaxUploadResources($this->config->getParameter('max_upload_resources'));
+        $workspace->setMaxStorageSize($this->config->getParameter('max_storage_size'));
+        $workspace->setMaxUsers($this->config->getParameter('max_workspace_users'));
+
+        $this->logListener->enable();
+    }
+
+    /**
+     * @param CopyEvent $event
+     */
+    public function preCopy(CopyEvent $event)
+    {
+        $this->logListener->disable();
+        $workspace = $event->getObject();
+
+        $new = $event->getCopy();
+        $new->refreshUuid();
+
+        $this->manager->copy($workspace, $new);
+        $this->logListener->enable();
+    }
+
+    /**
+     * @param UpdateEvent $event
+     */
+    public function endUpdate(UpdateEvent $event)
+    {
+        $workspace = $event->getObject();
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        if ($root) {
+            $root->setName($workspace->getName());
+            $this->om->persist($root);
+            $this->om->flush();
+        }
     }
 
     /**
@@ -97,63 +160,5 @@ class WorkspaceCrud
         $this->om->remove($workspace);
         $this->om->endFlushSuite();
         $this->logListener->enable();
-    }
-
-    /**
-     * @param CreateEvent $event
-     *
-     * @return Workspace
-     */
-    public function preCreate(CreateEvent $event)
-    {
-        $workspace = $this->manager->createWorkspace($event->getObject());
-
-        $user = $this->tokenStorage->getToken() ?
-            $this->tokenStorage->getToken()->getUser() :
-            $this->userManager->getDefaultClarolineAdmin();
-        $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
-        $workspace->setWorkspaceModel($model);
-
-        if ($user instanceof User) {
-            $workspace->setCreator($user);
-
-            $organization = $user->getMainOrganization() ?
-                $user->getMainOrganization() :
-                $this->organizationManager->getDefault();
-            $workspace->addOrganization($organization);
-        }
-
-        $this->om->flush();
-
-        return $workspace;
-    }
-
-    /**
-     * @param CopyEvent $event
-     */
-    public function preCopy(CopyEvent $event)
-    {
-        $this->logListener->disable();
-        $workspace = $event->getObject();
-
-        $new = $event->getCopy();
-        $new->refreshUuid();
-
-        $this->manager->copy($workspace, $new);
-        $this->logListener->enable();
-    }
-
-    /**
-     * @param UpdateEvent $event
-     */
-    public function endUpdate(UpdateEvent $event)
-    {
-        $workspace = $event->getObject();
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        if ($root) {
-            $root->setName($workspace->getName());
-            $this->om->persist($root);
-            $this->om->flush();
-        }
     }
 }

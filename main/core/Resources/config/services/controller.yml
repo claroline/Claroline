@@ -164,13 +164,8 @@ services:
           - '@security.authorization_checker'
           - '@claroline.manager.resource_manager'
           - '@translator'
-          - '@claroline.manager.role_manager'
-          - '@claroline.manager.tool_manager'
           - '@claroline.manager.workspace_manager'
-          - '@Claroline\CoreBundle\Library\Security\Utilities'
-          - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '@claroline.manager.workspace.transfer'
-          - '@claroline.manager.temp_file'
           - '%claroline.param.workspace_log_dir%'
           - '@claroline.manager.log_connect'
 

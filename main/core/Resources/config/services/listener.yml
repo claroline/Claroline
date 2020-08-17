@@ -322,9 +322,7 @@ services:
     Claroline\CoreBundle\Listener\Log\WorkspaceListener:
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\CoreBundle\Listener\Log\LogListener'
         tags:
-            - { name: kernel.event_listener, event: crud.pre.create.workspace, method: onWorkspacePreCreate }
             - { name: kernel.event_listener, event: crud.post.create.workspace, method: onWorkspacePostCreate }
             - { name: kernel.event_listener, event: crud.pre.delete.workspace, method: onWorkspacePreDelete, priority: 1 }
 

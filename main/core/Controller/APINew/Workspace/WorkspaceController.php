@@ -12,10 +12,8 @@
 namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Logger\JsonLogger;
-use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
@@ -24,17 +22,11 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,7 +36,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @Route("/workspace")
+ * @EXT\Route("/workspace")
  */
 class WorkspaceController extends AbstractCrudController
 {
@@ -53,18 +45,20 @@ class WorkspaceController extends AbstractCrudController
     use HasUsersTrait;
     use HasGroupsTrait;
 
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ResourceManager */
     private $resourceManager;
+    /** @var TranslatorInterface */
     private $translator;
-    private $roleManager;
+    /** @var WorkspaceManager */
     private $workspaceManager;
+    /** @var TransferManager */
     private $importer;
-    private $utils;
+    /** @var string */
     private $logDir;
-    private $fileUtils;
-    private $toolManager;
-    private $tempFileManager;
     /** @var LogConnectManager */
     private $logConnectManager;
 
@@ -75,13 +69,8 @@ class WorkspaceController extends AbstractCrudController
      * @param AuthorizationCheckerInterface $authorization
      * @param ResourceManager               $resourceManager
      * @param TranslatorInterface           $translator
-     * @param RoleManager                   $roleManager
      * @param WorkspaceManager              $workspaceManager
      * @param TransferManager               $importer
-     * @param Utilities                     $utils
-     * @param FileUtilities                 $fileUtils
-     * @param ToolManager                   $toolManager
-     * @param TempFileManager               $tempFileManager
      * @param string                        $logDir
      * @param LogConnectManager             $logConnectManager
      */
@@ -90,13 +79,8 @@ class WorkspaceController extends AbstractCrudController
         AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
-        RoleManager $roleManager,
-        ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
-        Utilities $utils,
-        FileUtilities $fileUtils,
         TransferManager $importer,
-        TempFileManager $tempFileManager,
         $logDir,
         LogConnectManager $logConnectManager
     ) {
@@ -105,13 +89,8 @@ class WorkspaceController extends AbstractCrudController
         $this->importer = $importer;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
-        $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
-        $this->toolManager = $toolManager;
-        $this->utils = $utils;
         $this->logDir = $logDir;
-        $this->fileUtils = $fileUtils;
-        $this->tempFileManager = $tempFileManager;
         $this->logConnectManager = $logConnectManager;
     }
 
@@ -135,11 +114,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route(
-     *    "/list/registerable",
-     *    name="apiv2_workspace_list_registerable"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/list/registerable", name="apiv2_workspace_list_registerable")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -148,7 +124,7 @@ class WorkspaceController extends AbstractCrudController
     public function listRegisterableAction(Request $request)
     {
         return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\Workspace\Workspace',
+            Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => [
                 'displayable' => true,
                 'model' => false,
@@ -169,11 +145,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route(
-     *    "/list/registered",
-     *    name="apiv2_workspace_list_registered"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/list/registered", name="apiv2_workspace_list_registered")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -182,7 +155,7 @@ class WorkspaceController extends AbstractCrudController
     public function listRegisteredAction(Request $request)
     {
         return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\Workspace\Workspace',
+            Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => ['user' => $this->tokenStorage->getToken()->getUser()->getId()]]),
             $this->getOptions()['list']
         ));
@@ -198,11 +171,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route(
-     *    "/list/administrated",
-     *    name="apiv2_workspace_list_managed"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/list/administrated", name="apiv2_workspace_list_managed")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -227,11 +197,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route(
-     *    "/list/model",
-     *    name="apiv2_workspace_list_model"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/list/model", name="apiv2_workspace_list_model")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -263,18 +230,6 @@ class WorkspaceController extends AbstractCrudController
     {
         $data = $this->decodeRequest($request);
 
-        //THIS IS FOR WORKSPACE IMPORT FROM ARCHIVE. IT'S CURRENTLY NOT TESTED (AND THEREFORE BROKEN)
-        if (isset($data['archive'])) {
-            /** @var Workspace $workspace */
-            $workspace = $this->importer->create($data, new Workspace());
-            $this->toolManager->addMissingWorkspaceTools($workspace);
-
-            return new JsonResponse(
-                $this->serializer->serialize($workspace, $this->options['get']),
-                201
-            );
-        }
-
         /** @var Workspace $workspace */
         $workspace = $this->crud->create($class, $data);
 
@@ -291,7 +246,7 @@ class WorkspaceController extends AbstractCrudController
         $logger->end();
 
         return new JsonResponse(
-            $this->serializer->serialize($workspace, $this->options['get']),
+            $this->serializer->serialize($workspace, $this->getOptions()['get']),
             201
         );
     }
@@ -314,7 +269,6 @@ class WorkspaceController extends AbstractCrudController
         //add params for the copy here
         $isModel = 1 === (int) $request->query->get('model') || 'true' === $request->query->get('model') ? true : false;
 
-        $serializer = $this->serializer;
         $copies = [];
 
         /** @var Workspace $workspace */
@@ -324,8 +278,8 @@ class WorkspaceController extends AbstractCrudController
             $copies[] = $this->workspaceManager->copy($workspace, $new, $isModel);
         }
 
-        return new JsonResponse(array_map(function ($copy) use ($serializer) {
-            return $serializer->serialize($copy, $this->options['get']);
+        return new JsonResponse(array_map(function ($copy) {
+            return $this->serializer->serialize($copy, $this->getOptions()['get']);
         }, $copies), 200);
     }
 
@@ -336,12 +290,9 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @Route(
-     *    "/{id}/export",
-     *    name="apiv2_workspace_export"
-     * )
-     * @Method("GET")
-     * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     * @EXT\Route("/{id}/export", name="apiv2_workspace_export")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Workspace $workspace
      *
@@ -414,8 +365,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     * @Route("/archive", name="apiv2_workspace_archive")
-     * @Method("PUT")
+     * @EXT\Route("/archive", name="apiv2_workspace_archive")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
@@ -447,8 +398,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     * @Route("/unarchive", name="apiv2_workspace_unarchive")
-     * @Method("PUT")
+     * @EXT\Route("/unarchive", name="apiv2_workspace_unarchive")
+     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
@@ -486,12 +437,9 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @Route(
-     *    "/{id}/managers",
-     *    name="apiv2_workspace_list_managers"
-     * )
-     * @Method("GET")
-     * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     * @EXT\Route("/{id}/managers", name="apiv2_workspace_list_managers")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Workspace $workspace
      * @param Request   $request
@@ -504,9 +452,8 @@ class WorkspaceController extends AbstractCrudController
         $role = $this->container->get('claroline.manager.role_manager')->getManagerRole($workspace);
 
         return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\User',
-            array_merge($request->query->all(), ['hiddenFilters' => ['role' => $role->getUuid()]]),
-            [Options::IS_RECURSIVE]
+            User::class,
+            array_merge($request->query->all(), ['hiddenFilters' => ['role' => $role->getUuid()]])
         ));
     }
 
@@ -517,11 +464,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     }
      * )
-     * @Route(
-     *    "/roles/common",
-     *    name="apiv2_workspace_roles_common"
-     * )
-     * @Method("GET")
+     * @EXT\Route("/roles/common", name="apiv2_workspace_roles_common")
+     * @EXT\Method("GET")
      *
      * @param Request $request
      *
@@ -576,11 +520,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @Route(
-     *    "/{id}/role/configurable",
-     *    name="apiv2_workspace_list_roles_configurable"
-     *)
-     * @Method("GET")
+     * @EXT\Route("/{id}/role/configurable", name="apiv2_workspace_list_roles_configurable")
+     * @EXT\Method("GET")
      *
      * @param string  $id
      * @param Request $request
@@ -605,21 +546,10 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
      *     }
      * )
-     * @Route(
-     *     "/{workspace}/role/{role}/shortcuts/add",
-     *     name="apiv2_workspace_shortcuts_add"
-     * )
-     * @Method("PUT")
-     * @ParamConverter(
-     *     "workspace",
-     *     class = "ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     * @ParamConverter(
-     *     "role",
-     *     class = "ClarolineCoreBundle:Role",
-     *     options={"mapping": {"role": "uuid"}}
-     * )
+     * @EXT\Route("/{workspace}/role/{role}/shortcuts/add", name="apiv2_workspace_shortcuts_add")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
      *
      * @param Workspace $workspace
      * @param Role      $role
@@ -649,21 +579,10 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
      *     }
      * )
-     * @Route(
-     *     "/{workspace}/role/{role}/shortcut/remove",
-     *     name="apiv2_workspace_shortcut_remove"
-     * )
-     * @Method("PUT")
-     * @ParamConverter(
-     *     "workspace",
-     *     class = "ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     * @ParamConverter(
-     *     "role",
-     *     class = "ClarolineCoreBundle:Role",
-     *     options={"mapping": {"role": "uuid"}}
-     * )
+     * @EXT\Route("/{workspace}/role/{role}/shortcut/remove", name="apiv2_workspace_shortcut_remove")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
      *
      * @param Workspace $workspace
      * @param Role      $role
@@ -692,17 +611,10 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string"}, "description": "The workspace uuid"}
      *     }
      * )
-     * @Route(
-     *     "/{slug}/close",
-     *     name="apiv2_workspace_close"
-     * )
-     * @Method("PUT")
-     * @ParamConverter(
-     *     "workspace",
-     *     class = "ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"slug": "slug"}}
-     * )
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     * @EXT\Route("/{slug}/close", name="apiv2_workspace_close")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"slug": "slug"}})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param Workspace $workspace
      * @param User      $user
@@ -715,7 +627,7 @@ class WorkspaceController extends AbstractCrudController
             $this->logConnectManager->computeWorkspaceDuration($user, $workspace);
         }
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 
     /**
