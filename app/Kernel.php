@@ -46,6 +46,6 @@ class Kernel extends BaseKernel
      */
     public function getCacheDir()
     {
-        return $this->getProjectDir() . '/app/cache' . $this->getEnvironment();
+        return $this->getProjectDir() . '/app/cache/' . $this->getEnvironment();
     }
 }
