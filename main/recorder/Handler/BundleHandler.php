@@ -18,12 +18,11 @@ class BundleHandler extends BaseHandler
     private $registeredBundles;
     private $configDir;
     private $prevInstalled;
-    private $bupIniFile;
 
-    public function __construct($configDir, LoggerInterface $logger = null)
+    public function __construct($configDir, $bundleFile, LoggerInterface $logger = null)
     {
         $this->configDir = $configDir;
-        $bundleFile = $configDir.'/bundles.ini';
+
         parent::__construct($bundleFile, $logger);
         $this->registeredBundles = parse_ini_file($this->targetFile);
         $this->prevInstalled = $configDir.'/previous-installed.json';
@@ -31,7 +30,7 @@ class BundleHandler extends BaseHandler
 
     public function writeBundleFile(array $bundleFqcns)
     {
-        $bundles = array();
+        $bundles = [];
 
         foreach ($bundleFqcns as $bundleFqcn) {
             $isEnabled = true;

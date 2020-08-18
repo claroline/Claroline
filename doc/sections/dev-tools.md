@@ -143,7 +143,7 @@ $ php app/console claroline:plugin:uninstall
 ```
 
 **Tips:** The list of registered bundle is saved in the file
-**app/config/bundles.ini**.
+**files/config/bundles.ini**.
 
 If you need to add a bundle, you can simply add a line in this file if it
 already exists in your vendors. If you don't want a bundle to be instanciated,

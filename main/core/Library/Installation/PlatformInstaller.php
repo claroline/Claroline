@@ -52,7 +52,7 @@ class PlatformInstaller
         $this->refresher = $refresher;
         $this->kernel = $kernel;
         $this->container = $container;
-        $this->bundles = parse_ini_file($this->container->getParameter('kernel.root_dir').'/config/bundles.ini');
+        $this->bundles = parse_ini_file($this->container->getParameter('claroline.param.bundle_file'));
     }
 
     /**

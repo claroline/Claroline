@@ -11,10 +11,10 @@
 
 namespace Claroline\BundleRecorder;
 
-use Claroline\BundleRecorder\Logger\ConsoleIoLogger;
-use Composer\Script\Event;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
+use Claroline\BundleRecorder\Logger\ConsoleIoLogger;
+use Composer\Script\Event;
 
 class ScriptHandler
 {
@@ -50,6 +50,7 @@ class ScriptHandler
         if (!isset(static::$recorder)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
             $configDir = realpath($vendorDir.'/../app/config');
+            $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
             $logger = new ConsoleIoLogger($event->getIO());
             $manager = $event->getComposer()->getRepositoryManager();
             $rootPackage = $event->getComposer()->getPackage();
@@ -57,7 +58,7 @@ class ScriptHandler
             static::$recorder = new Recorder(
                 $manager->getLocalRepository(),
                 new Detector($vendorDir),
-                new BundleHandler($configDir, $logger),
+                new BundleHandler($configDir, $bundleFile, $logger),
                 $rootPackage->getAliases(),
                 $vendorDir
             );

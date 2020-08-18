@@ -90,7 +90,7 @@ rm -rf vendor/claroline/distribution
 cp -r $DIST vendor/claroline/distribution
 
 # this is normally done in the post-update-cmd script
-echo "Building app/config/bundles.ini..."
+echo "Building files/config/bundles.ini..."
 composer bundles
 
 # Gets npm dependencies

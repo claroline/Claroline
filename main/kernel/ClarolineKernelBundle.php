@@ -31,7 +31,7 @@ class ClarolineKernelBundle extends Bundle
         $this->kernel = $kernel;
 
         if (!$bundlesFile) {
-            $bundlesFile = $kernel->getProjectDir().'/app/config/bundles.ini';
+            $bundlesFile = $kernel->getProjectDir().'/files/config/bundles.ini';
         }
 
         $this->bundlesFile = $bundlesFile;

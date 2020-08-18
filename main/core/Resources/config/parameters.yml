@@ -1,13 +1,14 @@
 # This file contains the core container parameters.
 parameters:
     # Project base paths
-    claroline.param.root_directory:         "%kernel.project_dir%/app/.."
-    claroline.param.config_directory:       "%kernel.project_dir%/app/config"
+    claroline.param.root_directory:         "%kernel.project_dir%"
+    claroline.param.config_directory:       "%kernel.project_dir%/files/config"
     claroline.param.vendor_directory:       "%claroline.param.root_directory%/vendor"
     claroline.param.web_directory:          "%claroline.param.root_directory%/web"
 
     # File paths
     claroline.param.files_directory:        "%claroline.param.root_directory%/files"
+    claroline.param.config_directory:       "%claroline.param.files_directory%/config"
     claroline.param.archive_directory:      "%claroline.param.files_directory%/archives"
     claroline.param.public_files_directory: "%claroline.param.files_directory%/data"
     claroline.param.uploads_directory:      "%claroline.param.public_files_directory%/uploads"
@@ -19,6 +20,7 @@ parameters:
     claroline.param.workspace_log_dir: "%claroline.param.log_dir%/workspace"
 
     # Configuration provider
+    claroline.param.bundle_file:                   "%claroline.param.config_directory%/bundles.ini"
     claroline.param.platform_config_handler_class: "Claroline\\CoreBundle\\Library\\Configuration\\PlatformConfigurationHandler"
     claroline.param.platform_options:              "%claroline.param.config_directory%/platform_options.json"
 

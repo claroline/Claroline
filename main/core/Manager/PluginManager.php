@@ -43,18 +43,20 @@ class PluginManager
      * PluginManager constructor.
      *
      * @param string          $kernelRootDir
+     * @param                 $bundleFile
      * @param ObjectManager   $om
      * @param KernelInterface $kernel
      */
     public function __construct(
         $kernelRootDir,
+        $bundleFile,
         ObjectManager $om,
         KernelInterface $kernel
     ) {
         $this->kernelRootDir = $kernelRootDir;
         $this->om = $om;
         $this->pluginRepo = $om->getRepository('ClarolineCoreBundle:Plugin');
-        $this->iniFile = $this->kernelRootDir.'/config/bundles.ini';
+        $this->iniFile = $bundleFile;
         $this->kernel = $kernel;
 
         $this->loadedBundles = IniParser::parseFile($this->iniFile);
@@ -64,13 +66,11 @@ class PluginManager
 
     public function updateIniFile($vendor, $bundle)
     {
-        $iniFile = $this->kernelRootDir.'/config/bundles.ini';
-
         // update ini file
         IniParser::updateKey(
             $vendor.'\\'.$bundle.'Bundle\\'.$vendor.$bundle.'Bundle',
             true,
-            $iniFile
+            $this->iniFile
         );
     }
 
@@ -131,7 +131,7 @@ class PluginManager
         IniParser::updateKey(
             $plugin->getBundleFQCN(),
             true,
-            $this->kernelRootDir.'/config/bundles.ini'
+            $this->iniFile
         );
 
         //cache the results
@@ -145,7 +145,7 @@ class PluginManager
         IniParser::updateKey(
             $plugin->getBundleFQCN(),
             false,
-            $this->kernelRootDir.'/config/bundles.ini'
+            $this->iniFile
         );
 
         //cache the results
