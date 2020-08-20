@@ -521,6 +521,5 @@
     "per_step": "Per step",
     "per_tag": "Per tag",
     "show_step_titles": "Show title of steps",
-    "show_back": "Allow rollback",
-    "item_words_calendar_help": "Use the calendar below to choose your answer."
+    "show_back": "Allow rollback"
 }
