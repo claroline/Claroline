@@ -69,7 +69,7 @@ class WikiManager
         $changeSet = $uow->getEntityChangeSet($wiki);
         $this->om->flush();
 
-        $this->eventDispatcher->dispatch('log', new LogWikiConfigureEvent($wiki, $changeSet));
+        $this->eventDispatcher->dispatch(new LogWikiConfigureEvent($wiki, $changeSet), 'log');
     }
 
     public function serializeWiki(Wiki $wiki)

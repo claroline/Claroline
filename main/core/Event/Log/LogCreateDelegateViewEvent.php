@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class LogCreateDelegateViewEvent extends Event implements DataConveyorEventInterface
 {

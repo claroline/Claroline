@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Event\Resource;
 
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
@@ -27,8 +27,6 @@ class DownloadResourceEvent extends Event
 
     /**
      * DownloadResourceEvent constructor.
-     *
-     * @param AbstractResource $resource
      */
     public function __construct(AbstractResource $resource)
     {

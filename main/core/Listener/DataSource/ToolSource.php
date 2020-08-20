@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ToolSource
 {
@@ -19,7 +19,7 @@ class ToolSource
     /** @var SerializerProvider */
     private $serializer;
 
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /** @var WorkspaceManager */
@@ -27,16 +27,11 @@ class ToolSource
 
     /**
      * ToolSource constructor.
-     *
-     * @param FinderProvider     $finder
-     * @param SerializerProvider $serializer
-     * @param TokenStorage       $tokenStorage
-     * @param WorkspaceManager   $workspaceManager
      */
     public function __construct(
         FinderProvider $finder,
         SerializerProvider $serializer,
-        TokenStorage $tokenStorage,
+        TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager
     ) {
         $this->finder = $finder;
@@ -45,9 +40,6 @@ class ToolSource
         $this->workspaceManager = $workspaceManager;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();

@@ -5,33 +5,27 @@ namespace Claroline\CursusBundle\Listener\DataSource;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CursusBundle\Entity\CourseSession;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MySessionSource
 {
     /** @var FinderProvider */
     private $finder;
 
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /**
      * MySessionSource constructor.
-     *
-     * @param FinderProvider $finder
-     * @param TokenStorage   $tokenStorage
      */
     public function __construct(
         FinderProvider $finder,
-        TokenStorage $tokenStorage
+        TokenStorageInterface $tokenStorage
     ) {
         $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();

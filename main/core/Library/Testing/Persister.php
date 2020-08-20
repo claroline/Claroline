@@ -14,14 +14,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 
-/**
- * @Service("claroline.library.testing.persister")
- */
 class Persister
 {
     /**
@@ -31,12 +25,6 @@ class Persister
 
     private $container;
 
-    /**
-     * @InjectParams({
-     *     "om"        = @Inject("Claroline\AppBundle\Persistence\ObjectManager"),
-     *     "container" = @Inject("service_container")
-     * })
-     */
     public function __construct(ObjectManager $om, $container)
     {
         $this->om = $om;

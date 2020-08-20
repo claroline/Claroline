@@ -9,16 +9,29 @@
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\UserManager;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PersonalWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
+class PersonalWorkspaceIntegrityCheckerCommand extends Command
 {
+    private $userManager;
+    private $conn;
+
+    public function __construct(UserManager $userManager, Connection $conn)
+    {
+        $this->userManager = $userManager;
+        $this->conn = $conn;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:personal_ws:check')
+        $this
             ->setDescription('Checks the personal workspace integrity of the platform.')
             ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User login or email. Checks integrity only for this user.')
             ->addOption('personal', 'p', InputOption::VALUE_NONE, 'Only check the is_personal parameter');
@@ -27,7 +40,7 @@ class PersonalWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
+        $userManager = $this->userManager;
         $userManager->setLogger($consoleLogger);
 
         if ($input->getOption('personal')) {
@@ -38,8 +51,7 @@ class PersonalWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
                 SET workspace.is_personal = true
             ';
 
-            $conn = $this->getContainer()->get('doctrine.dbal.default_connection');
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
             return;

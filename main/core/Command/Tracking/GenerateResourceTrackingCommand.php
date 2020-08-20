@@ -11,14 +11,27 @@
 
 namespace Claroline\CoreBundle\Command\Tracking;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class GenerateResourceTrackingCommand extends ContainerAwareCommand
+class GenerateResourceTrackingCommand extends Command
 {
+    private $om;
+    private $eventDispatcher;
+
+    public function __construct(ObjectManager $om, EventDispatcherInterface $eventDispatcher)
+    {
+        $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -48,11 +61,9 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<comment>Generating resource trackings...</comment>');
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
-        $userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $nodeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
+        $resourceTypeRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $nodeRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
 
         /* Fetch options */
         $days = intval($input->getOption('days'));
@@ -73,7 +84,7 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
             $startDate->setTime(0, 0);
         }
 
-        $om->startFlushSuite();
+        $this->om->startFlushSuite();
 
         $output->writeln('--------------------');
         $i = 0;
@@ -89,20 +100,20 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
 
                 foreach ($nodes as $node) {
                     $output->writeln('<info>        Resource "'.$node->getName().'" : starting...</info>');
-                    $dispatcher->dispatch(
-                        'generate_resource_user_evaluation_'.$resourceType->getName(),
+                    $this->eventDispatcher->dispatch(
                         new GenericDataEvent([
                             'resourceNode' => $node,
                             'user' => $user,
                             'startDate' => $startDate,
-                        ])
+                        ]),
+                        'generate_resource_user_evaluation_'.$resourceType->getName()
                     );
                     $output->writeln('<info>        Resource "'.$node->getName().'" : finished.</info>');
                     $output->writeln('        --------------------');
                     ++$i;
 
                     if (0 === $i % 200) {
-                        $om->forceFlush();
+                        $this->om->forceFlush();
                         $output->writeln('Processed');
                     }
                 }
@@ -112,7 +123,7 @@ class GenerateResourceTrackingCommand extends ContainerAwareCommand
             $output->writeln('--------------------');
         }
 
-        $om->endFlushSuite();
+        $this->om->endFlushSuite();
 
         $output->writeln('<comment>Generation of resource trackings is finished.</comment>');
     }

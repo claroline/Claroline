@@ -19,7 +19,7 @@ class DiscardCommand extends AbstractCommand
     protected function configure()
     {
         parent::configure();
-        $this->setName('claroline:migration:discard')
+        $this
             ->setDescription('Deletes migration classes which are above the current version of the bundle.')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command deletes bundle migration classes which

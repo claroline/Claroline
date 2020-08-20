@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Event\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched when a ResourceNode is serialized
@@ -55,9 +55,7 @@ class DecorateResourceNodeEvent extends Event
     /**
      * DecorateResourceNodeEvent constructor.
      *
-     * @param ResourceNode $resourceNode     - the resource node being serialized
-     * @param array        $unauthorizedKeys
-     * @param array        $options
+     * @param ResourceNode $resourceNode - the resource node being serialized
      */
     public function __construct(
         ResourceNode $resourceNode,
@@ -122,22 +120,16 @@ class DecorateResourceNodeEvent extends Event
     {
         // validates key
         if (in_array($key, $this->unauthorizedKeys)) {
-            throw new \RuntimeException(
-                'Injected key `'.$key.'` is not authorized. (Unauthorized keys: '.implode(', ', $this->unauthorizedKeys).')'
-            );
+            throw new \RuntimeException('Injected key `'.$key.'` is not authorized. (Unauthorized keys: '.implode(', ', $this->unauthorizedKeys).')');
         }
 
         if (in_array($key, array_keys($this->injectedData))) {
-            throw new \RuntimeException(
-                'Injected key `'.$key.'` is already used.'
-            );
+            throw new \RuntimeException('Injected key `'.$key.'` is already used.');
         }
 
         // validates data (must be serializable)
         if (false !== $data && false === json_encode($data)) {
-            throw new \RuntimeException(
-                'Injected data is not serializable.'
-            );
+            throw new \RuntimeException('Injected data is not serializable.');
         }
     }
 }

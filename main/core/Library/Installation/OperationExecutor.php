@@ -51,9 +51,9 @@ class OperationExecutor
         $this->versionManager = $versionManager;
         $this->baseInstaller = $baseInstaller;
         $this->pluginInstaller = $pluginInstaller;
-        $this->previousRepoFile = $this->kernel->getRootDir().'/config/previous-installed.json';
-        $this->installedRepoFile = $this->kernel->getRootDir().'/../vendor/composer/installed.json';
-        $this->bundleFile = $this->kernel->getRootDir().'/config/bundles.ini';
+        $this->previousRepoFile = $this->kernel->getProjectDir().'/app/config/previous-installed.json';
+        $this->installedRepoFile = $this->kernel->getProjectDir().'/vendor/composer/installed.json';
+        $this->bundleFile = $this->kernel->getProjectDir().'/app/config/bundles.ini';
         $this->detector = new Detector();
         $this->versionManager = $versionManager;
         $this->om = $om;
@@ -73,17 +73,12 @@ class OperationExecutor
 
     /**
      * Overrides the default bundle detector (test purposes).
-     *
-     * @param Detector $detector
      */
     public function setBundleDetector(Detector $detector)
     {
         $this->detector = $detector;
     }
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -101,6 +96,7 @@ class OperationExecutor
     {
         $this->log('Building install/update operations list...');
         $current = $this->versionManager->openRepository($this->installedRepoFile);
+        $operations = [];
 
         foreach ($current->getCanonicalPackages() as $currentPackage) {
             $extra = $currentPackage->getExtra();
@@ -333,7 +329,7 @@ class OperationExecutor
     //Composer\Package\PackageInterface but the use causes some issue
     private function buildOperation($type, $package)
     {
-        $vendorDir = $this->kernel->getRootDir().'/../vendor';
+        $vendorDir = $this->kernel->getProjectDir().'/vendor';
         $targetDir = $package->getTargetDir() ?: '';
         $packageDir = empty($targetDir) ?
             $package->getPrettyName() :

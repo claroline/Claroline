@@ -11,19 +11,30 @@
 
 namespace Claroline\AppBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\AppBundle\Routing\Finder;
 use Symfony\Bundle\FrameworkBundle\Console\Helper\DescriptorHelper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DebugRouterCommand extends ContainerAwareCommand
+class DebugRouterCommand extends Command
 {
     use BaseCommandTrait;
 
     /** @var array */
     private $params = ['class' => 'The class managed by the api'];
+
+    /** @var Finder */
+    private $finder;
+
+    public function __construct(Finder $finder)
+    {
+        $this->finder = $finder;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -36,7 +47,7 @@ class DebugRouterCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $class = $input->getArgument('class');
-        $describeCollection = $this->getContainer()->get('Claroline\AppBundle\Routing\Finder')->find($class);
+        $describeCollection = $this->finder->find($class);
         $io = new SymfonyStyle($input, $output);
         $helper = new DescriptorHelper();
         $helper->describe($io, $describeCollection, []);

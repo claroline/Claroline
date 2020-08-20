@@ -24,8 +24,6 @@ class ForumSerializer
 
     /**
      * ForumSerializer constructor.
-     *
-     * @param FinderProvider $finder
      */
     public function __construct(
         FinderProvider $finder,
@@ -71,9 +69,6 @@ class ForumSerializer
 
     /**
      * Serializes a Forum entity.
-     *
-     * @param Forum $forum
-     * @param array $options
      *
      * @return array
      */
@@ -131,8 +126,6 @@ class ForumSerializer
      * Deserializes data into a Forum entity.
      *
      * @param array $data
-     * @param Forum $forum
-     * @param array $options
      *
      * @return Forum
      */
@@ -168,8 +161,8 @@ class ForumSerializer
             ]);
 
             $this->eventDispatcher->dispatch(
-                'claroline_retrieve_used_tags_object_by_class_and_ids',
-                $event
+                $event,
+                'claroline_retrieve_used_tags_object_by_class_and_ids'
             );
 
             $tags = $event->getResponse() ?? [];

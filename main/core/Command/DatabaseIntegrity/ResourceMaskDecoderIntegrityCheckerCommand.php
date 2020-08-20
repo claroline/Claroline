@@ -9,12 +9,22 @@
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ResourceMaskDecoderIntegrityCheckerCommand extends ContainerAwareCommand
+class ResourceMaskDecoderIntegrityCheckerCommand extends Command
 {
+    private $maskManager;
+
+    public function __construct(MaskManager $maskManager)
+    {
+        $this->maskManager = $maskManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('claroline:resource_mask_decoder:check')
@@ -24,8 +34,7 @@ class ResourceMaskDecoderIntegrityCheckerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $maskManager = $this->getContainer()->get('claroline.manager.mask_manager');
-        $maskManager->setLogger($consoleLogger);
-        $maskManager->checkIntegrity();
+        $this->maskManager->setLogger($consoleLogger);
+        $this->maskManager->checkIntegrity();
     }
 }

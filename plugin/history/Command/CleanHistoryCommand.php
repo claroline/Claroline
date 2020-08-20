@@ -10,19 +10,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanHistoryCommand extends ContainerAwareCommand
 {
+    private $historyManager;
+
+    public function __construct(HistoryManager $historyManager)
+    {
+        $this->historyManager = $historyManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:history:clean')
-            ->setDescription('Cleans the recent workspaces and resources table of obsolete entries');
+        $this->setDescription('Cleans the recent workspaces and resources table of obsolete entries');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $logger = ConsoleLogger::get($output);
 
-        /** @var HistoryManager $historyManager */
-        $historyManager = $this->getContainer()->get('Claroline\HistoryBundle\Manager\HistoryManager');
-        $historyManager->setLogger($logger);
-        $historyManager->cleanRecent();
+        $this->historyManager->setLogger($logger);
+        $this->historyManager->cleanRecent();
     }
 }

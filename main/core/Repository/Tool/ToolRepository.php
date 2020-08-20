@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ToolRepository extends ServiceEntityRepository
 {
@@ -24,11 +24,8 @@ class ToolRepository extends ServiceEntityRepository
 
     /**
      * ToolRepository constructor.
-     *
-     * @param RegistryInterface $registry
-     * @param PluginManager     $manager
      */
-    public function __construct(RegistryInterface $registry, PluginManager $manager)
+    public function __construct(ManagerRegistry $registry, PluginManager $manager)
     {
         $this->bundles = $manager->getEnabled(true);
 
@@ -37,8 +34,6 @@ class ToolRepository extends ServiceEntityRepository
 
     /**
      * Returns the non-visible tools in a workspace.
-     *
-     * @param Workspace $workspace
      *
      * @return Tool[]
      */
@@ -70,8 +65,6 @@ class ToolRepository extends ServiceEntityRepository
 
     /**
      * Returns the number of tools visible in a workspace.
-     *
-     * @param Workspace $workspace
      *
      * @return int
      */

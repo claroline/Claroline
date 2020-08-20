@@ -12,12 +12,16 @@
 
 namespace Claroline\CoreBundle\Twig;
 
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
 /**
  * Class PcreTwigExtension
  * Preg filters for twig, for handling regular expressions.
  * Filters includes: preg_filter, preg_grep, preg_match, preg_quote, preg_replace, preg_split.
  */
-class PcreExtension extends \Twig_Extension
+class PcreExtension extends AbstractExtension
 {
     protected $env;
 
@@ -29,11 +33,11 @@ class PcreExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'preg_replace' => new \Twig_SimpleFilter('preg_replace', [$this, '_preg_replace']),
+            'preg_replace' => new TwigFilter('preg_replace', [$this, '_preg_replace']),
         ];
     }
 
-    public function initRuntime(\Twig_Environment $env)
+    public function initRuntime(Environment $env)
     {
         $this->env = $env;
     }

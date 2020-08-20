@@ -16,7 +16,7 @@ class DowngradeCommand extends AbstractMigrateCommand
     protected function configure()
     {
         parent::configure();
-        $this->setName('claroline:migration:downgrade')
+        $this
             ->setDescription('Downgrades a bundle to a specified version.');
     }
 

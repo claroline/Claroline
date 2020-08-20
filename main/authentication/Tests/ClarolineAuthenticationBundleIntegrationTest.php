@@ -19,8 +19,6 @@ class ClarolineAuthenticationBundleIntegrationTest extends TestCase
 
         (new ClarolineAuthenticationBundle())->build($container);
 
-        $container->getCompilerPassConfig()->setRemovingPasses([]);
-
         $container->compile();
         $this->addToAssertionCount(1); // container compiled successfully
 

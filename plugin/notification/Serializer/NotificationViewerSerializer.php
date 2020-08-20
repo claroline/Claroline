@@ -28,12 +28,6 @@ class NotificationViewerSerializer
 
     /**
      * NotificationViewerSerializer constructor.
-     *
-     * @param NotificationSerializer       $notificationSerializer
-     * @param PlatformConfigurationHandler $configHandler
-     * @param EventDispatcherInterface     $eventDispatcher
-     * @param UserSerializer               $userSerializer
-     * @param ObjectManager                $om
      */
     public function __construct(
         NotificationSerializer $notificationSerializer,
@@ -65,7 +59,7 @@ class NotificationViewerSerializer
         $event = new NotificationCreateDelegateViewEvent($viewer, $this->platformName);
 
         if ($this->eventDispatcher->hasListeners($eventName)) {
-            $this->eventDispatcher->dispatch($eventName, $event);
+            $this->eventDispatcher->dispatch($event, $eventName);
         }
 
         return [

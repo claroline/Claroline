@@ -2,25 +2,39 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ResourceRightsIntegrityCommand extends ContainerAwareCommand
+class ResourceRightsIntegrityCommand extends Command
 {
+    private $conn;
+    private $om;
+    private $rightsManager;
+
+    public function __construct(Connection $conn, ObjectManager $om, RightsManager $rightsManager)
+    {
+        $this->conn = $conn;
+        $this->om = $om;
+        $this->rightsManager = $rightsManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:resource_rights:check')
-            ->setDescription('Checks the resource mask decoders integrity of the platform.');
+        $this->setDescription('Checks the resource mask decoders integrity of the platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->conn = $this->getContainer()->get('doctrine.dbal.default_connection');
-        $roles[] = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
-        $roles[] = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
+        $roleRepository = $this->om->getRepository('ClarolineCoreBundle:Role');
+        $roles[] = $roleRepository->findOneByName('ROLE_ANONYMOUS');
+        $roles[] = $roleRepository->findOneByName('ROLE_USER');
 
         foreach ($roles as $role) {
             $sql = "
@@ -52,8 +66,10 @@ class ResourceRightsIntegrityCommand extends ContainerAwareCommand
         $output->writeln('Found '.$ids->rowCount().' resources with no right.');
         $i = 1;
 
+        $resourceNodeRepository = $this->om->getRepository(ResourceNode::class);
+
         while ($row = $ids->fetch()) {
-            $node = $om->getRepository(ResourceNode::class)->find($row['id']);
+            $node = $resourceNodeRepository->find($row['id']);
             $workspace = $node->getWorkspace();
             $output->writeln('Restore '.$i.'/'.$ids->rowCount());
 
@@ -72,10 +88,10 @@ class ResourceRightsIntegrityCommand extends ContainerAwareCommand
                         $perms = ['open' => true, 'export' => true];
                     }
 
-                    $this->getContainer()->get('claroline.manager.rights_manager')->editPerms($perms, $role, $node);
+                    $this->rightsManager->editPerms($perms, $role, $node);
                 }
             } else {
-                $this->getContainer()->get('claroline.manager.rights_manager')->copy($node->getParent(), $node);
+                $this->rightsManager->copy($node->getParent(), $node);
             }
             ++$i;
         }

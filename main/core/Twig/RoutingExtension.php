@@ -15,9 +15,11 @@ namespace Claroline\CoreBundle\Twig;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\RoutingHelper;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 //Maybe it'll be usefull to have that in a real service and not a twig one
-class RoutingExtension extends \Twig_Extension
+class RoutingExtension extends AbstractExtension
 {
     /** @var RoutingHelper */
     private $helper;
@@ -35,8 +37,8 @@ class RoutingExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'resourcePath' => new \Twig_SimpleFunction('resourcePath', [$this, 'resourcePath']),
-            'workspacePath' => new \Twig_SimpleFunction('workspacePath', [$this, 'workspacePath']),
+            'resourcePath' => new TwigFunction('resourcePath', [$this, 'resourcePath']),
+            'workspacePath' => new TwigFunction('workspacePath', [$this, 'workspacePath']),
         ];
     }
 

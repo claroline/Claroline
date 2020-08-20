@@ -12,9 +12,8 @@
 namespace Claroline\InstallationBundle\Fixtures;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
@@ -26,10 +25,7 @@ class FixtureLoader
     private $executor;
 
     /**
-     * Constructor.
-     *
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     * @param \Doctrine\Common\DataFixtures\Executor\ORMExecutor        $executor
+     * FixtureLoader constructor.
      */
     public function __construct(ContainerInterface $container, ORMExecutor $executor)
     {
@@ -42,8 +38,7 @@ class FixtureLoader
      * "DataFixtures/ORM" or "DataFixtures" directory within the bundle. Note
      * that fixtures are always appended (no purge/truncation).
      *
-     * @param BundleInterface $bundle
-     * @param string          $fixturesDirectory
+     * @param string $fixturesDirectory
      *
      * @return bool True if some fixtures have been found and executed, false otherwise
      */

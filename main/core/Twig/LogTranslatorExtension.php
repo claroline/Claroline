@@ -17,8 +17,10 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class LogTranslatorExtension extends \Twig_Extension
+class LogTranslatorExtension extends AbstractExtension
 {
     public function __construct(RoutingHelper $helper, TranslatorInterface $translator, TwigEngine $templating)
     {
@@ -35,7 +37,7 @@ class LogTranslatorExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'translateLog' => new \Twig_SimpleFunction('translateLog', [$this, 'translateLog']),
+            'translateLog' => new TwigFunction('translateLog', [$this, 'translateLog']),
         ];
     }
 

@@ -5,8 +5,6 @@
 - doctrine/dbal
 - doctrine/doctrine-bundle
 - doctrine/orm
-- jms/di-extra-bundle
-- jms/security-extra-bundle
 - stof/doctrine-extensions-bundle
 - symfony/monolog-bundle
 - symfony/swiftmailer-bundle

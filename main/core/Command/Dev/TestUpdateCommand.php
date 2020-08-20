@@ -14,13 +14,13 @@ namespace Claroline\CoreBundle\Command\Dev;
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Psr\Log\LogLevel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TestUpdateCommand extends ContainerAwareCommand
+class TestUpdateCommand extends Command
 {
     use BaseCommandTrait;
 
@@ -32,7 +32,6 @@ class TestUpdateCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        parent::configure();
         $this->setName('claroline:test_update')
             ->setAliases(['claroline:debug:update'])
             ->setDescription('Tests the local update of a bundle.');

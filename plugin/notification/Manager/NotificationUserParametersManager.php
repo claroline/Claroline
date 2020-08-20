@@ -79,8 +79,8 @@ class NotificationUserParametersManager
         $allTypes = [];
 
         $this->ed->dispatch(
-            'icap_notification_user_parameters_event',
-            new NotificationUserParametersEvent($allTypes)
+            new NotificationUserParametersEvent($allTypes),
+            'icap_notification_user_parameters_event'
         );
 
         $visibleTypes = $parameters->getDisplayEnabledTypes();
@@ -136,9 +136,6 @@ class NotificationUserParametersManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

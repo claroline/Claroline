@@ -30,5 +30,9 @@ class ClarolineCoreExtension extends Extension
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('parameters.yml');
         $loader->load('services.yml');
+
+        if ('test' === $container->getParameter('kernel.environment')) {
+            $loader->load('services_test.yml');
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event\Tool;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class OpenToolEvent extends Event implements DataConveyorEventInterface
 {
@@ -38,8 +38,6 @@ class OpenToolEvent extends Event implements DataConveyorEventInterface
     /**
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
-     *
-     * @param array $data
      */
     public function setData(array $data)
     {

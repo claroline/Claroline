@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ExportObjectEvent extends Event
 {
@@ -22,9 +22,7 @@ class ExportObjectEvent extends Event
     /**
      * ExportObjectEvent constructor.
      *
-     * @param mixed   $object
-     * @param FileBag $fileBag
-     * @param array   $data
+     * @param mixed $object
      */
     public function __construct(
         $object,

@@ -13,9 +13,10 @@ namespace Claroline\CoreBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\BundleRecorder\Detector\Detector;
+use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Psr\Log\LogLevel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,11 +26,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This class contains common methods for the plugin install/uninstall commands.
  */
-abstract class AbstractPluginCommand extends ContainerAwareCommand
+abstract class AbstractPluginCommand extends Command
 {
     use BaseCommandTrait;
 
     private $params = ['bundle' => 'the bundle name'];
+    private $pluginInstaller;
+
+    public function __construct(Installer $pluginInstaller)
+    {
+        $this->pluginInstaller = $pluginInstaller;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -39,14 +48,14 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function getPlugin(InputInterface $input, $fromKernel = true)
     {
         $bundleName = $input->getArgument('bundle');
-        $kernel = $this->getContainer()->get('kernel');
+        $kernel = $this->getApplication()->getKernel();
 
         if ($fromKernel) {
             return $kernel->getBundle($bundleName);
         }
 
         $detector = new Detector();
-        $bundles = $detector->detectBundles($kernel->getRootDir().'/../vendor');
+        $bundles = $detector->detectBundles($kernel->getProjectDir().'/vendor');
 
         foreach ($bundles as $bundleFqcn) {
             $parts = explode('\\', $bundleFqcn);
@@ -68,17 +77,15 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
 
     protected function getPluginInstaller(OutputInterface $output)
     {
-        /** @var \Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
-        $installer = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer');
         $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $installer->setLogger($consoleLogger);
+        $this->pluginInstaller->setLogger($consoleLogger);
 
-        return $installer;
+        return $this->pluginInstaller;
     }
 
     /**
@@ -86,13 +93,11 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      *
      * Clears the cache in production environment (mandatory after plugin
      * installation/uninstallation)
-     *
-     * @param OutputInterface $output
      */
     protected function resetCache(OutputInterface $output)
     {
-        if ('prod' === $this->getContainer()->get('kernel')->getEnvironment()) {
-            $command = $this->getApplication()->find('cache:clear');
+        if ('prod' === $this->getApplication()->getKernel()->getEnvironment()) {
+            $command = $this->getApplication()->get('cache:clear');
 
             $input = new ArrayInput(
                 [
@@ -109,13 +114,11 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      * @todo Remove ?
      *
      * Refreshes the asset folder (mandatory after plugin installation/uninstallation)
-     *
-     * @param OutputInterface $output
      */
     protected function installAssets(OutputInterface $output)
     {
-        $webDir = $this->getContainer()->getParameter('kernel.root_dir').'/../web';
-        $command = $this->getApplication()->find('assets:install');
+        $webDir = $this->getApplication()->getKernel()->getProjectDir().'/web';
+        $command = $this->getApplication()->get('assets:install');
         $input = new ArrayInput(
             [
                 'command' => 'assets:install',

@@ -22,9 +22,7 @@ class PluginUninstallCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
-        parent::configure();
-        $this->setName('claroline:plugin:uninstall')
-            ->setDescription('Uninstalls a specified claroline plugin.');
+        $this->setDescription('Uninstalls a specified claroline plugin.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

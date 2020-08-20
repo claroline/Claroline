@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Event;
 
 use Claroline\CoreBundle\Entity\Evaluation\AbstractUserEvaluation;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched when an activity evaluation is created or updated.
@@ -24,8 +24,6 @@ class UserEvaluationEvent extends Event
 
     /**
      * ResourceEvaluationEvent constructor.
-     *
-     * @param AbstractUserEvaluation $evaluation
      */
     public function __construct(AbstractUserEvaluation $evaluation)
     {

@@ -11,7 +11,7 @@
 
 namespace Claroline\AppBundle\Event\Platform;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class EnableEvent extends Event
 {
@@ -21,9 +21,6 @@ class EnableEvent extends Event
     /** @var string */
     private $cancellationMessage = null;
 
-    /**
-     * @return bool
-     */
     public function isCanceled(): bool
     {
         return $this->canceled;

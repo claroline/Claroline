@@ -1,8 +1,8 @@
 # This file contains the core container parameters.
 parameters:
     # Project base paths
-    claroline.param.root_directory:         "%kernel.root_dir%/.."
-    claroline.param.config_directory:       "%kernel.root_dir%/config"
+    claroline.param.root_directory:         "%kernel.project_dir%/app/.."
+    claroline.param.config_directory:       "%kernel.project_dir%/app/config"
     claroline.param.vendor_directory:       "%claroline.param.root_directory%/vendor"
     claroline.param.web_directory:          "%claroline.param.root_directory%/web"
 
@@ -14,7 +14,7 @@ parameters:
     claroline.param.data_web_dir:           "%claroline.param.web_directory%/data"
 
     # Log paths
-    claroline.param.log_dir:           "%kernel.root_dir%/logs/"
+    claroline.param.log_dir:           "%kernel.project_dir%/app/logs/"
     claroline.param.import_log_dir:    "%claroline.param.log_dir%/transfer"
     claroline.param.workspace_log_dir: "%claroline.param.log_dir%/workspace"
 

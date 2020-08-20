@@ -62,14 +62,6 @@ class PaperManager
 
     /**
      * PaperManager constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param PaperSerializer               $serializer
-     * @param ItemManager                   $itemManager
-     * @param ScoreManager                  $scoreManager
-     * @param ResourceEvaluationManager     $resourceEvalManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -93,9 +85,6 @@ class PaperManager
     /**
      * Serializes a user paper.
      *
-     * @param Paper $paper
-     * @param array $options
-     *
      * @return array
      */
     public function serialize(Paper $paper, array $options = [])
@@ -115,8 +104,6 @@ class PaperManager
     /**
      * Check if a Paper is full evaluated and dispatch a Log event if yes.
      *
-     * @param Paper $paper
-     *
      * @return bool
      */
     public function checkPaperEvaluated(Paper $paper)
@@ -128,7 +115,7 @@ class PaperManager
                 'resultMax' => $this->calculateTotal($paper),
             ]);
 
-            $this->eventDispatcher->dispatch('log', $event);
+            $this->eventDispatcher->dispatch($event, 'log');
         }
 
         return $fullyEvaluated;
@@ -136,8 +123,6 @@ class PaperManager
 
     /**
      * Calculates the score of a Paper.
-     *
-     * @param Paper $paper
      *
      * @return float
      */
@@ -210,8 +195,6 @@ class PaperManager
     /**
      * Calculates the total score of a Paper.
      *
-     * @param Paper $paper
-     *
      * @return float
      */
     public function calculateTotal(Paper $paper)
@@ -241,8 +224,7 @@ class PaperManager
     /**
      * Returns the papers for a given exercise, in a JSON format.
      *
-     * @param Exercise $exercise
-     * @param User     $user
+     * @param User $user
      *
      * @return array
      */
@@ -283,9 +265,6 @@ class PaperManager
     /**
      * Returns the number of finished papers already done by the user for a given exercise.
      *
-     * @param Exercise $exercise
-     * @param User     $user
-     *
      * @return array
      */
     public function countUserFinishedPapers(Exercise $exercise, User $user)
@@ -295,9 +274,6 @@ class PaperManager
 
     /**
      * Returns the number of finished papers already done by the user for a given exercise for the current day.
-     *
-     * @param Exercise $exercise
-     * @param User     $user
      *
      * @return array
      */
@@ -309,8 +285,6 @@ class PaperManager
     /**
      * Returns the number of papers already done for a given exercise.
      *
-     * @param Exercise $exercise
-     *
      * @return int
      */
     public function countExercisePapers(Exercise $exercise)
@@ -320,8 +294,6 @@ class PaperManager
 
     /**
      * Returns the number of different registered users that have passed a given exercise.
-     *
-     * @param Exercise $exercise
      *
      * @return int
      */
@@ -333,8 +305,6 @@ class PaperManager
     /**
      * Returns the number of different anonymous users that have passed a given exercise.
      *
-     * @param Exercise $exercise
-     *
      * @return int
      */
     public function countAnonymousPapers(Exercise $exercise)
@@ -344,9 +314,6 @@ class PaperManager
 
     /**
      * Check if the solution of the Paper is available to User.
-     *
-     * @param Exercise $exercise
-     * @param Paper    $paper
      *
      * @return bool
      */
@@ -379,9 +346,6 @@ class PaperManager
     /**
      * Check if the score of the Paper is available to User.
      *
-     * @param Exercise $exercise
-     * @param Paper    $paper
-     *
      * @return bool
      */
     public function isScoreAvailable(Exercise $exercise, Paper $paper)
@@ -406,8 +370,7 @@ class PaperManager
     /**
      * Creates a ResourceEvaluation for the attempt.
      *
-     * @param Paper $paper
-     * @param bool  $finished
+     * @param bool $finished
      *
      * @return ResourceEvaluation
      */
@@ -466,9 +429,6 @@ class PaperManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

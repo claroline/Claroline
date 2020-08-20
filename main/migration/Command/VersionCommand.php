@@ -18,10 +18,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class VersionCommand extends AbstractCommand
 {
+    private $migrator;
+
+    public function __construct(Migrator $migrator)
+    {
+        $this->migrator = $migrator;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         parent::configure();
-        $this->setName('claroline:migration:version')
+
+        $this
             ->setDescription('Displays information about the migration status of a bundle.')
             ->setHelp(
                 <<<'EOT'
@@ -64,25 +74,24 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $migrator = $this->getContainer()->get('claroline.migration.migrator');
         $status = $this->getManager($output)->getBundleStatus($this->getTargetBundle($input));
         $latest = $input->getOption('latest');
 
         if ($version = $input->getOption('remove')) {
-            $migrator->markNotMigrated($this->getTargetBundle($input), $version);
+            $this->migrator->markNotMigrated($this->getTargetBundle($input), $version);
         }
 
         if ($version = $input->getOption('add')) {
-            $migrator->markMigrated($this->getTargetBundle($input), $version);
+            $this->migrator->markMigrated($this->getTargetBundle($input), $version);
         }
 
         if ($version = $input->getOption('all')) {
-            $migrator->markAllMigrated($this->getTargetBundle($input));
+            $this->migrator->markAllMigrated($this->getTargetBundle($input));
         }
 
         if ($latest) {
             $latest = $status[Migrator::VERSION_LATEST];
-            $migrator->markMigrated($this->getTargetBundle($input), $latest);
+            $this->migrator->markMigrated($this->getTargetBundle($input), $latest);
         }
 
         $status = $this->getManager($output)->getBundleStatus($this->getTargetBundle($input));

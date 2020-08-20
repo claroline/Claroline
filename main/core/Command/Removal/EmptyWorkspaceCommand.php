@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle\Command\Removal;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,8 +25,21 @@ use Symfony\Component\Console\Question\Question;
 /**
  * Removes users from a workspace.
  */
-class EmptyWorkspaceCommand extends ContainerAwareCommand
+class EmptyWorkspaceCommand extends Command
 {
+    private $om;
+    private $workspaceManager;
+    private $roleManager;
+
+    public function __construct(ObjectManager $om, WorkspaceManager $workspaceManager, RoleManager $roleManager)
+    {
+        $this->om = $om;
+        $this->workspaceManager = $workspaceManager;
+        $this->roleManager = $roleManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('claroline:workspace:empty')
@@ -55,11 +70,7 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
         $removeUsers = $input->getOption('user');
         $removeGroups = $input->getOption('group');
 
-        $container = $this->getContainer();
-        $om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
         $helper = $this->getHelper('question');
-        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-        $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
         $question = new Question('Filter on code (continue if no filter)', null);
         $code = $helper->ask($input, $output, $question);
 
@@ -69,10 +80,10 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
 
         $question = new Question('Filter on name (continue if no filter)', null);
         $name = $helper->ask($input, $output, $question);
-        $workspaces = $workspaceManager->getNonPersonalByCodeAndName($code, $name);
+        $workspaces = $this->workspaceManager->getNonPersonalByCodeAndName($code, $name);
 
         foreach ($workspaces as $workspace) {
-            $roles = $roleManager->getWorkspaceRoles($workspace);
+            $roles = $this->roleManager->getWorkspaceRoles($workspace);
 
             $roleNames = array_map(function ($role) {
                 return $role->getTranslationKey();
@@ -92,23 +103,23 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
                 return in_array($role->getTranslationKey(), $roleNames);
             });
 
-            $om->startFlushSuite();
+            $this->om->startFlushSuite();
 
             foreach ($pickedRoles as $role) {
                 if ($removeUsers) {
-                    $count = $om->getRepository('ClarolineCoreBundle:User')->countUsersByRole($role);
+                    $count = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRole($role);
                     $output->writeln("Removing {$count} users from role {$role->getTranslationKey()}");
-                    $roleManager->emptyRole($role, RoleManager::EMPTY_USERS);
+                    $this->roleManager->emptyRole($role, RoleManager::EMPTY_USERS);
                 }
 
                 if ($removeGroups) {
-                    $count = $om->getRepository('ClarolineCoreBundle:Group')->countGroupsByRole($role);
+                    $count = $this->om->getRepository('ClarolineCoreBundle:Group')->countGroupsByRole($role);
                     $output->writeln("Removing {$count} groups from role {$role->getTranslationKey()}");
-                    $roleManager->emptyRole($role, RoleManager::EMPTY_GROUPS);
+                    $this->roleManager->emptyRole($role, RoleManager::EMPTY_GROUPS);
                 }
             }
 
-            $om->endFlushSuite();
+            $this->om->endFlushSuite();
         }
     }
 }

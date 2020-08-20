@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event\Layout;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An event dispatched when the application UI is rendered

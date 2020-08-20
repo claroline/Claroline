@@ -42,11 +42,6 @@ class AdministrationController
 
     /**
      * AdministrationController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -110,9 +105,9 @@ class AdministrationController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch('administration_tool_'.$toolName, new OpenToolEvent());
+        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'administration_tool_'.$toolName);
 
-        $this->eventDispatcher->dispatch('log', new LogAdminToolReadEvent($toolName));
+        $this->eventDispatcher->dispatch(new LogAdminToolReadEvent($toolName), 'log');
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => [

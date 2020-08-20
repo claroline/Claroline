@@ -35,10 +35,6 @@ class ConnectionMessageManager
 
     /**
      * ConnectionMessageManager constructor.
-     *
-     * @param ObjectManager            $om
-     * @param EventDispatcherInterface $dispatcher
-     * @param SerializerProvider       $serializer
      */
     public function __construct(
         ObjectManager $om,
@@ -54,9 +50,6 @@ class ConnectionMessageManager
 
     /**
      * Discards a message for a user.
-     *
-     * @param ConnectionMessage $message
-     * @param User              $user
      */
     public function discard(ConnectionMessage $message, User $user)
     {
@@ -68,8 +61,6 @@ class ConnectionMessageManager
 
     /**
      * Retrieves list of connection messages for an user.
-     *
-     * @param User $user
      *
      * @return array
      */
@@ -83,7 +74,7 @@ class ConnectionMessageManager
 
         // grab connection messages from everywhere
         $event = new GenericDataEvent();
-        $this->dispatcher->dispatch('platform.connection_messages.populate', $event);
+        $this->dispatcher->dispatch($event, 'platform.connection_messages.populate');
         // TODO : find a way to validate populated data. For now I just expect an array which looks like
         // the return of ConnectionMessageSerializer
         $extMessages = $event->getResponse() ?? [];

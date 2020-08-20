@@ -13,14 +13,15 @@ namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Logger\ConsoleLogger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\DevBundle\Manager\TranslationManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class TranslationDebugCommand extends ContainerAwareCommand
+class TranslationDebugCommand extends Command
 {
     use BaseCommandTrait;
 
@@ -28,10 +29,18 @@ class TranslationDebugCommand extends ContainerAwareCommand
         'locale' => 'locale to fill: ',
     ];
 
+    private $translationManager;
+
+    public function __construct(TranslationManager $translationManager)
+    {
+        $this->translationManager = $translationManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:fixup:translations')
-            ->setDescription('Search the translations and order them in their different config.yml files');
+        $this->setDescription('Search the translations and order them in their different config.yml files');
         $this->setDefinition(
             [
                 new InputArgument('locale', InputArgument::REQUIRED, 'The locale to fill.'),
@@ -71,13 +80,12 @@ class TranslationDebugCommand extends ContainerAwareCommand
         $mainLang = $input->getOption('main_lang') ? $input->getOption('main_lang') : 'fr';
         $filledShortPath = '@'.$fqcn.'/Resources/translations/'.$domain.'.'.$locale.'.yml';
         $mainShortPath = '@'.$fqcn.'/Resources/translations/'.$domain.'.'.$mainLang.'.yml';
-        $mainFile = $this->getContainer()->get('kernel')->locateResource($mainShortPath);
-        $filledFile = $this->getContainer()->get('kernel')->locateResource($filledShortPath);
+        $mainFile = $this->getApplication()->getKernel()->locateResource($mainShortPath);
+        $filledFile = $this->getApplication()->getKernel()->locateResource($filledShortPath);
         if ($input->getOption('fill')) {
-            $translationManager = $this->getContainer()->get('Claroline\DevBundle\Manager\TranslationManager');
             $consoleLogger = ConsoleLogger::get($output);
-            $translationManager->setLogger($consoleLogger);
-            $translationManager->fill($mainFile, $filledFile);
+            $this->translationManager->setLogger($consoleLogger);
+            $this->translationManager->fill($mainFile, $filledFile);
         }
         $this->showUntranslated($filledFile, $output, $locale);
     }

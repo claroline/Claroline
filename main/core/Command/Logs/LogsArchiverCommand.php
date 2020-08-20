@@ -12,14 +12,27 @@
 namespace Claroline\CoreBundle\Command\Logs;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
+use Claroline\AppBundle\Manager\DatabaseManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LogsArchiverCommand extends ContainerAwareCommand
+class LogsArchiverCommand extends Command
 {
+    private $om;
+    private $databaseManager;
+
+    public function __construct(ObjectManager $om, DatabaseManager $databaseManager)
+    {
+        $this->om = $om;
+        $this->databaseManager = $databaseManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         parent::configure();
@@ -54,7 +67,7 @@ class LogsArchiverCommand extends ContainerAwareCommand
         if ($from) {
             $from = \DateTime::createFromFormat('m-d-Y', $from);
         } else {
-            $from = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getRepository(Log::class)->findBy([], null, 1)[0]->getDateLog();
+            $from = $this->om->getRepository(Log::class)->findBy([], null, 1)[0]->getDateLog();
         }
 
         $searches = ['dateLog' => $from->format('Y-m-d h:i:s')];
@@ -65,8 +78,7 @@ class LogsArchiverCommand extends ContainerAwareCommand
         }
 
         $consoleLogger = ConsoleLogger::get($output);
-        $databaseManager = $this->getContainer()->get('claroline.manager.database_manager');
-        $databaseManager->setLogger($consoleLogger);
+        $this->databaseManager->setLogger($consoleLogger);
 
         $logTables = [
             'claro_log',
@@ -79,7 +91,7 @@ class LogsArchiverCommand extends ContainerAwareCommand
         foreach ($logTables as $table) {
             $name = str_replace('-', '_', $from->format('Y')).'_'.uniqid();
 
-            $databaseManager->backupRows(
+            $this->databaseManager->backupRows(
                 Log::class,
                 $searches,
                 $table,

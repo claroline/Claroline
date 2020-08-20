@@ -11,17 +11,16 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 
 class DisableMaintenanceCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('claroline:maintenance:disable')
-            ->setDescription('Disable maintenance mode');
+        $this->setDescription('Disable maintenance mode');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

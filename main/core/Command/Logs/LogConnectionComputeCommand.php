@@ -12,12 +12,21 @@
 namespace Claroline\CoreBundle\Command\Logs;
 
 use Claroline\CoreBundle\Manager\LogConnectManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LogConnectionComputeCommand extends ContainerAwareCommand
+class LogConnectionComputeCommand extends Command
 {
+    private $logConnectManager;
+
+    public function __construct(LogConnectManager $logConnectManager)
+    {
+        $this->logConnectManager = $logConnectManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         parent::configure();
@@ -28,27 +37,24 @@ class LogConnectionComputeCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var LogConnectManager $logConnectManager */
-        $logConnectManager = $this->getContainer()->get('claroline.manager.log_connect');
-
         $output->writeln('<info>  Computing spent time in platform...</info>');
-        $logConnectManager->computeAllPlatformDuration();
+        $this->logConnectManager->computeAllPlatformDuration();
         $output->writeln('<info>  Spent time in platform computed.</info>');
 
         $output->writeln('<info>  Computing spent time in workspaces...</info>');
-        $logConnectManager->computeAllWorkspacesDuration();
+        $this->logConnectManager->computeAllWorkspacesDuration();
         $output->writeln('<info>  Spent time in workspaces computed.</info>');
 
         $output->writeln('<info>  Computing spent time in admin tools...</info>');
-        $logConnectManager->computeAllAdminToolsDuration();
+        $this->logConnectManager->computeAllAdminToolsDuration();
         $output->writeln('<info>  Spent time in admin tools computed.</info>');
 
         $output->writeln('<info>  Computing spent time in tools...</info>');
-        $logConnectManager->computeAllToolsDuration();
+        $this->logConnectManager->computeAllToolsDuration();
         $output->writeln('<info>  Spent time in tools computed.</info>');
 
         $output->writeln('<info>  Computing spent time in resources...</info>');
-        $logConnectManager->computeAllResourcesDuration();
+        $this->logConnectManager->computeAllResourcesDuration();
         $output->writeln('<info>  Spent time in resources computed.</info>');
     }
 }

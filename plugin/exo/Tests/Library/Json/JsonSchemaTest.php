@@ -21,9 +21,9 @@ class JsonSchemaTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->jsonSchema = new JsonSchema($this->client->getKernel()->getRootDir());
+        $this->jsonSchema = new JsonSchema("{$this->client->getKernel()->getProjectDir()}/app");
 
-        $vendorDir = realpath("{$this->client->getKernel()->getRootDir()}/../vendor");
+        $vendorDir = realpath("{$this->client->getKernel()->getProjectDir()}/vendor");
         $this->formatDir = "{$vendorDir}/claroline/json-quiz/format";
     }
 

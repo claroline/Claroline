@@ -108,15 +108,7 @@ class ClacoFormManager
     /**
      * ClacoFormManager constructor.
      *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param Filesystem                    $fileSystem
-     * @param string                        $filesDir
-     * @param MessageManager                $messageManager
-     * @param ObjectManager                 $om
-     * @param RouterInterface               $router
-     * @param TokenStorageInterface         $tokenStorage
-     * @param TranslatorInterface           $translator
+     * @param string $filesDir
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -239,7 +231,7 @@ class ClacoFormManager
         $this->persistClacoForm($clacoForm);
         $details = $clacoForm->getDetails();
         $event = new LogClacoFormConfigureEvent($clacoForm, $details);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         return $details;
     }
@@ -260,7 +252,7 @@ class ClacoFormManager
             $keyword->setName($name);
             $this->persistKeyword($keyword);
             $event = new LogKeywordCreateEvent($keyword);
-            $this->eventDispatcher->dispatch('log', $event);
+            $this->eventDispatcher->dispatch($event, 'log');
         }
 
         return $keyword;
@@ -409,7 +401,7 @@ class ClacoFormManager
         $this->om->remove($entry);
         $this->om->flush();
         $event = new LogEntryDeleteEvent($details);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 
     public function deleteEntries(array $entries)
@@ -439,7 +431,7 @@ class ClacoFormManager
         }
         $this->persistEntry($entry);
         $event = new LogEntryStatusChangeEvent($entry);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
         $categories = $entry->getCategories();
         $this->notifyCategoriesManagers($entry, $categories, $categories);
 
@@ -457,7 +449,7 @@ class ClacoFormManager
             $entry->setStatus($status);
             $this->persistEntry($entry);
             $event = new LogEntryStatusChangeEvent($entry);
-            $this->eventDispatcher->dispatch('log', $event);
+            $this->eventDispatcher->dispatch($event, 'log');
             $categories = $entry->getCategories();
             $this->notifyCategoriesManagers($entry, $categories, $categories);
         }
@@ -472,7 +464,7 @@ class ClacoFormManager
         $entry->setLocked(!$locked);
         $this->persistEntry($entry);
         $event = new LogEntryLockSwitchEvent($entry);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
         $categories = $entry->getCategories();
         $this->notifyCategoriesManagers($entry, $categories, $categories);
 
@@ -487,7 +479,7 @@ class ClacoFormManager
             $entry->setLocked($locked);
             $this->persistEntry($entry);
             $event = new LogEntryLockSwitchEvent($entry);
-            $this->eventDispatcher->dispatch('log', $event);
+            $this->eventDispatcher->dispatch($event, 'log');
             $categories = $entry->getCategories();
             $this->notifyCategoriesManagers($entry, $categories, $categories);
         }
@@ -501,7 +493,7 @@ class ClacoFormManager
         $entry->setUser($user);
         $this->persistEntry($entry);
         $event = new LogEntryUserChangeEvent($entry);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         return $entry;
     }
@@ -658,7 +650,7 @@ class ClacoFormManager
         $comment->setStatus($status);
         $this->persistComment($comment);
         $event = new LogCommentCreateEvent($comment);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($entry, 'comment', $content);
@@ -675,7 +667,7 @@ class ClacoFormManager
         $comment->setEditionDate(new \DateTime());
         $this->persistComment($comment);
         $event = new LogCommentEditEvent($comment);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($comment->getEntry(), 'comment', $content);
@@ -689,7 +681,7 @@ class ClacoFormManager
         $comment->setStatus($status);
         $this->persistComment($comment);
         $event = new LogCommentStatusChangeEvent($comment);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($comment->getEntry(), 'comment', $comment->getContent());
@@ -725,7 +717,7 @@ class ClacoFormManager
         $this->om->remove($comment);
         $this->om->flush();
         $event = new LogCommentDeleteEvent($details);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 
     public function getNRandomEntries(ClacoForm $clacoForm, $nbEntries, array $categoriesIds)
@@ -1320,8 +1312,6 @@ class ClacoFormManager
     }
 
     /**
-     * @param ClacoForm $clacoForm
-     *
      * @return Entry[]|ArrayCollection
      */
     public function getAllEntries(ClacoForm $clacoForm)
@@ -1605,9 +1595,6 @@ class ClacoFormManager
     /**
      * Find all content for a given user and replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceCategoryManager(User $from, User $to)
@@ -1629,9 +1616,6 @@ class ClacoFormManager
     /**
      * Find all content for a given user and replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceCommentUser(User $from, User $to)
@@ -1651,9 +1635,6 @@ class ClacoFormManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -1675,9 +1656,6 @@ class ClacoFormManager
 
     /**
      * Find all content for a given user and replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -1709,10 +1687,6 @@ class ClacoFormManager
 
     /**
      * Creates an entries from data from a csv.
-     *
-     * @param ClacoForm $clacoForm
-     * @param User      $user
-     * @param array     $data
      *
      * @return int
      */

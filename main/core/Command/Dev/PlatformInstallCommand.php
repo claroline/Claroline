@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,14 +19,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Performs a fresh installation of the platform.
  */
-class PlatformInstallCommand extends ContainerAwareCommand
+class PlatformInstallCommand extends Command
 {
     protected function configure()
     {
-        parent::configure();
-
-        $this->setName('claroline:install')
-            ->setDescription('Installs the platform.');
+        $this->setDescription('Installs the platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,15 +33,15 @@ class PlatformInstallCommand extends ContainerAwareCommand
          * - No bundles.bup.ini
          * - Empty previous-installed.json
          */
-        $kernel = $this->getContainer()->get('kernel');
-        $rootDir = $kernel->getRootDir();
+        $kernel = $this->getApplication()->getKernel();
+        $rootDir = $kernel->getProjectDir().'/app';
         $previous = $rootDir.'/config/previous-installed.json';
         @unlink($previous);
         file_put_contents($previous, '[]');
 
         $this
             ->getApplication()
-            ->find('claroline:update')
+            ->get('claroline:update')
             ->run(new ArrayInput([]), $output);
     }
 }

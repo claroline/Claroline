@@ -11,12 +11,16 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\Workspace\TransferManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,7 +29,7 @@ use Symfony\Component\HttpFoundation\File\File;
 /**
  * Creates an user, optionally with a specific role (default to simple user).
  */
-class ImportCommand extends ContainerAwareCommand implements AdminCliCommand
+class ImportCommand extends Command implements AdminCliCommand
 {
     use BaseCommandTrait;
 
@@ -34,10 +38,24 @@ class ImportCommand extends ContainerAwareCommand implements AdminCliCommand
         'code' => 'The new code ',
     ];
 
+    private $crud;
+    private $fileUtils;
+    private $serializerProvider;
+    private $transferManager;
+
+    public function __construct(Crud $crud, FileUtilities $fileUtils, SerializerProvider $serializerProvider, TransferManager $transferManager)
+    {
+        $this->crud = $crud;
+        $this->fileUtils = $fileUtils;
+        $this->serializerProvider = $serializerProvider;
+        $this->transferManager = $transferManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
-            ->setName('claroline:workspace:import')
             ->setDescription('Create a workspace from a zip archive (for debug purpose)')
             ->setDefinition([
                 new InputArgument('path', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
@@ -55,26 +73,25 @@ class ImportCommand extends ContainerAwareCommand implements AdminCliCommand
         file_put_contents($tmp, $file);
         $file = new File($tmp);
 
-        $object = $this->getContainer()->get('Claroline\AppBundle\API\Crud')->create(
+        $object = $this->crud->create(
             PublicFile::class,
             [],
             ['file' => $file]
         );
 
         $zip = new \ZipArchive();
-        $zip->open($this->getContainer()->get('Claroline\CoreBundle\Library\Utilities\FileUtilities')->getPath($object));
+        $zip->open($this->fileUtils->getPath($object));
         $json = $zip->getFromName('workspace.json');
         $zip->close();
 
         $data = json_decode($json, true);
         $data['code'] = $input->getArgument('code');
-        $data['archive'] = $this->getContainer()->get('Claroline\AppBundle\API\SerializerProvider')->serialize($object);
+        $data['archive'] = $this->serializerProvider->serialize($object);
         $workspace = new Workspace();
         $workspace->setCode($data['code']);
 
         $consoleLogger = ConsoleLogger::get($output);
-        $manager = $this->getContainer()->get('claroline.manager.workspace.transfer');
-        $manager->setLogger($consoleLogger);
-        $manager->create($data, $workspace);
+        $this->transferManager->setLogger($consoleLogger);
+        $this->transferManager->create($data, $workspace);
     }
 }

@@ -12,18 +12,26 @@
 namespace Claroline\MigrationBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\MigrationBundle\Manager\Manager;
 use Psr\Log\LogLevel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractCommand extends ContainerAwareCommand
+abstract class AbstractCommand extends Command
 {
     use BaseCommandTrait;
 
     private $params = ['bundle' => 'The bundle name'];
+
+    private $manager;
+
+    public function setManager(Manager $manager)
+    {
+        $this->manager = $manager;
+    }
 
     protected function configure()
     {
@@ -32,22 +40,21 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
     protected function getManager(OutputInterface $output)
     {
-        $manager = $this->getContainer()->get('claroline.migration.manager');
         $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $manager->setLogger($consoleLogger);
+        $this->manager->setLogger($consoleLogger);
 
-        return $manager;
+        return $this->manager;
     }
 
     protected function getTargetBundle(InputInterface $input)
     {
         $bundleName = $input->getArgument('bundle');
-        $bundles = $this->getContainer()->get('kernel')->getBundle(
+        $bundles = $this->getApplication()->getKernel()->getBundle(
             $bundleName,
             false
         );
@@ -64,7 +71,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $bundleName = $input->getOption('output');
 
         if ($bundleName) {
-            $bundles = $this->getContainer()->get('kernel')->getBundle(
+            $bundles = $this->getApplication()->getKernel()->getBundle(
                 $bundleName,
                 false
             );

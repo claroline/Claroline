@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AuthenticationBundle\Tests\Tests\Functional;
+namespace Claroline\AuthenticationBundle\Tests\Security\Authentication\Guard;
 
 use Claroline\AuthenticationBundle\Manager\IPWhiteListManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator;

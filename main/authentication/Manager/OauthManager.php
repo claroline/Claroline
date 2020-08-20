@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OauthManager
 {
@@ -36,7 +36,7 @@ class OauthManager
     /** @var PlatformConfigurationHandler */
     private $platformConfigHandler;
 
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /** @var UserManager */
@@ -51,20 +51,11 @@ class OauthManager
     /** @var OauthUserRepository */
     private $oauthUserRepository;
 
-    /**
-     * @param EntityManager                $entityManager
-     * @param CacheManager                 $cacheManager
-     * @param PlatformConfigurationHandler $platformConfigHandler
-     * @param TokenStorage                 $tokenStorage
-     * @param UserManager                  $userManager
-     * @param RegistrationManager          $registrationManager
-     * @param Authenticator                $authenticator
-     */
     public function __construct(
         EntityManager $entityManager,
         CacheManager $cacheManager,
         PlatformConfigurationHandler $platformConfigHandler,
-        TokenStorage $tokenStorage,
+        TokenStorageInterface $tokenStorage,
         UserManager $userManager,
         registrationManager $registrationManager,
         Authenticator $authenticator
@@ -79,9 +70,6 @@ class OauthManager
         $this->oauthUserRepository = $entityManager->getRepository(OauthUser::class);
     }
 
-    /**
-     * @param RefreshCacheEvent $event
-     */
     public function refreshCache(RefreshCacheEvent $event)
     {
         foreach (OauthConfiguration::resourceOwners() as $resourceOwner) {

@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Event\User;
 
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched when two users are merged.
@@ -21,10 +21,6 @@ class MergeUsersEvent extends Event
 
     /**
      * MergeUsersEvent constructor.
-     *
-     * @param User  $kept
-     * @param User  $removed
-     * @param array $messages
      */
     public function __construct(
         User $kept,

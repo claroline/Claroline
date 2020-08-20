@@ -15,7 +15,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -24,16 +23,12 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class RegistrationManager
 {
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /** @var AuthenticationSuccessListener */
     private $authenticationHandler;
 
-    /**
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthenticationSuccessListener $authenticationHandler
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthenticationSuccessListener $authenticationHandler

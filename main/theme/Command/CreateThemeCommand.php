@@ -12,17 +12,25 @@
 namespace Claroline\ThemeBundle\Command;
 
 use Claroline\ThemeBundle\Manager\ThemeManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateThemeCommand extends ContainerAwareCommand
+class CreateThemeCommand extends Command
 {
+    private $themeManager;
+
+    public function __construct(ThemeManager $themeManager)
+    {
+        $this->themeManager = $themeManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
-            ->setName('claroline:theme:create')
             ->setDescription('Creates a new custom theme for the platform.')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the theme to create');
     }
@@ -33,9 +41,7 @@ class CreateThemeCommand extends ContainerAwareCommand
 
         $output->writeln('Create a new theme "'.$name.'".');
 
-        /** @var ThemeManager $themeManager */
-        $themeManager = $this->getContainer()->get('claroline.manager.theme_manager');
-        $themeManager->create(['name' => $name]);
+        $this->themeManager->create(['name' => $name]);
 
         $output->writeln('Done !');
     }

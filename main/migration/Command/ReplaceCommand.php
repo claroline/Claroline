@@ -21,8 +21,8 @@ class ReplaceCommand extends AbstractMigrateCommand
     protected function configure()
     {
         parent::configure();
-        $this->setName('claroline:migration:replace')
-            ->setDescription('Replace the last migration of a bundle (this is equivalent to downgrade => discard => generate => upgrade)');
+
+        $this->setDescription('Replace the last migration of a bundle (this is equivalent to downgrade => discard => generate => upgrade)');
         $this->addOption(
             'output',
             null,

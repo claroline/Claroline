@@ -11,31 +11,40 @@
 
 namespace Claroline\TeamBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\TeamBundle\Manager\TeamManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TeamIntegrityCheckerCommand extends ContainerAwareCommand
+class TeamIntegrityCheckerCommand extends Command
 {
+    private $teamManager;
+    private $om;
+
+    public function __construct(TeamManager $teamManager, ObjectManager $om)
+    {
+        $this->teamManager = $teamManager;
+        $this->om = $om;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:teams:check');
         $this->setDefinition([new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code')]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $code = $input->getArgument('code');
-        $teamManager = $this->getContainer()->get('Claroline\TeamBundle\Manager\TeamManager');
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
-
         $workspaces = $code ?
-          [$om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)] :
-          $om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findBy(['personal' => false]);
+          [$this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)] :
+          $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findBy(['personal' => false]);
 
         foreach ($workspaces as $workspace) {
-            $teams = $teamManager->getTeamsByWorkspace($workspace);
+            $teams = $this->teamManager->getTeamsByWorkspace($workspace);
             $output->writeln('Found '.count($teams).' team(s) for workspace '.$workspace->getCode());
             foreach ($teams as $team) {
                 $output->writeln('Initialize perms for team '.$team->getName());
@@ -43,7 +52,7 @@ class TeamIntegrityCheckerCommand extends ContainerAwareCommand
                   $team->getRole(),
                   $team->getTeamManagerRole(),
                 ];
-                $teamManager->initializeTeamPerms($team, $roles);
+                $this->teamManager->initializeTeamPerms($team, $roles);
             }
         }
     }

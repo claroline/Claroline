@@ -52,12 +52,9 @@ class DropzoneController
     /**
      * DropzoneController constructor.
      *
-     * @param FinderProvider           $finder
-     * @param DropzoneManager          $manager
-     * @param string                   $filesDir
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param string $filesDir
      */
-    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir, EventDispatcherInterface  $eventDispatcher, AuthorizationCheckerInterface $authorization)
+    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir, EventDispatcherInterface $eventDispatcher, AuthorizationCheckerInterface $authorization)
     {
         $this->finder = $finder;
         $this->manager = $manager;
@@ -76,9 +73,6 @@ class DropzoneController
      *     class="ClarolineDropZoneBundle:Dropzone",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Dropzone $dropzone
-     * @param Request  $request
      *
      * @return JsonResponse
      */
@@ -115,8 +109,6 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Dropzone $dropzone
-     *
      * @return JsonResponse
      */
     public function correctionsFetchAction(Dropzone $dropzone)
@@ -136,10 +128,6 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop    $drop
-     * @param User    $user
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -169,9 +157,6 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Correction $correction
-     * @param User       $user
      *
      * @return JsonResponse
      */
@@ -203,9 +188,6 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Correction $correction
-     * @param User       $user
-     *
      * @return JsonResponse
      */
     public function correctionValidationSwitchAction(Correction $correction, User $user)
@@ -236,9 +218,6 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Correction $correction
-     * @param User       $user
-     *
      * @return JsonResponse
      */
     public function correctionDeleteAction(Correction $correction, User $user)
@@ -267,10 +246,6 @@ class DropzoneController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Correction $correction
-     * @param User       $user
-     * @param Request    $request
      *
      * @return JsonResponse
      */
@@ -304,9 +279,6 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Dropzone $dropzone
-     * @param User     $user
-     *
      * @return JsonResponse
      */
     public function peerDropFetchAction(Dropzone $dropzone, User $user)
@@ -332,10 +304,6 @@ class DropzoneController
      *     options={"mapping": {"teamId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Dropzone $dropzone
-     * @param Team     $team
-     * @param User     $user
      *
      * @return JsonResponse
      */
@@ -364,9 +332,6 @@ class DropzoneController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param DropzoneTool $tool
-     * @param Document     $document
-     *
      * @return JsonResponse
      */
     public function toolExecuteAction(DropzoneTool $tool, Document $document)
@@ -394,8 +359,6 @@ class DropzoneController
      *     options={"mapping": {"document": "uuid"}}
      * )
      *
-     * @param Document $document
-     *
      * @return StreamedResponse
      */
     public function downloadAction(Document $document)
@@ -419,7 +382,7 @@ class DropzoneController
         $response->headers->set('Content-Type', $data['mimeType']);
         $response->headers->set('Connection', 'close');
 
-        $this->eventDispatcher->dispatch('log', new LogDocumentOpenEvent($document->getDrop()->getDropzone(), $document->getDrop(), $document));
+        $this->eventDispatcher->dispatch(new LogDocumentOpenEvent($document->getDrop()->getDropzone(), $document->getDrop(), $document), 'log');
 
         return $response->send();
     }

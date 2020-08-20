@@ -4,22 +4,26 @@ namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\UserManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserIntegrityCheckerCommand extends ContainerAwareCommand implements AdminCliCommand
+class UserIntegrityCheckerCommand extends Command implements AdminCliCommand
 {
-    protected function configure()
+    private $userManager;
+
+    public function __construct(UserManager $userManager)
     {
-        $this->setName('claroline:user:check');
+        $this->userManager = $userManager;
+
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
-        $userManager->setLogger($consoleLogger);
-        $userManager->bindUserToOrganization();
+        $this->userManager->setLogger($consoleLogger);
+        $this->userManager->bindUserToOrganization();
     }
 }

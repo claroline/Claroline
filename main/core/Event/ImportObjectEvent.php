@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event;
 
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ImportObjectEvent extends Event
 {

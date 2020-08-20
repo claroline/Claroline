@@ -4,24 +4,32 @@ namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildDefaultsCommand extends ContainerAwareCommand implements AdminCliCommand
+class BuildDefaultsCommand extends Command implements AdminCliCommand
 {
+    private $workspaceManager;
+
+    public function __construct(WorkspaceManager $workspaceManager)
+    {
+        $this->workspaceManager = $workspaceManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:build-default')
-            ->setDescription('This command allow you to rebuild the default workspaces');
+        $this->setDescription('This command allows you to rebuild the default workspaces');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-        $workspaceManager->setLogger($consoleLogger);
-        $workspaceManager->getDefaultModel(false, true);
-        $workspaceManager->getDefaultModel(true, true);
+        $this->workspaceManager->setLogger($consoleLogger);
+        $this->workspaceManager->getDefaultModel(false, true);
+        $this->workspaceManager->getDefaultModel(true, true);
     }
 }

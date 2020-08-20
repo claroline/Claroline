@@ -11,7 +11,7 @@
 
 namespace Claroline\AppBundle\Event\Platform;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class RefreshCacheEvent extends Event
 {
@@ -19,12 +19,12 @@ class RefreshCacheEvent extends Event
 
     public function __construct()
     {
-        $this->parameters = array();
+        $this->parameters = [];
     }
 
     public function addCacheParameter($key, $value)
     {
-        $this->parameters = array_merge($this->parameters, array($key => $value));
+        $this->parameters = array_merge($this->parameters, [$key => $value]);
     }
 
     public function getParameters()

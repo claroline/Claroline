@@ -10,14 +10,12 @@ class FinderProviderTest extends TransactionalTestCase
 {
     /** @var SerializerProvider */
     private $provider;
-    /** @var mixed[] */
-    private $serializers;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->provider = $this->client->getContainer()->get('Claroline\AppBundle\API\FinderProvider');
-        $this->reader = $this->client->getContainer()->get('annotation_reader');
+        $this->reader = $this->client->getContainer()->get('test.annotation_reader');
         $tokenStorage = $this->client->getContainer()->get('security.token_storage');
         $token = new AnonymousToken('key', 'anon.');
         $tokenStorage->setToken($token);

@@ -3,7 +3,7 @@
 namespace Icap\NotificationBundle\Event\Notification;
 
 use Icap\NotificationBundle\Entity\NotificationViewer;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class NotificationCreateDelegateViewEvent extends Event
 {

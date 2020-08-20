@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class WebpackExtension extends \Twig_Extension
+class WebpackExtension extends AbstractExtension
 {
     private $assetExtension;
     private $environment;
@@ -23,9 +25,8 @@ class WebpackExtension extends \Twig_Extension
     /**
      * WebpackExtension constructor.
      *
-     * @param AssetExtension $extension
-     * @param string         $environment
-     * @param string         $rootDir
+     * @param string $environment
+     * @param string $rootDir
      */
     public function __construct(AssetExtension $extension, $environment, $rootDir)
     {
@@ -37,7 +38,7 @@ class WebpackExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'hotAsset' => new \Twig_SimpleFunction('hotAsset', [$this, 'hotAsset']),
+            'hotAsset' => new TwigFunction('hotAsset', [$this, 'hotAsset']),
         ];
     }
 
@@ -65,9 +66,7 @@ class WebpackExtension extends \Twig_Extension
         if (!isset($assets[$assetName])) {
             $assetNames = implode("\n", array_keys($assets));
 
-            throw new \Exception(
-                "Cannot find asset '{$assetName}' in webpack stats. Found:\n{$assetNames})"
-            );
+            throw new \Exception("Cannot find asset '{$assetName}' in webpack stats. Found:\n{$assetNames})");
         }
 
         if ('dev' === $this->environment && $hot) {
@@ -92,10 +91,7 @@ class WebpackExtension extends \Twig_Extension
             $assetFile = "{$this->rootDir}/../webpack-{$assetFile}.json";
 
             if (!file_exists($assetFile)) {
-                throw new \Exception(sprintf(
-                    'Cannot find webpack generated assets file(s). Make sure you '
-                    .'have ran webpack with assets-webpack-plugin enabled'
-                ));
+                throw new \Exception(sprintf('Cannot find webpack generated assets file(s). Make sure you '.'have ran webpack with assets-webpack-plugin enabled'));
             }
 
             $this->assetCache = json_decode(file_get_contents($assetFile), true);

@@ -13,8 +13,9 @@ namespace Claroline\CoreBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
-class UpdateRichTextCommand extends ContainerAwareCommand
+class UpdateRichTextCommand extends Command
 {
     use BaseCommandTrait;
 
@@ -30,10 +31,18 @@ class UpdateRichTextCommand extends ContainerAwareCommand
         'old_string' => 'The string to match',
         'new_string' => 'The string to replace',
     ];
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
-        $this->setName('claroline:rich_texts:update')
+        $this
             ->setDescription('Update a text string ')
             ->setDefinition([
                new InputArgument('old_string', InputArgument::REQUIRED, 'old str'),
@@ -88,25 +97,23 @@ class UpdateRichTextCommand extends ContainerAwareCommand
         $toReplace = $input->getArgument('new_string');
         $classes = $input->getArgument('classes');
         $entities = [];
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $search = '%'.addcslashes($toMatch, '%_').'%';
 
         foreach ($classes as $class) {
             foreach ($parsable[$class] as $property) {
                 if ($input->getOption('regex')) {
-                    $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-                    $metadata = $em->getClassMetadata($class);
+                    $metadata = $this->em->getClassMetadata($class);
 
                     $tableName = $metadata->getTableName();
                     $columnName = $metadata->getColumnName($property);
                     $sql = 'SELECT * from '.$tableName.' WHERE '.$columnName." RLIKE '{$toMatch}'";
                     $output->writeln($sql);
-                    $rsm = new ResultSetMappingBuilder($em);
+                    $rsm = new ResultSetMappingBuilder($this->em);
                     $rsm->addRootEntityFromClassMetadata($class, '');
-                    $query = $em->createNativeQuery($sql, $rsm);
+                    $query = $this->em->createNativeQuery($sql, $rsm);
                     $data = $query->getResult();
                 } else {
-                    $data = $em->getRepository($class)->createQueryBuilder('e')
+                    $data = $this->em->getRepository($class)->createQueryBuilder('e')
                       ->where("e.{$property} LIKE :str")
                       ->setParameter('str', $search)
                       ->getQuery()
@@ -163,14 +170,14 @@ class UpdateRichTextCommand extends ContainerAwareCommand
 
                     $func = 'set'.ucfirst($property);
                     $entity->$func($text);
-                    $em->persist($entity);
+                    $this->em->persist($entity);
                     ++$i;
                 }
             }
         }
 
         $output->writeln("<comment>{$i} element changed... flushing</comment>");
-        $em->flush();
+        $this->em->flush();
         $output->writeln('<comment>Done</comment>');
     }
 

@@ -1,5 +1,5 @@
 # This file contains the authentication container parameters.
 parameters:
     # IP config files (should be stored in DB)
-    claroline.param.ip_white_list_file:       "%kernel.root_dir%/config/ip_white_list.yml"
-    claroline.param.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
+    claroline.param.ip_white_list_file:       "%kernel.project_dir%/app/config/ip_white_list.yml"
+    claroline.param.ip_range_white_list_file: "%kernel.project_dir%/app/config/white_list_ip_range.yml"

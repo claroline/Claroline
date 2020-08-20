@@ -51,13 +51,12 @@ class BlogTrackingManager
 
     public function dispatch($event)
     {
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         return $this;
     }
 
     /**
-     * @param Blog  $blog
      * @param array $changeSet
      *
      * @return Controller
@@ -70,8 +69,7 @@ class BlogTrackingManager
     }
 
     /**
-     * @param BlogOptions $blogOptions
-     * @param array       $changeSet
+     * @param array $changeSet
      *
      * @return Controller
      */
@@ -83,8 +81,7 @@ class BlogTrackingManager
     }
 
     /**
-     * @param BlogOptions $blogOptions
-     * @param array       $changeSet
+     * @param array $changeSet
      *
      * @return Controller
      */
@@ -96,9 +93,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Blog $blog
-     * @param Post $post
-     *
      * @return Controller
      */
     public function dispatchPostCreateEvent(Blog $blog, Post $post)
@@ -109,8 +103,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post $post
-     *
      * @return Controller
      */
     public function dispatchPostReadEvent(Post $post)
@@ -121,7 +113,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post  $post
      * @param array $changeSet
      *
      * @return Controller
@@ -134,8 +125,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post $post
-     *
      * @return Controller
      */
     public function dispatchPostDeleteEvent(Post $post)
@@ -146,8 +135,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post $post
-     *
      * @return Controller
      */
     public function dispatchPostPublishEvent(Post $post)
@@ -158,9 +145,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post    $post
-     * @param Comment $comment
-     *
      * @return Controller
      */
     public function dispatchCommentCreateEvent(Post $post, Comment $comment)
@@ -171,9 +155,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post    $post
-     * @param Comment $comment
-     *
      * @return Controller
      */
     public function dispatchCommentDeleteEvent(Post $post, Comment $comment)
@@ -184,8 +165,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post    $post
-     * @param Comment $comment
      * @param $changeSet
      *
      * @return Controller
@@ -198,9 +177,6 @@ class BlogTrackingManager
     }
 
     /**
-     * @param Post    $post
-     * @param Comment $comment
-     *
      * @return Controller
      */
     public function dispatchCommentPublishEvent(Post $post, Comment $comment)
@@ -212,10 +188,6 @@ class BlogTrackingManager
 
     /**
      * Logs participation in resource tracking.
-     *
-     * @param ResourceNode $node
-     * @param User         $user
-     * @param \DateTime    $date
      */
     public function updateResourceTracking(ResourceNode $node, User $user, \DateTime $date)
     {

@@ -11,7 +11,7 @@
 
 namespace Claroline\AppBundle\Event\Crud;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Crud event class.

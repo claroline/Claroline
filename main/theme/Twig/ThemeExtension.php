@@ -14,8 +14,10 @@ namespace Claroline\ThemeBundle\Twig;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class ThemeExtension extends \Twig_Extension
+class ThemeExtension extends AbstractExtension
 {
     /** @var AssetExtension */
     private $assetExtension;
@@ -31,14 +33,11 @@ class ThemeExtension extends \Twig_Extension
     /**
      * ThemeExtension constructor.
      *
-     * @param AssetExtension               $extension
-     * @param ThemeManager                 $themeManager
-     * @param PlatformConfigurationHandler $config
-     * @param string                       $rootDir
+     * @param string $rootDir
      */
     public function __construct(
-        AssetExtension               $extension,
-        ThemeManager                 $themeManager,
+        AssetExtension $extension,
+        ThemeManager $themeManager,
         PlatformConfigurationHandler $config,
         $rootDir)
     {
@@ -56,7 +55,7 @@ class ThemeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'themeAsset' => new \Twig_SimpleFunction('themeAsset', [$this, 'themeAsset']),
+            'themeAsset' => new TwigFunction('themeAsset', [$this, 'themeAsset']),
         ];
     }
 
@@ -77,10 +76,7 @@ class ThemeExtension extends \Twig_Extension
                 // default theme not found too, this time we can not do anything
                 $assetNames = implode("\n", array_keys($assets));
 
-                throw new \Exception(
-                    "Cannot find asset '{$path}' for theme '{$themeName}' ".
-                    "in theme build. Found:\n{$assetNames})"
-                );
+                throw new \Exception("Cannot find asset '{$path}' for theme '{$themeName}' "."in theme build. Found:\n{$assetNames})");
             }
         }
 
@@ -95,9 +91,7 @@ class ThemeExtension extends \Twig_Extension
             $assetFile = "{$this->rootDir}/../theme-assets.json";
 
             if (!file_exists($assetFile)) {
-                throw new \Exception(sprintf(
-                    'Cannot find theme generated assets file(s). Make sure you have built them.'
-                ));
+                throw new \Exception(sprintf('Cannot find theme generated assets file(s). Make sure you have built them.'));
             }
 
             $this->assetCache = json_decode(file_get_contents($assetFile), true);

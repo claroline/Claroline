@@ -2,10 +2,10 @@
 
 namespace HeVinci\CompetencyBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractFixtureCommand extends ContainerAwareCommand
+abstract class AbstractFixtureCommand extends Command
 {
     protected function getFixture($fixtureFile, OutputInterface $output)
     {
@@ -22,7 +22,7 @@ abstract class AbstractFixtureCommand extends ContainerAwareCommand
         $classes = get_declared_classes();
         $fixtureClass = end($classes); // should check type with reflection
 
-        $container = $this->getContainer();
+        $container = $this->getApplication()->getKernel()->getContainer();
 
         return new $fixtureClass($container, $output);
     }

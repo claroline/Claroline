@@ -13,46 +13,51 @@ namespace Claroline\ThemeBundle\Command;
 
 use Claroline\ThemeBundle\Manager\ThemeBuilderManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildThemesCommand extends ContainerAwareCommand
+class BuildThemesCommand extends Command
 {
+    private $themeBuilder;
+    private $themeManager;
+
+    public function __construct(ThemeBuilderManager $themeBuilder, ThemeManager $themeManager)
+    {
+        $this->themeBuilder = $themeBuilder;
+        $this->themeManager = $themeManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
-            ->setName('claroline:theme:build')
             ->setDescription('Build themes which are installed in the platform')
-            ->addOption('theme',    't',  InputOption::VALUE_OPTIONAL, 'Theme name. Rebuild only this theme.')
-            ->addOption('no-cache', 'c', InputOption::VALUE_NONE,     'Rebuild themes without using cache.');
+            ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Theme name. Rebuild only this theme.')
+            ->addOption('no-cache', 'c', InputOption::VALUE_NONE, 'Rebuild themes without using cache.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var ThemeManager $themeManager */
-        $themeManager = $this->getContainer()->get('claroline.manager.theme_manager');
-        /** @var ThemeBuilderManager $builder */
-        $builder = $this->getContainer()->get('claroline.manager.theme_builder');
-
         $output->writeln('Rebuilding themes...');
 
         // Get themes to build (either a single theme or all themes)
         $themeName = $input->getOption('theme');
         if (!empty($themeName)) {
-            $theme = $themeManager->getThemeByName($themeName);
+            $theme = $this->themeManager->getThemeByName($themeName);
             if (!empty($theme)) {
-                $themesToRebuild = [$themeManager->getThemeByName($themeName)];
+                $themesToRebuild = [$this->themeManager->getThemeByName($themeName)];
             } else {
                 $output->writeln('Can not find theme "'.$themeName.'".');
             }
         } else {
-            $themesToRebuild = $themeManager->all();
+            $themesToRebuild = $this->themeManager->all();
         }
 
         if (!empty($themesToRebuild)) {
-            $logs = $builder->rebuild(
+            $logs = $this->themeBuilder->rebuild(
                 $themesToRebuild,
                 !$input->getOption('no-cache')
             );

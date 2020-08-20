@@ -35,9 +35,6 @@ class ChapterManager
     /**
      * Constructor.
      *
-     * @param EntityManager     $entityManager
-     * @param ChapterSerializer $chapterSerializer
-     * @param ObjectManager     $om
      * @param $eventDispatcher  $eventDispatcher
      */
     public function __construct(
@@ -55,9 +52,6 @@ class ChapterManager
 
     /**
      * Copy full lesson chapters, from original root to copy root.
-     *
-     * @param Chapter $root_original
-     * @param Chapter $root_copy
      */
     public function copyRoot(Chapter $root_original, Chapter $root_copy)
     {
@@ -69,10 +63,8 @@ class ChapterManager
     /**
      * Copy chapter_org subchapters into provided chapter_copy.
      *
-     * @param Chapter $chapter_org
-     * @param Chapter $parent
-     * @param bool    $copy_children
-     * @param Lesson  $copyName
+     * @param bool   $copy_children
+     * @param Lesson $copyName
      *
      * @return Chapter $chapter_copy
      */
@@ -204,6 +196,6 @@ class ChapterManager
 
     private function dispatch($event)
     {
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 }

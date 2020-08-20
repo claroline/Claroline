@@ -11,10 +11,15 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Command\Traits\AskRolesTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Listener\Log\LogListener;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Psr\Log\LogLevel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -22,20 +27,36 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
-class RemoveCommand extends ContainerAwareCommand
+class RemoveCommand extends Command
 {
     private $force = false;
     private $output = null;
     private $input = null;
 
+    private $om;
+    private $workspaceManager;
+    private $finderProvider;
+    private $crud;
+    private $logListener;
+
     use AskRolesTrait;
 
     const BATCH_SIZE = 25;
 
+    public function __construct(ObjectManager $om, WorkspaceManager $workspaceManager, FinderProvider $finderProvider, Crud $crud, LogListener $logListener)
+    {
+        $this->om = $om;
+        $this->workspaceManager = $workspaceManager;
+        $this->finderProvider = $finderProvider;
+        $this->crud = $crud;
+        $this->logListener = $logListener;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:remove')
-            ->setDescription('Remove workspaces');
+        $this->setDescription('Remove workspaces');
         $this->addOption(
             'personal',
             'p',
@@ -119,15 +140,14 @@ class RemoveCommand extends ContainerAwareCommand
         ];
 
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-        $workspaceManager->setLogger($consoleLogger);
+        $this->workspaceManager->setLogger($consoleLogger);
 
         if ($personal) {
             $question = new ConfirmationQuestion('Remove all personal Workspaces ? y/n [y] ', true);
             $all = $helper->ask($input, $output, $question);
             $question = new ConfirmationQuestion('Include workspaces from removed users (orphans) ? y/n [y] ', true);
             $includeOrphans = $helper->ask($input, $output, $question);
-            $rolesSearch = $this->askRoles($all, $input, $output, $this->getContainer(), $helper);
+            $rolesSearch = $this->askRoles($all, $input, $output, $this->om, $helper);
             $this->deletePersonalWorkspace($all, $rolesSearch, $includeOrphans);
         }
 
@@ -146,7 +166,7 @@ class RemoveCommand extends ContainerAwareCommand
 
     private function deleteOrphans()
     {
-        $toDelete = $this->getContainer()->get('Claroline\AppBundle\API\FinderProvider')->fetch(Workspace::class, ['orphan' => true]);
+        $toDelete = $this->finderProvider->fetch(Workspace::class, ['orphan' => true]);
         if (count($toDelete) > 0) {
             $this->confirmWorkspaceDelete($toDelete);
         }
@@ -154,8 +174,7 @@ class RemoveCommand extends ContainerAwareCommand
 
     private function deleteWorkspaceByCodeAndName($code, $name)
     {
-        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-        $toDelete = $workspaceManager->getNonPersonalByCodeAndName($code, $name);
+        $toDelete = $this->workspaceManager->getNonPersonalByCodeAndName($code, $name);
 
         if (count($toDelete) > 0) {
             $this->confirmWorkspaceDelete($toDelete);
@@ -168,10 +187,9 @@ class RemoveCommand extends ContainerAwareCommand
     private function deletePersonalWorkspace($all, $rolesSearch, $includeOrphans)
     {
         $empty = $this->getInput()->getOption('empty');
-        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $workspacesToDelete = $all ?
-            $workspaceManager->getPersonalWorkspaceExcludingRoles($rolesSearch, $includeOrphans, $empty, null, self::BATCH_SIZE) :
-            $workspaceManager->getPersonalWorkspaceByRolesIncludingGroups($rolesSearch, $includeOrphans, $empty, null, self::BATCH_SIZE);
+            $this->workspaceManager->getPersonalWorkspaceExcludingRoles($rolesSearch, $includeOrphans, $empty, null, self::BATCH_SIZE) :
+            $this->workspaceManager->getPersonalWorkspaceByRolesIncludingGroups($rolesSearch, $includeOrphans, $empty, null, self::BATCH_SIZE);
 
         if (count($workspacesToDelete) > 0) {
             if ($this->confirmWorkspaceDelete($workspacesToDelete)) {
@@ -195,22 +213,21 @@ class RemoveCommand extends ContainerAwareCommand
             $continue = $helper->ask($this->getInput(), $this->getOutput(), $question);
         }
 
-        $this->getContainer()->get('Claroline\CoreBundle\Listener\Log\LogListener')->disable();
+        $this->logListener->disable();
 
         if ($this->getForce() || $continue) {
-            $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
             $i = 1;
 
-            $om->startFlushSuite();
+            $this->om->startFlushSuite();
 
             foreach ($workspaces as $workspace) {
                 $this->getOutput()->writeln('Removing '.$i.'/'.count($workspaces));
-                $this->getContainer()->get('Claroline\AppBundle\API\Crud')->delete($workspace);
+                $this->crud->delete($workspace);
                 ++$i;
             }
 
             $this->getOutput()->writeln('<comment> Flushing... </comment>');
-            $om->endFlushSuite();
+            $this->om->endFlushSuite();
 
             return true;
         }

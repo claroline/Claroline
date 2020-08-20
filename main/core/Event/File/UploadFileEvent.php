@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Event\File;
 
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Upload File event.
@@ -22,9 +22,6 @@ class UploadFileEvent extends Event
     /** @var PublicFile */
     private $file;
 
-    /**
-     * @param PublicFile $file
-     **/
     public function __construct(PublicFile $file)
     {
         $this->file = $file;

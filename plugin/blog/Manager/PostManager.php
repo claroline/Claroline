@@ -29,13 +29,6 @@ class PostManager
     const GET_PUBLISHED_POSTS = 'GET_PUBLISHED_POSTS';
     const GET_UNPUBLISHED_POSTS = 'GET_UNPUBLISHED_POSTS';
 
-    /**
-     * @param FinderProvider      $finder
-     * @param ObjectManager       $om
-     * @param BlogTrackingManager $trackingManager
-     * @param PostRepository      $repo
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om,
@@ -56,7 +49,6 @@ class PostManager
     }
 
     /**
-     * @param Blog   $blog
      * @param string $postId
      *
      * @return post
@@ -81,9 +73,6 @@ class PostManager
     /**
      * Find all content for a given user and the replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replacePostAuthor(User $from, User $to)
@@ -103,10 +92,6 @@ class PostManager
 
     /**
      * Create a post.
-     *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
      */
     public function createPost(Blog $blog, Post $post, User $user)
     {
@@ -135,11 +120,6 @@ class PostManager
 
     /**
      * Update a post.
-     *
-     * @param Blog $blog
-     * @param Post $existingPost
-     * @param Post $post
-     * @param User $user
      *
      * @return Post
      */
@@ -172,10 +152,6 @@ class PostManager
     /**
      * Delete a post.
      *
-     * @param Blog $blog
-     * @param Post $post
-     * @param User $user
-     *
      * @return Post
      */
     public function deletePost(Blog $blog, Post $post, User $user)
@@ -192,7 +168,7 @@ class PostManager
             ],
             'replace' => true,
         ]);
-        $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
 
         $this->om->remove($post);
         $this->om->flush();
@@ -229,7 +205,6 @@ class PostManager
     /**
      * Switch post state.
      *
-     * @param Post $post
      * @param User $user
      */
     public function switchPublicationState(Post $post)
@@ -347,8 +322,8 @@ class PostManager
         ]);
 
         $this->eventDispatcher->dispatch(
-            'claroline_retrieve_used_tags_by_class_and_ids',
-            $event
+            $event,
+            'claroline_retrieve_used_tags_by_class_and_ids'
         );
         $tags = $event->getResponse();
 
@@ -376,6 +351,6 @@ class PostManager
             'replace' => true,
         ]);
 
-        $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
     }
 }

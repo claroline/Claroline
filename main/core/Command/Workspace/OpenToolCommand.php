@@ -19,17 +19,28 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class OpenToolCommand extends ContainerAwareCommand implements AdminCliCommand
+class OpenToolCommand extends Command implements AdminCliCommand
 {
+    private $om;
+    private $em;
+
+    public function __construct(ObjectManager $om, EntityManagerInterface $em)
+    {
+        $this->om = $om;
+        $this->em = $em;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:open-tool')
-            ->setDescription('export workspace archive');
+        $this->setDescription('export workspace archive');
         $this->setDefinition([
             new InputArgument('tool', InputArgument::REQUIRED, 'The tool to open'),
         ]);
@@ -37,15 +48,11 @@ class OpenToolCommand extends ContainerAwareCommand implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        /** @var ObjectManager $om */
-        $om = $container->get('doctrine.orm.entity_manager');
-
         /** @var Tool $tool */
-        $tool = $om->getRepository(Tool::class)->findOneBy(['name' => $input->getArgument('tool')]);
+        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $input->getArgument('tool')]);
         if ($tool) {
             /** @var Workspace[] $workspaces */
-            $workspaces = $container->get('doctrine.orm.entity_manager')->getRepository(Workspace::class)->findBy([
+            $workspaces = $this->em->getRepository(Workspace::class)->findBy([
                 'model' => false,
                 'personal' => false,
             ]);
@@ -54,7 +61,7 @@ class OpenToolCommand extends ContainerAwareCommand implements AdminCliCommand
 
             foreach ($workspaces as $workspace) {
                 /** @var OrderedTool $orderedTool */
-                $orderedTool = $om->getRepository(OrderedTool::class)->findOneBy([
+                $orderedTool = $this->om->getRepository(OrderedTool::class)->findOneBy([
                     'tool' => $tool,
                     'workspace' => $workspace,
                 ]);
@@ -65,7 +72,7 @@ class OpenToolCommand extends ContainerAwareCommand implements AdminCliCommand
                     $wsRoles = $workspace->getRoles();
                     foreach ($wsRoles as $role) {
                         // get rights for the current role
-                        $toolRights = $om->getRepository(ToolRights::class)
+                        $toolRights = $this->om->getRepository(ToolRights::class)
                             ->findBy(['orderedTool' => $orderedTool, 'role' => $role], ['id' => 'ASC']);
 
                         if (0 < count($toolRights)) {
@@ -83,14 +90,14 @@ class OpenToolCommand extends ContainerAwareCommand implements AdminCliCommand
                             $output->writeln(sprintf('Role %s has no access. Give him', $role->getName()));
                             $mask += ToolMaskDecoder::$defaultValues['open'];
                             $rights->setMask($mask);
-                            $om->persist($rights);
+                            $this->om->persist($rights);
                         }
                     }
                 }
             }
         }
 
-        $om->flush();
+        $this->om->flush();
 
         $output->writeln('Done');
     }

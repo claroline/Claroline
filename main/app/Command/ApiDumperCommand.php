@@ -11,17 +11,30 @@
 
 namespace Claroline\AppBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\AppBundle\Routing\Documentator;
+use Claroline\AppBundle\Routing\Finder;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class ApiDumperCommand extends ContainerAwareCommand
+class ApiDumperCommand extends Command
 {
+    private $finder;
+    private $documentator;
+
+    public function __construct(Finder $finder, Documentator $documentator)
+    {
+        $this->finder = $finder;
+        $this->documentator = $documentator;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:api:dump')->setDescription('Dump the api doc as json');
+        $this->setDescription('Dump the api doc as json');
         $this->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'The required format (json|yml)');
         $this->addOption('debug', 'd', InputOption::VALUE_NONE, 'debug mode (no output)');
     }
@@ -30,10 +43,9 @@ class ApiDumperCommand extends ContainerAwareCommand
     {
         $format = $input->getOption('format') ?? 'json';
         $data = [];
-        $classes = $this->getContainer()->get('Claroline\AppBundle\Routing\Finder')->getHandledClasses();
 
-        foreach ($classes as $class) {
-            $data[$class] = $this->getContainer()->get('Claroline\AppBundle\Routing\Documentator')->documentClass($class);
+        foreach ($this->finder->getHandledClasses() as $class) {
+            $data[$class] = $this->documentator->documentClass($class);
         }
 
         switch ($format) {

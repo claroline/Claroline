@@ -14,11 +14,11 @@ namespace Claroline\CoreBundle\Repository;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 class ResourceActionRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry, PluginManager $manager)
+    public function __construct(ManagerRegistry $registry, PluginManager $manager)
     {
         $this->bundles = $manager->getEnabled(true);
 

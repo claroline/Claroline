@@ -12,11 +12,13 @@
 namespace Claroline\MigrationBundle\Twig;
 
 use Claroline\MigrationBundle\Generator\SqlFormatter as Formatter;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Adds a 'formatSql' function to the Twig environment.
  */
-class SqlFormatterExtension extends \Twig_Extension
+class SqlFormatterExtension extends AbstractExtension
 {
     /**
      * Constructor. Sets the formatting options of the SQL formatter.
@@ -24,7 +26,7 @@ class SqlFormatterExtension extends \Twig_Extension
     public function __construct()
     {
         Formatter::$tab = '    ';
-        Formatter::setKeywordFormattingOptions(array(
+        Formatter::setKeywordFormattingOptions([
             'SELECT' => Formatter::KEYWORD_NEWLINE,
             'FROM' => Formatter::KEYWORD_NEWLINE,
             'WHERE' => Formatter::KEYWORD_NEWLINE,
@@ -34,7 +36,7 @@ class SqlFormatterExtension extends \Twig_Extension
             'REFERENCES' => Formatter::KEYWORD_NEWLINE,
             'ON DELETE CASCADE' => Formatter::KEYWORD_NEWLINE,
             'ON DELETE SET NULL' => Formatter::KEYWORD_NEWLINE,
-        ));
+        ]);
     }
 
     /**
@@ -50,9 +52,9 @@ class SqlFormatterExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            'formatSql' => new \Twig_SimpleFunction('formatSql', array($this, 'formatSql')),
-        );
+        return [
+            'formatSql' => new TwigFunction('formatSql', [$this, 'formatSql']),
+        ];
     }
 
     /**
@@ -73,7 +75,7 @@ class SqlFormatterExtension extends \Twig_Extension
         }
 
         $sql = explode("\n", Formatter::format($sql, false));
-        $indentedLines = array();
+        $indentedLines = [];
 
         foreach ($sql as $line) {
             $indentedLines[] = $indent.str_replace('"', '\"', $line);

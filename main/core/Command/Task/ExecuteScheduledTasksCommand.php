@@ -12,31 +12,40 @@
 namespace Claroline\CoreBundle\Command\Task;
 
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class ExecuteScheduledTasksCommand extends ContainerAwareCommand
+class ExecuteScheduledTasksCommand extends Command
 {
+    private $taskManager;
+    private $eventDispatcher;
+
+    public function __construct(ScheduledTaskManager $taskManager, EventDispatcherInterface $eventDispatcher)
+    {
+        $this->taskManager = $taskManager;
+        $this->eventDispatcher = $eventDispatcher;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this
-            ->setName('claroline:tasks:execute')
-            ->setDescription('Execute scheduled tasks with passed execution date');
+        $this->setDescription('Execute scheduled tasks with passed execution date');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Executing scheduled tasks...');
-        $taskManager = $this->getContainer()->get('claroline.manager.scheduled_task_manager');
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
-        $tasks = $taskManager->getTasksToExecute();
+        $tasks = $this->taskManager->getTasksToExecute();
 
         foreach ($tasks as $task) {
             $output->writeln('['.$task->getType().'] '.$task->getName().' : Requesting execution...');
-            $dispatcher->dispatch(
-                'claroline_scheduled_task_execute_'.$task->getType(),
-                new GenericDataEvent($task)
+            $this->eventDispatcher->dispatch(
+                new GenericDataEvent($task),
+                'claroline_scheduled_task_execute_'.$task->getType()
             );
         }
     }

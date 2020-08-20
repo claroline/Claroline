@@ -9,5 +9,5 @@ framework:
     translator:      { fallback: en }
     default_locale: "%locale%"
     session:
-      save_path: "%kernel.root_dir%/sessions"
+      save_path: "%kernel.project_dir%/app/sessions"
       cookie_httponly: true

@@ -1,0 +1,9 @@
+services:
+
+    Claroline\TeamBundle\Command\TeamIntegrityCheckerCommand:
+        arguments:
+            - '@Claroline\TeamBundle\Manager\TeamManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:teams:check' }
+

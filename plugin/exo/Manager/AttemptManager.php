@@ -65,14 +65,6 @@ class AttemptManager
 
     /**
      * AttemptManager constructor.
-     *
-     * @param ObjectManager            $om
-     * @param PaperGenerator           $paperGenerator
-     * @param PaperManager             $paperManager
-     * @param AnswerManager            $answerManager
-     * @param ItemManager              $itemManager
-     * @param ItemSerializer           $itemSerializer
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         ObjectManager $om,
@@ -98,8 +90,7 @@ class AttemptManager
      *
      * Based on the maximum attempt allowed and the number of already done by the user.
      *
-     * @param Exercise $exercise
-     * @param User     $user
+     * @param User $user
      *
      * @return bool
      */
@@ -148,8 +139,7 @@ class AttemptManager
      * A user can submit to a paper only if it is its own and the paper is not closed (= no end).
      * ATTENTION : As is, anonymous have access to all the other anonymous Papers !!!
      *
-     * @param Paper $paper
-     * @param User  $user
+     * @param User $user
      *
      * @return bool
      */
@@ -211,7 +201,7 @@ class AttemptManager
           'user' => $user ?
            ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
         ]);
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         return $paper;
     }
@@ -228,8 +218,6 @@ class AttemptManager
     /**
      * Submits user answers to a paper.
      *
-     * @param Paper  $paper
-     * @param array  $answers
      * @param string $clientIp
      *
      * @throws InvalidDataException - if there is any invalid answer
@@ -246,10 +234,7 @@ class AttemptManager
             $question = $paper->getQuestion($answerData['questionId']);
 
             if (empty($question)) {
-                throw new InvalidDataException('Submitted answers are invalid', [[
-                    'path' => '/questionId',
-                    'message' => 'question is not part of the attempt',
-                ]]);
+                throw new InvalidDataException('Submitted answers are invalid', [['path' => '/questionId', 'message' => 'question is not part of the attempt']]);
             }
 
             $existingAnswer = $paper->getAnswer($answerData['questionId']);
@@ -287,9 +272,8 @@ class AttemptManager
      * Ends a user paper.
      * Sets the end date of the paper and calculates its score.
      *
-     * @param Paper $paper
-     * @param bool  $finished
-     * @param bool  $generateEvaluation
+     * @param bool $finished
+     * @param bool $generateEvaluation
      */
     public function end(Paper $paper, $finished = true, $generateEvaluation = true)
     {
@@ -315,14 +299,13 @@ class AttemptManager
             $event = new LogExerciseEvent('resource-ujm_exercise-paper-end', $paper->getExercise(), [
                 'user' => $user ? ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
             ]);
-            $this->eventDispatcher->dispatch('log', $event);
+            $this->eventDispatcher->dispatch($event, 'log');
         }
     }
 
     /**
      * Flags an hint has used in the user paper and returns the hint content.
      *
-     * @param Paper  $paper
      * @param string $questionId
      * @param string $hintId
      * @param string $clientIp

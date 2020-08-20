@@ -6,7 +6,7 @@ use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An event which is fired when a DataSource is requested.
@@ -48,8 +48,6 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
     /**
      * GetDataEvent constructor.
      *
-     * @param string    $context
-     * @param array     $options
      * @param User      $user
      * @param Workspace $workspace
      */

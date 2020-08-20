@@ -1,0 +1,10 @@
+services:
+
+    Claroline\ClacoFormBundle\Command\CreateEntriesFromCsvCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:clacoform:csv' }
+

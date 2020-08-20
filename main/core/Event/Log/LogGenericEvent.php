@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class LogGenericEvent extends Event implements RestrictionnableInterface
 {
@@ -117,8 +117,6 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
 
     /**
      * Sets receiver's data.
-     *
-     * @param User $receiver
      *
      * @return $this
      */
@@ -245,8 +243,6 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
 
     /**
      * Used when the doer isn't the logged user.
-     *
-     * @param User $doer
      */
     public function setDoer(User $doer)
     {

@@ -36,7 +36,7 @@ class ExerciseManager
     /** @var ExerciseSerializer */
     private $serializer;
 
-    /** @var ResourceManager $resourceManager */
+    /** @var ResourceManager */
     private $resourceManager;
 
     /** @var ItemManager */
@@ -56,16 +56,6 @@ class ExerciseManager
 
     /**
      * ExerciseManager constructor.
-     *
-     * @param ObjectManager             $om
-     * @param ExerciseValidator         $validator
-     * @param ExerciseSerializer        $serializer
-     * @param ResourceManager           $resourceManager
-     * @param ItemManager               $itemManager
-     * @param PaperManager              $paperManager
-     * @param ItemDefinitionsCollection $definitions
-     * @param ClaroUtilities            $utils
-     * @param EventDispatcherInterface  $eventDispatcher
      */
     public function __construct(
         ObjectManager $om,
@@ -92,9 +82,6 @@ class ExerciseManager
 
     /**
      * Validates and updates an Exercise entity with raw data.
-     *
-     * @param Exercise $exercise
-     * @param array    $data
      *
      * @return Exercise
      *
@@ -128,16 +115,13 @@ class ExerciseManager
 
         // Log exercise update
         $event = new LogExerciseUpdateEvent($exercise, (array) $this->serializer->serialize($exercise));
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
 
         return $exercise;
     }
 
     /**
      * Serializes an Exercise.
-     *
-     * @param Exercise $exercise
-     * @param array    $options
      *
      * @return array
      */
@@ -149,8 +133,6 @@ class ExerciseManager
     /**
      * Checks if an Exercise can be deleted.
      * The exercise needs to be unpublished or have no paper to be safely removed.
-     *
-     * @param Exercise $exercise
      *
      * @return bool
      */

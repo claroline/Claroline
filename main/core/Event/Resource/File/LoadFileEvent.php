@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event\Resource\File;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class LoadFileEvent extends Event
 {
@@ -31,9 +31,6 @@ class LoadFileEvent extends Event
 
     /**
      * LoadFileEvent constructor.
-     *
-     * @param File   $resource
-     * @param string $path
      */
     public function __construct(File $resource, string $path)
     {
@@ -69,8 +66,6 @@ class LoadFileEvent extends Event
     /**
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
-     *
-     * @param array $data
      */
     public function setData(array $data)
     {

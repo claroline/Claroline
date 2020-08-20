@@ -70,14 +70,6 @@ class SubjectSerializer
 
     /**
      * SubjectSerializer constructor.
-     *
-     * @param FinderProvider           $finder
-     * @param FileUtilities            $fileUt
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param PublicFileSerializer     $fileSerializer
-     * @param ObjectManager            $om
-     * @param UserSerializer           $userSerializer
-     * @param ForumManager             $manager
      */
     public function __construct(
         FinderProvider $finder,
@@ -101,9 +93,6 @@ class SubjectSerializer
 
     /**
      * Serializes a Subject entity.
-     *
-     * @param Subject $subject
-     * @param array   $options
      *
      * @return array
      */
@@ -146,9 +135,7 @@ class SubjectSerializer
     /**
      * Deserializes data into a Subject entity.
      *
-     * @param array   $data
-     * @param Subject $subject
-     * @param array   $options
+     * @param array $data
      *
      * @return Subject
      */
@@ -246,17 +233,13 @@ class SubjectSerializer
             'class' => Subject::class,
             'ids' => [$subject->getUuid()],
         ]);
-        $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
 
         return $event->getResponse();
     }
 
     /**
      * Deserializes Item tags.
-     *
-     * @param Subject $subject
-     * @param array   $tags
-     * @param array   $options
      */
     private function deserializeTags(Subject $subject, array $tags = [], array $options = [])
     {
@@ -272,7 +255,7 @@ class SubjectSerializer
             'replace' => true,
         ]);
 
-        $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
     }
 
     private function isHot(Subject $subject)

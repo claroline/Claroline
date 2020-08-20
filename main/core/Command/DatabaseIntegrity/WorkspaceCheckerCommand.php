@@ -12,16 +12,38 @@
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class WorkspaceCheckerCommand extends ContainerAwareCommand
+class WorkspaceCheckerCommand extends Command
 {
+    private $om;
+    private $workspaceManager;
+    private $entityManager;
+    private $toolManager;
+    private $organizationManager;
+
+    public function __construct(ObjectManager $om, WorkspaceManager $workspaceManager, EntityManagerInterface $entityManager, ToolManager $toolManager, OrganizationManager $organizationManager)
+    {
+        $this->om = $om;
+        $this->workspaceManager = $workspaceManager;
+        $this->entityManager = $entityManager;
+        $this->toolManager = $toolManager;
+        $this->organizationManager = $organizationManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:check')
+        $this
             ->setDescription('Checks the workspace tools integrity of the platform.')
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'All tools and workspace')
             ->addOption('flag', 'f', InputOption::VALUE_NONE, 'Set the personal workspace flag');
@@ -33,15 +55,15 @@ class WorkspaceCheckerCommand extends ContainerAwareCommand
 
         if ($input->getOption('flag')) {
             $consoleLogger = ConsoleLogger::get($output);
-            $this->getContainer()->get('claroline.manager.workspace_manager')->setLogger($consoleLogger);
-            $this->getContainer()->get('claroline.manager.workspace_manager')->setWorkspacesFlag();
+            $this->workspaceManager->setLogger($consoleLogger);
+            $this->workspaceManager->setWorkspacesFlag();
         }
 
         if ($input->getOption('all')) {
-            $workspaces = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+            $workspaces = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\Workspace')
               ->findBy(['personal' => false]);
         } else {
-            $query = $this->getContainer()->get('doctrine.orm.entity_manager')->createQuery(
+            $query = $this->entityManager->createQuery(
               '
                 SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
                 LEFT JOIN w.orderedTools ot
@@ -59,12 +81,12 @@ class WorkspaceCheckerCommand extends ContainerAwareCommand
 
         foreach ($workspaces as $workspace) {
             $output->writeln('Restoring tools for '.$workspace->getName().'...');
-            $this->getContainer()->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+            $this->toolManager->addMissingWorkspaceTools($workspace);
         }
 
         $output->writeln('Workspace organization restoration...');
 
-        $query = $this->getContainer()->get('doctrine.orm.entity_manager')->createQuery(
+        $query = $this->entityManager->createQuery(
           '
             SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
             LEFT JOIN w.organizations o
@@ -74,15 +96,14 @@ class WorkspaceCheckerCommand extends ContainerAwareCommand
 
         $workspaces = $query->getResult();
 
-        $defaultOrganization = $this->getContainer()->get('claroline.manager.organization.organization_manager')->getDefault();
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
+        $defaultOrganization = $this->organizationManager->getDefault();
 
         foreach ($workspaces as $workspace) {
             $output->writeln('Restoring organization for '.$workspace->getName().'...');
             $workspace->addOrganization($defaultOrganization);
-            $om->persist($workspace);
+            $this->om->persist($workspace);
         }
 
-        $om->flush();
+        $this->om->flush();
     }
 }

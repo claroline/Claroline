@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TeamListener
@@ -27,20 +27,14 @@ class TeamListener
     private $serializer;
     /** @var TeamManager */
     private $teamManager;
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @param AuthorizationCheckerInterface $authorization
-     * @param SerializerProvider            $serializer
-     * @param TeamManager                   $teamManager
-     * @param TokenStorage                  $tokenStorage
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         SerializerProvider $serializer,
         TeamManager $teamManager,
-        TokenStorage $tokenStorage
+        TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
         $this->serializer = $serializer;
@@ -48,9 +42,6 @@ class TeamListener
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param OpenToolEvent $event
-     */
     public function onWorkspaceToolOpen(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();

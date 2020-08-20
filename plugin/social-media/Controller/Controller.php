@@ -118,7 +118,7 @@ class Controller extends BaseController
 
     protected function dispatch($event)
     {
-        $this->dispatcher->dispatch('log', $event);
+        $this->dispatcher->dispatch($event, 'log');
 
         return $this;
     }

@@ -11,12 +11,14 @@
 
 namespace Claroline\CoreBundle\Command\User;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User as UserEntity;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Creates an user, optionally with a specific role (default to simple user).
  */
-class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
+class CreateCommand extends Command implements AdminCliCommand
 {
     use BaseCommandTrait;
 
@@ -35,11 +37,20 @@ class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
         'user_password' => 'password',
         'user_email' => 'email',
     ];
+    private $om;
+    private $crud;
+
+    public function __construct(ObjectManager $om, Crud $crud)
+    {
+        $this->om = $om;
+        $this->crud = $crud;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
-        $this->setName('claroline:user:create')
-            ->setDescription('Creates a new user.');
+        $this->setDescription('Creates a new user.');
         $this->configureParams();
         $this->addOption(
             'ws_creator',
@@ -69,10 +80,7 @@ class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
             $roleName = PlatformRoles::USER;
         }
 
-        $crud = $this->getContainer()->get('Claroline\AppBundle\API\Crud');
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
-
-        $object = $crud->create(
+        $object = $this->crud->create(
             UserEntity::class,
             [
               'firstName' => $input->getArgument('user_first_name'),
@@ -83,9 +91,9 @@ class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
              ]
         );
 
-        $role = $om->getRepository(Role::class)->findOneByName($roleName);
+        $role = $this->om->getRepository(Role::class)->findOneByName($roleName);
         $object->addRole($role);
-        $om->persist($object);
-        $om->flush();
+        $this->om->persist($object);
+        $this->om->flush();
     }
 }

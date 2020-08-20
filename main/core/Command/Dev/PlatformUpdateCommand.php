@@ -11,19 +11,21 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Installation\PlatformInstaller;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Psr\Log\LogLevel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Updates, installs or uninstalls core and plugin bundles, based
@@ -31,14 +33,30 @@ use Symfony\Component\Console\Output\OutputInterface;
  * by composer (vendor/composer/installed.json and
  * app/config/previous-installed.json).
  */
-class PlatformUpdateCommand extends ContainerAwareCommand
+class PlatformUpdateCommand extends Command
 {
+    private $refresher;
+    private $installer;
+    private $versionManager;
+    private $platformConfigurationHandler;
+    private $translator;
+    private $environment;
+
+    public function __construct(Refresher $refresher, PlatformInstaller $installer, VersionManager $versionManager, PlatformConfigurationHandler $platformConfigurationHandler, TranslatorInterface $translator, string $environment)
+    {
+        $this->refresher = $refresher;
+        $this->installer = $installer;
+        $this->versionManager = $versionManager;
+        $this->platformConfigurationHandler = $platformConfigurationHandler;
+        $this->translator = $translator;
+        $this->environment = $environment;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        parent::configure();
-
         $this
-            ->setName('claroline:update')
             ->setDescription(
                 'Updates, installs or uninstalls the platform packages brought by composer.'
             )
@@ -79,16 +97,11 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
      * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Refresher $refresher */
-        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
-        $refresher->setOutput($output);
+        $this->refresher->setOutput($output);
 
         MaintenanceHandler::enableMaintenance();
 
@@ -100,12 +113,12 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
         if (!$input->getOption('no_create_database')) {
             $databaseCreator = new CreateDatabaseDoctrineCommand();
-            $databaseCreator->setContainer($this->getContainer());
+            $databaseCreator->setApplication($this->getApplication());
             $databaseCreator->run(new ArrayInput([]), $output);
         }
 
         if (!$input->getOption('no_symlink')) {
-            $refresher->buildSymlinks();
+            $this->refresher->buildSymlinks();
         }
 
         $verbosityLevelMap = [
@@ -115,46 +128,42 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
-        /** @var PlatformInstaller $installer */
-        $installer = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\PlatformInstaller');
-        $installer->setOutput($output);
-        $installer->setLogger($consoleLogger);
+        $this->installer->setOutput($output);
+        $this->installer->setLogger($consoleLogger);
 
-        /** @var VersionManager $versionManager */
-        $versionManager = $this->getContainer()->get('claroline.manager.version_manager');
         if ($input->getArgument('from_version') && $input->getArgument('to_version')) {
             $from = $input->getArgument('from_version');
             $to = $input->getArgument('to_version');
         } else {
             try {
-                $lastVersion = $versionManager->getLatestUpgraded('ClarolineCoreBundle');
+                $lastVersion = $this->versionManager->getLatestUpgraded('ClarolineCoreBundle');
                 $from = $lastVersion ? $lastVersion->getVersion() : null;
-                $to = $versionManager->getCurrent();
+                $to = $this->versionManager->getCurrent();
             } catch (\Exception $e) {
                 $from = null;
                 $to = null;
             }
         }
         if ($from && $to) {
-            $installer->updateAll($from, $to);
+            $this->installer->updateAll($from, $to);
         } else {
-            $installer->updateFromComposerInfo();
+            $this->installer->updateFromComposerInfo();
         }
 
         // clear cache
         if ($input->getOption('clear_cache')) {
-            $refresher->clearCache($this->getContainer()->getParameter('kernel.environment'));
+            $this->refresher->clearCache($this->environment);
         }
 
         // dump static assets
         if (!$input->getOption('no_asset')) {
-            $refresher->installAssets();
-            $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
+            $this->refresher->installAssets();
+            $this->refresher->dumpAssets($this->environment);
         }
 
         // build themes
         if (!$input->getOption('no_theme')) {
-            $refresher->buildThemes();
+            $this->refresher->buildThemes();
         }
 
         MaintenanceHandler::disableMaintenance();
@@ -168,11 +177,9 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
     private function setLocale()
     {
-        $ch = $this->getContainer()->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
-        $locale = $ch->getParameter('locales.default');
+        $locale = $this->platformConfigurationHandler->getParameter('locales.default');
         if ($locale) {
-            $translator = $this->getContainer()->get('translator');
-            $translator->setLocale($locale);
+            $this->translator->setLocale($locale);
         }
     }
 }

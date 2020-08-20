@@ -221,7 +221,7 @@ services:
           - '@Claroline\AppBundle\Routing\Documentator'
           - '@Claroline\AppBundle\API\SchemaProvider'
           - '@Claroline\AppBundle\Manager\PlatformManager'
-          - '%kernel.root_dir%'
+          - '%kernel.project_dir%/app'
 
     Claroline\CoreBundle\Controller\APINew\TransferController:
         arguments:

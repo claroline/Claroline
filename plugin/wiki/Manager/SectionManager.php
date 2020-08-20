@@ -32,8 +32,6 @@ class SectionManager
     protected $eventDispatcher;
 
     /**
-     * @param ObjectManager     $om
-     * @param SectionSerializer $sectionSerializer
      * @param $eventDispatcher
      */
     public function __construct(
@@ -183,9 +181,6 @@ class SectionManager
     /**
      * Find all content for a given user and the replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceUser(User $from, User $to)
@@ -205,7 +200,7 @@ class SectionManager
 
     private function dispatch($event)
     {
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 
     private function restoreSection(Section $section)

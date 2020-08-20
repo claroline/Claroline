@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched by the resource controller when a resource copy is asked.
@@ -42,8 +42,7 @@ class CopyResourceEvent extends Event
     /**
      * CopyResourceEvent constructor.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode     $copiedNode
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $copiedNode
      */
     public function __construct(AbstractResource $resource, AbstractResource $copy)
     {
@@ -85,8 +84,6 @@ class CopyResourceEvent extends Event
 
     /**
      * Sets the copy of the original resource.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $copy
      */
     public function setCopy(AbstractResource $copy)
     {

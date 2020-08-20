@@ -11,22 +11,38 @@
 
 namespace Claroline\CoreBundle\Command\Import;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
+class RegisterUserToWorkspaceFromCsvCommand extends Command
 {
     use BaseCommandTrait;
     private $params = ['csv_workspace_registration_path' => 'Absolute path to the csv file: '];
 
+    private $om;
+    private $roleManager;
+    private $finderProvider;
+
+    public function __construct(ObjectManager $om, RoleManager $roleManager, FinderProvider $finderProvider)
+    {
+        $this->om = $om;
+        $this->roleManager = $roleManager;
+        $this->finderProvider = $finderProvider;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:register')
+        $this
             ->setDescription('Registers users to workspaces from a csv file')
             ->setAliases(['claroline:csv:workspace_register']);
         $this->setDefinition(
@@ -54,12 +70,10 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
-        $roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
-        $workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+        $roleRepo = $this->om->getRepository('ClarolineCoreBundle:Role');
+        $userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
+        $groupRepo = $this->om->getRepository('ClarolineCoreBundle:Group');
+        $workspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
 
         $file = $input->getArgument('csv_workspace_registration_path');
         $lines = str_getcsv(file_get_contents($file), PHP_EOL);
@@ -75,8 +89,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
             $users = array_unique($users);
 
-            $ignore = $this->getContainer()->get('Claroline\AppBundle\API\FinderProvider')
-              ->fetch('Claroline\CoreBundle\Entity\Workspace\Workspace', ['code' => $ignore, 'isPersonal' => false]);
+            $ignore = $this->finderProvider->fetch('Claroline\CoreBundle\Entity\Workspace\Workspace', ['code' => $ignore, 'isPersonal' => false]);
 
             $ignoreIds = array_map(function ($el) {
                 return $el->getId();
@@ -84,12 +97,11 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
             $i = 1;
 
-            $om->startFlushSuite();
+            $this->om->startFlushSuite();
 
             foreach ($users as $username) {
                 //clean user roles except those in workspace matching $ignore
-                $roles = $this->getContainer()->get('Claroline\AppBundle\API\FinderProvider')
-                  ->fetch('Claroline\CoreBundle\Entity\Role', ['user' => $username, 'type' => Role::WS_ROLE]);
+                $roles = $this->finderProvider->fetch('Claroline\CoreBundle\Entity\Role', ['user' => $username, 'type' => Role::WS_ROLE]);
 
                 foreach ($roles as $role) {
                     if (!in_array($role->getWorkspace()->getId(), $ignoreIds)) {
@@ -99,7 +111,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                         $user = $userRepo->findOneBy(['username' => $username]);
 
                         if ($user) {
-                            $roleManager->dissociateRole($user, $role);
+                            $this->roleManager->dissociateRole($user, $role);
                             ++$i;
                         } else {
                             $output->writeln(
@@ -108,18 +120,18 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                         }
 
                         if (0 === $i % 2000) {
-                            $om->forceFlush();
+                            $this->om->forceFlush();
                         }
                     }
                 }
             }
 
-            $om->endFlushSuite();
+            $this->om->endFlushSuite();
         }
 
-        $om->clear();
+        $this->om->clear();
         $i = 1;
-        $om->startFlushSuite();
+        $this->om->startFlushSuite();
 
         foreach ($lines as $line) {
             $datas = str_getcsv($line, ';');
@@ -141,22 +153,22 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
                     if (1 === count($roles)) {
                         if ('register' === $action) {
-                            $roleManager->associateRole($ars, $roles[0], false);
+                            $this->roleManager->associateRole($ars, $roles[0], false);
                             $output->writeln(
                                 "<info> Line $i: {User [$name] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
                             );
                         } elseif ('unregister' === $action) {
-                            $roleManager->dissociateRole($ars, $roles[0]);
+                            $this->roleManager->dissociateRole($ars, $roles[0]);
                             $output->writeln(
                                 "<info> Line $i: {User [$name] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
                             );
                         } elseif ('register_group' === $action) {
-                            $roleManager->associateRole($ars, $roles[0], false);
+                            $this->roleManager->associateRole($ars, $roles[0], false);
                             $output->writeln(
                                 "<info> Line $i: {Group [$name] has been registered to workspace [$workspaceCode] with role [$roleKey].} </info>"
                             );
                         } elseif ('unregister_group' === $action) {
-                            $roleManager->dissociateRole($ars, $roles[0]);
+                            $this->roleManager->dissociateRole($ars, $roles[0]);
                             $output->writeln(
                                 "<info> Line $i: {Group [$name] has been unregistered from role [$roleKey] of workspace [$workspaceCode].} </info>"
                             );
@@ -193,11 +205,11 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
             if (0 === $i % 250) {
                 $output->writeln('Flushing...');
-                $om->forceFlush();
-                $om->clear();
+                $this->om->forceFlush();
+                $this->om->clear();
             }
             ++$i;
         }
-        $om->endFlushSuite();
+        $this->om->endFlushSuite();
     }
 }

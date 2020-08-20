@@ -39,9 +39,6 @@ class EvaluationManager
 
     /**
      * EvaluationManager constructor.
-     *
-     * @param ObjectManager            $om
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         ObjectManager $om,
@@ -59,9 +56,7 @@ class EvaluationManager
     /**
      * Retrieve or create evaluation for a workspace and an user.
      *
-     * @param Workspace $workspace
-     * @param User      $user
-     * @param bool      $withCreation
+     * @param bool $withCreation
      *
      * @return Evaluation|null
      *
@@ -88,9 +83,6 @@ class EvaluationManager
 
     /**
      * Retrieve the list of resources an user has to do in the workspace.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
      *
      * @return array
      */
@@ -131,10 +123,7 @@ class EvaluationManager
     /**
      * Compute evaluation status and progression of an user in a workspace.
      *
-     * @param Workspace                   $workspace
-     * @param User                        $user
-     * @param ResourceUserEvaluation|null $currentRue
-     * @param \DateTime                   $date
+     * @param \DateTime $date
      *
      * @return Evaluation|null
      *
@@ -218,7 +207,7 @@ class EvaluationManager
             $this->om->persist($evaluation);
             $this->om->flush();
 
-            $this->eventDispatcher->dispatch('workspace.evaluate', new UserEvaluationEvent($evaluation));
+            $this->eventDispatcher->dispatch(new UserEvaluationEvent($evaluation), 'workspace.evaluate');
         }
 
         return $evaluation;
@@ -226,10 +215,6 @@ class EvaluationManager
 
     /**
      * Create requirements for a list of roles in a workspace.
-     *
-     * @param Workspace $workspace
-     * @param array     $roles
-     * @param array     $resources
      *
      * @return array
      */
@@ -261,10 +246,6 @@ class EvaluationManager
 
     /**
      * Create requirements for a list of users in a workspace.
-     *
-     * @param Workspace $workspace
-     * @param array     $users
-     * @param array     $resources
      *
      * @return array
      */
@@ -298,8 +279,6 @@ class EvaluationManager
 
     /**
      * Delete a list of requirements.
-     *
-     * @param array $multipleRequirements
      */
     public function deleteMultipleRequirements(array $multipleRequirements)
     {
@@ -328,9 +307,6 @@ class EvaluationManager
 
     /**
      * Add a list of resources to a Requirements entity.
-     *
-     * @param Requirements $requirements
-     * @param array        $resourceNodes
      *
      * @return Requirements
      */
@@ -364,9 +340,6 @@ class EvaluationManager
     /**
      * Remove a list of resources from a Requirements entity.
      *
-     * @param Requirements $requirements
-     * @param array        $resourceNodes
-     *
      * @return Requirements
      */
     public function removeResourcesFromRequirements(Requirements $requirements, array $resourceNodes)
@@ -395,8 +368,6 @@ class EvaluationManager
     /**
      * Fetch all requirements associated to a role and update (add/remove) a list of users for all of them.
      *
-     * @param Role   $role
-     * @param array  $users
      * @param string $type
      */
     public function manageRoleSubscription(Role $role, array $users, $type = 'add')
@@ -426,8 +397,6 @@ class EvaluationManager
     /**
      * Fetch all requirements associated to each role of a group and update (add/remove) a list of users for all of them.
      *
-     * @param Group  $group
-     * @param array  $users
      * @param string $type
      */
     public function manageGroupSubscription(Group $group, array $users, $type = 'add')
@@ -441,9 +410,6 @@ class EvaluationManager
 
     /**
      * Set required flag to true for each resource evaluations linked to the users having the given role.
-     *
-     * @param ResourceNode $resourceNode
-     * @param Role         $role
      */
     private function addRequirementToResourceEvaluationByRole(ResourceNode $resourceNode, Role $role)
     {
@@ -469,9 +435,6 @@ class EvaluationManager
 
     /**
      * Set required flag to false for each resource evaluations linked to the users having the given role.
-     *
-     * @param ResourceNode $resourceNode
-     * @param Role         $role
      */
     private function removeRequirementFromResourceEvaluationByRole(ResourceNode $resourceNode, Role $role)
     {
@@ -498,9 +461,6 @@ class EvaluationManager
     /**
      * Set required flag to true for resource evaluation linked to an user.
      * Resource evaluation is created if it doesn't exist.
-     *
-     * @param ResourceNode $resourceNode
-     * @param User         $user
      */
     private function addRequirementToResourceEvaluation(ResourceNode $resourceNode, User $user)
     {
@@ -519,9 +479,6 @@ class EvaluationManager
 
     /**
      * Set required flag to false for resource evaluation linked to an user.
-     *
-     * @param ResourceNode $resourceNode
-     * @param User         $user
      */
     private function removeRequirementFromResourceEvaluation(ResourceNode $resourceNode, User $user)
     {
@@ -537,9 +494,7 @@ class EvaluationManager
     /**
      * Add duration to a workspace user evaluation.
      *
-     * @param Workspace $workspace
-     * @param User      $user
-     * @param int       $duration
+     * @param int $duration
      */
     public function addDurationToWorkspaceEvaluation(Workspace $workspace, User $user, $duration)
     {
@@ -562,8 +517,6 @@ class EvaluationManager
 
     /**
      * Compute duration for a workspace user evaluation.
-     *
-     * @param Evaluation $workspaceEvaluation
      *
      * @return int
      */

@@ -13,17 +13,29 @@ namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\Workspace\TransferManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ExportCommand extends ContainerAwareCommand implements AdminCliCommand
+class ExportCommand extends Command implements AdminCliCommand
 {
+    private $em;
+    private $transferManager;
+
+    public function __construct(EntityManagerInterface $em, TransferManager $transferManager)
+    {
+        $this->em = $em;
+        $this->transferManager = $transferManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:export')
-            ->setDescription('export workspace archive');
+        $this->setDescription('export workspace archive');
         $this->setDefinition(
             [
                 new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code'),
@@ -33,9 +45,8 @@ class ExportCommand extends ContainerAwareCommand implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        $workspace = $container->get('doctrine.orm.entity_manager')->getRepository(Workspace::class)->findOneByCode($input->getArgument('code'));
-        $path = $container->get('claroline.manager.workspace.transfer')->export($workspace);
+        $workspace = $this->em->getRepository(Workspace::class)->findOneByCode($input->getArgument('code'));
+        $path = $this->transferManager->export($workspace);
 
         $output->writeln($path);
     }

@@ -10,4 +10,4 @@ services:
            - '@twig.extension.assets'
            - '@claroline.manager.theme_manager'
            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-           - '%kernel.root_dir%'
+           - '%kernel.project_dir%/app'

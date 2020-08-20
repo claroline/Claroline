@@ -13,12 +13,12 @@ namespace Claroline\CoreBundle\Command\Logs;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Manager\LogManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LogsFetcherCommand extends ContainerAwareCommand
+class LogsFetcherCommand extends Command
 {
     use BaseCommandTrait;
 
@@ -26,13 +26,18 @@ class LogsFetcherCommand extends ContainerAwareCommand
         'from' => 'from',
         'filePath' => 'filePath',
     ];
+    private $logManager;
+
+    public function __construct(LogManager $logManager)
+    {
+        $this->logManager = $logManager;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
-        parent::configure();
-
-        $this->setName('claroline:logs:fetch')
-            ->setDescription('Export logs');
+        $this->setDescription('Export logs');
         $this->setDefinition(
             [
                 //1472688000 1st sept 2016
@@ -44,9 +49,8 @@ class LogsFetcherCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var LogManager $logManager */
-        $logManager = $this->getContainer()->get('claroline.log.manager');
-        $logManager->exportLogsToCsv([
+        /* @var LogManager $logManager */
+        $this->logManager->exportLogsToCsv([
             'filters' => [
                 'dateLog' => $input->getArgument('from') ?? null,
             ],

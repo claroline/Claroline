@@ -13,24 +13,43 @@ namespace Claroline\CoreBundle\Command\API;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Logger\JsonLogger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
- * Creates an user, optionaly with a specific role (default to simple user).
+ * Creates an user, optionally with a specific role (default to simple user).
  */
-class ImportCsvCommand extends ContainerAwareCommand
+class ImportCsvCommand extends Command
 {
     use BaseCommandTrait;
+
     private $params = ['id' => 'The file id: ', 'action' => 'The action to execute: '];
+    private $importLogDir;
+    private $userManager;
+    private $tokenStorage;
+    private $objectManager;
+    private $apiManager;
+
+    public function __construct(string $importLogDir, UserManager $userManager, TokenStorageInterface $tokenStorage, ObjectManager $objectManager, ApiManager $apiManager)
+    {
+        $this->importLogDir = $importLogDir;
+        $this->userManager = $userManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->apiManager = $apiManager;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
-        $this->setName('claroline:api:load')
-            ->setDescription('Load from csv for the api');
+        $this->setDescription('Load from csv for the api');
         $this->setDefinition(
             [
               new InputArgument('id', InputArgument::REQUIRED, 'The file id.'),
@@ -44,7 +63,7 @@ class ImportCsvCommand extends ContainerAwareCommand
     {
         $logFile = $input->getArgument('log') ? $input->getArgument('log') : $this->generateRandomString(5);
         //big try catch in case something goes wrong, we can log it
-        $path = $this->getContainer()->getParameter('claroline.param.import_log_dir').'/'.$logFile.'.json';
+        $path = $this->importLogDir.'/'.$logFile.'.json';
         $jsonLogger = new JsonLogger($path);
         $jsonLogger->set('total', 0);
         $jsonLogger->set('processed', 0);
@@ -54,18 +73,18 @@ class ImportCsvCommand extends ContainerAwareCommand
         $jsonLogger->set('data.success', []);
 
         try {
-            $user = $this->getContainer()->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
+            $user = $this->userManager->getDefaultClarolineAdmin();
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->getContainer()->get('security.context')->setToken($token);
+            $this->tokenStorage->setToken($token);
 
             $id = $input->getArgument('id');
             $action = $input->getArgument('action');
-            $publicFile = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->getObject(
+            $publicFile = $this->objectManager->getObject(
                 ['id' => $id],
                 'Claroline\CoreBundle\Entity\File\PublicFile'
             );
 
-            $this->getContainer()->get('claroline.manager.api_manager')->import(
+            $this->apiManager->import(
               $publicFile,
               $action,
               $logFile

@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Event\Resource\File;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class EncodeFileEvent extends Event implements DataConveyorEventInterface
 {
@@ -23,8 +23,6 @@ class EncodeFileEvent extends Event implements DataConveyorEventInterface
 
     /**
      * EncodeFileEvent constructor.
-     *
-     * @param UploadedFile $file
      */
     public function __construct(UploadedFile $file)
     {
@@ -39,9 +37,6 @@ class EncodeFileEvent extends Event implements DataConveyorEventInterface
         return $this->file;
     }
 
-    /**
-     * @param UploadedFile $file
-     */
     public function setFile(UploadedFile $file)
     {
         $this->isPopulated = true;

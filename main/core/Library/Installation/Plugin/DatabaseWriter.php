@@ -64,14 +64,6 @@ class DatabaseWriter
 
     /**
      * Constructor.
-     *
-     * @param ObjectManager          $em
-     * @param Filesystem             $fileSystem
-     * @param KernelInterface        $kernel
-     * @param MaskManager            $mm
-     * @param ToolManager            $toolManager
-     * @param ToolMaskDecoderManager $toolMaskManager
-     * @param IconSetManager         $iconSetManager
      */
     public function __construct(
         ObjectManager $em,
@@ -85,7 +77,7 @@ class DatabaseWriter
         $this->em = $em;
         $this->mm = $mm;
         $this->fileSystem = $fileSystem;
-        $this->kernelRootDir = $kernel->getRootDir();
+        $this->kernelRootDir = $kernel->getProjectDir().'/app';
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;
         $this->iconSetManager = $iconSetManager;
@@ -95,9 +87,6 @@ class DatabaseWriter
 
     /**
      * Persists a plugin in the database.
-     *
-     * @param PluginBundleInterface $pluginBundle
-     * @param array                 $pluginConfiguration
      *
      * @return Plugin
      */
@@ -116,9 +105,6 @@ class DatabaseWriter
     }
 
     /**
-     * @param PluginBundleInterface $pluginBundle
-     * @param array                 $pluginConfiguration
-     *
      * @return Plugin|null
      *
      * @throws \Exception
@@ -177,8 +163,6 @@ class DatabaseWriter
     /**
      * Checks if a plugin is persisted in the database.
      *
-     * @param PluginBundleInterface $plugin
-     *
      * @return bool
      */
     public function isSaved(PluginBundleInterface $plugin)
@@ -191,9 +175,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array                 $processedConfiguration
-     * @param Plugin                $plugin
-     * @param PluginBundleInterface $pluginBundle
+     * @param array $processedConfiguration
      */
     private function persistConfiguration($processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
     {
@@ -238,9 +220,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array                 $processedConfiguration
-     * @param Plugin                $plugin
-     * @param PluginBundleInterface $pluginBundle
+     * @param array $processedConfiguration
      */
     private function updateConfiguration($processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
     {
@@ -338,9 +318,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array                 $resourceConfiguration
-     * @param Plugin                $plugin
-     * @param PluginBundleInterface $pluginBundle
+     * @param array $resourceConfiguration
      *
      * @return ResourceType
      */
@@ -398,8 +376,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $toolConfiguration
-     * @param Plugin $plugin
+     * @param array $toolConfiguration
      */
     private function updateTool($toolConfiguration, Plugin $plugin)
     {
@@ -416,8 +393,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $widgetConfiguration
-     * @param Plugin $plugin
+     * @param array $widgetConfiguration
      *
      * @return Widget
      */
@@ -435,10 +411,6 @@ class DatabaseWriter
         }
     }
 
-    /**
-     * @param array  $action
-     * @param Plugin $plugin
-     */
     public function persistResourceAction(array $action, Plugin $plugin)
     {
         // also remove duplicates if some are found
@@ -477,19 +449,13 @@ class DatabaseWriter
         $this->em->flush();
     }
 
-    /**
-     * @param array  $action
-     * @param Plugin $plugin
-     */
     public function updateResourceAction(array $action, Plugin $plugin)
     {
         $this->persistResourceAction($action, $plugin);
     }
 
     /**
-     * @param array                 $resourceConfiguration
-     * @param Plugin                $plugin
-     * @param PluginBundleInterface $pluginBundle
+     * @param array $resourceConfiguration
      *
      * @return ResourceType
      */
@@ -518,10 +484,6 @@ class DatabaseWriter
         return $resourceType;
     }
 
-    /**
-     * @param array        $rightsName
-     * @param ResourceType $resourceType
-     */
     private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType)
     {
         $mask = 0 === count($rightsName) ? 1 : 0;
@@ -540,8 +502,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $widgetConfiguration
-     * @param Plugin $plugin
+     * @param array $widgetConfiguration
      *
      * @return Widget
      */
@@ -556,8 +517,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $widgetConfiguration
-     * @param Widget $widget
+     * @param array $widgetConfiguration
      *
      * @return Widget
      */
@@ -612,8 +572,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $toolConfiguration
-     * @param Plugin $plugin
+     * @param array $toolConfiguration
      */
     private function createTool($toolConfiguration, Plugin $plugin)
     {
@@ -622,9 +581,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $toolConfiguration
-     * @param Plugin $plugin
-     * @param Tool   $tool
+     * @param array $toolConfiguration
      */
     private function persistTool($toolConfiguration, Plugin $plugin, Tool $tool)
     {
@@ -656,8 +613,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $themeConfiguration
-     * @param Plugin $plugin
+     * @param array $themeConfiguration
      */
     private function createTheme($themeConfiguration, Plugin $plugin)
     {
@@ -666,8 +622,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $themeConfiguration
-     * @param Plugin $plugin
+     * @param array $themeConfiguration
      */
     private function updateTheme($themeConfiguration, Plugin $plugin)
     {
@@ -682,9 +637,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $themeConfiguration
-     * @param Plugin $plugin
-     * @param Theme  $theme
+     * @param array $themeConfiguration
      */
     private function persistTheme($themeConfiguration, Plugin $plugin, Theme $theme)
     {
@@ -694,8 +647,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $adminToolConfiguration
-     * @param Plugin $plugin
+     * @param array $adminToolConfiguration
      */
     private function createAdminTool($adminToolConfiguration, Plugin $plugin)
     {
@@ -704,9 +656,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array     $adminToolConfiguration
-     * @param Plugin    $plugin
-     * @param AdminTool $adminTool
+     * @param array $adminToolConfiguration
      */
     private function persistAdminTool($adminToolConfiguration, Plugin $plugin, AdminTool $adminTool)
     {
@@ -718,8 +668,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $adminToolConfiguration
-     * @param Plugin $plugin
+     * @param array $adminToolConfiguration
      */
     private function updateAdminTool($adminToolConfiguration, Plugin $plugin)
     {
@@ -733,10 +682,6 @@ class DatabaseWriter
         $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
     }
 
-    /**
-     * @param array $rights
-     * @param Tool  $tool
-     */
     private function persistCustomToolRights(array $rights, Tool $tool)
     {
         $decoders = $this->toolMaskManager->getMaskDecodersByTool($tool);
@@ -758,19 +703,12 @@ class DatabaseWriter
         }
     }
 
-    /**
-     * @param array $rights
-     * @param Tool  $tool
-     */
     private function updateCustomToolRights(array $rights, Tool $tool)
     {
         $this->deleteCustomToolRights($tool);
         $this->persistCustomToolRights($rights, $tool);
     }
 
-    /**
-     * @param Tool $tool
-     */
     private function deleteCustomToolRights(Tool $tool)
     {
         $customDecoders = $this->toolMaskManager->getCustomMaskDecodersByTool($tool);
@@ -782,8 +720,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $templateTypeConfiguration
-     * @param Plugin $plugin
+     * @param array $templateTypeConfiguration
      */
     private function createTemplateType($templateTypeConfiguration, Plugin $plugin)
     {
@@ -792,8 +729,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array  $templateTypeConfiguration
-     * @param Plugin $plugin
+     * @param array $templateTypeConfiguration
      */
     private function updateTemplateType($templateTypeConfiguration, Plugin $plugin)
     {
@@ -808,9 +744,7 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $templateTypeConfiguration
-     * @param Plugin       $plugin
-     * @param TemplateType $templateType
+     * @param array $templateTypeConfiguration
      */
     private function persistTemplateType($templateTypeConfiguration, Plugin $plugin, TemplateType $templateType)
     {

@@ -64,15 +64,12 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $emptyConfigs = [
             'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
             'FOS\JsRoutingBundle\FOSJsRoutingBundle',
-            'JMS\AopBundle\JMSAopBundle',
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
         ];
         // simple container configuration, same for every environment
         $simpleConfigs = [
             'Symfony\Bundle\TwigBundle\TwigBundle' => 'twig',
             'Http\HttplugBundle\HttplugBundle' => 'httplug',
-            'JMS\DiExtraBundle\JMSDiExtraBundle' => 'jms_di_extra',
-            'JMS\SecurityExtraBundle\JMSSecurityExtraBundle' => 'jms_security_extra',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
         ];

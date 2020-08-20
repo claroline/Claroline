@@ -13,8 +13,8 @@ namespace Claroline\CoreBundle\Event\Resource\File;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class PlayFileEvent extends Event
 {
@@ -23,8 +23,6 @@ class PlayFileEvent extends Event
 
     /**
      * Constructor.
-     *
-     * @param File $resource
      */
     public function __construct(File $resource)
     {
@@ -43,8 +41,6 @@ class PlayFileEvent extends Event
 
     /**
      * Sets the response for the action.
-     *
-     * @param Response $response
      */
     public function setResponse(Response $response)
     {

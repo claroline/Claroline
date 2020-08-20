@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-class ContentExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+
+class ContentExtension extends AbstractExtension
 {
     protected $content;
 
@@ -23,7 +26,7 @@ class ContentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'getContent' => new \Twig_SimpleFunction('getContent', [$this, 'getContent']),
+            'getContent' => new TwigFunction('getContent', [$this, 'getContent']),
         ];
     }
 

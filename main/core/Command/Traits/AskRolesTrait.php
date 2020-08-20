@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command\Traits;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
@@ -18,9 +19,9 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 trait AskRolesTrait
 {
-    public function askRoles($all, $input, $output, $container, $helper)
+    public function askRoles($all, $input, $output, ObjectManager $om, $helper)
     {
-        $roles = $container->get('Claroline\AppBundle\Persistence\ObjectManager')
+        $roles = $om
             ->getRepository('ClarolineCoreBundle:Role')
             ->findAllPlatformRoles();
         $roleNames = array_map(function ($role) {

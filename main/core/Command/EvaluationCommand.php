@@ -16,18 +16,28 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EvaluationCommand extends ContainerAwareCommand implements AdminCliCommand
+class EvaluationCommand extends Command implements AdminCliCommand
 {
+    private $om;
+    private $evaluationManager;
+    private $resourceEvaluationManager;
+
+    public function __construct(ObjectManager $om, EvaluationManager $evaluationManager, ResourceEvaluationManager $resourceEvaluationManager)
+    {
+        $this->om = $om;
+        $this->evaluationManager = $evaluationManager;
+        $this->resourceEvaluationManager = $resourceEvaluationManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        parent::configure();
-
-        $this->setName('claroline:evaluation:compute')
-            ->setDescription('updates workspace & resource evaluations');
+        $this->setDescription('updates workspace & resource evaluations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -38,57 +48,45 @@ class EvaluationCommand extends ContainerAwareCommand implements AdminCliCommand
 
     private function processWorkspaces(OutputInterface $output)
     {
-        $container = $this->getContainer();
-        /** @var ObjectManager $om */
-        $om = $container->get(ObjectManager::class);
-        /** @var EvaluationManager $manager */
-        $manager = $container->get('claroline.manager.workspace.evaluation');
-
         /** @var Evaluation[] $evaluations */
-        $evaluations = $om->getRepository(Evaluation::class)->findAll();
+        $evaluations = $this->om->getRepository(Evaluation::class)->findAll();
 
         $output->writeln(sprintf('Computing workspace evaluations (status and duration)...'));
 
-        $om->startFlushSuite();
+        $this->om->startFlushSuite();
         foreach ($evaluations as $i => $evaluation) {
             if ($evaluation->getWorkspace() && $evaluation->getUser()) {
-                $manager->computeEvaluation($evaluation->getWorkspace(), $evaluation->getUser());
-                $manager->computeDuration($evaluation);
+                $this->evaluationManager->computeEvaluation($evaluation->getWorkspace(), $evaluation->getUser());
+                $this->evaluationManager->computeDuration($evaluation);
             }
 
             if (0 === $i % 200) {
-                $om->forceFlush();
+                $this->om->forceFlush();
             }
         }
-        $om->endFlushSuite();
+        $this->om->endFlushSuite();
 
         $output->writeln('Done');
     }
 
     private function processResources(OutputInterface $output)
     {
-        $container = $this->getContainer();
-        /** @var ObjectManager $om */
-        $om = $container->get(ObjectManager::class);
-        /** @var ResourceEvaluationManager $manager */
-        $manager = $container->get('claroline.manager.resource_evaluation_manager');
-
         /** @var ResourceUserEvaluation[] $evaluations */
-        $evaluations = $om->getRepository(ResourceUserEvaluation::class)->findAll();
+        $evaluations = $this->om->getRepository(ResourceUserEvaluation::class)->findAll();
 
         $output->writeln(sprintf('Computing resource evaluations (duration)...'));
 
-        $om->startFlushSuite();
+        $this->om->startFlushSuite();
         foreach ($evaluations as $i => $evaluation) {
             if ($evaluation->getResourceNode() && $evaluation->getUser()) {
-                $manager->computeDuration($evaluation);
+                $this->resourceEvaluationManager->computeDuration($evaluation);
             }
 
             if (0 === $i % 200) {
-                $om->forceFlush();
+                $this->om->forceFlush();
             }
         }
-        $om->endFlushSuite();
+        $this->om->endFlushSuite();
 
         $output->writeln('Done');
     }

@@ -92,9 +92,9 @@ class Detector
         $class = null;
 
         foreach (array_keys($tokens) as $i) {
-            if ($tokens[$i][0] === T_NAMESPACE) {
+            if (T_NAMESPACE === $tokens[$i][0]) {
                 for ($j = $i + 1; $j < count($tokens); ++$j) {
-                    if ($tokens[$j][0] === T_STRING) {
+                    if (T_STRING === $tokens[$j][0]) {
                         $namespaceSegments[] = $tokens[$j][1];
                     } elseif ('{' === $tokens[$j] || ';' === $tokens[$j]) {
                         break;
@@ -102,9 +102,9 @@ class Detector
                 }
             }
 
-            if ($tokens[$i][0] === T_CLASS) {
+            if (T_CLASS === $tokens[$i][0]) {
                 for ($j = $i + 1; $j < count($tokens); ++$j) {
-                    if ('{' === $tokens[$j]) {
+                    if ('{' === $tokens[$j] && !empty($tokens[$i + 2][1])) {
                         $class = $tokens[$i + 2][1];
                         break 2;
                     }

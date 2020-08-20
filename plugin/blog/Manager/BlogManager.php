@@ -44,10 +44,6 @@ class BlogManager
     }
 
     /**
-     * @param Workspace $workspace
-     * @param array     $files
-     * @param Blog      $object
-     *
      * @return array
      */
     public function exportBlog(Workspace $workspace, array &$files, Blog $object)
@@ -91,7 +87,7 @@ class BlogManager
                 'class' => 'Icap\BlogBundle\Entity\Post',
                 'ids' => [$post->getUuid()],
             ]);
-            $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+            $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
             $tags = $event->getResponse();
 
             $comments = [];
@@ -139,9 +135,7 @@ class BlogManager
     }
 
     /**
-     * @param array  $data
      * @param string $rootPath
-     * @param User   $owner
      *
      * @return Blog
      */
@@ -221,7 +215,7 @@ class BlogManager
                 ],
                 'replace' => true,
             ]);
-            $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
 
             $commentsDatas = $postsData['comments'];
             $comments = new ArrayCollection();
@@ -271,7 +265,6 @@ class BlogManager
 
     /**
      * @param string $email
-     * @param User   $owner
      *
      * @return User|null
      */
@@ -450,8 +443,8 @@ class BlogManager
         ]);
 
         $this->eventDispatcher->dispatch(
-            'claroline_retrieve_used_tags_by_class_and_ids',
-            $event
+            $event,
+            'claroline_retrieve_used_tags_by_class_and_ids'
         );
         $tags = $event->getResponse();
 
@@ -466,9 +459,6 @@ class BlogManager
 
     /**
      * Find all member for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      */
     public function replaceMemberAuthor(User $from, User $to)
     {

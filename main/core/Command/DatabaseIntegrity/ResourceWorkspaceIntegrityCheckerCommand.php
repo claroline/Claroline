@@ -12,23 +12,31 @@
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\AppBundle\Logger\ConsoleLogger;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ResourceWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
+class ResourceWorkspaceIntegrityCheckerCommand extends Command
 {
+    private $resourceManager;
+
+    public function __construct(ResourceManager $resourceManager)
+    {
+        $this->resourceManager = $resourceManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:resource:check')
-            ->setDescription('Checks the resource integrity of the platform.');
+        $this->setDescription('Checks the resource integrity of the platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
-        $resourceManager->setLogger($consoleLogger);
-        $resourceManager->checkIntegrity();
+        $this->resourceManager->setLogger($consoleLogger);
+        $this->resourceManager->checkIntegrity();
     }
 }

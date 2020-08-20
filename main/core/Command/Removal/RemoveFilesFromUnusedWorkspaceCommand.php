@@ -13,19 +13,29 @@ namespace Claroline\CoreBundle\Command\Removal;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Filesystem\Filesystem;
 
-class RemoveFilesFromUnusedWorkspaceCommand extends ContainerAwareCommand
+class RemoveFilesFromUnusedWorkspaceCommand extends Command
 {
+    private $filesDir;
+    private $om;
+
+    public function __construct(string $filesDir, ObjectManager $om)
+    {
+        $this->filesDir = $filesDir;
+        $this->om = $om;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:clean:files')
-            ->setDescription('Remove the unused files from the Claroline storage');
+        $this->setDescription('Remove the unused files from the Claroline storage');
 
         $this->addOption(
             'force',
@@ -39,14 +49,12 @@ class RemoveFilesFromUnusedWorkspaceCommand extends ContainerAwareCommand
     {
         $output->writeln("<error>Be carreful, you might removes files you don't want to. You should backup your files beforehand to be sure everything still works as intended.</error>");
         $force = $input->getOption('force');
-        $container = $this->getContainer();
         $fs = new FileSystem();
         $helper = $this->getHelper('question');
-
+        $workspaceRepo = $this->om->getRepository(Workspace::class);
         //Parse the file directory and fetch the other directories
         //We should find Workspaces and Users. Workspaces being formatted like "WORKSPACE_[ID]
-        $fileDir = $container->getParameter('claroline.param.files_directory');
-        $iterator = new \DirectoryIterator($fileDir);
+        $iterator = new \DirectoryIterator($this->filesDir);
 
         foreach ($iterator as $pathinfo) {
             if ($pathinfo->isDir()) {
@@ -56,7 +64,7 @@ class RemoveFilesFromUnusedWorkspaceCommand extends ContainerAwareCommand
                 if (strpos('_'.$name, 'WORKSPACE')) {
                     $parts = explode('_', $name);
                     $id = $parts[1];
-                    $workspace = $container->get(ObjectManager::class)->getRepository(Workspace::class)->find($id);
+                    $workspace = $workspaceRepo->find($id);
 
                     if (!$workspace) {
                         $continue = false;

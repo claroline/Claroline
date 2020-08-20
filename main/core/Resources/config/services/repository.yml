@@ -43,3 +43,8 @@ services:
         arguments:
           - '@Symfony\Bridge\Doctrine\RegistryInterface'
           - '@Claroline\CoreBundle\API\Finder\Log\LogFinder'
+
+    Claroline\CoreBundle\Repository\ResourceNodeRepository:
+      arguments:
+        - '@Symfony\Bridge\Doctrine\RegistryInterface'
+        - '@claroline.manager.plugin_manager'

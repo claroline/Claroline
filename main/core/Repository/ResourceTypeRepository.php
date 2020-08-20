@@ -15,14 +15,14 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class ResourceTypeRepository extends ServiceEntityRepository
 {
     /** @var array */
     private $bundles;
 
-    public function __construct(RegistryInterface $registry, PluginManager $manager)
+    public function __construct(ManagerRegistry $registry, PluginManager $manager)
     {
         $this->bundles = $manager->getEnabled(true);
 
@@ -110,8 +110,6 @@ class ResourceTypeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array $excludedTypeNames
-     *
      * @return array
      */
     public function findTypeNamesNotIn(array $excludedTypeNames)
@@ -137,9 +135,6 @@ class ResourceTypeRepository extends ServiceEntityRepository
 
     /**
      * Returns enabled resource types by their names.
-     *
-     * @param array $names
-     * @param bool  $enabled
      *
      * @return ResourceType[]
      */

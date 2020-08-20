@@ -25,38 +25,27 @@ class CursusCrud
 
     /**
      * CursusCrud constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function postCreate(CreateEvent $event)
     {
         $event = new LogCursusCreateEvent($event->getObject());
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 
-    /**
-     * @param UpdateEvent $event
-     */
     public function postUpdate(UpdateEvent $event)
     {
         $event = new LogCursusEditEvent($event->getObject());
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 
-    /**
-     * @param DeleteEvent $event
-     */
     public function preDelete(DeleteEvent $event)
     {
         $event = new LogCursusDeleteEvent($event->getObject());
-        $this->eventDispatcher->dispatch('log', $event);
+        $this->eventDispatcher->dispatch($event, 'log');
     }
 }

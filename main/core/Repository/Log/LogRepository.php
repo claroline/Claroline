@@ -17,14 +17,14 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class LogRepository extends ServiceEntityRepository
 {
     /** @var LogFinder */
     private $finder;
 
-    public function __construct(RegistryInterface $registry, LogFinder $finder)
+    public function __construct(ManagerRegistry $registry, LogFinder $finder)
     {
         $this->finder = $finder;
 
@@ -34,8 +34,7 @@ class LogRepository extends ServiceEntityRepository
     /**
      * Fetches data for line chart.
      *
-     * @param array $filters
-     * @param bool  $unique
+     * @param bool $unique
      *
      * @return array
      */
@@ -354,8 +353,7 @@ class LogRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param array        $range
+     * @param array $range
      *
      * @return QueryBuilder
      */
@@ -381,8 +379,7 @@ class LogRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param string       $userSearch
+     * @param string $userSearch
      *
      * @return QueryBuilder
      */
@@ -417,8 +414,7 @@ class LogRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param string       $userSearch
+     * @param string $userSearch
      *
      * @return QueryBuilder
      */
@@ -536,9 +532,6 @@ class LogRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param User         $owner
-     *
      * @return QueryBuilder
      */
     public function addOwnerFilterToQueryBuilder(QueryBuilder $queryBuilder, User $owner)
@@ -551,8 +544,7 @@ class LogRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param int          $otherElementId
+     * @param int $otherElementId
      *
      * @return QueryBuilder
      */

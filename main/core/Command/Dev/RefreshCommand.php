@@ -11,22 +11,30 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Library\Installation\Refresher;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RefreshCommand extends ContainerAwareCommand
+class RefreshCommand extends Command
 {
+    private $refresher;
+
+    public function __construct(Refresher $refresher)
+    {
+        $this->refresher = $refresher;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:refresh')
-            ->setDescription('Installs/dumps the assets and empties the cache.');
+        $this->setDescription('Installs/dumps the assets and empties the cache.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $refresher = $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Refresher');
-        $refresher->setOutput($output);
-        $refresher->refresh($input->getOption('env'));
+        $this->refresher->setOutput($output);
+        $this->refresher->refresh($input->getOption('env'));
     }
 }

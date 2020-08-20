@@ -8,7 +8,7 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@security.authorization_checker'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '%kernel.root_dir%'
+          - '%kernel.project_dir%/app'
           - '@Claroline\ThemeBundle\Serializer\ThemeSerializer'
           - '@claroline.manager.plugin_manager'
 
@@ -20,7 +20,7 @@ services:
         arguments:
           - '@kernel'
           - '%claroline.param.files_directory%'
-          - '%kernel.root_dir%'
+          - '%kernel.project_dir%/app'
 
     claroline.manager.theme_builder:
         alias: Claroline\ThemeBundle\Manager\ThemeBuilderManager

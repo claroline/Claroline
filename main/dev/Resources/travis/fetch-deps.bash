@@ -82,7 +82,7 @@ fetch() {
     rm -f $ARCHIVE
 }
 
-fetch composer $COMPOSER_SUM "COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-dist" vendor
+fetch composer $COMPOSER_SUM "COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-source -vvv" vendor
 
 # we don't want the sources present in the cache
 echo "Overriding distribution package with local build/repo..."

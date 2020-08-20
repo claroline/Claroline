@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Manager\ResourceManager as ResManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceManager implements ToolImporterInterface
 {
@@ -32,7 +32,7 @@ class ResourceManager implements ToolImporterInterface
     private $finder;
     /** @var Crud */
     private $crud;
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var UserManager */
     private $userManager;
@@ -43,22 +43,13 @@ class ResourceManager implements ToolImporterInterface
 
     /**
      * WorkspaceSerializer constructor.
-     *
-     * @param SerializerProvider $serializer
-     * @param UserManager        $userManager
-     * @param FinderProvider     $finder
-     * @param Crud               $crud
-     * @param TokenStorage       $tokenStorage
-     * @param ResManager         $resourceManager
-     * @param ObjectManager      $om
-     * @param StrictDispatcher   $eventDispatcher
      */
     public function __construct(
         SerializerProvider $serializer,
         UserManager $userManager,
         FinderProvider $finder,
         Crud $crud,
-        TokenStorage $tokenStorage,
+        TokenStorageInterface $tokenStorage,
         ResManager $resourceManager,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher
@@ -73,12 +64,6 @@ class ResourceManager implements ToolImporterInterface
         $this->resourceManager = $resourceManager;
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array     $options
-     *
-     * @return array
-     */
     public function serialize(Workspace $workspace, array $options): array
     {
         /** @var ResourceNode $root */
@@ -240,7 +225,6 @@ class ResourceManager implements ToolImporterInterface
      *
      * @param string $action (create, copy, delete, patch, update)
      * @param string $when   (post, pre)
-     * @param array  $args
      *
      * @return bool
      *

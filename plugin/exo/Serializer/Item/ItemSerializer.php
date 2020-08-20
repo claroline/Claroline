@@ -60,16 +60,6 @@ class ItemSerializer
 
     /**
      * ItemSerializer constructor.
-     *
-     * @param ObjectManager             $om
-     * @param TokenStorageInterface     $tokenStorage
-     * @param ItemDefinitionsCollection $itemDefinitions
-     * @param UserSerializer            $userSerializer
-     * @param HintSerializer            $hintSerializer
-     * @param ResourceContentSerializer $resourceContentSerializer
-     * @param ItemObjectSerializer      $itemObjectSerializer
-     * @param ContainerInterface        $container
-     * @param EventDispatcherInterface  $eventDispatcher
      */
     public function __construct(
         ObjectManager $om,
@@ -100,9 +90,6 @@ class ItemSerializer
 
     /**
      * Converts a Item into a JSON-encodable structure.
-     *
-     * @param Item  $question
-     * @param array $options
      *
      * @return array
      */
@@ -163,7 +150,6 @@ class ItemSerializer
      *
      * @param array $data
      * @param Item  $item
-     * @param array $options
      *
      * @return Item
      */
@@ -238,9 +224,6 @@ class ItemSerializer
      * Serializes Item data specific to its type.
      * Forwards the serialization to the correct handler.
      *
-     * @param Item  $question
-     * @param array $options
-     *
      * @return array
      */
     private function serializeQuestionType(Item $question, array $options = [])
@@ -254,10 +237,6 @@ class ItemSerializer
     /**
      * Deserializes Item data specific to its type.
      * Forwards the serialization to the correct handler.
-     *
-     * @param Item  $question
-     * @param array $data
-     * @param array $options
      */
     private function deserializeQuestionType(Item $question, array $data, array $options = [])
     {
@@ -274,9 +253,6 @@ class ItemSerializer
 
     /**
      * Serializes Item metadata.
-     *
-     * @param Item  $question
-     * @param array $options
      *
      * @return array
      */
@@ -327,9 +303,6 @@ class ItemSerializer
 
     /**
      * Deserializes Item metadata.
-     *
-     * @param Item  $question
-     * @param array $metadata
      */
     public function deserializeMetadata(Item $question, array $metadata)
     {
@@ -339,9 +312,6 @@ class ItemSerializer
     /**
      * Serializes Item hints.
      * Forwards the hint serialization to HintSerializer.
-     *
-     * @param Item  $question
-     * @param array $options
      *
      * @return array
      */
@@ -355,10 +325,6 @@ class ItemSerializer
     /**
      * Deserializes Item hints.
      * Forwards the hint deserialization to HintSerializer.
-     *
-     * @param Item  $question
-     * @param array $hints
-     * @param array $options
      */
     private function deserializeHints(Item $question, array $hints = [], array $options = [])
     {
@@ -397,9 +363,6 @@ class ItemSerializer
      * Serializes Item objects.
      * Forwards the object serialization to ItemObjectSerializer.
      *
-     * @param Item  $question
-     * @param array $options
-     *
      * @return array
      */
     private function serializeObjects(Item $question, array $options = [])
@@ -411,10 +374,6 @@ class ItemSerializer
 
     /**
      * Deserializes Item objects.
-     *
-     * @param Item  $question
-     * @param array $objects
-     * @param array $options
      */
     private function deserializeObjects(Item $question, array $objects = [], array $options = [])
     {
@@ -450,9 +409,6 @@ class ItemSerializer
      * Serializes Item resources.
      * Forwards the resource serialization to ResourceContentSerializer.
      *
-     * @param Item  $question
-     * @param array $options
-     *
      * @return array
      */
     private function serializeResources(Item $question, array $options = [])
@@ -464,10 +420,6 @@ class ItemSerializer
 
     /**
      * Deserializes Item resources.
-     *
-     * @param Item  $question
-     * @param array $resources
-     * @param array $options
      */
     private function deserializeResources(Item $question, array $resources = [], array $options = [])
     {
@@ -549,8 +501,6 @@ class ItemSerializer
      * Serializes Item tags.
      * Forwards the tag serialization to ItemTagSerializer.
      *
-     * @param Item $question
-     *
      * @return array
      */
     private function serializeTags(Item $question)
@@ -559,17 +509,13 @@ class ItemSerializer
             'class' => Item::class,
             'ids' => [$question->getUuid()],
         ]);
-        $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
 
         return $event->getResponse() ?? [];
     }
 
     /**
      * Deserializes Item tags.
-     *
-     * @param Item  $question
-     * @param array $tags
-     * @param array $options
      */
     private function deserializeTags(Item $question, array $tags = [], array $options = [])
     {
@@ -593,7 +539,7 @@ class ItemSerializer
                 'replace' => true,
             ]);
 
-            $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
         }
     }
 }

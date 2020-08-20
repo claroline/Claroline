@@ -35,10 +35,6 @@ class ResourceEvaluationManager
     private $logRepo;
     private $logConnectResource;
 
-    /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ObjectManager            $om
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher, ObjectManager $om)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -66,11 +62,6 @@ class ResourceEvaluationManager
     }
 
     /**
-     * @param ResourceNode   $node
-     * @param User|null      $user
-     * @param \DateTime|null $date
-     * @param array          $data
-     *
      * @return ResourceEvaluation
      */
     public function createResourceEvaluation(ResourceNode $node, User $user = null, \DateTime $date = null, array $data = [])
@@ -135,7 +126,7 @@ class ResourceEvaluationManager
 
         $this->om->endFlushSuite();
 
-        $this->eventDispatcher->dispatch('resource_evaluation', new UserEvaluationEvent($resourceUserEvaluation));
+        $this->eventDispatcher->dispatch(new UserEvaluationEvent($resourceUserEvaluation), 'resource_evaluation');
 
         return $evaluation;
     }
@@ -215,11 +206,6 @@ class ResourceEvaluationManager
     }
 
     /**
-     * @param ResourceNode   $node
-     * @param User           $user
-     * @param array          $actions
-     * @param \DateTime|null $startDate
-     *
      * @return Log[]
      */
     public function getLogsForResourceTracking(ResourceNode $node, User $user, array $actions, \DateTime $startDate = null)
@@ -230,9 +216,7 @@ class ResourceEvaluationManager
     /**
      * Add duration to a resource user evaluation.
      *
-     * @param ResourceNode $node
-     * @param User         $user
-     * @param int          $duration
+     * @param int $duration
      */
     public function addDurationToResourceEvaluation(ResourceNode $node, User $user, $duration)
     {
@@ -255,8 +239,6 @@ class ResourceEvaluationManager
 
     /**
      * Compute duration for a resource user evaluation.
-     *
-     * @param ResourceUserEvaluation $resUserEval
      *
      * @return int
      */

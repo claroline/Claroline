@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TeamSerializer
 {
@@ -26,9 +26,8 @@ class TeamSerializer
     private $resourceManager;
     /** @var TeamManager */
     private $teamManager;
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var ResourceNodeSerializer */
     private $resourceNodeSerializer;
     /** @var RoleSerializer */
@@ -43,20 +42,12 @@ class TeamSerializer
 
     /**
      * TeamSerializer constructor.
-     *
-     * @param ObjectManager          $om
-     * @param ResourceManager        $resourceManager
-     * @param TeamManager            $teamManager
-     * @param TokenStorage           $tokenStorage
-     * @param ResourceNodeSerializer $resourceNodeSerializer
-     * @param RoleSerializer         $roleSerializer
-     * @param WorkspaceSerializer    $workspaceSerializer
      */
     public function __construct(
         ObjectManager $om,
         ResourceManager $resourceManager,
         TeamManager $teamManager,
-        TokenStorage $tokenStorage,
+        TokenStorageInterface $tokenStorage,
         ResourceNodeSerializer $resourceNodeSerializer,
         RoleSerializer $roleSerializer,
         WorkspaceSerializer $workspaceSerializer
@@ -79,8 +70,6 @@ class TeamSerializer
     }
 
     /**
-     * @param Team $team
-     *
      * @return array
      */
     public function serialize(Team $team)
@@ -112,7 +101,6 @@ class TeamSerializer
 
     /**
      * @param array $data
-     * @param Team  $team
      *
      * @return Team
      */

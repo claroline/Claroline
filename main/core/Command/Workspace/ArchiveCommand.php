@@ -11,17 +11,32 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ArchiveCommand extends ContainerAwareCommand
+class ArchiveCommand extends Command
 {
+    private $em;
+    private $om;
+    private $workspaceManager;
+
+    public function __construct(EntityManagerInterface $em, ObjectManager $om, WorkspaceManager $workspaceManager)
+    {
+        $this->em = $em;
+        $this->om = $om;
+        $this->workspaceManager = $workspaceManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:workspace:archive')
-            ->setDescription('Archive workspace by request')
+        $this->setDescription('Archive workspace by request')
             ->setDefinition([
                 new InputArgument('dql', InputArgument::REQUIRED, 'The dql request - ie: "SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w WHERE w.name LIKE \'%fifi%\'"'
               ),
@@ -32,7 +47,7 @@ class ArchiveCommand extends ContainerAwareCommand
     {
         $dql = $input->getArgument('dql');
 
-        $query = $this->getContainer()->get('doctrine.orm.entity_manager')->createQuery($dql);
+        $query = $this->em->createQuery($dql);
 
         $workspaces = $query->getResult();
         $i = 0;
@@ -42,13 +57,13 @@ class ArchiveCommand extends ContainerAwareCommand
         foreach ($workspaces as $workspace) {
             ++$i;
             $output->writeln('Updating workspace '.$workspace->getName().': '.$i.'/'.$cw);
-            $this->getContainer()->get('claroline.manager.workspace_manager')->archive($workspace);
+            $this->workspaceManager->archive($workspace);
 
             if (0 === $i % 500) {
-                $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->flush();
+                $this->om->flush();
             }
         }
 
-        $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->flush();
+        $this->om->flush();
     }
 }

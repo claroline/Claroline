@@ -12,8 +12,8 @@
 namespace Claroline\MigrationBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateCommand extends AbstractCommand
 {
@@ -26,7 +26,7 @@ class GenerateCommand extends AbstractCommand
             InputOption::VALUE_REQUIRED,
             'The bundle output if you want migrations to be generated somewhere else'
         );
-        $this->setName('claroline:migration:generate')
+        $this
             ->setDescription('Creates migration classes on a per bundle basis.')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command generates migration classes for a

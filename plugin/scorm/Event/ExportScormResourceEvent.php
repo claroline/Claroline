@@ -4,7 +4,7 @@ namespace Claroline\ScormBundle\Event;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ExportScormResourceEvent extends Event implements DataConveyorEventInterface
 {
@@ -65,8 +65,7 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
     /**
      * Constructor.
      *
-     * @param AbstractResource $resource
-     * @param string           $locale
+     * @param string $locale
      */
     public function __construct(AbstractResource $resource, $locale)
     {
@@ -200,8 +199,6 @@ class ExportScormResourceEvent extends Event implements DataConveyorEventInterfa
 
     /**
      * Add an embed Resource.
-     *
-     * @param AbstractResource $resource
      */
     public function addEmbedResource(AbstractResource $resource)
     {

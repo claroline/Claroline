@@ -26,12 +26,6 @@ class PostSerializer
 
     /**
      * PostSerializer constructor.
-     *
-     * @param UserSerializer           $userSerializer
-     * @param CommentSerializer        $commentSerializer
-     * @param ObjectManager            $om
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ResourceNodeSerializer   $nodeSerializer
      */
     public function __construct(
         UserSerializer $userSerializer,
@@ -74,7 +68,6 @@ class PostSerializer
      * Checks if an option has been passed to the serializer.
      *
      * @param $option
-     * @param array $options
      *
      * @return bool
      */
@@ -84,10 +77,6 @@ class PostSerializer
     }
 
     /**
-     * @param Post  $post
-     * @param array $comments
-     * @param array $options
-     *
      * @return array - The serialized representation of a post
      */
     public function serialize(Post $post, array $options = [], array $comments = [])
@@ -131,9 +120,6 @@ class PostSerializer
     }
 
     /**
-     * @param Post  $post
-     * @param array $options
-     *
      * @return bool - Check if post content is truncated
      */
     private function isAbstract(Post $post, array $options = [])
@@ -150,7 +136,6 @@ class PostSerializer
     /**
      * @param array       $data
      * @param Post | null $post
-     * @param array       $options
      *
      * @return Post - The deserialized post entity
      */
@@ -202,9 +187,6 @@ class PostSerializer
     /**
      * Serialize post comments.
      *
-     * @param Post  $post
-     * @param array $options
-     *
      * @return array - The serialized representation comments
      */
     public function serializePostComments(Post $post, array $options = [])
@@ -221,8 +203,6 @@ class PostSerializer
      * Serializes Item tags.
      * Forwards the tag serialization to ItemTagSerializer.
      *
-     * @param post $post
-     *
      * @return array
      */
     public function serializeTags(Post $post)
@@ -231,7 +211,7 @@ class PostSerializer
             'class' => 'Icap\BlogBundle\Entity\Post',
             'ids' => [$post->getUuid()],
         ]);
-        $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
 
         return is_array($event->getResponse()) ? implode(', ', $event->getResponse()) : null;
     }
@@ -239,9 +219,7 @@ class PostSerializer
     /**
      * Deserializes Item tags.
      *
-     * @param Post   $post
      * @param string $tags
-     * @param array  $options
      */
     public function deserializeTags(Post $post, $tags, array $options = [])
     {
@@ -259,6 +237,6 @@ class PostSerializer
             'replace' => true,
         ]);
 
-        $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
     }
 }

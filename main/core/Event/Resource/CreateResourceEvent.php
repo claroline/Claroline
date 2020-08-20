@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched when a resource creation is asked.
@@ -25,8 +25,6 @@ class CreateResourceEvent extends Event
 
     /**
      * CreateResourceEvent constructor.
-     *
-     * @param AbstractResource $resource
      */
     public function __construct(AbstractResource $resource)
     {

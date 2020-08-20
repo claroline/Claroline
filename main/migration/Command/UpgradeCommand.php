@@ -16,8 +16,8 @@ class UpgradeCommand extends AbstractMigrateCommand
     protected function configure()
     {
         parent::configure();
-        $this->setName('claroline:migration:upgrade')
-            ->setDescription('Upgrades a bundle to a specified version.');
+
+        $this->setDescription('Upgrades a bundle to a specified version.');
     }
 
     protected function getAction()

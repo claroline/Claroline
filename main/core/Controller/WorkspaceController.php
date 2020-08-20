@@ -68,17 +68,6 @@ class WorkspaceController
 
     /**
      * WorkspaceController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param TokenStorageInterface         $tokenStorage
-     * @param SerializerProvider            $serializer
-     * @param ToolManager                   $toolManager
-     * @param TranslatorInterface           $translator
-     * @param WorkspaceManager              $manager
-     * @param WorkspaceRestrictionsManager  $restrictionsManager
-     * @param EvaluationManager             $evaluationManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -108,9 +97,8 @@ class WorkspaceController
      * @EXT\Route("/{slug}", name="claro_workspace_open")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
-     * @param string  $slug
-     * @param User    $user
-     * @param Request $request
+     * @param string $slug
+     * @param User   $user
      *
      * @throws AccessDeniedException
      *
@@ -132,10 +120,10 @@ class WorkspaceController
         $isManager = $this->manager->isManager($workspace, $this->tokenStorage->getToken());
         $accessErrors = $this->restrictionsManager->getErrors($workspace, $user);
         if (empty($accessErrors) || $isManager) {
-            $this->eventDispatcher->dispatch('workspace.open', new OpenWorkspaceEvent($workspace));
+            $this->eventDispatcher->dispatch(new OpenWorkspaceEvent($workspace), 'workspace.open');
 
             // Log workspace opening
-            $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
+            $this->eventDispatcher->dispatch(new LogWorkspaceEnterEvent($workspace), 'log');
 
             // Get the list of enabled workspace tool
             if ($isManager) {
@@ -192,8 +180,7 @@ class WorkspaceController
      *      options={"mapping": {"id": "uuid"}}
      * )
      *
-     * @param Workspace $workspace
-     * @param string    $toolName
+     * @param string $toolName
      *
      * @return Response
      */
@@ -209,9 +196,9 @@ class WorkspaceController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch('open_tool_workspace_'.$toolName, new OpenToolEvent($workspace));
+        $event = $this->eventDispatcher->dispatch(new OpenToolEvent($workspace), 'open_tool_workspace_'.$toolName);
 
-        $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
+        $this->eventDispatcher->dispatch(new LogWorkspaceToolReadEvent($workspace, $toolName), 'log');
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),
@@ -228,9 +215,6 @@ class WorkspaceController
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
      *
      * @return JsonResponse
      */

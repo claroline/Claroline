@@ -52,16 +52,7 @@ class ClientSerializer
     /**
      * ClientSerializer constructor.
      *
-     * @param string                       $env
-     * @param EventDispatcherInterface     $eventDispatcher
-     * @param TokenStorageInterface        $tokenStorage
-     * @param RequestStack                 $requestStack
-     * @param ObjectManager                $om
-     * @param PlatformConfigurationHandler $config
-     * @param PlatformManager              $platformManager
-     * @param VersionManager               $versionManager
-     * @param PluginManager                $pluginManager
-     * @param ResourceTypeSerializer       $resourceTypeSerializer
+     * @param string $env
      */
     public function __construct(
         $env,
@@ -155,7 +146,7 @@ class ClientSerializer
         ];
 
         $event = new GenericDataEvent();
-        $this->eventDispatcher->dispatch('claroline_populate_client_config', $event);
+        $this->eventDispatcher->dispatch($event, 'claroline_populate_client_config');
         $data = array_merge($data, $event->getResponse() ?? []);
 
         return $data;

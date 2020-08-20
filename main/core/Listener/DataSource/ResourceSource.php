@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceSource
 {
@@ -18,29 +18,22 @@ class ResourceSource
     /** @var FinderProvider */
     private $finder;
 
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /**
      * ResourceSource constructor.
-     *
-     * @param ObjectManager  $om
-     * @param FinderProvider $finder
-     * @param TokenStorage   $tokenStorage
      */
     public function __construct(
         ObjectManager $om,
         FinderProvider $finder,
-        TokenStorage $tokenStorage
+        TokenStorageInterface $tokenStorage
     ) {
         $this->repository = $om->getRepository(ResourceNode::class);
         $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();

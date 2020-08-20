@@ -27,3 +27,11 @@ services:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
+
+    # Console commands
+
+    Claroline\HistoryBundle\Command\CleanHistoryCommand:
+        arguments:
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'
+        tags:
+            - { name: console.command, command: claroline:history:clean }

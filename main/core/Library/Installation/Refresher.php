@@ -28,8 +28,6 @@ class Refresher
 
     /**
      * Refresher constructor.
-     *
-     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -55,7 +53,7 @@ class Refresher
 
     public function installAssets()
     {
-        $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
+        $webDir = "{$this->container->get('kernel')->getProjectDir()}/web";
         $args = ['command' => 'assets:install', 'target' => $webDir, '--symlink' => true];
         $this->container->get('claroline.manager.command_manager')
           ->run(new ArrayInput($args), $this->output ?: new NullOutput());
@@ -93,7 +91,7 @@ class Refresher
             $this->output->writeln('Clearing the cache...');
         }
 
-        $baseCacheDir = "{$this->container->get('kernel')->getRootDir()}/cache";
+        $baseCacheDir = "{$this->container->get('kernel')->getProjectDir()}/app/cache";
         $cacheDir = null === $environment ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
         static::removeContentFrom($cacheDir);
     }

@@ -55,12 +55,6 @@ class DesktopController
 
     /**
      * DesktopController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param ParametersSerializer          $parametersSerializer
-     * @param SerializerProvider            $serializer
-     * @param ToolManager                   $toolManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -99,7 +93,7 @@ class DesktopController
         }
 
         /** @var GenericDataEvent $event */
-        $event = $this->eventDispatcher->dispatch('desktop.open', new GenericDataEvent());
+        $event = $this->eventDispatcher->dispatch(new GenericDataEvent(), 'desktop.open');
 
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
@@ -133,9 +127,9 @@ class DesktopController
         }
 
         /** @var OpenToolEvent $event */
-        $event = $this->eventDispatcher->dispatch('open_tool_desktop_'.$toolName, new OpenToolEvent());
+        $event = $this->eventDispatcher->dispatch(new OpenToolEvent(), 'open_tool_desktop_'.$toolName);
 
-        $this->eventDispatcher->dispatch('log', new LogDesktopToolReadEvent($toolName));
+        $this->eventDispatcher->dispatch(new LogDesktopToolReadEvent($toolName), 'log');
 
         return new JsonResponse(array_merge($event->getData(), [
             'data' => $this->serializer->serialize($orderedTool),
@@ -147,8 +141,6 @@ class DesktopController
      *
      * @EXT\Route("/tools", name="claro_desktop_tools")
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User|null $currentUser
      *
      * @return JsonResponse
      */

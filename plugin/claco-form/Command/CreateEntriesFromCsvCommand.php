@@ -13,16 +13,23 @@ namespace Claroline\ClacoFormBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Logger\ConsoleLogger;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateEntriesFromCsvCommand extends ContainerAwareCommand
+class CreateEntriesFromCsvCommand extends Command
 {
     use BaseCommandTrait;
+
+    private $om;
+    private $resourceManager;
+    private $formManager;
 
     private $params = [
         'username' => 'The username of the creator ',
@@ -30,10 +37,18 @@ class CreateEntriesFromCsvCommand extends ContainerAwareCommand
         'csv_path' => 'Absolute path to the csv file ',
     ];
 
+    public function __construct(ObjectManager $om, ResourceManager $resourceManager, ClacoFormManager $formManager)
+    {
+        $this->om = $om;
+        $this->resourceManager = $resourceManager;
+        $this->formManager = $formManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:csv:clacoform')
-            ->setDescription('Create entries for a ClacoForm from a csv file');
+        $this->setDescription('Create entries for a ClacoForm from a csv file');
         $this->setDefinition([
             new InputArgument('username', InputArgument::REQUIRED, 'The username of the creator'),
             new InputArgument('clacoform_node_id', InputArgument::REQUIRED, 'The uuid of the ClacoForm resource node'),
@@ -44,10 +59,9 @@ class CreateEntriesFromCsvCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
-        $userRepo = $om->getRepository(User::class);
-        $resourceNodeRepo = $om->getRepository(ResourceNode::class);
+        $userRepo = $this->om->getRepository(User::class);
+        $resourceNodeRepo = $this->om->getRepository(ResourceNode::class);
 
         $file = $input->getArgument('csv_path');
         $content = str_replace(PHP_EOL, '<br/>', file_get_contents($file));

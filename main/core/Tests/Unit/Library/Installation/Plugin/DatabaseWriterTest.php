@@ -38,7 +38,7 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
         $this->kernel = $this->mock('Symfony\Component\HttpKernel\KernelInterface');
         $this->templateDir = 'path/to/templateDir';
-        $this->kernel->shouldReceive('getRootDir')->andReturn('kernelRootDir');
+        $this->kernel->shouldReceive('getProjectDir')->andReturn('kernelRootDir');
         $this->kernel->shouldReceive('getEnvironment')->andReturn('test');
         $this->kernelRootDir = 'kernelRootDir';
         $this->dbWriter = new DatabaseWriter(

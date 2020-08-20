@@ -15,16 +15,30 @@ use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\UserManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RoleIntegrityCheckerCommand extends ContainerAwareCommand
+class RoleIntegrityCheckerCommand extends Command
 {
+    private $roleManager;
+    private $userManager;
+    private $om;
+
+    public function __construct(RoleManager $roleManager, UserManager $userManager, ObjectManager $om)
+    {
+        $this->roleManager = $roleManager;
+        $this->userManager = $userManager;
+        $this->om = $om;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:roles:check')
+        $this
             ->setDescription('Checks the role integrity of the platform.')
             ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User login or email. Restore roles only for this user.')
             ->addOption('user_index', 'i', InputOption::VALUE_OPTIONAL, 'Restore roles for users after given index.', 0)
@@ -35,43 +49,34 @@ class RoleIntegrityCheckerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        /** @var RoleManager $roleManager */
-        $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
-        $roleManager->setLogger($consoleLogger);
+        $this->roleManager->setLogger($consoleLogger);
         $userId = $input->getOption('user');
         $workspaceCode = $input->getOption('workspace');
 
         if (!empty($userId)) {
-            $user = $this
-                ->getContainer()
-                ->get('claroline.manager.user_manager')
-                ->getUserByUsernameOrMail($userId, $userId);
+            $user = $this->userManager->getUserByUsernameOrMail($userId, $userId);
             if (empty($user)) {
                 $consoleLogger->warning("Could not find user \"{$userId}\"");
 
                 return;
             }
-            $roleManager->checkUserIntegrity($user);
+            $this->roleManager->checkUserIntegrity($user);
 
             return;
         } elseif (!empty($workspaceCode)) {
-            $workspace = $this
-                ->getContainer()
-                ->get(ObjectManager::class)
-                ->getRepository(Workspace::class)
-                ->findOneByCode($workspaceCode);
+            $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($workspaceCode);
             if (empty($workspace)) {
                 $consoleLogger->warning("Could not find workspace \"{$workspaceCode}\"");
 
                 return;
             }
-            $roleManager->checkWorkspaceIntegrity($workspace);
+            $this->roleManager->checkWorkspaceIntegrity($workspace);
 
             return;
         }
 
         $userIdx = $input->getOption('user_index');
         $workspaceIdx = $input->getOption('workspace_index');
-        $roleManager->checkIntegrity($workspaceIdx, $userIdx);
+        $this->roleManager->checkIntegrity($workspaceIdx, $userIdx);
     }
 }

@@ -55,15 +55,8 @@ class ScormManager
     /**
      * Constructor.
      *
-     * @param EventDispatcherInterface  $eventDispatcher
-     * @param string                    $filesDir
-     * @param ObjectManager             $om
-     * @param ResourceEvaluationManager $resourceEvalManager
-     * @param ScormLib                  $scormLib
-     * @param ScormSerializer           $scormSerializer
-     * @param ScoSerializer             $scoSerializer
-     * @param ScoTrackingSerializer     $scoTrackingSerializer
-     * @param string                    $uploadDir
+     * @param string $filesDir
+     * @param string $uploadDir
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -299,7 +292,7 @@ class ScormManager
                     $data['bestScore'] = $bestScore;
                     $data['bestStatus'] = $bestStatus;
                     $event = new LogScormResultEvent($sco->getScorm(), $user, $data);
-                    $this->eventDispatcher->dispatch('log', $event);
+                    $this->eventDispatcher->dispatch($event, 'log');
 
                     // Generate resource evaluation
                     $this->generateScormEvaluation(
@@ -387,7 +380,7 @@ class ScormManager
                     $data['result'] = $scoreRaw;
                     $data['resultMax'] = $scoreMax;
                     $event = new LogScormResultEvent($sco->getScorm(), $user, $data);
-                    $this->eventDispatcher->dispatch('log', $event);
+                    $this->eventDispatcher->dispatch($event, 'log');
 
                     // Generate resource evaluation
                     $this->generateScormEvaluation(
@@ -488,9 +481,7 @@ class ScormManager
     /**
      * Unzip a given ZIP file into the web resources directory.
      *
-     * @param Workspace $workspace
-     * @param File      $file
-     * @param string    $hashName  name of the destination directory
+     * @param string $hashName name of the destination directory
      */
     public function unzipScormArchive(Workspace $workspace, File $file, $hashName)
     {

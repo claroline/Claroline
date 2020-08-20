@@ -2,13 +2,23 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RootNodeIntegrityCheckerCommand extends ContainerAwareCommand
+class RootNodeIntegrityCheckerCommand extends Command
 {
+    private $om;
+
+    public function __construct(ObjectManager $om)
+    {
+        $this->om = $om;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('claroline:resource_root:check')
@@ -17,8 +27,7 @@ class RootNodeIntegrityCheckerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $roots = $om->getRepository(ResourceNode::class)->findBy(['parent' => null, 'personal' => false]);
+        $roots = $this->om->getRepository(ResourceNode::class)->findBy(['parent' => null, 'personal' => false]);
 
         $i = 0;
 
@@ -28,15 +37,15 @@ class RootNodeIntegrityCheckerCommand extends ContainerAwareCommand
 
                 $output->writeln("Set root name for node {$root->getName()} to {$root->getWorkspace()->getName()}");
             }
-            $om->persist($root);
+            $this->om->persist($root);
             ++$i;
 
             if (0 === $i % 100) {
                 $output->writeln('flush...');
-                $om->flush();
+                $this->om->flush();
             }
         }
         $output->writeln('flush...');
-        $om->flush();
+        $this->om->flush();
     }
 }

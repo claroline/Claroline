@@ -11,19 +11,27 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Psr\Log\LogLevel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateConfigCommand extends ContainerAwareCommand
+class UpdateConfigCommand extends Command
 {
+    private $pluginInstaller;
+
+    public function __construct(Installer $pluginInstaller)
+    {
+        $this->pluginInstaller = $pluginInstaller;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        parent::configure();
-        $this->setName('claroline:update_config')
-            ->setDescription('Runs the local update the config.');
+        $this->setDescription('Runs the local update the config.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -35,7 +43,7 @@ class UpdateConfigCommand extends ContainerAwareCommand
         ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
-        $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer')->setLogger($consoleLogger);
-        $this->getContainer()->get('Claroline\CoreBundle\Library\Installation\Plugin\Installer')->updateAllConfigurations();
+        $this->pluginInstaller->setLogger($consoleLogger);
+        $this->pluginInstaller->updateAllConfigurations();
     }
 }

@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * List the workspaces in which the current user is registered.
@@ -16,26 +16,17 @@ class RegisteredSource
     /** @var FinderProvider */
     private $finder;
 
-    /** @var TokenStorage */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * RegisteredSource constructor.
-     *
-     * @param FinderProvider $finder
-     * @param TokenStorage   $tokenStorage
-     */
     public function __construct(
         FinderProvider $finder,
-        TokenStorage $tokenStorage
+        TokenStorageInterface $tokenStorage
     ) {
         $this->finder = $finder;
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
