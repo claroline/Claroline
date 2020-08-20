@@ -5,9 +5,7 @@ app/bootstrap*
 app/cache/*
 app/sessions/*
 app/config/.update
-app/config/bundles.ini
 app/config/parameters.yml
-app/config/platform_options.json
 app/config/previous-installed.json
 app/logs/*
 bin/*
