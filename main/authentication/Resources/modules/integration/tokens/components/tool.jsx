@@ -17,9 +17,10 @@ const ApiToken = props =>
       target: `${props.path}/tokens`
     }]}
     subtitle={trans('tokens', {}, 'integration')}
+    primaryAction="add-token"
     actions={[
       {
-        name: 'token-add',
+        name: 'add-token',
         type: LINK_BUTTON,
         icon: 'fa fa-plus',
         label: trans('add_token', {}, 'security'),

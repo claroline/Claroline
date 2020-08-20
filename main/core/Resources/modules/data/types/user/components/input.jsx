@@ -48,7 +48,7 @@ const UserInput = props => {
           primaryAction={{
             type: LINK_BUTTON,
             label: trans('open', {}, 'actions'),
-            target: route(props.data)
+            target: route(props.value)
           }}
           actions={[
             {
