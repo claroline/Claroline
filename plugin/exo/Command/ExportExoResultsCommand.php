@@ -11,19 +11,38 @@
 
 namespace UJM\ExoBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Claroline\CoreBundle\Manager\UserManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Debug\Exception\ContextErrorException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use UJM\ExoBundle\Manager\ExerciseManager;
 
-class ExportExoResultsCommand extends ContainerAwareCommand
+class ExportExoResultsCommand extends Command
 {
+    private $userManager;
+    private $exerciseManager;
+    private $em;
+    private $tokenStorage;
+
+    public function __construct(UserManager $userManager, ExerciseManager $exerciseManager, EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
+    {
+        $this->userManager = $userManager;
+        $this->exerciseManager = $exerciseManager;
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:exo:export_results')->setDescription('export exercice results into csv');
+        $this->setDescription('export exercice results into csv');
         $this->setDefinition(
       [
         new InputArgument('exercice_id', InputArgument::REQUIRED, 'ID of the exercise to export, or workspace ID if option set'),
@@ -46,12 +65,11 @@ class ExportExoResultsCommand extends ContainerAwareCommand
         $username = $input->getArgument('username');
         $workspaceMode = $input->getOption('workspace');
         //credentials
-        $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
+        $user = $this->userManager->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->getContainer()->get('security.context')->setToken($token);
-        $exoManager = $this->getContainer()->get('UJM\ExoBundle\Manager\ExerciseManager');
+        $this->tokenStorage->setToken($token);
 
-        $exoRepo = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('UJMExoBundle:Exercise');
+        $exoRepo = $this->em->getRepository('UJMExoBundle:Exercise');
         $exercises = [];
         if (!$workspaceMode) {
             $exercises[] = $exoRepo->findOneBy(['resourceNode' => $id]);
@@ -67,7 +85,7 @@ class ExportExoResultsCommand extends ContainerAwareCommand
                 }
                 try {
                     $output->writeln('<comment>Debut export resultats exercice ID </comment>'.$exo->getResourceNode()->getId());
-                    $exoManager->exportResultsToCsv($exercise, $path);
+                    $this->exerciseManager->exportResultsToCsv($exercise, $path);
                     $output->writeln('<comment>Fin export resultats exercice ID </comment>'.$exo->getResourceNode()->getId().': '.$path);
                 } catch (ContextErrorException  $e) {
                     $output->writeln('<error>!!!!Erreur export resultats exercice ID '.$exo->getResourceNode()->getId().'</error>');

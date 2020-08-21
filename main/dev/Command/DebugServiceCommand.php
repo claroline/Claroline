@@ -13,9 +13,11 @@ namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Logger\ConsoleLogger;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Listener\Doctrine\DebugListener;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Debug a manager.
  */
-class DebugServiceCommand extends ContainerAwareCommand implements AdminCliCommand
+class DebugServiceCommand extends Command implements AdminCliCommand
 {
     use BaseCommandTrait;
 
@@ -33,6 +35,19 @@ class DebugServiceCommand extends ContainerAwareCommand implements AdminCliComma
         'service_name' => 'The service name: ',
         'method_name' => 'The method name: ',
     ];
+
+    private $om;
+    private $debugListener;
+    private $authenticator;
+
+    public function __construct(ObjectManager $om, DebugListener $debugListener, Authenticator $authenticator)
+    {
+        $this->om = $om;
+        $this->debugListener = $debugListener;
+        $this->authenticator = $authenticator;
+
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -53,21 +68,20 @@ class DebugServiceCommand extends ContainerAwareCommand implements AdminCliComma
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consoleLogger = ConsoleLogger::get($output);
-        $manager = $this->getContainer()->get($input->getArgument('service_name'));
+        $manager = $this->getApplication()->getKernel()->get($input->getArgument('service_name'));
         if (method_exists($manager, 'setLogger')) {
             $manager->setLogger($consoleLogger);
         }
         $method = $input->getArgument('method_name');
-        $om = $this->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
 
         if ($input->getOption('debug_doctrine_all')) {
-            $om->setLogger($consoleLogger);
-            $om->activateLog();
-            $om->showFlushLevel();
-            $this->getContainer()->get('Claroline\CoreBundle\Listener\Doctrine\DebugListener')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DebugListener::DEBUG_ALL)->setVendor('Claroline');
+            $this->om->setLogger($consoleLogger);
+            $this->om->activateLog();
+            $this->om->showFlushLevel();
+            $this->debugListener->setLogger($consoleLogger)->activateLog()->setDebugLevel(DebugListener::DEBUG_ALL)->setVendor('Claroline');
         }
 
-        $this->getContainer()->get('Claroline\AuthenticationBundle\Security\Authentication\Authenticator')->authenticate($input->getArgument('owner'), null, false);
+        $this->authenticator->authenticate($input->getArgument('owner'), null, false);
         $variables = $input->getArgument('parameters');
         $args = [];
         $class = get_class($manager);
@@ -76,7 +90,7 @@ class DebugServiceCommand extends ContainerAwareCommand implements AdminCliComma
             $param = new \ReflectionParameter([$class, $method], $i);
             $pclass = $param->getClass();
             $args[] = $pclass ?
-                $om->getRepository($pclass->name)->find($variables[$i]) : $variables[$i];
+                $this->om->getRepository($pclass->name)->find($variables[$i]) : $variables[$i];
         }
 
         call_user_func_array([$manager, $method], $args);

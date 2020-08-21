@@ -3,6 +3,7 @@ imports:
     - { resource: services/serializer.yml }
     - { resource: services/library.yml }
     - { resource: services/controller.yml }
+    - { resource: services/command.yml }
     - { resource: services/validator.yml }
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }

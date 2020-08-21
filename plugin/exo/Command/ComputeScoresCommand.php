@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Command;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,12 +14,22 @@ use UJM\ExoBundle\Manager\Attempt\PaperManager;
 /**
  * Recomputes score for quiz papers.
  */
-class ComputeScoresCommand extends ContainerAwareCommand
+class ComputeScoresCommand extends Command
 {
+    private $om;
+    private $paperManager;
+
+    public function __construct(ObjectManager $om, PaperManager $paperManager)
+    {
+        $this->om = $om;
+        $this->paperManager = $paperManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
-            ->setName('claroline:quiz:scores')
             ->setDescription('Recomputes papers scores for a quiz.')
             ->setDefinition([
                 new InputArgument('quiz_id', InputArgument::REQUIRED, 'The resource node ID of the quiz.'),
@@ -28,29 +38,24 @@ class ComputeScoresCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var ObjectManager $om */
-        $om = $this->getContainer()->get(ObjectManager::class);
-        /** @var PaperManager $manager */
-        $manager = $this->getContainer()->get(PaperManager::class);
-
         $id = $input->getArgument('quiz_id');
 
         /** @var Exercise $quiz */
-        $quiz = $om->getRepository(Exercise::class)->findOneBy(['resourceNode' => $id]);
+        $quiz = $this->om->getRepository(Exercise::class)->findOneBy(['resourceNode' => $id]);
         /** @var Paper[] $papers */
-        $papers = $om->getRepository(Paper::class)->findBy(['exercise' => $quiz]);
+        $papers = $this->om->getRepository(Paper::class)->findBy(['exercise' => $quiz]);
 
         $output->writeln(sprintf('Found %d papers to compute', count($papers)));
 
         foreach ($papers as $paper) {
             $output->writeln(sprintf('- Processing paper : %s', $paper->getUuid()));
 
-            $paper->setTotal($manager->calculateTotal($paper));
-            $paper->setScore($manager->calculateScore($paper));
+            $paper->setTotal($this->paperManager->calculateTotal($paper));
+            $paper->setScore($this->paperManager->calculateScore($paper));
 
-            $om->persist($paper);
+            $this->om->persist($paper);
         }
 
-        $om->flush();
+        $this->om->flush();
     }
 }

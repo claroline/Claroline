@@ -12,23 +12,33 @@
 namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Debug a manager.
  */
-class RouterDebugCommand extends ContainerAwareCommand
+class RouterDebugCommand extends Command
 {
     use BaseCommandTrait;
 
     private $params = ['route' => 'The route name: '];
 
+    private $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:debug:router')->setDescription('Generate a route');
+        $this->setDescription('Generate a route');
         $this->setDefinition(
             [
                 new InputArgument('route', InputArgument::REQUIRED, 'The route'),
@@ -41,7 +51,6 @@ class RouterDebugCommand extends ContainerAwareCommand
     {
         $route = $input->getArgument('route');
         $parameters = $input->getArgument('parameters');
-        $container = $this->getContainer();
-        $output->writeln($container->get('router')->generate($route, $parameters, true));
+        $output->writeln($this->urlGenerator->generate($route, $parameters));
     }
 }

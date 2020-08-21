@@ -12,7 +12,7 @@
 namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,7 +23,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Creates a plugin. I assume you work on a linux fs.
  */
-class CreatePluginCommand extends ContainerAwareCommand
+class CreatePluginCommand extends Command
 {
     use BaseCommandTrait;
 
@@ -34,9 +34,18 @@ class CreatePluginCommand extends ContainerAwareCommand
         'bundle' => 'The bundle name (camel case required)',
     ];
 
+    private $vendorDir;
+
+    public function __construct(string $vendorDir)
+    {
+        $this->vendorDir = $vendorDir;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
-        $this->setName('claroline:plugin:create')
+        $this
             ->setDescription(
                 'Create a claroline plugin in your vendor directory (does not support camel case yet)'
             );
@@ -99,7 +108,6 @@ class CreatePluginCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $fs = new Filesystem();
-        $vendorDir = $this->getContainer()->getParameter('claroline.param.vendor_directory');
         $skel = $this->getTemplateDirectory('skel');
         $ivendor = $input->getArgument('vendor');
         $ibundle = $input->getArgument('bundle');
@@ -107,7 +115,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $bname = $this->getNormalizedBundleName($ibundle).'-bundle';
 
         //create the directories if they don't exist
-        $vendorNameDir = "{$vendorDir}/{$vname}";
+        $vendorNameDir = "{$this->vendorDir}/{$vname}";
         $bundleNameDir = "{$vendorNameDir}/{$bname}";
         $parentDir = "{$bundleNameDir}/{$ivendor}";
         $rootDir = "{$parentDir}/{$ibundle}Bundle";
@@ -583,8 +591,7 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     private function getTemplateDirectory($subDirectory)
     {
-        $vendorDir = $this->getContainer()->getParameter('claroline.param.vendor_directory');
-        $baseDir = $vendorDir.'/claroline/distribution/main/dev/Resources/bundle-creator';
+        $baseDir = $this->vendorDir.'/claroline/distribution/main/dev/Resources/bundle-creator';
 
         return "{$baseDir}/{$subDirectory}";
     }
