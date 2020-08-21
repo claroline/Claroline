@@ -9,7 +9,7 @@ $binDir = __DIR__.'/../../../../../../bin';
 $phpmd = realpath("{$binDir}/phpmd");
 
 if (!$phpmd) {
-    echo "Cannot found php-cs-fixer (looked in {$binDir}) \n";
+    echo "Cannot found php-md (looked in {$binDir}) \n";
     exit(1);
 }
 
