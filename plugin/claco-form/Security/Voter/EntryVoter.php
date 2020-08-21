@@ -21,19 +21,33 @@ class EntryVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
+            case self::CREATE:
+                return $this->checkCreate($object);
             case self::EDIT:
+            case self::DELETE:
                 return $this->checkEdit($token, $object);
         }
     }
 
     public function getClass()
     {
-        return 'Claroline\ClacoFormBundle\Entity\Entry';
+        return Entry::class;
     }
 
     public function getSupportedActions()
     {
-        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+    }
+
+    private function checkCreate(Entry $entry)
+    {
+        $clacoForm = $entry->getClacoForm();
+
+        if ($this->isGranted('ADD-ENTRY', $clacoForm->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit(TokenInterface $token, Entry $entry)

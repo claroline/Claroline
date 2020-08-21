@@ -376,8 +376,8 @@ const EntryForm = withRouter(connect(
 
       if (isNew) {
         dispatch(formActions.saveForm(selectors.STORE_NAME+'.entries.current', ['apiv2_clacoformentry_create'])).then((data) => {
-          navigate(`${path}/entries/${data.id}`)
           dispatch(actions.addCreatedEntry(data))
+          navigate(`${path}/entries/${data.id}`)
         }, () => true)
       } else {
         dispatch(formActions.saveForm(selectors.STORE_NAME+'.entries.current', ['apiv2_clacoformentry_update', {id: entry.id}]))
