@@ -10,5 +10,9 @@
   "users": "List of users",
   "users_desc": "Allows to list users visible by the current user.",
   "workspaces": "List of workspaces",
-  "workspaces_desc": "Allows to list workspaces visible by the current user. This includes workspaces that the user manages, in which he is registered or in which he can register."
+  "workspaces_desc": "Allows to list workspaces visible by the current user. This includes workspaces that the user manages, in which he is registered or in which he can register.",
+  "resource": "Selected resource",
+  "resource_desc": "Allows to display a selected resource.",
+  "personal_workspace": "Personal workspace directory",
+  "personal_workspace_desc": "Allows to display the root directory of the current user's personal workspace."
 }

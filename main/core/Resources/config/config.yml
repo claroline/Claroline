@@ -178,13 +178,22 @@ plugin:
 
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
-          context: [workspace, desktop, home, administration]
-          tags: [content]
+          sources: [resource]
 
     data_sources:
         - name: resources
           type: list
           context: [workspace, desktop, home, administration]
+          tags: [content]
+
+        - name: resource
+          type: resource
+          context: [workspace, desktop, home, administration]
+          tags: [content]
+
+        - name: personal_workspace
+          type: resource
+          context: [desktop, administration]
           tags: [content]
 
         - name: workspaces

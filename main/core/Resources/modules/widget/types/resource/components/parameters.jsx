@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -18,6 +19,7 @@ const ResourceWidgetParameters = (props) =>
             name: 'parameters.resource',
             label: trans('resource'),
             type: 'resource',
+            displayed: (data) => 'personal_workspace' !== get(data, 'source'),
             required: true
           }, {
             name: 'parameters.showResourceHeader',

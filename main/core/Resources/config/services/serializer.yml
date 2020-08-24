@@ -109,6 +109,7 @@ services:
     Claroline\CoreBundle\API\Serializer\Widget\Type\ResourceWidgetSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
