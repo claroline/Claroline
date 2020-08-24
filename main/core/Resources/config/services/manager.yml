@@ -256,11 +256,7 @@ services:
     Claroline\CoreBundle\Manager\ApiManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.curl_manager'
-          - '@service_container'
           - '@Claroline\AppBundle\API\TransferProvider'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '@Claroline\AppBundle\API\Crud'
 

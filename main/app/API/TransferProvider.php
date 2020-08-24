@@ -140,6 +140,7 @@ class TransferProvider
                 }
             }
         } else {
+            $identifiersSchema = [];
             foreach ($schema as $prop => $value) {
                 //this is for the custom schema defined in the transfer stuff (atm add user to roles for workspace)
                 //there is probably a better way to handle this
@@ -373,6 +374,8 @@ class TransferProvider
      * Returns a list of available actions for a given format (mime type).
      *
      * @param string $format
+     * @param array  $options
+     * @param array  $extra
      *
      * @return array
      */
@@ -393,9 +396,11 @@ class TransferProvider
     /**
      * Returns an adapter for a given mime type.
      *
-     * @param string $mimeType
+     * @param string $mimeTypes
      *
      * @return AdapterInterface
+     *
+     * @throws \Exception
      */
     public function getAdapter($mimeTypes)
     {
@@ -409,7 +414,7 @@ class TransferProvider
             }
         }
 
-        throw new \Exception('No adapter found for mime type '.$mimeType);
+        throw new \Exception('No adapter found for mime type '.$mimeTypes);
     }
 
     private function formatCsvOutput($data)

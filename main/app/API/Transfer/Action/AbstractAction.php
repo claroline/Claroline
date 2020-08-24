@@ -67,6 +67,11 @@ abstract class AbstractAction
         return [];
     }
 
+    public function getSamples($format)
+    {
+        return [];
+    }
+
     public function getExtraDefinition(array $options = [], array $extra = [])
     {
         return [];
@@ -74,6 +79,6 @@ abstract class AbstractAction
 
     public function export()
     {
-        throw new \Exception("I don't plan to implements you anytime soon");
+        throw new \Exception('I don\'t plan to implements you anytime soon');
     }
 }

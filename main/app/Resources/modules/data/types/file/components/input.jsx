@@ -159,7 +159,7 @@ implementPropTypes(FileComponent, DataInputTypes, {
   min: T.number,
   max: T.number,
 
-  uploadUrl: T.oneOfType([T.string, T.arrayOf(T.string)]),
+  uploadUrl: T.oneOfType([T.string, T.array]),
   autoUpload: T.bool,
 
   // async method for autoUpload

@@ -4,9 +4,19 @@
   "The user first name": "Le prénom de l'utilisateur",
   "The user last name": "Le nom de famille de l'utilisateur",
   "The user username": "L'identifiant de l'utilisateur",
-  "The group name": "Le nom du groupe",
+  "The user administrativeCode": "Le code administratif de l'utilisateur",
+  "The user description": "La description de l'utilisateur",
+  "The plain login password": "Le mot de passe (décrypté) de l'utilisateur",
+
   "The group id": "L'id du groupe (uuid/id)",
-  "The plain login password": "Le password (décrypté) de l'utilisateur",
+  "The group name": "Le nom du groupe",
+
+  "The role id": "L'id du rôle (uuid/id)",
+  "The role name": "Le nom du rôle",
   "The user role": "Nom du rôle de l'utilisateur. S'il s'agit d'un rôle par défaut se référer aux valeurs du tableau suivant: Utilisateur -> USER, Créateur d'espaces -> WS_CREATOR, Gestionnaire de l'accueil -> HOME_MANAGER, Gestionnaire de compétences -> COMPETENCY_MANAGER",
-  "The organisation code": "Le code de l'organisation"
+
+  "The organization id": "L'id de l'organisation (uuid/id)",
+  "The organization name": "Le nom de l'organisation",
+  "The organization code": "Le code de l'organisation",
+  "The organization email": "L'adresse email de l'organisation"
 }

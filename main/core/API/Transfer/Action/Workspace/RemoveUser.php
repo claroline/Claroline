@@ -13,10 +13,19 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class RemoveUser extends AbstractAction
 {
+    /** @var Crud */
+    private $crud;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * Action constructor.
      *
-     * @param Crud $crud
+     * @param Crud               $crud
+     * @param SerializerProvider $serializer
+     * @param ObjectManager      $om
      */
     public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
     {
@@ -41,7 +50,7 @@ class RemoveUser extends AbstractAction
         }
 
         $role = $this->om->getRepository('ClarolineCoreBundle:Role')
-          ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
+            ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
 
         if (!$role) {
             throw new \Exception('Role '.$this->printError($data['role'])." doesn't exists.");

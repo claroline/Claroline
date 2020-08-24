@@ -7,8 +7,7 @@ use Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv\Explanation;
 interface AdapterInterface
 {
     /**
-     * Build the list of object from the contnet submitted by a user and the
-     * data Schema.
+     * Build the list of object from the content submitted by a user and the data Schema.
      *
      * @param mixed       $content
      * @param Explanation $explanation
@@ -18,16 +17,17 @@ interface AdapterInterface
     public function decodeSchema($content, Explanation $explanation);
 
     /**
-     * return a list of supported mimetypes for the data schema.
+     * return a list of supported mime-types for the data schema.
      *
      * @return array
      */
     public function getMimeTypes();
 
     /**
-     * Explain how to build the content for the specified mimetype from the json-schema.
+     * Explain how to build the content for the specified mime-type from the json-schema.
      *
      * @param \stdClass $json
+     * @param string    $mode
      *
      * @return array
      */

@@ -10,6 +10,10 @@
     "group": "Group",
     "user": "User",
     "directory": "Directory",
+    "examples": "Examples",
+    "schema_all_properties": "All available columns",
+    "schema_required_properties": "Only required columns",
+    "one_of_field_list": "One of the following structures:",
 
     "directory_name": "The directory name",
     "directory_open": "Open permission [default: 0 (false)]",

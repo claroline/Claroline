@@ -48,23 +48,23 @@ const List = props =>
         label: trans('id'),
         displayed: true,
         primary: true
-      },
-      {
+      }, {
         name: 'log',
         type: 'string',
         label: trans('log')
-      },
-      {
+      }, {
         name: 'status',
-        type: 'string',
+        type: 'translation',
         label: trans('status'),
         displayed: true
-      },
-      {
+      }, {
         name: 'uploadDate',
         type: 'date',
-        label: trans('upload_date'),
-        displayed: true
+        label: trans('date'),
+        displayed: true,
+        options: {
+          time: true
+        }
       }
     ]}
   />

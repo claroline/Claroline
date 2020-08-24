@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 
 class Create extends AbstractAction
@@ -65,11 +66,21 @@ class Create extends AbstractAction
             }
         }
 
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $role) {
+                $object = $this->om->getObject($role, Role::class, array_keys($role));
+
+                if (!$object) {
+                    throw new \Exception('Role '.implode(',', $role).' does not exists');
+                }
+            }
+        }
+
         $this->crud->create($this->getClass(), $data, $options);
 
         $successData['create'][] = [
-          'data' => $data,
-          'log' => $this->getAction()[0].' created.',
+            'data' => $data,
+            'log' => $this->getAction()[0].' created.',
         ];
     }
 

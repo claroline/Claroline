@@ -10,6 +10,10 @@
     "group": "Groupe",
     "user": "Utilisateur",
     "directory": "Dossier",
+    "examples": "Exemples",
+    "schema_all_properties": "Toutes les colonnes disponibles",
+    "schema_required_properties": "Uniquement les colonnes requises",
+    "one_of_field_list": "Une des structures suivantes :",
 
     "directory_name": "Le nom du répertoire",
     "directory_open": "Le droit d'ouverture [default: 0 (faux)]",

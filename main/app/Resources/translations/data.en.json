@@ -13,5 +13,6 @@
   "ip": "IP address",
   "number": "Number",
   "string": "Text",
-  "url": "URL"
+  "url": "URL",
+  "array_of": "A list of '%type%'"
 }

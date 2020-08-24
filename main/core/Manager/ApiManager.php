@@ -11,47 +11,52 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Api\Options;
+use Claroline\AppBundle\API\TransferProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Import\File as HistoryFile;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 
-/**
- * This service allows 2 instances of claroline-connect to communicate through their REST api.
- * The REST api requires an oauth authentication (wich is why the $id/$secret combination is required).
- */
 class ApiManager
 {
+    /** @var ObjectManager */
+    private $om;
+    /** @var Crud */
+    private $crud;
+    /** @var TransferProvider */
+    private $transfer;
+    /** @var FileUtilities */
+    private $fileUt;
+
+    /**
+     * ApiManager constructor.
+     *
+     * @param ObjectManager    $om
+     * @param TransferProvider $transfer
+     * @param FileUtilities    $fileUt
+     * @param Crud             $crud
+     */
     public function __construct(
         ObjectManager $om,
-        CurlManager $curlManager,
-        $container,
-        $transfer,
-        $finder,
-        $serializer,
-        $fileUt,
-        $crud
+        TransferProvider $transfer,
+        FileUtilities $fileUt,
+        Crud $crud
     ) {
         $this->om = $om;
-        $this->curlManager = $curlManager;
-        $this->container = $container;
         $this->transfer = $transfer;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
         $this->fileUt = $fileUt;
         $this->crud = $crud;
     }
 
     public function import(PublicFile $publicFile, $action, $log, array $extra = [])
     {
-        $historyFile = $this->finder->fetch(
-            HistoryFile::class,
-            ['file' => $publicFile->getId()]
-        )[0];
+        $historyFile = $this->om->getRepository(HistoryFile::class)->findOneBy(['file' => $publicFile->getId()]);
 
         $this->crud->replace($historyFile, 'log', $log);
         $this->crud->replace($historyFile, 'executionDate', new \DateTime());
-        //this is here otherwise the entity manager can crash and... well that's an issue.
+        // this is here otherwise the entity manager can crash and... well that's an issue.
         $this->crud->replace($historyFile, 'status', HistoryFile::STATUS_ERROR);
 
         $content = $this->fileUt->getContents($publicFile);
@@ -62,15 +67,15 @@ class ApiManager
         }
 
         $data = $this->transfer->execute(
-          $content,
-          $action,
-          $publicFile->getMimeType(),
-          $log,
-          $options,
-          $extra
-      );
+            $content,
+            $action,
+            $publicFile->getMimeType(),
+            $log,
+            $options,
+            $extra
+        );
 
-        //should probably reset entity manager here
+        // should probably reset entity manager here
         if (0 === count($data['data']['error'])) {
             $this->crud->replace($historyFile, 'status', HistoryFile::STATUS_SUCCESS);
         }

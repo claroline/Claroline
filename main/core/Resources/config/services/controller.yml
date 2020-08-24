@@ -222,6 +222,8 @@ services:
         arguments:
           - '@Claroline\AppBundle\API\TransferProvider'
           - '%claroline.api.core_schema.dir%'
+          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\CoreBundle\Manager\ApiManager'
 
     Claroline\CoreBundle\Controller\APINew\WidgetController:
         arguments:

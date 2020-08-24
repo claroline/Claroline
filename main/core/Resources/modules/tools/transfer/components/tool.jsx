@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {Import as ImportTab} from '#/main/core/tools/transfer/import/components/tab'
+import {ImportTab} from '#/main/core/tools/transfer/import/containers/tab'
 import {History as HistoryTab} from '#/main/core/tools/transfer/history/components/tab'
 
 const TransferTool = (props) =>

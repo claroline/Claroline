@@ -27,6 +27,8 @@ class CsvAdapter implements AdapterInterface
      *
      * @param string      $content
      * @param Explanation $explanation
+     *
+     * @return array
      */
     public function decodeSchema($content, Explanation $explanation)
     {
@@ -54,6 +56,8 @@ class CsvAdapter implements AdapterInterface
      * @param array       $properties
      * @param array       $headers
      * @param Explanation $explanation
+     *
+     * @return array
      */
     private function buildObjectFromLine(array $properties, array $headers, Explanation $explanation)
     {
@@ -79,6 +83,8 @@ class CsvAdapter implements AdapterInterface
      * @param Property $property
      * @param array    &$object
      * @param mixed    $value
+     *
+     * @return array
      */
     private function addPropertyToObject(Property $property, array &$object, $value)
     {
@@ -171,6 +177,8 @@ class CsvAdapter implements AdapterInterface
         if (property_exists($object, $first) && !is_array($object->$first)) {
             return $object->{$first};
         }
+
+        return '';
     }
 
     /**
