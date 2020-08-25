@@ -111,7 +111,6 @@ class StepSerializer
             }, $step->getSecondaryResources()->toArray()),
             'display' => [
                 'numbering' => $step->getNumbering(),
-                'height' => $step->getActivityHeight(),
             ],
             'children' => array_map(function (Step $child) use ($options) {
                 return $this->serialize($child, $options);
