@@ -2,6 +2,7 @@
 
 require_once __DIR__.'/../app/autoload.php';
 
+use App\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
@@ -23,7 +24,7 @@ if (file_exists($file = __DIR__.'/../app/config/ip_white_list.yml')) {
 
 if (!$maintenanceMode || $authorized) {
     $request = Request::createFromGlobals();
-    $kernel = new AppKernel('prod', false);
+    $kernel = new Kernel('prod', false);
     $response = $kernel->handle($request);
     $response->send();
     $kernel->terminate($request, $response);
