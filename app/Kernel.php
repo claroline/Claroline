@@ -36,7 +36,7 @@ class Kernel extends BaseKernel
      */
     public function getLogDir()
     {
-        return $this->getProjectDir() . '/app/log';
+        return $this->getProjectDir() . '/app/logs';
     }
 
     /**
