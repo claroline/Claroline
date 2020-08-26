@@ -8,6 +8,13 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 
 abstract class AbstractDeleteAction extends AbstractAction
 {
+    /** @var ObjectManager */
+    private $om;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var Crud */
+    private $crud;
+
     abstract public function getClass();
 
     public function setCrud(Crud $crud)
@@ -27,13 +34,18 @@ abstract class AbstractDeleteAction extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $object = $this->om->getObject($data[$this->getAction()[0]], $this->getClass());
+        $object = $this->om->getObject(
+            $data[$this->getAction()[0]],
+            $this->getClass(),
+            array_keys($data[$this->getAction()[0]])
+        );
 
-        if ($object->getId()) {
+        if (!empty($object)) {
             $this->crud->delete($object);
 
             $successData['delete'][] = [
                 'data' => $data,
+                'log' => $this->getAction()[0].' deleted.',
             ];
         }
     }

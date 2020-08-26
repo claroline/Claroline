@@ -8,7 +8,7 @@
     },
     "email": {
       "type": "string",
-      "description": "The user email adress",
+      "description": "The user email address",
       "minLength": 1
     },
     "firstName": {

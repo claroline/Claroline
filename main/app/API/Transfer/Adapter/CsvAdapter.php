@@ -36,15 +36,21 @@ class CsvAdapter implements AdapterInterface
         $lines = str_getcsv($content, PHP_EOL);
         $header = array_shift($lines);
         $headers = array_filter(
-          str_getcsv($header, ';'),
-          function ($header) {
-              return '' !== $header;
-          }
+            array_map(function ($headerProp) {
+                return trim($headerProp);
+            }, str_getcsv($header, ';')),
+            function ($headerProp) {
+                return !empty($headerProp);
+            }
         );
 
         foreach ($lines as $line) {
-            $properties = str_getcsv($line, ';');
-            $data[] = $this->buildObjectFromLine($properties, $headers, $explanation);
+            if (!empty($line)) {
+                $properties = array_map(function ($property) {
+                    return trim($property);
+                }, str_getcsv($line, ';'));
+                $data[] = $this->buildObjectFromLine($properties, $headers, $explanation);
+            }
         }
 
         return $data;
@@ -102,12 +108,16 @@ class CsvAdapter implements AdapterInterface
             $propertyName = implode('.', $keys);
         }
 
-        if ('integer' === $property->getType()) {
-            $value = (int) $value;
-        }
+        $types = !is_array($property->getType()) ? [$property->getType()] : $property->getType();
 
-        if ('boolean' === $property->getType()) {
-            $value = (bool) $value;
+        if ('null' === $value && in_array('null', $types)) {
+            $value = null;
+        } else {
+            if (in_array('integer', $types)) {
+                $value = (int) $value;
+            } elseif ('boolean' === $property->getType()) {
+                $value = (bool) $value;
+            }
         }
 
         ArrayUtils::set($object, $propertyName, $value);

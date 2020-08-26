@@ -39,6 +39,7 @@ services:
 
     Claroline\AppBundle\API\TransferProvider:
         arguments:
+            - '%kernel.project_dir%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\SchemaProvider'

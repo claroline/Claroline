@@ -20,8 +20,10 @@ use Claroline\CoreBundle\Entity\Import\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @EXT\Route("/transfer")
@@ -159,6 +161,7 @@ class TransferController extends AbstractCrudController
         unset($data['file']);
         $action = $data['action'];
         unset($data['action']);
+        unset($data['format']); // posted by the form, but it's deduced from the file mime-type
 
         $publicFile = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
         $uuid = $request->get('workspace');
@@ -202,33 +205,40 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/action/{name}/{format}", name="apiv2_transfer_action")
-     * @EXT\Method("GET")
-     *
-     * @param string $name
-     * @param string $format
-     *
-     * @return JsonResponse
-     */
-    public function getExplanationAction($name, $format)
-    {
-        return new JsonResponse(
-            $this->provider->explainAction($name, $format)
-        );
-    }
-
-    /**
-     * @EXT\Route("/actions/{format}", name="apiv2_transfer_actions")
+     * @EXT\Route("/action/{format}", name="apiv2_transfer_actions")
      * @EXT\Method("GET")
      *
      * @param string $format
      *
      * @return JsonResponse
      */
-    public function getAvailableActions($format)
+    public function getAvailableActionsAction($format)
     {
         return new JsonResponse(
             $this->provider->getAvailableActions($format)
         );
+    }
+
+    /**
+     * @EXT\Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_sample")
+     * @EXT\Method("GET")
+     *
+     * @param string $name
+     * @param string $entity
+     * @param string $format
+     * @param string $sample
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadSampleAction($name, $format, $entity, $sample)
+    {
+        $file = $this->provider->getSamplePath($format, $entity, $name, $sample);
+        if (!$file) {
+            throw new NotFoundHttpException('Sample file not found.');
+        }
+
+        return new BinaryFileResponse($file, 200, [
+            'Content-Disposition' => "attachment; filename={$sample}",
+        ]);
     }
 }

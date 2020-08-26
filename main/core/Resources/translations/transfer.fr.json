@@ -5,15 +5,16 @@
     "delete": "Supprimer",
     "update": "Mettre à jour",
     "create_or_update": "Créer ou mettre à jour",
-    "facet": "Onglet du profil",
     "workspace": "Espace d'activités",
     "group": "Groupe",
     "user": "Utilisateur",
     "directory": "Dossier",
+    "enable": "Activer",
+    "disable": "Désactiver",
     "examples": "Exemples",
     "schema_all_properties": "Toutes les colonnes disponibles",
     "schema_required_properties": "Uniquement les colonnes requises",
-    "one_of_field_list": "Une des structures suivantes :",
+    "one_of_field_list": "Une des colonnes suivantes :",
 
     "directory_name": "Le nom du répertoire",
     "directory_open": "Le droit d'ouverture [default: 0 (faux)]",
@@ -24,5 +25,14 @@
     "directory_administrate": "Le droit d'administration pour les collaborateurs",
     "directory_user": "Un username s'il est le seul a y avoir accès",
     "directory_role": "Clef de traduction du role (role par defaut si non défini)",
-    "directory_creation": "Liste des types de ressources autorisé à être créé (séparé par des virgules) - %types% - par defaut: tous"
+    "directory_creation": "Liste des types de ressources autorisé à être créé (séparé par des virgules) - %types% - par defaut: tous",
+
+    "no_sample": "Aucun fichier d'exemple n'est disponible pour cette action.",
+    "no_log": "Aucun log n'est disponible pour le moment.",
+    "no_log_help": "Veuillez commencer l'import ou patienter le temps que nous chargions les logs.",
+
+    "csv_header": "La 1ère ligne contient le nom des colonnes",
+    "row_delimiter": "Délimiteur de lignes",
+    "col_delimiter": "Délimiteur de colonnes",
+    "list_delimiter": "Délimiteur des valeurs dans les listes"
 }

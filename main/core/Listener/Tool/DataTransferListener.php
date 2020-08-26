@@ -16,9 +16,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
-/**
- * Home tool.
- */
 class DataTransferListener
 {
     /** @var TransferProvider */
@@ -46,12 +43,14 @@ class DataTransferListener
     public function onDisplayWorkspace(OpenToolEvent $event)
     {
         $workspace = $event->getWorkspace();
-        $explanations = $this->transfer->getAvailableActions('csv', [Options::WORKSPACE_IMPORT], [
-          'workspace' => $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]),
-        ]);
+        $options = [Options::WORKSPACE_IMPORT];
+        $extra = [
+            'workspace' => $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]),
+        ];
 
         $event->setData([
-          'explanation' => $explanations,
+            'explanation' => $this->transfer->getAvailableActions('csv', $options, $extra),
+            'samples' => $this->transfer->getSamples('csv', $options, $extra),
         ]);
         $event->stopPropagation();
     }

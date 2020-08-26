@@ -13,6 +13,7 @@ const ImportForm = withRouter(
     (state) => ({
       path: toolSelectors.path(state),
       explanation: selectors.explanation(state),
+      samples: selectors.samples(state),
       logs: selectors.log(state),
       workspace: toolSelectors.contextData(state)
     }),

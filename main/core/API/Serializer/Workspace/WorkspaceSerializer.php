@@ -373,15 +373,23 @@ class WorkspaceSerializer
         $this->sipe('name', 'setName', $data, $workspace);
 
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
+            /** @var PublicFile $thumbnail */
             $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class);
             $workspace->setThumbnail($data['thumbnail']['url']);
             $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
         }
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
+            /** @var PublicFile $poster */
             $poster = $this->om->getObject($data['thumbnail'], PublicFile::class);
             $workspace->setPoster($data['poster']['url']);
             $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
+        }
+
+        if (isset($data['meta']) && !empty($data['meta']['creator'])) {
+            /** @var User $creator */
+            $creator = $this->om->getObject($data['meta']['creator'], User::class);
+            $workspace->setCreator($creator);
         }
 
         if (isset($data['extra']) && isset($data['extra']['model']) && isset($data['extra']['model']['code'])) {
@@ -397,23 +405,29 @@ class WorkspaceSerializer
             $workspace->refreshUuid();
         }
 
-        $this->sipe('meta.model', 'setModel', $data, $workspace);
-        $this->sipe('meta.description', 'setDescription', $data, $workspace);
-        $this->sipe('meta.lang', 'setLang', $data, $workspace);
+        if (isset($data['meta'])) {
+            $this->sipe('meta.model', 'setModel', $data, $workspace);
+            $this->sipe('meta.description', 'setDescription', $data, $workspace);
+            $this->sipe('meta.lang', 'setLang', $data, $workspace);
+
+            if (!empty($data['meta']['created'])) {
+                $date = DateNormalizer::denormalize($data['meta']['created']);
+                $workspace->setCreated($date->getTimestamp());
+            }
+        }
 
         $this->sipe('notifications.enabled', 'setNotifications', $data, $workspace);
 
         $this->sipe('restrictions.hidden', 'setHidden', $data, $workspace);
         $this->sipe('restrictions.code', 'setAccessCode', $data, $workspace);
         $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $workspace);
-        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $workspace);
-        $this->sipe('restrictions.maxResources', 'setMaxUploadResources', $data, $workspace);
 
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
         $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
         $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
 
         if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {
+            /** @var Role $defaultRole */
             $defaultRole = $this->om->getObject($data['registration']['defaultRole'], Role::class);
             $workspace->setDefaultRole($defaultRole);
         }
@@ -422,8 +436,16 @@ class WorkspaceSerializer
             // TODO : store raw file size to avoid this
             if (isset($data['restrictions']['maxStorage'])) {
                 $workspace->setMaxStorageSize(
-                    $this->fileUt->formatFileSize($data['restrictions']['maxStorage'])
+                    $this->fileUt->formatFileSize($data['restrictions']['maxStorage'] ?? 0)
                 );
+            }
+
+            if (isset($data['restrictions']['maxUsers'])) {
+                $workspace->setMaxUsers($data['restrictions']['maxUsers'] ?? 0);
+            }
+
+            if (isset($data['restrictions']['maxResources'])) {
+                $workspace->setMaxUploadResources($data['restrictions']['maxResources'] ?? 0);
             }
 
             if (isset($data['restrictions']['dates'])) {

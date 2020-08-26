@@ -3,12 +3,8 @@
   "type": "object",
   "properties": {
     "id": {
-      "type": ["string", "integer", "null"],
+      "type": ["string"],
       "description": "The workspace id or uuid"
-    },
-    "uuid": {
-      "type": "string",
-      "description": "The workspace uuid"
     },
     "name": {
       "type": "string",
@@ -19,27 +15,37 @@
       "description": "The workspace code",
       "minLength": 1
     },
+    "model": {
+      "type": "object",
+      "description": "The model to use to prefill the workspace",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The code of the model used to pre-configure the workspace"
+        }
+      }
+    },
     "meta": {
       "type": "object",
       "properties": {
         "model": {
           "type": "boolean",
-          "description": "The workspace type"
+          "description": "The workspace is a model"
         },
         "personal": {
           "type": "boolean",
-          "description": "Is it a personal workspace"
+          "description": "The workspace is a personal workspace"
         },
         "description": {
           "type": ["string", "null"],
           "description": "The workspace description"
         },
         "created": {
-          "type": ["string"],
+          "type": "string",
           "description": "The workspace creation date"
         },
         "creator": {
-          "type": ["object", "null"],
+          "type": "object",
           "properties": {
             "id": {
               "type": "string",
@@ -49,36 +55,30 @@
         }
       }
     },
-    "display": {
-      "type": "object",
-      "properties": {
-        "displayable": {
-          "type": "boolean",
-          "description": "Is the workspace displayable"
-        }
-      }
-    },
     "restrictions": {
       "type": "object",
       "properties": {
-        "accessibleFrom": {
-          "type": ["string", "null"],
-          "description": "The workspace opening date"
+        "hidden": {
+          "type": "boolean",
+          "description": "The workspace is hidden"
         },
-        "accessibleUntil": {
-          "type": ["string", "null"],
-          "description": "The workspace closing date"
+        "dates": {
+          "type": "array",
+          "description": "The workspace opening and closing dates",
+          "items": {
+            "type": ["string", "null"]
+          }
         },
         "maxUsers": {
           "type": ["integer", "null"],
           "description": "The maximum amount of users the workspace can have"
         },
         "maxStorage": {
-          "type": "integer",
+          "type": ["string", "null"],
           "description": "The maximum amount of data storage the workspace is allowed to take"
         },
         "maxResources": {
-          "type": "integer",
+          "type": ["integer", "null"],
           "description": "The maximum amount of resources in the workspace"
         }
       }
@@ -87,21 +87,16 @@
       "type": "object",
       "properties": {
         "validation": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Registrations to the workspace need to be validated by a manager"
         },
         "selfRegistration": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Users can register themselves to the workspace"
         },
         "selfUnregistration": {
-          "type": "boolean"
-        }
-      }
-    },
-    "model": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string"
+          "type": "boolean",
+          "description": "Users can unregister themselves from the workspace"
         }
       }
     },
@@ -114,10 +109,12 @@
             "type": "object",
             "properties": {
               "email": {
-                "type": "string"
+                "type": "string",
+                "description": "The user email address"
               },
               "username": {
-                "type": "string"
+                "type": "string",
+                "description": "The user username"
               }
             }
           },
@@ -134,20 +131,6 @@
         "oneOf": [
           {
               "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/organization.json"
-          },
-          {
-              "type": "null"
-          }
-        ]
-      }
-    },
-    "roles": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {
-        "oneOf": [
-          {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
           },
           {
               "type": "null"

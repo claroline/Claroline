@@ -12,7 +12,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -26,20 +25,18 @@ class WorkspaceCrud
     /**
      * WorkspaceCrud constructor.
      *
-     * @param PlatformConfigurationHandler $config
-     * @param WorkspaceManager             $manager
-     * @param UserManager                  $userManager
-     * @param TokenStorageInterface        $tokenStorage
-     * @param ResourceManager              $resourceManager
-     * @param RoleManager                  $roleManager
-     * @param OrganizationManager          $orgaManager
-     * @param ObjectManager                $om
-     * @param Crud                         $crud
-     * @param StrictDispatcher             $dispatcher
-     * @param LogListener                  $logListener
+     * @param WorkspaceManager      $manager
+     * @param UserManager           $userManager
+     * @param TokenStorageInterface $tokenStorage
+     * @param ResourceManager       $resourceManager
+     * @param RoleManager           $roleManager
+     * @param OrganizationManager   $orgaManager
+     * @param ObjectManager         $om
+     * @param Crud                  $crud
+     * @param StrictDispatcher      $dispatcher
+     * @param LogListener           $logListener
      */
     public function __construct(
-        PlatformConfigurationHandler $config,
         WorkspaceManager $manager,
         UserManager $userManager,
         TokenStorageInterface $tokenStorage,
@@ -51,7 +48,6 @@ class WorkspaceCrud
         StrictDispatcher $dispatcher,
         LogListener $logListener
     ) {
-        $this->config = $config;
         $this->manager = $manager;
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
@@ -79,18 +75,20 @@ class WorkspaceCrud
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
         $workspace->setWorkspaceModel($model);
 
-        if ($user instanceof User) {
-            $workspace->setCreator($user);
+        if ($user instanceof User && empty($workspace->getCreator())) {
+            if (empty($workspace->getCreator())) {
+                $workspace->setCreator($user);
 
-            $organization = $user->getMainOrganization() ?
-                $user->getMainOrganization() :
-                $this->organizationManager->getDefault();
-            $workspace->addOrganization($organization);
+                if (empty($workspace->getOrganizations()) && !empty($user->getMainOrganization())) {
+                    $workspace->addOrganization($user->getMainOrganization());
+                }
+            }
         }
 
-        $workspace->setMaxUploadResources($this->config->getParameter('max_upload_resources'));
-        $workspace->setMaxStorageSize($this->config->getParameter('max_storage_size'));
-        $workspace->setMaxUsers($this->config->getParameter('max_workspace_users'));
+        // adds default organization if needed
+        if (empty($workspace->getOrganizations())) {
+            $workspace->addOrganization($this->organizationManager->getDefault());
+        }
 
         $this->logListener->enable();
     }
@@ -133,6 +131,7 @@ class WorkspaceCrud
         $this->logListener->disable();
         // Log action
         $this->om->startFlushSuite();
+        /** @var ResourceNode[] $roots */
         $roots = $this->om->getRepository(ResourceNode::class)->findBy(['workspace' => $workspace, 'parent' => null]);
 
         //in case 0 or multiple due to errors

@@ -1,6 +1,6 @@
 {
   "The user id": "L'id de l'utilisateur (uuid/id)",
-  "The user email adress": "L'adresse email de l'utilisateur",
+  "The user email address": "L'adresse email de l'utilisateur",
   "The user first name": "Le prénom de l'utilisateur",
   "The user last name": "Le nom de famille de l'utilisateur",
   "The user username": "L'identifiant de l'utilisateur",
@@ -18,5 +18,24 @@
   "The organization id": "L'id de l'organisation (uuid/id)",
   "The organization name": "Le nom de l'organisation",
   "The organization code": "Le code de l'organisation",
-  "The organization email": "L'adresse email de l'organisation"
+  "The organization email": "L'adresse email de l'organisation",
+
+  "The workspace id or uuid": "L'id de l'espace d'activités (uuid/id)",
+  "The workspace name": "Le nom de l'espace d'activités",
+  "The workspace code": "Le code de l'espace d'activités",
+  "The workspace description": "La description de l'espace d'activités",
+  "The workspace is a model": "L'espace d'activités est un modèle",
+  "The workspace is a personal workspace": "L'espace d'activités est un espace personnel",
+  "The workspace creation date": "La date de création de l'espace d'activités",
+  "The workspace creator": "L'utilisateur ayant créé l'espace d'activités",
+  "The workspace is hidden": "L'espace d'activités est caché",
+  "The workspace opening date": "La date d'ouverture de l'espace d'activités",
+  "The workspace closing date": "La date de fermeture de l'espace d'activités",
+  "The maximum amount of users the workspace can have": "Le nombre maximum d'utilisateurs pouvant être inscrits à l'espace d'activités",
+  "The maximum amount of data storage the workspace is allowed to take": "L'espace de stockage maximum disponible pour l'espace d'activités",
+  "The maximum amount of resources in the workspace": "Le nombre maximum de ressources pouvant être créées dans l'espace d'activités",
+  "The code of the model used to pre-configure the workspace": "Le code du modèle utilisé pour pré-configurer l'espace d'activités",
+  "Registrations to the workspace need to be validated by a manager": "Les inscriptions à l'espace d'activités doivent être validées par un gestionnaire",
+  "Users can register themselves to the workspace": "Les utilisateurs peuvent s'inscrire eux-même à l'espace d'activités",
+  "Users can unregister themselves from the workspace": "Les utilisateurs peuvent se désinscrire eux-même de l'espace d'activités"
 }

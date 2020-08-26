@@ -29,7 +29,7 @@ interface AdapterInterface
      * @param \stdClass $json
      * @param string    $mode
      *
-     * @return array
+     * @return Explanation
      */
     public function explainSchema(\stdClass $json, $mode);
 
@@ -38,7 +38,7 @@ interface AdapterInterface
      *
      * @param \stdClass[] $schemas
      *
-     * @return array
+     * @return Explanation
      */
     public function explainIdentifiers(array $schemas);
 

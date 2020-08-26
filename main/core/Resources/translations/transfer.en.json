@@ -5,15 +5,16 @@
     "delete": "Delete",
     "update": "Mettre à jour",
     "create_or_update": "Create or update",
-    "facet": "Profile tab",
     "workspace": "Workspace",
     "group": "Group",
     "user": "User",
     "directory": "Directory",
+    "enable": "Enable",
+    "disable": "Disable",
     "examples": "Examples",
     "schema_all_properties": "All available columns",
     "schema_required_properties": "Only required columns",
-    "one_of_field_list": "One of the following structures:",
+    "one_of_field_list": "One of the following columns:",
 
     "directory_name": "The directory name",
     "directory_open": "Open permission [default: 0 (false)]",
@@ -24,5 +25,14 @@
     "directory_administrate": "Administrate permission [default: 0 (false)]",
     "directory_user": "A username if these directories are only usable by him",
     "directory_role": "A role translation key (workspace default role by default)",
-    "directory_creation": "The list of creatable types (coma separated) - %types% - default: all"
+    "directory_creation": "The list of creatable types (coma separated) - %types% - default: all",
+
+    "no_sample": "No example file available for this action.",
+    "no_log": "No log is available for now.",
+    "no_log_help": "Please start the import or wait while we load the logs.",
+
+    "csv_header": "The first line contains the name of the columns",
+    "row_delimiter": "Rows delimiter",
+    "col_delimiter": "Columns delimiter",
+    "list_delimiter": "List values delimiter"
 }

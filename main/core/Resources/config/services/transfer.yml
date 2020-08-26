@@ -68,10 +68,6 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@translator'
 
-    Claroline\CoreBundle\API\Transfer\Action\Facet\Create:
-        arguments:
-          - '@Claroline\AppBundle\API\Crud'
-
     Claroline\CoreBundle\API\Transfer\Action\Group\AddUser:
         arguments:
           - '@Claroline\AppBundle\API\Crud'
@@ -96,6 +92,16 @@ services:
     Claroline\CoreBundle\API\Transfer\Action\User\Delete: ~
 
     Claroline\CoreBundle\API\Transfer\Action\User\Update: ~
+
+    Claroline\CoreBundle\API\Transfer\Action\User\Enable:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+
+    Claroline\CoreBundle\API\Transfer\Action\User\Disable:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
 
     Claroline\CoreBundle\API\Transfer\Action\Workspace\AddUser:
         arguments:

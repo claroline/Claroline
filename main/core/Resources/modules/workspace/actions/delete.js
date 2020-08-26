@@ -16,7 +16,7 @@ export default (workspaces, refresher) => ({
   dangerous: true,
   confirm: {
     title: trans('workspace_delete_confirm_title'),
-    subtitle: 1 === workspaces.length ? workspaces[0].name : transChoice('count_elements', {count: workspaces.length}),
+    subtitle: 1 === workspaces.length ? workspaces[0].name : transChoice('count_elements', workspaces.length, {count: workspaces.length}),
     message: trans('workspace_delete_confirm_message')
   },
   request: {

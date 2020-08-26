@@ -187,6 +187,8 @@ class Workspace
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
+     * @todo store a DateTime and remove Gedmo (can be handled by Crud)
+     *
      * @var \DateTime
      */
     protected $created;

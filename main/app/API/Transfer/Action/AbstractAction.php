@@ -67,11 +67,6 @@ abstract class AbstractAction
         return [];
     }
 
-    public function getSamples($format)
-    {
-        return [];
-    }
-
     public function getExtraDefinition(array $options = [], array $extra = [])
     {
         return [];

@@ -14,6 +14,7 @@ class RemoveUser extends AbstractAction
     private $crud;
     /** @var ObjectManager */
     private $om;
+
     /**
      * RemoveUser constructor.
      *
@@ -28,10 +29,17 @@ class RemoveUser extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $user = $this->om->getObject($data['user'][0], User::class);
-        $group = $this->om->getObject($data['group'][0], Group::class);
+        $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
+        $group = $this->om->getObject($data['group'], Group::class, array_keys($data['group']));
 
-        $this->crud->patch($user, 'group', 'remove', [$group]);
+        if ($user && $group) {
+            $this->crud->patch($user, 'group', 'remove', [$group]);
+
+            $successData['remove_user'][] = [
+                'data' => $data,
+                'log' => 'user removed from group.',
+            ];
+        }
     }
 
     public function getSchema(array $options = [], array $extra = [])
@@ -53,9 +61,5 @@ class RemoveUser extends AbstractAction
     public function getBatchSize()
     {
         return 500;
-    }
-
-    public function clear(ObjectManager $om)
-    {
     }
 }

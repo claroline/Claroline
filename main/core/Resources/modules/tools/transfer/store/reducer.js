@@ -11,6 +11,9 @@ const reducer = combineReducers({
   explanation: makeReducer({}, {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.explanation
   }),
+  samples: makeReducer({}, {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.samples
+  }),
   import: makeFormReducer(selectors.STORE_NAME + '.import'),
   export: makeFormReducer(selectors.STORE_NAME + '.export'),
   history: makeListReducer(selectors.STORE_NAME + '.history', {

@@ -106,6 +106,6 @@ actions.deleteFile = (fileId, onSuccess = () => {}) => ({
     request: {
       method: 'DELETE'
     },
-    success: () => onSuccess({})
+    success: () => onSuccess(null)
   }
 })

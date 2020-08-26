@@ -1,9 +1,11 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors} from '#/main/core/tools/transfer/store'
@@ -35,77 +37,109 @@ Success.propTypes = {
   log: T.string
 }
 
-const Logs = props => {
-  if (!isEmpty(props.data)) {
-    return (
-      <div>
-        <pre>
-          {trans('processed')}: {props.data.processed} {'\n'}
-          {trans('error')}: {props.data.error} {'\n'}
-          {trans('success')}: {props.data.success} {'\n'}
-          {trans('total')}: {props.data.total} {'\n'}
-        </pre>
+const LogsComponent = props =>
+  <Fragment>
+    <div className="row transfer-analytics">
+      <div className="transfer-total-count analytics-card">
+        <span className="fa fa-list" />
 
-        <FormSections
-          level={3}
-          defaultOpened="log-section"
-        >
-          <FormSection
-            id="log-section"
-            className="embedded-list-section"
-            title={trans('log')}
-          >
-            <pre>
-              {props.data.log}
-            </pre>
-          </FormSection>
-          <FormSection
-            id="success-section"
-            className="embedded-list-section"
-            title={trans('success')}
-          >
-            <div>
-              {props.data.data &&
-                Object.keys(props.data.data.success).map((action, i) => {
-                  return(
-                    <div key={'success'+i}>
-                      <h4>{action}</h4>
-                      {props.data.data.success[action].map((success, j) =>  <Success key={'success'+i+j} {...success}/>)}
-                    </div>
-                  )}
-                )
-              }
-            </div>
-          </FormSection>
-          <FormSection
-            id="error-section"
-            className="embedded-list-section"
-            title={trans('error')}
-          >
-            <div>
-              {props.data.data && props.data.data.error.map((error, k) =>
-                <Error key={'error'+k} {...error}/>
-              )}
-            </div>
-          </FormSection>
-        </FormSections>
+        <h1 className="h3">
+          <small>{trans('total')}</small>
+          {!isEmpty(props.data) ? get(props.data, 'total') || '0' : '?'}
+        </h1>
       </div>
-    )
-  }
 
-  return null
-}
+      <div className="transfer-processed-count analytics-card">
+        <span className="fa fa-sync" />
 
-Logs.propTypes = {
+        <h1 className="h3">
+          <small>{trans('processed')}</small>
+          {!isEmpty(props.data) ? get(props.data, 'processed') || '0' : '?'}
+        </h1>
+      </div>
+
+      <div className="transfer-success-count analytics-card">
+        <span className="fa fa-check" />
+
+        <h1 className="h3">
+          <small>{trans('success')}</small>
+          {!isEmpty(props.data) ? get(props.data, 'success') || '0' : '?'}
+        </h1>
+      </div>
+
+      <div className="transfer-error-count analytics-card">
+        <span className="fa fa-exclamation-triangle" />
+
+        <h1 className="h3">
+          <small>{trans('error')}</small>
+          {!isEmpty(props.data) ? get(props.data, 'error') || '0' : '?'}
+        </h1>
+      </div>
+    </div>
+
+    {isEmpty(props.data) &&
+      <ContentPlaceholder
+        icon="fa fa-clipboard-list"
+        title={trans('no_log', {}, 'transfer')}
+        help={trans('no_log_help', {}, 'transfer')}
+      />
+    }
+
+    {!isEmpty(props.data) &&
+      <FormSections
+        level={3}
+        defaultOpened="log-section"
+      >
+        <FormSection
+          id="log-section"
+          className="embedded-list-section"
+          title={trans('log')}
+        >
+          <pre>{props.data.log}</pre>
+        </FormSection>
+
+        <FormSection
+          id="success-section"
+          className="embedded-list-section"
+          title={trans('success')}
+        >
+          <Fragment>
+            {props.data.data && Object.keys(props.data.data.success).map((action, i) =>
+              <div key={'success' + i}>
+                <h4>{trans(action, {}, 'transfer')}</h4>
+                {props.data.data.success[action].map((success, j) =>
+                  <Success key={'success' + i + j} {...success} />
+                )}
+              </div>
+            )}
+          </Fragment>
+        </FormSection>
+
+        <FormSection
+          id="error-section"
+          className="embedded-list-section"
+          title={trans('error')}
+        >
+          <Fragment>
+            {props.data.data && props.data.data.error.map((error, k) =>
+              <Error key={'error' + k} {...error}/>
+            )}
+          </Fragment>
+        </FormSection>
+      </FormSections>
+    }
+  </Fragment>
+
+LogsComponent.propTypes = {
   data: T.object.isRequired
 }
 
-const ConnectedLog = connect(
+const Logs = connect(
   state => ({
     data: selectors.log(state)
   })
-)(Logs)
+)(LogsComponent)
 
 export {
-  ConnectedLog as Logs
+  Logs
 }

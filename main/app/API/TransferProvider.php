@@ -16,10 +16,8 @@ class TransferProvider
 {
     use LoggableTrait;
 
-    /** @var AdapterInterface[] */
-    private $adapters;
-    /** @var AbstractAction[] */
-    private $actions;
+    /** @var string */
+    private $projectDir;
     /** @var ObjectManager */
     private $om;
     /** @var SerializerProvider */
@@ -31,9 +29,15 @@ class TransferProvider
     /** @var TranslatorInterface */
     private $translator;
 
+    /** @var AdapterInterface[] */
+    private $adapters = [];
+    /** @var AbstractAction[] */
+    private $actions = [];
+
     /**
-     * Crud constructor.
+     * TransferProvider constructor.
      *
+     * @param string              $projectDir
      * @param ObjectManager       $om
      * @param SerializerProvider  $serializer
      * @param SchemaProvider      $schema
@@ -41,14 +45,14 @@ class TransferProvider
      * @param TranslatorInterface $translator
      */
     public function __construct(
+        $projectDir,
         ObjectManager $om,
         SerializerProvider $serializer,
         SchemaProvider $schema,
         $logDir,
         TranslatorInterface $translator
       ) {
-        $this->adapters = [];
-        $this->actions = [];
+        $this->projectDir = $projectDir;
         $this->om = $om;
         $this->serializer = $serializer;
         $this->logDir = $logDir;
@@ -104,39 +108,48 @@ class TransferProvider
         //use the translator here
         $jsonLogger->info('Building objects from data...');
 
+        $jsonSchema = null;
         if (array_key_exists('$root', $schema)) {
             $jsonSchema = $this->schema->getSchema($schema['$root']);
 
-            //if we didn't find any but root it's set, it means that is is custom and already defined
+            //if we didn't find any but root it's set, it means that is custom and already defined
             if ($jsonSchema) {
                 $explanation = $adapter->explainSchema($jsonSchema, 'create');
                 $data = $adapter->decodeSchema($data, $explanation);
             } else {
+                // This block should be handled by the CsvAdapter
+
                 $content = $data;
                 $data = [];
                 $lines = str_getcsv($content, PHP_EOL);
                 $header = array_shift($lines);
                 $headers = array_filter(
-                  str_getcsv($header, ';'),
-                    function ($header) {
-                        return '' !== trim($header);
+                    array_map(function ($headerProp) {
+                        return trim($headerProp);
+                    }, str_getcsv($header, ';')),
+                    function ($headerProp) {
+                        return !empty($headerProp);
                     }
                 );
 
                 foreach ($lines as $line) {
-                    $properties = array_filter(
-                      str_getcsv($line, ';'),
-                        function ($property) {
-                            return '' !== trim($property);
+                    if (!empty($line)) {
+                        $properties = array_filter(
+                            array_map(function ($property) {
+                                return trim($property);
+                            }, str_getcsv($line, ';')),
+                            function ($property) {
+                                return !empty($property);
+                            }
+                        );
+
+                        $row = [];
+                        foreach ($properties as $index => $property) {
+                            $row[$headers[$index]] = $property;
                         }
-                    );
-                    $row = [];
 
-                    foreach ($properties as $index => $property) {
-                        $row[$headers[$index]] = $property;
+                        $data[] = $row;
                     }
-
-                    $data[] = $row;
                 }
             }
         } else {
@@ -145,7 +158,7 @@ class TransferProvider
                 //this is for the custom schema defined in the transfer stuff (atm add user to roles for workspace)
                 //there is probably a better way to handle this
                 if (!$value instanceof \stdClass) {
-                    $jsonSchema = $this->schema->getSchema($value, $options, $extra);
+                    $jsonSchema = $this->schema->getSchema($value, $options);
 
                     if ($jsonSchema) {
                         $identifiersSchema[$prop] = $jsonSchema;
@@ -181,7 +194,7 @@ class TransferProvider
         $loaded = [];
         $loggedSuccess = [];
 
-        //look for duplicatas here
+        //look for duplicates here
         //JsonSchema defined above
         if (array_key_exists('$root', $schema) && $jsonSchema && isset($jsonSchema->claroline) && isset($jsonSchema->claroline->ids)) {
             $ids = $jsonSchema->claroline->ids;
@@ -213,13 +226,12 @@ class TransferProvider
                 foreach ($duplicateErrors as $property => $list) {
                     foreach ($list as $value) {
                         $jsonLogger->push('data.error', [
-                          'line' => 'unknown',
-                          'value' => "Duplicate {$property} found for value {$value}.",
+                            'line' => 'unknown',
+                            'value' => "Duplicate {$property} found for value {$value}.",
                         ]);
                     }
                 }
 
-                $jsonLogger->set('total', 0);
                 $jsonLogger->set('processed', 0);
 
                 return $jsonLogger->get();
@@ -264,9 +276,9 @@ class TransferProvider
                 try {
                     $this->om->forceFlush();
 
-                    foreach ($loaded as $el) {
-                        if ($el) {
-                            $this->om->detach($el);
+                    foreach ($loaded as $element) {
+                        if ($element) {
+                            $this->om->detach($element);
                         }
                     }
 
@@ -381,16 +393,58 @@ class TransferProvider
      */
     public function getAvailableActions($format, array $options = [], array $extra = [])
     {
-        $availables = [];
-
-        foreach (array_filter($this->actions, function ($action) use ($format, $options, $extra) {
+        $supportedActions = array_filter($this->actions, function (AbstractAction $action) use ($format, $options, $extra) {
             return $action->supports($format, $options, $extra);
-        }) as $action) {
+        });
+
+        $available = [];
+        foreach ($supportedActions as $action) {
             $schema = $action->getAction();
-            $availables[$schema[0]][$schema[1]] = $this->explainAction($this->getActionName($action), $format, $options, $extra);
+            $available[$schema[0]][$schema[1]] = $this->explainAction($this->getActionName($action), $format, $options, $extra);
         }
 
-        return $availables;
+        return $available;
+    }
+
+    public function getSamples($format, array $options = [], array $extra = [])
+    {
+        $supportedActions = array_filter($this->actions, function (AbstractAction $action) use ($format, $options, $extra) {
+            return $action->supports($format, $options, $extra);
+        });
+
+        $samples = [];
+        foreach ($supportedActions as $action) {
+            $schema = $action->getAction();
+
+            $samples[$schema[0]][$schema[1]] = [];
+
+            $samplesPath = $this->getSamplePath($format, $schema[0], $schema[1]);
+            if ($samplesPath) {
+                $dir = new \DirectoryIterator($samplesPath);
+                foreach ($dir as $fileInfo) {
+                    if (!$fileInfo->isDot()) {
+                        $samples[$schema[0]][$schema[1]][] = $fileInfo->getFilename();
+                    }
+                }
+            }
+        }
+
+        return $samples;
+    }
+
+    public function getSamplePath($format, $entity, $action, $filename = null)
+    {
+        // FIXME : like this I can only define samples in core bundle
+        $path = "$this->projectDir/vendor/claroline/distribution/main/core/Resources/samples/$entity/$format/valid/$action/";
+        if (!empty($filename)) {
+            $path .= $filename;
+        }
+
+        if (file_exists($path)) {
+            return $path;
+        }
+
+        return null;
     }
 
     /**
@@ -423,7 +477,6 @@ class TransferProvider
         $data = $this->stringToUtf8($data);
         $data = str_replace("\r\n", PHP_EOL, $data);
         $data = str_replace("\r", PHP_EOL, $data);
-        $data = str_replace("\n", PHP_EOL, $data);
 
         return $data;
     }

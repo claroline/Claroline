@@ -14,5 +14,7 @@
   "number": "Number",
   "string": "Text",
   "url": "URL",
-  "array_of": "A list of '%type%'"
+  "array_of": "A list of '%type%'",
+  "integer": "Integer",
+  "object": "Object"
 }

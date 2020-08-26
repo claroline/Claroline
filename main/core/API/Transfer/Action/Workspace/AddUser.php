@@ -13,10 +13,19 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class AddUser extends AbstractAction
 {
+    /** @var ObjectManager */
+    private $om;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var Crud */
+    private $crud;
+
     /**
-     * Action constructor.
+     * AddUser constructor.
      *
-     * @param Crud $crud
+     * @param Crud               $crud
+     * @param SerializerProvider $serializer
+     * @param ObjectManager      $om
      */
     public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
     {
@@ -64,19 +73,19 @@ class AddUser extends AbstractAction
     public function getSchema(array $options = [], array $extra = [])
     {
         $roleSchema = [
-          '$schema' => 'http:\/\/json-schema.org\/draft-04\/schema#',
-          'type' => 'object',
-          'properties' => [
-            'translationKey' => [
-              'type' => 'string',
-              'description' => 'The role name',
+            '$schema' => 'http:\/\/json-schema.org\/draft-04\/schema#',
+            'type' => 'object',
+            'properties' => [
+                'translationKey' => [
+                    'type' => 'string',
+                    'description' => 'The role name',
+                ],
             ],
-          ],
-          'claroline' => [
-            'requiredAtCreation' => ['translationKey'],
-            'ids' => ['translationKey'],
-            'class' => Role::class,
-          ],
+            'claroline' => [
+                'requiredAtCreation' => ['translationKey'],
+                'ids' => ['translationKey'],
+                'class' => Role::class,
+            ],
         ];
 
         $schema = json_decode(json_encode($roleSchema));

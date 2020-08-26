@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -10,6 +11,7 @@ import {selectors} from '#/main/core/tools/transfer/store'
 import {Logs} from '#/main/core/tools/transfer/log/components/logs'
 
 import {ImportExplanation} from '#/main/core/tools/transfer/import/components/explanation'
+import {ImportSamples} from '#/main/core/tools/transfer/import/components/samples'
 
 class ImportForm extends Component {
   constructor(props) {
@@ -37,7 +39,7 @@ class ImportForm extends Component {
 
     const entity = props.match.params.entity
     const action = props.match.params.action
-    const choices = {none: ''}
+    const choices = {}
 
     Object.keys(props.explanation[entity]).reduce((o, key) => Object.assign(o, {[entity + '_' + key]: trans(key, {}, 'transfer')}), choices)
 
@@ -47,12 +49,17 @@ class ImportForm extends Component {
         type: 'choice',
         label: trans('action'),
         onChange: (value) => {
-          props.history.push(`${this.props.path}/import/${entity}/${value.substring(value.indexOf('_') + 1)}`)
+          let action = ''
+          if (value) {
+            action = value.substring(value.indexOf('_') + 1)
+          }
+
+          props.history.push(`${this.props.path}/import/${entity}/${action}`)
           props.resetLog()
         },
         required: true,
         options: {
-          noEmpty: true,
+          noEmpty: false,
           condensed: true,
           choices: choices
         }
@@ -79,28 +86,28 @@ class ImportForm extends Component {
           {
             name: 'header',
             type: 'boolean',
-            label: trans('La 1ère ligne contient le nom des colonnes', {}, 'transfer'),
+            label: trans('csv_header', {}, 'transfer'),
             required: true,
             disabled: true,
             calculated: () => true
           }, {
             name: 'rowDelimiter',
             type: 'string',
-            label: trans('Délimiteur de lignes', {}, 'transfer'),
+            label: trans('row_delimiter', {}, 'transfer'),
             required: true,
             disabled: true,
             calculated: () => '\\n'
           }, {
             name: 'columnDelimiter',
             type: 'string',
-            label: trans('Délimiteur de colonnes', {}, 'transfer'),
+            label: trans('col_delimiter', {}, 'transfer'),
             required: true,
             disabled: true,
             calculated: () => ';'
           }, {
             name: 'arrayDelimiter',
             type: 'string',
-            label: trans('Délimiteur des valeurs dans les listes', {}, 'transfer'),
+            label: trans('list_delimiter', {}, 'transfer'),
             required: true,
             disabled: true,
             calculated: () => ','
@@ -154,41 +161,54 @@ class ImportForm extends Component {
           }
         ]}
       >
-        <ul className="nav nav-tabs" style={{marginBottom: '20px'}}>
-          <li>
-            <Button
-              type={CALLBACK_BUTTON}
-              label={trans('format')}
-              callback={() => this.setState({currentSection: 'format'})}
-              active={'format' === this.state.currentSection}
-            />
-          </li>
+        {action &&
+          <Fragment>
+            <ul className="nav nav-tabs">
+              <li>
+                <Button
+                  type={CALLBACK_BUTTON}
+                  label={trans('format')}
+                  callback={() => this.setState({currentSection: 'format'})}
+                  active={'format' === this.state.currentSection}
+                />
+              </li>
 
-          <li>
-            <Button
-              type={CALLBACK_BUTTON}
-              label={trans('examples', {}, 'transfer')}
-              callback={() => this.setState({currentSection: 'examples'})}
-              active={'examples' === this.state.currentSection}
-            />
-          </li>
+              <li>
+                <Button
+                  type={CALLBACK_BUTTON}
+                  label={trans('examples', {}, 'transfer')}
+                  callback={() => this.setState({currentSection: 'samples'})}
+                  active={'samples' === this.state.currentSection}
+                />
+              </li>
 
-          <li>
-            <Button
-              type={CALLBACK_BUTTON}
-              label={trans('log')}
-              callback={() => this.setState({currentSection: 'log'})}
-              active={'log' === this.state.currentSection}
-            />
-          </li>
-        </ul>
+              <li>
+                <Button
+                  type={CALLBACK_BUTTON}
+                  label={trans('log')}
+                  callback={() => this.setState({currentSection: 'log'})}
+                  active={'log' === this.state.currentSection}
+                />
+              </li>
+            </ul>
 
-        {'format' === this.state.currentSection && props.explanation[entity][action] &&
-          <ImportExplanation schema={props.explanation[entity][action]} />
-        }
+            {'format' === this.state.currentSection &&
+              <ImportExplanation schema={get(this.props.explanation, entity+'.'+action, {})} />
+            }
 
-        {'log' === this.state.currentSection &&
-          <Logs />
+            {'samples' === this.state.currentSection &&
+              <ImportSamples
+                format="csv"
+                entity={entity}
+                action={action}
+                samples={get(this.props.samples, entity+'.'+action, [])}
+              />
+            }
+
+            {'log' === this.state.currentSection &&
+              <Logs />
+            }
+          </Fragment>
         }
       </FormData>
     )
@@ -204,6 +224,7 @@ ImportForm.propTypes = {
     params: T.object.isRequired
   }).isRequired,
   explanation: T.object.isRequired,
+  samples: T.object.isRequired,
   logs: T.object,
   workspace: T.object,
 

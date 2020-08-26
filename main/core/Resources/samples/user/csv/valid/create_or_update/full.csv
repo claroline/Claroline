@@ -1,0 +1,3 @@
+id;email;firstName;lastName;username;administrativeCode;plainPassword;meta.personalWorkspace;meta.description;groups.name;roles.name;mainOrganization.name;organizations.name
+699438d3-c874-11e8-8e9e-f46d0497b11d;john.doe@test.com;John;Doe;john.doe;12345678910Z;john.doe;true;This is a description;Group1,Group2;ROLE_USER,ROLE_ADMIN;default;Organization,Organization2
+699438d3-c874-11e8-8e9e-f46d0499b11d;jeanpaul.dupond@test.com;Jean-Paul;Dupond;jeanpaul.dupond;12345678911Z;jeanpaul.dupond;true;This is a another description;Group1,Group2;ROLE_ADMIN;default;Organization,Organization2

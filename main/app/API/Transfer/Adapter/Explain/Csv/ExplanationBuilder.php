@@ -16,6 +16,12 @@ class ExplanationBuilder
         $this->mode = $mode;
     }
 
+    /**
+     * @param \stdClass   $data
+     * @param Explanation $explanation
+     * @param string      $currentPath
+     * @param bool        $isArray
+     */
     private function explainObject($data, $explanation, $currentPath, $isArray = false)
     {
         if (!isset($data->properties) || isset($data->transferable) && false === $data->transferable) {
@@ -50,18 +56,30 @@ class ExplanationBuilder
 
     /**
      * A oneOf is simply an other schema that needs to be explained.
+     *
+     * @param \stdClass   $data
+     * @param Explanation $explanation
+     * @param string      $currentPath
+     * @param bool        $isArray
      */
     private function explainOneOf($data, $explanation, $currentPath, $isArray = false)
     {
         $explanation->addOneOf(array_map(function ($oneOf) use ($currentPath, $isArray) {
             return $this->explainSchema($oneOf, null, $currentPath, $isArray);
-        }, $data->oneOf), 'an auto generated descr', true);
+        }, $data->oneOf), 'an auto generated descr');
     }
 
     /**
      * Explain how to import according to the json-schema for a given mime type (csv)
      * Here, we'll give a csv description according to the schema
      * This is only a first version because not everything will be supported by csv.
+     *
+     * @param \stdClass   $data
+     * @param Explanation $explanation
+     * @param string      $currentPath
+     * @param bool        $isArray
+     *
+     * @return Explanation
      */
     public function explainSchema(
       $data,
@@ -120,8 +138,7 @@ class ExplanationBuilder
 
                 $explanation->addOneOf(
                   $oneOfs,
-                  $this->translator->trans('One of the following list of properties', [], 'schema'),
-                  true
+                  $this->translator->trans('One of the following list of properties', [], 'schema')
                 );
             }
         }

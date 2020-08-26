@@ -9,6 +9,11 @@ const explanation = createSelector(
   (store) => store.explanation
 )
 
+const samples = createSelector(
+  [store],
+  (store) => store.samples
+)
+
 const log = createSelector(
   [store],
   (store) => store.log
@@ -18,5 +23,6 @@ export const selectors = {
   STORE_NAME,
   store,
   explanation,
+  samples,
   log
 }

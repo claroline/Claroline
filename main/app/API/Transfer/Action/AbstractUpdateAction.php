@@ -6,6 +6,9 @@ use Claroline\AppBundle\API\Crud;
 
 abstract class AbstractUpdateAction extends AbstractAction
 {
+    /** @var Crud */
+    private $crud;
+
     abstract public function getClass();
 
     public function setCrud(Crud $crud)
@@ -18,8 +21,8 @@ abstract class AbstractUpdateAction extends AbstractAction
         $this->crud->update($this->getClass(), $data);
 
         $successData['update'][] = [
-          'data' => $data,
-          'log' => $this->getAction()[0].' updated.',
+            'data' => $data,
+            'log' => $this->getAction()[0].' updated.',
         ];
     }
 

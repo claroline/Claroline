@@ -60,6 +60,10 @@ class Create extends AbstractAction
         }
 
         $workspace = $this->workspaceManager->copy($model, $workspace, false);
+        // Override model values by the form ones. This is not the better way to do it
+        // because it has already be done by Crud::create() earlier.
+        // This is mostly because the model copy requires some of the target WS entities to be here (eg. Role).
+        $workspace = $this->serializer->deserialize($data, $workspace);
 
         //add organizations here
         if (isset($data['organizations'])) {

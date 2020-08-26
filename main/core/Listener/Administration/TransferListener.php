@@ -32,6 +32,7 @@ class TransferListener
     {
         $event->setData([
             'explanation' => $this->transfer->getAvailableActions('csv'),
+            'samples' => $this->transfer->getSamples('csv'),
         ]);
         $event->stopPropagation();
     }
