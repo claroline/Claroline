@@ -105,11 +105,11 @@ class AgendaViewMonthComponent extends Component {
     const monthEnd = moment(this.props.range[1])
 
     let monthWeeks
-    if (monthEnd.get('week') > monthStart.get('week') + 1) {
+    if (monthEnd.get('week') > monthStart.get('week')) {
       monthWeeks = monthEnd.get('week') - monthStart.get('week') + 1
     } else {
       // year change
-      monthWeeks = (52 + monthEnd.get('week')) - monthStart.get('week') + 1
+      monthWeeks = (moment(monthStart).subtract(1, 'years').weeksInYear() - monthStart.get('week')) + monthEnd.get('week') + 1
     }
 
     return (

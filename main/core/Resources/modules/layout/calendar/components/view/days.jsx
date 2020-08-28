@@ -92,7 +92,8 @@ const Days = props =>
         {times(6, (weekNum) =>
           <tr key={`week-${weekNum}`} className="calendar-row week">
             <th scope="row" className="week-num">
-              {props.currentRange[0].week()+weekNum}
+              {moment(props.currentRange[0])
+                .week(props.currentRange[0].week()+weekNum).week()}
             </th>
 
             {times(7, (dayNum) =>
