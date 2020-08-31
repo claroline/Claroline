@@ -218,6 +218,21 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:user:create' }
 
+    Claroline\CoreBundle\Command\User\AddGroupCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:add_group' }
+
+    Claroline\CoreBundle\Command\User\CleanGroupCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:user:clean_group' }
+
     # Workspace
 
     Claroline\CoreBundle\Command\Workspace\ArchiveCommand:
