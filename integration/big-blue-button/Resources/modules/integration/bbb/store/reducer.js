@@ -16,6 +16,9 @@ const reducer = combineReducers({
   maxParticipants: makeReducer(0, {
     [MEETINGS_UPDATE]: (state, action) => action.maxParticipants
   }),
+  maxMeetingParticipants: makeReducer(0, {
+    [MEETINGS_UPDATE]: (state, action) => action.maxMeetingParticipants
+  }),
   activeMeetingsCount: makeReducer(0, {
     [MEETINGS_UPDATE]: (state, action) => action.activeMeetingsCount
   }),

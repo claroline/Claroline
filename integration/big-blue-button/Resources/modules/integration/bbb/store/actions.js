@@ -7,7 +7,7 @@ export const MEETINGS_SET_LOADED = 'MEETINGS_SET_LOADED'
 const actions = {}
 
 actions.setLoaded = makeActionCreator(MEETINGS_SET_LOADED, 'loaded')
-actions.updateMeetings = makeActionCreator(MEETINGS_UPDATE, 'maxMeetings', 'maxParticipants', 'activeMeetingsCount', 'participantsCount', 'meetings')
+actions.updateMeetings = makeActionCreator(MEETINGS_UPDATE, 'maxMeetings', 'maxMeetingParticipants', 'maxParticipants', 'activeMeetingsCount', 'participantsCount', 'meetings')
 
 actions.endMeeting = (meetingId) => (dispatch) => dispatch({
   [API_REQUEST]: {
@@ -26,7 +26,7 @@ actions.fetchMeetings = () => (dispatch) => dispatch({
       method: 'GET'
     },
     before: () => dispatch(actions.setLoaded(false)),
-    success: (data) => dispatch(actions.updateMeetings(data.maxMeetings, data.maxParticipants, data.activeMeetingsCount, data.participantsCount, data.meetings))
+    success: (data) => dispatch(actions.updateMeetings(data.maxMeetings, data.maxMeetingParticipants, data.maxParticipants, data.activeMeetingsCount, data.participantsCount, data.meetings))
   }
 })
 
