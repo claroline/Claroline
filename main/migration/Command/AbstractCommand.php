@@ -53,17 +53,9 @@ abstract class AbstractCommand extends Command
 
     protected function getTargetBundle(InputInterface $input)
     {
-        $bundleName = $input->getArgument('bundle');
-        $bundles = $this->getApplication()->getKernel()->getBundle(
-            $bundleName,
-            false
+        return $this->getApplication()->getKernel()->getBundle(
+            $input->getArgument('bundle')
         );
-
-        foreach ($bundles as $bundle) {
-            if ($bundle->getName() == $bundleName) {
-                return $bundle;
-            }
-        }
     }
 
     protected function getOutputBundle(InputInterface $input)
