@@ -16,11 +16,6 @@ use Claroline\LinkBundle\Installation\AdditionalInstaller;
 
 class ClarolineLinkBundle extends DistributionPluginBundle
 {
-    public function hasMigrations()
-    {
-        return false;
-    }
-
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
