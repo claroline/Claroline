@@ -67,8 +67,4 @@ class AddUser extends AbstractAction
     {
         return 500;
     }
-
-    public function clear(ObjectManager $om)
-    {
-    }
 }

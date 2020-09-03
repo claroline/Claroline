@@ -112,46 +112,13 @@ class TransferProvider
         if (array_key_exists('$root', $schema)) {
             $jsonSchema = $this->schema->getSchema($schema['$root']);
 
-            //if we didn't find any but root it's set, it means that is custom and already defined
-            if ($jsonSchema) {
-                $explanation = $adapter->explainSchema($jsonSchema, 'create');
-                $data = $adapter->decodeSchema($data, $explanation);
-            } else {
-                // This block should be handled by the CsvAdapter
-
-                $content = $data;
-                $data = [];
-                $lines = str_getcsv($content, PHP_EOL);
-                $header = array_shift($lines);
-                $headers = array_filter(
-                    array_map(function ($headerProp) {
-                        return trim($headerProp);
-                    }, str_getcsv($header, ';')),
-                    function ($headerProp) {
-                        return !empty($headerProp);
-                    }
-                );
-
-                foreach ($lines as $line) {
-                    if (!empty($line)) {
-                        $properties = array_filter(
-                            array_map(function ($property) {
-                                return trim($property);
-                            }, str_getcsv($line, ';')),
-                            function ($property) {
-                                return !empty($property);
-                            }
-                        );
-
-                        $row = [];
-                        foreach ($properties as $index => $property) {
-                            $row[$headers[$index]] = $property;
-                        }
-
-                        $data[] = $row;
-                    }
-                }
+            // if we didn't find any but root it's set, it means that is custom and already defined
+            if (empty($jsonSchema)) {
+                $jsonSchema = json_decode(json_encode($schema['$root']));
             }
+
+            $explanation = $adapter->explainSchema($jsonSchema, 'create');
+            $data = $adapter->decodeSchema($data, $explanation);
         } else {
             $identifiersSchema = [];
             foreach ($schema as $prop => $value) {

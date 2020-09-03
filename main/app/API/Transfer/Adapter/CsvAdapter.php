@@ -94,33 +94,26 @@ class CsvAdapter implements AdapterInterface
      */
     private function addPropertyToObject(Property $property, array &$object, $value)
     {
+        $formattedValue = $value;
         $propertyName = $property->getName();
+        $types = !is_array($property->getType()) ? [$property->getType()] : $property->getType();
+
         if ($property->isArray()) {
             $keys = explode('.', $propertyName);
             $objectProp = array_pop($keys);
-            $value = array_map(function ($value) use ($objectProp) {
+            $formattedValue = array_map(function ($objectValue) use ($objectProp, $types) {
                 $object = [];
-                $object[$objectProp] = $value;
+                $object[$objectProp] = $this->formatValue($types, $objectValue);
 
                 return $object;
             }, explode(',', $value));
 
             $propertyName = implode('.', $keys);
-        }
-
-        $types = !is_array($property->getType()) ? [$property->getType()] : $property->getType();
-
-        if ('null' === $value && in_array('null', $types)) {
-            $value = null;
         } else {
-            if (in_array('integer', $types)) {
-                $value = (int) $value;
-            } elseif ('boolean' === $property->getType()) {
-                $value = (bool) $value;
-            }
+            $formattedValue = $this->formatValue($types, $value);
         }
 
-        ArrayUtils::set($object, $propertyName, $value);
+        ArrayUtils::set($object, $propertyName, $formattedValue);
 
         return $object;
     }
@@ -160,6 +153,23 @@ class CsvAdapter implements AdapterInterface
         $data = implode('</br>', $lines);
 
         return $data;
+    }
+
+    private function formatValue(array $types, $value)
+    {
+        $formattedValue = $value;
+
+        if ('null' === $value && in_array('null', $types)) {
+            $formattedValue = null;
+        } else {
+            if (in_array('integer', $types)) {
+                $formattedValue = (int) $value;
+            } elseif (in_array('boolean', $types)) {
+                $formattedValue = (bool) $value;
+            }
+        }
+
+        return $value;
     }
 
     /**

@@ -24,8 +24,6 @@ abstract class AbstractCommand extends Command
 {
     use BaseCommandTrait;
 
-    private $params = ['bundle' => 'The bundle name'];
-
     private $manager;
 
     public function setManager(Manager $manager)

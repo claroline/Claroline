@@ -76,22 +76,31 @@ class CreateOrUpdate extends AbstractAction
             'copy' => isset($data['copy']) ? $data['copy'] : false,
         ];
 
-        $rights = [];
         $roles = [];
-        if (isset($data['user']) || isset($data['role'])) {
-            if (isset($data['user'])) {
-                /** @var User $user */
-                $user = $this->om->getRepository(User::class)->findOneBy(['username' => $data['user']]);
+        if (isset($data['user'])) {
+            /** @var User $user */
+            $user = $this->om->getRepository(User::class)->findOneBy(['username' => $data['user']]);
 
-                foreach ($user->getEntityRoles() as $role) {
-                    if (Role::USER_ROLE === $role->getType()) {
-                        $roles[] = $role;
-                    }
+            foreach ($user->getEntityRoles() as $role) {
+                if (Role::USER_ROLE === $role->getType()) {
+                    $roles[] = $role;
                 }
-            } else {
-                $roles[] = $this->om->getRepository(Role::class)->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']]);
             }
-        } else {
+        }
+
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $role) {
+                $object = $this->om->getObject($role, Role::class, array_keys($role));
+
+                if (!$object) {
+                    throw new \Exception('Role '.implode(',', $role).' does not exists');
+                }
+
+                $roles[] = $object;
+            }
+        }
+
+        if (empty($roles)) {
             $roles[] = $workspace->getDefaultRole();
         }
 
@@ -104,6 +113,7 @@ class CreateOrUpdate extends AbstractAction
             $permissions['create'] = $create;
         }
 
+        $rights = [];
         foreach ($roles as $role) {
             $rights[] = [
                 'permissions' => $permissions,
@@ -190,17 +200,38 @@ class CreateOrUpdate extends AbstractAction
                     'type' => 'boolean',
                     'description' => $this->translator->trans('directory_administrate', [], 'transfer'),
                 ],
+                'create' => [
+                    'type' => 'string',
+                    'description' => $this->translator->trans('directory_creation', ['%types%' => $types], 'transfer'),
+                ],
                 'user' => [
                     'type' => 'string',
                     'description' => $this->translator->trans('directory_user', [], 'transfer'),
                 ],
-                'role' => [
-                    'type' => 'string',
-                    'description' => $this->translator->trans('directory_role', [], 'transfer'),
-                ],
-                'create' => [
-                    'type' => 'string',
-                    'description' => $this->translator->trans('directory_creation', ['%types%' => $types], 'transfer'),
+                'roles' => [
+                    'type' => 'array',
+                    'uniqueItems' => true,
+                    'items' => [
+                        'oneOf' => [
+                            [
+                                'type' => 'object',
+                                'properties' => [
+                                    'id' => [
+                                        'type' => 'string',
+                                        'description' => 'The role id',
+                                    ],
+                                    'name' => [
+                                        'type' => 'string',
+                                        'description' => 'The role name',
+                                    ],
+                                    'translationKey' => [
+                                        'type' => 'string',
+                                        'description' => 'The role displayed value',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
 
@@ -250,7 +281,7 @@ class CreateOrUpdate extends AbstractAction
                         ],
                         'current' => $root,
                         'root' => $root,
-                    ]
+                    ],
                 ],
             ],
         ]];
