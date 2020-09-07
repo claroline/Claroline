@@ -36,6 +36,9 @@ use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * @todo : find the proper way to manage connections to deleted resources (for now its kept in DB).
+ */
 class LogConnectManager
 {
     /** @var FinderProvider */
@@ -154,7 +157,7 @@ class LogConnectManager
                     $adminToolConnection = $this->getComputableLogAdminTool($user);
 
                     // Computes last resource duration
-                    if (!is_null($resourceConnection)) {
+                    if (!is_null($resourceConnection) && !empty($resourceConnection->getResource())) {
                         $updatedConnection = $this->computeConnectionDuration($resourceConnection, $dateLog);
 
                         if ($updatedConnection && $updatedConnection->getDuration()) {
@@ -228,7 +231,7 @@ class LogConnectManager
                             $this->computeConnectionDuration($adminToolConnection, $dateLog);
                         }
                         // Computes last resource duration
-                        if (!is_null($resourceConnection)) {
+                        if (!is_null($resourceConnection) && !empty($resourceConnection->getResource())) {
                             // Ignores log if previous resource opening log and this one are associated to the same resource
                             // for the current session
                             if ($resourceConnection->getResource() === $logResourceNode) {
@@ -274,7 +277,7 @@ class LogConnectManager
                         $this->computeConnectionDuration($workspaceConnection, $dateLog);
                     }
                     // Computes last resource duration
-                    if (!is_null($resourceConnection)) {
+                    if (!is_null($resourceConnection) && !empty($resourceConnection->getResource())) {
                         $updatedConnection = $this->computeConnectionDuration($resourceConnection, $dateLog);
 
                         if ($updatedConnection && $updatedConnection->getDuration()) {
@@ -324,7 +327,7 @@ class LogConnectManager
     {
         $resourceConnection = $this->getLogConnectResourceByResource($user, $resource, $embedded);
 
-        if (!is_null($resourceConnection)) {
+        if (!is_null($resourceConnection) && !empty($resourceConnection->getResource())) {
             $updatedConnection = $this->computeConnectionDuration($resourceConnection, new \DateTime());
 
             if ($updatedConnection && $updatedConnection->getDuration()) {
