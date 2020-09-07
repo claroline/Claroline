@@ -381,12 +381,12 @@ class WorkspaceSerializer
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
             /** @var PublicFile $poster */
-            $poster = $this->om->getObject($data['thumbnail'], PublicFile::class);
+            $poster = $this->om->getObject($data['poster'], PublicFile::class);
             $workspace->setPoster($data['poster']['url']);
             $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
         }
 
-        if (isset($data['meta']) && !empty($data['meta']['creator'])) {
+        if (empty($workspace->getCreator()) && isset($data['meta']) && !empty($data['meta']['creator'])) {
             /** @var User $creator */
             $creator = $this->om->getObject($data['meta']['creator'], User::class);
             $workspace->setCreator($creator);
@@ -410,7 +410,7 @@ class WorkspaceSerializer
             $this->sipe('meta.description', 'setDescription', $data, $workspace);
             $this->sipe('meta.lang', 'setLang', $data, $workspace);
 
-            if (!empty($data['meta']['created'])) {
+            if (empty($workspace->getCreated()) && !empty($data['meta']['created'])) {
                 $date = DateNormalizer::denormalize($data['meta']['created']);
                 $workspace->setCreated($date->getTimestamp());
             }

@@ -483,7 +483,6 @@ class WorkspaceManager
             unset($data['name']);
         }
 
-        /** @var Workspace $workspaceCopy */
         $workspaceCopy = $transferManager->deserialize($data, $newWorkspace, [Options::REFRESH_UUID], $fileBag);
 
         $workspaceCopy->setModel($model);

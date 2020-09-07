@@ -22,6 +22,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class WorkspaceCrud
 {
+    private $manager;
+    private $userManager;
+    private $tokenStorage;
+    private $resourceManager;
+    private $organizationManager;
+    private $roleManager;
+    private $om;
+    private $crud;
+    private $dispatcher;
+    private $logListener;
+
     /**
      * WorkspaceCrud constructor.
      *

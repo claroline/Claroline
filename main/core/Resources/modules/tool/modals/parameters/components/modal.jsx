@@ -26,16 +26,16 @@ const ParametersModal = props =>
           title: trans('display_parameters'),
           fields: [
             {
-              name: 'thumbnail',
-              label: trans('thumbnail'),
-              type: 'image'
-            }, {
               name: 'poster',
               label: trans('poster'),
               type: 'image',
               options: {
                 ratio: '3:1'
               }
+            }, {
+              name: 'thumbnail',
+              label: trans('thumbnail'),
+              type: 'image'
             }, {
               name: 'display.showIcon',
               label: trans('resource_showIcon', {}, 'resource'),

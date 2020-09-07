@@ -74,7 +74,7 @@
           "description": "The maximum amount of users the workspace can have"
         },
         "maxStorage": {
-          "type": ["string", "null"],
+          "type": ["integer", "string", "null"],
           "description": "The maximum amount of data storage the workspace is allowed to take"
         },
         "maxResources": {
