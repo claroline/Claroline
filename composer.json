@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "src/"
         }
     },
     "require-dev": {
@@ -22,21 +22,21 @@
     "scripts": {
         "fast-install" : [
             "php scripts/check.php",
-            "php app/console doctrine:database:create --if-not-exists",
-            "php vendor/bin/doctrine dbal:import claroline.sql -vvv",
-            "php app/console assets:install web --symlink",
+            "php bin/console doctrine:database:create --if-not-exists",
+            "php bin/bin/doctrine dbal:import claroline.sql -vvv",
+            "php bin/console assets:install public --symlink",
             "php scripts/data-symlink.php"
         ],
         "sync": [
             "composer fetch",
             "composer build",
-            "php app/console claroline:update --env=prod",
+            "php bin/console claroline:update --env=prod",
             "composer disable-maintenance"
         ],
         "sync-dev": [
             "composer fetch-dev",
             "composer build",
-            "php app/console claroline:update -vvv",
+            "php bin/console claroline:update -vvv",
             "composer disable-maintenance"
         ],
         "fetch": [
@@ -81,8 +81,7 @@
         "process-timeout": 3600
     },
     "extra": {
-        "symfony-app-dir": "app",
-        "symfony-web-dir": "web",
+        "symfony-var-dir": "var",
         "symfony-assets-install": "symlink"
     }
 }

@@ -7,13 +7,13 @@
  *
  * Currently, it means:
  *
- *   - an app/config/parameters.yml file
+ *   - a config/parameters.yml file
  *   - a recent version of node and npm
  */
 
-if (!file_exists(__DIR__ . '/../app/config/parameters.yml')) {
+if (!file_exists(__DIR__ . '/../config/parameters.yml')) {
     abort(
-        'The configuration file app/config/parameters.yml is missing '
+        'The configuration file config/parameters.yml is missing '
          . '(execute "php scripts/configure.php" to build it interactively)'
     );
 }

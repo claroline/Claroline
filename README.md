@@ -62,7 +62,7 @@ file. For an installation from scratch, the commands would be:
     npm install
     composer build
 
-    php app/console claroline:install
+    php bin/console claroline:install
 
 Upgrade 12.x
 -------
@@ -77,7 +77,7 @@ To update your 12.x just follow this steps :
 
 #### 2. Launch update script
    
-    php app/console claroline:update 12.x.xx 12.y.yy
+    php bin/console claroline:update 12.x.xx 12.y.yy
 
 
 
@@ -100,12 +100,12 @@ To update an existing development installation, just pull the latest changes
 
 #### 3. Launch update script
    
-    php app/console claroline:update 1x.x.xx 12.1.0
+    php bin/console claroline:update 1x.x.xx 12.1.0
     
 #### 4. Migrate some ressource
 
-    php app/console claroline:scorm:convert
-    php app/console claroline:dropzone:convert
+    php bin/console claroline:scorm:convert
+    php bin/console claroline:dropzone:convert
 
 Development
 -----------
@@ -125,7 +125,7 @@ This is the simplest way of serving the application during
 development. To start the server, use the command provided by the symfony
 framework (more details [here][symfo-server]):
 
-    php app/console server:start
+    php bin/console server:start
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
 
@@ -137,12 +137,12 @@ If you want to use Apache or Nginx during development, make them serve the
 
 Note that you'll certainly face permissions issues on the following directories:
 
-- *app/cache*
-- *app/config*
-- *app/logs*
-- *app/sessions*
+- *var/cache*
+- *config*
+- *var/log*
+- *var/sessions*
 - *files*
-- *web/uploads*
+- *public/uploads*
 
 All of them must be recursively writable from both the web server and the CLI.
 For more information on that subject, see the [configuration section][symfo-config]
@@ -153,7 +153,7 @@ Usage
 
 You can create a first admin user with:
 
-    php app/console claroline:user:create -a
+    php bin/console claroline:user:create -a
 
 Plugins
 -------
@@ -166,14 +166,14 @@ the package from the `require` section of your composer.json and running
 Once the plugin package is in your *vendor* directory, you can proceed to the
 (un-)installation using one the following commands:
 
-    php app/console claroline:plugin:install FooBarBundle
-    php app/console claroline:plugin:uninstall FooBarBundle
+    php bin/console claroline:plugin:install FooBarBundle
+    php bin/console claroline:plugin:uninstall FooBarBundle
 
 ***Important***: Note that the installation and upgrade procedures of the
 platform described above apply only to the "standard" distribution, which
 comes with a fixed set of plugins. If you deviate from that set, you'll have
 to maintain your own composer files and perform `composer update` and
-`php app/console claroline:update` accordingly.
+`php bin/console claroline:update` accordingly.
 
 Browser support
 ------------
