@@ -105,8 +105,8 @@ class OrganizationCrud
                     $this->om->persist($users);
                 }
             }
-        }
 
-        $this->om->flush();
+            $this->om->flush();
+        }
     }
 }
