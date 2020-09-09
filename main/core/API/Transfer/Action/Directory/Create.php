@@ -87,7 +87,18 @@ class Create extends AbstractAction
 
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
-                $object = $this->om->getObject($role, Role::class, array_keys($role));
+                $roleKeys = array_keys($role);
+                if (in_array('translationKey', $roleKeys)) {
+                    $object = $this->om->getRepository(Role::class)->findOneBy([
+                        'translationKey' => $role['translationKey'],
+                        'workspace' => $workspace,
+                    ]);
+                }
+                if (empty($object)) {
+                    unset($roleKeys[array_search('translationKey', $roleKeys)]);
+
+                    $object = $this->om->getObject($role, Role::class, $roleKeys);
+                }
 
                 if (!$object) {
                     throw new \Exception('Role '.implode(',', $role).' does not exists');
