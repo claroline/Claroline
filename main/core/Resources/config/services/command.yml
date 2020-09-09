@@ -171,21 +171,6 @@ services:
 
     # Removal
 
-    Claroline\CoreBundle\Command\Removal\EmptyWorkspaceByDateCommand:
-        arguments:
-            - '@Claroline\CoreBundle\API\Finder\Workspace\WorkspaceFinder'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:empty-by-date' }
-
-    Claroline\CoreBundle\Command\Removal\EmptyWorkspaceCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:workspace:empty' }
-
     Claroline\CoreBundle\Command\Removal\RemoveFilesFromUnusedWorkspaceCommand:
         arguments:
             - '%claroline.param.files_directory%'
@@ -283,6 +268,13 @@ services:
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
         tags:
             - { name: 'console.command', command: 'claroline:workspace:remove' }
+
+    Claroline\CoreBundle\Command\Workspace\EmptyByTagCommand:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+        tags:
+            - { name: 'console.command', command: 'claroline:workspace:empty' }
 
     # Common
 

@@ -119,7 +119,7 @@ class TaggedObjectRepository extends EntityRepository
         $dql = "
           SELECT DISTINCT w
           FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-          WHERE w.id IN (
+          WHERE w.uuid IN (
               SELECT to.objectId
               FROM Claroline\TagBundle\Entity\TaggedObject to
               JOIN to.tag t
