@@ -100,7 +100,7 @@ module.exports = {
     }
   },
   resolve: {
-    modules: ['./node_modules', './web/packages'],
+    modules: ['./node_modules', './public/packages'],
     extensions: ['.js', '.jsx']
   },
   externals: shared.externals()

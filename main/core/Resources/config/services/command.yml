@@ -98,6 +98,8 @@ services:
             - { name: 'console.command', command: 'claroline:maintenance:enable' }
 
     Claroline\CoreBundle\Command\Dev\PlatformInstallCommand:
+        arguments:
+            - '%claroline.param.files_directory%'
         tags:
             - { name: 'console.command', command: 'claroline:install' }
 

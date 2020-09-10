@@ -15,7 +15,7 @@ class JsonSchema
     /**
      * @var string
      */
-    private $kernelDir;
+    private $projectDir;
 
     /**
      * List of loaded schemas.
@@ -32,11 +32,11 @@ class JsonSchema
     /**
      * JsonSchema constructor.
      *
-     * @param string $kernelDir
+     * @param string $projectDir
      */
-    public function __construct($kernelDir)
+    public function __construct($projectDir)
     {
-        $this->kernelDir = $kernelDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -98,7 +98,7 @@ class JsonSchema
     private function uriToFile($uri)
     {
         $uri = str_replace($this->baseUri, '', $uri);
-        $schemaDir = realpath("{$this->kernelDir}/../vendor/claroline/json-quiz/format");
+        $schemaDir = realpath("{$this->projectDir}/vendor/claroline/json-quiz/format");
 
         return $schemaDir.'/'.$uri;
     }

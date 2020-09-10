@@ -21,6 +21,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PlatformInstallCommand extends Command
 {
+    private $filesDir;
+
+    public function __construct(string $filesDir)
+    {
+        parent::__construct();
+
+        $this->filesDir = $filesDir;
+    }
+
     protected function configure()
     {
         $this->setDescription('Installs the platform.');
@@ -33,9 +42,7 @@ class PlatformInstallCommand extends Command
          * - No bundles.bup.ini
          * - Empty previous-installed.json
          */
-        $kernel = $this->getApplication()->getKernel();
-        $rootDir = $kernel->getProjectDir().'/app';
-        $previous = $rootDir.'/config/previous-installed.json';
+        $previous = $this->filesDir.'/config/previous-installed.json';
         @unlink($previous);
         file_put_contents($previous, '[]');
 

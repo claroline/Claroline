@@ -222,11 +222,11 @@ class SettingChecker
         $category = new SettingCategory('File permissions');
         $rootDir = __DIR__.'/../../../../../../../../';
         $writableElements = [
-            'app/cache' => 'directory',
-            'app/sessions' => 'directory',
-            'app/config' => 'directory',
-            'app/config/parameters.yml' => 'file',
-            'app/logs' => 'directory',
+            'var/cache' => 'directory',
+            'var/sessions' => 'directory',
+            'config' => 'directory',
+            'config/parameters.yml' => 'file',
+            'var/log' => 'directory',
             'files' => 'directory',
             'files/config' => 'directory',
             'files/config/bundles.ini' => 'file',
@@ -234,9 +234,9 @@ class SettingChecker
             'files/config/white_list_ip_range.yml' => 'file',
             'files/config/ip_white_list.yml' => 'file',
             'files/templates' => 'directory',
-            'web' => 'directory',
-            'web/uploads' => 'directory',
-            'web/js' => 'directory',
+            'public' => 'directory',
+            'public/uploads' => 'directory',
+            'public/js' => 'directory',
         ];
 
         foreach ($writableElements as $element => $type) {

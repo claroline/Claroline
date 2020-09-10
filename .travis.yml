@@ -24,7 +24,7 @@ env:
 
 #addons:
 #  mariadb: '10.4'
-  
+
 services:
   - xvfb
   - mysql
@@ -83,7 +83,7 @@ before_script:
   - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
   - bash $TRAVIS_BUILD_DIR/main/dev/Resources/travis/fetch-deps.bash
   - composer build
-  - php app/console claroline:install --env=test -vvv
+  - php bin/console claroline:install --env=test -vvv
   # move to distribution directory
   - export ROOT=`pwd`
   - cd vendor/claroline/distribution

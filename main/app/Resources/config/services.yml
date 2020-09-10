@@ -29,13 +29,13 @@ services:
 
     Claroline\AppBundle\API\SchemaProvider:
         arguments:
-            - '%kernel.project_dir%/app'
+            - '%kernel.project_dir%'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\AppBundle\API\SerializerProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '%kernel.project_dir%/app'
+            - '%kernel.project_dir%'
 
     Claroline\AppBundle\API\TransferProvider:
         arguments:

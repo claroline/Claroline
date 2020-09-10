@@ -7,7 +7,7 @@ const distribution = () => path.resolve(__dirname, '..')
 const root = () => path.resolve(distribution(), '..', '..', '..')
 
 // platform web directory
-const web = () => path.resolve(root(), 'web')
+const web = () => path.resolve(root(), 'public')
 
 // output directory (compiled entries)
 const output = () => path.resolve(web(), 'dist')

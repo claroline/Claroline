@@ -28,7 +28,7 @@ services:
 
     Claroline\ThemeBundle\Manager\IconSetManager:
         arguments:
-          - '%claroline.param.web_directory%'
+          - '%claroline.param.public_directory%'
           - '%claroline.param.icon_sets_web_dir%'
           - '%claroline.param.icon_sets_directory%'
           - '@Claroline\AppBundle\Persistence\ObjectManager'

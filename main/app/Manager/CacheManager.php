@@ -14,6 +14,7 @@ namespace Claroline\AppBundle\Manager;
 use Claroline\AppBundle\Event\Platform\RefreshCacheEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Parser\IniParser;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Manages the application cache.
@@ -30,12 +31,11 @@ class CacheManager
      * CacheManager constructor.
      *
      * @param StrictDispatcher $eventDispatcher
-     * @param string           $rootDir
+     * @param KernelInterface  $kernel
      */
-    public function __construct(StrictDispatcher $eventDispatcher, $rootDir)
+    public function __construct(StrictDispatcher $eventDispatcher, KernelInterface $kernel)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $this->cachePath = $rootDir.$ds.'cache'.$ds.'claroline.cache.ini';
+        $this->cachePath = $kernel->getCacheDir().DIRECTORY_SEPARATOR.'claroline.cache.ini';
         $this->eventDispatcher = $eventDispatcher;
     }
 

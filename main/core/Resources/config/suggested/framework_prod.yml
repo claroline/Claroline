@@ -3,11 +3,17 @@ framework:
     router:
         resource: .
         type: dynamic
+        utf8: true
     form:            true
     validation:      { enable_annotations: true }
     templating:      { engines: ['twig'] }
     translator:      { fallback: en }
     default_locale: "%locale%"
     session:
-      save_path: "%kernel.project_dir%/app/sessions"
+      save_path: "%kernel.project_dir%/var/sessions"
       cookie_httponly: true
+      cookie_secure: auto
+      cookie_samesite: lax
+    cache: ~
+    php_errors:
+        log: true

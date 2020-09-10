@@ -7,17 +7,17 @@
 Install with composer :
 
     $ composer require "innova/path-bundle" "6.*"
-    $ php app/console claroline:plugin:install InnovaPathBundle
+    $ php bin/console claroline:plugin:install InnovaPathBundle
 
 ## Uninstall 
 
-    $ php app/console claroline:plugin:uninstall InnovaPathBundle 
+    $ php bin/console claroline:plugin:uninstall InnovaPathBundle 
 
 ## Command line
 
 The PathBundle provides a new Symfony 2 command to publish Paths into the application :
 
-    $ php app/console innova:path:publish
+    $ php bin/console innova:path:publish
 
 It accepts the following arguments :
 

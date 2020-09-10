@@ -14,8 +14,8 @@ set -e
 PREVIEW="pr-$TRAVIS_PULL_REQUEST-`date +%s`.tar.gz"
 
 mysqldump --opt --no-create-db claroline_test -uroot --password="" > claroline.sql
-rm -rf app/cache/* app/logs/* web/bundles
-rm -rf web/data
+rm -rf var/cache/* var/log/* public/bundles
+rm -rf public/data
 tar --exclude=".git" -czf $PREVIEW *
 
 export SSHPASS=$REMOTE_PASS

@@ -35,7 +35,7 @@ services:
     Claroline\AppBundle\Manager\CacheManager:
         arguments:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '%kernel.project_dir%/app'
+            - '@kernel'
 
     claroline.manager.cache_manager:
         alias: Claroline\AppBundle\Manager\CacheManager

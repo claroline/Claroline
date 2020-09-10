@@ -52,7 +52,7 @@ class OperationExecutor
         $this->versionManager = $versionManager;
         $this->baseInstaller = $baseInstaller;
         $this->pluginInstaller = $pluginInstaller;
-        $this->previousRepoFile = $this->kernel->getProjectDir().'/app/config/previous-installed.json';
+        $this->previousRepoFile = $this->kernel->getProjectDir().'/files/config/previous-installed.json';
         $this->installedRepoFile = $this->kernel->getProjectDir().'/vendor/composer/installed.json';
         $this->bundleFile = $this->kernel->getProjectDir().'/files/config/bundles.ini';
         $this->detector = new Detector();

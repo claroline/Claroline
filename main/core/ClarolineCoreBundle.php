@@ -41,7 +41,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
 
     public function supports($environment)
     {
-        return in_array($environment, ['prod', 'dev', 'test', 'console']);
+        return in_array($environment, ['prod', 'dev', 'test']);
     }
 
     public function getConfiguration($environment)
@@ -87,7 +87,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         } elseif (isset($simpleConfigs[$bundleClass])) {
             return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
         } elseif (isset($envConfigs[$bundleClass])) {
-            if (in_array($environment, ['prod', 'dev', 'test', 'console'])) {
+            if (in_array($environment, ['prod', 'dev', 'test'])) {
                 return $config->addContainerResource($this->buildPath("{$envConfigs[$bundleClass]}_{$environment}"));
             }
         } elseif ($bundle instanceof BazingaJsTranslationBundle) {

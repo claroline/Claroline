@@ -15,14 +15,18 @@ class MaintenanceHandler
 {
     public static function enableMaintenance()
     {
-        if (!file_exists($file = self::getFlagPath())) {
+        $file = self::getFlagPath();
+
+        if (!file_exists($file)) {
             touch($file);
         }
     }
 
     public static function disableMaintenance()
     {
-        if (file_exists($file = self::getFlagPath())) {
+        $file = self::getFlagPath();
+
+        if (file_exists($file)) {
             @unlink($file);
         }
     }
@@ -34,6 +38,6 @@ class MaintenanceHandler
 
     private static function getFlagPath()
     {
-        return __DIR__.'/../../../../../../../app/config/.update';
+        return __DIR__.'/../../../../../../../files/config/.update';
     }
 }

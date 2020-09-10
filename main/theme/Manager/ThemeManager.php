@@ -63,7 +63,7 @@ class ThemeManager
         $this->repository = $this->om->getRepository(Theme::class);
         $this->authorization = $authorization;
         $this->config = $config;
-        $this->themeDir = $kernelDir.'/../web/themes';
+        $this->themeDir = $kernelDir.'/../public/themes';
         $this->serializer = $serializer;
         $this->pm = $pm;
     }

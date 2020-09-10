@@ -164,4 +164,4 @@ services:
 
     UJM\ExoBundle\Library\Json\JsonSchema:
         arguments:
-           - '%kernel.project_dir%/app'
+           - '%kernel.project_dir%'

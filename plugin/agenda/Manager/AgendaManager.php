@@ -37,10 +37,11 @@ class AgendaManager
     private $translator;
     private $su;
     private $container;
+    private $projectDir;
 
     public function __construct(
         ObjectManager $om,
-        $rootDir,
+        $projectDir,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         RoleManager $rm,
@@ -48,7 +49,7 @@ class AgendaManager
         Utilities $su,
         ContainerInterface $container
     ) {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -139,12 +140,12 @@ class AgendaManager
      * @param string    $text      it's the calendar text formatted in ics structure
      * @param Workspace $workspace
      *
-     * @return string $fileName path to the file in web/upload folder
+     * @return string $fileName path to the file in public/uploads folder
      */
     public function writeToICS($text, $workspace)
     {
         $name = is_null($workspace) ? 'desktop' : $workspace->getName();
-        $fileName = $this->rootDir.'/../web/uploads/'.$name.'.ics';
+        $fileName = $this->projectDir.'/public/uploads/'.$name.'.ics';
         file_put_contents($fileName, $text);
 
         return $fileName;

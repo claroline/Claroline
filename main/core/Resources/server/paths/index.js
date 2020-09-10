@@ -6,13 +6,10 @@ const distribution = () => path.resolve(__dirname, '..', '..',  '..', '..', '..'
 // platform root directory
 const root = () => path.resolve(distribution(), '..', '..', '..')
 
-// bower directory (currently main third-party modules dir instead of node_modules)
-const bower = () => path.resolve(root(), 'web', 'packages')
-
-// platform web directory
-const web = () => path.resolve(root(), 'web')
+// platform public directory
+const web = () => path.resolve(root(), 'public')
 
 // output directory (compiled entries)
 const output = () => path.resolve(web(), 'dist')
 
-module.exports = {distribution, root, web, bower, output}
+module.exports = {distribution, root, web, output}

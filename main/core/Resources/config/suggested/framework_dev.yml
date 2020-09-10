@@ -5,4 +5,4 @@ framework:
     profiler:
         only_exceptions: false
     session:
-        save_path: "%kernel.project_dir%/app/sessions"
+        save_path: "%kernel.project_dir%/var/sessions"

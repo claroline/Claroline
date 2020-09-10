@@ -53,7 +53,7 @@ class Refresher
 
     public function installAssets()
     {
-        $webDir = "{$this->container->get('kernel')->getProjectDir()}/web";
+        $webDir = $this->container->getParameter('claroline.param.public_directory');
         $args = ['command' => 'assets:install', 'target' => $webDir, '--symlink' => true];
         $this->container->get('claroline.manager.command_manager')
           ->run(new ArrayInput($args), $this->output ?: new NullOutput());
@@ -65,8 +65,10 @@ class Refresher
             $this->output->writeln('Dumping translations...');
         }
 
+        $translationTargetDir = $this->container->getParameter('claroline.param.public_directory').'/js';
+
         $cmdManager = $this->container->get('claroline.manager.command_manager');
-        $cmdManager->run(new ArrayInput(['command' => 'bazinga:js-translation:dump']), $this->output ?: new NullOutput());
+        $cmdManager->run(new ArrayInput(['command' => 'bazinga:js-translation:dump', 'target' => $translationTargetDir]), $this->output ?: new NullOutput());
 
         if ($this->output) {
             $this->output->writeln('Compiling javascripts...');
@@ -99,11 +101,11 @@ class Refresher
     public static function deleteCache(Event $event)
     {
         $options = array_merge(
-            ['symfony-app-dir' => 'app'],
+            ['symfony-var-dir' => 'var'],
             $event->getComposer()->getPackage()->getExtra()
         );
 
-        $cacheDir = $options['symfony-app-dir'].'/cache';
+        $cacheDir = $options['symfony-var-dir'].'/cache';
         $event->getIO()->write('Clearing the cache...');
         static::removeContentFrom($cacheDir);
     }
@@ -130,14 +132,14 @@ class Refresher
         $publicFilesDir = $this->container->getParameter('claroline.param.public_files_directory');
 
         if (!$fileSystem->exists($dataWebDir)) {
-            $this->output->writeln('Creating symlink to public directory of files directory in web directory...');
+            $this->output->writeln('Creating symlink to public directory of files directory in public directory...');
             $fileSystem->symlink($publicFilesDir, $dataWebDir);
         } else {
             if (!is_link($dataWebDir)) {
                 //we could remove it manually but it might be risky
-                $this->output->writeln('Symlink from web/data to files/data could not be created, please remove your web/data folder manually', LogLevel::ERROR);
+                $this->output->writeln('Symlink from public/data to files/data could not be created, please remove your public/data folder manually', LogLevel::ERROR);
             } else {
-                $this->output->writeln('Web folder symlinks validated...');
+                $this->output->writeln('Public folder symlinks validated...');
             }
         }
     }
@@ -145,13 +147,13 @@ class Refresher
     private function linkPackageFiles()
     {
         $fileSystem = $this->container->get('filesystem');
-        $webDir = $this->container->getParameter('claroline.param.web_directory');
+        $webDir = $this->container->getParameter('claroline.param.public_directory');
 
         if (!$fileSystem->exists($webDir.'/packages')) {
             $this->output->writeln('Creating symlink to '.$webDir.'/packages');
             $fileSystem->symlink($webDir.'/../node_modules', $webDir.'/packages');
         } elseif (!is_link($webDir.'/packages')) {
-            $this->output->writeln('Couldn\'t create symlink to from node_modules to web/packages. You must remove web/packages or create the link manually');
+            $this->output->writeln('Couldn\'t create symlink to from node_modules to public/packages. You must remove public/packages or create the link manually');
         }
     }
 }

@@ -127,19 +127,19 @@ $ app/dev/raw_install
 In case you don't need fixtures, simply use:
 
 ```sh
-$ php app/console claroline:install
+$ php bin/console claroline:install
 ```
 
 Plugins are registered with the command:
 
 ```sh
-$ php app/console claroline:plugin:install
+$ php bin/console claroline:plugin:install
 ```
 
 You can remove plugins with:
 
 ```sh
-$ php app/console claroline:plugin:uninstall
+$ php bin/console claroline:plugin:uninstall
 ```
 
 **Tips:** The list of registered bundle is saved in the file
@@ -155,7 +155,7 @@ line concerning the bundle wich crashed (including the ClarolineCoreBundle).
 You can create a new admin using the command:
 
 ```sh
-$ php app/console claroline:user:create -a
+$ php bin/console claroline:user:create -a
 ```
 
 Removing the -a option will create a regular user.
@@ -171,13 +171,13 @@ Please read the MigrationBundle readme for me informations
 You can drop the database using:
 
 ```sh
-$ php app/console doctrine:database:drop --force
+$ php bin/console doctrine:database:drop --force
 ```
 
 You can create an empty database using:
 
 ```sh
-$ php app/console doctrine:database:create
+$ php bin/console doctrine:database:create
 ```
 
 ### Clearing the cache ###
@@ -185,7 +185,7 @@ $ php app/console doctrine:database:create
 You can clear the symfony cache using:
 
 ```sh
-$ php app/console cache:clear
+$ php bin/console cache:clear
 ```
 
 **Tips:** It's often better to remove the cache manually using

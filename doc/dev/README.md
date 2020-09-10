@@ -55,7 +55,7 @@ This command fires a method of a service. It's allows you to see your logs in re
 - PARAMETERS: The list of parameters your function needs. It currently support only 'simple' type (ie: string, int, boolean). If the parameter is an entity, you can pass its id and the object will be retrieved.
 - [-a]: Show the doctrine logs.
 
-`php app/console claroline:debug:service root claroline.manager.workspace_manager createWorkspaceFromModel 2 1 lh lh -a -vvv`
+`php bin/console claroline:debug:service root claroline.manager.workspace_manager createWorkspaceFromModel 2 1 lh lh -a -vvv`
 
 ### claroline:debug:translation LANGUAGE [--domain=] [--main_lang=] [--fqcn=] [-f]
 
@@ -67,4 +67,4 @@ This command will allow you to reorder translations and adding the missing keys 
 - [--fqcn]= : The bundle you want to check the translations (default: ClarolineCoreBundle)
 - [-f]: Update the translation file (reorder and inject the missing keys).
 
-`php app/console claroline:debug:translation en --domain=forum --main_lang=fr --fqcn=ClarolineForumBundle -f`
+`php bin/console claroline:debug:translation en --domain=forum --main_lang=fr --fqcn=ClarolineForumBundle -f`
