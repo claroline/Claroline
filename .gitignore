@@ -6,7 +6,6 @@ config/.update
 config/parameters.yml
 config/previous-installed.json
 var/log/*
-bin/*
 coverage
 files/*
 node_modules
