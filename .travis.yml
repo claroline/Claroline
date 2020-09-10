@@ -25,11 +25,11 @@ before_script:
   - sudo mkswap /swapfile
   - sudo swapon /swapfile
   - sudo swapon -s
-  
+
   - composer validate
   - php scripts/configure.php --default
   - composer sync-dev
-  - php app/console claroline:install --env=test
+  - php bin/console claroline:install --env=test
   - export SYMFONY_DEPRECATIONS_HELPER=weak
 
 script:

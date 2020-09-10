@@ -68,8 +68,8 @@ echo "Dumping database..."
         > claroline.sql
 
 echo "Removing local files..."
-    rm -f app/config/parameters.yml # don't publish CI config...
-    rm -rf app/cache/* app/logs/*
+    rm -f config/parameters.yml # don't publish CI config...
+    rm -rf var/cache/* var/log/*
     git checkout . # restore .gitkeep files
 
 echo "Creating archive..."

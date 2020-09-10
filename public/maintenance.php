@@ -1,6 +1,6 @@
 <?php
 
-$maintenanceMode = file_exists(__DIR__.'/../app/config/.update');
+$maintenanceMode = file_exists(__DIR__.'/../files/config/.update');
 
 if (!$maintenanceMode) {
     $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';

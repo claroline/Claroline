@@ -25,12 +25,12 @@ else
 
   if [[ -v PLATFORM_NAME ]]; then
     echo "Changing platform name to $PLATFORM_NAME";
-    sed -i "/name: claroline/c\name: $PLATFORM_NAME" app/config/platform_options.yml
+    sed -i "/name: claroline/c\name: $PLATFORM_NAME" files/config/platform_options.yml
   fi
 
   if [[ -v PLATFORM_SUPPORT_EMAIL ]]; then
     echo "Changing platform support email to $PLATFORM_SUPPORT_EMAIL";
-    sed -i "/support_email: null/c\support_email: $PLATFORM_SUPPORT_EMAIL" app/config/platform_options.yml
+    sed -i "/support_email: null/c\support_email: $PLATFORM_SUPPORT_EMAIL" files/config/platform_options.yml
   fi
 
   USERS=$(mysql $DB_NAME -u $DB_USER -p$DB_PASSWORD -h $DB_HOST -se "select count(*) from claro_user")
@@ -40,7 +40,7 @@ else
     echo "Creating default admin user : $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL"
     echo '*********************************************************************************************************************'
 
-    php app/console claroline:user:create -a $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL
+    php bin/console claroline:user:create -a $ADMIN_FIRSTNAME $ADMIN_LASTNAME $ADMIN_USERNAME $ADMIN_PASSWORD $ADMIN_EMAIL
   else
     echo 'ClarolineConnect installed without an admin account'
   fi
@@ -49,6 +49,6 @@ else
 fi
 
 echo "Setting correct file permissions"
-chmod -R 777 app/cache app/config app/logs app/sessions files web/uploads
+chmod -R 777 var/cache files/config var/log var/sessions files public/uploads
 
 exec "$@"

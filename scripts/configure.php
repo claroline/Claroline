@@ -23,7 +23,7 @@ $params = [
     ['secret', 'SECRET', 'change_me']
 ];
 
-$paramFile = __DIR__ . '/../app/config/parameters.yml';
+$paramFile = __DIR__ . '/../config/parameters.yml';
 
 set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
@@ -54,7 +54,7 @@ foreach ($params as $paramData) {
 
 file_put_contents($paramFile, $fileContent);
 
-writeln('Config file app/config/parameters.yml written', true);
+writeln('Config file config/parameters.yml written', true);
 
 function getParameter(array $paramData, $forceDefault)
 {
