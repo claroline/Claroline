@@ -93,7 +93,7 @@ class Refresher
             $this->output->writeln('Clearing the cache...');
         }
 
-        $baseCacheDir = "{$this->container->get('kernel')->getProjectDir()}/app/cache";
+        $baseCacheDir = "{$this->container->get('kernel')->getProjectDir()}/var/cache";
         $cacheDir = null === $environment ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
         static::removeContentFrom($cacheDir);
     }

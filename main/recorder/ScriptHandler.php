@@ -49,7 +49,6 @@ class ScriptHandler
     {
         if (!isset(static::$recorder)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
-            $configDir = realpath($vendorDir.'/../app/config');
             $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
             $logger = new ConsoleIoLogger($event->getIO());
             $manager = $event->getComposer()->getRepositoryManager();
@@ -58,7 +57,7 @@ class ScriptHandler
             static::$recorder = new Recorder(
                 $manager->getLocalRepository(),
                 new Detector($vendorDir),
-                new BundleHandler($configDir, $bundleFile, $logger),
+                new BundleHandler($bundleFile, $logger),
                 $rootPackage->getAliases(),
                 $vendorDir
             );

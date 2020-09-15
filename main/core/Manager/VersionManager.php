@@ -17,8 +17,6 @@ use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
-use Composer\Json\JsonFile;
-use Composer\Repository\InstalledFilesystemRepository;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -117,36 +115,5 @@ class VersionManager
     public function getDistributionVersionFilePAth()
     {
         return __DIR__.'/../../../VERSION.txt';
-    }
-
-    /**
-     * @param string $repoFile
-     * @param bool   $filter
-     *
-     * @return InstalledFilesystemRepository
-     */
-    public function openRepository($repoFile, $filter = true)
-    {
-        $json = new JsonFile($repoFile);
-
-        if (!$json->exists()) {
-            throw new \RuntimeException(
-               "'{$repoFile}' must be writable",
-               456 // this code is there for unit testing only
-            );
-        }
-
-        $repo = new InstalledFilesystemRepository($json);
-
-        if ($filter) {
-            foreach ($repo->getPackages() as $package) {
-                if ('claroline-core' !== $package->getType()
-                    && 'claroline-plugin' !== $package->getType()) {
-                    $repo->removePackage($package);
-                }
-            }
-        }
-
-        return $repo;
     }
 }

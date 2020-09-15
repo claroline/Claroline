@@ -76,14 +76,15 @@ class PlatformInstaller
     }
 
     /**
-     * Installs or updates platform packages based on the comparison
-     * of local repositories versions ("vendor/composer/installed.json"
-     * versus "app/config/previous-installed.json").
+     * Installs platform packages based on the bundles configuration (INI file).
      */
-    public function updateFromComposerInfo()
+    public function installAll()
     {
         $this->launchPreInstallActions();
-        $operations = $this->operationExecutor->buildOperationList();
+        $pluginManager = $this->container->get('claroline.manager.plugin_manager');
+        $bundles = $pluginManager->getInstalledBundles();
+
+        $operations = $this->operationExecutor->buildOperationListForBundles($bundles);
         $this->operationExecutor->execute($operations);
     }
 

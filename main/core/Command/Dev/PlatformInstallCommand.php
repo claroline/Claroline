@@ -37,15 +37,6 @@ class PlatformInstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /*
-         * Set the app/config directory in the installation state.
-         * - No bundles.bup.ini
-         * - Empty previous-installed.json
-         */
-        $previous = $this->filesDir.'/config/previous-installed.json';
-        @unlink($previous);
-        file_put_contents($previous, '[]');
-
         $this
             ->getApplication()
             ->get('claroline:update')

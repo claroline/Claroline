@@ -16,16 +16,11 @@ use Psr\Log\LoggerInterface;
 class BundleHandler extends BaseHandler
 {
     private $registeredBundles;
-    private $configDir;
-    private $prevInstalled;
 
-    public function __construct($configDir, $bundleFile, LoggerInterface $logger = null)
+    public function __construct($bundleFile, LoggerInterface $logger = null)
     {
-        $this->configDir = $configDir;
-
         parent::__construct($bundleFile, $logger);
         $this->registeredBundles = parse_ini_file($this->targetFile);
-        $this->prevInstalled = $configDir.'/previous-installed.json';
     }
 
     public function writeBundleFile(array $bundleFqcns)

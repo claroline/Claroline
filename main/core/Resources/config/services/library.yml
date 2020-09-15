@@ -21,7 +21,6 @@ services:
     Claroline\CoreBundle\Library\Installation\OperationExecutor:
         arguments:
             - '@kernel'
-            - '%claroline.param.bundle_file%'
             - '@claroline.installation.manager'
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

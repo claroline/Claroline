@@ -28,10 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Updates, installs or uninstalls core and plugin bundles, based
- * on the comparison of packages previously and currently installed
- * by composer (vendor/composer/installed.json and
- * app/config/previous-installed.json).
+ * Updates, installs or uninstalls core and plugin bundles.
  */
 class PlatformUpdateCommand extends Command
 {
@@ -147,7 +144,7 @@ class PlatformUpdateCommand extends Command
         if ($from && $to) {
             $this->installer->updateAll($from, $to);
         } else {
-            $this->installer->updateFromComposerInfo();
+            $this->installer->installAll();
         }
 
         // clear cache
