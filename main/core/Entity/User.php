@@ -686,7 +686,11 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      */
     public function isEqualTo(UserInterface $user)
     {
-        if (count($user->getRoles()) < count($this->getRoles())) {
+        if (0 === count($user->getRoles())) {
+            return false;
+        }
+
+        if (!$user->isEnabled() || $user->isRemoved()) {
             return false;
         }
 
