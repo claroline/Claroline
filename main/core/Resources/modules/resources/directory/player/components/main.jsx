@@ -29,7 +29,7 @@ import {getActions, getDefaultAction} from '#/main/core/resource/utils'
  * @return {object}
  */
 function transformAction(action, resourceNodes, embedded = false) {
-  if (embedded && -1 === resourceNodes.findIndex(node => 'directory' === node.meta.type)) {
+  if (embedded && LINK_BUTTON === action.type && -1 === resourceNodes.findIndex(node => 'directory' === node.meta.type)) {
     // make the action an URL button to escape the embedded router
     return merge({}, action, {
       type: URL_BUTTON,
