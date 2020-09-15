@@ -31,6 +31,8 @@ export default (resourceNodes, nodesRefresher) => ({
         className: 'modal-body'
       }, resourceNodes.map(node => createElement(ResourceCard, {
         key: node.id,
+        orientation: 'row',
+        size: 'xs',
         className: 'component-container',
         data: node
       })))

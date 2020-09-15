@@ -13,7 +13,7 @@ actions.open = (formName, publicUrl = null, defaultProps) => (dispatch, getState
     if (publicUrl) {
       return dispatch({
         [API_REQUEST]: {
-          url: ['apiv2_user_get', {id: publicUrl}],
+          url: url(['apiv2_user_find'], {filters: {publicUrl: publicUrl}}),
           success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
         }
       })

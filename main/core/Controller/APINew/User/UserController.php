@@ -106,36 +106,6 @@ class UserController extends AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Finds an object class $class.",
-     *     parameters={
-     *          {"name": "id", "type": {"string", "integer"}, "description": "The object id or uuid or publicUrl"}
-     *     },
-     *     response={"$object"}
-     * )
-     *
-     * @param Request    $request
-     * @param string|int $id
-     * @param string     $class
-     *
-     * @return JsonResponse
-     */
-    public function getAction(Request $request, $id, $class)
-    {
-        $object = $this->find($class, $id);
-
-        if (!$object) {
-            $object = $this->om->getRepository($class)->findOneBy(['publicUrl' => $id]);
-        }
-
-        return $object ?
-            new JsonResponse(
-                $this->serializer->serialize($object, [Options::SERIALIZE_FACET])
-            ) :
-            new JsonResponse("No object found for id {$id} of class {$class}", 404);
-    }
-
-    /**
-     * @ApiDoc(
      *     description="List the objects of class $class.",
      *     queryString={
      *         "$finder",
