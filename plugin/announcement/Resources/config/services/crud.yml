@@ -13,7 +13,6 @@ services:
     Claroline\AnnouncementBundle\Crud\AnnouncementCrud:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
         tags:
             - { name: kernel.event_listener, event: crud_pre_create_object_claroline_announcementbundle_entity_announcement, method: preCreate }

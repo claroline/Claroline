@@ -6,22 +6,25 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 
 class AnnouncementCrud
 {
+    /** @var AnnouncementManager */
+    private $manager;
+    /** @var ObjectManager */
+    private $om;
+
     /**
-     * AnnouncementManager constructor.
+     * AnnouncementCrud constructor.
      *
-     * @param StrictDispatcher $eventDispatcher
+     * @param ObjectManager       $om
+     * @param AnnouncementManager $manager
      */
     public function __construct(
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
         AnnouncementManager $manager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
         $this->manager = $manager;
         $this->om = $om;
     }

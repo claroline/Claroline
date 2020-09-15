@@ -4,6 +4,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
+import {getResource} from '#/main/core/resources'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {selectors} from '#/main/core/resource/modals/creation/store/selectors'
 
@@ -17,22 +18,35 @@ export const actions = {}
  * @param {object} parent       - the parent of the new resource
  * @param {object} resourceType - the type of resource to create
  */
-actions.startCreation = (parent, resourceType) => (dispatch, getState) => dispatch(formActions.resetForm(selectors.STORE_NAME, {
-  resource: null,
-  resourceNode: merge({}, ResourceNodeTypes.defaultProps, {
-    id: makeId(),
-    autoId: 0, // this is just to avoid prop-types fail. It's not used and will be removed
-    workspace: parent.workspace,
-    meta: {
-      mimeType: `custom/${resourceType.name}`,
-      type: resourceType.name,
-      creator: securitySelectors.currentUser(getState()),
-      published: true
-    },
-    restrictions: parent.restrictions,
-    rights: parent.rights
+actions.startCreation = (parent, resourceType) => (dispatch, getState) => {
+  let defaultData = {
+    resource: null,
+    resourceNode: merge({}, ResourceNodeTypes.defaultProps, {
+      id: makeId(),
+      autoId: 0, // this is just to avoid prop-types fail. It's not used and will be removed
+      workspace: parent.workspace,
+      meta: {
+        mimeType: `custom/${resourceType.name}`,
+        type: resourceType.name,
+        creator: securitySelectors.currentUser(getState()),
+        published: true
+      },
+      restrictions: parent.restrictions,
+      rights: parent.rights
+    })
+  }
+
+  // let the plugin add some changes to init data if it wants to
+  return getResource(resourceType.name).then(module => {
+    if (module.default.create) {
+      // plugin wants to customize init data
+      defaultData = module.default.create(defaultData)
+    }
+
+    // fill form reducer with new data
+    dispatch(formActions.resetForm(selectors.STORE_NAME, defaultData, true))
   })
-}, true))
+}
 
 actions.reset = () => formActions.resetForm(selectors.STORE_NAME, {resource: {}, resourceNode: {}}, true)
 

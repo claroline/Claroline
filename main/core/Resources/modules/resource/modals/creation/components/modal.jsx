@@ -48,10 +48,9 @@ class ResourceCreationModal extends Component {
         return (
           <ResourceType
             types={this.props.parent.permissions.create}
-            select={(type) => {
-              this.props.startCreation(this.props.parent, type)
+            select={(type) => this.props.startCreation(this.props.parent, type).then(() => {
               this.changeStep(constants.RESOURCE_CREATION_PARAMETERS)
-            }}
+            })}
           />
         )
       case constants.RESOURCE_CREATION_PARAMETERS:

@@ -57,11 +57,12 @@ class AnnouncementController
     /**
      * AnnouncementController constructor.
      *
-     * @param AnnouncementManager    $manager
-     * @param AnnouncementSerializer $serializer
-     * @param Crud                   $crud
-     * @param ObjectManager          $om
-     * @param FinderProvider         $finder
+     * @param AnnouncementManager           $manager
+     * @param AnnouncementSerializer        $serializer
+     * @param Crud                          $crud
+     * @param ObjectManager                 $om
+     * @param FinderProvider                $finder
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         AnnouncementManager $manager,
@@ -99,13 +100,13 @@ class AnnouncementController
      */
     public function createAction(AnnouncementAggregate $aggregate, Request $request)
     {
-        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+        $this->checkPermission('CREATE-ANNOUNCE', $aggregate->getResourceNode(), [], true);
         $data = $this->decodeRequest($request);
         $data['aggregate'] = ['id' => $aggregate->getUuid()];
 
         /** @var Announcement $announcement */
         $announcement = $this->crud->create($this->getClass(), $data, [
-          'announcement_aggregate' => $aggregate,
+            'announcement_aggregate' => $aggregate,
         ]);
 
         return new JsonResponse(

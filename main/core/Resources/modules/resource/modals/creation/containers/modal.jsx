@@ -13,7 +13,7 @@ const ResourceCreationModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       startCreation(parent, resourceType) {
-        dispatch(actions.startCreation(parent, resourceType))
+        return dispatch(actions.startCreation(parent, resourceType))
       },
 
       updateRights(perms) {
