@@ -31,10 +31,12 @@ class ResourceMaskDecoderIntegrityCheckerCommand extends Command
             ->setDescription('Checks the resource mask decoders integrity of the platform.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $this->maskManager->setLogger($consoleLogger);
         $this->maskManager->checkIntegrity();
+
+        return 0;
     }
 }

@@ -72,7 +72,7 @@ EOT
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $status = $this->getManager($output)->getBundleStatus($this->getTargetBundle($input));
         $latest = $input->getOption('latest');
@@ -107,5 +107,7 @@ EOT
         } else {
             $output->writeln('No migration is available for this bundle.');
         }
+
+        return 0;
     }
 }

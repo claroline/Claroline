@@ -43,7 +43,7 @@ class CleanGroupCommand extends Command
             ->addArgument('group', InputArgument::REQUIRED, 'The name of the group');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->om = $this->getContainer()->get(ObjectManager::class);
         $this->manager = $this->getContainer()->get('claroline.manager.user_manager');
@@ -85,5 +85,7 @@ class CleanGroupCommand extends Command
 
         $this->om->flush();
         $this->om->endFlushSuite();
+
+        return 0;
     }
 }

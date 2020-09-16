@@ -24,11 +24,13 @@ class CleanHistoryCommand extends Command
         $this->setDescription('Cleans the recent workspaces and resources table of obsolete entries');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $logger = ConsoleLogger::get($output);
 
         $this->historyManager->setLogger($logger);
         $this->historyManager->cleanRecent();
+
+        return 0;
     }
 }

@@ -59,7 +59,7 @@ class LogsArchiverCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $from = $input->getOption('from');
         $to = $input->getOption('to');
@@ -99,5 +99,7 @@ class LogsArchiverCommand extends Command
                 $delete
             );
         }
+
+        return 0;
     }
 }

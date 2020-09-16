@@ -39,7 +39,7 @@ class ApiDumperCommand extends Command
         $this->addOption('debug', 'd', InputOption::VALUE_NONE, 'debug mode (no output)');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = $input->getOption('format') ?? 'json';
         $data = [];
@@ -56,5 +56,7 @@ class ApiDumperCommand extends Command
         if (!$input->getOption('debug')) {
             $output->writeln($string);
         }
+
+        return 0;
     }
 }

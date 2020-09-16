@@ -90,7 +90,7 @@ class UpdateRichTextCommand extends Command
         }
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $parsable = $this->getParsableEntities();
         $toMatch = $input->getArgument('old_string');
@@ -129,7 +129,7 @@ class UpdateRichTextCommand extends Command
         if (!$entities) {
             $output->writeln('<error>No entities found...</error>');
 
-            return;
+            return 1;
         }
 
         $output->writeln('<error>'.count($entities).' entities found.</error>');
@@ -179,6 +179,8 @@ class UpdateRichTextCommand extends Command
         $output->writeln("<comment>{$i} element changed... flushing</comment>");
         $this->em->flush();
         $output->writeln('<comment>Done</comment>');
+
+        return 0;
     }
 
     private function getParsableEntities()

@@ -105,7 +105,7 @@ class CreatePluginCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $fs = new Filesystem();
         $skel = $this->getTemplateDirectory('skel');
@@ -185,6 +185,8 @@ class CreatePluginCommand extends Command
             $bundleManager->updateIniFile($ivendor, $ibundle);
             $bundleManager->updateAutoload($ivendor, $ibundle, $vname, $bname);
         }
+
+        return 0;
     }
 
     private function editControllerClass($rootDir, $vendor, $bundle)

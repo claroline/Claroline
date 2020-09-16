@@ -47,7 +47,7 @@ class LogsFetcherCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /* @var LogManager $logManager */
         $this->logManager->exportLogsToCsv([
@@ -57,5 +57,7 @@ class LogsFetcherCommand extends Command
         ], $input->getArgument('filePath'));
 
         $output->writeln('Check your file at '.$input->getArgument('filePath'));
+
+        return 0;
     }
 }

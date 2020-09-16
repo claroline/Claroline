@@ -46,7 +46,7 @@ class OpenToolCommand extends Command implements AdminCliCommand
         ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var Tool $tool */
         $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $input->getArgument('tool')]);
@@ -100,5 +100,7 @@ class OpenToolCommand extends Command implements AdminCliCommand
         $this->om->flush();
 
         $output->writeln('Done');
+
+        return 0;
     }
 }

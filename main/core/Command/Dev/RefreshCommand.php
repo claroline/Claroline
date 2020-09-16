@@ -32,9 +32,11 @@ class RefreshCommand extends Command
         $this->setDescription('Installs/dumps the assets and empties the cache.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->refresher->setOutput($output);
         $this->refresher->refresh($input->getOption('env'));
+
+        return 0;
     }
 }

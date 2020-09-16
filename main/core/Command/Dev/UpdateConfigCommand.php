@@ -34,7 +34,7 @@ class UpdateConfigCommand extends Command
         $this->setDescription('Runs the local update the config.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
@@ -45,5 +45,7 @@ class UpdateConfigCommand extends Command
 
         $this->pluginInstaller->setLogger($consoleLogger);
         $this->pluginInstaller->updateAllConfigurations();
+
+        return 0;
     }
 }

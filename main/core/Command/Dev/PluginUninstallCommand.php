@@ -25,10 +25,12 @@ class PluginUninstallCommand extends AbstractPluginCommand
         $this->setDescription('Uninstalls a specified claroline plugin.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $plugin = $this->getPlugin($input);
         $this->getPluginInstaller($output)->uninstall($plugin);
         $this->resetCache($output);
+
+        return 0;
     }
 }

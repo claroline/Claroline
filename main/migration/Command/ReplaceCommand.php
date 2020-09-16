@@ -31,7 +31,7 @@ class ReplaceCommand extends AbstractMigrateCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $manager = $this->getManager($output);
         try {
@@ -42,6 +42,8 @@ class ReplaceCommand extends AbstractMigrateCommand
         } catch (InvalidVersionException $ex) {
             throw new \Exception($ex->getUsageMessage());
         }
+
+        return 0;
     }
 
     protected function getAction()

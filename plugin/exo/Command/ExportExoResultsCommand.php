@@ -58,7 +58,7 @@ class ExportExoResultsCommand extends Command
     );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $id = $input->getArgument('exercice_id');
         $outputOption = $input->getArgument('export_directory');
@@ -93,5 +93,7 @@ class ExportExoResultsCommand extends Command
                 $output->writeln('------------------------------------------------------------------------------');
             }
         }
+
+        return 0;
     }
 }

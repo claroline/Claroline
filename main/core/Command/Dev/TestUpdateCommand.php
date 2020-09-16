@@ -44,7 +44,7 @@ class TestUpdateCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $container = $this->getContainer();
         $bundleName = $input->getArgument('bundle');
@@ -67,5 +67,7 @@ class TestUpdateCommand extends Command
         $to = $input->getArgument('to_version');
         $installer->update($bundle, $from, $to);
         $installer->end($bundle, $from, $to);
+
+        return 0;
     }
 }

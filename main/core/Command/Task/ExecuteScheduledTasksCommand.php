@@ -36,7 +36,7 @@ class ExecuteScheduledTasksCommand extends Command
         $this->setDescription('Execute scheduled tasks with passed execution date');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Executing scheduled tasks...');
         $tasks = $this->taskManager->getTasksToExecute();
@@ -48,5 +48,7 @@ class ExecuteScheduledTasksCommand extends Command
                 'claroline_scheduled_task_execute_'.$task->getType()
             );
         }
+
+        return 0;
     }
 }

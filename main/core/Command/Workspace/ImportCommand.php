@@ -63,7 +63,7 @@ class ImportCommand extends Command implements AdminCliCommand
             ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $destination = @tempnam('claro', '_wscopy');
         $file = $input->getArgument('path');
@@ -93,5 +93,7 @@ class ImportCommand extends Command implements AdminCliCommand
         $consoleLogger = ConsoleLogger::get($output);
         $this->transferManager->setLogger($consoleLogger);
         $this->transferManager->create($data, $workspace);
+
+        return 0;
     }
 }

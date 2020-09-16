@@ -40,10 +40,12 @@ class EvaluationCommand extends Command implements AdminCliCommand
         $this->setDescription('updates workspace & resource evaluations');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->processWorkspaces($output);
         $this->processResources($output);
+
+        return 0;
     }
 
     private function processWorkspaces(OutputInterface $output)

@@ -43,7 +43,7 @@ class ArchiveCommand extends Command
            ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dql = $input->getArgument('dql');
 
@@ -65,5 +65,7 @@ class ArchiveCommand extends Command
         }
 
         $this->om->flush();
+
+        return 0;
     }
 }

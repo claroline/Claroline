@@ -96,7 +96,7 @@ class PlatformUpdateCommand extends Command
     /**
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->refresher->setOutput($output);
 

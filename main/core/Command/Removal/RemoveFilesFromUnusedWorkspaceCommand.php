@@ -45,7 +45,7 @@ class RemoveFilesFromUnusedWorkspaceCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<error>Be carreful, you might removes files you don't want to. You should backup your files beforehand to be sure everything still works as intended.</error>");
         $force = $input->getOption('force');
@@ -81,5 +81,7 @@ class RemoveFilesFromUnusedWorkspaceCommand extends Command
                 }
             }
         }
+
+        return 0;
     }
 }

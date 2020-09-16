@@ -33,7 +33,7 @@ class DirectoryIntegrityCommand extends Command
             ->addOption('workspace', 'w', InputOption::VALUE_OPTIONAL, 'The workspace code');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $code = $input->getOption('workspace');
 
@@ -61,5 +61,7 @@ class DirectoryIntegrityCommand extends Command
             $output->writeln('Flushing...');
             $this->om->flush();
         }
+
+        return 0;
     }
 }

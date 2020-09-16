@@ -15,9 +15,11 @@ class UnloadFixtureCommand extends AbstractFixtureCommand
             ->addArgument('fixture', InputArgument::REQUIRED, 'Fixture class file', null);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $fixture = $this->getFixture($input->getArgument('fixture'), $output);
         $fixture->unload();
+
+        return 0;
     }
 }

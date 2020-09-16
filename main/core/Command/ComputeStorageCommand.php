@@ -36,7 +36,7 @@ class ComputeStorageCommand extends Command
         $this->setDescription('Compute used storage (content of files directory) and store result in platform options');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Computing used storage...');
 
@@ -49,5 +49,7 @@ class ComputeStorageCommand extends Command
         $this->parametersSerializer->deserialize($parameters);
 
         $output->writeln('Used storage computed and saved.');
+
+        return 0;
     }
 }

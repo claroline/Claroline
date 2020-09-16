@@ -23,8 +23,10 @@ class DisableMaintenanceCommand extends Command
         $this->setDescription('Disable maintenance mode');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         MaintenanceHandler::disableMaintenance();
+
+        return 0;
     }
 }

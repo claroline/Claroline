@@ -47,10 +47,12 @@ class RouterDebugCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $route = $input->getArgument('route');
         $parameters = $input->getArgument('parameters');
         $output->writeln($this->urlGenerator->generate($route, $parameters));
+
+        return 0;
     }
 }

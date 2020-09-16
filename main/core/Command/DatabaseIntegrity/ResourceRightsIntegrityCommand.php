@@ -30,7 +30,7 @@ class ResourceRightsIntegrityCommand extends Command
         $this->setDescription('Checks the resource mask decoders integrity of the platform.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $roleRepository = $this->om->getRepository('ClarolineCoreBundle:Role');
         $roles[] = $roleRepository->findOneByName('ROLE_ANONYMOUS');
@@ -95,5 +95,7 @@ class ResourceRightsIntegrityCommand extends Command
             }
             ++$i;
         }
+
+        return 0;
     }
 }

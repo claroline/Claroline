@@ -35,11 +35,13 @@ class PlatformInstallCommand extends Command
         $this->setDescription('Installs the platform.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this
             ->getApplication()
             ->get('claroline:update')
             ->run(new ArrayInput([]), $output);
+
+        return 0;
     }
 }

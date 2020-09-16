@@ -41,8 +41,10 @@ EOT
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->getManager($output)->generateBundleMigration($this->getTargetBundle($input), $this->getOutputBundle($input));
+
+        return 0;
     }
 }

@@ -123,7 +123,7 @@ class RemoveCommand extends Command
         return $this->input;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getHelper('question');
         $personal = $input->getOption('personal');
@@ -162,6 +162,8 @@ class RemoveCommand extends Command
         if ($orphans) {
             $this->deleteOrphans();
         }
+
+        return 0;
     }
 
     private function deleteOrphans()

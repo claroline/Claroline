@@ -65,7 +65,7 @@ class DebugServiceCommand extends Command implements AdminCliCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $manager = $this->getApplication()->getKernel()->get($input->getArgument('service_name'));
@@ -94,5 +94,7 @@ class DebugServiceCommand extends Command implements AdminCliCommand
         }
 
         call_user_func_array([$manager, $method], $args);
+
+        return 0;
     }
 }

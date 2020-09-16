@@ -36,7 +36,7 @@ class ComputeScoresCommand extends Command
             ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $id = $input->getArgument('quiz_id');
 
@@ -57,5 +57,7 @@ class ComputeScoresCommand extends Command
         }
 
         $this->om->flush();
+
+        return 0;
     }
 }

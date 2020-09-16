@@ -25,10 +25,12 @@ class PluginInstallCommand extends AbstractPluginCommand
         $this->setDescription('Installs a specified claroline plugin.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $plugin = $this->getPlugin($input, false);
         $this->getPluginInstaller($output)->install($plugin);
         $this->resetCache($output);
+
+        return 0;
     }
 }

@@ -25,7 +25,7 @@ class RootNodeIntegrityCheckerCommand extends Command
             ->setDescription('Checks the workspace roots integrity');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $roots = $this->om->getRepository(ResourceNode::class)->findBy(['parent' => null, 'personal' => false]);
 
@@ -47,5 +47,7 @@ class RootNodeIntegrityCheckerCommand extends Command
         }
         $output->writeln('flush...');
         $this->om->flush();
+
+        return 0;
     }
 }

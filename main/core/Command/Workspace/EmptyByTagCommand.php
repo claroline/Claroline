@@ -51,7 +51,7 @@ class EmptyByTagCommand extends Command
             ->addOption('group', 'g', InputOption::VALUE_NONE, 'When set to true, remove groups from the workspace');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $removeUsers = $input->getOption('user');
         $removeGroups = $input->getOption('group');
@@ -101,5 +101,7 @@ class EmptyByTagCommand extends Command
             }
         }
         $this->om->endFlushSuite();
+
+        return 0;
     }
 }

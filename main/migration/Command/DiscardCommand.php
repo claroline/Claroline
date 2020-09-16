@@ -31,8 +31,10 @@ EOT
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->getManager($output)->discardUpperMigrations($this->getTargetBundle($input));
+
+        return 0;
     }
 }

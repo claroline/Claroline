@@ -44,12 +44,14 @@ class DebugRouterCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $class = $input->getArgument('class');
         $describeCollection = $this->finder->find($class);
         $io = new SymfonyStyle($input, $output);
         $helper = new DescriptorHelper();
         $helper->describe($io, $describeCollection, []);
+
+        return 0;
     }
 }

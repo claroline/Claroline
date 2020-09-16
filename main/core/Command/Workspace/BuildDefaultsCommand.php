@@ -25,11 +25,13 @@ class BuildDefaultsCommand extends Command implements AdminCliCommand
         $this->setDescription('This command allows you to rebuild the default workspaces');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $this->workspaceManager->setLogger($consoleLogger);
         $this->workspaceManager->getDefaultModel(false, true);
         $this->workspaceManager->getDefaultModel(true, true);
+
+        return 0;
     }
 }

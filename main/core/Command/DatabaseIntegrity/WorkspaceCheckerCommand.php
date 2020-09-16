@@ -49,7 +49,7 @@ class WorkspaceCheckerCommand extends Command
             ->addOption('flag', 'f', InputOption::VALUE_NONE, 'Set the personal workspace flag');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Workspace tool restoration...');
 
@@ -105,5 +105,7 @@ class WorkspaceCheckerCommand extends Command
         }
 
         $this->om->flush();
+
+        return 0;
     }
 }

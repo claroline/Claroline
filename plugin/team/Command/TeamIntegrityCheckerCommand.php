@@ -36,7 +36,7 @@ class TeamIntegrityCheckerCommand extends Command
         $this->setDefinition([new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code')]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $code = $input->getArgument('code');
         $workspaces = $code ?
@@ -55,5 +55,7 @@ class TeamIntegrityCheckerCommand extends Command
                 $this->teamManager->initializeTeamPerms($team, $roles);
             }
         }
+
+        return 0;
     }
 }

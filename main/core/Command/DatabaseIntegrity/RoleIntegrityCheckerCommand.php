@@ -46,7 +46,7 @@ class RoleIntegrityCheckerCommand extends Command
             ->addOption('workspace_index', 'j', InputOption::VALUE_OPTIONAL, 'Restore roles for workspaces after given index.', 0);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $this->roleManager->setLogger($consoleLogger);
@@ -58,25 +58,27 @@ class RoleIntegrityCheckerCommand extends Command
             if (empty($user)) {
                 $consoleLogger->warning("Could not find user \"{$userId}\"");
 
-                return;
+                return 1;
             }
             $this->roleManager->checkUserIntegrity($user);
 
-            return;
+            return 0;
         } elseif (!empty($workspaceCode)) {
             $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($workspaceCode);
             if (empty($workspace)) {
                 $consoleLogger->warning("Could not find workspace \"{$workspaceCode}\"");
 
-                return;
+                return 1;
             }
             $this->roleManager->checkWorkspaceIntegrity($workspace);
 
-            return;
+            return 0;
         }
 
         $userIdx = $input->getOption('user_index');
         $workspaceIdx = $input->getOption('workspace_index');
         $this->roleManager->checkIntegrity($workspaceIdx, $userIdx);
+
+        return 0;
     }
 }

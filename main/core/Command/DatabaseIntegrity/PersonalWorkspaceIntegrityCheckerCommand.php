@@ -37,7 +37,7 @@ class PersonalWorkspaceIntegrityCheckerCommand extends Command
             ->addOption('personal', 'p', InputOption::VALUE_NONE, 'Only check the is_personal parameter');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $userManager = $this->userManager;
@@ -54,7 +54,7 @@ class PersonalWorkspaceIntegrityCheckerCommand extends Command
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
-            return;
+            return 0;
         }
 
         $userId = $input->getOption('user');
@@ -63,12 +63,14 @@ class PersonalWorkspaceIntegrityCheckerCommand extends Command
             if (empty($user)) {
                 $consoleLogger->warning("Could not find user \"{$userId}\"");
 
-                return;
+                return 1;
             }
             $userManager->checkPersonalWorkspaceIntegrityForUser($user);
 
-            return;
+            return 0;
         }
         $userManager->checkPersonalWorkspaceIntegrity();
+
+        return 0;
     }
 }

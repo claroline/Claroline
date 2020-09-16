@@ -55,7 +55,7 @@ class ApiImportCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $file = $input->getArgument('file');
         $action = $input->getArgument('action');
@@ -68,5 +68,7 @@ class ApiImportCommand extends Command
           $action,
           'text/csv'
         );
+
+        return 0;
     }
 }

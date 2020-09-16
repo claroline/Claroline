@@ -56,7 +56,7 @@ class CreateEntriesFromCsvCommand extends Command
         ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
@@ -77,12 +77,12 @@ class CreateEntriesFromCsvCommand extends Command
         if (!$user) {
             $output->writeln("<error>Coudn't find user.</error>");
 
-            return;
+            return 1;
         }
         if (!$clacoForm) {
             $output->writeln("<error>Coudn't find ClacoForm resource.</error>");
 
-            return;
+            return 1;
         }
         if (1 < count($lines)) {
             $data = [];
@@ -107,8 +107,11 @@ class CreateEntriesFromCsvCommand extends Command
             $manager = $this->getContainer()->get('Claroline\ClacoFormBundle\Manager\ClacoFormManager');
             $manager->setLogger($consoleLogger);
             $manager->importEntryFromCsv($clacoForm, $user, $data);
-        } else {
-            $output->writeln('<error>CSV file must contain more the 1 line.</error>');
+
+            return 0;
         }
+        $output->writeln('<error>CSV file must contain more the 1 line.</error>');
+
+        return 1;
     }
 }

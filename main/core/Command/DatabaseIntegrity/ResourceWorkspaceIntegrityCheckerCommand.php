@@ -33,10 +33,12 @@ class ResourceWorkspaceIntegrityCheckerCommand extends Command
         $this->setDescription('Checks the resource integrity of the platform.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $this->resourceManager->setLogger($consoleLogger);
         $this->resourceManager->checkIntegrity();
+
+        return 0;
     }
 }

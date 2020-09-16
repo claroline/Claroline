@@ -43,11 +43,13 @@ class ExportCommand extends Command implements AdminCliCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $workspace = $this->em->getRepository(Workspace::class)->findOneByCode($input->getArgument('code'));
         $path = $this->transferManager->export($workspace);
 
         $output->writeln($path);
+
+        return 0;
     }
 }

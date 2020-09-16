@@ -39,7 +39,7 @@ class BuildThemesCommand extends Command
             ->addOption('no-cache', 'c', InputOption::VALUE_NONE, 'Rebuild themes without using cache.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Rebuilding themes...');
 
@@ -71,5 +71,7 @@ class BuildThemesCommand extends Command
         }
 
         $output->writeln('Done !');
+
+        return 0;
     }
 }

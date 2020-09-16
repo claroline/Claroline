@@ -58,7 +58,7 @@ class GenerateResourceTrackingCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<comment>Generating resource trackings...</comment>');
         $userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
@@ -126,5 +126,7 @@ class GenerateResourceTrackingCommand extends Command
         $this->om->endFlushSuite();
 
         $output->writeln('<comment>Generation of resource trackings is finished.</comment>');
+
+        return 0;
     }
 }

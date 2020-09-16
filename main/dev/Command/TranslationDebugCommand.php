@@ -72,7 +72,7 @@ class TranslationDebugCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $fqcn = $input->getOption('fqcn') ? $input->getOption('fqcn') : 'ClarolineCoreBundle';
         $domain = $input->getOption('domain') ? $input->getOption('domain') : 'platform';
@@ -88,6 +88,8 @@ class TranslationDebugCommand extends Command
             $this->translationManager->fill($mainFile, $filledFile);
         }
         $this->showUntranslated($filledFile, $output, $locale);
+
+        return 0;
     }
 
     private function showUntranslated($filledFile, OutputInterface $output, $locale)

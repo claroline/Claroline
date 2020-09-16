@@ -33,10 +33,12 @@ class RightsIntegrityCheckerCommand extends Command
         $this->setDescription('Checks the rights integrity of the platform.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $this->rightsManager->setLogger($consoleLogger);
         $this->rightsManager->checkIntegrity();
+
+        return 0;
     }
 }

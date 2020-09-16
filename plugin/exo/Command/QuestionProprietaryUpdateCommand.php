@@ -50,7 +50,7 @@ class QuestionProprietaryUpdateCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $username = $input->getArgument('new_owner');
         $id = $input->getArgument('question_id');
@@ -82,5 +82,7 @@ class QuestionProprietaryUpdateCommand extends Command
 
         $output->writeln('Flushing...');
         $this->om->flush();
+
+        return 0;
     }
 }

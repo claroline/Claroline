@@ -68,7 +68,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $roleRepo = $this->om->getRepository('ClarolineCoreBundle:Role');
         $userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
@@ -211,5 +211,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends Command
             ++$i;
         }
         $this->om->endFlushSuite();
+
+        return 0;
     }
 }

@@ -59,7 +59,7 @@ class ImportCsvCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $logFile = $input->getArgument('log') ? $input->getArgument('log') : $this->generateRandomString(5);
         //big try catch in case something goes wrong, we can log it
@@ -98,6 +98,8 @@ class ImportCsvCommand extends Command
               'value' => $e->getFile().':'.$e->getLine()."\n".$e->getMessage(),
             ]);
         }
+
+        return 0;
     }
 
     public function generateRandomString($length = 10)

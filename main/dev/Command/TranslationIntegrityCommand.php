@@ -25,13 +25,15 @@ class TranslationIntegrityCommand extends Command
             ->setDescription('Show translations integrity informations. This command ignore arrays');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $translationFiles = $this->getTranslationFiles();
         $output->writeln('<comment> Analysing '.self::BASE_LANG.' translations... </comment>');
         $frenchLations = $this->getLangFiles($translationFiles, self::BASE_LANG);
         $duplicates = $this->getDuplicates($frenchLations);
         $this->displayDuplicateErrors($duplicates, $output);
+
+        return 0;
     }
 
     private function getTranslationFiles()

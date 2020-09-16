@@ -20,10 +20,12 @@ class UserIntegrityCheckerCommand extends Command implements AdminCliCommand
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consoleLogger = ConsoleLogger::get($output);
         $this->userManager->setLogger($consoleLogger);
         $this->userManager->bindUserToOrganization();
+
+        return 0;
     }
 }

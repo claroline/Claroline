@@ -35,7 +35,7 @@ class CreateThemeCommand extends Command
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the theme to create');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = $input->getArgument('name');
 
@@ -44,5 +44,7 @@ class CreateThemeCommand extends Command
         $this->themeManager->create(['name' => $name]);
 
         $output->writeln('Done !');
+
+        return 0;
     }
 }

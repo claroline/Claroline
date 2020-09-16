@@ -66,7 +66,7 @@ class CreateCommand extends Command implements AdminCliCommand
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $email = $input->getArgument('user_email');
         $email = filter_var($email, FILTER_VALIDATE_EMAIL) ?
@@ -95,5 +95,7 @@ class CreateCommand extends Command implements AdminCliCommand
         $object->addRole($role);
         $this->om->persist($object);
         $this->om->flush();
+
+        return 0;
     }
 }

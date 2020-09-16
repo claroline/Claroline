@@ -48,7 +48,7 @@ class AddGroupCommand extends Command implements AdminCliCommand
             ->addArgument('group', InputArgument::REQUIRED, 'The name of the group');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->om = $this->getContainer()->get(ObjectManager::class);
         $this->finder = $this->getContainer()->get(FinderProvider::class);
@@ -79,5 +79,7 @@ class AddGroupCommand extends Command implements AdminCliCommand
 
         $this->om->flush();
         $this->om->endFlushSuite();
+
+        return 0;
     }
 }

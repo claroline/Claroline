@@ -35,7 +35,7 @@ class LogConnectionComputeCommand extends Command
             ->setDescription('Computes duration for connection logs');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>  Computing spent time in platform...</info>');
         $this->logConnectManager->computeAllPlatformDuration();
@@ -56,5 +56,7 @@ class LogConnectionComputeCommand extends Command
         $output->writeln('<info>  Computing spent time in resources...</info>');
         $this->logConnectManager->computeAllResourcesDuration();
         $output->writeln('<info>  Spent time in resources computed.</info>');
+
+        return 0;
     }
 }
