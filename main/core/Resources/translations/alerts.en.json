@@ -65,6 +65,10 @@
     "error": {
       "title": "Save failure",
       "message": "We were unable to save your data."
+    },
+    "forbidden": {
+      "title": "Save forbidden",
+      "message": "You do not have the necessary rights to save this data."
     }
   },
   "create": {
@@ -83,6 +87,10 @@
     "error": {
       "title": "Creation failure",
       "message": "We were unable to save your data."
+    },
+    "forbidden": {
+      "title": "Creation forbidden",
+      "message": "You do not have the necessary rights to create this data."
     }
   },
   "update": {
@@ -101,6 +109,10 @@
     "error": {
       "title": "Update failure",
       "message": "We were unable to save your data."
+    },
+    "forbidden": {
+      "title": "Update forbidden",
+      "message": "You do not have the necessary rights to update this data."
     }
   },
   "delete": {
@@ -119,6 +131,10 @@
     "error": {
       "title": "Deletion failure",
       "message": "We were unable to delete your data."
+    },
+    "forbidden": {
+      "title": "Deletion forbidden",
+      "message": "You do not have the necessary rights to delete this data."
     }
   },
   "send": {
@@ -141,16 +157,20 @@
       "message": "Please wait while we upload your file."
     },
     "success": {
-      "title": "Successful download",
+      "title": "Successful upload",
       "message": "Your file has been uploaded correctly."
     },
     "warning": {
-      "title": "Download failure",
+      "title": "Upload failure",
       "message": "Please use a supported file type and try again."
     },
     "error": {
-      "title": "Download failure",
+      "title": "Upload failure",
       "message": "We were unable to upload your file."
+    },
+    "forbidden": {
+      "title": "Upload forbidden",
+      "message": "You do not have the necessary rights to upload this file."
     }
   },
   "publish": {

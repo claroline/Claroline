@@ -23,8 +23,7 @@ const ALERT_STATUS = {
   [ALERT_STATUS_FORBIDDEN]: {
     order: 2,
     icon: 'fa-lock',
-    removable: true,
-    timeout: ALERT_DISPLAY_TIMEOUT
+    removable: true
   },
   [ALERT_STATUS_ERROR]: {
     order: 3,
@@ -34,8 +33,7 @@ const ALERT_STATUS = {
   [ALERT_STATUS_UNAUTHORIZED]: {
     order: 4,
     icon: 'fa-lock-alt',
-    removable: true,
-    timeout: ALERT_DISPLAY_TIMEOUT
+    removable: true
   },
   [ALERT_STATUS_UNAVAILABLE]: {
     order: 5,
@@ -100,7 +98,7 @@ const ALERT_ACTIONS = {
       title: trans('generic.forbidden.title', {}, 'alerts'),
       message: trans('generic.forbidden.message', {}, 'alerts')
     },
-    [ALERT_STATUS_FORBIDDEN]: {
+    [ALERT_STATUS_UNAVAILABLE]: {
       title: trans('generic.unavailable.title', {}, 'alerts'),
       message: trans('generic.unavailable.message', {}, 'alerts')
     },
@@ -163,6 +161,10 @@ const ALERT_ACTIONS = {
     [ALERT_STATUS_ERROR]: {
       title: trans('create.error.title', {}, 'alerts'),
       message: trans('create.error.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_FORBIDDEN]: {
+      title: trans('create.forbidden.title', {}, 'alerts'),
+      message: trans('create.forbidden.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_UPDATE]: {
@@ -181,6 +183,10 @@ const ALERT_ACTIONS = {
     [ALERT_STATUS_ERROR]: {
       title: trans('update.error.title', {}, 'alerts'),
       message: trans('update.error.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_FORBIDDEN]: {
+      title: trans('update.forbidden.title', {}, 'alerts'),
+      message: trans('update.forbidden.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_DELETE]: {
@@ -199,6 +205,10 @@ const ALERT_ACTIONS = {
     [ALERT_STATUS_ERROR]: {
       title: trans('delete.error.title', {}, 'alerts'),
       message: trans('delete.error.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_FORBIDDEN]: {
+      title: trans('delete.forbidden.title', {}, 'alerts'),
+      message: trans('delete.forbidden.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_SEND]: {
@@ -231,6 +241,10 @@ const ALERT_ACTIONS = {
     [ALERT_STATUS_ERROR]: {
       title: trans('upload.error.title', {}, 'alerts'),
       message: trans('upload.error.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_FORBIDDEN]: {
+      title: trans('upload.forbidden.title', {}, 'alerts'),
+      message: trans('upload.forbidden.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_PUBLISH]: {

@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 class UserVoter extends AbstractVoter
 {
@@ -112,39 +111,36 @@ class UserVoter extends AbstractVoter
         if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\Role')) {
             // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
             $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
-                if ($role->getWorkspace() && $this->isGranted(['users', 'edit'], $role->getWorkspace())) {
-                    $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-                    // If user is workspace manager then grant access
-                    if ($workspaceManager->isManager($role->getWorkspace(), $token)) {
-                        return false;
+                if ($role->getWorkspace()) {
+                    if ($this->isGranted(['community', 'edit'], $role->getWorkspace())) {
+                        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+                        // If user is workspace manager then grant access
+                        if ($workspaceManager->isManager($role->getWorkspace(), $token)) {
+                            return false;
+                        }
+
+                        // Otherwise only allow modification of roles the current user owns
+                        if (in_array($role->getName(), $token->getRoleNames())) {
+                            return false;
+                        }
                     }
 
-                    // If role to be removed is not an administrate role then grant access
-                    $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
-                    $wsRoles = $roleManager->getWorkspaceNonAdministrateRoles($role->getWorkspace());
-                    if (in_array($role, $wsRoles)) {
-                        return false;
-                    }
+                    // user has no community right on the workspace he cannot add anything
+                    return true;
+                }
+
+                if (Role::PLATFORM_ROLE === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
+                    return false;
                 }
 
                 return true;
             });
 
-            if (0 === count($nonAuthorized)) {
-                return VoterInterface::ACCESS_GRANTED;
-            }
-
-            // we can only add platform roles to users if we have that platform role
-            // require dedicated unit test imo
-            $currentRoles = array_map(function (BaseRole $role) {
-                return $role->getRole();
-            }, $token->getRoles());
-            if (count(array_filter($collection->toArray(), function (Role $role) use ($currentRoles) {
-                // search for not allowed roles
-                return Role::PLATFORM_ROLE === $role->getType() && !in_array($role->getName(), $currentRoles);
-            })) > 0) {
+            if (0 < count($nonAuthorized)) {
                 return VoterInterface::ACCESS_DENIED;
             }
+
+            return VoterInterface::ACCESS_GRANTED;
         }
 
         if ($this->isOrganizationManager($token, $user)) {

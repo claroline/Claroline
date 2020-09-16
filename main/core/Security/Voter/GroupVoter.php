@@ -64,9 +64,9 @@ class GroupVoter extends AbstractVoter
      * This is not done yet but later a user might be able to edit its roles/groups himself
      * and it should be checked here.
      *
-     * @param TokenInterface   $token
-     * @param User             $user
-     * @param ObjectCollection $collection
+     * @param TokenInterface        $token
+     * @param Group                 $group
+     * @param ObjectCollection|null $collection
      *
      * @return int
      */
@@ -77,18 +77,40 @@ class GroupVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        //we can only add platform roles to users if we have that platform role
-        //require dedicated unit test imo
+        // we can only add platform roles to users if we have that platform role
         if ($collection->isInstanceOf(Role::class)) {
-            $currentRoles = array_map(function ($role) {
-                return $role->getRole();
-            }, $token->getRoles());
+            // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
+            $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
+                if ($role->getWorkspace()) {
+                    if ($this->isGranted(['community', 'edit'], $role->getWorkspace())) {
+                        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+                        // If user is workspace manager then grant access
+                        if ($workspaceManager->isManager($role->getWorkspace(), $token)) {
+                            return false;
+                        }
 
-            if (count(array_filter((array) $collection, function ($role) use ($currentRoles) {
-                return Role::PLATFORM_ROLE === $role && !in_array($role->getName(), $currentRoles);
-            })) > 0) {
+                        // Otherwise only allow modification of roles the current user owns
+                        if (in_array($role->getName(), $token->getRoleNames())) {
+                            return false;
+                        }
+                    }
+
+                    // user has no community right on the workspace he cannot add anything
+                    return true;
+                }
+
+                if (Role::PLATFORM_ROLE === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            if (0 < count($nonAuthorized)) {
                 return VoterInterface::ACCESS_DENIED;
             }
+
+            return VoterInterface::ACCESS_GRANTED;
         }
 
         if ($this->isGroupManaged($token, $group)) {
@@ -96,8 +118,11 @@ class GroupVoter extends AbstractVoter
         }
 
         //maybe do something more complicated later
-        return $this->isGranted(self::EDIT, $collection) ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        if ($this->isGranted(self::EDIT, $collection)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function isGroupManaged(TokenInterface $token, Group $group)
@@ -129,6 +154,6 @@ class GroupVoter extends AbstractVoter
      */
     public function getSupportedActions()
     {
-        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

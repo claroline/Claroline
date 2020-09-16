@@ -69,6 +69,10 @@
     "error": {
       "title": "Echec de la sauvegarde",
       "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    },
+    "forbidden": {
+      "title": "Sauvegarde interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour sauvegarder ces données."
     }
   },
   "create": {
@@ -87,6 +91,10 @@
     "error": {
       "title": "Echec de la création",
       "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    },
+    "forbidden": {
+      "title": "Création interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour créer ces données."
     }
   },
   "update": {
@@ -105,6 +113,10 @@
     "error": {
       "title": "Echec de la mise à jour",
       "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    },
+    "forbidden": {
+      "title": "Mise à jour interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour modifier ces données."
     }
   },
   "delete": {
@@ -123,6 +135,10 @@
     "error": {
       "title": "Echec de la suppression",
       "message": "Nous n'avons pas réussi à supprimer vos données."
+    },
+    "forbidden": {
+      "title": "Suppression interdite",
+      "message": "Vous n'avez pas les droits nécessaires pour supprimer ces données."
     }
   },
   "send": {
@@ -155,6 +171,10 @@
     "error": {
       "title": "Echec du téléchargement",
       "message": "Nous n'avons pas réussi à télécharger votre fichier."
+    },
+    "forbidden": {
+      "title": "Téléchargement interdit",
+      "message": "Vous n'avez pas les droits nécessaires pour télécharger ce fichier."
     }
   },
   "publish": {
