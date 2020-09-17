@@ -12,6 +12,85 @@ If you want to contribute or directly browse the sources of the project,
 check the [claroline/Distribution][distribution] repository, which gathers
 the standard modules and plugins of the platform.
 
+=======
+**/!\ Warning if you wan't to upgrade to 13.x from a older version of Claroline [read this](README.md#Upgrade-From-12x-or-older-to-13x) /!\**
+
+Installation
+------------
+
+See Claroline [requirements here](README.md#requirements)
+
+### 1. From source
+
+The raw installation procedure is composed of several steps that need to be
+executed in order (fetching php sources, installing dev dependencies, building,
+creating the database, etc.). Except for the configuration step, the whole process
+is managed through composer scripts listed in the [composer.json](composer.json)
+file. For an installation from scratch, the commands would be:
+
+    git clone -b 13.x http://github.com/claroline/Claroline
+    cd Claroline
+    composer install --no-dev --optimize-autoloader
+
+    npm install
+    composer build
+
+    php bin/console claroline:install
+
+Upgrade 13.x
+-------
+
+To update your 13.x just follow this steps :
+
+#### 1. Update source
+
+    composer update --no-dev --optimize-autoloader
+    npm install
+    composer build
+
+#### 2. Launch update script
+   
+    php bin/console claroline:update
+
+
+
+Upgrade From 12.x or older to 13.x
+-------
+
+To update an existing installation to 13.x you must **first upgrade to the latest 12.5 branch**
+
+#### 1. go to 12.5 branch
+
+     git fetch origin
+     git checkout 12.5
+
+#### 2. Update source
+
+    composer update --no-dev --optimize-autoloader
+    npm install
+    composer build
+
+#### 3. Launch update script
+   
+    php app/console claroline:update 1x.x.xx 12.5.xx
+
+Then you can go to 13.x
+    
+#### 4. go to 13.x branch
+
+     git fetch origin
+     git checkout 13.x
+
+#### 5. Update source
+
+    composer update --no-dev --optimize-autoloader
+    npm install
+    composer build
+
+#### 6. Launch update script
+   
+    php app/console claroline:update
+
 Requirements
 ------------
 
@@ -43,70 +122,6 @@ For mysql >= 5.7, there is an additonal step:
 ```
 
 
-Installation
-------------
-
-### 1. From source
-
-The raw installation procedure is composed of several steps that need to be
-executed in order (fetching php sources, installing dev dependencies, building,
-creating the database, etc.). Except for the configuration step, the whole process
-is managed through composer scripts listed in the [composer.json](composer.json)
-file. For an installation from scratch, the commands would be:
-
-    git clone http://github.com/claroline/Claroline
-    cd Claroline
-    php bin/configure
-    
-    composer update --no-dev -o
-    npm install
-    composer build
-
-    php bin/console claroline:install
-
-Upgrade 12.x
--------
-
-To update your 12.x just follow this steps :
-
-#### 1. Update source
-
-    composer update --no-dev -o
-    npm install
-    composer build
-
-#### 2. Launch update script
-   
-    php bin/console claroline:update 12.x.xx 12.y.yy
-
-
-
-Upgrade From 10.x or 11.x
--------
-
-To update an existing development installation, just pull the latest changes
-(or a specific version) of this repository and follow this steps:
-
-#### 1. go to 12.x branch
-
-     git fetch origin
-     git checkout origin/12.x
-
-#### 2. Update source
-
-    composer update --no-dev
-    npm install
-    composer build
-
-#### 3. Launch update script
-   
-    php bin/console claroline:update 1x.x.xx 12.1.0
-    
-#### 4. Migrate some ressource
-
-    php bin/console claroline:scorm:convert
-    php bin/console claroline:dropzone:convert
-
 Development
 -----------
 
@@ -119,13 +134,13 @@ running. You can start it with:
 Obviously, you'll also need a PHP-enabled web server to serve the application.
 Two alternatives are available.
 
-### 1. Using PHP's built-in web server (not tested)
+### 1. Using Symfony web server (not tested)
 
 This is the simplest way of serving the application during
 development. To start the server, use the command provided by the symfony
-framework (more details [here][symfo-server]):
+local server (more details on installation and configuration [here][symfo-server]):
 
-    php bin/console server:start
+    symfony server:start
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
 
@@ -133,12 +148,12 @@ The application will be available at [http://localhost:8000](http://localhost:80
 
 If you want to use Apache or Nginx during development, make them serve the
 *web* directory, and access the application at
-[http://localhost/example-site/app_dev.php](http://localhost/example-site/app_dev.php).
+[http://localhost/example-site/index.php](http://localhost/example-site/index.php).
 
 Note that you'll certainly face permissions issues on the following directories:
 
-- *var/cache*
 - *config*
+- *var/cache*
 - *var/log*
 - *var/sessions*
 - *files*
@@ -184,7 +199,6 @@ We support :
 - Mozilla Firefox (latest version)
 - Chromium (latest version) and Google Chrome (latest version)
 - Microsoft Edge (latest version)
-- Microsoft Internet Explorer 11
 - Safari (latest version)
 
 For complete list : http://caniuse.com/#feat=mutationobserver
@@ -192,11 +206,7 @@ For complete list : http://caniuse.com/#feat=mutationobserver
 Documentation
 -------------
 
-For user documentation, see : http://doc.claroline.com.
-
-For development documentation, see
-[Claroline/CoreBundle/Resources/doc/index.md][dist-doc].
-
+For user documentation, see [here](https://support.claroline.com/#/desktop/workspaces/open/documentation/home/accueil).
 
 [distribution]: https://github.com/claroline/Distribution
 [gd]:           http://www.php.net/manual/en/book.image.php
@@ -204,8 +214,7 @@ For development documentation, see
 [composer]:     https://getcomposer.org
 [node]:         https://nodejs.org
 [npm]:          https://docs.npmjs.com
-[releases]:     http://packages.claroline.net/releases
 [webpack]:      https://webpack.github.io
-[symfo-server]: http://symfony.com/doc/2.7/cookbook/web_server/built_in.html
-[symfo-config]: http://symfony.com/doc/2.7/book/installation.html#checking-symfony-application-configuration-and-setup
+[symfo-server]: https://symfony.com/doc/4.4/setup/symfony_server.html
+[symfo-config]: https://symfony.com/doc/4.4/setup/web_server_configuration.html
 [dist-doc]:     https://github.com/claroline/Distribution/blob/master/doc/index.md
