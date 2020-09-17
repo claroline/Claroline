@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
 
+import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {constants as toolConst} from '#/main/core/tool/constants'
 import {actions as toolActions} from '#/main/core/tool/store'
@@ -22,7 +23,8 @@ const WorkspaceMain = withRouter(
         workspace: selectors.workspace(state),
         accessErrors: selectors.accessErrors(state),
         defaultOpening: selectors.defaultOpening(state),
-        tools: selectors.tools(state)
+        tools: selectors.tools(state),
+        platformSelfRegistration: configSelectors.param(state, 'selfRegistration')
       }),
       (dispatch) => ({
         openTool(toolName, workspace) {

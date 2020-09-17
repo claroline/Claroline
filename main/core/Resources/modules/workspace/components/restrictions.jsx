@@ -93,13 +93,17 @@ class WorkspaceRestrictions extends Component {
                   type={MODAL_BUTTON}
                   label={trans('login', {}, 'actions')}
                   modal={[MODAL_LOGIN, {
-                    onLogin: () => this.props.selfRegister()
+                    onLogin: () => {
+                      if (this.props.errors.selfRegistration) {
+                        this.props.selfRegister()
+                      }
+                    }
                   }]}
                   primary={true}
                 />
               }
 
-              {!this.props.authenticated && this.props.errors.selfRegistration &&
+              {!this.props.authenticated && this.props.platformSelfRegistration && this.props.errors.selfRegistration &&
                 <Button
                   className="btn btn-block"
                   type={MODAL_BUTTON}
@@ -246,6 +250,7 @@ WorkspaceRestrictions.propTypes = {
   workspace: T.shape(
     WorkspaceType.propTypes
   ),
+  platformSelfRegistration: T.bool,
   dismiss: T.func.isRequired,
   checkAccessCode: T.func,
   selfRegister: T.func

@@ -66,6 +66,7 @@ class WorkspaceMain extends Component {
           managed={this.props.managed}
           workspace={this.props.workspace}
           checkAccessCode={(code) => this.props.checkAccessCode(this.props.workspace, code)}
+          platformSelfRegistration={this.props.platformSelfRegistration}
           selfRegister={() => this.props.selfRegister(this.props.workspace)}
         />
       )
@@ -121,6 +122,7 @@ WorkspaceMain.propTypes = {
   })),
   openTool: T.func.isRequired,
   accessErrors: T.object,
+  platformSelfRegistration: T.bool,
   dismissRestrictions: T.func.isRequired,
   checkAccessCode: T.func,
   selfRegister: T.func,
