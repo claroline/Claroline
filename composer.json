@@ -1,9 +1,9 @@
 {
     "name": "claroline/claroline",
-    "description": "Claroline Connect",
+    "description": "Claroline Connect Learning management system",
     "license": "GPL-3.0+",
     "require": {
-        "php": ">=7.2,<7.4",
+        "php": ">=7.2",
         "claroline/distribution": "13.x-dev"
     },
     "autoload": {
@@ -20,13 +20,6 @@
         "symfony/phpunit-bridge": "^4.0"
     },
     "scripts": {
-        "fast-install" : [
-            "php scripts/check.php",
-            "php bin/console doctrine:database:create --if-not-exists",
-            "php bin/bin/doctrine dbal:import claroline.sql -vvv",
-            "php bin/console assets:install public --symlink",
-            "php scripts/data-symlink.php"
-        ],
         "sync": [
             "composer fetch",
             "composer build",
@@ -44,7 +37,7 @@
             "npm install"
         ],
         "fetch-dev": [
-            "composer install --prefer-source",
+            "composer install --prefer-source --optimize-autoloader",
             "npm install"
         ],
         "build": [
@@ -59,15 +52,15 @@
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php scripts/check.php",
-            "php scripts/save-repo.php"
+            "php bin/check",
+            "php bin/configure"
         ],
         "post-install-cmd": [
             "composer bundles"
         ],
         "pre-update-cmd": [
-            "php scripts/check.php",
-            "php scripts/save-repo.php",
+            "php bin/check",
+            "php bin/configure",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
