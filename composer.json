@@ -31,15 +31,15 @@
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php bin/check",
-            "php bin/configure"
+            "php bin/configure",
+            "php bin/check"
         ],
         "post-install-cmd": [
             "composer bundles"
         ],
         "pre-update-cmd": [
-            "php bin/check",
             "php bin/configure",
+            "php bin/check",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
