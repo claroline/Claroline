@@ -21,9 +21,10 @@ use Icap\NotificationBundle\Manager\NotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/notifications")
+ * @Route("/notifications")
  */
 class NotificationsViewerController
 {
@@ -60,7 +61,7 @@ class NotificationsViewerController
     }
 
     /**
-     * @EXT\Route("", name="apiv2_user_notifications_list")
+     * @Route("", name="apiv2_user_notifications_list")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Method("GET")
      *
@@ -79,7 +80,7 @@ class NotificationsViewerController
     }
 
     /**
-     * @EXT\Route("/unread/count", name="apiv2_user_notifications_count")
+     * @Route("/unread/count", name="apiv2_user_notifications_count")
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param User $user
@@ -94,7 +95,7 @@ class NotificationsViewerController
     }
 
     /**
-     * @EXT\Route("/read", name="apiv2_user_notifications_read")
+     * @Route("/read", name="apiv2_user_notifications_read")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Method("PUT")
      *
@@ -110,7 +111,7 @@ class NotificationsViewerController
     }
 
     /**
-     * @EXT\Route("/unread", name="apiv2_user_notifications_unread")
+     * @Route("/unread", name="apiv2_user_notifications_unread")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Method("PUT")
      *
@@ -126,7 +127,7 @@ class NotificationsViewerController
     }
 
     /**
-     * @EXT\Route("/", name="apiv2_user_notifications_delete")
+     * @Route("/", name="apiv2_user_notifications_delete")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Method("DELETE")
      *

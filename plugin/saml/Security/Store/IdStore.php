@@ -3,7 +3,7 @@
 namespace Claroline\SamlBundle\Security\Store;
 
 use Claroline\SamlBundle\Entity\IdEntry;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use LightSaml\Provider\TimeProvider\TimeProviderInterface;
 use LightSaml\Store\Id\IdStoreInterface;
 

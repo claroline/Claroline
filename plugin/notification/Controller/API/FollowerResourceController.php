@@ -9,9 +9,10 @@ use Icap\NotificationBundle\Manager\NotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/notificationfollower")
+ * @Route("/notificationfollower")
  */
 class FollowerResourceController extends AbstractCrudController
 {
@@ -44,7 +45,7 @@ class FollowerResourceController extends AbstractCrudController
     /**
      * Follows or unfollows resources.
      *
-     * @EXT\Route("resources/toggle/{mode}", name="icap_notification_follower_resources_toggle")
+     * @Route("resources/toggle/{mode}", name="icap_notification_follower_resources_toggle")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *

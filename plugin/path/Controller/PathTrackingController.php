@@ -26,11 +26,12 @@ use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/pathtracking")
+ * @Route("/pathtracking")
  */
 class PathTrackingController
 {
@@ -83,7 +84,7 @@ class PathTrackingController
     /**
      * Fetch all path trackings of the workspace.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/workspace/{workspace}/paths/tracking",
      *     name="claroline_paths_trackings_fetch"
      * )
@@ -181,7 +182,7 @@ class PathTrackingController
     /**
      * Fetch path evaluations.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/path/{resourceNode}/evaluations/list",
      *     name="claroline_path_evaluations_list"
      * )

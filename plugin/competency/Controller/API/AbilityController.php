@@ -18,11 +18,12 @@ use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/ability")
+ * @Route("/ability")
  */
 class AbilityController extends AbstractCrudController
 {
@@ -58,7 +59,7 @@ class AbilityController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/node/{node}/abilities/fetch",
      *     name="apiv2_competency_resource_abilities_list"
      * )
@@ -86,7 +87,7 @@ class AbilityController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/node/{node}/ability/{ability}/associate",
      *     name="apiv2_competency_resource_ability_associate"
      * )
@@ -120,7 +121,7 @@ class AbilityController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/node/{node}/ability/{ability}/dissociate",
      *     name="apiv2_competency_resource_ability_dissociate"
      * )

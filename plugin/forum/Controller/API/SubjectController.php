@@ -10,9 +10,10 @@ use Claroline\ForumBundle\Entity\Subject;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/forum_subject")
+ * @Route("/forum_subject")
  */
 class SubjectController extends AbstractCrudController
 {
@@ -22,8 +23,8 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/messages")
-     * @EXT\Route("/forum/{forumId}/subjects/{id}/messages", name="apiv2_forum_subject_get_message")
+     * @Route("/{id}/messages")
+     * @Route("/forum/{forumId}/subjects/{id}/messages", name="apiv2_forum_subject_get_message")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("subject", class = "ClarolineForumBundle:Subject",  options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forumId": "uuid"}})
@@ -61,7 +62,7 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/message")
+     * @Route("/{id}/message")
      * @EXT\Method({"POST", "PUT"})
      * @EXT\ParamConverter("subject", class = "ClarolineForumBundle:Subject",  options={"mapping": {"id": "uuid"}})
      *
@@ -100,7 +101,7 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{subject}/message/{message}", name="apiv2_forum_subject_message_update")
+     * @Route("/{subject}/message/{message}", name="apiv2_forum_subject_message_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("message", class = "ClarolineForumBundle:Message",  options={"mapping": {"message": "uuid"}})
      * @EXT\ParamConverter("subject", class = "ClarolineForumBundle:Subject",  options={"mapping": {"subject": "uuid"}})
@@ -124,7 +125,7 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list")
+     * @Route("/forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -144,7 +145,7 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list")
+     * @Route("/forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *

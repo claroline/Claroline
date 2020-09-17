@@ -17,9 +17,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/connectionmessage")
+ * @Route("/connectionmessage")
  */
 class ConnectionMessageController extends AbstractCrudController
 {
@@ -54,8 +55,7 @@ class ConnectionMessageController extends AbstractCrudController
     /**
      * Discards a message for the next login.
      *
-     * @EXT\Route("/{id}/discard", name="apiv2_connection_message_discard")
-     * @EXT\Method("PUT")
+     * @Route("/{id}/discard", name="apiv2_connection_message_discard", methods="PUT")
      * @EXT\ParamConverter(
      *     "message",
      *     class="ClarolineCoreBundle:ConnectionMessage\ConnectionMessage",

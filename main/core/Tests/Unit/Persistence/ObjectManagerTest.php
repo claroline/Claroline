@@ -32,7 +32,7 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testWrappedManagerDependentMethodsThrowAnExceptionOnUnsupportedMethods($method)
     {
-        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
+        $om = new ObjectManager($this->mock('Doctrine\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
         $om->{$method}();
     }
 
@@ -70,13 +70,13 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testEndFlushSuiteThrowsAnExceptionIfNoSuiteHasBeenStarted()
     {
-        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
+        $om = new ObjectManager($this->mock('Doctrine\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
         $om->endFlushSuite();
     }
 
     public function testFlushCallsWrappedManagerFlushIfNoFlushSuiteIsActive()
     {
-        $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
+        $oom = $this->mock('Doctrine\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->once();
         $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->flush();
@@ -84,7 +84,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testFlushHasNoEffectIfAFlushSuiteIsActive()
     {
-        $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
+        $oom = $this->mock('Doctrine\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->never();
         $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->startFlushSuite();
@@ -93,7 +93,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     public function testNestedFlushSuites()
     {
-        $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
+        $oom = $this->mock('Doctrine\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->once();
         $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->startFlushSuite();
@@ -149,8 +149,8 @@ class ObjectManagerTest extends MockeryTestCase
     public function hasSupportMethodProvider()
     {
         return [
-            ['Doctrine\Common\Persistence\ObjectManager', 'supportsTransactions', false],
-            ['Doctrine\Common\Persistence\ObjectManager', 'hasEventManager', false],
+            ['Doctrine\Persistence\ObjectManager', 'supportsTransactions', false],
+            ['Doctrine\Persistence\ObjectManager', 'hasEventManager', false],
             ['Doctrine\ORM\EntityManagerInterface', 'supportsTransactions', true],
             ['Doctrine\ORM\EntityManagerInterface', 'hasEventManager', true],
         ];

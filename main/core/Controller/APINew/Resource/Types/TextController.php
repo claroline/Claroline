@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("resource_text")
+ * @Route("resource_text")
  */
 class TextController extends AbstractCrudController
 {

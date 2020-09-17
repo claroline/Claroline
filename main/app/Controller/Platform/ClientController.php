@@ -11,9 +11,9 @@ use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -75,7 +75,7 @@ class ClientController
     /**
      * Renders the Claroline web application.
      *
-     * @EXT\Route("/", name="claro_index")
+     * @Route("/", name="claro_index")
      *
      * @return Response
      */

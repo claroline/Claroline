@@ -8,11 +8,11 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/search", options={"expose"=true})
+ * @Route("/search", options={"expose"=true})
  */
 class SearchController
 {
@@ -43,7 +43,7 @@ class SearchController
      *   - Resource : name.
      *   - User : username, firstName, lastName, email.
      *
-     * @EXT\Route("/{search}", name="claro_search")
+     * @Route("/{search}", name="claro_search")
      *
      * @param string $search
      *

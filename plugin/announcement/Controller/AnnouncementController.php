@@ -18,12 +18,13 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages announces of an announcement resource.
  *
- * @EXT\Route("/announcement/{aggregateId}", options={"expose"=true})
+ * @Route("/announcement/{aggregateId}", options={"expose"=true})
  * @EXT\ParamConverter(
  *      "aggregate",
  *      class="ClarolineAnnouncementBundle:AnnouncementAggregate",
@@ -88,7 +89,7 @@ class AnnouncementController
     /**
      * Creates a new announce.
      *
-     * @EXT\Route("/", name="claro_announcement_create")
+     * @Route("/", name="claro_announcement_create")
      * @EXT\Method("POST")
      *
      * @param AnnouncementAggregate $aggregate
@@ -116,7 +117,7 @@ class AnnouncementController
     /**
      * Updates an existing announce.
      *
-     * @EXT\Route("/{id}", name="claro_announcement_update")
+     * @Route("/{id}", name="claro_announcement_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *      "announcement",
@@ -148,7 +149,7 @@ class AnnouncementController
     /**
      * Deletes an announce.
      *
-     * @EXT\Route("/{id}", name="claro_announcement_delete")
+     * @Route("/{id}", name="claro_announcement_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *      "announcement",
@@ -173,7 +174,7 @@ class AnnouncementController
     /**
      * Sends an announce (in current implementation, it's sent by email).
      *
-     * @EXT\Route("/{id}/validate", name="claro_announcement_validate")
+     * @Route("/{id}/validate", name="claro_announcement_validate")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "announcement",
@@ -223,7 +224,7 @@ class AnnouncementController
     /**
      * Sends an announce (in current implementation, it's sent by email).
      *
-     * @EXT\Route("/{id}/send", name="claro_announcement_send")
+     * @Route("/{id}/send", name="claro_announcement_send")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "announcement",

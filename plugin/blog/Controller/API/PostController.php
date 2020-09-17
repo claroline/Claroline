@@ -13,11 +13,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("blog/{blogId}/posts", options={"expose"=true})
+ * @Route("blog/{blogId}/posts", options={"expose"=true})
  * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class PostController
@@ -64,7 +65,7 @@ class PostController
     /**
      * Get unpublished blog posts.
      *
-     * @EXT\Route("/moderation", name="apiv2_blog_post_list_unpublished")
+     * @Route("/moderation", name="apiv2_blog_post_list_unpublished")
      * @EXT\Method("GET")
      *
      * @param Blog $blog
@@ -94,7 +95,7 @@ class PostController
     /**
      * Get blog posts.
      *
-     * @EXT\Route("", name="apiv2_blog_post_list")
+     * @Route("", name="apiv2_blog_post_list")
      * @EXT\Method("GET")
      *
      * @param Blog $blog
@@ -124,7 +125,7 @@ class PostController
     /**
      * Get blog post.
      *
-     * @EXT\Route("/{postId}", name="apiv2_blog_post_get")
+     * @Route("/{postId}", name="apiv2_blog_post_get")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
      *
@@ -159,7 +160,7 @@ class PostController
     /**
      * Create blog post.
      *
-     * @EXT\Route("/new", name="apiv2_blog_post_new")
+     * @Route("/new", name="apiv2_blog_post_new")
      * @EXT\Method({"POST", "PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -184,7 +185,7 @@ class PostController
     /**
      * Update blog post.
      *
-     * @EXT\Route("/update/{postId}", name="apiv2_blog_post_update")
+     * @Route("/update/{postId}", name="apiv2_blog_post_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -208,7 +209,7 @@ class PostController
     /**
      * Delete blog post.
      *
-     * @EXT\Route("/delete/{postId}", name="apiv2_blog_post_delete")
+     * @Route("/delete/{postId}", name="apiv2_blog_post_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -230,7 +231,7 @@ class PostController
     /**
      * Switch post publication state.
      *
-     * @EXT\Route("/publish/{postId}", name="apiv2_blog_post_publish")
+     * @Route("/publish/{postId}", name="apiv2_blog_post_publish")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -256,7 +257,7 @@ class PostController
     /**
      * Pin post.
      *
-     * @EXT\Route("/pin/{postId}", name="apiv2_blog_post_pin")
+     * @Route("/pin/{postId}", name="apiv2_blog_post_pin")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -279,7 +280,7 @@ class PostController
     /**
      * Get all authors for a given blog.
      *
-     * @EXT\Route("/authors/get", name="apiv2_blog_post_authors")
+     * @Route("/authors/get", name="apiv2_blog_post_authors")
      * @EXT\Method("GET")
      */
     public function getBlogAuthorsAction(Blog $blog)

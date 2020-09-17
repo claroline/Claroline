@@ -23,12 +23,13 @@ use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/bbb")
+ * @Route("/bbb")
  */
 class BBBController extends AbstractCrudController
 {
@@ -90,7 +91,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/meetings/list", name="apiv2_bbb_moderator_meetings_list")
+     * @Route("/meetings/list", name="apiv2_bbb_moderator_meetings_list")
      *
      * @return JsonResponse
      */
@@ -121,7 +122,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/meeting", name="apiv2_bbb_meeting_create")
+     * @Route("/{id}/meeting", name="apiv2_bbb_meeting_create")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
@@ -149,7 +150,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/meeting/join/{username}", name="apiv2_bbb_meeting_join")
+     * @Route("/{id}/meeting/join/{username}", name="apiv2_bbb_meeting_join")
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
      * @param BBB    $bbb
@@ -181,7 +182,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/meeting/end", name="apiv2_bbb_meeting_end")
+     * @Route("/{id}/meeting/end", name="apiv2_bbb_meeting_end")
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
      * @param BBB $bbb
@@ -201,7 +202,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/meeting/moderators/check", name="apiv2_bbb_meeting_moderators_check")
+     * @Route("/{id}/meeting/moderators/check", name="apiv2_bbb_meeting_moderators_check")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
@@ -222,7 +223,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/recordings", name="apiv2_bbb_meeting_recordings_list")
+     * @Route("/{id}/recordings", name="apiv2_bbb_meeting_recordings_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
@@ -243,7 +244,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/recordings/{recordId}", name="apiv2_bbb_meeting_recording_delete")
+     * @Route("/{id}/recordings/{recordId}", name="apiv2_bbb_meeting_recording_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *

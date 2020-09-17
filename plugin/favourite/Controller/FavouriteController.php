@@ -13,9 +13,10 @@ use HeVinci\FavouriteBundle\Manager\FavouriteManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/favourite", options={"expose"=true})
+ * @Route("/favourite", options={"expose"=true})
  */
 class FavouriteController extends AbstractApiController
 {
@@ -48,7 +49,7 @@ class FavouriteController extends AbstractApiController
     /**
      * Gets the current user favourites.
      *
-     * @EXT\Route("/", name="claro_user_favourites")
+     * @Route("/", name="claro_user_favourites")
      * @EXT\ParamConverter("currentUser", converter="current_user")
      *
      * @param User $currentUser
@@ -73,7 +74,7 @@ class FavouriteController extends AbstractApiController
     /**
      * Creates or deletes favourite resources.
      *
-     * @EXT\Route("/resources/toggle", name="hevinci_favourite_resources_toggle")
+     * @Route("/resources/toggle", name="hevinci_favourite_resources_toggle")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -93,7 +94,7 @@ class FavouriteController extends AbstractApiController
     /**
      * Creates or deletes favourite workspaces.
      *
-     * @EXT\Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle")
+     * @Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *

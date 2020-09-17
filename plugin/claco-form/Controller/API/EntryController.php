@@ -18,9 +18,10 @@ use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/clacoformentry")
+ * @Route("/clacoformentry")
  */
 class EntryController extends AbstractCrudController
 {
@@ -53,7 +54,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/clacoform/{clacoForm}/entries/list",
      *     name="apiv2_clacoformentry_list"
      * )
@@ -104,7 +105,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "/clacoform/{clacoForm}/file/upload",
      *    name="apiv2_clacoformentry_file_upload"
      * )
@@ -132,7 +133,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/clacoform/{clacoForm}/{entry}/next",
      *     name="apiv2_clacoformentry_next"
      * )
@@ -177,7 +178,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/clacoform/{clacoForm}/{entry}/previous",
      *     name="apiv2_clacoformentry_previous"
      * )

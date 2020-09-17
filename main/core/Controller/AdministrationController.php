@@ -15,16 +15,16 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/admin", options={"expose"=true})
+ * @Route("/admin", options={"expose"=true})
  */
 class AdministrationController
 {
@@ -58,8 +58,8 @@ class AdministrationController
     /**
      * Opens the administration index.
      *
-     * @EXT\Route("/", name="claro_admin_index")
-     * @EXT\Route("/", name="claro_admin_open")
+     * @Route("/", name="claro_admin_index")
+     * @Route("/", name="claro_admin_open")
      *
      * @throws AccessDeniedException
      *
@@ -85,7 +85,7 @@ class AdministrationController
     /**
      * Opens an administration tool.
      *
-     * @EXT\Route("/open/{toolName}", name="claro_admin_open_tool")
+     * @Route("/open/{toolName}", name="claro_admin_open_tool")
      *
      * @param $toolName
      *
@@ -122,7 +122,7 @@ class AdministrationController
     /**
      * Lists admin tools accessible by the current user.
      *
-     * @EXT\Route("/tools", name="claro_admin_tools")
+     * @Route("/tools", name="claro_admin_tools")
      *
      * @return JsonResponse
      */

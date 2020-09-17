@@ -3,11 +3,12 @@
 namespace Icap\FormulaPluginBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 class FormulaController
 {
     /**
-     * @EXT\Route("/formula", name="icap_formula_plugin_index", options={"expose"=true})
+     * @Route("/formula", name="icap_formula_plugin_index", options={"expose"=true})
      * @EXT\Template("IcapFormulaPluginBundle:formula:index.html.twig")
      *
      * @return array

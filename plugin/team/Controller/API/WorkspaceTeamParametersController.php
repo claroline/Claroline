@@ -12,10 +12,10 @@
 namespace Claroline\TeamBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/workspaceteamparameters")
+ * @Route("/workspaceteamparameters")
  */
 class WorkspaceTeamParametersController extends AbstractCrudController
 {

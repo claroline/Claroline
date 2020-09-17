@@ -25,11 +25,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/log_connect")
+ * @Route("/log_connect")
  */
 class LogConnectController
 {
@@ -71,7 +72,7 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/platform/list",
      *     name="apiv2_log_connect_platform_list"
      * )
@@ -103,7 +104,7 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/platform/csv",
      *     name="apiv2_log_connect_platform_list_csv"
      * )
@@ -144,7 +145,7 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/workspace/{workspace}/list",
      *     name="apiv2_log_connect_workspace_list"
      * )
@@ -176,7 +177,7 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/workspace/{workspace}/csv",
      *     name="apiv2_log_connect_workspace_list_csv"
      * )
@@ -216,7 +217,7 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/resource/{resource}/list",
      *     name="apiv2_log_connect_resource_list"
      * )
@@ -250,7 +251,7 @@ class LogConnectController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/resource/{resource}/csv",
      *     name="apiv2_log_connect_resource_list_csv"
      * )

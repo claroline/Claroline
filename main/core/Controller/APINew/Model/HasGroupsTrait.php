@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Crud;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages a groups collection on an entity.
@@ -16,7 +17,7 @@ trait HasGroupsTrait
     /**
      * List groups of the collection.
      *
-     * @EXT\Route("/{id}/group")
+     * @Route("/{id}/group")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Group.",
@@ -48,7 +49,7 @@ trait HasGroupsTrait
     /**
      * Adds groups to the collection.
      *
-     * @EXT\Route("/{id}/group")
+     * @Route("/{id}/group")
      * @EXT\Method("PATCH")
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Group.",
@@ -81,7 +82,7 @@ trait HasGroupsTrait
     /**
      * Removes groups from the collection.
      *
-     * @EXT\Route("/{id}/group")
+     * @Route("/{id}/group")
      * @EXT\Method("DELETE")
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Group.",

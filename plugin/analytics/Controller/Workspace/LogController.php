@@ -20,11 +20,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/tools/workspace/{workspaceId}/logs")
+ * @Route("/tools/workspace/{workspaceId}/logs")
  */
 class LogController
 {
@@ -76,7 +77,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/", name="apiv2_workspace_tool_logs_list")
+     * @Route("/", name="apiv2_workspace_tool_logs_list")
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      * @EXT\Method("GET")
      *
@@ -97,7 +98,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/csv", name="apiv2_workspace_tool_logs_list_csv")
+     * @Route("/csv", name="apiv2_workspace_tool_logs_list_csv")
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      * @EXT\Method("GET")
      *
@@ -123,7 +124,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv")
+     * @Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv")
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
      * @EXT\Method("GET")
      *

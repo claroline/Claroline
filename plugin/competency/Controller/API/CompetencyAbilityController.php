@@ -18,9 +18,10 @@ use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/competency_ability")
+ * @Route("/competency_ability")
  */
 class CompetencyAbilityController extends AbstractCrudController
 {
@@ -40,7 +41,7 @@ class CompetencyAbilityController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/competency/{competency}/list",
      *     name="apiv2_competency_ability_competency_list"
      * )

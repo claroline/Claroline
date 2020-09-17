@@ -21,11 +21,12 @@ use Claroline\CoreBundle\Manager\LogManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/role")
+ * @Route("/role")
  */
 class RoleController extends AbstractCrudController
 {
@@ -89,7 +90,7 @@ class RoleController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/analytics/{year}", name="apiv2_role_analytics")
+     * @Route("/{id}/analytics/{year}", name="apiv2_role_analytics")
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      *

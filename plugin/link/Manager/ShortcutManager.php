@@ -14,7 +14,7 @@ namespace Claroline\LinkBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Manages resource shortcuts.

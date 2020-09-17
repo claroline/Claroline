@@ -7,10 +7,10 @@ namespace Claroline\AppBundle\Routing;
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Doctrine\Common\Annotations\Reader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method as MethodConfig;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as RouteConfig;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class ApiLoader extends Loader
@@ -109,7 +109,7 @@ class ApiLoader extends Loader
 
                     foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
                         //The route prefix is defined with the sf2 annotations
-                        if ($annotation instanceof RouteConfig) {
+                        if ($annotation instanceof Route) {
                             $prefix = $annotation->getPath();
 
                             if (0 === strpos($prefix, '/')) {
@@ -133,7 +133,7 @@ class ApiLoader extends Loader
 
                             foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
                                 //The route prefix is defined with the sf2 annotations
-                                if ($annotation instanceof RouteConfig) {
+                                if ($annotation instanceof Route) {
                                     $prefix = $annotation->getPath();
 
                                     if (0 === strpos($prefix, '/')) {
@@ -196,7 +196,7 @@ class ApiLoader extends Loader
                 $defaults[$actionName][1] = 'GET';
 
                 foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
-                    if ($annotation instanceof RouteConfig) {
+                    if ($annotation instanceof Route) {
                         $defaults[$actionName][0] = $annotation->getPath();
                     }
 

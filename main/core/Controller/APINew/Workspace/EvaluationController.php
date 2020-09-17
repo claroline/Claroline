@@ -18,11 +18,12 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/workspace")
+ * @Route("/workspace")
  */
 class EvaluationController
 {
@@ -51,7 +52,7 @@ class EvaluationController
     }
 
     /**
-     * @EXT\Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list")
+     * @Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      *

@@ -27,11 +27,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/dropzone", options={"expose"=true})
+ * @Route("/dropzone", options={"expose"=true})
  */
 class DropController
 {
@@ -67,7 +68,7 @@ class DropController
     }
 
     /**
-     * @EXT\Route("/drop/{id}", name="claro_dropzone_drop_fetch")
+     * @Route("/drop/{id}", name="claro_dropzone_drop_fetch")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "drop",
@@ -90,7 +91,7 @@ class DropController
     }
 
     /**
-     * @EXT\Route("/{id}/drops/search", name="claro_dropzone_drops_search")
+     * @Route("/{id}/drops/search", name="claro_dropzone_drops_search")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -119,7 +120,7 @@ class DropController
     /**
      * Initializes a Drop for the current User or Team.
      *
-     * @EXT\Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null})
+     * @Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null})
      * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"teamId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -156,7 +157,7 @@ class DropController
     /**
      * Submits Drop.
      *
-     * @EXT\Route("/drop/{id}/submit", name="claro_dropzone_drop_submit")
+     * @Route("/drop/{id}/submit", name="claro_dropzone_drop_submit")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "drop",
@@ -190,7 +191,7 @@ class DropController
     /**
      * Cancels Drop submission.
      *
-     * @EXT\Route("/drop/{id}/submission/cancel", name="claro_dropzone_drop_submission_cancel")
+     * @Route("/drop/{id}/submission/cancel", name="claro_dropzone_drop_submission_cancel")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "drop",
@@ -220,7 +221,7 @@ class DropController
     /**
      * Adds a Document to a Drop.
      *
-     * @EXT\Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add")
+     * @Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "drop",
@@ -274,7 +275,7 @@ class DropController
     /**
      * Deletes a Document.
      *
-     * @EXT\Route("/document/{id}", name="claro_dropzone_document_delete")
+     * @Route("/document/{id}", name="claro_dropzone_document_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "document",
@@ -308,7 +309,7 @@ class DropController
     /**
      * Adds a manager Document to a Drop.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/drop/{id}/revision/{revision}/type/{type}/manager",
      *     name="claro_dropzone_manager_documents_add"
      * )
@@ -367,7 +368,7 @@ class DropController
     /**
      * Deletes a manager Document.
      *
-     * @EXT\Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete")
+     * @Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "document",
@@ -399,7 +400,7 @@ class DropController
     /**
      * Unlocks Drop.
      *
-     * @EXT\Route("/drop/{id}/unlock", name="claro_dropzone_drop_unlock")
+     * @Route("/drop/{id}/unlock", name="claro_dropzone_drop_unlock")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "drop",
@@ -429,7 +430,7 @@ class DropController
     /**
      * Unlocks Drop user.
      *
-     * @EXT\Route("/drop/{id}/unlock/user", name="claro_dropzone_drop_unlock_user")
+     * @Route("/drop/{id}/unlock/user", name="claro_dropzone_drop_unlock_user")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "drop",
@@ -457,7 +458,7 @@ class DropController
     }
 
     /**
-     * @EXT\Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute")
+     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "tool",
@@ -493,7 +494,7 @@ class DropController
     /**
      * Downloads drops documents into a ZIP archive.
      *
-     * @EXT\Route("/drops/download", name="claro_dropzone_drops_download")
+     * @Route("/drops/download", name="claro_dropzone_drops_download")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -526,7 +527,7 @@ class DropController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/drop/{id}/next",
      *     name="claro_dropzone_drop_next"
      * )
@@ -571,7 +572,7 @@ class DropController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/drop/{id}/previous",
      *     name="claro_dropzone_drop_previous"
      * )

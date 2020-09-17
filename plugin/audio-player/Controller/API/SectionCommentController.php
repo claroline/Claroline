@@ -19,10 +19,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @EXT\Route("/audioresourcesectioncomment")
+ * @Route("/audioresourcesectioncomment")
  */
 class SectionCommentController extends AbstractCrudController
 {
@@ -58,7 +59,7 @@ class SectionCommentController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{resourceNode}/list/{type}",
      *     name="apiv2_audioresourcesectioncomment_list_comments"
      * )
@@ -86,7 +87,7 @@ class SectionCommentController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{resourceNode}/comments/csv",
      *     name="apiv2_audioresourcesectioncomment_list_comments_csv"
      * )

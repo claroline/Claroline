@@ -7,11 +7,12 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages platform plugins.
  *
- * @EXT\Route("/plugin")
+ * @Route("/plugin")
  */
 class PluginController extends AbstractSecurityController
 {
@@ -29,7 +30,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("", name="apiv2_plugin_list")
+     * @Route("", name="apiv2_plugin_list")
      *
      * @return JsonResponse
      */
@@ -43,7 +44,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/configure", name="apiv2_plugin_configure")
+     * @Route("/configure", name="apiv2_plugin_configure")
      * @EXT\Method("PUT")
      *
      * @param Plugin $plugin
@@ -61,7 +62,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/enable", name="apiv2_plugin_enable")
+     * @Route("/enable", name="apiv2_plugin_enable")
      * @EXT\Method("PUT")
      *
      * @param Plugin $plugin
@@ -79,7 +80,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/disable", name="apiv2_plugin_disable")
+     * @Route("/disable", name="apiv2_plugin_disable")
      * @EXT\Method("PUT")
      *
      * @param Plugin $plugin

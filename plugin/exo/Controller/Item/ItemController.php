@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use UJM\ExoBundle\Controller\AbstractController;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Transfer;
@@ -17,7 +18,7 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 /**
  * Item Controller exposes REST API.
  *
- * @EXT\Route("/questions", options={"expose"=true})
+ * @Route("/questions", options={"expose"=true})
  *
  * @todo : use a crud controller instead
  */
@@ -52,7 +53,7 @@ class ItemController extends AbstractController
     /**
      * Searches for questions.
      *
-     * @EXT\Route("", name="question_list")
+     * @Route("", name="question_list")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -73,7 +74,7 @@ class ItemController extends AbstractController
     /**
      * Creates a new Item.
      *
-     * @EXT\Route("", name="question_create")
+     * @Route("", name="question_create")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -115,7 +116,7 @@ class ItemController extends AbstractController
     /**
      * Updates a Item.
      *
-     * @EXT\Route("/{id}", name="question_update")
+     * @Route("/{id}", name="question_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("question", class="UJMExoBundle:Item\Item", options={"mapping": {"id": "uuid"}})
      *
@@ -158,7 +159,7 @@ class ItemController extends AbstractController
     /**
      * Duplicates a list of items.
      *
-     * @EXT\Route("/{id}", name="questions_duplicate")
+     * @Route("/{id}", name="questions_duplicate")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -170,7 +171,7 @@ class ItemController extends AbstractController
     /**
      * Deletes a list of Items.
      *
-     * @EXT\Route("/{id}", name="questions_delete")
+     * @Route("/{id}", name="questions_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", converter="current_user")
      *

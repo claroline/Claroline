@@ -18,6 +18,7 @@ use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class WebResourceController extends AbstractCrudController
 {
@@ -38,7 +39,7 @@ class WebResourceController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "workspace/{workspace}/webResource/file/upload",
      *    name="apiv2_webresource_file_upload"
      * )

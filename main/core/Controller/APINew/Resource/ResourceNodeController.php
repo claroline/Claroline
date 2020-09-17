@@ -19,10 +19,11 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/resource")
+ * @Route("/resource")
  */
 class ResourceNodeController extends AbstractCrudController
 {
@@ -73,7 +74,7 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
+     * @Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
      *
      * @param Request $request
      * @param string  $parent
@@ -131,7 +132,7 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{parent}/files",
      *     name="apiv2_resource_files_create"
      * )
@@ -214,7 +215,7 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{workspace}/workspace",
      *     name="apiv2_resource_workspace_removed_list"
      * )
@@ -243,7 +244,7 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{slug}/close", name="claro_resource_close")
+     * @Route("/{slug}/close", name="claro_resource_close")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})

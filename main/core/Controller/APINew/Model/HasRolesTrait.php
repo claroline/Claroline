@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 trait HasRolesTrait
 {
@@ -25,7 +26,7 @@ trait HasRolesTrait
      *     }
      * )
      *
-     * @EXT\Route("/{id}/role")
+     * @Route("/{id}/role")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Role.",
@@ -55,7 +56,7 @@ trait HasRolesTrait
     }
 
     /**
-     * @EXT\Route("/{id}/role")
+     * @Route("/{id}/role")
      * @EXT\Method("PATCH")
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Role.",
@@ -87,7 +88,7 @@ trait HasRolesTrait
     }
 
     /**
-     * @EXT\Route("/{id}/role")
+     * @Route("/{id}/role")
      * @EXT\Method("DELETE")
      * @ApiDoc(
      *     description="Remove objects of class Claroline\CoreBundle\Entity\Role.",

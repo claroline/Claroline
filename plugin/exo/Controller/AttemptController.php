@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -20,7 +21,7 @@ use UJM\ExoBundle\Manager\AttemptManager;
 /**
  * Attempt Controller.
  *
- * @EXT\Route("/exercises/{exerciseId}/attempts", options={"expose"=true})
+ * @Route("/exercises/{exerciseId}/attempts", options={"expose"=true})
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class AttemptController extends AbstractController
@@ -77,7 +78,7 @@ class AttemptController extends AbstractController
      * Opens an exercise, creating a new paper or re-using an unfinished one.
      * Also check that max attempts are not reached if needed.
      *
-     * @EXT\Route("", name="exercise_attempt_start")
+     * @Route("", name="exercise_attempt_start")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
@@ -108,7 +109,7 @@ class AttemptController extends AbstractController
     /**
      * Submits answers to an Exercise.
      *
-     * @EXT\Route("/{id}", name="exercise_attempt_submit")
+     * @Route("/{id}", name="exercise_attempt_submit")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
@@ -151,7 +152,7 @@ class AttemptController extends AbstractController
     /**
      * Flags a paper as finished.
      *
-     * @EXT\Route("/{id}/end", name="exercise_attempt_finish")
+     * @Route("/{id}/end", name="exercise_attempt_finish")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
@@ -181,7 +182,7 @@ class AttemptController extends AbstractController
      * Returns the content of a question hint, and records the fact that it has
      * been consulted within the context of a given paper.
      *
-     * @EXT\Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show")
+     * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})

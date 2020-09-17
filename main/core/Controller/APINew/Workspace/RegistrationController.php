@@ -27,11 +27,12 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/workspace")
+ * @Route("/workspace")
  */
 class RegistrationController extends AbstractApiController
 {
@@ -98,7 +99,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "id",  "type": {"string", "integer"}, "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/{id}/user/pending",
      *    name="apiv2_workspace_list_pending"
      * )
@@ -128,7 +129,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/{id}/registration/validate",
      *    name="apiv2_workspace_registration_validate"
      * )
@@ -170,7 +171,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/{id}/registration/remove",
      *    name="apiv2_workspace_registration_remove"
      * )
@@ -210,7 +211,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/{id}/users/unregister",
      *    name="apiv2_workspace_unregister_users"
      * )
@@ -248,7 +249,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/{id}/groups/unregister",
      *    name="apiv2_workspace_unregister_groups"
      * )
@@ -287,7 +288,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "role", "type": {"string"}, "description": "The role translation key"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/users/register/{role}",
      *    name="apiv2_workspace_bulk_register_users"
      * )
@@ -326,7 +327,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "role", "type": {"string"}, "description": "The role translation key"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *    "/groups/register/{role}",
      *    name="apiv2_workspace_bulk_register_groups"
      * )
@@ -364,7 +365,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
-     * @EXT\Route("/register/{user}", name="apiv2_workspace_register")
+     * @Route("/register/{user}", name="apiv2_workspace_register")
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      *
@@ -406,7 +407,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
-     * @EXT\Route("/unregister/{user}", name="apiv2_workspace_unregister")
+     * @Route("/unregister/{user}", name="apiv2_workspace_unregister")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      *
@@ -433,7 +434,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"}
      *     }
      * )
-     * @EXT\Route(
+     * @Route(
      *     "/{workspace}/register/self",
      *     name="apiv2_workspace_self_register"
      * )

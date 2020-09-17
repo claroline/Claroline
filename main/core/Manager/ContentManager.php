@@ -30,7 +30,7 @@ class ContentManager
     private $request;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository
+     * @var \Doctrine\Persistence\ObjectRepository
      */
     private $content;
 

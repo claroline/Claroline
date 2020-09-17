@@ -12,10 +12,10 @@
 namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/rule")
+ * @Route("/rule")
  */
 class RuleController extends AbstractCrudController
 {

@@ -20,11 +20,12 @@ use Claroline\TeamBundle\Manager\TeamManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/team")
+ * @Route("/team")
  */
 class TeamController extends AbstractCrudController
 {
@@ -86,7 +87,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/workspace/{workspace}/teams/list",
      *     name="apiv2_workspace_team_list"
      * )
@@ -116,7 +117,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/team/{team}/{role}/register",
      *     name="apiv2_team_register"
      * )
@@ -166,7 +167,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/team/{team}/{role}/unregister",
      *     name="apiv2_team_unregister"
      * )
@@ -200,7 +201,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/team/{team}/register",
      *     name="apiv2_team_self_register"
      * )
@@ -242,7 +243,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/team/{team}/unregister",
      *     name="apiv2_team_self_unregister"
      * )
@@ -271,7 +272,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/workspace/{workspace}/teams/create",
      *     name="apiv2_team_multiple_create"
      * )
@@ -298,7 +299,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/teams/fill",
      *     name="apiv2_team_fill"
      * )
@@ -328,7 +329,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/teams/empty",
      *     name="apiv2_team_empty"
      * )

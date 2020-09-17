@@ -13,10 +13,10 @@ namespace HeVinci\CompetencyBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use HeVinci\CompetencyBundle\Entity\Scale;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/competency_scale")
+ * @Route("/competency_scale")
  */
 class ScaleController extends AbstractCrudController
 {

@@ -20,10 +20,11 @@ use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("/badge-class")
+ * @Route("/badge-class")
  */
 class BadgeClassController extends AbstractCrudController
 {
@@ -58,7 +59,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{badge}/users/add", name="apiv2_badge-class_add_users")
+     * @Route("/{badge}/users/add", name="apiv2_badge-class_add_users")
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
@@ -81,7 +82,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/enable", name="apiv2_badge-class_enable")
+     * @Route("/enable", name="apiv2_badge-class_enable")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -104,7 +105,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/disable", name="apiv2_badge-class_disable")
+     * @Route("/disable", name="apiv2_badge-class_disable")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -127,7 +128,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{badge}/users/remove", name="apiv2_badge-class_remove_users")
+     * @Route("/{badge}/users/remove", name="apiv2_badge-class_remove_users")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
@@ -150,7 +151,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/workspace/{workspace}", name="apiv2_badge-class_workspace_badge_list")
+     * @Route("/workspace/{workspace}", name="apiv2_badge-class_workspace_badge_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
@@ -170,7 +171,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{badge}/assertion", name="apiv2_badge-class_assertion")
+     * @Route("/{badge}/assertion", name="apiv2_badge-class_assertion")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *

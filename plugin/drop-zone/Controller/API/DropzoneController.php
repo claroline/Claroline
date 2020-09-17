@@ -28,11 +28,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/dropzone", options={"expose"=true})
+ * @Route("/dropzone", options={"expose"=true})
  */
 class DropzoneController
 {
@@ -66,7 +67,7 @@ class DropzoneController
     /**
      * Updates a Dropzone resource.
      *
-     * @EXT\Route("/{id}", name="claro_dropzone_update")
+     * @Route("/{id}", name="claro_dropzone_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -100,7 +101,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch")
+     * @Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -120,7 +121,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save")
+     * @Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "drop",
@@ -149,7 +150,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/correction/{id}/submit", name="claro_dropzone_correction_submit")
+     * @Route("/correction/{id}/submit", name="claro_dropzone_correction_submit")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "correction",
@@ -179,7 +180,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/correction/{id}/validation/switch", name="claro_dropzone_correction_validation_switch")
+     * @Route("/correction/{id}/validation/switch", name="claro_dropzone_correction_validation_switch")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "correction",
@@ -209,7 +210,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/correction/{id}/delete", name="claro_dropzone_correction_delete")
+     * @Route("/correction/{id}/delete", name="claro_dropzone_correction_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "correction",
@@ -238,7 +239,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/correction/{id}/deny", name="claro_dropzone_correction_deny")
+     * @Route("/correction/{id}/deny", name="claro_dropzone_correction_deny")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "correction",
@@ -270,7 +271,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch")
+     * @Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -291,7 +292,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch")
+     * @Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -318,7 +319,7 @@ class DropzoneController
     }
 
     /**
-     * @EXT\Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute")
+     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "tool",
@@ -351,7 +352,7 @@ class DropzoneController
     /**
      * Downloads a document.
      *
-     * @EXT\Route("/{document}/download", name="claro_dropzone_document_download")
+     * @Route("/{document}/download", name="claro_dropzone_document_download")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "document",

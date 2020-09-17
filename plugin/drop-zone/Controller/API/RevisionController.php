@@ -22,11 +22,12 @@ use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/droprevision")
+ * @Route("/droprevision")
  */
 class RevisionController extends AbstractCrudController
 {
@@ -68,7 +69,7 @@ class RevisionController extends AbstractCrudController
     /**
      * Submits Drop for revision.
      *
-     * @EXT\Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision")
+     * @Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "drop",
@@ -101,7 +102,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/revisions/list", name="claro_dropzone_revisions_list")
+     * @Route("/{id}/revisions/list", name="claro_dropzone_revisions_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -128,7 +129,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list")
+     * @Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "drop",
@@ -161,7 +162,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get")
+     * @Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "revision",
@@ -189,7 +190,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/revision/{id}/next",
      *     name="claro_dropzone_revision_next"
      * )
@@ -232,7 +233,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/revision/{id}/previous",
      *     name="claro_dropzone_revision_previous"
      * )

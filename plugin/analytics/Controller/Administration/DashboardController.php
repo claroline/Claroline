@@ -10,14 +10,14 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @EXT\Route("/tools/admin/analytics")
+ * @Route("/tools/admin/analytics")
  */
 class DashboardController extends AbstractSecurityController
 {
@@ -64,7 +64,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/activity", name="apiv2_admin_tool_analytics_activity")
+     * @Route("/activity", name="apiv2_admin_tool_analytics_activity")
      *
      * @param Request $request
      *
@@ -88,7 +88,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/actions", name="apiv2_admin_tool_analytics_actions")
+     * @Route("/actions", name="apiv2_admin_tool_analytics_actions")
      *
      * @param Request $request
      *
@@ -107,7 +107,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/time", name="apiv2_admin_tool_analytics_time")
+     * @Route("/time", name="apiv2_admin_tool_analytics_time")
      *
      * @return JsonResponse
      */
@@ -122,7 +122,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/resources", name="apiv2_admin_tool_analytics_resources")
+     * @Route("/resources", name="apiv2_admin_tool_analytics_resources")
      *
      * @return JsonResponse
      */
@@ -136,7 +136,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/resources/top", name="apiv2_admin_tool_analytics_top_resources")
+     * @Route("/resources/top", name="apiv2_admin_tool_analytics_top_resources")
      *
      * @return JsonResponse
      */
@@ -168,7 +168,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/users", name="apiv2_admin_tool_analytics_users")
+     * @Route("/users", name="apiv2_admin_tool_analytics_users")
      *
      * @return JsonResponse
      */
@@ -182,7 +182,7 @@ class DashboardController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/users/top", name="apiv2_admin_tool_analytics_top_users")
+     * @Route("/users/top", name="apiv2_admin_tool_analytics_top_users")
      *
      * @return JsonResponse
      */

@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
@@ -16,7 +17,7 @@ use UJM\ExoBundle\Manager\CorrectionManager;
  * Correction API controller permits to a quiz creator to save scores and feedback
  * for answers to questions with manual correction.
  *
- * @EXT\Route("/exercises/{exerciseId}/correction", options={"expose"=true})
+ * @Route("/exercises/{exerciseId}/correction", options={"expose"=true})
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class CorrectionController extends AbstractController
@@ -48,7 +49,7 @@ class CorrectionController extends AbstractController
     /**
      * Lists all questions with `manual` score rule that have answers to correct.
      *
-     * @EXT\Route("", name="exercise_correction_questions")
+     * @Route("", name="exercise_correction_questions")
      * @EXT\Method("GET")
      *
      * @param Exercise $exercise
@@ -65,7 +66,7 @@ class CorrectionController extends AbstractController
     /**
      * Saves score & feedback for a bulk of answers.
      *
-     * @EXT\Route("/{questionId}", name="exercise_correction_save")
+     * @Route("/{questionId}", name="exercise_correction_save")
      * @EXT\Method("PUT")
      *
      * @param Exercise $exercise

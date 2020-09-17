@@ -22,10 +22,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("/assertion")
+ * @Route("/assertion")
  */
 class AssertionController extends AbstractCrudController
 {
@@ -66,7 +67,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{assertion}/evidences", name="apiv2_assertion_evidences")
+     * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      *
@@ -86,7 +87,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/current-user", name="apiv2_assertion_current_user_list")
+     * @Route("/current-user", name="apiv2_assertion_current_user_list")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -105,7 +106,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/user/{user}", name="apiv2_assertion_user_list")
+     * @Route("/user/{user}", name="apiv2_assertion_user_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
      *
@@ -127,7 +128,7 @@ class AssertionController extends AbstractCrudController
     /**
      * Downloads pdf version of assertion.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/{assertion}/pdf/download",
      *     name="apiv2_assertion_pdf_download"
      * )

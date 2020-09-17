@@ -12,11 +12,12 @@ use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Exposes user saved searches.
  *
- * @EXT\Route("/saved_search", options={"expose": true})
+ * @Route("/saved_search", options={"expose": true})
  * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
  */
 class SavedSearchController extends AbstractApiController
@@ -53,7 +54,7 @@ class SavedSearchController extends AbstractApiController
     /**
      * Lists saved searches of the current user for a list.
      *
-     * @EXT\Route("/{list}", name="apiv2_saved_search_list")
+     * @Route("/{list}", name="apiv2_saved_search_list")
      * @EXT\Method("GET")
      *
      * @param User   $currentUser
@@ -79,7 +80,7 @@ class SavedSearchController extends AbstractApiController
     /**
      * Creates a searches for the current user and a list.
      *
-     * @EXT\Route("/{list}", name="apiv2_saved_search_create")
+     * @Route("/{list}", name="apiv2_saved_search_create")
      * @EXT\Method("GET")
      *
      * @param User    $currentUser

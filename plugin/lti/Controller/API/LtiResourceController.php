@@ -12,11 +12,11 @@
 namespace UJM\LtiBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 use UJM\LtiBundle\Entity\LtiResource;
 
 /**
- * @EXT\Route("/ltiresource")
+ * @Route("/ltiresource")
  */
 class LtiResourceController extends AbstractCrudController
 {

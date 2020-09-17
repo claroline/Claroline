@@ -19,9 +19,10 @@ use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/user_tracking"),
+ * @Route("/user_tracking"),
  */
 class TrackingController extends AbstractApiController
 {
@@ -51,7 +52,7 @@ class TrackingController extends AbstractApiController
      *          {"name": "user", "type": {"string", "integer"}, "description": "The user uuid"}
      *     }
      * )
-     * @EXT\Route("/{user}/tracking/list", name="apiv2_user_tracking_list")
+     * @Route("/{user}/tracking/list", name="apiv2_user_tracking_list")
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
      *
      * @param User    $user

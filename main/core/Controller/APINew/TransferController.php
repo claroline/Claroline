@@ -24,9 +24,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/transfer")
+ * @Route("/transfer")
  */
 class TransferController extends AbstractCrudController
 {
@@ -87,7 +88,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/upload/{workspaceId}", name="apiv2_transfer_upload_file")
+     * @Route("/upload/{workspaceId}", name="apiv2_transfer_upload_file")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -120,7 +121,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_list")
+     * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_list")
      * @EXT\Method("GET")
      *
      * @param int     $workspaceId
@@ -147,7 +148,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/start", name="apiv2_transfer_start")
+     * @Route("/start", name="apiv2_transfer_start")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -182,7 +183,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/export/{format}", name="apiv2_transfer_export")
+     * @Route("/export/{format}", name="apiv2_transfer_export")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -205,7 +206,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/action/{format}", name="apiv2_transfer_actions")
+     * @Route("/action/{format}", name="apiv2_transfer_actions")
      * @EXT\Method("GET")
      *
      * @param string $format
@@ -220,7 +221,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_sample")
+     * @Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_sample")
      * @EXT\Method("GET")
      *
      * @param string $name

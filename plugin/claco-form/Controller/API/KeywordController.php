@@ -16,9 +16,10 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/clacoformkeyword")
+ * @Route("/clacoformkeyword")
  */
 class KeywordController extends AbstractCrudController
 {
@@ -38,7 +39,7 @@ class KeywordController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/clacoform/{clacoForm}/keywords/list",
      *     name="apiv2_clacoformkeyword_list"
      * )

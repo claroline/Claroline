@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -41,7 +42,7 @@ use Symfony\Component\Templating\EngineInterface;
  * Manages platform resources.
  * ATTENTION. be careful if you change routes order.
  *
- * @EXT\Route("/resources", options={"expose"=true})
+ * @Route("/resources", options={"expose"=true})
  */
 class ResourceController
 {
@@ -117,8 +118,8 @@ class ResourceController
     /**
      * Opens a resource.
      *
-     * @EXT\Route("/load/{id}", name="claro_resource_load")
-     * @EXT\Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
+     * @Route("/load/{id}", name="claro_resource_load")
+     * @Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
      * @EXT\Method("GET")
      *
      * @param int|string $id       - the id or slug of the target node (we don't use ParamConverter to support ID and UUID)
@@ -168,8 +169,8 @@ class ResourceController
     /**
      * Embeds a resource inside a rich text content.
      *
-     * @EXT\Route("/embed/{id}", name="claro_resource_embed_short")
-     * @EXT\Route("/embed/{type}/{id}", name="claro_resource_embed")
+     * @Route("/embed/{id}", name="claro_resource_embed_short")
+     * @Route("/embed/{type}/{id}", name="claro_resource_embed")
      *
      * @param ResourceNode $resourceNode
      *
@@ -194,12 +195,12 @@ class ResourceController
     /**
      * Downloads a list of Resources.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/download",
      *     name="claro_resource_download",
      *     defaults ={"forceArchive"=false}
      * )
-     * @EXT\Route(
+     * @Route(
      *     "/download/{forceArchive}",
      *     name="claro_resource_download",
      *     requirements={"forceArchive" = "^(true|false|0|1)$"},
@@ -243,7 +244,7 @@ class ResourceController
     /**
      * Submit access code.
      *
-     * @EXT\Route("/unlock/{id}", name="claro_resource_unlock")
+     * @Route("/unlock/{id}", name="claro_resource_unlock")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
@@ -262,7 +263,7 @@ class ResourceController
     /**
      * Executes an action on a collection of resources.
      *
-     * @EXT\Route("/collection/{action}", name="claro_resource_collection_action")
+     * @Route("/collection/{action}", name="claro_resource_collection_action")
      *
      * @param string  $action
      * @param Request $request
@@ -316,8 +317,8 @@ class ResourceController
     /**
      * Executes an action on one resource.
      *
-     * @EXT\Route("/{action}/{id}", name="claro_resource_action_short")
-     * @EXT\Route("/{type}/{action}/{id}", name="claro_resource_action")
+     * @Route("/{action}/{id}", name="claro_resource_action_short")
+     * @Route("/{type}/{action}/{id}", name="claro_resource_action")
      *
      * @param string       $action
      * @param ResourceNode $resourceNode

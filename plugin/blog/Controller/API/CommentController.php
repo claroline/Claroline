@@ -15,11 +15,12 @@ use Icap\BlogBundle\Serializer\CommentSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("blog/{blogId}/comments", options={"expose"=true})
+ * @Route("blog/{blogId}/comments", options={"expose"=true})
  * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class CommentController
@@ -53,7 +54,7 @@ class CommentController
     /**
      * Get post comments.
      *
-     * @EXT\Route("/{postId}", name="apiv2_blog_comment_list")
+     * @Route("/{postId}", name="apiv2_blog_comment_list")
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\Method("GET")
@@ -88,7 +89,7 @@ class CommentController
     /**
      * Get reported comments posts.
      *
-     * @EXT\Route("/moderation/reported", name="apiv2_blog_comment_reported")
+     * @Route("/moderation/reported", name="apiv2_blog_comment_reported")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -115,7 +116,7 @@ class CommentController
     /**
      * Get unpublished comments posts.
      *
-     * @EXT\Route("/moderation/unpublished", name="apiv2_blog_comment_unpublished")
+     * @Route("/moderation/unpublished", name="apiv2_blog_comment_unpublished")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -142,7 +143,7 @@ class CommentController
     /**
      * Get unpublished comments posts.
      *
-     * @EXT\Route("/moderation/trusted", name="apiv2_blog_comment_trusted")
+     * @Route("/moderation/trusted", name="apiv2_blog_comment_trusted")
      * @EXT\Method("GET")
      *
      * @param Blog $blog
@@ -164,7 +165,7 @@ class CommentController
     /**
      * Create a post comment.
      *
-     * @EXT\Route("/{postId}/new", name="apiv2_blog_comment_new")
+     * @Route("/{postId}/new", name="apiv2_blog_comment_new")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
@@ -195,7 +196,7 @@ class CommentController
     /**
      * Update post comment.
      *
-     * @EXT\Route("/{commentId}/update", name="apiv2_blog_comment_update")
+     * @Route("/{commentId}/update", name="apiv2_blog_comment_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
@@ -227,7 +228,7 @@ class CommentController
     /**
      * Publish post comment.
      *
-     * @EXT\Route("/{commentId}/publish", name="apiv2_blog_comment_publish")
+     * @Route("/{commentId}/publish", name="apiv2_blog_comment_publish")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -249,7 +250,7 @@ class CommentController
     /**
      * Unpublish post comment.
      *
-     * @EXT\Route("/{commentId}/unpublish", name="apiv2_blog_comment_unpublish")
+     * @Route("/{commentId}/unpublish", name="apiv2_blog_comment_unpublish")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -271,7 +272,7 @@ class CommentController
     /**
      * Report post comment.
      *
-     * @EXT\Route("/{commentId}/report", name="apiv2_blog_comment_report")
+     * @Route("/{commentId}/report", name="apiv2_blog_comment_report")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -292,7 +293,7 @@ class CommentController
     /**
      * Delete post comment.
      *
-     * @EXT\Route("/{commentId}/delete", name="apiv2_blog_comment_delete")
+     * @Route("/{commentId}/delete", name="apiv2_blog_comment_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("comment", class="IcapBlogBundle:Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})

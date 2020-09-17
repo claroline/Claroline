@@ -25,12 +25,13 @@ use Claroline\CursusBundle\Manager\SessionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @EXT\Route("/cursus_session")
+ * @Route("/cursus_session")
  */
 class SessionController extends AbstractCrudController
 {
@@ -79,7 +80,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/list",
      *     name="apiv2_cursus_session_list"
      * )
@@ -113,7 +114,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/events",
      *     name="apiv2_cursus_session_list_events"
      * )
@@ -152,7 +153,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/users",
      *     name="apiv2_cursus_session_list_users"
      * )
@@ -186,7 +187,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/users",
      *     name="apiv2_cursus_session_add_users"
      * )
@@ -224,7 +225,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/remove/users",
      *     name="apiv2_cursus_session_remove_users"
      * )
@@ -244,7 +245,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/groups",
      *     name="apiv2_cursus_session_list_groups"
      * )
@@ -278,7 +279,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/groups",
      *     name="apiv2_cursus_session_add_groups"
      * )
@@ -320,7 +321,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/remove/groups",
      *     name="apiv2_cursus_session_remove_groups"
      * )
@@ -340,7 +341,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/self/register",
      *     name="apiv2_cursus_session_self_register"
      * )
@@ -375,7 +376,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/queues",
      *     name="apiv2_cursus_session_list_queues"
      * )
@@ -407,7 +408,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/remove/queues",
      *     name="apiv2_cursus_session_remove_queues"
      * )
@@ -427,7 +428,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/queue/{queue}/validate",
      *     name="apiv2_cursus_session_validate_queue"
      * )
@@ -458,7 +459,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/all/invite",
      *     name="apiv2_cursus_session_invite_all"
      * )
@@ -482,7 +483,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/users/invite",
      *     name="apiv2_cursus_session_invite_users"
      * )
@@ -508,7 +509,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/groups/invite",
      *     name="apiv2_cursus_session_invite_groups"
      * )
@@ -543,7 +544,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/certificate/all/generate",
      *     name="apiv2_cursus_session_certificate_generate_all"
      * )
@@ -567,7 +568,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/certificate/users/generate",
      *     name="apiv2_cursus_session_certificate_generate_users"
      * )
@@ -593,7 +594,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/certificate/groups/generate",
      *     name="apiv2_cursus_session_certificate_generate_groups"
      * )
@@ -628,7 +629,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/public/list",
      *     name="apiv2_cursus_session_public_list"
      * )

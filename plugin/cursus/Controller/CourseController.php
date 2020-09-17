@@ -22,12 +22,13 @@ use Claroline\CursusBundle\Manager\CourseManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/cursus_course")
+ * @Route("/cursus_course")
  */
 class CourseController extends AbstractCrudController
 {
@@ -99,7 +100,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/available", name="apiv2_cursus_course_available")
+     * @Route("/available", name="apiv2_cursus_course_available")
      *
      * @param Request $request
      *
@@ -123,7 +124,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{slug}/open", name="apiv2_cursus_course_open")
+     * @Route("/{slug}/open", name="apiv2_cursus_course_open")
      * @EXT\ParamConverter("course", class="ClarolineCursusBundle:Course", options={"mapping": {"slug": "slug"}})
      *
      * @param Course $course
@@ -151,7 +152,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions")
+     * @Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions")
      * @EXT\ParamConverter(
      *     "course",
      *     class="ClarolineCursusBundle:Course",
@@ -187,7 +188,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/users",
      *     name="apiv2_cursus_list_users"
      * )
@@ -221,7 +222,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/users",
      *     name="apiv2_cursus_add_users"
      * )
@@ -250,7 +251,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/remove/users",
      *     name="apiv2_cursus_remove_users"
      * )
@@ -271,7 +272,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/groups",
      *     name="apiv2_cursus_list_groups"
      * )
@@ -306,7 +307,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/{type}/groups",
      *     name="apiv2_cursus_add_groups"
      * )
@@ -335,7 +336,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/remove/groups",
      *     name="apiv2_cursus_remove_groups"
      * )

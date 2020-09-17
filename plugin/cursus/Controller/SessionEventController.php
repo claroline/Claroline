@@ -22,12 +22,13 @@ use Claroline\CursusBundle\Manager\SessionEventManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @EXT\Route("/cursus_session_event")
+ * @Route("/cursus_session_event")
  */
 class SessionEventController extends AbstractCrudController
 {
@@ -76,7 +77,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/list",
      *     name="apiv2_cursus_session_event_list"
      * )
@@ -110,7 +111,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/users",
      *     name="apiv2_cursus_session_event_list_users"
      * )
@@ -142,7 +143,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/users",
      *     name="apiv2_cursus_session_event_add_users"
      * )
@@ -178,7 +179,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/remove/users",
      *     name="apiv2_cursus_session_event_remove_users"
      * )
@@ -198,7 +199,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/self/register",
      *     name="apiv2_cursus_session_event_self_register"
      * )
@@ -249,7 +250,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/all/invite",
      *     name="apiv2_cursus_session_event_invite_all"
      * )
@@ -273,7 +274,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/users/invite",
      *     name="apiv2_cursus_session_event_invite_users"
      * )
@@ -299,7 +300,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/certificate/all/generate",
      *     name="apiv2_cursus_session_event_certificate_generate_all"
      * )
@@ -323,7 +324,7 @@ class SessionEventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/certificate/users/generate",
      *     name="apiv2_cursus_session_event_certificate_generate_users"
      * )

@@ -19,9 +19,10 @@ use Claroline\TagBundle\Manager\TagManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("tag")
+ * @Route("tag")
  */
 class TagController extends AbstractCrudController
 {
@@ -94,9 +95,8 @@ class TagController extends AbstractCrudController
     /**
      * List all objects linked to a Tag.
      *
-     * @EXT\Route("/{id}/object", name="apiv2_tag_list_objects")
+     * @Route("/{id}/object", name="apiv2_tag_list_objects", methods={"GET"})
      * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
-     * @EXT\Method("GET")
      *
      * @param Tag     $tag
      * @param Request $request
@@ -117,9 +117,8 @@ class TagController extends AbstractCrudController
      * Adds a tag to a collection of taggable objects.
      * NB. If the tag does not exist, it will be created.
      *
-     * @EXT\Route("/{tag}/object", name="apiv2_tag_add_objects")
+     * @Route("/{tag}/object", name="apiv2_tag_add_objects", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\Method("POST")
      *
      * @param string  $tag
      * @param User    $user
@@ -137,10 +136,9 @@ class TagController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/object", name="apiv2_tag_remove_objects")
+     * @Route("/{id}/object", name="apiv2_tag_remove_objects", methods={"DELETE"})
      * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\Method("DELETE")
      *
      * @param Tag     $tag
      * @param Request $request

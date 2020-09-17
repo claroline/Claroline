@@ -3,7 +3,7 @@
 namespace Claroline\SamlBundle\Security\Store;
 
 use Claroline\SamlBundle\Entity\RequestStateEntry;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use LightSaml\State\Request\RequestState;
 use LightSaml\Store\Request\RequestStateStoreInterface;
 

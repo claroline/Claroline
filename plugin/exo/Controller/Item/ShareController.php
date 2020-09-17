@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use UJM\ExoBundle\Controller\AbstractController;
 use UJM\ExoBundle\Manager\Item\ShareManager;
 use UJM\ExoBundle\Serializer\UserSerializer;
@@ -16,7 +17,7 @@ use UJM\ExoBundle\Serializer\UserSerializer;
 /**
  * Share Controller exposes REST API.
  *
- * @EXT\Route("/questions/share", options={"expose"=true})
+ * @Route("/questions/share", options={"expose"=true})
  */
 class ShareController extends AbstractController
 {
@@ -55,7 +56,7 @@ class ShareController extends AbstractController
     /**
      * Shares a list of questions to users.
      *
-     * @EXT\Route("", name="questions_share")
+     * @Route("", name="questions_share")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -90,7 +91,7 @@ class ShareController extends AbstractController
     }
 
     /**
-     * @EXT\Route("", name="question_share_update")
+     * @Route("", name="question_share_update")
      * @EXT\Method("DELETE")
      *
      * @param Request $request
@@ -102,7 +103,7 @@ class ShareController extends AbstractController
     }
 
     /**
-     * @EXT\Route("", name="question_share_delete")
+     * @Route("", name="question_share_delete")
      * @EXT\Method("DELETE")
      *
      * @param Request $request
@@ -116,7 +117,7 @@ class ShareController extends AbstractController
     /**
      * Searches users by username, first or last name.
      *
-     * @EXT\Route("/{search}", name="questions_share_users")
+     * @Route("/{search}", name="questions_share_users")
      * @EXT\Method("GET")
      *
      * @param string $search

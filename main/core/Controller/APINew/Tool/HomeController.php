@@ -21,11 +21,12 @@ use Claroline\CoreBundle\Manager\LockManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/home")
+ * @Route("/home")
  */
 class HomeController extends AbstractApiController
 {
@@ -71,7 +72,7 @@ class HomeController extends AbstractApiController
     /**
      * Get the platform home data.
      *
-     * @EXT\Route("/", name="apiv2_home", options={"method_prefix"=false})
+     * @Route("/", name="apiv2_home", options={"method_prefix"=false})
      * @EXT\Method("GET")
      *
      * @return JsonResponse
@@ -90,7 +91,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/{context}/{contextId}", name="apiv2_home_update", options={"method_prefix"=false})
+     * @Route("/{context}/{contextId}", name="apiv2_home_update", options={"method_prefix"=false})
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -140,7 +141,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false})
+     * @Route("/admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false})
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -176,7 +177,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/home/tabs/fetch",
      *     name="apiv2_home_user_fetch",
      *     options={"method_prefix"=false}
@@ -207,7 +208,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/admin/home/tabs/fetch",
      *     name="apiv2_home_admin_fetch",
      *     options={"method_prefix"=false}

@@ -32,11 +32,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/tool")
+ * @Route("/tool")
  */
 class ToolController extends AbstractApiController
 {
@@ -90,7 +91,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure")
+     * @Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure")
      * @EXT\Method("PUT")
      *
      * @param string $name
@@ -129,7 +130,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_get_rights")
+     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_get_rights")
      * @EXT\Method("GET")
      *
      * @param string $name
@@ -170,7 +171,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_update_rights")
+     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_update_rights")
      * @EXT\Method("PUT")
      *
      * @param string $name
@@ -220,7 +221,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/close/{name}/{context}/{contextId}", name="apiv2_tool_close")
+     * @Route("/close/{name}/{context}/{contextId}", name="apiv2_tool_close")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *

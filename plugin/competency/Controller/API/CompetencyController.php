@@ -23,11 +23,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/competency")
+ * @Route("/competency")
  */
 class CompetencyController extends AbstractCrudController
 {
@@ -71,7 +72,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/root/list",
      *     name="apiv2_competency_root_list"
      * )
@@ -94,7 +95,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/competency/{id}/list",
      *     name="apiv2_competency_tree_list"
      * )
@@ -128,7 +129,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/framework/{id}/export",
      *     name="apiv2_competency_framework_export"
      * )
@@ -158,7 +159,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "/framework/file/upload",
      *     name="apiv2_competency_framework_file_upload"
      * )
@@ -186,7 +187,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/framework/import",
      *     name="apiv2_competency_framework_import"
      * )
@@ -207,7 +208,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/node/{node}/competencies/fetch",
      *     name="apiv2_competency_resource_competencies_list"
      * )
@@ -235,7 +236,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/node/{node}/competency/{competency}/associate",
      *     name="apiv2_competency_resource_associate"
      * )
@@ -269,7 +270,7 @@ class CompetencyController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/node/{node}/competency/{competency}/dissociate",
      *     name="apiv2_competency_resource_dissociate"
      * )

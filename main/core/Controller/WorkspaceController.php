@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -41,7 +42,7 @@ use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @EXT\Route("/workspaces", options={"expose" = true})
+ * @Route("/workspaces", options={"expose" = true})
  */
 class WorkspaceController
 {
@@ -94,7 +95,7 @@ class WorkspaceController
     }
 
     /**
-     * @EXT\Route("/{slug}", name="claro_workspace_open")
+     * @Route("/{slug}", name="claro_workspace_open")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param string $slug
@@ -173,7 +174,7 @@ class WorkspaceController
     /**
      * Opens a tool.
      *
-     * @EXT\Route("/{id}/tool/{toolName}", name="claro_workspace_open_tool")
+     * @Route("/{id}/tool/{toolName}", name="claro_workspace_open_tool")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -208,7 +209,7 @@ class WorkspaceController
     /**
      * Submit access code.
      *
-     * @EXT\Route("/unlock/{id}", name="claro_workspace_unlock")
+     * @Route("/unlock/{id}", name="claro_workspace_unlock")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "workspace",

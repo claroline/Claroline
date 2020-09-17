@@ -17,9 +17,10 @@ use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/evidence")
+ * @Route("/evidence")
  */
 class EvidenceController extends AbstractCrudController
 {
@@ -29,7 +30,7 @@ class EvidenceController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/assertion/{assertion}", name="apiv2_evidence_create_at")
+     * @Route("/assertion/{assertion}", name="apiv2_evidence_create_at")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      *

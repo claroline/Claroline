@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -101,7 +102,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/{clacoForm}/keyword/get/by/name/{name}/excluding/uuid/{uuid}",
      *     name="claro_claco_form_get_keyword_by_name_excluding_uuid",
      *     options = {"expose"=true}
@@ -130,7 +131,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/{clacoForm}/entry/random",
      *     name="claro_claco_form_entry_random",
      *     options = {"expose"=true}
@@ -156,7 +157,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entries/delete",
      *     name="claro_claco_form_entries_delete",
      *     options = {"expose"=true}
@@ -190,7 +191,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/status/change",
      *     name="claro_claco_form_entry_status_change",
      *     options = {"expose"=true}
@@ -221,7 +222,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entries/status/{status}/change",
      *     name="claro_claco_form_entries_status_change",
      *     options = {"expose"=true}
@@ -260,7 +261,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/comments/retrieve",
      *     name="claro_claco_form_entry_comments_retrieve",
      *     options = {"expose"=true}
@@ -300,7 +301,7 @@ class ClacoFormController
     /**
      * Creates a comment.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/comment/create",
      *     name="claro_claco_form_entry_comment_create",
      *     options = {"expose"=true}
@@ -332,7 +333,7 @@ class ClacoFormController
     /**
      * Edits a comment.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/comment/{comment}/edit",
      *     name="claro_claco_form_entry_comment_edit",
      *     options = {"expose"=true}
@@ -360,7 +361,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/comment/{comment}/delete",
      *     name="claro_claco_form_entry_comment_delete",
      *     options = {"expose"=true}
@@ -387,7 +388,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/comment/{comment}/activate",
      *     name="claro_claco_form_entry_comment_activate",
      *     options = {"expose"=true}
@@ -415,7 +416,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/comment/{comment}/block",
      *     name="claro_claco_form_entry_comment_block",
      *     options = {"expose"=true}
@@ -443,7 +444,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/user/retrieve",
      *     name="claro_claco_form_entry_user_retrieve",
      *     options = {"expose"=true}
@@ -472,7 +473,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/user/save",
      *     name="claro_claco_form_entry_user_save",
      *     options = {"expose"=true}
@@ -514,7 +515,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/pdf/download",
      *     name="claro_claco_form_entry_pdf_download",
      *     options = {"expose"=true}
@@ -557,7 +558,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/shared/users/list",
      *     name="claro_claco_form_entry_shared_users_list",
      *     options = {"expose"=true}
@@ -592,7 +593,7 @@ class ClacoFormController
     /**
      * Shares entry ownership to users.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/users/share",
      *     name="claro_claco_form_entry_users_share",
      *     options = {"expose"=true}
@@ -623,7 +624,7 @@ class ClacoFormController
     /**
      * Unshares entry ownership from user.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/unshare",
      *     name="claro_claco_form_entry_user_unshare",
      *     options = {"expose"=true}
@@ -655,7 +656,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/{clacoForm}/entries/export",
      *     name="claro_claco_form_entries_export",
      *     options = {"expose"=true}
@@ -706,7 +707,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/user/{user}/change",
      *     name="claro_claco_form_entry_user_change",
      *     options = {"expose"=true}
@@ -739,7 +740,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/lock/switch",
      *     name="claro_claco_form_entry_lock_switch",
      *     options = {"expose"=true}
@@ -766,7 +767,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entries/lock/{locked}/switch",
      *     name="claro_claco_form_entries_lock_switch",
      *     options = {"expose"=true}
@@ -808,7 +809,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/entry/{entry}/field/{field}/file/download",
      *     name="claro_claco_form_field_value_file_download",
      *     options = {"expose"=true}
@@ -860,7 +861,7 @@ class ClacoFormController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/claco/form/{clacoForm}/entries/used/countries",
      *     name="claro_claco_form_used_countries_load",
      *     options = {"expose"=true}

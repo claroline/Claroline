@@ -20,9 +20,10 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/profile")
+ * @Route("/profile")
  *
  * There is a thing named Link which work through an event. See older version on github so we can
  * add it again
@@ -61,7 +62,7 @@ class ProfileController extends AbstractApiController
     /**
      * Updates the profile configuration for the current platform.
      *
-     * @EXT\Route("", name="apiv2_profile_update")
+     * @Route("", name="apiv2_profile_update")
      * @EXT\Method("PUT")
      *
      * @param Request $request

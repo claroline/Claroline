@@ -12,11 +12,12 @@ use Icap\WikiBundle\Manager\SectionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/wiki/section/{sectionId}/contribution")
+ * @Route("/wiki/section/{sectionId}/contribution")
  * @EXT\ParamConverter(
  *     "section",
  *     class="IcapWikiBundle:Section",
@@ -56,7 +57,7 @@ class ContributionController
     }
 
     /**
-     * @EXT\Route("/history", name="apiv2_wiki_section_contribution_history")
+     * @Route("/history", name="apiv2_wiki_section_contribution_history")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\Method({"GET"})
      *
@@ -82,7 +83,7 @@ class ContributionController
     }
 
     /**
-     * @EXT\Route("/{id}", name="apiv2_wiki_section_contribution_get")
+     * @Route("/{id}", name="apiv2_wiki_section_contribution_get")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
@@ -105,7 +106,7 @@ class ContributionController
     }
 
     /**
-     * @EXT\Route("/{id}", name="apiv2_wiki_section_contribution_set_active")
+     * @Route("/{id}", name="apiv2_wiki_section_contribution_set_active")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
@@ -129,7 +130,7 @@ class ContributionController
     }
 
     /**
-     * @EXT\Route("/compare/{id1}/{id2}", name="apiv2_wiki_section_contribution_compare")
+     * @Route("/compare/{id1}/{id2}", name="apiv2_wiki_section_contribution_compare")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\Method({"GET"})
      *

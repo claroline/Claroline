@@ -14,9 +14,10 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/logger")
+ * @Route("/logger")
  */
 class LoggerController
 {
@@ -26,7 +27,7 @@ class LoggerController
     }
 
     /**
-     * @EXT\Route("/{subdir}/{name}", name="apiv2_logger_get")
+     * @Route("/{subdir}/{name}", name="apiv2_logger_get")
      * @EXT\Method("GET")
      *
      * @todo update import log

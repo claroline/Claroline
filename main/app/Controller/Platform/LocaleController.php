@@ -12,16 +12,16 @@
 namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Manages platform locales.
  *
- * @EXT\Route("/locale")
+ * @Route("/locale")
  */
 class LocaleController
 {
@@ -47,8 +47,7 @@ class LocaleController
     /**
      * List platform locales.
      *
-     * @EXT\Route("/", name="apiv2_locale_list")
-     * @EXT\Method("GET")
+     * @Route("/", name="apiv2_locale_list", methods={"GET"})
      *
      * @return JsonResponse
      */
@@ -61,8 +60,9 @@ class LocaleController
 
     /**
      * Change locale.
+     * Change locale.
      *
-     * @EXT\Route("/{locale}", name="claroline_locale_change")
+     * @Route("/{locale}", name="claroline_locale_change")
      *
      * @param Request $request
      * @param string  $locale

@@ -22,11 +22,12 @@ use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/path")
+ * @Route("/path")
  */
 class PathController extends AbstractCrudController
 {
@@ -58,7 +59,7 @@ class PathController extends AbstractCrudController
     /**
      * Update step progression for an user.
      *
-     * @EXT\Route("/step/{id}/progression/update", name="innova_path_progression_update")
+     * @Route("/step/{id}/progression/update", name="innova_path_progression_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "step",
@@ -96,7 +97,7 @@ class PathController extends AbstractCrudController
     /**
      * Fetch user progressions for path.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/progressions/fetch",
      *     name="innova_path_progressions_fetch"
      * )
@@ -134,7 +135,7 @@ class PathController extends AbstractCrudController
     /**
      * Fetch user progressions for path.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/{id}/user/{user}/steps/progression/fetch",
      *     name="innova_path_user_steps_progression_fetch"
      * )

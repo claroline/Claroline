@@ -30,12 +30,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/user")
+ * @Route("/user")
  */
 class UserController extends AbstractCrudController
 {
@@ -166,7 +167,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @EXT\Route("/pws", name="apiv2_users_pws_create")
+     * @Route("/pws", name="apiv2_users_pws_create")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -199,7 +200,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @EXT\Route("/pws", name="apiv2_users_pws_delete")
+     * @Route("/pws", name="apiv2_users_pws_delete")
      * @EXT\Method("DELETE")
      *
      * @param Request $request
@@ -234,7 +235,7 @@ class UserController extends AbstractCrudController
      *         "schema":"$schema"
      *     }
      * )
-     * @EXT\Route("/register", name="apiv2_user_register")
+     * @Route("/register", name="apiv2_user_register")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -311,7 +312,7 @@ class UserController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @EXT\Route("/list/managed/organization", name="apiv2_user_list_managed_organization")
+     * @Route("/list/managed/organization", name="apiv2_user_list_managed_organization")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -337,7 +338,7 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{keep}/{remove}/merge", name="apiv2_user_merge")
+     * @Route("/{keep}/{remove}/merge", name="apiv2_user_merge")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("keep", options={"mapping": {"keep": "uuid"}})
      * @EXT\ParamConverter("remove", options={"mapping": {"remove": "uuid"}})
@@ -379,7 +380,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @EXT\Route("/enable", name="apiv2_users_enable")
+     * @Route("/enable", name="apiv2_users_enable")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -411,7 +412,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @EXT\Route("/disable", name="apiv2_users_disable")
+     * @Route("/disable", name="apiv2_users_disable")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -443,7 +444,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @EXT\Route("/password/reset", name="apiv2_users_password_reset")
+     * @Route("/password/reset", name="apiv2_users_password_reset")
      * @EXT\Method("PUT")
      *
      * @param Request $request

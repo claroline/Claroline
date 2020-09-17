@@ -32,12 +32,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @EXT\Route(options={"expose"=true})
+ * @Route(options={"expose"=true})
  *
  * @todo merge with APINew\FileController
  */
@@ -103,7 +104,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/stream/{id}", name="claro_file_stream")
+     * @Route("/stream/{id}", name="claro_file_stream")
      * @EXT\Method("GET")
      *
      * @param ResourceNode $resourceNode
@@ -116,7 +117,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/resource/media/{node}", name="claro_file_get_media")
+     * @Route("/resource/media/{node}", name="claro_file_get_media")
      * @EXT\Method("GET")
      *
      * @param ResourceNode $node
@@ -131,7 +132,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults ={"workspace"=null})
+     * @Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults ={"workspace"=null})
      * @EXT\Method("GET")
      *
      * @param Workspace $workspace
@@ -158,7 +159,7 @@ class FileController extends AbstractApiController
     /**
      * Creates a resource from uploaded file.
      *
-     * @EXT\Route("/tinymce/upload", name="claro_tinymce_file_upload")
+     * @Route("/tinymce/upload", name="claro_tinymce_file_upload")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Method("POST")
      *
@@ -230,7 +231,7 @@ class FileController extends AbstractApiController
     /**
      * Saves a file.
      *
-     * @EXT\Route("/public/upload", name="upload_public_file")
+     * @Route("/public/upload", name="upload_public_file")
      * @EXT\Method("POST")
      *
      * @param Request $request

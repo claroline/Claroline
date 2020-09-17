@@ -38,8 +38,8 @@ class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('config');
+        $treeBuilder = new TreeBuilder('config');
+        $rootNode = $treeBuilder->getRootNode();
         //maybe remove that line and edit plugins later
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);

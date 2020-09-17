@@ -10,9 +10,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/forum_message")
+ * @Route("/forum_message")
  */
 class MessageController extends AbstractCrudController
 {
@@ -22,7 +23,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/{id}/comment")
+     * @Route("/{id}/comment")
      * @EXT\Method("POST")
      * @ParamConverter("message", options={"mapping": {"id": "uuid"}})
      *
@@ -64,7 +65,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list")
+     * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -85,7 +86,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list")
+     * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *

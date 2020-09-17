@@ -19,11 +19,12 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\HistoryBundle\Manager\HistoryManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * User history.
  *
- * @EXT\Route("/history", options={"expose"=true})
+ * @Route("/history", options={"expose"=true})
  */
 class HistoryController
 {
@@ -50,7 +51,7 @@ class HistoryController
     /**
      * Gets the current user history.
      *
-     * @EXT\Route("/", name="claro_user_history")
+     * @Route("/", name="claro_user_history")
      * @EXT\ParamConverter("currentUser", converter="current_user")
      *
      * @param User $currentUser

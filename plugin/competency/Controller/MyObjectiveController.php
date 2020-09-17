@@ -10,11 +10,12 @@ use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * todo: use firewall instead for security, check if role user for route /my-objectives.
  *
- * @EXT\Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true})
+ * @Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
  */
 class MyObjectiveController
@@ -41,7 +42,7 @@ class MyObjectiveController
     /**
      * Fetches data for competency page of My Objectives tool.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/objective/{objective}/competency/{competency}",
      *     name="hevinci_my_objectives_competency"
      * )
@@ -100,7 +101,7 @@ class MyObjectiveController
     /**
      * Fetches data for competency page of My Objectives tool.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/objective/competency/{competency}/level/{level}",
      *     name="hevinci_my_objectives_competency_level"
      * )
@@ -125,7 +126,7 @@ class MyObjectiveController
     /**
      * Fetches a resource for a competency at the given level for My Objectives tool.
      *
-     * @EXT\Route(
+     * @Route(
      *     "/objective/competency/{competency}/level/{level}/resource/fetch",
      *     name="hevinci_my_objectives_competency_resource_fetch"
      * )
@@ -153,7 +154,7 @@ class MyObjectiveController
     /**
      * Returns the competencies associated with an objective assigned to a user, with progress data.
      *
-     * @EXT\Route("/{id}/competencies", name="hevinci_load_my_objective_competencies")
+     * @Route("/{id}/competencies", name="hevinci_load_my_objective_competencies")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * @param Objective $objective
@@ -169,7 +170,7 @@ class MyObjectiveController
     /**
      * Displays the progress history of a user for a given competency.
      *
-     * @EXT\Route("/competencies/{id}/history", name="hevinci_competency_my_history")
+     * @Route("/competencies/{id}/history", name="hevinci_competency_my_history")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      * @EXT\Template("HeVinciCompetencyBundle::competencyHistory.html.twig")
      *

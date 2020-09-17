@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
@@ -18,7 +19,7 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 /**
  * Exercise API Controller exposes REST API.
  *
- * @EXT\Route("/exercises", options={"expose"=true})
+ * @Route("/exercises", options={"expose"=true})
  */
 class ExerciseController extends AbstractController
 {
@@ -57,7 +58,7 @@ class ExerciseController extends AbstractController
     /**
      * Gets the full representation of an exercise (including solutions) in a JSON format.
      *
-     * @EXT\Route("/{id}", name="exercise_get")
+     * @Route("/{id}", name="exercise_get")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      *
@@ -77,7 +78,7 @@ class ExerciseController extends AbstractController
     /**
      * Updates an Exercise.
      *
-     * @EXT\Route("/{id}", name="exercise_update")
+     * @Route("/{id}", name="exercise_update")
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      * @EXT\Method("PUT")
      *
@@ -122,7 +123,7 @@ class ExerciseController extends AbstractController
     /**
      * Opens the docimology of a quiz.
      *
-     * @EXT\Route("/{id}/docimology", name="exercise_docimology")
+     * @Route("/{id}/docimology", name="exercise_docimology")
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      * @EXT\Method("GET")
      *
@@ -140,7 +141,7 @@ class ExerciseController extends AbstractController
     /**
      * Gets statistics of an Exercise.
      *
-     * @EXT\Route("/{id}/statistics", name="exercise_statistics")
+     * @Route("/{id}/statistics", name="exercise_statistics")
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      * @EXT\Method("GET")
      *

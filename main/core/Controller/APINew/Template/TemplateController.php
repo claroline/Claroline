@@ -18,11 +18,12 @@ use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/template")
+ * @Route("/template")
  */
 class TemplateController extends AbstractCrudController
 {
@@ -68,7 +69,7 @@ class TemplateController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{lang}/list",
      *     name="apiv2_lang_template_list"
      * )
@@ -94,7 +95,7 @@ class TemplateController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/delete",
      *     name="apiv2_template_full_delete_bulk"
      * )
@@ -130,7 +131,7 @@ class TemplateController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "{id}/default",
      *     name="apiv2_template_default_define"
      * )

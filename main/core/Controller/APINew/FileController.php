@@ -17,11 +17,12 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages platform uploaded files... sort of.
  *
- * @EXT\Route("/public_file")
+ * @Route("/public_file")
  */
 class FileController extends AbstractCrudController
 {
@@ -55,7 +56,7 @@ class FileController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false})
+     * @Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false})
      * @EXT\Method("POST")
      *
      * @param Request $request

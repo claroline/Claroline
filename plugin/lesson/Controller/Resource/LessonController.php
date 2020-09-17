@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class LessonController extends Controller
@@ -53,7 +54,7 @@ class LessonController extends Controller
     }
 
     /**
-     * @EXT\Route("view/{lesson}.pdf", name="icap_lesson_export_pdf")
+     * @Route("view/{lesson}.pdf", name="icap_lesson_export_pdf")
      * @EXT\ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"mapping": {"lesson": "uuid"}})
      *
      * @param Lesson $lesson
@@ -87,7 +88,7 @@ class LessonController extends Controller
     }
 
     /**
-     * @EXT\Route("view/chapter/{chapter}.pdf", name="icap_lesson_chapter_export_pdf")
+     * @Route("view/chapter/{chapter}.pdf", name="icap_lesson_chapter_export_pdf")
      * @EXT\ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"chapter": "uuid"}})
      *
      * @param Chapter $chapter

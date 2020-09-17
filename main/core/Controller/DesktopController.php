@@ -26,13 +26,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * User desktop.
  *
- * @EXT\Route("/desktop", options={"expose"=true})
+ * @Route("/desktop", options={"expose"=true})
  */
 class DesktopController
 {
@@ -73,7 +74,7 @@ class DesktopController
     /**
      * Opens the desktop.
      *
-     * @EXT\Route("/", name="claro_desktop_open")
+     * @Route("/", name="claro_desktop_open")
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User $currentUser
@@ -109,7 +110,7 @@ class DesktopController
     /**
      * Opens a tool.
      *
-     * @EXT\Route("/tool/{toolName}", name="claro_desktop_open_tool")
+     * @Route("/tool/{toolName}", name="claro_desktop_open_tool")
      *
      * @param string $toolName
      *
@@ -139,7 +140,7 @@ class DesktopController
     /**
      * Lists desktop tools accessible by the current user.
      *
-     * @EXT\Route("/tools", name="claro_desktop_tools")
+     * @Route("/tools", name="claro_desktop_tools")
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      *
      * @return JsonResponse

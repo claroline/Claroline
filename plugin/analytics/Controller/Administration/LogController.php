@@ -12,10 +12,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("/tools/admin/logs")
+ * @Route("/tools/admin/logs")
  */
 class LogController extends AbstractSecurityController
 {
@@ -67,7 +68,7 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/", name="apiv2_admin_tool_logs_list")
+     * @Route("/", name="apiv2_admin_tool_logs_list")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -87,7 +88,7 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/csv", name="apiv2_admin_tool_logs_list_csv")
+     * @Route("/csv", name="apiv2_admin_tool_logs_list_csv")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -110,7 +111,7 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv")
+     * @Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv")
      * @EXT\Method("GET")
      *
      * @param Request $request

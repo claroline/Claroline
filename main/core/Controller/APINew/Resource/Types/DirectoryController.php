@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("resource_directory")
+ * @Route("resource_directory")
  */
 class DirectoryController extends AbstractCrudController
 {

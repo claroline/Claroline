@@ -9,11 +9,12 @@ use Claroline\CoreBundle\Manager\DataSourceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Exposes platform data sources.
  *
- * @EXT\Route("/data_source", options={"expose": true})
+ * @Route("/data_source", options={"expose": true})
  */
 class DataSourceController
 {
@@ -46,7 +47,7 @@ class DataSourceController
     /**
      * Lists available data sources for a given context.
      *
-     * @EXT\Route("/{context}", name="apiv2_data_source_list", defaults={"context"=null})
+     * @Route("/{context}", name="apiv2_data_source_list", defaults={"context"=null})
      * @EXT\Method("GET")
      *
      * @param string $context
@@ -65,7 +66,7 @@ class DataSourceController
     /**
      * Gets data from a data source.
      *
-     * @EXT\Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null})
+     * @Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null})
      * @EXT\Method("GET")
      *
      * @param Request $request

@@ -16,9 +16,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\LockManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/objectlock")
+ * @Route("/objectlock")
  */
 class ObjectLockController
 {
@@ -33,7 +34,7 @@ class ObjectLockController
     }
 
     /**
-     * @EXT\Route("/lock/class/{class}/id/{id}", name="apiv2_object_lock")
+     * @Route("/lock/class/{class}/id/{id}", name="apiv2_object_lock")
      * @EXT\Method("PUT")
      */
     public function lockAction($class, $id)
@@ -44,7 +45,7 @@ class ObjectLockController
     }
 
     /**
-     * @EXT\Route("/unlock/class/{class}/id/{id}", name="apiv2_object_unlock")
+     * @Route("/unlock/class/{class}/id/{id}", name="apiv2_object_unlock")
      * @EXT\Method("PUT")
      */
     public function unlockAction($class, $id)
@@ -55,7 +56,7 @@ class ObjectLockController
     }
 
     /**
-     * @EXT\Route("/class/{class}/id/{id}", name="apiv2_object_lock_get")
+     * @Route("/class/{class}/id/{id}", name="apiv2_object_lock_get")
      * @EXT\Method("GET")
      */
     public function getAction($class, $id)

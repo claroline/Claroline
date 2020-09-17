@@ -10,11 +10,12 @@ use Icap\WikiBundle\Manager\WikiManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * @EXT\Route("/wiki/{id}")
+ * @Route("/wiki/{id}")
  * @EXT\ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"mapping": {"id": "uuid"}})
  */
 class WikiController
@@ -51,7 +52,7 @@ class WikiController
     }
 
     /**
-     * @EXT\Route("/", name="apiv2_wiki_update")
+     * @Route("/", name="apiv2_wiki_update")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\Method({"PUT"})
      *
@@ -74,7 +75,7 @@ class WikiController
     }
 
     /**
-     * @EXT\Route("/pdf", name="apiv2_wiki_export_pdf")
+     * @Route("/pdf", name="apiv2_wiki_export_pdf")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param Wiki      $wiki

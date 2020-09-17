@@ -32,12 +32,13 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @EXT\Route("/workspace")
+ * @Route("/workspace")
  */
 class WorkspaceController extends AbstractCrudController
 {
@@ -115,7 +116,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @EXT\Route("/list/registerable", name="apiv2_workspace_list_registerable")
+     * @Route("/list/registerable", name="apiv2_workspace_list_registerable")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -146,7 +147,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @EXT\Route("/list/registered", name="apiv2_workspace_list_registered")
+     * @Route("/list/registered", name="apiv2_workspace_list_registered")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -172,7 +173,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @EXT\Route("/list/administrated", name="apiv2_workspace_list_managed")
+     * @Route("/list/administrated", name="apiv2_workspace_list_managed")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -198,7 +199,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @EXT\Route("/list/model", name="apiv2_workspace_list_model")
+     * @Route("/list/model", name="apiv2_workspace_list_model")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -297,7 +298,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route("/{id}/export", name="apiv2_workspace_export")
+     * @Route("/{id}/export", name="apiv2_workspace_export")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
@@ -375,7 +376,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     * @EXT\Route("/archive", name="apiv2_workspace_archive")
+     * @Route("/archive", name="apiv2_workspace_archive")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -408,7 +409,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     * @EXT\Route("/unarchive", name="apiv2_workspace_unarchive")
+     * @Route("/unarchive", name="apiv2_workspace_unarchive")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -447,7 +448,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route("/{id}/managers", name="apiv2_workspace_list_managers")
+     * @Route("/{id}/managers", name="apiv2_workspace_list_managers")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
@@ -474,7 +475,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     }
      * )
-     * @EXT\Route("/roles/common", name="apiv2_workspace_roles_common")
+     * @Route("/roles/common", name="apiv2_workspace_roles_common")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -530,7 +531,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
-     * @EXT\Route("/{id}/role/configurable", name="apiv2_workspace_list_roles_configurable")
+     * @Route("/{id}/role/configurable", name="apiv2_workspace_list_roles_configurable")
      * @EXT\Method("GET")
      *
      * @param string  $id
@@ -556,7 +557,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
      *     }
      * )
-     * @EXT\Route("/{workspace}/role/{role}/shortcuts/add", name="apiv2_workspace_shortcuts_add")
+     * @Route("/{workspace}/role/{role}/shortcuts/add", name="apiv2_workspace_shortcuts_add")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
@@ -589,7 +590,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "role", "type": {"string"}, "description": "The role uuid"}
      *     }
      * )
-     * @EXT\Route("/{workspace}/role/{role}/shortcut/remove", name="apiv2_workspace_shortcut_remove")
+     * @Route("/{workspace}/role/{role}/shortcut/remove", name="apiv2_workspace_shortcut_remove")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
@@ -621,7 +622,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string"}, "description": "The workspace uuid"}
      *     }
      * )
-     * @EXT\Route("/{slug}/close", name="apiv2_workspace_close")
+     * @Route("/{slug}/close", name="apiv2_workspace_close")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})

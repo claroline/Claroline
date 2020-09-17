@@ -19,11 +19,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @EXT\Route("/event")
+ * @Route("/event")
  */
 class EventController extends AbstractCrudController
 {
@@ -93,7 +94,7 @@ class EventController extends AbstractCrudController
     /**
      * Marks a list of tasks as done.
      *
-     * @EXT\Route("/done", name="apiv2_task_mark_done")
+     * @Route("/done", name="apiv2_task_mark_done")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -121,7 +122,7 @@ class EventController extends AbstractCrudController
     /**
      * Marks a list of tasks as to do.
      *
-     * @EXT\Route("/todo", name="apiv2_task_mark_todo")
+     * @Route("/todo", name="apiv2_task_mark_todo")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -147,7 +148,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/download", name="apiv2_download_agenda")
+     * @Route("/download", name="apiv2_download_agenda")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -179,7 +180,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/import", name="apiv2_event_import")
+     * @Route("/import", name="apiv2_event_import")
      * @EXT\Method("POST")
      *
      * @param Request $request

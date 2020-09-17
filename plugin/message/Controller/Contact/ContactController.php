@@ -21,10 +21,11 @@ use Claroline\MessageBundle\Serializer\Contact\ContactSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("/contact")
+ * @Route("/contact")
  */
 class ContactController extends AbstractCrudController
 {
@@ -77,7 +78,7 @@ class ContactController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/contacts/create",
      *     name="apiv2_contacts_create"
      * )

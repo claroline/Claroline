@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Crud;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages an organizations collection on an entity.
@@ -16,7 +17,7 @@ trait HasOrganizationsTrait
     /**
      * List organizations of the collection.
      *
-     * @EXT\Route("/{id}/organization")
+     * @Route("/{id}/organization")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
@@ -48,7 +49,7 @@ trait HasOrganizationsTrait
     /**
      * Adds organizations to the collection.
      *
-     * @EXT\Route("/{id}/organization")
+     * @Route("/{id}/organization")
      * @EXT\Method("PATCH")
      * @ApiDoc(
      *     description="Adds objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
@@ -81,7 +82,7 @@ trait HasOrganizationsTrait
     /**
      * Removes organizations from the collection.
      *
-     * @EXT\Route("/{id}/organization")
+     * @Route("/{id}/organization")
      * @EXT\Method("DELETE")
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Organization\Organization.",

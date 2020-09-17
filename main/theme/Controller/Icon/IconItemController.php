@@ -20,11 +20,12 @@ use Claroline\ThemeBundle\Manager\IconSetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/icon_item")
+ * @Route("/icon_item")
  */
 class IconItemController extends AbstractCrudController
 {
@@ -70,7 +71,7 @@ class IconItemController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{iconSet}/items/list",
      *     name="apiv2_icon_set_items_list"
      * )
@@ -96,7 +97,7 @@ class IconItemController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/{iconSet}/item/update",
      *     name="apiv2_icon_set_item_update"
      * )

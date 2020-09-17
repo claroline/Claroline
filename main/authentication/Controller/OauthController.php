@@ -19,10 +19,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * @EXT\Route("/oauth")
+ * @Route("/oauth")
  */
 class OauthController extends AbstractCrudController
 {
@@ -63,7 +64,7 @@ class OauthController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/check_connection", name="claro_oauth_check_connexion")
+     * @Route("/check_connection", name="claro_oauth_check_connexion")
      *
      * @param Request $request
      *
@@ -86,7 +87,7 @@ class OauthController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/link_account/{service}/{username}", name="claro_oauth_link_account")
+     * @Route("/link_account/{service}/{username}", name="claro_oauth_link_account")
      * @EXT\Method("POST")
      *
      * @param Request $request
@@ -103,7 +104,7 @@ class OauthController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/link_account_mail", name="claro_oauth_link_account_mail")
+     * @Route("/link_account_mail", name="claro_oauth_link_account_mail")
      * @EXT\Method("GET")
      *
      * @param Request $request

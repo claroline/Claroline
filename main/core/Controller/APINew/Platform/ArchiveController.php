@@ -15,6 +15,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Platform;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ArchiveController extends AbstractSecurityController
 {
@@ -32,7 +33,7 @@ class ArchiveController extends AbstractSecurityController
     }
 
     /**
-     * @EXT\Route("/download/{archive}", name="claro_admin_archive_download")
+     * @Route("/download/{archive}", name="claro_admin_archive_download")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response

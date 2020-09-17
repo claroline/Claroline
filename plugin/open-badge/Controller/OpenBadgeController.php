@@ -24,9 +24,10 @@ use Claroline\OpenBadgeBundle\Serializer\ProfileSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/openbadge2")
+ * @Route("/openbadge2")
  */
 class OpenBadgeController
 {
@@ -60,7 +61,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/criteria/{badge}", name="apiv2_open_badge__criteria")
+     * @Route("/criteria/{badge}", name="apiv2_open_badge__criteria")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
@@ -74,7 +75,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/image/{image}", name="apiv2_open_badge__image")
+     * @Route("/image/{image}", name="apiv2_open_badge__image")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("image", class="ClarolineCoreBundle:File\PublicFile", options={"mapping": {"image": "id"}})
      *
@@ -88,7 +89,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/profile/{profile}", name="apiv2_open_badge__profile")
+     * @Route("/profile/{profile}", name="apiv2_open_badge__profile")
      * @EXT\Method("GET")
      *
      * @param $profile
@@ -101,7 +102,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/badge/{badge}", name="apiv2_open_badge__badge_class")
+     * @Route("/badge/{badge}", name="apiv2_open_badge__badge_class")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
      *
@@ -115,7 +116,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/assertion/{assertion}.json", name="apiv2_open_badge__assertion")
+     * @Route("/assertion/{assertion}.json", name="apiv2_open_badge__assertion")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      *
@@ -129,7 +130,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/evidence/{evidence}", name="apiv2_open_badge__evidence")
+     * @Route("/evidence/{evidence}", name="apiv2_open_badge__evidence")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("evidence", class="ClarolineOpenBadgeBundle:Evidence", options={"mapping": {"evidence": "uuid"}})
      *
@@ -143,7 +144,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/crypto/{key}", name="apiv2_open_badge__cryptographic_key")
+     * @Route("/crypto/{key}", name="apiv2_open_badge__cryptographic_key")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("key", class="ClarolineCoreBundle:Cryptography\CryptographicKey", options={"mapping": {"key": "uuid"}})
      *
@@ -157,7 +158,7 @@ class OpenBadgeController
     }
 
     /**
-     * @EXT\Route("/connect", name="apiv2_open_badge__connect")
+     * @Route("/connect", name="apiv2_open_badge__connect")
      * @EXT\Method("GET")
      *
      * @param Request $request

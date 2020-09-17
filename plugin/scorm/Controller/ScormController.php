@@ -23,6 +23,7 @@ use Claroline\ScormBundle\Serializer\ScoTrackingSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -62,7 +63,7 @@ class ScormController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "/workspace/{workspace}/scorm/archive/upload",
      *    name="apiv2_scorm_archive_upload"
      * )
@@ -103,7 +104,7 @@ class ScormController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "/scorm/{scorm}/update",
      *    name="apiv2_scorm_update"
      * )
@@ -133,7 +134,7 @@ class ScormController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "/sco/{sco}/{mode}/commit",
      *    name="apiv2_scorm_sco_commit"
      * )
@@ -163,7 +164,7 @@ class ScormController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/scorm/{scorm}/trackings/list",
      *     name="apiv2_scormscotracking_list"
      * )

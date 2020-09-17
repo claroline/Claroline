@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -24,7 +25,7 @@ use UJM\ExoBundle\Manager\ExerciseManager;
  * Paper Controller.
  * Manages the submitted papers to an exercise.
  *
- * @EXT\Route("exercises/{exerciseId}/papers", options={"expose"=true})
+ * @Route("exercises/{exerciseId}/papers", options={"expose"=true})
  * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class PaperController
@@ -73,7 +74,7 @@ class PaperController
      * Returns all the papers associated with an exercise.
      * Administrators get the papers of all users, others get only theirs.
      *
-     * @EXT\Route("", name="exercise_paper_list")
+     * @Route("", name="exercise_paper_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -115,7 +116,7 @@ class PaperController
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @EXT\Route("/{id}", name="exercise_paper_get")
+     * @Route("/{id}", name="exercise_paper_get")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
@@ -141,7 +142,7 @@ class PaperController
     /**
      * Deletes some papers associated with an exercise.
      *
-     * @EXT\Route("", name="ujm_exercise_delete_papers")
+     * @Route("", name="ujm_exercise_delete_papers")
      * @EXT\Method("DELETE")
      *
      * @param Exercise $exercise
@@ -166,7 +167,7 @@ class PaperController
     /**
      * Exports papers into a CSV file.
      *
-     * @EXT\Route("/export/csv", name="exercise_papers_export")
+     * @Route("/export/csv", name="exercise_papers_export")
      * @EXT\Method("GET")
      *
      * @param Exercise $exercise
@@ -188,7 +189,7 @@ class PaperController
     /**
      * Exports papers into a json file.
      *
-     * @EXT\Route("/export/json", name="exercise_papers_export_json")
+     * @Route("/export/json", name="exercise_papers_export_json")
      * @EXT\Method("GET")
      *
      * @param Exercise $exercise
@@ -218,7 +219,7 @@ class PaperController
     /**
      * Exports papers into a csv file.
      *
-     * @EXT\Route("/export/papers/csv", name="exercise_papers_export_csv")
+     * @Route("/export/papers/csv", name="exercise_papers_export_csv")
      * @EXT\Method("GET")
      *
      * @param Exercise $exercise

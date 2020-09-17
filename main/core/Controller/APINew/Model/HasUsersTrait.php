@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Crud;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages a users collection on an entity.
@@ -16,7 +17,7 @@ trait HasUsersTrait
     /**
      * List users of the collection.
      *
-     * @EXT\Route("/{id}/user")
+     * @Route("/{id}/user")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\User.",
@@ -48,7 +49,7 @@ trait HasUsersTrait
     /**
      * Adds users to the collection.
      *
-     * @EXT\Route("/{id}/user")
+     * @Route("/{id}/user")
      * @EXT\Method("PATCH")
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\User.",
@@ -81,7 +82,7 @@ trait HasUsersTrait
     /**
      * Removes users from the collection.
      *
-     * @EXT\Route("/{id}/user")
+     * @Route("/{id}/user")
      * @EXT\Method("DELETE")
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\User.",

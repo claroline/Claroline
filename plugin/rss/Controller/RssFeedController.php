@@ -13,10 +13,10 @@ namespace Claroline\RssBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\RssBundle\Entity\Resource\RssFeed;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/rss_feed")
+ * @Route("/rss_feed")
  */
 class RssFeedController extends AbstractCrudController
 {

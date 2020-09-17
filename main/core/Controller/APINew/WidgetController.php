@@ -18,11 +18,12 @@ use Claroline\CoreBundle\Manager\DataSourceManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Exposes platform widgets.
  *
- * @EXT\Route("/widget", options={"expose": true})
+ * @Route("/widget", options={"expose": true})
  */
 class WidgetController
 {
@@ -55,7 +56,7 @@ class WidgetController
     /**
      * Lists available widgets for a given context.
      *
-     * @EXT\Route("/{context}", name="apiv2_widget_available", defaults={"context"=null})
+     * @Route("/{context}", name="apiv2_widget_available", defaults={"context"=null})
      * @EXT\Method("GET")
      *
      * @param string $context

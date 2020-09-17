@@ -12,7 +12,7 @@
 namespace Claroline\AppBundle\Persistence;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
+use Doctrine\Persistence\ObjectManager as ObjectManagerInterface;
 
 class TableManager
 {

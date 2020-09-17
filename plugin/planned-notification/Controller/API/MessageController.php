@@ -17,9 +17,10 @@ use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/plannednotificationmessage")
+ * @Route("/plannednotificationmessage")
  */
 class MessageController extends AbstractCrudController
 {
@@ -52,7 +53,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/workspace/{workspace}/list",
      *     name="apiv2_plannednotificationmessage_workspace_list"
      * )
@@ -82,7 +83,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/messages/send",
      *     name="apiv2_plannednotificationmessage_messages_send"
      * )

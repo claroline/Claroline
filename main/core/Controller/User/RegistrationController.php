@@ -17,10 +17,10 @@ use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\UserManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -30,7 +30,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * that the user is anonymous and the self-registration is allowed by the
  * platform configuration.
  *
- * @EXT\Route("/user/registration", options={"expose"=true})
+ * @Route("/user/registration", options={"expose"=true})
  */
 class RegistrationController
 {
@@ -77,7 +77,7 @@ class RegistrationController
     }
 
     /**
-     * @EXT\Route("/activate/{hash}", name="claro_security_activate_user")
+     * @Route("/activate/{hash}", name="claro_security_activate_user")
      *
      * @param string $hash
      *
@@ -108,7 +108,7 @@ class RegistrationController
     /**
      * Fetches data self-registration form.
      *
-     * @EXT\Route("/fetch", name="claro_user_registration_data_fetch")
+     * @Route("/fetch", name="claro_user_registration_data_fetch")
      *
      * @return JsonResponse
      */

@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\VersionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * REST API to manage platform parameters.
@@ -67,7 +68,7 @@ class ParametersController
     }
 
     /**
-     * @EXT\Route("/parameters", name="apiv2_parameters_update")
+     * @Route("/parameters", name="apiv2_parameters_update")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -94,7 +95,7 @@ class ParametersController
     }
 
     /**
-     * @EXT\Route("/info", name="apiv2_platform_info")
+     * @Route("/info", name="apiv2_platform_info")
      * @EXT\Method("GET")
      */
     public function getAction()
@@ -121,7 +122,7 @@ class ParametersController
     /**
      * Enables the platform.
      *
-     * @EXT\Route("/enable", name="apiv2_platform_enable")
+     * @Route("/enable", name="apiv2_platform_enable")
      * @EXT\Method("PUT")
      *
      * @return JsonResponse
@@ -142,7 +143,7 @@ class ParametersController
     /**
      * Extends the period of availability of the platform.
      *
-     * @EXT\Route("/extend", name="apiv2_platform_extend")
+     * @Route("/extend", name="apiv2_platform_extend")
      * @EXT\Method("PUT")
      *
      * @return JsonResponse
@@ -176,7 +177,7 @@ class ParametersController
     }
 
     /**
-     * @EXT\Route("/disable", name="apiv2_platform_disable")
+     * @Route("/disable", name="apiv2_platform_disable")
      * @EXT\Method("PUT")
      *
      * @return JsonResponse
@@ -189,7 +190,7 @@ class ParametersController
     }
 
     /**
-     * @EXT\Route("/maintenance/enable", name="apiv2_maintenance_enable")
+     * @Route("/maintenance/enable", name="apiv2_maintenance_enable")
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -209,7 +210,7 @@ class ParametersController
     }
 
     /**
-     * @EXT\Route("/maintenance/disable", name="apiv2_maintenance_disable")
+     * @Route("/maintenance/disable", name="apiv2_maintenance_disable")
      * @EXT\Method("PUT")
      *
      * @return JsonResponse

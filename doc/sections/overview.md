@@ -111,7 +111,7 @@ therefore use the manager to persist any needed data. Example :
 namespace Foo\BarBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Foo\BarBundle\Entity\FooEntity;
 
 class FooFixture extends AbstractFixture

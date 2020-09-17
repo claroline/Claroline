@@ -13,10 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @EXT\Route("lesson/{lessonId}", options={"expose"=true})
+ * @Route("lesson/{lessonId}", options={"expose"=true})
  * @EXT\ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"mapping": {"lessonId": "uuid"}})
  */
 class ChapterController
@@ -71,7 +72,7 @@ class ChapterController
     /**
      * Get chapter by its slug.
      *
-     * @EXT\Route("/chapters/{chapterSlug}", name="apiv2_lesson_chapter_get")
+     * @Route("/chapters/{chapterSlug}", name="apiv2_lesson_chapter_get")
      * @EXT\Method("GET")
      *
      * @param Request $request
@@ -96,7 +97,7 @@ class ChapterController
     /**
      * Create new chapter.
      *
-     * @EXT\Route("/chapters/{slug}", name="apiv2_lesson_chapter_create")
+     * @Route("/chapters/{slug}", name="apiv2_lesson_chapter_create")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("parent", class="IcapLessonBundle:Chapter", options={"mapping": {"slug": "slug"}})
      *
@@ -118,7 +119,7 @@ class ChapterController
     /**
      * Update existing chapter.
      *
-     * @EXT\Route("/chapters/{slug}", name="apiv2_lesson_chapter_update")
+     * @Route("/chapters/{slug}", name="apiv2_lesson_chapter_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"slug": "slug"}})
      *
@@ -140,7 +141,7 @@ class ChapterController
     /**
      * Delete existing chapter.
      *
-     * @EXT\Route("/chapters/{chapterSlug}/delete", name="apiv2_lesson_chapter_delete")
+     * @Route("/chapters/{chapterSlug}/delete", name="apiv2_lesson_chapter_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"chapterSlug": "slug"}})
      *
@@ -171,7 +172,7 @@ class ChapterController
     /**
      * Get chapter tree.
      *
-     * @EXT\Route("/tree", name="apiv2_lesson_tree_get")
+     * @Route("/tree", name="apiv2_lesson_tree_get")
      * @EXT\Method("GET")
      *
      * @param Lesson $lesson

@@ -16,10 +16,11 @@ use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("apitoken")
+ * @Route("apitoken")
  */
 class ApiTokenController extends AbstractCrudController
 {
@@ -37,7 +38,7 @@ class ApiTokenController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *    "/list/current",
      *    name="apiv2_apitoken_list_current"
      * )

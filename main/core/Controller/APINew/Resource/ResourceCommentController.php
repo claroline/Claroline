@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceComment;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/resourcecomment")
+ * @Route("/resourcecomment")
  */
 class ResourceCommentController extends AbstractCrudController
 {

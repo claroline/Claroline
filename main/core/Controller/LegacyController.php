@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Used to declare redirection to maintain some old routes for retro-compatibility.
@@ -35,9 +36,9 @@ class LegacyController
     /**
      * Pre SPA resource route.
      *
-     * @EXT\Route("/resources/show/{type}/{id}")
-     * @EXT\Route("/resources/show/{id}")
-     * @EXT\Route("/workspaces/{workspaceId}/open/tool/resource_manager/{id}")
+     * @Route("/resources/show/{type}/{id}")
+     * @Route("/resources/show/{id}")
+     * @Route("/workspaces/{workspaceId}/open/tool/resource_manager/{id}")
      * @EXT\Method("GET")
      *
      * @param string $id
@@ -64,8 +65,8 @@ class LegacyController
     /**
      * Pre SPA workspace route.
      *
-     * @EXT\Route("/workspaces/{id}/open/tool/{toolName}")
-     * @EXT\Route("/workspaces/{id}/open")
+     * @Route("/workspaces/{id}/open/tool/{toolName}")
+     * @Route("/workspaces/{id}/open")
      * @EXT\Method("GET")
      *
      * @param string $id
@@ -93,8 +94,8 @@ class LegacyController
     /**
      * Pre SPA main home route.
      *
-     * @EXT\Route("/apiv2/")
-     * @EXT\Route("/apiv2")
+     * @Route("/apiv2/")
+     * @Route("/apiv2")
      * @EXT\Method("GET")
      *
      * @return RedirectResponse
@@ -110,7 +111,7 @@ class LegacyController
     /**
      * Pre SPA desktop home route.
      *
-     * @EXT\Route("/desktop/tool/open/home")
+     * @Route("/desktop/tool/open/home")
      * @EXT\Method("GET")
      *
      * @return RedirectResponse
@@ -126,7 +127,7 @@ class LegacyController
     /**
      * Pre SPA desktop reset password route.
      *
-     * @EXT\Route("/login")
+     * @Route("/login")
      * @EXT\Method("GET")
      *
      * @return RedirectResponse
@@ -141,7 +142,7 @@ class LegacyController
     /**
      * Pre SPA reset password route.
      *
-     * @EXT\Route("/reset")
+     * @Route("/reset")
      * @EXT\Method("GET")
      *
      * @return RedirectResponse

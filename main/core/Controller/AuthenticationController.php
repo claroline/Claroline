@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -68,7 +69,7 @@ class AuthenticationController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/sendmail",
      *     name="claro_security_send_token",
      *     options={"expose"=true}
@@ -102,7 +103,7 @@ class AuthenticationController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/validatepassword",
      *     name="claro_security_new_password",
      *     options={"expose"=true}
@@ -143,7 +144,7 @@ class AuthenticationController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/validate/email/{hash}",
      *     name="claro_security_validate_email",
      *     options={"expose"=true}
@@ -160,7 +161,7 @@ class AuthenticationController
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/send/email/validation",
      *     name="claro_security_validate_email_send",
      *     options={"expose"=true}

@@ -13,11 +13,12 @@ use Icap\WikiBundle\Manager\SectionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/wiki")
+ * @Route("/wiki")
  */
 class SectionController
 {
@@ -53,7 +54,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/{wikiId}/tree", name="apiv2_wiki_section_tree")
+     * @Route("/{wikiId}/tree", name="apiv2_wiki_section_tree")
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="IcapWikiBundle:Wiki",
@@ -80,7 +81,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/section/{id}/visible", name="apiv2_wiki_section_set_visibility")
+     * @Route("/section/{id}/visible", name="apiv2_wiki_section_set_visibility")
      * @EXT\ParamConverter(
      *     "section",
      *     class="IcapWikiBundle:Section",
@@ -108,7 +109,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/section/{id}", name="apiv2_wiki_section_create")
+     * @Route("/section/{id}", name="apiv2_wiki_section_create")
      * @EXT\ParamConverter(
      *     "section",
      *     class="IcapWikiBundle:Section",
@@ -140,7 +141,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/section/{id}", name="apiv2_wiki_section_update")
+     * @Route("/section/{id}", name="apiv2_wiki_section_update")
      * @EXT\ParamConverter(
      *     "section",
      *     class="IcapWikiBundle:Section",
@@ -172,7 +173,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/{wikiId}/section/delete", name="apiv2_wiki_section_delete")
+     * @Route("/{wikiId}/section/delete", name="apiv2_wiki_section_delete")
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="IcapWikiBundle:Wiki",
@@ -204,7 +205,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/{wikiId}/section/restore", name="apiv2_wiki_section_restore")
+     * @Route("/{wikiId}/section/restore", name="apiv2_wiki_section_restore")
      * @EXT\ParamConverter(
      *     "wiki",
      *     class="IcapWikiBundle:Wiki",
@@ -228,7 +229,7 @@ class SectionController
     }
 
     /**
-     * @EXT\Route("/{wikiId}/sections/deleted", name="apiv2_wiki_section_deleted_list")
+     * @Route("/{wikiId}/sections/deleted", name="apiv2_wiki_section_deleted_list")
      * @EXT\Method({"GET"})
      * @EXT\ParamConverter(
      *     "wiki",

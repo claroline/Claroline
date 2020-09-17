@@ -21,9 +21,10 @@ use Claroline\MessageBundle\Manager\MessageManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/message")
+ * @Route("/message")
  */
 class MessageController extends AbstractCrudController
 {
@@ -47,7 +48,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/count/unread", name="apiv2_message_count_unread")
+     * @Route("/count/unread", name="apiv2_message_count_unread")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -65,7 +66,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/received", name="apiv2_message_received")
+     * @Route("/received", name="apiv2_message_received")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="Returns the list of received message for the current connected user",
@@ -92,7 +93,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/removed", name="apiv2_message_removed")
+     * @Route("/removed", name="apiv2_message_removed")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="Returns the list of removed message for the current connected user",
@@ -119,7 +120,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/sent", name="apiv2_message_sent")
+     * @Route("/sent", name="apiv2_message_sent")
      * @EXT\Method("GET")
      *
      * @ApiDoc(
@@ -147,7 +148,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/softdelete", name="apiv2_message_soft_delete")
+     * @Route("/softdelete", name="apiv2_message_soft_delete")
      * @EXT\Method("PUT")
      * @ApiDoc(
      *     description="Soft delete an array of messages.",
@@ -176,7 +177,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/remove", name="apiv2_message_hard_delete")
+     * @Route("/remove", name="apiv2_message_hard_delete")
      * @EXT\Method("DELETE")
      * @ApiDoc(
      *     description="Hard delete an array of messages.",
@@ -203,7 +204,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/restore", name="apiv2_message_restore")
+     * @Route("/restore", name="apiv2_message_restore")
      * @EXT\Method("PUT")
      * @ApiDoc(
      *     description="Restore a list of messages for the current user.",
@@ -232,7 +233,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/read", name="apiv2_message_read")
+     * @Route("/read", name="apiv2_message_read")
      * @EXT\Method("PUT")
      * @ApiDoc(
      *     description="Read an array of message for the current user.",
@@ -264,7 +265,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/unread", name="apiv2_message_unread")
+     * @Route("/unread", name="apiv2_message_unread")
      * @EXT\Method("PUT")
      * @ApiDoc(
      *     description="Unread an array of message for the current user.",
@@ -296,7 +297,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/root/{id}", name="apiv2_message_root")
+     * @Route("/root/{id}", name="apiv2_message_root")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="Get the fist message.",

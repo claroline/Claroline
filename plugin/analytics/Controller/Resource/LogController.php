@@ -11,11 +11,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/resource/{resourceId}/logs", requirements={"resourceId"="\d+"})
+ * @Route("/resource/{resourceId}/logs", requirements={"resourceId"="\d+"})
  */
 class LogController
 {
@@ -59,7 +60,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/", name="apiv2_resource_logs_list")
+     * @Route("/", name="apiv2_resource_logs_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "node",
@@ -84,7 +85,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/csv", name="apiv2_resource_logs_list_csv")
+     * @Route("/csv", name="apiv2_resource_logs_list_csv")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "node",
@@ -114,7 +115,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/chart", name="apiv2_resource_logs_list_chart")
+     * @Route("/chart", name="apiv2_resource_logs_list_chart")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "node",
@@ -137,7 +138,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/users", name="apiv2_resource_logs_list_users")
+     * @Route("/users", name="apiv2_resource_logs_list_users")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "node",
@@ -159,7 +160,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/users/csv", name="apiv2_resource_logs_list_users_csv")
+     * @Route("/users/csv", name="apiv2_resource_logs_list_users_csv")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "node",
@@ -189,7 +190,7 @@ class LogController
     }
 
     /**
-     * @EXT\Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"})
+     * @Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"})
      * @EXT\Method("GET")
      * @EXT\ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log", options={
      *     "mapping": {"resourceId": "resourceNode",

@@ -12,10 +12,11 @@ use Icap\BlogBundle\Serializer\BlogSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @EXT\Route("blog/{blogId}/", options={"expose"=true})
+ * @Route("blog/{blogId}/", options={"expose"=true})
  * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class BlogController
@@ -67,7 +68,7 @@ class BlogController
     /**
      * Get blog options.
      *
-     * @EXT\Route("options", name="apiv2_blog_options")
+     * @Route("options", name="apiv2_blog_options")
      * @EXT\Method("GET")
      *
      * @param Blog $blog
@@ -84,7 +85,7 @@ class BlogController
     /**
      * Update blog options.
      *
-     * @EXT\Route("options/update", name="apiv2_blog_options_update")
+     * @Route("options/update", name="apiv2_blog_options_update")
      * @EXT\Method("PUT")
      *
      * @param Blog $blog
@@ -103,7 +104,7 @@ class BlogController
     /**
      * Get tag cloud, tags used in blog posts.
      *
-     * @EXT\Route("tags", name="apiv2_blog_tags")
+     * @Route("tags", name="apiv2_blog_tags")
      * @EXT\Method("GET")
      */
     public function getTagsAction(Blog $blog)

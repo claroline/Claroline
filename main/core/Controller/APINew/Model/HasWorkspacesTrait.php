@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Crud;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Manages a workspaces collection on an entity.
@@ -16,7 +17,7 @@ trait HasWorkspacesTrait
     /**
      * List workspaces of the collection.
      *
-     * @EXT\Route("/{id}/workspace")
+     * @Route("/{id}/workspace")
      * @EXT\Method("GET")
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -48,7 +49,7 @@ trait HasWorkspacesTrait
     /**
      * Adds workspaces to the collection.
      *
-     * @EXT\Route("/{id}/workspace")
+     * @Route("/{id}/workspace")
      * @EXT\Method("PATCH")
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -81,7 +82,7 @@ trait HasWorkspacesTrait
     /**
      * Removes workspaces from the collection.
      *
-     * @EXT\Route("/{id}/workspace")
+     * @Route("/{id}/workspace")
      * @EXT\Method("DELETE")
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",

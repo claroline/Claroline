@@ -22,12 +22,13 @@ use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/group")
+ * @Route("/group")
  */
 class GroupController extends AbstractCrudController
 {
@@ -92,7 +93,7 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/list/managed", name="apiv2_group_list_managed")
+     * @Route("/list/managed", name="apiv2_group_list_managed")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @ApiDoc(
@@ -127,7 +128,7 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/password/reset", name="apiv2_group_initialize_password")
+     * @Route("/password/reset", name="apiv2_group_initialize_password")
      * @EXT\Method("POST")
      *
      * @param Request $request

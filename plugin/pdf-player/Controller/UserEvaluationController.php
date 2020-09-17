@@ -9,11 +9,12 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\PdfPlayerBundle\Manager\UserEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @EXT\Route("/pdf")
+ * @Route("/pdf")
  */
 class UserEvaluationController
 {
@@ -44,7 +45,7 @@ class UserEvaluationController
     }
 
     /**
-     * @EXT\Route("/{id}/progression/{page}/{total}", name="apiv2_pdf_progression_update")
+     * @Route("/{id}/progression/{page}/{total}", name="apiv2_pdf_progression_update")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("pdf", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "id"}})

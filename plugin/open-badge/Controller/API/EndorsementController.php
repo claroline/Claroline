@@ -13,10 +13,10 @@ namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\OpenBadgeBundle\Entity\Endorsement;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @EXT\Route("/endorsement")
+ * @Route("/endorsement")
  */
 class EndorsementController extends AbstractCrudController
 {
