@@ -32,7 +32,7 @@ class User
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
+     *     cascade={"persist", "remove"}
      * )
      */
     protected $user;
