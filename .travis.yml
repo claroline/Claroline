@@ -76,7 +76,7 @@ before_script:
   # get and configure claroline platform
   - curl -L https://github.com/claroline/Claroline/archive/${TRAVIS_BRANCH}.tar.gz | tar xzv
   - cd Claroline-${TRAVIS_BRANCH}
-  - php scripts/configure.php --default
+  - php bin/configure --default
   # override platform composer.json with build/repo local reference
   - php $TRAVIS_BUILD_DIR/main/dev/Resources/travis/pre-composer.php claroline/distribution $TRAVIS_BUILD_DIR "*"
   # fetch dependencies and build (currently this is done in prod mode)
