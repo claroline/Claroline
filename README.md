@@ -59,6 +59,10 @@ Upgrade From 12.x or older to 13.x
 
 To update an existing installation to 13.x you must **first upgrade to the latest 12.5 branch**
 
+**ATTENTION :**
+You may need to update the configuration of your web server as the new application entry point is
+now `PROJECT_DIR/public/index.php` instead of `PROJECT_DIR/web/app.php`.
+
 #### 1. go to 12.5 branch
 
      git fetch origin
@@ -72,7 +76,7 @@ To update an existing installation to 13.x you must **first upgrade to the lates
 
 #### 3. Launch update script
    
-    php app/console claroline:update 1x.x.xx 12.5.xx
+    php bin/console claroline:update 1x.x.xx 12.5.xx
 
 Then you can go to 13.x
     
@@ -85,11 +89,16 @@ Then you can go to 13.x
 
     composer update --no-dev --optimize-autoloader
     npm install
+    
+    mv app/config/parameters.yml config/parameters.yml
+    rm -rf app
+    rm -rf web
+    
     composer build
 
 #### 6. Launch update script
    
-    php app/console claroline:update
+    php bin/console claroline:update
 
 Requirements
 ------------
