@@ -22,11 +22,11 @@ composer.lock
 package-lock.json
 .php_cs.cache
 ###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
+/claroline/.env.local
+/claroline/.env.local.php
+/claroline/.env.*.local
+/claroline/config/secrets/prod/prod.decrypt.private.php
+/claroline/public/bundles/
+/claroline/var/
+/claroline/vendor/
 ###< symfony/framework-bundle ###

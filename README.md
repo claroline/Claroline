@@ -29,7 +29,7 @@ is managed through composer scripts listed in the [composer.json](composer.json)
 file. For an installation from scratch, the commands would be:
 
     git clone -b 13.x http://github.com/claroline/Claroline
-    cd Claroline
+    cd Claroline/claroline
     php bin/configure
     php bin/check
     composer install --no-dev --optimize-autoloader
@@ -223,7 +223,6 @@ For user documentation, see [here](https://support.claroline.com/#/desktop/works
 
 [distribution]: https://github.com/claroline/Distribution
 [gd]:           http://www.php.net/manual/en/book.image.php
-[ffmpeg]:       http://ffmpeg-php.sourceforge.net
 [composer]:     https://getcomposer.org
 [node]:         https://nodejs.org
 [npm]:          https://docs.npmjs.com

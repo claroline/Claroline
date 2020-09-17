@@ -1,42 +1,62 @@
-version: '2'
+version: "3.8"
 services:
   web:
+    container_name: claroline-web
+    build: .docker/web
     ports:
-      - 80:80
+      - "80:80"
     volumes:
-      - composer_cache:/root/.composer
-      - npm_cache:/root/.npm
-      - bower_cache:/root/.cache/bower
+      - ./claroline:/var/www/html/claroline # This is where the symfony files are stored
+      # - composer_cache:/root/.composer
+      # - npm_cache:/root/.npm
+      # - bower_cache:/root/.cache/bower
     depends_on:
       - db
     environment:
-      APP_URL: ${APP_URL}
-      DB_HOST: db
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SECRET: ${SECRET}
-      ADMIN_FIRSTNAME: ${ADMIN_FIRSTNAME}
-      ADMIN_LASTNAME: ${ADMIN_LASTNAME}
-      ADMIN_USERNAME: ${ADMIN_USERNAME}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      - APP_URL=${APP_URL}
+      - ENV=${ENV}
+      - APP_ENV=${APP_ENV}
+      - APP_DEBUG=${APP_DEBUG}
+      - DB_HOST=claroline-db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SECRET=${SECRET}
+      - ADMIN_FIRSTNAME=${ADMIN_FIRSTNAME}
+      - ADMIN_LASTNAME=${ADMIN_LASTNAME}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
 
       # These will be the default platform options, they are only used once during the Claroline Connect install
-      PLATFORM_NAME: ${PLATFORM_NAME}
-      PLATFORM_SUPPORT_EMAIL: ${PLATFORM_SUPPORT_EMAIL}
+      - PLATFORM_NAME=${PLATFORM_NAME}
+      - PLATFORM_SUPPORT_EMAIL=${PLATFORM_SUPPORT_EMAIL}
 
   db:
+    container_name: claroline-db
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-    image: mysql
+    image: mysql:8.0
+    command: --sql_mode="" --default_authentication_plugin="mysql_native_password"
+    ports:
+      - "3306:3306"
     volumes:
+      - ./mysql_data:/var/lib/mysql
       - ./.docker/mysql:/etc/mysql/conf.d
-      - mysql_data:/var/lib/mysql
+    networks:
+      app_net_claro:
+        ipv4_address: 172.22.9.5
 
+networks:
+  app_net_claro:
+    ipam:
+      config:
+        - subnet: 172.22.9.0/24
+
+# If you don't reuse volumes, there's no need to define a top-level volumes key
 volumes:
   mysql_data: # This is where the mysql data lives
   composer_cache: # This is where the composer cache data lives

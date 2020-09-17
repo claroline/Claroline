@@ -32,6 +32,7 @@ before_script:
   - sudo swapon /swapfile
   - sudo swapon -s
 
+  - cd claroline
   - composer validate
   - php bin/configure --default
   - COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader
