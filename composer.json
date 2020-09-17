@@ -20,30 +20,9 @@
         "symfony/phpunit-bridge": "^4.0"
     },
     "scripts": {
-        "sync": [
-            "composer fetch",
-            "composer build",
-            "php bin/console claroline:update --env=prod",
-            "composer disable-maintenance"
-        ],
-        "sync-dev": [
-            "composer fetch-dev",
-            "composer build",
-            "php bin/console claroline:update -vvv",
-            "composer disable-maintenance"
-        ],
-        "fetch": [
-            "composer install --prefer-dist --no-dev --optimize-autoloader",
-            "npm install"
-        ],
-        "fetch-dev": [
-            "composer install --prefer-source --optimize-autoloader",
-            "npm install"
-        ],
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "npm run webpack"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap"
         ],
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
@@ -64,7 +43,8 @@
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
-            "composer bundles"
+            "composer bundles",
+            "composer disable-maintenance"
         ]
     },
     "minimum-stability": "dev",
