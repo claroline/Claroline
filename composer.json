@@ -20,10 +20,6 @@
         "symfony/phpunit-bridge": "^4.0"
     },
     "scripts": {
-        "build": [
-            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap"
-        ],
         "disable-maintenance": [
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
         ],
@@ -40,7 +36,8 @@
         "pre-update-cmd": [
             "php bin/configure",
             "php bin/check",
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache"
         ],
         "post-update-cmd": [
             "composer bundles",

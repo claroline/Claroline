@@ -35,8 +35,8 @@ file. For an installation from scratch, the commands would be:
     composer install --no-dev --optimize-autoloader
 
     npm install
-    composer build
-
+    npm run webpack
+    
     php bin/console claroline:install
 
 Upgrade 13.x
@@ -47,8 +47,9 @@ To update your 13.x just follow this steps :
 #### 1. Update source
 
     composer update --no-dev --optimize-autoloader
+    
     npm install
-    composer build
+    npm run webpack
 
 #### 2. Launch update script
    
@@ -73,8 +74,9 @@ now `PROJECT_DIR/public/index.php` instead of `PROJECT_DIR/web/app.php`.
 #### 2. Update source
 
     composer update --no-dev --optimize-autoloader
+    
     npm install
-    composer build
+    npm run webpack
 
 #### 3. Launch update script
    
@@ -90,13 +92,13 @@ Then you can go to 13.x
 #### 5. Update source
 
     composer update --no-dev --optimize-autoloader
+    
     npm install
+    npm run webpack
     
     mv app/config/parameters.yml config/parameters.yml
     rm -rf app
     rm -rf web
-    
-    composer build
 
 #### 6. Launch update script
    
