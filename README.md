@@ -30,6 +30,8 @@ file. For an installation from scratch, the commands would be:
 
     git clone -b 13.x http://github.com/claroline/Claroline
     cd Claroline
+    php bin/check
+    php bin/configure
     composer install --no-dev --optimize-autoloader
 
     npm install
