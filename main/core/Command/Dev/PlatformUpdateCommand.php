@@ -16,10 +16,8 @@ use Claroline\CoreBundle\Library\Installation\PlatformInstaller;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -80,12 +78,6 @@ class PlatformUpdateCommand extends Command
                 'When set to true, symlinks won\'t be rebuilt'
             )
             ->addOption(
-                'no_create_database',
-                'd',
-                InputOption::VALUE_NONE,
-                'When set to true, the create database is not executed'
-            )
-            ->addOption(
                 'clear_cache',
                 'c',
                 InputOption::VALUE_NONE,
@@ -107,12 +99,6 @@ class PlatformUpdateCommand extends Command
         );
 
         $this->setLocale();
-
-        if (!$input->getOption('no_create_database')) {
-            $databaseCreator = new CreateDatabaseDoctrineCommand();
-            $databaseCreator->setApplication($this->getApplication());
-            $databaseCreator->run(new ArrayInput([]), $output);
-        }
 
         if (!$input->getOption('no_symlink')) {
             $this->refresher->buildSymlinks();
