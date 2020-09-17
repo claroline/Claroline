@@ -17,7 +17,7 @@ Requirements
 
 For a development installation, you'll need at least:
 
-- PHP >= 7.2,<7.4 with the following extensions:
+- PHP >= 7.2 with the following extensions:
     - curl
     - fileinfo
     - [gd][gd]
@@ -48,7 +48,7 @@ Installation
 
 ### 1. From source
 
-The raw installation procedure is comprised of several steps that need to be
+The raw installation procedure is composed of several steps that need to be
 executed in order (fetching php sources, installing dev dependencies, building,
 creating the database, etc.). Except for the configuration step, the whole process
 is managed through composer scripts listed in the [composer.json](composer.json)
@@ -56,9 +56,9 @@ file. For an installation from scratch, the commands would be:
 
     git clone http://github.com/claroline/Claroline
     cd Claroline
-    php scripts/configure.php
-    composer update
-     
+    php bin/configure
+    
+    composer update --no-dev -o
     npm install
     composer build
 
@@ -71,7 +71,7 @@ To update your 12.x just follow this steps :
 
 #### 1. Update source
 
-    composer update --no-dev   
+    composer update --no-dev -o
     npm install
     composer build
 
