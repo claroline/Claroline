@@ -19,6 +19,7 @@ public/themes/*
 docker-compose.override.yml
 installed
 composer.lock
+package-lock.json
 
 ###> symfony/framework-bundle ###
 /.env.local
