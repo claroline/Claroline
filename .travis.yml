@@ -27,8 +27,10 @@ before_script:
   - sudo swapon -s
 
   - composer validate
-  - php scripts/configure.php --default
-  - composer sync-dev
+  - php bin/configure --default
+  - composer update --no-dev
+  - npm install
+  - composer build
   - php bin/console claroline:install --env=test
   - export SYMFONY_DEPRECATIONS_HELPER=weak
 
