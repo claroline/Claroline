@@ -1,20 +1,13 @@
 *~
 !.gitkeep
-var/cache/*
-var/sessions/*
 config/.update
 config/parameters.yml
-config/previous-installed.json
-var/log/*
 coverage
 files/*
 node_modules
 npm-debug.log
-templates/*
-vendor/*
 theme-assets.json
 webpack-*.json
-public/bundles/*
 public/css/*
 public/data
 public/dist
@@ -22,13 +15,10 @@ public/js/*
 public/packages
 public/themes/*
 !public/themes/.gitkeep
-public/thumbnails/*
-public/uploads/*
-public/vendor/*
-public/vendors/*
 .env
 docker-compose.override.yml
 installed
+composer.lock
 
 ###> symfony/framework-bundle ###
 /.env.local
