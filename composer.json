@@ -13,11 +13,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "2.14",
-        "mockery/mockery": "0.9.9",
+        "mockery/mockery": "^1.2",
         "mikey179/vfsstream": "1.6.4",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "7.1.5",
-        "symfony/phpunit-bridge": "^4.0"
+        "symfony/phpunit-bridge": "^4.4"
     },
     "scripts": {
         "build": [
