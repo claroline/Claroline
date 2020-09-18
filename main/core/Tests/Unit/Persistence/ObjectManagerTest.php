@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
+use Claroline\AppBundle\Persistence\NoFlushSuiteStartedException;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\ORM\Query;
@@ -28,7 +29,6 @@ class ObjectManagerTest extends MockeryTestCase
 
     /**
      * @dataProvider        wrappedManagerDependentMethodProvider
-     * @expectedException   \Claroline\AppBundle\Persistence\UnsupportedMethodException
      */
     public function testWrappedManagerDependentMethodsThrowAnExceptionOnUnsupportedMethods($method)
     {
@@ -65,11 +65,10 @@ class ObjectManagerTest extends MockeryTestCase
         $this->assertEquals('uow', $om->getUnitOfWork());
     }
 
-    /**
-     * @expectedException \Claroline\AppBundle\Persistence\NoFlushSuiteStartedException
-     */
     public function testEndFlushSuiteThrowsAnExceptionIfNoSuiteHasBeenStarted()
     {
+        $this->expectException(NoFlushSuiteStartedException::class);
+
         $om = new ObjectManager($this->mock('Doctrine\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
         $om->endFlushSuite();
     }

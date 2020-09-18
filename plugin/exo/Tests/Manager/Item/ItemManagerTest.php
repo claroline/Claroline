@@ -33,9 +33,6 @@ class ItemManagerTest extends TransactionalTestCase
         );
     }
 
-    /**
-     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
-     */
     public function testCreateWithInvalidData()
     {
         $this->markTestIncomplete(
@@ -50,9 +47,6 @@ class ItemManagerTest extends TransactionalTestCase
         );
     }
 
-    /**
-     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
-     */
     public function testUpdateWithInvalidData()
     {
         $this->markTestIncomplete(

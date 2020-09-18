@@ -44,11 +44,11 @@ class SetAnswerValidatorTest extends JsonSchemaTestCase
 
     /**
      * The validator MUST throw an exception if the validator is called without a question instance.
-     *
-     * @expectedException \LogicException
      */
     public function testValidatorThrowsExceptionIfNoQuestionProvided()
     {
+        $this->expectException(\LogicException::class);
+
         // Validate answer without question
         $this->validator->validate([]);
     }

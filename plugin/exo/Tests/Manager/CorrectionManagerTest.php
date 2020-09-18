@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Tests\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
@@ -92,11 +93,10 @@ class CorrectionManagerTest extends JsonDataTestCase
         $this->assertEquals($this->answers[0]->getUuid(), $toCorrect['answers'][0]['id']);
     }
 
-    /**
-     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
-     */
     public function testSaveUnknownAnswer()
     {
+        $this->expectException(InvalidDataException::class);
+
         $toCorrect = [
             'id' => uniqid(), // Unknown answer
             'questionId' => uniqid(),

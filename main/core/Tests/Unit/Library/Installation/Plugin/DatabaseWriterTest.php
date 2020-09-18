@@ -29,6 +29,7 @@ class DatabaseWriterTest extends MockeryTestCase
     {
         parent::setUp();
 
+        \Mockery::getConfiguration()->allowMockingNonExistentMethods(true); // needed for mocking the `Kernel::getProjectDir()` method (virtual until symfony 5)
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->om->shouldReceive('getRepository')->andReturn($this->mock('Doctrine\ORM\EntityRepository'));
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
@@ -50,6 +51,11 @@ class DatabaseWriterTest extends MockeryTestCase
             $this->tmd,
             $this->ism
         );
+    }
+
+    public function tearDown(): void
+    {
+        \Mockery::getConfiguration()->allowMockingNonExistentMethods(false);
     }
 
     public function testPersistCustomActionIfDecodersAreFound()

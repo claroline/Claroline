@@ -328,11 +328,10 @@ class PaperGeneratorTest extends TransactionalTestCase
         $this->assertTrue(!$this->checkFirstStepItemsChange($paper));
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testPickTooManyStepsThrowsException()
     {
+        $this->expectException(\LogicException::class);
+
         // Set random picking for the exercise
         $this->exercise->setRandomPick(Recurrence::ALWAYS);
         $this->exercise->setPick(6); // There is only 4 steps defined in the `setUp()` method
@@ -341,11 +340,9 @@ class PaperGeneratorTest extends TransactionalTestCase
         $this->generator->create($this->exercise, $this->user);
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testPickTooManyQuestionsThrowsException()
     {
+        $this->expectException(\LogicException::class);
         // Set random picking for the step
         $step = $this->exercise->getSteps()->get(0);
         $step->setRandomPick(Recurrence::ALWAYS);

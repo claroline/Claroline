@@ -46,11 +46,10 @@ class CompetencyAbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals(3, $this->repo->countByCompetency($c2));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testFindOneByTermsExpectsAResult()
     {
+        $this->expectException(\RuntimeException::class);
+
         $c = $this->persistCompetency('c');
         $a = $this->persistAbility('a');
         $this->repo->findOneByTerms($c, $a);

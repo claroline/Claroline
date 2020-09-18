@@ -12,14 +12,14 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
 
 class ResourceQueryBuilderTest extends MockeryTestCase
 {
-    /**
-     * @expectedException \Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException
-     */
     public function testASelectClauseIsRequired()
     {
+        $this->expectException(MissingSelectClauseException::class);
+
         $qb = new ResourceQueryBuilder();
         $qb->getDql();
     }

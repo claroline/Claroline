@@ -168,11 +168,9 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals([$a1, $a3], $this->repo->findByResource($resource));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testFindEvaluationsByCompetencyThrowsAnExceptionIfNotLeafCompetency()
     {
+        $this->expectException(\Exception::class);
         $u1 = $this->persistUser('u1');
         $c1 = $this->persistCompetency('c1');
         $this->persistCompetency('c2', $c1);

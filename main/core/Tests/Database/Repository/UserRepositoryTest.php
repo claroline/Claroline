@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserRepositoryTest extends RepositoryTestCase
 {
@@ -35,11 +37,10 @@ class UserRepositoryTest extends RepositoryTestCase
         self::createGroup('group_2', [self::get('jane'), self::get('bill'), self::get('bob')]);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
-     */
     public function testLoadUserByUsernameOnUnknownUsername()
     {
+        $this->expectException(UsernameNotFoundException::class);
+
         self::$repo->loadUserByUsername('unknown_user');
     }
 
@@ -49,11 +50,10 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::get('john'), $user);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\UnsupportedUserException
-     */
     public function testRefreshUserThrowsAnExceptionOnUnsupportedUserClass()
     {
+        $this->expectException(UnsupportedUserException::class);
+
         $user = \Mockery::mock('Symfony\Component\Security\Core\User\UserInterface');
         self::$repo->refreshUser($user);
     }
