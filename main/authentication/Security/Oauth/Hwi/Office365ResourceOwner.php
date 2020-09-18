@@ -25,7 +25,8 @@ class Office365ResourceOwner extends GenericOAuth2ResourceOwner
      */
     protected $paths = [
         'identifier' => 'id',
-        'email' => 'mail',
+        // ATTENTION : this may not be the correct email but for now but atm we cannot get email from `mail` prop
+        'email' => 'userPrincipalName',
         'realname' => 'displayName',
         'nickname' => 'userPrincipalName',
         'firstname' => 'givenName',

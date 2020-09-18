@@ -73,15 +73,14 @@ class OauthController extends AbstractCrudController
     public function checkConnectionAction(Request $request)
     {
         $session = $request->getSession();
-        $service = $session->get('claroline.oauth.resource_owner');
-        $user = $session->get('claroline.oauth.user');
 
-        if (null !== $service && null !== $user) {
+        $service = $session->get('claroline.oauth.resource_owner');
+        if (null !== $service) {
+            // The user need to manually validate the link between the oauth provider and its claroline account
+            // If he is not logged, he will need to log first.
+            // If the platform allows it, he will be able to register and link its account.
             return new RedirectResponse($this->router->generate('claro_index').'#/external/'.$service['name']);
         }
-
-        $session->remove('claroline.oauth.resource_owner');
-        $session->remove('claroline.oauth.user');
 
         return new RedirectResponse($this->router->generate('claro_index').'#/desktop');
     }
@@ -99,23 +98,6 @@ class OauthController extends AbstractCrudController
     {
         $session = $request->getSession();
         $service = $session->get('claroline.oauth.resource_owner');
-
-        return $this->oauthManager->linkAccount($request, $service, $username);
-    }
-
-    /**
-     * @Route("/link_account_mail", name="claro_oauth_link_account_mail")
-     * @EXT\Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function linkAccountByMailAction(Request $request)
-    {
-        $session = $request->getSession();
-        $service = $session->get('claroline.oauth.resource_owner');
-        $username = $session->get('claroline.oauth.user')['email'];
 
         return $this->oauthManager->linkAccount($request, $service, $username);
     }
