@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\AppBundle\Event\MandatoryEventException;
+use Claroline\AppBundle\Event\MissingEventClassException;
+use Claroline\AppBundle\Event\NotPopulatedEventException;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -18,32 +21,29 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class StrictDispatcherTest extends MockeryTestCase
 {
-    /**
-     * @expectedException \Claroline\AppBundle\Event\MissingEventClassException
-     */
     public function testDispatchThrowsExceptionOnInvalidClass()
     {
+        $this->expectException(MissingEventClassException::class);
+
         $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $claroDispatcher->dispatch('noClass', 'FakeClass', []);
     }
 
-    /**
-     * @expectedException \Claroline\AppBundle\Event\MandatoryEventException
-     */
     public function testDispatchThrowsExceptionOnMandatoryNotObserved()
     {
+        $this->expectException(MandatoryEventException::class);
+
         $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
         $claroDispatcher->dispatch('notObserved', 'Resource\ResourceAction', []);
     }
 
-    /**
-     * @expectedException \Claroline\AppBundle\Event\NotPopulatedEventException
-     */
     public function testDispatchThrowsExceptionOnConveyorNotPopulated()
     {
+        $this->expectException(NotPopulatedEventException::class);
+
         $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);

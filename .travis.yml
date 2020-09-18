@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - "7.2"
+  - "7.4"
 
 addons:
   apt:
@@ -97,7 +97,7 @@ script:
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config=main/dev/Resources/travis/php-cs.php; fi
   - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch php tests
-  - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit --dont-report-useless-tests
+  - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/simple-phpunit --dont-report-useless-tests
   # launch js tests
   # FIXME : enable JS test suite when fixed
   # - $ROOT/node_modules/.bin/karma start --single-run

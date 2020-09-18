@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Converter;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CurrentUserConverterTest extends MockeryTestCase
 {
@@ -33,12 +34,11 @@ class CurrentUserConverterTest extends MockeryTestCase
         $this->converter = new CurrentUserConverter($this->securityContext);
     }
 
-    /**
-     * @expectedException       \Claroline\CoreBundle\Converter\InvalidConfigurationException
-     * @expectedExceptionCode   1
-     */
     public function testApplyThrowsAnExceptionIfTheNameParameterIsMissing()
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionCode(1);
+
         $this->configuration->shouldReceive('getName')->once()->andReturn(null);
         $this->converter->apply($this->request, $this->configuration);
     }
@@ -76,11 +76,10 @@ class CurrentUserConverterTest extends MockeryTestCase
         $this->assertFalse($this->converter->supports($configuration));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     */
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUserAndAnonymousDisallowed()
     {
+        $this->expectException(AccessDeniedException::class);
+
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
         $this->configuration->shouldReceive('getOptions')->once()->andReturn([]);
 

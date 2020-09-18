@@ -29,11 +29,11 @@ class JsonSchemaTest extends TransactionalTestCase
 
     /**
      * The validator MUST throw an exception if the schema file do not exist.
-     *
-     * @expectedException \RuntimeException
      */
     public function testInvalidSchemaUriThrowsException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $this->jsonSchema->validate([], 'unknown.json');
     }
 

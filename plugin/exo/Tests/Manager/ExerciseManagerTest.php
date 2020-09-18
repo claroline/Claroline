@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Tests\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
@@ -61,11 +62,10 @@ class ExerciseManagerTest extends JsonDataTestCase
         $this->assertCount($this->exercise->getSteps()->count(), $validData['steps']);
     }
 
-    /**
-     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
-     */
     public function testUpdateWithInvalidData()
     {
+        $this->expectException(InvalidDataException::class);
+
         $invalidData = $this->loadTestData('exercise/invalid/no-pick.json');
 
         $this->manager->update($this->exercise, $invalidData);

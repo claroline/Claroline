@@ -7,19 +7,17 @@ use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 
 class GenericPenaltyTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testNonNumericPenaltyThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new GenericPenalty([]);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testPenaltyUnderZeroThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new GenericPenalty(-1);
     }
 
