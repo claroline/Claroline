@@ -37,7 +37,7 @@ file. For an installation from scratch, the commands would be:
     npm install
     npm run webpack
     
-    php bin/console claroline:install
+    php bin/console claroline:install -vvv
 
 Upgrade 13.x
 -------
@@ -53,7 +53,7 @@ To update your 13.x just follow this steps :
 
 #### 2. Launch update script
    
-    php bin/console claroline:update
+    php bin/console claroline:update -vvv
 
 
 
@@ -80,7 +80,7 @@ now `PROJECT_DIR/public/index.php` instead of `PROJECT_DIR/web/app.php`.
 
 #### 3. Launch update script
    
-    php bin/console claroline:update 1x.x.xx 12.5.xx
+    php bin/console claroline:update -vvv 1x.x.xx 12.5.xx
 
 Then you can go to 13.x
     
@@ -102,7 +102,7 @@ Then you can go to 13.x
 
 #### 6. Launch update script
    
-    php bin/console claroline:update
+    php bin/console claroline:update -vvv
 
 Requirements
 ------------
