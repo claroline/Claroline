@@ -6,7 +6,6 @@ namespace Claroline\AppBundle\Routing;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Doctrine\Common\Annotations\Reader;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method as MethodConfig;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -198,9 +197,6 @@ class ApiLoader extends Loader
                 foreach ($this->reader->getMethodAnnotations($method) as $annotation) {
                     if ($annotation instanceof Route) {
                         $defaults[$actionName][0] = $annotation->getPath();
-                    }
-
-                    if ($annotation instanceof MethodConfig) {
                         $defaults[$actionName][1] = $annotation->getMethods()[0];
                     }
                 }

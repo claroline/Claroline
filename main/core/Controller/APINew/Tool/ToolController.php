@@ -91,8 +91,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure")
-     * @EXT\Method("PUT")
+     * @Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure", methods={"PUT"})
      *
      * @param string $name
      * @param string $context
@@ -130,8 +129,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_get_rights")
-     * @EXT\Method("GET")
+     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_get_rights", methods={"GET"})
      *
      * @param string $name
      * @param string $context
@@ -171,8 +169,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_update_rights")
-     * @EXT\Method("PUT")
+     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_update_rights", methods={"PUT"})
      *
      * @param string $name
      * @param string $context
@@ -221,8 +218,7 @@ class ToolController extends AbstractApiController
     }
 
     /**
-     * @Route("/close/{name}/{context}/{contextId}", name="apiv2_tool_close")
-     * @EXT\Method("PUT")
+     * @Route("/close/{name}/{context}/{contextId}", name="apiv2_tool_close", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param User   $user

@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Cryptography;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,9 +39,9 @@ class ApiTokenController extends AbstractCrudController
     /**
      * @Route(
      *    "/list/current",
-     *    name="apiv2_apitoken_list_current"
+     *    name="apiv2_apitoken_list_current",
+     *    methods={"GET"}
      * )
-     * @EXT\Method("GET")
      *
      * @param Request $request
      *

@@ -74,8 +74,7 @@ class FavouriteController extends AbstractApiController
     /**
      * Creates or deletes favourite resources.
      *
-     * @Route("/resources/toggle", name="hevinci_favourite_resources_toggle")
-     * @EXT\Method("PUT")
+     * @Route("/resources/toggle", name="hevinci_favourite_resources_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param User    $user
@@ -94,8 +93,7 @@ class FavouriteController extends AbstractApiController
     /**
      * Creates or deletes favourite workspaces.
      *
-     * @Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle")
-     * @EXT\Method("PUT")
+     * @Route("/workspaces/toggle", name="hevinci_favourite_workspaces_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param User    $user

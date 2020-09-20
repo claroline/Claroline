@@ -68,8 +68,7 @@ class BlogController
     /**
      * Get blog options.
      *
-     * @Route("options", name="apiv2_blog_options")
-     * @EXT\Method("GET")
+     * @Route("options", name="apiv2_blog_options", methods={"GET"})
      *
      * @param Blog $blog
      *
@@ -85,8 +84,7 @@ class BlogController
     /**
      * Update blog options.
      *
-     * @Route("options/update", name="apiv2_blog_options_update")
-     * @EXT\Method("PUT")
+     * @Route("options/update", name="apiv2_blog_options_update", methods={"PUT"})
      *
      * @param Blog $blog
      *
@@ -104,8 +102,7 @@ class BlogController
     /**
      * Get tag cloud, tags used in blog posts.
      *
-     * @Route("tags", name="apiv2_blog_tags")
-     * @EXT\Method("GET")
+     * @Route("tags", name="apiv2_blog_tags", methods={"GET"})
      */
     public function getTagsAction(Blog $blog)
     {

@@ -21,11 +21,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Requirements;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -71,9 +70,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/{workspace}/requirements/{type}/list",
-     *    name="apiv2_workspace_requirements_list"
+     *    name="apiv2_workspace_requirements_list",
+     *    methods={"GET"}
      * )
-     * @Method("GET")
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -106,9 +105,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/{workspace}/requirements/{type}/create",
-     *    name="apiv2_workspace_requirements_create"
+     *    name="apiv2_workspace_requirements_create",
+     *    methods={"PUT"}
      * )
-     * @Method("PUT")
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -136,9 +135,9 @@ class RequirementsController
     /**
      * @Route(
      *     "/{workspace}/requirements/delete",
-     *     name="apiv2_workspace_requirements_delete"
+     *     name="apiv2_workspace_requirements_delete",
+     *     methods={"DELETE"}
      * )
-     * @Method("DELETE")
      * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -160,9 +159,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/requirements/{requirements}/fetch",
-     *    name="apiv2_workspace_requirements_fetch"
+     *    name="apiv2_workspace_requirements_fetch",
+     *    methods="{GET}"
      * )
-     * @Method("GET")
      * @ParamConverter("requirements", options={"mapping": {"requirements": "uuid"}})
      *
      * @param Requirements $requirements
@@ -181,9 +180,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/requirements/resource/{resourceNode}/{type}/list",
-     *    name="apiv2_workspace_requirements_resource_list"
+     *    name="apiv2_workspace_requirements_resource_list",
+     *    methods={"GET"}
      * )
-     * @Method("GET")
      * @ParamConverter("resourceNode", options={"mapping": {"resourceNode": "uuid"}})
      *
      * @param ResourceNode $resourceNode
@@ -219,9 +218,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/requirements/{requirements}/resources/add",
-     *    name="apiv2_workspace_requirements_resources_add"
+     *    name="apiv2_workspace_requirements_resources_add",
+     *    methods={"PUT"}
      * )
-     * @Method("PUT")
      * @ParamConverter("requirements", options={"mapping": {"requirements": "uuid"}})
      *
      * @param Requirements $requirements
@@ -243,9 +242,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/requirements/{requirements}/resources/remove",
-     *    name="apiv2_workspace_requirements_resources_remove"
+     *    name="apiv2_workspace_requirements_resources_remove",
+     *    methods={"DELETE"}
      * )
-     * @Method("DELETE")
      * @ParamConverter("requirements", options={"mapping": {"requirements": "uuid"}})
      *
      * @param Requirements $requirements
@@ -267,9 +266,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/requirements/resource/{resourceNode}/remove",
-     *    name="apiv2_workspace_requirements_resource_remove"
+     *    name="apiv2_workspace_requirements_resource_remove",
+     *    methods={"DELETE"}
      * )
-     * @Method("DELETE")
      * @ParamConverter("resourceNode", options={"mapping": {"resourceNode": "uuid"}})
      *
      * @param ResourceNode $resourceNode
@@ -294,9 +293,9 @@ class RequirementsController
     /**
      * @Route(
      *    "/requirements/resource/{resourceNode}/{type}/update",
-     *    name="apiv2_workspace_requirements_resource_update"
+     *    name="apiv2_workspace_requirements_resource_update",
+     *    methods={"PUT"}
      * )
-     * @Method("PUT")
      * @ParamConverter("resourceNode", options={"mapping": {"resourceNode": "uuid"}})
      *
      * @param ResourceNode $resourceNode

@@ -19,7 +19,6 @@ security:
 
         main:
             pattern: ^/
-            logout_on_user_change: true
             anonymous: ~
             logout:
                 path:   /logout

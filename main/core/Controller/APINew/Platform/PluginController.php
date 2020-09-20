@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Platform;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Manager\PluginManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -44,8 +43,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/configure", name="apiv2_plugin_configure")
-     * @EXT\Method("PUT")
+     * @Route("/configure", name="apiv2_plugin_configure", methods={"PUT"})
      *
      * @param Plugin $plugin
      *
@@ -62,8 +60,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/enable", name="apiv2_plugin_enable")
-     * @EXT\Method("PUT")
+     * @Route("/enable", name="apiv2_plugin_enable", methods={"PUT"})
      *
      * @param Plugin $plugin
      *
@@ -80,8 +77,7 @@ class PluginController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/disable", name="apiv2_plugin_disable")
-     * @EXT\Method("PUT")
+     * @Route("/disable", name="apiv2_plugin_disable", methods={"PUT"})
      *
      * @param Plugin $plugin
      *

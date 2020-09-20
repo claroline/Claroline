@@ -93,8 +93,7 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @Route("/list/managed", name="apiv2_group_list_managed")
-     * @EXT\Method("GET")
+     * @Route("/list/managed", name="apiv2_group_list_managed", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @ApiDoc(
      *     description="List the objects of class $class.",
@@ -128,8 +127,7 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @Route("/password/reset", name="apiv2_group_initialize_password")
-     * @EXT\Method("POST")
+     * @Route("/password/reset", name="apiv2_group_initialize_password", methods={"POST"})
      *
      * @param Request $request
      *

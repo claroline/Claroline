@@ -113,14 +113,14 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/users",
-     *     name="apiv2_cursus_session_event_list_users"
+     *     name="apiv2_cursus_session_event_list_users",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
      *     class="ClarolineCursusBundle:SessionEvent",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("GET")
      *
      * @param SessionEvent $sessionEvent
      * @param Request      $request
@@ -145,14 +145,14 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/users",
-     *     name="apiv2_cursus_session_event_add_users"
+     *     name="apiv2_cursus_session_event_add_users",
+     *     methods={"PATCH"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
      *     class="ClarolineCursusBundle:SessionEvent",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PATCH")
      *
      * @param SessionEvent $sessionEvent
      * @param Request      $request
@@ -181,9 +181,9 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/remove/users",
-     *     name="apiv2_cursus_session_event_remove_users"
+     *     name="apiv2_cursus_session_event_remove_users",
+     *     methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *
@@ -201,7 +201,8 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/self/register",
-     *     name="apiv2_cursus_session_event_self_register"
+     *     name="apiv2_cursus_session_event_self_register",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
@@ -209,7 +210,6 @@ class SessionEventController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\Method("PUT")
      *
      * @param SessionEvent $sessionEvent
      * @param User         $user
@@ -252,14 +252,14 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/all/invite",
-     *     name="apiv2_cursus_session_event_invite_all"
+     *     name="apiv2_cursus_session_event_invite_all",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
      *     class="ClarolineCursusBundle:SessionEvent",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param SessionEvent $sessionEvent
      *
@@ -276,14 +276,14 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/users/invite",
-     *     name="apiv2_cursus_session_event_invite_users"
+     *     name="apiv2_cursus_session_event_invite_users",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
      *     class="ClarolineCursusBundle:SessionEvent",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param SessionEvent $sessionEvent
      * @param Request      $request
@@ -302,14 +302,14 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/certificate/all/generate",
-     *     name="apiv2_cursus_session_event_certificate_generate_all"
+     *     name="apiv2_cursus_session_event_certificate_generate_all",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
      *     class="ClarolineCursusBundle:SessionEvent",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param SessionEvent $sessionEvent
      *
@@ -326,14 +326,14 @@ class SessionEventController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/certificate/users/generate",
-     *     name="apiv2_cursus_session_event_certificate_generate_users"
+     *     name="apiv2_cursus_session_event_certificate_generate_users",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "sessionEvent",
      *     class="ClarolineCursusBundle:SessionEvent",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param SessionEvent $sessionEvent
      * @param Request      $request

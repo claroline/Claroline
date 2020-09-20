@@ -72,9 +72,9 @@ class AuthenticationController
      * @Route(
      *     "/sendmail",
      *     name="claro_security_send_token",
-     *     options={"expose"=true}
+     *     options={"expose"=true},
+     *     methods={"POST"}
      * )
-     * @EXT\Method("POST")
      */
     public function sendEmailAction(Request $request)
     {
@@ -106,9 +106,9 @@ class AuthenticationController
      * @Route(
      *     "/validatepassword",
      *     name="claro_security_new_password",
-     *     options={"expose"=true}
+     *     options={"expose"=true},
+     *     methods={"POST"}
      * )
-     * @EXT\Method("POST")
      */
     public function newPasswordAction(Request $request)
     {
@@ -147,9 +147,9 @@ class AuthenticationController
      * @Route(
      *     "/validate/email/{hash}",
      *     name="claro_security_validate_email",
-     *     options={"expose"=true}
+     *     options={"expose"=true},
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      */
     public function validateEmailAction($hash)
     {

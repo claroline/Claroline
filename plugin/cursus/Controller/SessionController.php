@@ -155,14 +155,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/users",
-     *     name="apiv2_cursus_session_list_users"
+     *     name="apiv2_cursus_session_list_users",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
-     *     options={"mapping": {"id": "uuid"}}
+     *     options={"mapping": {"id": "uuid"}},
      * )
-     * @EXT\Method("GET")
      *
      * @param CourseSession $session
      * @param int           $type
@@ -189,14 +189,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/users",
-     *     name="apiv2_cursus_session_add_users"
+     *     name="apiv2_cursus_session_add_users",
+     *     methods={"PATCH"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
-     *     options={"mapping": {"id": "uuid"}}
+     *     options={"mapping": {"id": "uuid"}},
      * )
-     * @EXT\Method("PATCH")
      *
      * @param CourseSession $session
      * @param int           $type
@@ -227,9 +227,9 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/remove/users",
-     *     name="apiv2_cursus_session_remove_users"
+     *     name="apiv2_cursus_session_remove_users",
+     *     methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *
@@ -247,14 +247,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/groups",
-     *     name="apiv2_cursus_session_list_groups"
+     *     name="apiv2_cursus_session_list_groups",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
-     *     options={"mapping": {"id": "uuid"}}
+     *     options={"mapping": {"id": "uuid"}},
      * )
-     * @EXT\Method("GET")
      *
      * @param CourseSession $session
      * @param int           $type
@@ -286,9 +286,8 @@ class SessionController extends AbstractCrudController
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
-     *     options={"mapping": {"id": "uuid"}}
+     *     options={"mapping": {"id": "uuid"}},
      * )
-     * @EXT\Method("PATCH")
      *
      * @param CourseSession $session
      * @param int           $type
@@ -323,9 +322,9 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/remove/groups",
-     *     name="apiv2_cursus_session_remove_groups"
+     *     name="apiv2_cursus_session_remove_groups",
+     *     methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *
@@ -343,7 +342,8 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/self/register",
-     *     name="apiv2_cursus_session_self_register"
+     *     name="apiv2_cursus_session_self_register",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
@@ -351,7 +351,6 @@ class SessionController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      * @param User          $user
@@ -378,10 +377,10 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/queues",
-     *     name="apiv2_cursus_session_list_queues"
+     *     name="apiv2_cursus_session_list_queues",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\Method("GET")
      *
      * @param User    $user
      * @param Request $request
@@ -410,9 +409,9 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/remove/queues",
-     *     name="apiv2_cursus_session_remove_queues"
+     *     name="apiv2_cursus_session_remove_queues",
+     *     methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *
@@ -430,14 +429,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/queue/{queue}/validate",
-     *     name="apiv2_cursus_session_validate_queue"
+     *     name="apiv2_cursus_session_validate_queue",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "queue",
      *     class="ClarolineCursusBundle:CourseSessionRegistrationQueue",
      *     options={"mapping": {"queue": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSessionRegistrationQueue $queue
      *
@@ -461,14 +460,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/all/invite",
-     *     name="apiv2_cursus_session_invite_all"
+     *     name="apiv2_cursus_session_invite_all",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      *
@@ -485,14 +484,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/users/invite",
-     *     name="apiv2_cursus_session_invite_users"
+     *     name="apiv2_cursus_session_invite_users",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      * @param Request       $request
@@ -511,14 +510,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/groups/invite",
-     *     name="apiv2_cursus_session_invite_groups"
+     *     name="apiv2_cursus_session_invite_groups",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      * @param Request       $request
@@ -546,14 +545,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/certificate/all/generate",
-     *     name="apiv2_cursus_session_certificate_generate_all"
+     *     name="apiv2_cursus_session_certificate_generate_all",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      *
@@ -570,14 +569,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/certificate/users/generate",
-     *     name="apiv2_cursus_session_certificate_generate_users"
+     *     name="apiv2_cursus_session_certificate_generate_users",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      * @param Request       $request
@@ -596,14 +595,14 @@ class SessionController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/certificate/groups/generate",
-     *     name="apiv2_cursus_session_certificate_generate_groups"
+     *     name="apiv2_cursus_session_certificate_generate_groups",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "session",
      *     class="ClarolineCursusBundle:CourseSession",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param CourseSession $session
      * @param Request       $request

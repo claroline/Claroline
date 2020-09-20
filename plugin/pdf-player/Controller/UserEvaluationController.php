@@ -45,8 +45,7 @@ class UserEvaluationController
     }
 
     /**
-     * @Route("/{id}/progression/{page}/{total}", name="apiv2_pdf_progression_update")
-     * @EXT\Method("PUT")
+     * @Route("/{id}/progression/{page}/{total}", name="apiv2_pdf_progression_update", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("pdf", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "id"}})
      *

@@ -48,8 +48,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/count/unread", name="apiv2_message_count_unread")
-     * @EXT\Method("GET")
+     * @Route("/count/unread", name="apiv2_message_count_unread", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return JsonResponse
@@ -66,8 +65,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/received", name="apiv2_message_received")
-     * @EXT\Method("GET")
+     * @Route("/received", name="apiv2_message_received", methods={"GET"})
      * @ApiDoc(
      *     description="Returns the list of received message for the current connected user",
      *     queryString={
@@ -93,8 +91,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/removed", name="apiv2_message_removed")
-     * @EXT\Method("GET")
+     * @Route("/removed", name="apiv2_message_removed", methods={"GET"})
      * @ApiDoc(
      *     description="Returns the list of removed message for the current connected user",
      *     queryString={
@@ -120,8 +117,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/sent", name="apiv2_message_sent")
-     * @EXT\Method("GET")
+     * @Route("/sent", name="apiv2_message_sent", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Returns the list of sent message for the current connected user",
@@ -148,8 +144,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/softdelete", name="apiv2_message_soft_delete")
-     * @EXT\Method("PUT")
+     * @Route("/softdelete", name="apiv2_message_soft_delete", methods={"PUT"})
      * @ApiDoc(
      *     description="Soft delete an array of messages.",
      *     queryString={
@@ -177,8 +172,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/remove", name="apiv2_message_hard_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/remove", name="apiv2_message_hard_delete", methods={"DELETE"})
      * @ApiDoc(
      *     description="Hard delete an array of messages.",
      *     queryString={
@@ -204,8 +198,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/restore", name="apiv2_message_restore")
-     * @EXT\Method("PUT")
+     * @Route("/restore", name="apiv2_message_restore", methods={"PUT"})
      * @ApiDoc(
      *     description="Restore a list of messages for the current user.",
      *     queryString={
@@ -233,8 +226,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/read", name="apiv2_message_read")
-     * @EXT\Method("PUT")
+     * @Route("/read", name="apiv2_message_read", methods={"PUT"})
      * @ApiDoc(
      *     description="Read an array of message for the current user.",
      *     queryString={
@@ -265,8 +257,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unread", name="apiv2_message_unread")
-     * @EXT\Method("PUT")
+     * @Route("/unread", name="apiv2_message_unread", methods={"PUT"})
      * @ApiDoc(
      *     description="Unread an array of message for the current user.",
      *     queryString={
@@ -297,8 +288,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/root/{id}", name="apiv2_message_root")
-     * @EXT\Method("GET")
+     * @Route("/root/{id}", name="apiv2_message_root", methods={"GET"})
      * @ApiDoc(
      *     description="Get the fist message.",
      *     parameters={

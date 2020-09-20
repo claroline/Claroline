@@ -23,8 +23,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/comment")
-     * @EXT\Method("POST")
+     * @Route("/{id}/comment", methods={"POST"})
      * @ParamConverter("message", options={"mapping": {"id": "uuid"}})
      *
      * @ApiDoc(
@@ -65,8 +64,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list")
-     * @EXT\Method("GET")
+     * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @param string  $id
@@ -86,8 +84,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list")
-     * @EXT\Method("GET")
+     * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list", methods={"GET"})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
      * @param string  $id

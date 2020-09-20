@@ -57,9 +57,8 @@ class ContributionController
     }
 
     /**
-     * @Route("/history", name="apiv2_wiki_section_contribution_history")
+     * @Route("/history", name="apiv2_wiki_section_contribution_history", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\Method({"GET"})
      *
      * @param Section $section
      * @param User    $user
@@ -83,14 +82,13 @@ class ContributionController
     }
 
     /**
-     * @Route("/{id}", name="apiv2_wiki_section_contribution_get")
+     * @Route("/{id}", name="apiv2_wiki_section_contribution_get", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
      *     class="IcapWikiBundle:Contribution",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method({"GET"})
      *
      * @param Section      $section
      * @param Contribution $contribution
@@ -106,14 +104,13 @@ class ContributionController
     }
 
     /**
-     * @Route("/{id}", name="apiv2_wiki_section_contribution_set_active")
+     * @Route("/{id}", name="apiv2_wiki_section_contribution_set_active", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter(
      *     "contribution",
      *     class="IcapWikiBundle:Contribution",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method({"PUT"})
      *
      * @param Section      $section
      * @param Contribution $contribution
@@ -130,9 +127,8 @@ class ContributionController
     }
 
     /**
-     * @Route("/compare/{id1}/{id2}", name="apiv2_wiki_section_contribution_compare")
+     * @Route("/compare/{id1}/{id2}", name="apiv2_wiki_section_contribution_compare", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\Method({"GET"})
      *
      * @param Section $section
      * @param $id1

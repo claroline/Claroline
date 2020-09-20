@@ -19,11 +19,10 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasParentTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasWorkspacesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/organization")
@@ -65,8 +64,7 @@ class OrganizationController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/managers", name="apiv2_organization_list_managers")
-     * @Method("GET")
+     * @Route("/{id}/managers", name="apiv2_organization_list_managers", methods={"GET"})
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      *
      * @param Organization $organization
@@ -84,8 +82,7 @@ class OrganizationController extends AbstractCrudController
     /**
      * Adds managers to the collection.
      *
-     * @Route("/{id}/manager", name="apiv2_organization_add_managers")
-     * @Method("PATCH")
+     * @Route("/{id}/manager", name="apiv2_organization_add_managers", methods={"PATCH"})
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      *
      * @param Organization $organization
@@ -104,8 +101,7 @@ class OrganizationController extends AbstractCrudController
     /**
      * Removes managers from the collection.
      *
-     * @Route("/{id}/manager", name="apiv2_organization_remove_managers")
-     * @Method("DELETE")
+     * @Route("/{id}/manager", name="apiv2_organization_remove_managers", methods={"DELETE"})
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      *
      * @param Organization $organization

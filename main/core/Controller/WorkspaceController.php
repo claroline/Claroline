@@ -209,8 +209,7 @@ class WorkspaceController
     /**
      * Submit access code.
      *
-     * @Route("/unlock/{id}", name="claro_workspace_unlock")
-     * @EXT\Method("POST")
+     * @Route("/unlock/{id}", name="claro_workspace_unlock", methods={"POST"})
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",

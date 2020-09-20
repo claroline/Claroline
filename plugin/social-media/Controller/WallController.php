@@ -5,24 +5,22 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/6/15
  */
 
 namespace Icap\SocialmediaBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 class WallController extends Controller
 {
     /**
-     * @Route("/wall/{publicUrl}", name="icap_socialmedia_wall_view")
-     * @Method({"GET"})
+     * @Route("/wall/{publicUrl}", name="icap_socialmedia_wall_view", methods={"GET"})
      * @Template()
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @ParamConverter(
@@ -46,7 +44,6 @@ class WallController extends Controller
 
     /**
      * @Route("/wall/list/{page}/{userId}", name="icap_socialmedia_walllist", defaults={"page" : "1"})
-     * @Method({"GET"})
      * @Template()
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
@@ -65,15 +62,14 @@ class WallController extends Controller
         $likesQB = $this->getWallItemManager()->getWallItemsForPagination($userId, $isOwner);
         $pager = $this->paginateQuery($likesQB, $page);
 
-        return array(
+        return [
             'pager' => $pager,
             'userId' => $userId,
-            'isOwner' => $isOwner, );
+            'isOwner' => $isOwner, ];
     }
 
     /**
-     * @Route("/wall/item/{id}", name="icap_socialmedia_wall_item_delete", requirements={"id" : "\d+"})
-     * @Method({"DELETE"})
+     * @Route("/wall/item/{id}", name="icap_socialmedia_wall_item_delete", requirements={"id" : "\d+"}, methods={"DELETE"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $id

@@ -16,7 +16,6 @@ use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -60,8 +59,7 @@ class SwaggerController
     }
 
     /**
-     * @Route("", name="apiv2_swagger_get")
-     * @EXT\Method("GET")
+     * @Route("", name="apiv2_swagger_get", methods={"GET"})
      */
     public function getApiAction()
     {

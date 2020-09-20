@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Manager\DataSourceManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -47,8 +46,7 @@ class DataSourceController
     /**
      * Lists available data sources for a given context.
      *
-     * @Route("/{context}", name="apiv2_data_source_list", defaults={"context"=null})
-     * @EXT\Method("GET")
+     * @Route("/{context}", name="apiv2_data_source_list", defaults={"context"=null}, methods={"GET"})
      *
      * @param string $context
      *
@@ -66,8 +64,7 @@ class DataSourceController
     /**
      * Gets data from a data source.
      *
-     * @Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null})
-     * @EXT\Method("GET")
+     * @Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null}, methods={"GET"})
      *
      * @param Request $request
      * @param string  $type

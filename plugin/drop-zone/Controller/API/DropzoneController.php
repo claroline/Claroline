@@ -67,8 +67,7 @@ class DropzoneController
     /**
      * Updates a Dropzone resource.
      *
-     * @Route("/{id}", name="claro_dropzone_update")
-     * @EXT\Method("PUT")
+     * @Route("/{id}", name="claro_dropzone_update", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="ClarolineDropZoneBundle:Dropzone",
@@ -101,8 +100,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch")
-     * @EXT\Method("GET")
+     * @Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="ClarolineDropZoneBundle:Dropzone",
@@ -121,8 +119,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save")
-     * @EXT\Method("POST")
+     * @Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save", methods={"POST"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -150,8 +147,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/correction/{id}/submit", name="claro_dropzone_correction_submit")
-     * @EXT\Method("PUT")
+     * @Route("/correction/{id}/submit", name="claro_dropzone_correction_submit", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "correction",
      *     class="ClarolineDropZoneBundle:Correction",
@@ -180,8 +176,10 @@ class DropzoneController
     }
 
     /**
-     * @Route("/correction/{id}/validation/switch", name="claro_dropzone_correction_validation_switch")
-     * @EXT\Method("PUT")
+     * @Route("/correction/{id}/validation/switch",
+     *     name="claro_dropzone_correction_validation_switch",
+     *     methods={"PUT"}
+     * )
      * @EXT\ParamConverter(
      *     "correction",
      *     class="ClarolineDropZoneBundle:Correction",
@@ -210,8 +208,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/correction/{id}/delete", name="claro_dropzone_correction_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/correction/{id}/delete", name="claro_dropzone_correction_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "correction",
      *     class="ClarolineDropZoneBundle:Correction",
@@ -239,8 +236,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/correction/{id}/deny", name="claro_dropzone_correction_deny")
-     * @EXT\Method("PUT")
+     * @Route("/correction/{id}/deny", name="claro_dropzone_correction_deny", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "correction",
      *     class="ClarolineDropZoneBundle:Correction",
@@ -271,8 +267,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch")
-     * @EXT\Method("GET")
+     * @Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="ClarolineDropZoneBundle:Dropzone",
@@ -292,8 +287,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch")
-     * @EXT\Method("GET")
+     * @Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="ClarolineDropZoneBundle:Dropzone",
@@ -319,8 +313,7 @@ class DropzoneController
     }
 
     /**
-     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute")
-     * @EXT\Method("POST")
+     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
      * @EXT\ParamConverter(
      *     "tool",
      *     class="ClarolineDropZoneBundle:DropzoneTool",
@@ -352,8 +345,7 @@ class DropzoneController
     /**
      * Downloads a document.
      *
-     * @Route("/{document}/download", name="claro_dropzone_document_download")
-     * @EXT\Method("GET")
+     * @Route("/{document}/download", name="claro_dropzone_document_download", methods={"GET"})
      * @EXT\ParamConverter(
      *     "document",
      *     class="ClarolineDropZoneBundle:Document",

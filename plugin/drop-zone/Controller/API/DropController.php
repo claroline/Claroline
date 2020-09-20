@@ -68,8 +68,7 @@ class DropController
     }
 
     /**
-     * @Route("/drop/{id}", name="claro_dropzone_drop_fetch")
-     * @EXT\Method("GET")
+     * @Route("/drop/{id}", name="claro_dropzone_drop_fetch", methods={"GET"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -91,8 +90,7 @@ class DropController
     }
 
     /**
-     * @Route("/{id}/drops/search", name="claro_dropzone_drops_search")
-     * @EXT\Method("GET")
+     * @Route("/{id}/drops/search", name="claro_dropzone_drops_search", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="ClarolineDropZoneBundle:Dropzone",
@@ -120,11 +118,10 @@ class DropController
     /**
      * Initializes a Drop for the current User or Team.
      *
-     * @Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null})
+     * @Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null}, methods={"POST"})
      * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"teamId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     * @EXT\Method("POST")
      *
      * @param Dropzone $dropzone
      * @param Team     $team
@@ -157,8 +154,7 @@ class DropController
     /**
      * Submits Drop.
      *
-     * @Route("/drop/{id}/submit", name="claro_dropzone_drop_submit")
-     * @EXT\Method("PUT")
+     * @Route("/drop/{id}/submit", name="claro_dropzone_drop_submit", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -191,8 +187,7 @@ class DropController
     /**
      * Cancels Drop submission.
      *
-     * @Route("/drop/{id}/submission/cancel", name="claro_dropzone_drop_submission_cancel")
-     * @EXT\Method("PUT")
+     * @Route("/drop/{id}/submission/cancel", name="claro_dropzone_drop_submission_cancel", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -221,8 +216,7 @@ class DropController
     /**
      * Adds a Document to a Drop.
      *
-     * @Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add")
-     * @EXT\Method("POST")
+     * @Route("/drop/{id}/type/{type}", name="claro_dropzone_documents_add", methods={"POST"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -275,8 +269,7 @@ class DropController
     /**
      * Deletes a Document.
      *
-     * @Route("/document/{id}", name="claro_dropzone_document_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/document/{id}", name="claro_dropzone_document_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "document",
      *     class="ClarolineDropZoneBundle:Document",
@@ -311,9 +304,9 @@ class DropController
      *
      * @Route(
      *     "/drop/{id}/revision/{revision}/type/{type}/manager",
-     *     name="claro_dropzone_manager_documents_add"
+     *     name="claro_dropzone_manager_documents_add",
+     *     methods={"POST"}
      * )
-     * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -368,8 +361,7 @@ class DropController
     /**
      * Deletes a manager Document.
      *
-     * @Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/document/{id}/manager", name="claro_dropzone_manager_document_delete", methods={"DELETE"})
      * @EXT\ParamConverter(
      *     "document",
      *     class="ClarolineDropZoneBundle:Document",
@@ -400,8 +392,7 @@ class DropController
     /**
      * Unlocks Drop.
      *
-     * @Route("/drop/{id}/unlock", name="claro_dropzone_drop_unlock")
-     * @EXT\Method("PUT")
+     * @Route("/drop/{id}/unlock", name="claro_dropzone_drop_unlock", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -430,8 +421,7 @@ class DropController
     /**
      * Unlocks Drop user.
      *
-     * @Route("/drop/{id}/unlock/user", name="claro_dropzone_drop_unlock_user")
-     * @EXT\Method("PUT")
+     * @Route("/drop/{id}/unlock/user", name="claro_dropzone_drop_unlock_user", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -458,8 +448,7 @@ class DropController
     }
 
     /**
-     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute")
-     * @EXT\Method("POST")
+     * @Route("/tool/{tool}/document/{document}", name="claro_dropzone_tool_execute", methods={"POST"})
      * @EXT\ParamConverter(
      *     "tool",
      *     class="ClarolineDropZoneBundle:DropzoneTool",
@@ -494,8 +483,7 @@ class DropController
     /**
      * Downloads drops documents into a ZIP archive.
      *
-     * @Route("/drops/download", name="claro_dropzone_drops_download")
-     * @EXT\Method("POST")
+     * @Route("/drops/download", name="claro_dropzone_drops_download", methods={"POST"})
      *
      * @param Request $request
      *

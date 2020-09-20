@@ -122,8 +122,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/meeting", name="apiv2_bbb_meeting_create")
-     * @EXT\Method("POST")
+     * @Route("/{id}/meeting", name="apiv2_bbb_meeting_create", methods={"POST"})
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
      * @param BBB $bbb
@@ -202,8 +201,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/meeting/moderators/check", name="apiv2_bbb_meeting_moderators_check")
-     * @EXT\Method("GET")
+     * @Route("/{id}/meeting/moderators/check", name="apiv2_bbb_meeting_moderators_check", methods={"GET"})
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
      * @param BBB $bbb
@@ -223,8 +221,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/recordings", name="apiv2_bbb_meeting_recordings_list")
-     * @EXT\Method("GET")
+     * @Route("/{id}/recordings", name="apiv2_bbb_meeting_recordings_list", methods={"GET"})
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
      * @param BBB $bbb
@@ -244,8 +241,7 @@ class BBBController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/recordings/{recordId}", name="apiv2_bbb_meeting_recording_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/{id}/recordings/{recordId}", name="apiv2_bbb_meeting_recording_delete", methods={"DELETE"})
      * @EXT\ParamConverter("bbb", class="ClarolineBigBlueButtonBundle:BBB", options={"mapping": {"id": "uuid"}})
      *
      * @param BBB    $bbb

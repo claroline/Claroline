@@ -52,8 +52,7 @@ class EvaluationController
     }
 
     /**
-     * @Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace

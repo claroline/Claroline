@@ -2,16 +2,14 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Model;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 trait HasParentTrait
 {
     /**
-     * @Route("/{parent}/move/{child}")
-     * @Method("PATCH")
+     * @Route("/{parent}/move/{child}", methods={"PATCH"})
      */
     public function moveAction($child, $parent, $class, Request $request)
     {

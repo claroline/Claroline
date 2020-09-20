@@ -14,12 +14,11 @@ namespace Icap\SocialmediaBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\CommentAction;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CommentActionController extends Controller
 {
@@ -67,8 +66,7 @@ class CommentActionController extends Controller
     }
 
     /**
-     * @Route("/comment/{resourceId}", name="icap_socialmedia_comment")
-     * @Method({"POST"})
+     * @Route("/comment/{resourceId}", name="icap_socialmedia_comment", methods={"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $resourceId
@@ -116,8 +114,7 @@ class CommentActionController extends Controller
     }
 
     /**
-     * @Route("/comment/item/{id}", name="icap_socialmedia_comment_delete", requirements={"id" : "\d+"})
-     * @Method({"DELETE"})
+     * @Route("/comment/item/{id}", name="icap_socialmedia_comment_delete", requirements={"id" : "\d+"}, methods={"DELETE"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $id

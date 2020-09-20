@@ -87,8 +87,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/activity", name="apiv2_workspace_analytics_activity")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/activity", name="apiv2_workspace_analytics_activity", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -119,8 +118,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/actions", name="apiv2_workspace_analytics_actions")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/actions", name="apiv2_workspace_analytics_actions", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -146,8 +144,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/time", name="apiv2_workspace_analytics_time")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/time", name="apiv2_workspace_analytics_time", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -167,8 +164,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/resources", name="apiv2_workspace_analytics_resources")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/resources", name="apiv2_workspace_analytics_resources", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -187,8 +183,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/resources/top", name="apiv2_workspace_analytics_top_resources")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/resources/top", name="apiv2_workspace_analytics_top_resources", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -226,8 +221,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/users", name="apiv2_workspace_analytics_users")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/users", name="apiv2_workspace_analytics_users", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -246,8 +240,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/users/top", name="apiv2_workspace_analytics_top_users")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/users/top", name="apiv2_workspace_analytics_top_users", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
      * @param Workspace $workspace
@@ -275,8 +268,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/progression/{user}", name="apiv2_workspace_get_user_progression")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/progression/{user}", name="apiv2_workspace_get_user_progression", methods={"GET"})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
@@ -301,8 +293,7 @@ class DashboardController
     }
 
     /**
-     * @Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression")
-     * @EXT\Method("GET")
+     * @Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression", methods={"GET"})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      *
@@ -405,9 +396,8 @@ class DashboardController
     }
 
     /**
-     * @Route("/evaluations/{userEvaluationId}", name="apiv2_workspace_list_resource_evaluations")
+     * @Route("/evaluations/{userEvaluationId}", name="apiv2_workspace_list_resource_evaluations", methods={"GET"})
      * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
-     * @EXT\Method("GET")
      *
      * @param ResourceUserEvaluation $userEvaluation
      * @param Request                $request

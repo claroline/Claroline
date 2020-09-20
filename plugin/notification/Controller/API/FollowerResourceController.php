@@ -45,8 +45,7 @@ class FollowerResourceController extends AbstractCrudController
     /**
      * Follows or unfollows resources.
      *
-     * @Route("resources/toggle/{mode}", name="icap_notification_follower_resources_toggle")
-     * @EXT\Method("PUT")
+     * @Route("resources/toggle/{mode}", name="icap_notification_follower_resources_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param string  $mode

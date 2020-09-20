@@ -133,14 +133,14 @@ class TemplateController extends AbstractCrudController
     /**
      * @Route(
      *     "{id}/default",
-     *     name="apiv2_template_default_define"
+     *     name="apiv2_template_default_define",
+     *     methods={"PUT"}
      * )
      * @EXT\ParamConverter(
      *     "template",
      *     class="ClarolineCoreBundle:Template\Template",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PUT")
      *
      * @param Template $template
      *

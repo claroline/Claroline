@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Role;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,8 +25,7 @@ trait HasRolesTrait
      *     }
      * )
      *
-     * @Route("/{id}/role")
-     * @EXT\Method("GET")
+     * @Route("/{id}/role", methods={"GET"})
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Role.",
      *     queryString={
@@ -56,8 +54,7 @@ trait HasRolesTrait
     }
 
     /**
-     * @Route("/{id}/role")
-     * @EXT\Method("PATCH")
+     * @Route("/{id}/role", methods={"PATCH"})
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Role.",
      *     parameters={
@@ -88,8 +85,7 @@ trait HasRolesTrait
     }
 
     /**
-     * @Route("/{id}/role")
-     * @EXT\Method("DELETE")
+     * @Route("/{id}/role", methods={"DELETE"})
      * @ApiDoc(
      *     description="Remove objects of class Claroline\CoreBundle\Entity\Role.",
      *     parameters={

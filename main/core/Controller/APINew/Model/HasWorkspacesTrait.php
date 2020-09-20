@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +16,7 @@ trait HasWorkspacesTrait
     /**
      * List workspaces of the collection.
      *
-     * @Route("/{id}/workspace")
-     * @EXT\Method("GET")
+     * @Route("/{id}/workspace", methods={"GET"})
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
      *     queryString={
@@ -49,8 +47,7 @@ trait HasWorkspacesTrait
     /**
      * Adds workspaces to the collection.
      *
-     * @Route("/{id}/workspace")
-     * @EXT\Method("PATCH")
+     * @Route("/{id}/workspace", methods={"PATCH"})
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
      *     parameters={
@@ -82,8 +79,7 @@ trait HasWorkspacesTrait
     /**
      * Removes workspaces from the collection.
      *
-     * @Route("/{id}/workspace")
-     * @EXT\Method("DELETE")
+     * @Route("/{id}/workspace", methods={"DELETE"})
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
      *     parameters={

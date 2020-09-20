@@ -15,7 +15,6 @@ use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -94,8 +93,7 @@ class EventController extends AbstractCrudController
     /**
      * Marks a list of tasks as done.
      *
-     * @Route("/done", name="apiv2_task_mark_done")
-     * @EXT\Method("PUT")
+     * @Route("/done", name="apiv2_task_mark_done", methods={"PUT"})
      *
      * @param Request $request
      *
@@ -122,8 +120,7 @@ class EventController extends AbstractCrudController
     /**
      * Marks a list of tasks as to do.
      *
-     * @Route("/todo", name="apiv2_task_mark_todo")
-     * @EXT\Method("PUT")
+     * @Route("/todo", name="apiv2_task_mark_todo", methods={"PUT"})
      *
      * @param Request $request
      *
@@ -148,8 +145,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/download", name="apiv2_download_agenda")
-     * @EXT\Method("GET")
+     * @Route("/download", name="apiv2_download_agenda", methods={"GET"})
      *
      * @param Request $request
      *
@@ -180,8 +176,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/import", name="apiv2_event_import")
-     * @EXT\Method("POST")
+     * @Route("/import", name="apiv2_event_import", methods={"POST"})
      *
      * @param Request $request
      *

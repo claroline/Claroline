@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/scheduledtask")

@@ -69,8 +69,7 @@ class RevisionController extends AbstractCrudController
     /**
      * Submits Drop for revision.
      *
-     * @Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision")
-     * @EXT\Method("PUT")
+     * @Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -102,8 +101,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/revisions/list", name="claro_dropzone_revisions_list")
-     * @EXT\Method("GET")
+     * @Route("/{id}/revisions/list", name="claro_dropzone_revisions_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="ClarolineDropZoneBundle:Dropzone",
@@ -129,8 +127,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list")
-     * @EXT\Method("GET")
+     * @Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "drop",
      *     class="ClarolineDropZoneBundle:Drop",
@@ -162,8 +159,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get")
-     * @EXT\Method("GET")
+     * @Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get", methods={"GET"})
      * @EXT\ParamConverter(
      *     "revision",
      *     class="ClarolineDropZoneBundle:Revision",

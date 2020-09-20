@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/7/15
  */
 
@@ -13,12 +13,11 @@ namespace Icap\SocialmediaBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\NoteAction;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class NoteActionController extends Controller
 {
@@ -38,12 +37,11 @@ class NoteActionController extends Controller
         $notesQB = $noteManager->getNotesForPagination($resourceId, $user);
         $pager = $this->paginateQuery($notesQB, 1);
 
-        return array('resourceId' => $resourceId, 'pager' => $pager);
+        return ['resourceId' => $resourceId, 'pager' => $pager];
     }
 
     /**
-     * @Route("/note/{resourceId}", name="icap_socialmedia_note")
-     * @Method({"POST"})
+     * @Route("/note/{resourceId}", name="icap_socialmedia_note", methods={"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param Request $request
@@ -56,7 +54,7 @@ class NoteActionController extends Controller
     {
         $text = $request->get('social_media_note_text');
         $jsonResponse = new JsonResponse(true);
-        if ($text !== null) {
+        if (null !== $text) {
             $note = new NoteAction();
             $note->setUser($user);
             $note->setText($text);
@@ -83,12 +81,11 @@ class NoteActionController extends Controller
         $notesQB = $this->getNoteActionManager()->getNotesForPagination($resourceId, $user);
         $pager = $this->paginateQuery($notesQB, $page);
 
-        return array('pager' => $pager, 'resourceId' => $resourceId);
+        return ['pager' => $pager, 'resourceId' => $resourceId];
     }
 
     /**
-     * @Route("/note/item/{id}", name="icap_socialmedia_note_delete", requirements={"id" : "\d+"})
-     * @Method({"DELETE"})
+     * @Route("/note/item/{id}", name="icap_socialmedia_note_delete", requirements={"id" : "\d+"}, methods={"DELETE"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param $id

@@ -86,9 +86,9 @@ class PathTrackingController
      *
      * @Route(
      *     "/workspace/{workspace}/paths/tracking",
-     *     name="claroline_paths_trackings_fetch"
+     *     name="claroline_paths_trackings_fetch",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -184,9 +184,9 @@ class PathTrackingController
      *
      * @Route(
      *     "/path/{resourceNode}/evaluations/list",
-     *     name="claroline_path_evaluations_list"
+     *     name="claroline_path_evaluations_list",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "resourceNode",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",

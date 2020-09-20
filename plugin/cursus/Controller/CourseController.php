@@ -190,14 +190,14 @@ class CourseController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/users",
-     *     name="apiv2_cursus_list_users"
+     *     name="apiv2_cursus_list_users",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter(
      *     "cursus",
      *     class="ClarolineCursusBundle:Cursus",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("GET")
      *
      * @param Cursus  $cursus
      * @param int     $type
@@ -224,14 +224,14 @@ class CourseController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/users",
-     *     name="apiv2_cursus_add_users"
+     *     name="apiv2_cursus_add_users",
+     *     methods={"PATCH"}
      * )
      * @EXT\ParamConverter(
      *     "cursus",
      *     class="ClarolineCursusBundle:Cursus",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PATCH")
      *
      * @param Cursus  $cursus
      * @param int     $type
@@ -253,9 +253,9 @@ class CourseController extends AbstractCrudController
     /**
      * @Route(
      *     "/remove/users",
-     *     name="apiv2_cursus_remove_users"
+     *     name="apiv2_cursus_remove_users",
+     *     methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *
@@ -274,14 +274,14 @@ class CourseController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/groups",
-     *     name="apiv2_cursus_list_groups"
+     *     name="apiv2_cursus_list_groups",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter(
      *     "cursus",
      *     class="ClarolineCursusBundle:Cursus",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("GET")
      *
      * @param Cursus  $cursus
      * @param int     $type
@@ -309,14 +309,14 @@ class CourseController extends AbstractCrudController
     /**
      * @Route(
      *     "/{id}/{type}/groups",
-     *     name="apiv2_cursus_add_groups"
+     *     name="apiv2_cursus_add_groups",
+     *     methods={"PATCH"}
      * )
      * @EXT\ParamConverter(
      *     "cursus",
      *     class="ClarolineCursusBundle:Cursus",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     * @EXT\Method("PATCH")
      *
      * @param Cursus  $cursus
      * @param int     $type
@@ -338,9 +338,9 @@ class CourseController extends AbstractCrudController
     /**
      * @Route(
      *     "/remove/groups",
-     *     name="apiv2_cursus_remove_groups"
+     *     name="apiv2_cursus_remove_groups",
+     *     methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param Request $request
      *

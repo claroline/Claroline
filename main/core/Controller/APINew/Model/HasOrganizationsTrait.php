@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +16,7 @@ trait HasOrganizationsTrait
     /**
      * List organizations of the collection.
      *
-     * @Route("/{id}/organization")
-     * @EXT\Method("GET")
+     * @Route("/{id}/organization", methods={"GET"})
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
      *     queryString={
@@ -49,8 +47,7 @@ trait HasOrganizationsTrait
     /**
      * Adds organizations to the collection.
      *
-     * @Route("/{id}/organization")
-     * @EXT\Method("PATCH")
+     * @Route("/{id}/organization", methods={"PATCH"})
      * @ApiDoc(
      *     description="Adds objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
      *     parameters={
@@ -82,8 +79,7 @@ trait HasOrganizationsTrait
     /**
      * Removes organizations from the collection.
      *
-     * @Route("/{id}/organization")
-     * @EXT\Method("DELETE")
+     * @Route("/{id}/organization", methods={"DELETE"})
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
      *     parameters={

@@ -58,8 +58,7 @@ class ExerciseController extends AbstractController
     /**
      * Gets the full representation of an exercise (including solutions) in a JSON format.
      *
-     * @Route("/{id}", name="exercise_get")
-     * @EXT\Method("GET")
+     * @Route("/{id}", name="exercise_get", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
      *
      * @param Exercise $exercise
@@ -78,9 +77,8 @@ class ExerciseController extends AbstractController
     /**
      * Updates an Exercise.
      *
-     * @Route("/{id}", name="exercise_update")
+     * @Route("/{id}", name="exercise_update", methods={"PUT"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     * @EXT\Method("PUT")
      *
      * @param Exercise $exercise
      * @param Request  $request
@@ -123,9 +121,8 @@ class ExerciseController extends AbstractController
     /**
      * Opens the docimology of a quiz.
      *
-     * @Route("/{id}/docimology", name="exercise_docimology")
+     * @Route("/{id}/docimology", name="exercise_docimology", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     * @EXT\Method("GET")
      *
      * @param Exercise $exercise
      *
@@ -141,9 +138,8 @@ class ExerciseController extends AbstractController
     /**
      * Gets statistics of an Exercise.
      *
-     * @Route("/{id}/statistics", name="exercise_statistics")
+     * @Route("/{id}/statistics", name="exercise_statistics", methods={"GET"})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     * @EXT\Method("GET")
      *
      * @param Exercise $exercise
      *

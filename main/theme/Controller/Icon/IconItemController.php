@@ -73,14 +73,14 @@ class IconItemController extends AbstractCrudController
     /**
      * @Route(
      *     "/{iconSet}/items/list",
-     *     name="apiv2_icon_set_items_list"
+     *     name="apiv2_icon_set_items_list",
+     *     methods={"GET"}
      * )
      * @EXT\ParamConverter(
      *     "iconSet",
      *     class="ClarolineCoreBundle:Icon\IconSet",
      *     options={"mapping": {"iconSet": "uuid"}}
      * )
-     * @EXT\Method("GET")
      *
      * @param IconSet $iconSet
      * @param Request $request
@@ -99,14 +99,14 @@ class IconItemController extends AbstractCrudController
     /**
      * @Route(
      *     "/{iconSet}/item/update",
-     *     name="apiv2_icon_set_item_update"
+     *     name="apiv2_icon_set_item_update",
+     *     methods={"POST", "PUT"}
      * )
      * @EXT\ParamConverter(
      *     "iconSet",
      *     class="ClarolineCoreBundle:Icon\IconSet",
      *     options={"mapping": {"iconSet": "uuid"}}
      * )
-     * @EXT\Method({"POST", "PUT"})
      *
      * @param IconSet $iconSet
      * @param Request $request

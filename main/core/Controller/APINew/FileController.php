@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,8 +55,7 @@ class FileController extends AbstractCrudController
     }
 
     /**
-     * @Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false})
-     * @EXT\Method("POST")
+     * @Route("/upload", name="apiv2_file_upload", options={"method_prefix" = false}, methods={"POST"})
      *
      * @param Request $request
      *

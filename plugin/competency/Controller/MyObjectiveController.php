@@ -15,8 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * todo: use firewall instead for security, check if role user for route /my-objectives.
  *
- * @Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true})
- * @EXT\Method("GET")
+ * @Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true}, methods={"GET"})
  */
 class MyObjectiveController
 {

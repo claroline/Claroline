@@ -118,9 +118,8 @@ class ResourceController
     /**
      * Opens a resource.
      *
-     * @Route("/load/{id}", name="claro_resource_load")
-     * @Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
-     * @EXT\Method("GET")
+     * @Route("/load/{id}", name="claro_resource_load", methods={"GET"})
+     * @Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded", methods={"GET"})
      *
      * @param int|string $id       - the id or slug of the target node (we don't use ParamConverter to support ID and UUID)
      * @param int        $embedded
@@ -244,8 +243,7 @@ class ResourceController
     /**
      * Submit access code.
      *
-     * @Route("/unlock/{id}", name="claro_resource_unlock")
-     * @EXT\Method("POST")
+     * @Route("/unlock/{id}", name="claro_resource_unlock", methods={"POST"})
      * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
      * @param ResourceNode $resourceNode

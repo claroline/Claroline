@@ -8,7 +8,6 @@ use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\LogManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -68,8 +67,7 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/", name="apiv2_admin_tool_logs_list")
-     * @EXT\Method("GET")
+     * @Route("/", name="apiv2_admin_tool_logs_list", methods={"GET"})
      *
      * @param Request $request
      *
@@ -88,8 +86,7 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/csv", name="apiv2_admin_tool_logs_list_csv")
-     * @EXT\Method("GET")
+     * @Route("/csv", name="apiv2_admin_tool_logs_list_csv", methods={"GET"})
      *
      * @param Request $request
      *
@@ -111,8 +108,7 @@ class LogController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv")
-     * @EXT\Method("GET")
+     * @Route("/users/csv", name="apiv2_admin_tool_logs_list_users_csv", methods={"GET"})
      *
      * @param Request $request
      *

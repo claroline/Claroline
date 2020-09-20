@@ -59,8 +59,7 @@ class PathController extends AbstractCrudController
     /**
      * Update step progression for an user.
      *
-     * @Route("/step/{id}/progression/update", name="innova_path_progression_update")
-     * @EXT\Method("PUT")
+     * @Route("/step/{id}/progression/update", name="innova_path_progression_update", methods={"PUT"})
      * @EXT\ParamConverter(
      *     "step",
      *     class="InnovaPathBundle:Step",
@@ -99,9 +98,9 @@ class PathController extends AbstractCrudController
      *
      * @Route(
      *     "/{id}/progressions/fetch",
-     *     name="innova_path_progressions_fetch"
+     *     name="innova_path_progressions_fetch",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "path",
      *     class="InnovaPathBundle:Path\Path",
@@ -137,9 +136,9 @@ class PathController extends AbstractCrudController
      *
      * @Route(
      *     "/{id}/user/{user}/steps/progression/fetch",
-     *     name="innova_path_user_steps_progression_fetch"
+     *     name="innova_path_user_steps_progression_fetch",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "path",
      *     class="InnovaPathBundle:Path\Path",

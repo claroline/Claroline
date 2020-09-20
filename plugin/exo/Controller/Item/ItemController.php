@@ -53,8 +53,7 @@ class ItemController extends AbstractController
     /**
      * Searches for questions.
      *
-     * @Route("", name="question_list")
-     * @EXT\Method("GET")
+     * @Route("", name="question_list", methods={"GET"})
      *
      * @param Request $request
      *
@@ -74,8 +73,7 @@ class ItemController extends AbstractController
     /**
      * Creates a new Item.
      *
-     * @Route("", name="question_create")
-     * @EXT\Method("POST")
+     * @Route("", name="question_create", methods={"POST"})
      *
      * @param Request $request
      *
@@ -116,8 +114,7 @@ class ItemController extends AbstractController
     /**
      * Updates a Item.
      *
-     * @Route("/{id}", name="question_update")
-     * @EXT\Method("PUT")
+     * @Route("/{id}", name="question_update", methods={"PUT"})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Item\Item", options={"mapping": {"id": "uuid"}})
      *
      * @param Item    $question
@@ -159,8 +156,7 @@ class ItemController extends AbstractController
     /**
      * Duplicates a list of items.
      *
-     * @Route("/{id}", name="questions_duplicate")
-     * @EXT\Method("POST")
+     * @Route("/{id}", name="questions_duplicate", methods={"POST"})
      *
      * @param Request $request
      */
@@ -171,8 +167,7 @@ class ItemController extends AbstractController
     /**
      * Deletes a list of Items.
      *
-     * @Route("/{id}", name="questions_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/{id}", name="questions_delete", methods={"DELETE"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param Request $request

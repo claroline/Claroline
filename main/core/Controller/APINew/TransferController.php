@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Import\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ApiManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,8 +87,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/upload/{workspaceId}", name="apiv2_transfer_upload_file")
-     * @EXT\Method("POST")
+     * @Route("/upload/{workspaceId}", name="apiv2_transfer_upload_file", methods={"POST"})
      *
      * @param Request $request
      * @param int     $workspaceId
@@ -121,8 +119,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_list")
-     * @EXT\Method("GET")
+     * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_list", methods={"GET"})
      *
      * @param int     $workspaceId
      * @param Request $request
@@ -148,8 +145,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/start", name="apiv2_transfer_start")
-     * @EXT\Method("POST")
+     * @Route("/start", name="apiv2_transfer_start", methods={"POST"})
      *
      * @param Request $request
      *
@@ -183,8 +179,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/export/{format}", name="apiv2_transfer_export")
-     * @EXT\Method("GET")
+     * @Route("/export/{format}", name="apiv2_transfer_export", methods={"GET"})
      *
      * @param Request $request
      * @param string  $format
@@ -206,8 +201,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/action/{format}", name="apiv2_transfer_actions")
-     * @EXT\Method("GET")
+     * @Route("/action/{format}", name="apiv2_transfer_actions", methods={"GET"})
      *
      * @param string $format
      *
@@ -221,8 +215,7 @@ class TransferController extends AbstractCrudController
     }
 
     /**
-     * @Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_sample")
-     * @EXT\Method("GET")
+     * @Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_sample", methods={"GET"})
      *
      * @param string $name
      * @param string $entity

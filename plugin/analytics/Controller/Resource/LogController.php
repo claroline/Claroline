@@ -60,8 +60,7 @@ class LogController
     }
 
     /**
-     * @Route("/", name="apiv2_resource_logs_list")
-     * @EXT\Method("GET")
+     * @Route("/", name="apiv2_resource_logs_list", methods={"GET"})
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -85,8 +84,7 @@ class LogController
     }
 
     /**
-     * @Route("/csv", name="apiv2_resource_logs_list_csv")
-     * @EXT\Method("GET")
+     * @Route("/csv", name="apiv2_resource_logs_list_csv", methods={"GET"})
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -115,8 +113,7 @@ class LogController
     }
 
     /**
-     * @Route("/chart", name="apiv2_resource_logs_list_chart")
-     * @EXT\Method("GET")
+     * @Route("/chart", name="apiv2_resource_logs_list_chart", methods={"GET"})
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -138,8 +135,7 @@ class LogController
     }
 
     /**
-     * @Route("/users", name="apiv2_resource_logs_list_users")
-     * @EXT\Method("GET")
+     * @Route("/users", name="apiv2_resource_logs_list_users", methods={"GET"})
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -160,8 +156,7 @@ class LogController
     }
 
     /**
-     * @Route("/users/csv", name="apiv2_resource_logs_list_users_csv")
-     * @EXT\Method("GET")
+     * @Route("/users/csv", name="apiv2_resource_logs_list_users_csv", methods={"GET"})
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -190,8 +185,7 @@ class LogController
     }
 
     /**
-     * @Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"})
-     * @EXT\Method("GET")
+     * @Route("/{id}", name="apiv2_resource_logs_get", requirements={"id"="\d+"}, methods={"GET"})
      * @EXT\ParamConverter("log", class="Claroline\CoreBundle\Entity\Log\Log", options={
      *     "mapping": {"resourceId": "resourceNode",
      *     "id": "id"

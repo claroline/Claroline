@@ -77,9 +77,8 @@ class LogController
     }
 
     /**
-     * @Route("/", name="apiv2_workspace_tool_logs_list")
+     * @Route("/", name="apiv2_workspace_tool_logs_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     * @EXT\Method("GET")
      *
      * @param Request   $request
      * @param Workspace $workspace
@@ -98,9 +97,8 @@ class LogController
     }
 
     /**
-     * @Route("/csv", name="apiv2_workspace_tool_logs_list_csv")
+     * @Route("/csv", name="apiv2_workspace_tool_logs_list_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     * @EXT\Method("GET")
      *
      * @param Request   $request
      * @param Workspace $workspace
@@ -124,9 +122,8 @@ class LogController
     }
 
     /**
-     * @Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv")
+     * @Route("/users/csv", name="apiv2_workspace_tool_logs_list_users_csv", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspaceId": "uuid"}})
-     * @EXT\Method("GET")
      *
      * @param Request   $request
      * @param Workspace $workspace

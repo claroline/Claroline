@@ -16,10 +16,9 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Organization\Location;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/location")
@@ -36,8 +35,7 @@ class LocationController extends AbstractCrudController
     use HasOrganizationsTrait;
 
     /**
-     * @Route("/{id}/geolocate", name="apiv2_location_geolocate")
-     * @Method("GET")
+     * @Route("/{id}/geolocate", name="apiv2_location_geolocate", methods={"GET"})
      * @ParamConverter("location", options={"mapping": {"id": "uuid"}})
      */
     public function geolocateAction(Location $location)

@@ -106,9 +106,9 @@ class LogConnectController
     /**
      * @Route(
      *     "/platform/csv",
-     *     name="apiv2_log_connect_platform_list_csv"
+     *     name="apiv2_log_connect_platform_list_csv",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param User    $user
@@ -179,9 +179,9 @@ class LogConnectController
     /**
      * @Route(
      *     "/workspace/{workspace}/csv",
-     *     name="apiv2_log_connect_workspace_list_csv"
+     *     name="apiv2_log_connect_workspace_list_csv",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -253,9 +253,9 @@ class LogConnectController
     /**
      * @Route(
      *     "/resource/{resource}/csv",
-     *     name="apiv2_log_connect_resource_list_csv"
+     *     name="apiv2_log_connect_resource_list_csv",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "resource",
      *     class="ClarolineCoreBundle:Resource\ResourceNode",

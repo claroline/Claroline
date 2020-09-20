@@ -11,7 +11,7 @@
 namespace Icap\BibliographyBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/book_reference")

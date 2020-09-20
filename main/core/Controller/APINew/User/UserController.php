@@ -137,8 +137,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/pws", name="apiv2_users_pws_create")
-     * @EXT\Method("POST")
+     * @Route("/pws", name="apiv2_users_pws_create", methods={"POST"})
      *
      * @param Request $request
      *
@@ -170,8 +169,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/pws", name="apiv2_users_pws_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/pws", name="apiv2_users_pws_delete", methods={"DELETE"})
      *
      * @param Request $request
      *
@@ -205,8 +203,7 @@ class UserController extends AbstractCrudController
      *         "schema":"$schema"
      *     }
      * )
-     * @Route("/register", name="apiv2_user_register")
-     * @EXT\Method("POST")
+     * @Route("/register", name="apiv2_user_register", methods={"POST"})
      *
      * @param Request $request
      *
@@ -282,8 +279,7 @@ class UserController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route("/list/managed/organization", name="apiv2_user_list_managed_organization")
-     * @EXT\Method("GET")
+     * @Route("/list/managed/organization", name="apiv2_user_list_managed_organization", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param User    $user
@@ -308,8 +304,7 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{keep}/{remove}/merge", name="apiv2_user_merge")
-     * @EXT\Method("PUT")
+     * @Route("/{keep}/{remove}/merge", name="apiv2_user_merge", methods={"PUT"})
      * @EXT\ParamConverter("keep", options={"mapping": {"keep": "uuid"}})
      * @EXT\ParamConverter("remove", options={"mapping": {"remove": "uuid"}})
      *
@@ -350,8 +345,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/enable", name="apiv2_users_enable")
-     * @EXT\Method("PUT")
+     * @Route("/enable", name="apiv2_users_enable", methods={"PUT"})
      *
      * @param Request $request
      *
@@ -382,8 +376,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/disable", name="apiv2_users_disable")
-     * @EXT\Method("PUT")
+     * @Route("/disable", name="apiv2_users_disable", methods={"PUT"})
      *
      * @param Request $request
      *
@@ -414,8 +407,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     * @Route("/password/reset", name="apiv2_users_password_reset")
-     * @EXT\Method("PUT")
+     * @Route("/password/reset", name="apiv2_users_password_reset", methods={"PUT"})
      *
      * @param Request $request
      *

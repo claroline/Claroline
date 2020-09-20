@@ -67,8 +67,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences")
-     * @EXT\Method("GET")
+     * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences", methods={"GET"})
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      *
      * @param Request   $request
@@ -87,8 +86,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/current-user", name="apiv2_assertion_current_user_list")
-     * @EXT\Method("GET")
+     * @Route("/current-user", name="apiv2_assertion_current_user_list", methods={"GET"})
      *
      * @param Request $request
      *
@@ -106,8 +104,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/user/{user}", name="apiv2_assertion_user_list")
-     * @EXT\Method("GET")
+     * @Route("/user/{user}", name="apiv2_assertion_user_list", methods={"GET"})
      * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
      *
      * @param Request $request
@@ -130,9 +127,9 @@ class AssertionController extends AbstractCrudController
      *
      * @Route(
      *     "/{assertion}/pdf/download",
-     *     name="apiv2_assertion_pdf_download"
+     *     name="apiv2_assertion_pdf_download",
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "assertion",
      *     class="ClarolineOpenBadgeBundle:Assertion",

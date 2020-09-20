@@ -89,7 +89,8 @@ class AbilityController extends AbstractCrudController
     /**
      * @Route(
      *     "/node/{node}/ability/{ability}/associate",
-     *     name="apiv2_competency_resource_ability_associate"
+     *     name="apiv2_competency_resource_ability_associate",
+     *     methods={"POST"}
      * )
      * @EXT\ParamConverter(
      *     "node",
@@ -99,9 +100,8 @@ class AbilityController extends AbstractCrudController
      * @EXT\ParamConverter(
      *     "ability",
      *     class="HeVinciCompetencyBundle:Ability",
-     *     options={"mapping": {"ability": "uuid"}}
+     *     options={"mapping": {"ability": "uuid"}},
      * )
-     * @EXT\Method("POST")
      *
      * @param ResourceNode $node
      * @param Ability      $ability
@@ -123,7 +123,8 @@ class AbilityController extends AbstractCrudController
     /**
      * @Route(
      *     "/node/{node}/ability/{ability}/dissociate",
-     *     name="apiv2_competency_resource_ability_dissociate"
+     *     name="apiv2_competency_resource_ability_dissociate",
+     *     methods={"DELETE"}
      * )
      * @EXT\ParamConverter(
      *     "node",
@@ -133,9 +134,8 @@ class AbilityController extends AbstractCrudController
      * @EXT\ParamConverter(
      *     "ability",
      *     class="HeVinciCompetencyBundle:Ability",
-     *     options={"mapping": {"ability": "uuid"}}
+     *     options={"mapping": {"ability": "uuid"}},
      * )
-     * @EXT\Method("DELETE")
      *
      * @param ResourceNode $node
      * @param Ability      $ability

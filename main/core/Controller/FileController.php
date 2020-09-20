@@ -104,8 +104,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @Route("/stream/{id}", name="claro_file_stream")
-     * @EXT\Method("GET")
+     * @Route("/stream/{id}", name="claro_file_stream", methods={"GET"})
      *
      * @param ResourceNode $resourceNode
      *
@@ -117,8 +116,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @Route("/resource/media/{node}", name="claro_file_get_media")
-     * @EXT\Method("GET")
+     * @Route("/resource/media/{node}", name="claro_file_get_media", methods={"GET"})
      *
      * @param ResourceNode $node
      *
@@ -132,8 +130,11 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults ={"workspace"=null})
-     * @EXT\Method("GET")
+     * @Route("/tinymce/destinations/{workspace}",
+     *     name="claro_tinymce_file_destinations",
+     *     defaults ={"workspace"=null},
+     *     methods={"GET"}
+     *     )
      *
      * @param Workspace $workspace
      *
@@ -159,9 +160,8 @@ class FileController extends AbstractApiController
     /**
      * Creates a resource from uploaded file.
      *
-     * @Route("/tinymce/upload", name="claro_tinymce_file_upload")
+     * @Route("/tinymce/upload", name="claro_tinymce_file_upload", methods={"POST"})
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Method("POST")
      *
      * @param Request $request
      * @param User    $user
@@ -231,8 +231,7 @@ class FileController extends AbstractApiController
     /**
      * Saves a file.
      *
-     * @Route("/public/upload", name="upload_public_file")
-     * @EXT\Method("POST")
+     * @Route("/public/upload", name="upload_public_file", methods={"POST"})
      *
      * @param Request $request
      *

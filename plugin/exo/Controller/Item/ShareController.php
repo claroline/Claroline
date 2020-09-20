@@ -56,8 +56,7 @@ class ShareController extends AbstractController
     /**
      * Shares a list of questions to users.
      *
-     * @Route("", name="questions_share")
-     * @EXT\Method("POST")
+     * @Route("", name="questions_share", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param Request $request
@@ -91,8 +90,7 @@ class ShareController extends AbstractController
     }
 
     /**
-     * @Route("", name="question_share_update")
-     * @EXT\Method("DELETE")
+     * @Route("", name="question_share_update", methods={"DELETE"})
      *
      * @param Request $request
      *
@@ -103,8 +101,7 @@ class ShareController extends AbstractController
     }
 
     /**
-     * @Route("", name="question_share_delete")
-     * @EXT\Method("DELETE")
+     * @Route("", name="question_share_delete", methods={"DELETE"})
      *
      * @param Request $request
      *
@@ -117,8 +114,7 @@ class ShareController extends AbstractController
     /**
      * Searches users by username, first or last name.
      *
-     * @Route("/{search}", name="questions_share_users")
-     * @EXT\Method("GET")
+     * @Route("/{search}", name="questions_share_users", methods={"GET"})
      *
      * @param string $search
      *

@@ -72,8 +72,7 @@ class ChapterController
     /**
      * Get chapter by its slug.
      *
-     * @Route("/chapters/{chapterSlug}", name="apiv2_lesson_chapter_get")
-     * @EXT\Method("GET")
+     * @Route("/chapters/{chapterSlug}", name="apiv2_lesson_chapter_get", methods={"GET"})
      *
      * @param Request $request
      * @param Lesson  $lesson
@@ -97,8 +96,7 @@ class ChapterController
     /**
      * Create new chapter.
      *
-     * @Route("/chapters/{slug}", name="apiv2_lesson_chapter_create")
-     * @EXT\Method("POST")
+     * @Route("/chapters/{slug}", name="apiv2_lesson_chapter_create", methods={"POST"})
      * @EXT\ParamConverter("parent", class="IcapLessonBundle:Chapter", options={"mapping": {"slug": "slug"}})
      *
      * @param Request $request
@@ -119,8 +117,7 @@ class ChapterController
     /**
      * Update existing chapter.
      *
-     * @Route("/chapters/{slug}", name="apiv2_lesson_chapter_update")
-     * @EXT\Method("PUT")
+     * @Route("/chapters/{slug}", name="apiv2_lesson_chapter_update", methods={"PUT"})
      * @EXT\ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"slug": "slug"}})
      *
      * @param Request $request
@@ -141,8 +138,7 @@ class ChapterController
     /**
      * Delete existing chapter.
      *
-     * @Route("/chapters/{chapterSlug}/delete", name="apiv2_lesson_chapter_delete")
-     * @EXT\Method("DELETE")
+     * @Route("/chapters/{chapterSlug}/delete", name="apiv2_lesson_chapter_delete", methods={"DELETE"})
      * @EXT\ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"chapterSlug": "slug"}})
      *
      * @param Request $request
@@ -172,8 +168,7 @@ class ChapterController
     /**
      * Get chapter tree.
      *
-     * @Route("/tree", name="apiv2_lesson_tree_get")
-     * @EXT\Method("GET")
+     * @Route("/tree", name="apiv2_lesson_tree_get", methods={"GET"})
      *
      * @param Lesson $lesson
      *

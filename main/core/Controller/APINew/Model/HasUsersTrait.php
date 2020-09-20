@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +16,7 @@ trait HasUsersTrait
     /**
      * List users of the collection.
      *
-     * @Route("/{id}/user")
-     * @EXT\Method("GET")
+     * @Route("/{id}/user", methods={"GET"})
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\User.",
      *     queryString={
@@ -49,8 +47,7 @@ trait HasUsersTrait
     /**
      * Adds users to the collection.
      *
-     * @Route("/{id}/user")
-     * @EXT\Method("PATCH")
+     * @Route("/{id}/user", methods={"PATCH"})
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\User.",
      *     parameters={
@@ -82,8 +79,7 @@ trait HasUsersTrait
     /**
      * Removes users from the collection.
      *
-     * @Route("/{id}/user")
-     * @EXT\Method("DELETE")
+     * @Route("/{id}/user", methods={"DELETE"})
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\User.",
      *     parameters={

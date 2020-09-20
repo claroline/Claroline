@@ -49,8 +49,7 @@ class CorrectionController extends AbstractController
     /**
      * Lists all questions with `manual` score rule that have answers to correct.
      *
-     * @Route("", name="exercise_correction_questions")
-     * @EXT\Method("GET")
+     * @Route("", name="exercise_correction_questions", methods={"GET"})
      *
      * @param Exercise $exercise
      *
@@ -66,8 +65,7 @@ class CorrectionController extends AbstractController
     /**
      * Saves score & feedback for a bulk of answers.
      *
-     * @Route("/{questionId}", name="exercise_correction_save")
-     * @EXT\Method("PUT")
+     * @Route("/{questionId}", name="exercise_correction_save", methods={"PUT"})
      *
      * @param Exercise $exercise
      * @param Request  $request

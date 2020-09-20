@@ -74,8 +74,7 @@ class PaperController
      * Returns all the papers associated with an exercise.
      * Administrators get the papers of all users, others get only theirs.
      *
-     * @Route("", name="exercise_paper_list")
-     * @EXT\Method("GET")
+     * @Route("", name="exercise_paper_list", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param Exercise $exercise
@@ -116,8 +115,7 @@ class PaperController
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @Route("/{id}", name="exercise_paper_get")
-     * @EXT\Method("GET")
+     * @Route("/{id}", name="exercise_paper_get", methods={"GET"})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -142,8 +140,7 @@ class PaperController
     /**
      * Deletes some papers associated with an exercise.
      *
-     * @Route("", name="ujm_exercise_delete_papers")
-     * @EXT\Method("DELETE")
+     * @Route("", name="ujm_exercise_delete_papers", methods={"DELETE"})
      *
      * @param Exercise $exercise
      * @param Request  $request
@@ -167,8 +164,7 @@ class PaperController
     /**
      * Exports papers into a CSV file.
      *
-     * @Route("/export/csv", name="exercise_papers_export")
-     * @EXT\Method("GET")
+     * @Route("/export/csv", name="exercise_papers_export", methods={"GET"})
      *
      * @param Exercise $exercise
      *
@@ -189,8 +185,7 @@ class PaperController
     /**
      * Exports papers into a json file.
      *
-     * @Route("/export/json", name="exercise_papers_export_json")
-     * @EXT\Method("GET")
+     * @Route("/export/json", name="exercise_papers_export_json", methods={"GET"})
      *
      * @param Exercise $exercise
      *
@@ -219,8 +214,7 @@ class PaperController
     /**
      * Exports papers into a csv file.
      *
-     * @Route("/export/papers/csv", name="exercise_papers_export_csv")
-     * @EXT\Method("GET")
+     * @Route("/export/papers/csv", name="exercise_papers_export_csv", methods={"GET"})
      *
      * @param Exercise $exercise
      *

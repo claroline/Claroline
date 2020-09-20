@@ -52,9 +52,8 @@ class WikiController
     }
 
     /**
-     * @Route("/", name="apiv2_wiki_update")
+     * @Route("/", name="apiv2_wiki_update", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\Method({"PUT"})
      *
      * @param Wiki    $wiki
      * @param Request $request

@@ -2,7 +2,6 @@
 
 namespace Claroline\ThemeBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Yaml\Yaml;
@@ -26,8 +25,7 @@ class IconController
     }
 
     /**
-     * @Route("/system", name="apiv2_icon_system_list")
-     * @EXT\Method("GET")
+     * @Route("/system", name="apiv2_icon_system_list", methods={"GET"})
      *
      * @return JsonResponse
      */

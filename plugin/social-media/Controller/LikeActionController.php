@@ -14,12 +14,11 @@ namespace Icap\SocialmediaBundle\Controller;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\LikeAction;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @todo rewrite using the new resource action system
@@ -61,8 +60,7 @@ class LikeActionController extends Controller
     }
 
     /**
-     * @Route("/like", name="icap_socialmedia_like", options={"expose"=true})
-     * @Method({"POST"})
+     * @Route("/like", name="icap_socialmedia_like", options={"expose"=true}, methods={"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -105,8 +103,7 @@ class LikeActionController extends Controller
     }
 
     /**
-     * @Route("/like/list/{page}", name="icap_socialmedia_likelist", defaults={"page" = "1"})
-     * @Method({"GET"})
+     * @Route("/like/list/{page}", name="icap_socialmedia_likelist", defaults={"page" = "1"}, methods={"GET"})
      *
      * @param Request $request
      * @Template()

@@ -17,7 +17,6 @@ use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -62,8 +61,7 @@ class ProfileController extends AbstractApiController
     /**
      * Updates the profile configuration for the current platform.
      *
-     * @Route("", name="apiv2_profile_update")
-     * @EXT\Method("PUT")
+     * @Route("", name="apiv2_profile_update", methods={"PUT"})
      *
      * @param Request $request
      *

@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -36,10 +35,9 @@ class LegacyController
     /**
      * Pre SPA resource route.
      *
-     * @Route("/resources/show/{type}/{id}")
-     * @Route("/resources/show/{id}")
-     * @Route("/workspaces/{workspaceId}/open/tool/resource_manager/{id}")
-     * @EXT\Method("GET")
+     * @Route("/resources/show/{type}/{id}", methods={"GET"})
+     * @Route("/resources/show/{id}", methods={"GET"})
+     * @Route("/workspaces/{workspaceId}/open/tool/resource_manager/{id}", methods={"GET"})
      *
      * @param string $id
      *
@@ -65,9 +63,8 @@ class LegacyController
     /**
      * Pre SPA workspace route.
      *
-     * @Route("/workspaces/{id}/open/tool/{toolName}")
-     * @Route("/workspaces/{id}/open")
-     * @EXT\Method("GET")
+     * @Route("/workspaces/{id}/open/tool/{toolName}", methods={"GET"})
+     * @Route("/workspaces/{id}/open", methods={"GET"})
      *
      * @param string $id
      * @param string $toolName
@@ -94,9 +91,8 @@ class LegacyController
     /**
      * Pre SPA main home route.
      *
-     * @Route("/apiv2/")
-     * @Route("/apiv2")
-     * @EXT\Method("GET")
+     * @Route("/apiv2/", methods={"GET"})
+     * @Route("/apiv2", methods={"GET"})
      *
      * @return RedirectResponse
      */
@@ -111,8 +107,7 @@ class LegacyController
     /**
      * Pre SPA desktop home route.
      *
-     * @Route("/desktop/tool/open/home")
-     * @EXT\Method("GET")
+     * @Route("/desktop/tool/open/home", methods={"GET"})
      *
      * @return RedirectResponse
      */
@@ -127,8 +122,7 @@ class LegacyController
     /**
      * Pre SPA desktop reset password route.
      *
-     * @Route("/login")
-     * @EXT\Method("GET")
+     * @Route("/login", methods={"GET"})
      *
      * @return RedirectResponse
      */
@@ -142,8 +136,7 @@ class LegacyController
     /**
      * Pre SPA reset password route.
      *
-     * @Route("/reset")
-     * @EXT\Method("GET")
+     * @Route("/reset", methods={"GET"})
      *
      * @return RedirectResponse
      */

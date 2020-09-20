@@ -18,7 +18,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Manager\LockManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,8 +71,7 @@ class HomeController extends AbstractApiController
     /**
      * Get the platform home data.
      *
-     * @Route("/", name="apiv2_home", options={"method_prefix"=false})
-     * @EXT\Method("GET")
+     * @Route("/", name="apiv2_home", options={"method_prefix"=false}, methods={"GET"})
      *
      * @return JsonResponse
      */
@@ -91,8 +89,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @Route("/{context}/{contextId}", name="apiv2_home_update", options={"method_prefix"=false})
-     * @EXT\Method("PUT")
+     * @Route("/{context}/{contextId}", name="apiv2_home_update", options={"method_prefix"=false}, methods={"PUT"})
      *
      * @param Request $request
      * @param string  $context
@@ -141,8 +138,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @Route("/admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false})
-     * @EXT\Method("PUT")
+     * @Route("/admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false}, methods={"PUT"})
      *
      * @param Request $request
      * @param string  $context
@@ -180,9 +176,9 @@ class HomeController extends AbstractApiController
      * @Route(
      *     "/home/tabs/fetch",
      *     name="apiv2_home_user_fetch",
-     *     options={"method_prefix"=false}
+     *     options={"method_prefix"=false},
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      *
      * @return JsonResponse
      */
@@ -211,9 +207,9 @@ class HomeController extends AbstractApiController
      * @Route(
      *     "/admin/home/tabs/fetch",
      *     name="apiv2_home_admin_fetch",
-     *     options={"method_prefix"=false}
+     *     options={"method_prefix"=false},
+     *     methods={"GET"}
      * )
-     * @EXT\Method("GET")
      *
      * @return JsonResponse
      */

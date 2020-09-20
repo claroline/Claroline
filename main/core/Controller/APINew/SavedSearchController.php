@@ -54,8 +54,7 @@ class SavedSearchController extends AbstractApiController
     /**
      * Lists saved searches of the current user for a list.
      *
-     * @Route("/{list}", name="apiv2_saved_search_list")
-     * @EXT\Method("GET")
+     * @Route("/{list}", name="apiv2_saved_search_list", methods={"GET"})
      *
      * @param User   $currentUser
      * @param string $list
@@ -80,8 +79,7 @@ class SavedSearchController extends AbstractApiController
     /**
      * Creates a searches for the current user and a list.
      *
-     * @Route("/{list}", name="apiv2_saved_search_create")
-     * @EXT\Method("GET")
+     * @Route("/{list}", name="apiv2_saved_search_create", methods={"GET"})
      *
      * @param User    $currentUser
      * @param string  $list

@@ -61,9 +61,8 @@ class NotificationsViewerController
     }
 
     /**
-     * @Route("", name="apiv2_user_notifications_list")
+     * @Route("", name="apiv2_user_notifications_list", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Method("GET")
      *
      * @param User    $user
      * @param Request $request
@@ -95,9 +94,8 @@ class NotificationsViewerController
     }
 
     /**
-     * @Route("/read", name="apiv2_user_notifications_read")
+     * @Route("/read", name="apiv2_user_notifications_read", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
@@ -111,9 +109,8 @@ class NotificationsViewerController
     }
 
     /**
-     * @Route("/unread", name="apiv2_user_notifications_unread")
+     * @Route("/unread", name="apiv2_user_notifications_unread", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Method("PUT")
      *
      * @param Request $request
      *
@@ -127,9 +124,8 @@ class NotificationsViewerController
     }
 
     /**
-     * @Route("/", name="apiv2_user_notifications_delete")
+     * @Route("/", name="apiv2_user_notifications_delete", methods={"DELETE"})
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Method("DELETE")
      *
      * @param User    $user
      * @param Request $request

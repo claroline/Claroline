@@ -238,7 +238,8 @@ class CompetencyController extends AbstractCrudController
     /**
      * @Route(
      *     "/node/{node}/competency/{competency}/associate",
-     *     name="apiv2_competency_resource_associate"
+     *     name="apiv2_competency_resource_associate",
+     *     methods={"POST"}
      * )
      * @EXT\ParamConverter(
      *     "node",
@@ -248,9 +249,8 @@ class CompetencyController extends AbstractCrudController
      * @EXT\ParamConverter(
      *     "competency",
      *     class="HeVinciCompetencyBundle:Competency",
-     *     options={"mapping": {"competency": "uuid"}}
+     *     options={"mapping": {"competency": "uuid"}},
      * )
-     * @EXT\Method("POST")
      *
      * @param ResourceNode $node
      * @param Competency   $competency
@@ -272,7 +272,8 @@ class CompetencyController extends AbstractCrudController
     /**
      * @Route(
      *     "/node/{node}/competency/{competency}/dissociate",
-     *     name="apiv2_competency_resource_dissociate"
+     *     name="apiv2_competency_resource_dissociate",
+     *     methods={"DELETE"}
      * )
      * @EXT\ParamConverter(
      *     "node",
@@ -284,7 +285,6 @@ class CompetencyController extends AbstractCrudController
      *     class="HeVinciCompetencyBundle:Competency",
      *     options={"mapping": {"competency": "uuid"}}
      * )
-     * @EXT\Method("DELETE")
      *
      * @param ResourceNode $node
      * @param Competency   $competency

@@ -78,8 +78,7 @@ class AttemptController extends AbstractController
      * Opens an exercise, creating a new paper or re-using an unfinished one.
      * Also check that max attempts are not reached if needed.
      *
-     * @Route("", name="exercise_attempt_start")
-     * @EXT\Method("POST")
+     * @Route("", name="exercise_attempt_start", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
      * @param Exercise $exercise
@@ -109,8 +108,7 @@ class AttemptController extends AbstractController
     /**
      * Submits answers to an Exercise.
      *
-     * @Route("/{id}", name="exercise_attempt_submit")
-     * @EXT\Method("PUT")
+     * @Route("/{id}", name="exercise_attempt_submit", methods={"PUT"})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
@@ -152,8 +150,7 @@ class AttemptController extends AbstractController
     /**
      * Flags a paper as finished.
      *
-     * @Route("/{id}/end", name="exercise_attempt_finish")
-     * @EXT\Method("PUT")
+     * @Route("/{id}/end", name="exercise_attempt_finish", methods={"PUT"})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *
@@ -182,8 +179,7 @@ class AttemptController extends AbstractController
      * Returns the content of a question hint, and records the fact that it has
      * been consulted within the context of a given paper.
      *
-     * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show")
-     * @EXT\Method("GET")
+     * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      *

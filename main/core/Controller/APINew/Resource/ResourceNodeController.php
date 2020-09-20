@@ -244,8 +244,7 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{slug}/close", name="claro_resource_close")
-     * @EXT\Method("PUT")
+     * @Route("/{slug}/close", name="claro_resource_close", methods={"PUT"})
      * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      *

@@ -38,8 +38,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/subjects")
-     * @EXT\Method("GET")
+     * @Route("/{id}/subjects", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Get the subjects of a forum",
@@ -70,8 +69,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/subject")
-     * @EXT\Method({"POST", "PUT"})
+     * @Route("/{id}/subject", methods={"POST", "PUT"})
      * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
      *
      * @ApiDoc(
@@ -110,8 +108,7 @@ class ForumController extends AbstractCrudController
     //Pour les 6 méthodes suivantes, utilser le CRUD ? je sais pas trop.
 
     /**
-     * @Route("/unlock/{user}/forum/{forum}")
-     * @EXT\Method("PATCH")
+     * @Route("/unlock/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -152,8 +149,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/lock/{user}/forum/{forum}")
-     * @EXT\Method("PATCH")
+     * @Route("/lock/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -173,8 +169,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/ban/{user}/forum/{forum}")
-     * @EXT\Method("PATCH")
+     * @Route("/ban/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -194,8 +189,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unban/{user}/forum/{forum}")
-     * @EXT\Method("PATCH")
+     * @Route("/unban/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -215,8 +209,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/notify/{user}/forum/{forum}")
-     * @EXT\Method("PATCH")
+     * @Route("/notify/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -236,8 +229,7 @@ class ForumController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unnotify/{user}/forum/{forum}")
-     * @EXT\Method("PATCH")
+     * @Route("/unnotify/{user}/forum/{forum}", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *

@@ -101,9 +101,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/{id}/user/pending",
-     *    name="apiv2_workspace_list_pending"
+     *    name="apiv2_workspace_list_pending",
+     *    methods={"GET"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Request   $request
@@ -131,9 +131,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/{id}/registration/validate",
-     *    name="apiv2_workspace_registration_validate"
+     *    name="apiv2_workspace_registration_validate",
+     *    methods={"PATCH"}
      * )
-     * @EXT\Method("PATCH")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Request   $request
@@ -173,9 +173,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/{id}/registration/remove",
-     *    name="apiv2_workspace_registration_remove"
+     *    name="apiv2_workspace_registration_remove",
+     *    methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Request   $request
@@ -213,9 +213,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/{id}/users/unregister",
-     *    name="apiv2_workspace_unregister_users"
+     *    name="apiv2_workspace_unregister_users",
+     *    methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Request   $request
@@ -251,9 +251,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/{id}/groups/unregister",
-     *    name="apiv2_workspace_unregister_groups"
+     *    name="apiv2_workspace_unregister_groups",
+     *    methods={"DELETE"}
      * )
-     * @EXT\Method("DELETE")
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Request   $request
@@ -290,9 +290,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/users/register/{role}",
-     *    name="apiv2_workspace_bulk_register_users"
+     *    name="apiv2_workspace_bulk_register_users",
+     *    methods={"PATCH"}
      * )
-     * @EXT\Method("PATCH")
      *
      * @param string  $role
      * @param Request $request
@@ -329,9 +329,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *    "/groups/register/{role}",
-     *    name="apiv2_workspace_bulk_register_groups"
+     *    name="apiv2_workspace_bulk_register_groups",
+     *    methods={"PATCH"}
      * )
-     * @EXT\Method("PATCH")
      *
      * @param string  $role
      * @param Request $request
@@ -365,8 +365,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
-     * @Route("/register/{user}", name="apiv2_workspace_register")
-     * @EXT\Method("PATCH")
+     * @Route("/register/{user}", name="apiv2_workspace_register", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      *
      * @param User    $user
@@ -407,8 +406,7 @@ class RegistrationController extends AbstractApiController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
-     * @Route("/unregister/{user}", name="apiv2_workspace_unregister")
-     * @EXT\Method("DELETE")
+     * @Route("/unregister/{user}", name="apiv2_workspace_unregister", methods={"DELETE"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      *
      * @param User    $user
@@ -436,9 +434,9 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route(
      *     "/{workspace}/register/self",
-     *     name="apiv2_workspace_self_register"
+     *     name="apiv2_workspace_self_register",
+     *     methods={"PUT"}
      * )
-     * @EXT\Method("PUT")
      * @EXT\ParamConverter(
      *     "workspace",
      *     class = "ClarolineCoreBundle:Workspace\Workspace",
