@@ -20,7 +20,7 @@ docker-compose.override.yml
 installed
 composer.lock
 package-lock.json
-
+.php_cs.cache
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
