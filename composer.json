@@ -12,7 +12,7 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "2.14",
+        "friendsofphp/php-cs-fixer": "^2.15",
         "mockery/mockery": "^1.2",
         "mikey179/vfsstream": "1.6.4",
         "phpmd/phpmd": "@stable",
