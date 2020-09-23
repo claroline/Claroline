@@ -8,7 +8,6 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
@@ -39,12 +38,11 @@ class PersonalWorkspaceIntegrityCheckerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
         $userManager = $this->userManager;
-        $userManager->setLogger($consoleLogger);
 
         if ($input->getOption('personal')) {
-            $consoleLogger->warning('Restoring is_personal parameter');
+            $output->writeln('Restoring is_personal parameter');
+
             $sql = '
                 UPDATE claro_workspace workspace
                 JOIN claro_user user on workspace.id = user.workspace_id
@@ -61,7 +59,7 @@ class PersonalWorkspaceIntegrityCheckerCommand extends Command
         if (!empty($userId)) {
             $user = $userManager->getUserByUsernameOrMail($userId, $userId);
             if (empty($user)) {
-                $consoleLogger->warning("Could not find user \"{$userId}\"");
+                $output->writeln("Could not find user \"{$userId}\"");
 
                 return 1;
             }

@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Console\Command\Command;
@@ -22,8 +21,6 @@ class UserIntegrityCheckerCommand extends Command implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->userManager->setLogger($consoleLogger);
         $this->userManager->bindUserToOrganization();
 
         return 0;

@@ -16,7 +16,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -36,11 +36,12 @@ use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ResourceManager
+class ResourceManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
@@ -322,8 +323,6 @@ class ResourceManager
      * @param User         $user
      *
      * @return ResourceNode
-     *
-     * @throws ResourceNotFoundException
      */
     public function copy(ResourceNode $node, ResourceNode $parent, User $user)
     {

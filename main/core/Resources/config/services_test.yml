@@ -1,8 +1,8 @@
 services:
     _defaults:
         public: true
-        autowire: true
-        autoconfigure: true
+        autowire: false
+        autoconfigure: false
 
     claroline.library.testing.persister:
         class: Claroline\CoreBundle\Library\Testing\Persister

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AppBundle\Logger;
+namespace Claroline\AppBundle\Log;
 
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Psr\Log\LoggerInterface;

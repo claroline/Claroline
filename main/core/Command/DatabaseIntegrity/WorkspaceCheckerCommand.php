@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -54,8 +53,6 @@ class WorkspaceCheckerCommand extends Command
         $output->writeln('Workspace tool restoration...');
 
         if ($input->getOption('flag')) {
-            $consoleLogger = ConsoleLogger::get($output);
-            $this->workspaceManager->setLogger($consoleLogger);
             $this->workspaceManager->setWorkspacesFlag();
         }
 

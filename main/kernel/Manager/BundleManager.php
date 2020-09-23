@@ -11,17 +11,18 @@
 
 namespace Claroline\KernelBundle\Manager;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * The KernelBundle probably should do all of that.
  */
-class BundleManager
+class BundleManager implements LoggerAwareInterface
 {
     use LoggableTrait;
     const BUNDLE_INSTANCE = 'instance';

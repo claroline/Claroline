@@ -10,7 +10,7 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -21,10 +21,11 @@ use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Listener\Log\LogListener;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class TransferManager
+class TransferManager implements LoggerAwareInterface
 {
     use PermissionCheckerTrait;
     use LoggableTrait;

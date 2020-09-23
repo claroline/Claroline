@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Command\Workspace;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -90,8 +89,6 @@ class ImportCommand extends Command implements AdminCliCommand
         $workspace = new Workspace();
         $workspace->setCode($data['code']);
 
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->transferManager->setLogger($consoleLogger);
         $this->transferManager->create($data, $workspace);
 
         return 0;

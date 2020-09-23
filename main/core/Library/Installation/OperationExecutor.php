@@ -12,10 +12,11 @@
 namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * Installs/updates platform bundles based on the bundles config ini file.
  */
-class OperationExecutor
+class OperationExecutor implements LoggerAwareInterface
 {
     use LoggableTrait;
 

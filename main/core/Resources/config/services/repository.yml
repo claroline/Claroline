@@ -1,7 +1,7 @@
 services:
     _defaults:
         autowire: false
-        autoconfigure: true
+        autoconfigure: false
         public: false
 
     _instanceof:
@@ -45,6 +45,7 @@ services:
           - '@Claroline\CoreBundle\API\Finder\Log\LogFinder'
 
     Claroline\CoreBundle\Repository\ResourceNodeRepository:
-      arguments:
-        - '@Doctrine\Persistence\ManagerRegistry'
-        - '@claroline.manager.plugin_manager'
+        tags: [doctrine.repository_service]
+        arguments:
+          - '@Doctrine\Persistence\ManagerRegistry'
+          - '@claroline.manager.plugin_manager'

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\Logs;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Manager\DatabaseManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
@@ -76,9 +75,6 @@ class LogsArchiverCommand extends Command
             $to = \DateTime::createFromFormat('m-d-Y', $to);
             $searches['dateTo'] = $to->format('Y-m-d h:i:s');
         }
-
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->databaseManager->setLogger($consoleLogger);
 
         $logTables = [
             'claro_log',

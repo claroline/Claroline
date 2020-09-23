@@ -4,15 +4,16 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\API\Transfer\Adapter\AdapterInterface;
-use Claroline\AppBundle\Logger\JsonLogger;
+use Claroline\AppBundle\Log\JsonLogger;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 //should not be here because it's a corebundle dependency
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class TransferProvider
+class TransferProvider implements LoggerAwareInterface
 {
     use LoggableTrait;
 
@@ -34,22 +35,12 @@ class TransferProvider
     /** @var AbstractAction[] */
     private $actions = [];
 
-    /**
-     * TransferProvider constructor.
-     *
-     * @param string              $projectDir
-     * @param ObjectManager       $om
-     * @param SerializerProvider  $serializer
-     * @param SchemaProvider      $schema
-     * @param string              $logDir
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
-        $projectDir,
+        string $projectDir,
         ObjectManager $om,
         SerializerProvider $serializer,
         SchemaProvider $schema,
-        $logDir,
+        string $logDir,
         TranslatorInterface $translator
       ) {
         $this->projectDir = $projectDir;

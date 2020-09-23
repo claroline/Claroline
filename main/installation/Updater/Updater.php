@@ -2,9 +2,10 @@
 
 namespace Claroline\InstallationBundle\Updater;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
+use Psr\Log\LoggerAwareInterface;
 
-abstract class Updater
+abstract class Updater implements LoggerAwareInterface
 {
     use LoggableTrait;
 }

@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -30,11 +30,12 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 
-class RoleManager
+class RoleManager implements LoggerAwareInterface
 {
     const EMPTY_USERS = 1;
     const EMPTY_GROUPS = 2;

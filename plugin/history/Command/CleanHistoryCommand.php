@@ -2,7 +2,6 @@
 
 namespace Claroline\HistoryBundle\Command;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\HistoryBundle\Manager\HistoryManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,9 +25,6 @@ class CleanHistoryCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $logger = ConsoleLogger::get($output);
-
-        $this->historyManager->setLogger($logger);
         $this->historyManager->cleanRecent();
 
         return 0;

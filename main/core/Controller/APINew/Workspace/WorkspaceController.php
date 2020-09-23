@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Logger\JsonLogger;
+use Claroline\AppBundle\Log\JsonLogger;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;

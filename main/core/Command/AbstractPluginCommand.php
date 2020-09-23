@@ -20,7 +20,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -31,7 +30,7 @@ abstract class AbstractPluginCommand extends Command
     use BaseCommandTrait;
 
     private $params = ['bundle' => 'the bundle name'];
-    private $pluginInstaller;
+    protected $pluginInstaller;
 
     public function __construct(Installer $pluginInstaller)
     {
@@ -77,14 +76,6 @@ abstract class AbstractPluginCommand extends Command
 
     protected function getPluginInstaller(OutputInterface $output)
     {
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        ];
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $this->pluginInstaller->setLogger($consoleLogger);
-
         return $this->pluginInstaller;
     }
 

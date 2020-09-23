@@ -22,7 +22,6 @@ use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
@@ -138,9 +137,6 @@ class RemoveCommand extends Command
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         ];
-
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $this->workspaceManager->setLogger($consoleLogger);
 
         if ($personal) {
             $question = new ConfirmationQuestion('Remove all personal Workspaces ? y/n [y] ', true);

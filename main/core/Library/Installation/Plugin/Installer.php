@@ -12,18 +12,19 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
  */
-class Installer
+class Installer implements LoggerAwareInterface
 {
     use LoggableTrait;
 

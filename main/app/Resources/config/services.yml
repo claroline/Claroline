@@ -9,9 +9,9 @@ imports:
 
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: true
 
     Claroline\AppBundle\API\FinderProvider:
         arguments:
@@ -45,6 +45,8 @@ services:
             - '@Claroline\AppBundle\API\SchemaProvider'
             - '%claroline.param.import_log_dir%'
             - '@translator'
+        calls:
+            - setLogger: ['@logger']
 
     Claroline\AppBundle\API\ValidatorProvider:
         arguments:
@@ -60,7 +62,8 @@ services:
     Claroline\AppBundle\Persistence\ObjectManager:
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@logger'
+        calls:
+            - setLogger: ['@logger']
 
     Claroline\AppBundle\Event\StrictDispatcher:
         arguments:

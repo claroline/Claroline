@@ -9,7 +9,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -18,9 +18,10 @@ use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Manager\ResourceManager as ResManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ResourceManager implements ToolImporterInterface
+class ResourceManager implements ToolImporterInterface, LoggerAwareInterface
 {
     use LoggableTrait;
 

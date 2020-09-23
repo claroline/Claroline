@@ -12,7 +12,6 @@
 namespace Claroline\ClacoFormBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -58,7 +57,6 @@ class CreateEntriesFromCsvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
         $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $userRepo = $this->om->getRepository(User::class);
         $resourceNodeRepo = $this->om->getRepository(ResourceNode::class);
@@ -105,7 +103,6 @@ class CreateEntriesFromCsvCommand extends Command
                 }
             }
             $manager = $this->getContainer()->get('Claroline\ClacoFormBundle\Manager\ClacoFormManager');
-            $manager->setLogger($consoleLogger);
             $manager->importEntryFromCsv($clacoForm, $user, $data);
 
             return 0;

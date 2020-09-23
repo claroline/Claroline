@@ -12,7 +12,6 @@
 namespace Claroline\AppBundle\Command;
 
 use Claroline\AppBundle\API\TransferProvider;
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -59,9 +58,7 @@ class ApiImportCommand extends Command
     {
         $file = $input->getArgument('file');
         $action = $input->getArgument('action');
-        $consoleLogger = ConsoleLogger::get($output);
         $this->authenticator->authenticate($input->getArgument('owner'), null, false);
-        $this->transferProvider->setLogger($consoleLogger);
 
         $this->transferProvider->execute(
           file_get_contents($file),

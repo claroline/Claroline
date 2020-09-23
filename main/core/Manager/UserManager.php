@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,7 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserManager
+class UserManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

@@ -12,15 +12,15 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
-class VersionManager
+class VersionManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
@@ -51,8 +51,7 @@ class VersionManager
 
         if (!empty($version)) {
             $this->log(
-                sprintf('Version "%s" of "%s" already registered !', trim($version->getVersion()), $version->getBundle()),
-                LogLevel::ERROR
+                sprintf('Version "%s" of "%s" already registered !', trim($version->getVersion()), $version->getBundle())
             );
 
             return $version;

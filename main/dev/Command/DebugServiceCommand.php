@@ -12,7 +12,6 @@
 namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Command\AdminCliCommand;
@@ -67,18 +66,13 @@ class DebugServiceCommand extends Command implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
         $manager = $this->getApplication()->getKernel()->get($input->getArgument('service_name'));
-        if (method_exists($manager, 'setLogger')) {
-            $manager->setLogger($consoleLogger);
-        }
         $method = $input->getArgument('method_name');
 
         if ($input->getOption('debug_doctrine_all')) {
-            $this->om->setLogger($consoleLogger);
             $this->om->activateLog();
             $this->om->showFlushLevel();
-            $this->debugListener->setLogger($consoleLogger)->activateLog()->setDebugLevel(DebugListener::DEBUG_ALL)->setVendor('Claroline');
+            $this->debugListener->activateLog()->setDebugLevel(DebugListener::DEBUG_ALL)->setVendor('Claroline');
         }
 
         $this->authenticator->authenticate($input->getArgument('owner'), null, false);

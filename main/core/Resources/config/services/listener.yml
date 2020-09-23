@@ -291,6 +291,8 @@ services:
 
     Claroline\CoreBundle\Listener\Doctrine\DebugListener:
         public: true
+        calls:
+            - setLogger: [ '@logger' ]
         tags:
             - { name: doctrine.event_listener, event: onFLush }
 

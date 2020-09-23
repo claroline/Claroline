@@ -3,7 +3,7 @@
 namespace Claroline\HistoryBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -11,8 +11,9 @@ use Claroline\HistoryBundle\Entity\ResourceRecent;
 use Claroline\HistoryBundle\Entity\WorkspaceRecent;
 use Claroline\HistoryBundle\Repository\ResourceRecentRepository;
 use Claroline\HistoryBundle\Repository\WorkspaceRecentRepository;
+use Psr\Log\LoggerAwareInterface;
 
-class HistoryManager
+class HistoryManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

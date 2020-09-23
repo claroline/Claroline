@@ -53,7 +53,7 @@ class ConfigurationCheckerTest extends MockeryTestCase
     {
         $pluginFqcn = 'Invalid\NonExistentConfigFile1\InvalidNonExistentConfigFile1';
         $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
-        $this->assertContains('config.yml file missing', $errors[0]->getMessage());
+        $this->assertStringContainsString('config.yml file missing', $errors[0]->getMessage());
     }
 
     public function testCheckerReturnsAnErrorOnMissingResourceKey()
@@ -68,7 +68,7 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $pluginFqcn = 'Invalid\UnloadableResourceClass1\InvalidUnloadableResourceClass1';
         $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
-        $this->assertContains('was not found', $errors[0]->getMessage());
+        $this->assertStringContainsString('was not found', $errors[0]->getMessage());
     }
 
     public function testCheckerReturnsAnErrorOnUnloadableResourceClass2()
@@ -77,7 +77,7 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $this->requirePluginClass('Invalid\UnloadableResourceClass2\Entity\ResourceX');
         $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
-        $this->assertContains('must extend', $errors[0]->getMessage());
+        $this->assertStringContainsString('must extend', $errors[0]->getMessage());
     }
 
     public function testCheckerReturnsAnErrorOnUnexpectedLargeIcon()
@@ -86,7 +86,7 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $this->requirePluginClass('Invalid\UnexpectedResourceIcon\Entity\ResourceX');
         $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
-        $this->assertContains('this file was not found', $errors[0]->getMessage());
+        $this->assertStringContainsString('this file was not found', $errors[0]->getMessage());
     }
 
     public function testCheckerReturnsAnErrorOnUnexpectedIcon()
@@ -94,7 +94,7 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $pluginFqcn = 'Invalid\UnexpectedIcon\InvalidUnexpectedIcon';
         $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
-        $this->assertContains('this file was not found', $errors[0]->getMessage());
+        $this->assertStringContainsString('this file was not found', $errors[0]->getMessage());
     }
 
     /**

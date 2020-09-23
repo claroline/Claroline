@@ -17,7 +17,7 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Token\ViewAsToken;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
@@ -32,12 +32,13 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Persistence\ObjectRepository;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class WorkspaceManager
+class WorkspaceManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

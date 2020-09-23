@@ -11,10 +11,11 @@
 
 namespace Claroline\AppBundle\Persistence;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Doctrine\Persistence\ObjectManager as ObjectManagerInterface;
+use Psr\Log\LoggerAwareInterface;
 
-class TableManager
+class TableManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

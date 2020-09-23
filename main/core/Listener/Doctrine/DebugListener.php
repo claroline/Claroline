@@ -2,8 +2,9 @@
 
 namespace Claroline\CoreBundle\Listener\Doctrine;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -13,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *  - logging MUST BE enabled inside the Claroline\AppBundle\Persistence\ObjectManager
  *  - printing log MUST BE down through event listening
  */
-class DebugListener
+class DebugListener implements LoggerAwareInterface
 {
     use ContainerAwareTrait;
 

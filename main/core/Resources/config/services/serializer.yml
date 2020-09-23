@@ -1,7 +1,7 @@
 services:
     _defaults:
         autowire: false
-        autoconfigure: true
+        autoconfigure: false
         public: true
 
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:

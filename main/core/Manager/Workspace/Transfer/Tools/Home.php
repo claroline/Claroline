@@ -6,11 +6,12 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Psr\Log\LoggerAwareInterface;
 
-class Home implements ToolImporterInterface
+class Home implements ToolImporterInterface, LoggerAwareInterface
 {
     use LoggableTrait;
 

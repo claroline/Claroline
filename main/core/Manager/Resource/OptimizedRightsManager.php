@@ -13,17 +13,18 @@ namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerAwareInterface;
 
 /**
  * Right manager optimizations.
  */
-class OptimizedRightsManager
+class OptimizedRightsManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

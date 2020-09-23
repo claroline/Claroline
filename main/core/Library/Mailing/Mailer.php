@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Mailing;
 
-use Claroline\AppBundle\Logger\FileLogger;
+use Claroline\AppBundle\Log\FileLogger;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class Mailer

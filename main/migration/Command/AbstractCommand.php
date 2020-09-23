@@ -12,11 +12,9 @@
 namespace Claroline\MigrationBundle\Command;
 
 use Claroline\MigrationBundle\Manager\Manager;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
@@ -35,14 +33,6 @@ abstract class AbstractCommand extends Command
 
     protected function getManager(OutputInterface $output)
     {
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        ];
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $this->manager->setLogger($consoleLogger);
-
         return $this->manager;
     }
 

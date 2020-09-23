@@ -33,6 +33,8 @@ services:
           - '%claroline.param.icon_sets_directory%'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.icon_set_manager:
         alias: Claroline\ThemeBundle\Manager\IconSetManager

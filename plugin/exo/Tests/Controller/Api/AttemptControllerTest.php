@@ -89,7 +89,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
+        $this->assertIsObject( $content);
         $this->assertTrue(property_exists($content, 'id'));
         $this->assertTrue(property_exists($content, 'structure'));
     }
@@ -148,7 +148,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->request('POST', "/api/exercises/{$this->ex1->getUuid()}/attempts", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
+        $this->assertIsObject( $content);
     }
 
     public function testAnonymousSubmit()
@@ -234,7 +234,7 @@ class AttemptControllerTest extends TransactionalTestCase
 
         // Check the paper is correctly returned to User
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
+        $this->assertIsObject( $content);
     }
 
     public function testHint()

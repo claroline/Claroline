@@ -25,6 +25,8 @@ services:
             - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.version_manager'
+        calls:
+            - setLogger: ['@logger']
 
     Claroline\CoreBundle\Library\Installation\Plugin\RoutingChecker:
         arguments:
@@ -46,6 +48,8 @@ services:
             - '@claroline.manager.plugin_manager'
             - '@translator'
             - '@claroline.manager.version_manager'
+        calls:
+            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter:
         arguments:
@@ -56,6 +60,8 @@ services:
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@claroline.manager.icon_set_manager'
+        calls:
+            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Library\Installation\Plugin\ConfigurationChecker:
         arguments:
@@ -70,6 +76,8 @@ services:
             - '@Claroline\CoreBundle\Library\Installation\Refresher'
             - '@kernel'
             - '@service_container'
+        calls:
+            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Library\Mailing\TransportFactory:
         arguments:

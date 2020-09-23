@@ -12,7 +12,7 @@
 namespace Claroline\ClacoFormBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
@@ -49,6 +49,7 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
@@ -62,7 +63,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ClacoFormManager
+class ClacoFormManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

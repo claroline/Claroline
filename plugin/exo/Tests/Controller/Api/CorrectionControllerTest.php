@@ -102,7 +102,7 @@ class CorrectionControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertInternalType('object', $content);
+        $this->assertIsObject( $content);
 
         // Checks returned questions
         $this->assertTrue(property_exists($content, 'questions'));

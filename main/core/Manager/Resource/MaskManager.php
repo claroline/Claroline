@@ -12,13 +12,14 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\ResourceMaskDecoderRepository;
 use Doctrine\Persistence\ObjectRepository;
+use Psr\Log\LoggerAwareInterface;
 
-class MaskManager
+class MaskManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

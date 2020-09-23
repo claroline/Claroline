@@ -25,6 +25,8 @@ services:
     Claroline\CoreBundle\Manager\VersionManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.version_manager:
         alias: Claroline\CoreBundle\Manager\VersionManager
@@ -43,6 +45,8 @@ services:
           - '@translator'
           - '@validator'
           - '@claroline.manager.workspace_manager'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.user_manager:
         alias: Claroline\CoreBundle\Manager\UserManager
@@ -63,6 +67,8 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
           - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.tool_manager:
         alias: Claroline\CoreBundle\Manager\Tool\ToolManager
@@ -89,6 +95,8 @@ services:
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.template_manager'
           - '@Claroline\AppBundle\API\Crud'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.role_manager:
         alias: Claroline\CoreBundle\Manager\RoleManager
@@ -103,6 +111,8 @@ services:
           - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
           - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.temp_file'
+        calls:
+          - setLogger: ['@logger']
 
     claroline.manager.resource_manager:
         alias: Claroline\CoreBundle\Manager\ResourceManager
@@ -282,6 +292,8 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@service_container'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.workspace_manager:
         alias: Claroline\CoreBundle\Manager\Workspace\WorkspaceManager
@@ -299,6 +311,8 @@ services:
           - '@security.token_storage'
           - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
           - '@Claroline\CoreBundle\Listener\Log\LogListener'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.workspace.transfer:
         alias: Claroline\CoreBundle\Manager\Workspace\TransferManager
@@ -318,6 +332,8 @@ services:
           - '@Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer'
           - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
           - '@service_container'
+        calls:
+          - setLogger: [ '@logger' ]
 
     #alias is required: todo: use tags
     claroline.transfer.ordered_tool:
@@ -334,7 +350,8 @@ services:
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
-
+        calls:
+          - setLogger: [ '@logger' ]
         tags:
             - { name: kernel.event_listener, event: export_tool_resources, method: onExport }
             - { name: kernel.event_listener, event: import_tool_resources, method: onImport }
@@ -349,6 +366,8 @@ services:
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\Crud'
+        calls:
+          - setLogger: [ '@logger' ]
 
     #alias is required: todo: use tags
     claroline.transfer.home:
@@ -387,6 +406,8 @@ services:
           - '@claroline.manager.role_manager'
           - '@claroline.manager.mask_manager'
           - '@service_container'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\RightsManager
@@ -439,6 +460,8 @@ services:
           - '@doctrine.dbal.default_connection'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.optimized_rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager
@@ -447,6 +470,8 @@ services:
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.mask_manager:
         alias: Claroline\CoreBundle\Manager\Resource\MaskManager
@@ -455,6 +480,8 @@ services:
     Claroline\CoreBundle\Manager\Organization\OrganizationManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+        calls:
+          - setLogger: [ '@logger' ]
 
     claroline.manager.organization.organization_manager:
         alias: Claroline\CoreBundle\Manager\Organization\OrganizationManager

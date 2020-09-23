@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Command\API;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\AppBundle\Logger\JsonLogger;
+use Claroline\AppBundle\Log\JsonLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\UserManager;

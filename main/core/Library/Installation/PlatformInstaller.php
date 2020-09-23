@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * Entry point of platform installation/update, ensuring that minimal requirements
  * (e.g. existing database) are met before executing operations.
  */
-class PlatformInstaller
+class PlatformInstaller implements LoggerAwareInterface
 {
     use LoggableTrait;
 

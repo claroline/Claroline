@@ -12,10 +12,8 @@
 namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateConfigCommand extends Command
@@ -36,14 +34,6 @@ class UpdateConfigCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        ];
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-
-        $this->pluginInstaller->setLogger($consoleLogger);
         $this->pluginInstaller->updateAllConfigurations();
 
         return 0;

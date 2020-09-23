@@ -3,10 +3,11 @@
 namespace Claroline\AppBundle\API\Transfer\Action;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerAwareInterface;
 
-abstract class AbstractAction
+abstract class AbstractAction implements LoggerAwareInterface
 {
     const MODE_CREATE = 'create';
     const MODE_UPDATE = 'update';

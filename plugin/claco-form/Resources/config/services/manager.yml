@@ -15,3 +15,5 @@ services:
             - '@router'
             - '@security.token_storage'
             - '@translator'
+        calls:
+            - setLogger: [ '@logger' ]

@@ -4,7 +4,9 @@ services:
         autoconfigure: false
         public: false
 
-    Claroline\DevBundle\Manager\TranslationManager: ~
+    Claroline\DevBundle\Manager\TranslationManager:
+        calls:
+            - setLogger: [ '@logger' ]
 
     Claroline\DevBundle\Listener\DebugListener:
         tags:

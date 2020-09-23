@@ -11,11 +11,12 @@
 
 namespace Claroline\BundleRecorder\Handler;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class BaseHandler
+class BaseHandler implements LoggerAwareInterface
 {
     use LoggableTrait;
 

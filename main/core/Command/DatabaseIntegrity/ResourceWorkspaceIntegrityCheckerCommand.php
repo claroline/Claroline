@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,8 +34,6 @@ class ResourceWorkspaceIntegrityCheckerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->resourceManager->setLogger($consoleLogger);
         $this->resourceManager->checkIntegrity();
 
         return 0;

@@ -12,7 +12,6 @@
 namespace Claroline\DevBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\DevBundle\Manager\TranslationManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -83,8 +82,6 @@ class TranslationDebugCommand extends Command
         $mainFile = $this->getApplication()->getKernel()->locateResource($mainShortPath);
         $filledFile = $this->getApplication()->getKernel()->locateResource($filledShortPath);
         if ($input->getOption('fill')) {
-            $consoleLogger = ConsoleLogger::get($output);
-            $this->translationManager->setLogger($consoleLogger);
             $this->translationManager->fill($mainFile, $filledFile);
         }
         $this->showUntranslated($filledFile, $output, $locale);

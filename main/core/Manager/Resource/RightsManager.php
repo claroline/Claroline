@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -32,7 +33,7 @@ use Symfony\Component\Security\Core\Role\Role as BaseRole;
 /**
  * @deprecated use OptimizedRightsManager instead
  */
-class RightsManager
+class RightsManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

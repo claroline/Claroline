@@ -11,17 +11,18 @@
 
 namespace Claroline\InstallationBundle\Manager;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class InstallationManager
+class InstallationManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

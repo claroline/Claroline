@@ -12,10 +12,11 @@
 namespace Claroline\CoreBundle\Manager\Organization;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Psr\Log\LoggerAwareInterface;
 
-class OrganizationManager
+class OrganizationManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

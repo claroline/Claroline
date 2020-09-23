@@ -4,12 +4,13 @@ namespace Claroline\AppBundle\Manager;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\DatabaseBackup;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
-class DatabaseManager
+class DatabaseManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

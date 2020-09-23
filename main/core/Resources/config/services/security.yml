@@ -1,8 +1,8 @@
 services:
     _defaults:
-        autowire: false #change to true
-        autoconfigure: true #change to true
-        public: true #default should be false now
+        autowire: false
+        autoconfigure: false
+        public: false
 
     Claroline\CoreBundle\Library\Security\TokenUpdater:
         arguments:

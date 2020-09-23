@@ -6,6 +6,8 @@ services:
             - '@claroline.migration.manager'
             - '@claroline.installation.fixture_loader'
             - '%kernel.environment%'
+        calls:
+            - setLogger: [ '@logger' ]
 
     claroline.installation.fixture_loader:
         class: '%claroline.installation_fixture_loader.class%'

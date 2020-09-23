@@ -13,11 +13,9 @@ namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TestUpdateCommand extends Command
@@ -53,16 +51,9 @@ class TestUpdateCommand extends Command
             'Claroline\CoreBundle\Library\Installation\Plugin\Installer' :
             'claroline.installation.manager';
 
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        ];
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-
         /** @var \Claroline\InstallationBundle\Manager\InstallationManager|\Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
         $installer = $this->getContainer()->get($installerType);
-        $installer->setLogger($consoleLogger);
+
         $from = $input->getArgument('from_version');
         $to = $input->getArgument('to_version');
         $installer->update($bundle, $from, $to);

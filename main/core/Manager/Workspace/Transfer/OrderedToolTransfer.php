@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Manager\Workspace\Transfer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\FileBag;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Role;
@@ -12,12 +12,13 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Not a true Serializer I guess, need to see where it is used. Could be extended after a refactoring.
  */
-class OrderedToolTransfer
+class OrderedToolTransfer implements LoggerAwareInterface
 {
     use LoggableTrait;
 

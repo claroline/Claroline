@@ -8,7 +8,6 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,8 +32,6 @@ class ResourceMaskDecoderIntegrityCheckerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->maskManager->setLogger($consoleLogger);
         $this->maskManager->checkIntegrity();
 
         return 0;

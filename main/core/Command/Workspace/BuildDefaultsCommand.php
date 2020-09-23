@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Command\Workspace;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Console\Command\Command;
@@ -27,8 +26,6 @@ class BuildDefaultsCommand extends Command implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->workspaceManager->setLogger($consoleLogger);
         $this->workspaceManager->getDefaultModel(false, true);
         $this->workspaceManager->getDefaultModel(true, true);
 

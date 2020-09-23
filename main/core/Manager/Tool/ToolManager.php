@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager\Tool;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -21,9 +21,10 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\Tool\ToolRepository;
+use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ToolManager
+class ToolManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 

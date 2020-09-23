@@ -21,7 +21,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -104,15 +103,7 @@ class PlatformUpdateCommand extends Command
             $this->refresher->buildSymlinks();
         }
 
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        ];
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-
         $this->installer->setOutput($output);
-        $this->installer->setLogger($consoleLogger);
 
         if ($input->getArgument('from_version') && $input->getArgument('to_version')) {
             $from = $input->getArgument('from_version');

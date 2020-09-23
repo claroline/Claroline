@@ -28,7 +28,7 @@ class PluginUninstallCommand extends AbstractPluginCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $plugin = $this->getPlugin($input);
-        $this->getPluginInstaller($output)->uninstall($plugin);
+        $this->pluginInstaller->uninstall($plugin);
         $this->resetCache($output);
 
         return 0;

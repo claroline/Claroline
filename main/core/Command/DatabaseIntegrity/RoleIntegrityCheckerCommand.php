@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
-use Claroline\AppBundle\Logger\ConsoleLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -48,15 +47,13 @@ class RoleIntegrityCheckerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $consoleLogger = ConsoleLogger::get($output);
-        $this->roleManager->setLogger($consoleLogger);
         $userId = $input->getOption('user');
         $workspaceCode = $input->getOption('workspace');
 
         if (!empty($userId)) {
             $user = $this->userManager->getUserByUsernameOrMail($userId, $userId);
             if (empty($user)) {
-                $consoleLogger->warning("Could not find user \"{$userId}\"");
+                $output->writeln("Could not find user \"{$userId}\"");
 
                 return 1;
             }
@@ -66,7 +63,7 @@ class RoleIntegrityCheckerCommand extends Command
         } elseif (!empty($workspaceCode)) {
             $workspace = $this->om->getRepository(Workspace::class)->findOneByCode($workspaceCode);
             if (empty($workspace)) {
-                $consoleLogger->warning("Could not find workspace \"{$workspaceCode}\"");
+                $output->writeln("Could not find workspace \"{$workspaceCode}\"");
 
                 return 1;
             }
