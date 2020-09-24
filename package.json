@@ -5,8 +5,8 @@
   "license": "GPL-3.0",
   "repository": "https://github.com/claroline/Claroline",
   "engines": {
-    "node": ">=6.12",
-    "npm": ">=3.7"
+    "node": ">=10",
+    "npm": ">=6"
   },
   "scripts": {
     "themes": "node vendor/claroline/distribution/main/core/Resources/server/themes/bin build",
