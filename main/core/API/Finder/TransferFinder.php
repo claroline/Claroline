@@ -25,7 +25,16 @@ class TransferFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         foreach ($searches as $filterName => $filterValue) {
-            $this->setDefaults($qb, $filterName, $filterValue);
+            switch ($filterName) {
+                case 'workspace':
+                    $qb->leftJoin('obj.workspace', 'w');
+                    $qb->andWhere('w.uuid = :workspaceId');
+                    $qb->setParameter('workspaceId', $filterValue);
+                    break;
+
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
+            }
         }
 
         return $qb;

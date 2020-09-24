@@ -29,14 +29,6 @@ class CreateOrUpdate extends AbstractAction
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * CreateOrUpdate constructor.
-     *
-     * @param Crud                $crud
-     * @param ObjectManager       $om
-     * @param SerializerProvider  $serializer
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         Crud $crud,
         ObjectManager $om,
@@ -50,7 +42,6 @@ class CreateOrUpdate extends AbstractAction
     }
 
     /**
-     * @param array $data
      * @param array $successData
      *
      * @throws \Exception
@@ -81,9 +72,11 @@ class CreateOrUpdate extends AbstractAction
             /** @var User $user */
             $user = $this->om->getRepository(User::class)->findOneBy(['username' => $data['user']]);
 
-            foreach ($user->getEntityRoles() as $role) {
-                if (Role::USER_ROLE === $role->getType()) {
-                    $roles[] = $role;
+            if ($user) {
+                foreach ($user->getEntityRoles() as $role) {
+                    if (Role::USER_ROLE === $role->getType()) {
+                        $roles[] = $role;
+                    }
                 }
             }
         }
@@ -166,13 +159,7 @@ class CreateOrUpdate extends AbstractAction
         $this->om->persist($resourceNode);
     }
 
-    /**
-     * @param array $options
-     * @param array $extra
-     *
-     * @return array
-     */
-    public function getSchema(array $options = [], array $extra = [])
+    public function getSchema(array $options = [], array $extra = []): array
     {
         $types = array_map(function (ResourceType $type) {
             return $type->getName();
@@ -262,11 +249,9 @@ class CreateOrUpdate extends AbstractAction
             $directory['claroline']['requiredAtCreation'][] = 'workspace';
         }
 
-        $schema = [
+        return [
             '$root' => json_decode(json_encode($directory)),
         ];
-
-        return $schema;
     }
 
     public function getExtraDefinition(array $options = [], array $extra = [])
