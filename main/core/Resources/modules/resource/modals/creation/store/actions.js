@@ -38,7 +38,7 @@ actions.startCreation = (parent, resourceType) => (dispatch, getState) => {
 
   // let the plugin add some changes to init data if it wants to
   return getResource(resourceType.name).then(module => {
-    if (module.default.create) {
+    if (module.default && module.default.create) {
       // plugin wants to customize init data
       defaultData = module.default.create(defaultData)
     }
