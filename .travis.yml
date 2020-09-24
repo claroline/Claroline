@@ -1,7 +1,10 @@
-language: php
+jobs:
+  include:
+    - php: 7.4
+      env: NODE_RELEASE=14
+      dist: focal # with mysql 8.0
 
-php:
-  - "7.2"
+language: php
 
 env:
   - DB=mysql
@@ -12,10 +15,13 @@ services:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 6.12
+  - nvm install ${NODE_RELEASE}
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
+  - export ENV=PROD
+  - export APP_ENV=test
+  - export APP_DEBUG=0
 
 before_script:
   # add swap
@@ -28,13 +34,13 @@ before_script:
 
   - composer validate
   - php bin/configure --default
-  - composer update --no-dev
+  - COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader
   - npm install
-  - composer build
+  - npm run webpack
   - php bin/console claroline:install --env=test -vvv
   - export SYMFONY_DEPRECATIONS_HELPER=weak
 
 script:
-  - vendor/bin/phpunit -c vendor/claroline/distribution
+  - ./vendor/bin/simple-phpunit --dont-report-useless-tests -c vendor/claroline/distribution
   # TODO : enable when JS test suite is fixed
   # - node_modules/.bin/karma start vendor/claroline/distribution/karma.conf.js --single-run

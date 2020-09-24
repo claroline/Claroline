@@ -119,14 +119,14 @@ For a development installation, you'll need at least:
     - xml
     - json
     - zip
-- MySQL/MariaDB >=5.0
+- MySQL/MariaDB >= 8.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 8.9
-- [npm][npm] >= 6.4
+- [node.js][node] >= 10
+- [npm][npm] >= 6
 
 It's also highly recommended to develop on an UNIX-like OS.
 
-For mysql >= 5.7, there is an additonal step:
+For mysql >= 8.0, there is an additonal step:
 
 ```
     mysql -u**** -p
