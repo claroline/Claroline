@@ -23,10 +23,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class UserVoter extends AbstractVoter
 {
     /**
-     * @param TokenInterface $token
-     * @param mixed          $object
-     * @param array          $attributes
-     * @param array          $options
+     * @param User $object
      *
      * @return int
      */

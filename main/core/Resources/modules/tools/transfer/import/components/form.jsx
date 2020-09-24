@@ -69,7 +69,7 @@ class ImportForm extends Component {
         label: trans('file'),
         required: true,
         options: {
-          uploadUrl: ['apiv2_transfer_upload_file', {workspace: props.workspace && props.workspace.id ? props.workspace.id : 0}]
+          uploadUrl: ['apiv2_transfer_upload_file', {workspaceId: props.workspace && props.workspace.id ? props.workspace.id : 0}]
         }
       }, {
         name: 'format',

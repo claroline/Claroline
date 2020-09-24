@@ -15,9 +15,6 @@ class FileSerializer
     /** @var PublicFileSerializer */
     private $fileSerializer;
 
-    /**
-     * @param PublicFileSerializer $fileSerializer
-     */
     public function __construct(PublicFileSerializer $fileSerializer, ObjectManager $om)
     {
         $this->fileSerializer = $fileSerializer;
@@ -35,15 +32,7 @@ class FileSerializer
         return 'public_file';
     }
 
-    /**
-     * Serializes a PublicFile entity.
-     *
-     * @param File  $file
-     * @param array $options
-     *
-     * @return array
-     */
-    public function serialize(File $file, array $options = [])
+    public function serialize(File $file, array $options = []): array
     {
         $data = [
             'id' => $file->getUuid(),
@@ -60,16 +49,7 @@ class FileSerializer
         return $data;
     }
 
-    /**
-     * Deserializes data into a PublicFile into an entity.
-     *
-     * @param \stdClass $data
-     * @param File|null $file
-     * @param array     $options
-     *
-     * @return File
-     */
-    public function deserialize($data, File $file = null, array $options = [])
+    public function deserialize(array $data, File $file = null, array $options = []): File
     {
         $this->sipe('log', 'setLog', $data, $file);
         $this->sipe('status', 'setStatus', $data, $file);
@@ -84,7 +64,7 @@ class FileSerializer
         }
 
         if (isset($data['workspace'])) {
-            $workspace = $this->om->getRepository(Workspace::class)->find($data['workspace']['id']);
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
             if ($workspace) {
                 $file->setWorkspace($workspace);
             }

@@ -39,17 +39,9 @@ class TransferController extends AbstractCrudController
     /** @var ApiManager */
     private $apiManager;
 
-    /**
-     * TransferController constructor.
-     *
-     * @param TransferProvider $provider
-     * @param string           $schemaDir
-     * @param StrictDispatcher $dispatcher
-     * @param ApiManager       $apiManager
-     */
     public function __construct(
         TransferProvider $provider,
-        $schemaDir,
+        string $schemaDir,
         StrictDispatcher $dispatcher,
         ApiManager $apiManager
     ) {
@@ -88,13 +80,8 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route("/upload/{workspaceId}", name="apiv2_transfer_upload_file", methods={"POST"})
-     *
-     * @param Request $request
-     * @param int     $workspaceId
-     *
-     * @return JsonResponse
      */
-    public function uploadFileAction(Request $request, $workspaceId = null)
+    public function uploadFileAction(Request $request, string $workspaceId = null): JsonResponse
     {
         $toUpload = $request->files->all()['file'];
         $handler = $request->get('handler');
@@ -105,14 +92,9 @@ class TransferController extends AbstractCrudController
 
         $file = $this->serializer->serialize($object);
 
-        $workspace = null;
-        if ($workspaceId) {
-            $workspace = $this->om->getRepository(Workspace::class)->find($workspaceId);
-        }
-
         $this->crud->create(File::class, [
             'uploadedFile' => $file,
-            'workspace' => $workspace ? $this->serializer->serialize($workspace) : null,
+            'workspace' => $workspaceId ? ['id' => $workspaceId] : null,
         ]);
 
         return new JsonResponse([$file], 200);
@@ -120,13 +102,8 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_list", methods={"GET"})
-     *
-     * @param int     $workspaceId
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function workspaceListAction($workspaceId, Request $request)
+    public function workspaceListAction(string $workspaceId, Request $request): JsonResponse
     {
         $query = $request->query->all();
         $options = $this->getOptions()['list'] ?? [];
@@ -146,12 +123,8 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route("/start", name="apiv2_transfer_start", methods={"POST"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function startAction(Request $request)
+    public function startAction(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $file = $data['file'];
@@ -180,13 +153,8 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route("/export/{format}", name="apiv2_transfer_export", methods={"GET"})
-     *
-     * @param Request $request
-     * @param string  $format
-     *
-     * @return JsonResponse
      */
-    public function exportAction(Request $request, $format)
+    public function exportAction(Request $request, string $format): JsonResponse
     {
         $results = $this->finder->search(
             //maybe use a class map because it's the entity one currently
@@ -202,12 +170,8 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route("/action/{format}", name="apiv2_transfer_actions", methods={"GET"})
-     *
-     * @param string $format
-     *
-     * @return JsonResponse
      */
-    public function getAvailableActionsAction($format)
+    public function getAvailableActionsAction(string $format): JsonResponse
     {
         return new JsonResponse(
             $this->provider->getAvailableActions($format)
@@ -216,15 +180,8 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_sample", methods={"GET"})
-     *
-     * @param string $name
-     * @param string $entity
-     * @param string $format
-     * @param string $sample
-     *
-     * @return BinaryFileResponse
      */
-    public function downloadSampleAction($name, $format, $entity, $sample)
+    public function downloadSampleAction(string $name, string $format, string $entity, string $sample): BinaryFileResponse
     {
         $file = $this->provider->getSamplePath($format, $entity, $name, $sample);
         if (!$file) {

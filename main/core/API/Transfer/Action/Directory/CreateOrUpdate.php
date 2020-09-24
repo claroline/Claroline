@@ -89,10 +89,10 @@ class CreateOrUpdate extends AbstractAction
                         'translationKey' => $role['translationKey'],
                         'workspace' => $workspace,
                     ]);
+
+                    unset($roleKeys[array_search('translationKey', $roleKeys)]);
                 }
                 if (empty($object)) {
-                    unset($roleKeys[array_search('translationKey', $roleKeys)]);
-
                     $object = $this->om->getObject($role, Role::class, $roleKeys);
                 }
 
