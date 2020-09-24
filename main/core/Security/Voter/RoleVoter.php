@@ -15,6 +15,7 @@ use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -40,7 +41,7 @@ class RoleVoter extends AbstractVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    public function checkPatch(TokenInterface $token, Role $role, $collection)
+    public function checkPatch(TokenInterface $token, Role $role, $collection): int
     {
         if ($collection->isInstanceOf(User::class) || $collection->isInstanceOf(Group::class)) {
             $grant = true;
@@ -62,7 +63,7 @@ class RoleVoter extends AbstractVoter
         return $this->check($token, $role);
     }
 
-    public function check(TokenInterface $token, Role $object)
+    public function check(TokenInterface $token, Role $object): int
     {
         // probably do the check from the UserVoter or a security issue will arise
         if (!$object->getWorkspace()) {
@@ -72,7 +73,10 @@ class RoleVoter extends AbstractVoter
 
         // if it's a workspace role, we must be able be granted the edit perm on the workspace users tool
         // and our right level to be less than the role we're trying to remove that way, a user cannot remove admins
-        if ($this->isGranted(['community', 'edit'], $object->getWorkspace())) {
+
+        /** @var Workspace $workspace */
+        $workspace = $object->getWorkspace();
+        if ($this->isGranted(['community', 'edit'], $workspace)) {
             $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
             // If user is workspace manager then grant access
             if ($workspaceManager->isManager($object->getWorkspace(), $token)) {
@@ -81,6 +85,13 @@ class RoleVoter extends AbstractVoter
 
             // Otherwise only allow modification of roles the current user owns
             if (in_array($object->getName(), $token->getRoleNames())) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        // If public registration is enabled and user try to get the default role, grant access
+        if ($workspace->getSelfRegistration() && $workspace->getDefaultRole()) {
+            if ($workspace->getDefaultRole()->getId() === $object->getId()) {
                 return VoterInterface::ACCESS_GRANTED;
             }
         }

@@ -60,17 +60,7 @@ class GroupVoter extends AbstractVoter
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    /**
-     * This is not done yet but later a user might be able to edit its roles/groups himself
-     * and it should be checked here.
-     *
-     * @param TokenInterface        $token
-     * @param Group                 $group
-     * @param ObjectCollection|null $collection
-     *
-     * @return int
-     */
-    private function checkPatch(TokenInterface $token, Group $group, ObjectCollection $collection = null)
+    private function checkPatch(TokenInterface $token, Group $group, ObjectCollection $collection = null): int
     {
         //single property: no check now
         if (!$collection) {
@@ -81,16 +71,24 @@ class GroupVoter extends AbstractVoter
         if ($collection->isInstanceOf(Role::class)) {
             // check if we can add a workspace (this block is mostly a c/c from RoleVoter)
             $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token) {
-                if ($role->getWorkspace()) {
-                    if ($this->isGranted(['community', 'edit'], $role->getWorkspace())) {
+                $workspace = $role->getWorkspace();
+                if ($workspace) {
+                    if ($this->isGranted(['community', 'edit'], $workspace)) {
                         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
                         // If user is workspace manager then grant access
-                        if ($workspaceManager->isManager($role->getWorkspace(), $token)) {
+                        if ($workspaceManager->isManager($workspace, $token)) {
                             return false;
                         }
 
                         // Otherwise only allow modification of roles the current user owns
                         if (in_array($role->getName(), $token->getRoleNames())) {
+                            return false;
+                        }
+                    }
+
+                    // If public registration is enabled and user try to get the default role, grant access
+                    if ($workspace->getSelfRegistration() && $workspace->getDefaultRole()) {
+                        if ($workspace->getDefaultRole()->getId() === $role->getId()) {
                             return false;
                         }
                     }
