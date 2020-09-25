@@ -73,7 +73,6 @@ class TransferProvider implements LoggerAwareInterface
      * @param string      $mimeType
      * @param string|null $logFile
      * @param array       $options  (currently used to pass the workspace so it' an entity but we might improve it later with an array of parameters)
-     * @param array       $extra
      *
      * @return array
      */
@@ -257,12 +256,7 @@ class TransferProvider implements LoggerAwareInterface
         return $jsonLogger->get();
     }
 
-    /**
-     * @param AbstractAction $action
-     *
-     * @return string
-     */
-    public function getActionName(AbstractAction $action)
+    public function getActionName(AbstractAction $action): string
     {
         return $action->getAction()[0].'_'.$action->getAction()[1];
     }
@@ -306,8 +300,6 @@ class TransferProvider implements LoggerAwareInterface
      *
      * @param string $actionName
      * @param string $format
-     * @param array  $options
-     * @param array  $extra
      *
      * @return mixed|array
      */
@@ -344,8 +336,6 @@ class TransferProvider implements LoggerAwareInterface
      * Returns a list of available actions for a given format (mime type).
      *
      * @param string $format
-     * @param array  $options
-     * @param array  $extra
      *
      * @return array
      */
@@ -416,9 +406,9 @@ class TransferProvider implements LoggerAwareInterface
      */
     public function getAdapter($mimeTypes)
     {
-        $mimeTypes = explode(';', $mimeTypes);
+        $types = explode(';', $mimeTypes);
 
-        foreach ($mimeTypes as $mimeType) {
+        foreach ($types as $mimeType) {
             foreach ($this->adapters as $adapter) {
                 if (in_array(ltrim($mimeType), $adapter->getMimeTypes())) {
                     return $adapter;
@@ -452,8 +442,6 @@ class TransferProvider implements LoggerAwareInterface
 
     /**
      * Detect if encoding is UTF-8, ASCII, ISO-8859-1 or Windows-1252.
-     *
-     * @param $string
      *
      * @return bool|string
      */

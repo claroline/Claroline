@@ -3,39 +3,29 @@
 namespace Claroline\CoreBundle\API\Crud\File;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PublicFile
 {
-    /** @var ObjectManager */
-    private $om;
-
+    /** @var string */
+    private $filesDir;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var FileUtilities */
-    private $utils;
+    private $fileUtils;
 
     public function __construct(
         $filesDir,
-        SymfonyFileSystem $fileSystem,
-        ObjectManager $om,
-        $publicFilesDir,
         TokenStorageInterface $tokenStorage,
         FileUtilities $fileUtils
     ) {
         $this->filesDir = $filesDir;
-        $this->fileSystem = $fileSystem;
-        $this->om = $om;
-        $this->publicFilesDir = $publicFilesDir;
         $this->tokenStorage = $tokenStorage;
         $this->fileUtils = $fileUtils;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
         $publicFile = $event->getObject();
@@ -47,9 +37,9 @@ class PublicFile
             $tmpFile->getClientOriginalName();
         $directoryName = $this->fileUtils->getActiveDirectoryName();
         $size = filesize($tmpFile);
-        $mimeType = !method_exists($tmpFile, 'getClientMimeType') || !$tmpFile->getClientMimeType() ?
-            $tmpFile->getMimeType() :
-            $tmpFile->getClientMimeType();
+        $mimeType = !$tmpFile->getMimeType() && method_exists($tmpFile, 'getClientMimeType') ?
+            $tmpFile->getClientMimeType() :
+            $tmpFile->getMimeType();
         $extension = !method_exists($tmpFile, 'getClientOriginalExtension') || !$tmpFile->getClientOriginalExtension() ?
             $tmpFile->guessExtension() :
             $tmpFile->getClientOriginalExtension();
@@ -64,9 +54,8 @@ class PublicFile
         $publicFile->setCreationDate(new \DateTime());
         $publicFile->setUrl($url);
 
-        if ($this->tokenStorage->getToken() && $user = 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
-            $user = $this->tokenStorage->getToken()->getUser();
-            $publicFile->setCreator($user);
+        if (empty($publicFile->getCreator()) && $this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
+            $publicFile->setCreator($this->tokenStorage->getToken()->getUser());
         }
 
         $tmpFile->move($this->filesDir.DIRECTORY_SEPARATOR.$prefix, $hashName);

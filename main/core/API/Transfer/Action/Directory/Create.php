@@ -48,21 +48,18 @@ class Create extends AbstractAction
         //todo find a generic way to find the identifiers
         /** @var Workspace $workspace */
         $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
-        /** @var ResourceNode $parent */
-        $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
-
         if (!$workspace) {
             throw new \Exception('Workspace '.json_encode($data['workspace'])." doesn't exists.");
         }
 
-        $permissions = [
-            'open' => isset($data['open']) ? $data['open'] : false,
-            'edit' => isset($data['edit']) ? $data['edit'] : false,
-            'delete' => isset($data['delete']) ? $data['delete'] : false,
-            'administrate' => isset($data['administrate']) ? $data['administrate'] : false,
-            'export' => isset($data['export']) ? $data['export'] : false,
-            'copy' => isset($data['copy']) ? $data['copy'] : false,
-        ];
+        // get the parent of the new dirs
+        if (isset($data['directory'])) {
+            /** @var ResourceNode $parent */
+            $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $data['directory']['id']]);
+        } else {
+            /** @var ResourceNode $parent */
+            $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
+        }
 
         $roles = [];
         if (isset($data['user'])) {
@@ -106,6 +103,14 @@ class Create extends AbstractAction
             $roles[] = $workspace->getDefaultRole();
         }
 
+        $permissions = [
+            'open' => isset($data['open']) ? $data['open'] : false,
+            'edit' => isset($data['edit']) ? $data['edit'] : false,
+            'delete' => isset($data['delete']) ? $data['delete'] : false,
+            'administrate' => isset($data['administrate']) ? $data['administrate'] : false,
+            'export' => isset($data['export']) ? $data['export'] : false,
+            'copy' => isset($data['copy']) ? $data['copy'] : false,
+        ];
         if (isset($data['create'])) {
             $create = explode(',', $data['create']);
             $create = array_map(function ($type) {
@@ -132,11 +137,6 @@ class Create extends AbstractAction
             ],
             'rights' => $rights,
         ];
-
-        if (isset($data['directory'])) {
-            /** @var ResourceNode $parent */
-            $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $data['directory']['id']]);
-        }
 
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);

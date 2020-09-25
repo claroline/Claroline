@@ -51,21 +51,18 @@ class CreateOrUpdate extends AbstractAction
         //todo find a generic way to find the identifiers
         /** @var Workspace $workspace */
         $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
-        /** @var ResourceNode $parent */
-        $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
-
         if (!$workspace) {
             throw new \Exception('Workspace '.json_encode($data['workspace'])." doesn't exists.");
         }
 
-        $permissions = [
-            'open' => isset($data['open']) ? $data['open'] : false,
-            'edit' => isset($data['edit']) ? $data['edit'] : false,
-            'delete' => isset($data['delete']) ? $data['delete'] : false,
-            'administrate' => isset($data['administrate']) ? $data['administrate'] : false,
-            'export' => isset($data['export']) ? $data['export'] : false,
-            'copy' => isset($data['copy']) ? $data['copy'] : false,
-        ];
+        // get the parent of the new dirs
+        if (isset($data['directory'])) {
+            /** @var ResourceNode $parent */
+            $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $data['directory']['id']]);
+        } else {
+            /** @var ResourceNode $parent */
+            $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
+        }
 
         $roles = [];
         if (isset($data['user'])) {
@@ -108,6 +105,15 @@ class CreateOrUpdate extends AbstractAction
             $roles[] = $workspace->getDefaultRole();
         }
 
+        $permissions = [
+            'open' => isset($data['open']) ? $data['open'] : false,
+            'edit' => isset($data['edit']) ? $data['edit'] : false,
+            'delete' => isset($data['delete']) ? $data['delete'] : false,
+            'administrate' => isset($data['administrate']) ? $data['administrate'] : false,
+            'export' => isset($data['export']) ? $data['export'] : false,
+            'copy' => isset($data['copy']) ? $data['copy'] : false,
+        ];
+
         if (isset($data['create'])) {
             $create = explode(',', $data['create']);
             $create = array_map(function ($type) {
@@ -135,26 +141,26 @@ class CreateOrUpdate extends AbstractAction
             'rights' => $rights,
         ];
 
-        if (isset($data['directory'])) {
-            /** @var ResourceNode $parent */
-            $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $data['directory']['id']]);
+        // try to update an existing node
+        $resourceNode = null;
+        if (!empty($data['id'])) {
+            $dataResourceNode['id'] = $data['id'];
+
+            /** @var ResourceNode $resourceNode */
+            $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $data['id'], 'parent' => $parent]);
         }
 
-        /** @var ResourceNode $resourceNode */
-
-        //search for the node if it exists
-        $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['name' => $dataResourceNode['name'], 'parent' => $parent]);
-
         if ($resourceNode) {
-            $resourceNode = $this->serializer->deserialize($dataResourceNode, $resourceNode, []);
+            $resourceNode = $this->serializer->deserialize($dataResourceNode, $resourceNode);
         } else {
             $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);
             $resource = $this->crud->create(Directory::class, []);
             $resource->setResourceNode($resourceNode);
-            $resourceNode->setParent($parent);
-            $resourceNode->setWorkspace($parent->getWorkspace());
             $this->om->persist($resource);
         }
+
+        $resourceNode->setParent($parent);
+        $resourceNode->setWorkspace($parent->getWorkspace());
 
         $this->om->persist($resourceNode);
     }
@@ -170,6 +176,10 @@ class CreateOrUpdate extends AbstractAction
             '$schema' => 'http:\/\/json-schema.org\/draft-04\/schema#',
             'type' => 'object',
             'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'description' => $this->translator->trans('directory_id', [], 'transfer'),
+                ],
                 'name' => [
                     'type' => 'string',
                     'description' => $this->translator->trans('directory_name', [], 'transfer'),

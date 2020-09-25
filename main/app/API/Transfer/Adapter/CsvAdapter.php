@@ -13,9 +13,6 @@ class CsvAdapter implements AdapterInterface
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -25,8 +22,7 @@ class CsvAdapter implements AdapterInterface
      * Create a php array object from the schema according to the data passed on.
      * Each line is a new object.
      *
-     * @param string      $content
-     * @param Explanation $explanation
+     * @param string $content
      *
      * @return array
      */
@@ -58,14 +54,8 @@ class CsvAdapter implements AdapterInterface
 
     /**
      * Build an object from an array of headers and properties path.
-     *
-     * @param array       $properties
-     * @param array       $headers
-     * @param Explanation $explanation
-     *
-     * @return array
      */
-    private function buildObjectFromLine(array $properties, array $headers, Explanation $explanation)
+    private function buildObjectFromLine(array $properties, array $headers, Explanation $explanation): array
     {
         $object = [];
 
@@ -86,15 +76,12 @@ class CsvAdapter implements AdapterInterface
     /**
      * Build an object from an array of headers and properties path.
      *
-     * @param Property $property
-     * @param array    &$object
-     * @param mixed    $value
+     * @param mixed $value
      *
      * @return array
      */
     private function addPropertyToObject(Property $property, array &$object, $value)
     {
-        $formattedValue = $value;
         $propertyName = $property->getName();
         $types = !is_array($property->getType()) ? [$property->getType()] : $property->getType();
 
@@ -166,17 +153,18 @@ class CsvAdapter implements AdapterInterface
                 $formattedValue = (int) $value;
             } elseif (in_array('boolean', $types)) {
                 $formattedValue = (bool) $value;
+            } elseif (in_array('string', $types) && empty($value)) {
+                $formattedValue = '';
             }
         }
 
-        return $value;
+        return $formattedValue;
     }
 
     /**
      * Returns the property of the object according to the path for the csv export.
      *
-     * @param \stdClass $object
-     * @param string    $path
+     * @param string $path
      *
      * @return string
      */

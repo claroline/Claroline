@@ -110,9 +110,6 @@ services:
     Claroline\CoreBundle\API\Crud\File\PublicFile:
         arguments:
             - '%claroline.param.files_directory%'
-            - '@filesystem'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '%claroline.param.public_files_directory%'
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
         tags:

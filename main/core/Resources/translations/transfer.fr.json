@@ -16,6 +16,7 @@
     "schema_required_properties": "Uniquement les colonnes requises",
     "one_of_field_list": "Une des colonnes suivantes :",
 
+    "directory_id": "L'id du dossier",
     "directory_name": "Le nom du répertoire",
     "directory_open": "Le droit d'ouverture [default: 0 (faux)]",
     "directory_delete": "Le droit de suppression [default: 0 (faux)]",
