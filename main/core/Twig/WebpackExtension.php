@@ -19,20 +19,14 @@ class WebpackExtension extends AbstractExtension
 {
     private $assetExtension;
     private $environment;
-    private $rootDir;
+    private $projectDir;
     private $assetCache;
 
-    /**
-     * WebpackExtension constructor.
-     *
-     * @param string $environment
-     * @param string $rootDir
-     */
-    public function __construct(AssetExtension $extension, $environment, $rootDir)
+    public function __construct(AssetExtension $extension, string $environment, string $projectDir)
     {
         $this->assetExtension = $extension;
         $this->environment = $environment;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     public function getFunctions()
@@ -88,7 +82,7 @@ class WebpackExtension extends AbstractExtension
                 $assetFile = 'dev';
             }
 
-            $assetFile = "{$this->rootDir}/../webpack-{$assetFile}.json";
+            $assetFile = "{$this->projectDir}/webpack-{$assetFile}.json";
 
             if (!file_exists($assetFile)) {
                 throw new \Exception(sprintf('Cannot find webpack generated assets file(s). Make sure you '.'have ran webpack with assets-webpack-plugin enabled'));

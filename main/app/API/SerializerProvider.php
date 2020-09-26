@@ -21,14 +21,11 @@ class SerializerProvider
 
     /**
      * Injects Serializer service.
-     *
-     * @param ObjectManager $om
-     * @param string        $rootDir
      */
-    public function __construct(ObjectManager $om, $rootDir)
+    public function __construct(ObjectManager $om, string $rootDir)
     {
         $this->om = $om;
-        $this->rootDir = $rootDir.'/..';
+        $this->rootDir = $rootDir;
         $this->baseUri = 'https://github.com/claroline/Distribution/tree/master';
     }
 
@@ -103,9 +100,7 @@ class SerializerProvider
             }
         }
 
-        throw new \Exception(
-            sprintf('No serializer found for class "%s" Maybe you forgot to add the "claroline.serializer" tag to your serializer.', is_string($object) ? $object : get_class($object))
-        );
+        throw new \Exception(sprintf('No serializer found for class "%s" Maybe you forgot to add the "claroline.serializer" tag to your serializer.', is_string($object) ? $object : get_class($object)));
     }
 
     /**

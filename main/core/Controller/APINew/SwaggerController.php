@@ -35,15 +35,6 @@ class SwaggerController
     /** @var string */
     private $rootDir;
 
-    /**
-     * SwaggerController constructor.
-     *
-     * @param Finder          $routerFinder
-     * @param Documentator    $documentator
-     * @param SchemaProvider  $schemaProvider
-     * @param PlatformManager $platformManager
-     * @param string          $rootDir
-     */
     public function __construct(
         Finder $routerFinder,
         Documentator $documentator,
@@ -55,7 +46,7 @@ class SwaggerController
         $this->documentator = $documentator;
         $this->schemaProvider = $schemaProvider;
         $this->platformManager = $platformManager;
-        $this->rootDir = $rootDir.'/..';
+        $this->rootDir = $rootDir;
     }
 
     /**

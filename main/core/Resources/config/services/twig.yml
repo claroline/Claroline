@@ -25,4 +25,4 @@ services:
        arguments:
            - '@twig.extension.assets'
            - '%kernel.environment%'
-           - '%kernel.project_dir%/app'
+           - '%kernel.project_dir%'

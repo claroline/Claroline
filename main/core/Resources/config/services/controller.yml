@@ -192,7 +192,7 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\LoggerController:
         arguments:
-          - '%claroline.param.log_dir%'
+          - '%kernel.logs_dir%'
 
     Claroline\CoreBundle\Controller\APINew\ObjectLockController:
         arguments:
@@ -216,7 +216,7 @@ services:
           - '@Claroline\AppBundle\Routing\Documentator'
           - '@Claroline\AppBundle\API\SchemaProvider'
           - '@Claroline\AppBundle\Manager\PlatformManager'
-          - '%kernel.project_dir%/app'
+          - '%kernel.project_dir%'
 
     Claroline\CoreBundle\Controller\APINew\TransferController:
         arguments:

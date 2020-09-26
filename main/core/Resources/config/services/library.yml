@@ -86,7 +86,7 @@ services:
     Claroline\CoreBundle\Library\Mailing\Mailer:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '%kernel.project_dir%/app'
+            - '%kernel.logs_dir%'
 
     Claroline\CoreBundle\Library\Mailing\Client\SwiftMailer:
         tags: ['claroline.mailing']

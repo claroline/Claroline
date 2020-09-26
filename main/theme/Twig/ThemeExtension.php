@@ -26,25 +26,20 @@ class ThemeExtension extends AbstractExtension
     /** @var PlatformConfigurationHandler */
     private $config;
     /** @var string */
-    private $rootDir;
+    private $projectDir;
     /** @var array */
     private $assetCache;
 
-    /**
-     * ThemeExtension constructor.
-     *
-     * @param string $rootDir
-     */
     public function __construct(
         AssetExtension $extension,
         ThemeManager $themeManager,
         PlatformConfigurationHandler $config,
-        $rootDir)
+        string $projectDir)
     {
         $this->assetExtension = $extension;
         $this->themeManager = $themeManager;
         $this->config = $config;
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     public function getName()
@@ -88,7 +83,7 @@ class ThemeExtension extends AbstractExtension
     private function getThemeAssets()
     {
         if (!$this->assetCache) {
-            $assetFile = "{$this->rootDir}/../theme-assets.json";
+            $assetFile = "{$this->projectDir}/theme-assets.json";
 
             if (!file_exists($assetFile)) {
                 throw new \Exception(sprintf('Cannot find theme generated assets file(s). Make sure you have built them.'));

@@ -16,23 +16,23 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class Mailer
 {
-    private $mailer;
     private $ch;
-    private $rootDir;
+    private $clients = [];
+    private $logDir;
 
     public function __construct(
         PlatformConfigurationHandler $ch,
-        $rootDir
+        $logDir
     ) {
         $this->ch = $ch;
-        $this->rootDir = $rootDir;
+        $this->logDir = $logDir;
         $this->clients = [];
     }
 
     public function send(Message $message)
     {
         $client = $this->getClient();
-        $rightsLog = $this->rootDir.'/logs/email.log';
+        $rightsLog = $this->logDir.'/email.log';
         $logger = FileLogger::get($rightsLog);
 
         if (empty($message->getAttribute('to')) && empty($message->getAttribute('bcc'))) {
