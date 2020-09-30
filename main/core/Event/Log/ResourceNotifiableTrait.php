@@ -15,8 +15,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 trait ResourceNotifiableTrait
 {
-    use ResourceNotifiableTrait;
-
     /**
      * Get if event is allowed to create notification or not.
      *
