@@ -15,7 +15,7 @@
         "friendsofphp/php-cs-fixer": "^2.15",
         "mockery/mockery": "^1.2",
         "mikey179/vfsstream": "1.6.4",
-        "phpmd/phpmd": "@stable",
+        "phpmd/phpmd": "^2.9.1",
         "symfony/phpunit-bridge": "^4.4"
     },
     "scripts": {
