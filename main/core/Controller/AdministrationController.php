@@ -67,7 +67,7 @@ class AdministrationController
      */
     public function openAction()
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
+        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoleNames());
         if (0 === count($tools)) {
             throw new AccessDeniedException();
         }
@@ -128,7 +128,7 @@ class AdministrationController
      */
     public function listToolsAction()
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
+        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoleNames());
 
         return new JsonResponse([
             'tools' => array_values(array_map(function (AdminTool $tool) {

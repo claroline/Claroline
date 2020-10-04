@@ -8,7 +8,6 @@ import {constants} from '#/main/app/content/form/constants'
 const DataFormProperty = {
   propTypes: merge({}, DataProperty.propTypes, {
     // form configuration
-    placeholder: T.any,
     help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     hideLabel: T.bool,
     displayed: T.oneOfType([

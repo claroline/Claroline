@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-import {Course as CourseTypes} from '#/plugin/cursus/course/prop-types'
+import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CourseCard} from '#/plugin/cursus/course/components/card'
 
 const CourseDisplay = (props) => props.data ?

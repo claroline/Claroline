@@ -13,8 +13,8 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -25,13 +25,12 @@ use Claroline\CoreBundle\Exception\AddRoleException;
 use Claroline\CoreBundle\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Claroline\CoreBundle\Repository\GroupRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\GroupRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -64,16 +63,6 @@ class RoleManager implements LoggerAwareInterface
     /** @var GroupRepository */
     private $groupRepo;
 
-    /**
-     * Constructor.
-     *
-     * @param ObjectManager                $om
-     * @param StrictDispatcher             $dispatcher
-     * @param Container                    $container
-     * @param PlatformConfigurationHandler $configHandler
-     * @param TemplateManager              $templateManager
-     * @param Crud                         $crud
-     */
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
@@ -96,10 +85,9 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param string    $name
-     * @param string    $translationKey
-     * @param Workspace $workspace
-     * @param bool      $isReadOnly
+     * @param string $name
+     * @param string $translationKey
+     * @param bool   $isReadOnly
      *
      * @return Role
      */
@@ -156,8 +144,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return Role
      */
     public function createUserRole(User $user)
@@ -184,7 +170,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Role   $role
      * @param string $username
      */
     public function renameUserRole(Role $role, $username)
@@ -197,9 +182,7 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param AbstractRoleSubject $ars
-     * @param Role                $role
-     * @param bool                $sendMail
+     * @param bool $sendMail
      *
      * @throws AddRoleException
      */
@@ -222,10 +205,6 @@ class RoleManager implements LoggerAwareInterface
         }
     }
 
-    /**
-     * @param AbstractRoleSubject $ars
-     * @param Role                $role
-     */
     public function dissociateRole(AbstractRoleSubject $ars, Role $role)
     {
         if ($ars->hasRole($role->getName())) {
@@ -234,9 +213,8 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param AbstractRoleSubject $ars
-     * @param array               $roles
-     * @param bool                $sendMail
+     * @param array $roles
+     * @param bool  $sendMail
      */
     public function associateRoles(AbstractRoleSubject $ars, $roles, $sendMail = false)
     {
@@ -249,7 +227,6 @@ class RoleManager implements LoggerAwareInterface
 
     /**
      * @param AbstractRoleSubject[] $subjects
-     * @param Role                  $role
      */
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
@@ -259,8 +236,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Role $role
-     *
      * @throws RoleReadOnlyException
      */
     public function remove(Role $role)
@@ -274,8 +249,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Workspace $workspace
-     *
      * @return Role[]
      */
     public function getWorkspaceRoles(Workspace $workspace)
@@ -284,37 +257,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Workspace $workspace
-     *
-     * @return Role[]
-     */
-    public function getWorkspaceConfigurableRoles(Workspace $workspace)
-    {
-        /** @var Role[] $roles */
-        $roles = $this->roleRepo->findBy(['workspace' => $workspace]);
-        $configurableRoles = [];
-
-        foreach ($roles as $role) {
-            if ($role->getName() !== 'ROLE_WS_MANAGER_'.$workspace->getUuid()) {
-                $configurableRoles[] = $role;
-            }
-        }
-
-        return array_merge(
-            $configurableRoles,
-            $this->roleRepo->findBy(['name' => 'ROLE_ANONYMOUS']),
-            $this->roleRepo->findBy(['name' => 'ROLE_USER'])
-        );
-    }
-
-    public function getWorkspaceNonAdministrateRoles(Workspace $workspace)
-    {
-        return $this->roleRepo->findByWorkspaceNonAdministrate($workspace);
-    }
-
-    /**
-     * @param Workspace $workspace
-     *
      * @return Role
      */
     public function getCollaboratorRole(Workspace $workspace)
@@ -323,8 +265,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Workspace $workspace
-     *
      * @return Role
      */
     public function getManagerRole(Workspace $workspace)
@@ -333,8 +273,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return Role[]
      */
     public function getPlatformRoles(User $user)
@@ -343,24 +281,11 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param User      $user
-     * @param Workspace $workspace
-     *
      * @return Role[]
      */
     public function getWorkspaceRolesForUser(User $user, Workspace $workspace)
     {
         return $this->roleRepo->findWorkspaceRolesForUser($user, $workspace);
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return Role[]
-     */
-    public function getWorkspaceRolesByUser(User $user)
-    {
-        return $this->roleRepo->findWorkspaceRolesByUser($user);
     }
 
     /**
@@ -385,8 +310,7 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param string    $key       The translation key
-     * @param Workspace $workspace
+     * @param string $key - The translation key
      *
      * @return Role
      */
@@ -398,9 +322,6 @@ class RoleManager implements LoggerAwareInterface
         return $role;
     }
 
-    /**
-     * @param \Claroline\CoreBundle\Entity\Role $role
-     */
     public function edit(Role $role)
     {
         $this->om->persist($role);
@@ -444,9 +365,6 @@ class RoleManager implements LoggerAwareInterface
 
     /**
      * Returns if a role can be added to a RoleSubject.
-     *
-     * @param AbstractRoleSubject $ars
-     * @param Role                $role
      *
      * @return bool
      */
@@ -505,8 +423,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Role $role
-     *
      * @return bool
      */
     public function countUsersByRoleIncludingGroup(Role $role)
@@ -534,30 +450,11 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Workspace $workspace
-     *
      * @return Role[]
      */
     public function getWorkspaceRoleWithToolAccess(Workspace $workspace)
     {
         return $this->roleRepo->findWorkspaceRoleWithToolAccess($workspace);
-    }
-
-    public function getWorkspaceRoleByNameOrTranslationKey(
-        Workspace $workspace,
-        $translationKey,
-        $executeQuery = true
-    ) {
-        return $this->roleRepo->findWorkspaceRoleByNameOrTranslationKey(
-            $workspace,
-            $translationKey,
-            $executeQuery
-        );
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     public function checkIntegrity($workspaceIdx = 0, $userIdx = 0)
@@ -694,7 +591,8 @@ class RoleManager implements LoggerAwareInterface
             $operationExecuted = true;
         }
 
-        if ($creator = $workspace->getCreator()) {
+        $creator = $workspace->getCreator();
+        if ($creator) {
             $creator->addRole($manager);
         }
 

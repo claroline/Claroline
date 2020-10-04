@@ -283,7 +283,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $workspace = new Workspace();
         $workspace->setName('w1');
         $workspace->setCode('abc');
-        $workspace->setGuid('abc123');
+        $workspace->setUuid('abc123');
         $workspace->setCreator($user);
 
         $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
@@ -294,7 +294,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $node->setCreator($user);
         $node->setResourceType($type);
         $node->setWorkspace($workspace);
-        $node->setGuid($name);
+        $node->setUuid($name);
 
         $this->om->persist($user);
         $this->om->persist($workspace);

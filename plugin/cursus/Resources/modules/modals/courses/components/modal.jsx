@@ -8,7 +8,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {CourseCard} from '#/plugin/cursus/course/components/card'
-import {Course as CourseTypes} from '#/plugin/cursus/course/prop-types'
+import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 
 import {selectors} from '#/plugin/cursus/modals/courses/store'
 

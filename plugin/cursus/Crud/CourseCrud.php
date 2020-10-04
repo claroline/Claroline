@@ -33,13 +33,6 @@ class CourseCrud
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * CourseCrud constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param TokenStorageInterface    $tokenStorage
-     * @param ObjectManager            $om
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
@@ -50,20 +43,18 @@ class CourseCrud
         $this->om = $om;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
+        /** @var User $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
         /** @var Course $course */
         $course = $event->getObject();
-        if ($course->getOrganizations()->isEmpty()) {
-            // If Course is associated to no organization, initializes it with organizations administrated by authenticated user
-            // or at last resort with default organizations
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
 
-            if ('anon.' !== $user && !empty($user->getMainOrganization())) {
+        // If Course is associated to no organization, initializes it with organizations administrated by authenticated user
+        // or at last resort with default organizations
+        if ($course->getOrganizations()->isEmpty()) {
+            if ($user instanceof User && !empty($user->getMainOrganization())) {
                 $course->addOrganization($user->getMainOrganization());
             } else {
                 // Initializes Course with default organizations if no others organization is found
@@ -75,12 +66,27 @@ class CourseCrud
                 }
             }
         }
+
+        $course->setCreatedAt(new \DateTime());
+        $course->setUpdatedAt(new \DateTime());
+
+        if (empty($course->getCreator()) && $user instanceof User) {
+            $course->setCreator($user);
+        }
     }
 
     public function postCreate(CreateEvent $event)
     {
         $event = new LogCourseCreateEvent($event->getObject());
         $this->eventDispatcher->dispatch($event, 'log');
+    }
+
+    public function preUpdate(UpdateEvent $event)
+    {
+        /** @var Course $course */
+        $course = $event->getObject();
+
+        $course->setUpdatedAt(new \DateTime());
     }
 
     public function postUpdate(UpdateEvent $event)

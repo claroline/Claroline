@@ -10,7 +10,7 @@ use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;

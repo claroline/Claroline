@@ -42,7 +42,7 @@
   "evidence_narrative_workspace_participated": "L'espace d'activités a été complété le %date%",
   "evidence_narrative_add_group": "Groupe assigné par %doer% le %date%",
   "evidence_narrative_add_role": "Role assigné par %doer% le %date%",
-  "resource_passed": "Resource terminée",
+  "resource_passed": "Ressource terminée",
   "resource_participated": "Participation à la ressource",
   "resource_score_above": "Score de la ressource supérieur à ...",
   "resource_completed_above": "Resource effectuée à ... %",

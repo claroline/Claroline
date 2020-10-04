@@ -13,7 +13,7 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,16 +54,6 @@ class AnnouncementController
     /** @var RoleRepository */
     private $roleRepo;
 
-    /**
-     * AnnouncementController constructor.
-     *
-     * @param AnnouncementManager           $manager
-     * @param AnnouncementSerializer        $serializer
-     * @param Crud                          $crud
-     * @param ObjectManager                 $om
-     * @param FinderProvider                $finder
-     * @param AuthorizationCheckerInterface $authorization
-     */
     public function __construct(
         AnnouncementManager $manager,
         AnnouncementSerializer $serializer,
@@ -91,13 +81,8 @@ class AnnouncementController
      * Creates a new announce.
      *
      * @Route("/", name="claro_announcement_create", methods={"POST"})
-     *
-     * @param AnnouncementAggregate $aggregate
-     * @param Request               $request
-     *
-     * @return JsonResponse
      */
-    public function createAction(AnnouncementAggregate $aggregate, Request $request)
+    public function createAction(AnnouncementAggregate $aggregate, Request $request): JsonResponse
     {
         $this->checkPermission('CREATE-ANNOUNCE', $aggregate->getResourceNode(), [], true);
         $data = $this->decodeRequest($request);
@@ -123,14 +108,8 @@ class AnnouncementController
      *      class="ClarolineAnnouncementBundle:Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param AnnouncementAggregate $aggregate
-     * @param Announcement          $announcement
-     * @param Request               $request
-     *
-     * @return JsonResponse
      */
-    public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
+    public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
@@ -154,13 +133,8 @@ class AnnouncementController
      *      class="ClarolineAnnouncementBundle:Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param AnnouncementAggregate $aggregate
-     * @param Announcement          $announcement
-     *
-     * @return JsonResponse
      */
-    public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement)
+    public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
@@ -178,14 +152,8 @@ class AnnouncementController
      *      class="ClarolineAnnouncementBundle:Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param AnnouncementAggregate $aggregate
-     * @param Announcement          $announcement
-     * @param Request               $request
-     *
-     * @return JsonResponse
      */
-    public function validateSendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
+    public function validateSendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
         $ids = $request->query->all()['filters']['roles'];
@@ -227,14 +195,8 @@ class AnnouncementController
      *      class="ClarolineAnnouncementBundle:Announcement",
      *      options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param AnnouncementAggregate $aggregate
-     * @param Announcement          $announcement
-     * @param Request               $request
-     *
-     * @return JsonResponse
      */
-    public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
+    public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 

@@ -11,6 +11,7 @@ const dataType = {
     label: trans('location', {}, 'data'),
     description: trans('location_desc', {}, 'data')
   },
+  render: (raw) => raw ? raw.name : null,
   components: {
     details: LocationDisplay,
     input: LocationInput

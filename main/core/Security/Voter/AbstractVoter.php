@@ -14,9 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -44,18 +42,13 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     /** @var ContainerInterface */
     protected $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
     /**
-     * @param TokenInterface $token
-     * @param mixed          $object
-     * @param array          $attributes
+     * @param mixed $object
      *
      * @return int
      */
@@ -179,13 +172,8 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return true;
     }
 
-    /***************************/
-    /* COMMON UTILITIES METHOD */
-    /***************************/
-
     /**
-     * @param TokenInterface $token
-     * @param string         $name
+     * @param string $name
      *
      * @return bool
      */
@@ -196,23 +184,11 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
           ->getRepository('ClarolineCoreBundle:Tool\AdminTool')
           ->findOneBy(['name' => $name]);
 
-        $roles = $tool->getRoles();
-        $tokenRoles = $token->getRoles();
-
-        foreach ($tokenRoles as $tokenRole) {
-            foreach ($roles as $role) {
-                if ($role->getRole() === $tokenRole->getRole()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->isGranted('OPEN', $tool);
     }
 
     /**
-     * @param TokenInterface $token
-     * @param User|Group     $object
+     * @param mixed $object
      *
      * @return bool
      */
@@ -234,44 +210,27 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return false;
     }
 
-    /**
-     * Kinda like a shortcut.
-     */
-    public function isAdmin(TokenInterface $token)
+    protected function isOrganizationMember(TokenInterface $token, $object)
     {
-        return $this->isGranted('ROLE_ADMIN');
-    }
+        if ($token->getUser() instanceof User) {
+            $userOrganizations = $token->getUser()->getOrganizations();
+            $objectOrganizations = $object->getOrganizations();
 
-    protected function getWorkspaceToolPerm(Workspace $workspace, $toolName, TokenInterface $token)
-    {
-        if ($this->container->get('claroline.manager.workspace_manager')->isManager($workspace, $token)) {
-            //create + edit as mask
-            return 3;
-        }
-
-        $roles = array_map(function ($role) {
-            return $role->getRole();
-        }, $token->getRoles());
-
-        $perm = 0;
-
-        $finder = $this->container->get('Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder');
-        $ot = $finder->findOneBy([
-          'tool' => $toolName,
-          'workspace' => $workspace->getUuid(),
-        ]);
-
-        $rights = $ot->getRights();
-
-        foreach ($rights as $right) {
-            $role = $right->getRole();
-
-            if (in_array($role->getName(), $roles)) {
-                $perm = $right->getMask() | $perm;
+            foreach ($userOrganizations as $userOrganization) {
+                foreach ($objectOrganizations as $objectOrganization) {
+                    if ($objectOrganization === $userOrganization) {
+                        return true;
+                    }
+                }
             }
         }
 
-        return $perm;
+        return false;
+    }
+
+    protected function isAdmin(TokenInterface $token)
+    {
+        return $this->isGranted('ROLE_ADMIN');
     }
 
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)

@@ -151,6 +151,9 @@ services:
 
     Claroline\CoreBundle\API\Serializer\User\LocationSerializer:
         tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\User\GroupSerializer:
         tags: [claroline.serializer]

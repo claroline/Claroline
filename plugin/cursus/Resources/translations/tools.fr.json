@@ -1,5 +1,4 @@
 {
-    "claroline_cursus_tool": "Gestion des formations",
-    "claroline_session_events_tool": "Gestion des séances",
-    "cursus": "Formations"
+    "training_events": "Séances de formation",
+    "trainings": "Formations"
 }

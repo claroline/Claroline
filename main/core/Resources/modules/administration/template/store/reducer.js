@@ -8,7 +8,9 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/administration/template/store/selectors'
 
 const reducer = combineReducers({
-  templates: makeListReducer(selectors.STORE_NAME + '.templates', {}, {
+  templates: makeListReducer(selectors.STORE_NAME + '.templates', {
+    sortBy: {property: 'name', direction: 1}
+  }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.template']: () => true,
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true

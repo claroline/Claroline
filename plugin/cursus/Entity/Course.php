@@ -11,34 +11,25 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Id;
-use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_cursusbundle_course")
  * @DoctrineAssert\UniqueEntity("code")
  */
-class Course extends AbstractCourseSession
+class Course extends AbstractTraining
 {
-    use Id;
-    use Uuid;
+    use Hidden;
 
     /**
-     * @ORM\Column()
-     * @Assert\NotBlank()
-     */
-    private $title;
-
-    /**
-     * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(length=128, unique=true)
      *
      * @var string
@@ -55,7 +46,7 @@ class Course extends AbstractCourseSession
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Course", mappedBy="parent")
-     * @ORM\OrderBy({"displayOrder" = "ASC"})
+     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Course[]|ArrayCollection
      */
@@ -78,22 +69,26 @@ class Course extends AbstractCourseSession
     private $learnerRoleName;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CursusBundle\Entity\CourseSession",
-     *     mappedBy="course"
-     * )
+     * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Session", mappedBy="course")
+     *
+     * @var Session[]
      */
     private $sessions;
+
+    /**
+     * If true, automatically register users to the default session of the training children
+     * when registering to a session of this training.
+     *
+     * @ORM\Column(type="boolean", options={"default" = 0})
+     *
+     * @var bool
+     */
+    private $propagateRegistration = false;
 
     /**
      * @ORM\Column(name="session_duration", nullable=false, type="integer", options={"default" = 1})
      */
     private $defaultSessionDuration = 1;
-
-    /**
-     * @ORM\Column(name="with_session_event", type="boolean", options={"default" = 1})
-     */
-    private $withSessionEvent = true;
 
     /**
      * @ORM\ManyToMany(
@@ -113,16 +108,6 @@ class Course extends AbstractCourseSession
         $this->sessions = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->children = new ArrayCollection();
-    }
-
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    public function setTitle($title)
-    {
-        $this->title = $title;
     }
 
     public function getSlug()
@@ -165,6 +150,16 @@ class Course extends AbstractCourseSession
         $this->learnerRoleName = $learnerRoleName;
     }
 
+    public function getPropagateRegistration(): bool
+    {
+        return $this->propagateRegistration;
+    }
+
+    public function setPropagateRegistration(bool $propagate)
+    {
+        $this->propagateRegistration = $propagate;
+    }
+
     public function getSessions()
     {
         return $this->sessions;
@@ -192,16 +187,6 @@ class Course extends AbstractCourseSession
     public function setDefaultSessionDuration($defaultSessionDuration)
     {
         $this->defaultSessionDuration = $defaultSessionDuration;
-    }
-
-    public function getWithSessionEvent()
-    {
-        return $this->withSessionEvent;
-    }
-
-    public function setWithSessionEvent($withSessionEvent)
-    {
-        $this->withSessionEvent = $withSessionEvent;
     }
 
     public function getOrganizations()
@@ -263,6 +248,6 @@ class Course extends AbstractCourseSession
 
     public function __toString()
     {
-        return $this->getTitle().' ['.$this->getCode().']';
+        return $this->getName().' ['.$this->getCode().']';
     }
 }

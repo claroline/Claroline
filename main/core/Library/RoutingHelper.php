@@ -9,6 +9,8 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RoutingHelper
 {
+    private $router;
+
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;

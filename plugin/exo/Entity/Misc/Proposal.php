@@ -2,11 +2,11 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Library\Model\ContentTrait;
-use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * Proposal.
@@ -27,7 +27,7 @@ class Proposal
 
     use UuidTrait;
 
-    use OrderTrait;
+    use Order;
 
     use ContentTrait;
 
@@ -67,8 +67,6 @@ class Proposal
 
     /**
      * Set InteractionMatching.
-     *
-     * @param MatchQuestion $interactionMatching
      */
     public function setInteractionMatching(MatchQuestion $interactionMatching)
     {

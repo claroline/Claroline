@@ -42,7 +42,7 @@ class Persister
         $workspace->setName($username);
         $workspace->setCreator($user);
         $workspace->setCode($username);
-        $workspace->setGuid($username);
+        $workspace->setUuid($username);
         $this->om->persist($workspace);
         $user->setPersonalWorkspace($workspace);
 
@@ -63,7 +63,7 @@ class Persister
         $node->setCreator($creator);
         $node->setResourceType($this->lessonType);
         $node->setWorkspace($creator->getPersonalWorkspace());
-        $node->setGuid(time());
+        $node->setUuid(time());
 
         $lesson->setResourceNode($node);
 

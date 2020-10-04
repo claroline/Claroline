@@ -8,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
-import {Location as LocationType} from '#/main/core/user/prop-types'
+import {Location as LocationTypes} from '#/main/core/user/prop-types'
 import {MODAL_LOCATIONS} from '#/main/core/modals/locations'
 
 const LocationsButton = props =>
@@ -44,6 +44,7 @@ const LocationInput = props => {
       <Fragment>
         <LocationCard
           data={props.value}
+          size="xs"
           actions={[
             {
               name: 'delete',
@@ -84,7 +85,7 @@ const LocationInput = props => {
 }
 
 implementPropTypes(LocationInput, DataInputTypes, {
-  value: T.shape(LocationType.propTypes),
+  value: T.shape(LocationTypes.propTypes),
   picker: T.shape({
     title: T.string
   })

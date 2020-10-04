@@ -12,82 +12,57 @@
 namespace Claroline\CursusBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\CursusBundle\Entity\CourseSessionUser;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Doctrine\ORM\QueryBuilder;
 
 class SessionUserFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return CourseSessionUser::class;
+        return SessionUser::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $userJoin = false;
+        $sessionJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'course':
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
+                    $qb->join('s.course', 'c');
+                    $qb->andWhere("c.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'session':
-                    $qb->join('obj.session', 's');
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
                     $qb->andWhere("s.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
                 case 'user':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
+                    $qb->join('obj.user', 'u');
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'user.firstName':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
-                    $qb->andWhere('u.firstName LIKE :firstName');
-                    $qb->setParameter('firstName', '%'.strtoupper($filterValue).'%');
-                    break;
-                case 'user.lastName':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
-                    $qb->andWhere('u.lastName LIKE :lastName');
-                    $qb->setParameter('lastName', '%'.strtoupper($filterValue).'%');
-                    break;
-                case 'type':
-                    $qb->andWhere("obj.userType = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                default:
-                    if (is_bool($filterValue)) {
-                        $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                        $qb->setParameter($filterName, $filterValue);
-                    } else {
-                        $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                        $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-                    }
-            }
-        }
-        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
-            $sortByProperty = $sortBy['property'];
-            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
-            switch ($sortByProperty) {
-                case 'user.firstName':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
+                case 'pending':
+                    if ($filterValue) {
+                        $qb->andWhere('(obj.confirmed = 0 OR obj.validated = 0)');
+                    } else {
+                        $qb->andWhere('(obj.confirmed = 1 AND obj.validated = 1)');
                     }
-                    $qb->orderBy('u.firstName', $sortByDirection);
                     break;
-                case 'user.lastName':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                    }
-                    $qb->orderBy('u.lastName', $sortByDirection);
-                    break;
+
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 

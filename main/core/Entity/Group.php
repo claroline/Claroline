@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\GroupRepository")
  * @ORM\Table(
  *      name="claro_group",
  *       uniqueConstraints={

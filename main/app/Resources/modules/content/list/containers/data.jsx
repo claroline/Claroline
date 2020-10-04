@@ -131,6 +131,7 @@ ListData.propTypes = {
    */
   delete: T.shape({
     url: T.oneOfType([T.string, T.array]).isRequired,
+    label: T.string,
     disabled: T.func, // receives the list of rows to delete
     displayed: T.func // receives the list of rows to delete
   }),

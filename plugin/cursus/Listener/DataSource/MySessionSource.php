@@ -3,8 +3,9 @@
 namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MySessionSource
@@ -29,11 +30,13 @@ class MySessionSource
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
+
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $options['hiddenFilters']['user'] = 'anon.' !== $user ? $user->getUuid() : null;
 
         $event->setData(
-            $this->finder->search(CourseSession::class, $options)
+            $this->finder->search(Session::class, $options)
         );
 
         $event->stopPropagation();

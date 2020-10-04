@@ -44,32 +44,22 @@ class AdministrationToolRepository extends ServiceEntityRepository
     /**
      * @return AdminTool[]
      */
-    public function findByRoles(array $roles)
+    public function findByRoles(array $rolesNames)
     {
-        $rolesNames = [];
-        $isAdmin = false;
+        $isAdmin = in_array('ROLE_ADMIN', $rolesNames);
 
-        foreach ($roles as $role) {
-            $rolesNames[] = $role->getRole();
+        $dql = '
+            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
+            LEFT JOIN tool.roles role
+            LEFT JOIN tool.plugin p
+            WHERE (
+                CONCAT(p.vendorName, p.bundleName) IN (:bundles)
+                OR tool.plugin IS NULL
+            )
+        ';
 
-            if ('ROLE_ADMIN' === $role->getRole()) {
-                $isAdmin = true;
-            }
-        }
-
-        if ($isAdmin) {
-            return $this->findAll();
-        } else {
-            $dql = '
-                SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
-                JOIN tool.roles role
-                LEFT JOIN tool.plugin p
-                WHERE role.name IN (:roleNames)
-                AND (
-                    CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                    OR tool.plugin IS NULL
-                )
-            ';
+        if (!$isAdmin) {
+            $dql .= ' AND role.name IN (:roleNames)';
         }
 
         $query = $this->_em->createQuery($dql);

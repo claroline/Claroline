@@ -89,7 +89,7 @@ class Paper
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $user;
 
@@ -141,11 +141,6 @@ class Paper
         return $this->number;
     }
 
-    /**
-     * Sets start date.
-     *
-     * @param \DateTime $start
-     */
     public function setStart(\DateTime $start)
     {
         $this->start = $start;
@@ -161,9 +156,6 @@ class Paper
         return $this->start;
     }
 
-    /**
-     * @param \Datetime $end
-     */
     public function setEnd($end)
     {
         $this->end = $end;
@@ -230,9 +222,6 @@ class Paper
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -246,9 +235,6 @@ class Paper
         return $this->exercise;
     }
 
-    /**
-     * @param Exercise $exercise
-     */
     public function setExercise(Exercise $exercise)
     {
         $this->exercise = $exercise;
@@ -405,8 +391,6 @@ class Paper
 
     /**
      * Adds an answer.
-     *
-     * @param Answer $answer
      */
     public function addAnswer(Answer $answer)
     {
@@ -418,8 +402,6 @@ class Paper
 
     /**
      * Removes an answer.
-     *
-     * @param Answer $answer
      */
     public function removeAnswer(Answer $answer)
     {

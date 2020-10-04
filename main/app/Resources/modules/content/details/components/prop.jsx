@@ -15,7 +15,7 @@ import {DataType as DataTypeTypes} from '#/main/app/data/types/prop-types'
 const DataDetailsField = props =>
   <div id={props.name} className={props.className}>
     {(!props.value && false !== props.value) &&
-      <span className="data-details-empty">{trans('empty_value')}</span>
+      <span className="data-details-empty">{props.placeholder || trans('empty_value')}</span>
     }
 
     {(props.value || false === props.value) && (props.definition.components.details ?
@@ -33,6 +33,7 @@ const DataDetailsField = props =>
 DataDetailsField.propTypes = {
   value: T.any,
   name: T.string.isRequired,
+  placeholder: T.any,
   type: T.string,
   label: T.string.isRequired,
   hideLabel: T.bool,

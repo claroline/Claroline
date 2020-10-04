@@ -12,8 +12,8 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Repository\GroupRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\GroupRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
@@ -44,16 +44,6 @@ class MessageSerializer
     /** @var WorkspaceRepository */
     private $workspaceRepo;
 
-    /**
-     * ParametersSerializer constructor.
-     *
-     * @param ObjectManager         $om
-     * @param TokenStorageInterface $tokenStorage
-     * @param MessageManager        $manager
-     * @param UserSerializer        $userSerializer
-     * @param GroupSerializer       $groupSerializer
-     * @param WorkspaceSerializer   $workspaceSerializer
-     */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
@@ -85,15 +75,7 @@ class MessageSerializer
         return 'message';
     }
 
-    /**
-     * Serializes a Message entity.
-     *
-     * @param Message $message
-     * @param array   $options
-     *
-     * @return array
-     */
-    public function serialize(Message $message, array $options = [])
+    public function serialize(Message $message, array $options = []): array
     {
         $userMessage = $this->getUserMessage($message);
 
@@ -144,16 +126,7 @@ class MessageSerializer
         return $data;
     }
 
-    /**
-     * Deserializes data into a Message entity.
-     *
-     * @param array   $data
-     * @param Message $message
-     * @param array   $options
-     *
-     * @return Message
-     */
-    public function deserialize($data, Message $message, array $options = [])
+    public function deserialize($data, Message $message, array $options = []): Message
     {
         $this->sipe('object', 'setObject', $data, $message);
         $this->sipe('content', 'setContent', $data, $message);

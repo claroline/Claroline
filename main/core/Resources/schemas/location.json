@@ -7,7 +7,7 @@
       "description": "The location id"
     },
     "meta": {
-      "type": ["object"],
+      "type": "object",
       "properties": {
         "type": {
           "type": "integer",
@@ -16,36 +16,41 @@
       }
     },
     "phone": {
-      "type": "string",
+      "type": ["null", "string"],
       "description": "The location phone"
     },
-    "street": {
-      "type": "string",
-      "description": "The location street"
-    },
-    "boxNumber": {
-      "type": "string",
-      "description": "The location box number"
-    },
-    "streetNumber": {
-      "type": "string",
-      "description": "The location street number"
-    },
-    "zipCode": {
-      "type": "string",
-      "description": "The location zip code"
-    },
-    "town": {
-      "type": "string",
-      "description": "The location town"
-    },
-    "country": {
-      "type": "string",
-      "description": "The location country"
+    "address": {
+      "type": "object",
+      "properties": {
+        "street1": {
+          "type": ["null", "string"],
+          "description": "The location street"
+        },
+        "street2": {
+          "type": ["null", "string"],
+          "description": "The location street (second part)"
+        },
+        "postalCode": {
+          "type": ["null", "string"],
+          "description": "The location zip code"
+        },
+        "city": {
+          "type": ["null", "string"],
+          "description": "The location city"
+        },
+        "state": {
+          "type": ["null", "string"],
+          "description": "The location state"
+        },
+        "country": {
+          "type": "string",
+          "description": "The location country"
+        }
+      }
     }
   },
   "claroline": {
-    "requiredAtCreation": ["name", "street", "streetNumber", "zipCode", "town", "country"],
+    "requiredAtCreation": ["name"],
     "ids":  ["id", "name"]
   }
 }

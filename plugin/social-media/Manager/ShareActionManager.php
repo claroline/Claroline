@@ -33,7 +33,7 @@ class ShareActionManager
     protected $shareActionRepository;
 
     /**
-     * @var \Claroline\CoreBundle\Repository\ResourceNodeRepository
+     * @var \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository
      */
     protected $resourceNodeRepository;
 
@@ -44,11 +44,6 @@ class ShareActionManager
 
     protected $router;
 
-    /**
-     * @param EntityManager                     $em
-     * @param WallItemManager                   $wallItemManager
-     * @param \Symfony\Component\Routing\Router $router
-     */
     public function __construct(EntityManager $em, WallItemManager $wallItemManager, Router $router)
     {
         $this->em = $em;

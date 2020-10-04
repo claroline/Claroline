@@ -7,7 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceSource

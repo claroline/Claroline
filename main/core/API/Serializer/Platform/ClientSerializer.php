@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

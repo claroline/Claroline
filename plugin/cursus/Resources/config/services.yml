@@ -1,5 +1,3 @@
-# This file contains only services that cannot be defined using annotations.
-
 imports:
     - { resource: services/finder.yml }
     - { resource: services/voter.yml }
@@ -8,12 +6,3 @@ imports:
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
-
-services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Claroline\CursusBundle\Configuration\PlatformDefaults:
-        tags: ['claroline.configuration']

@@ -1,21 +1,21 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {asset} from '#/main/app/config/asset'
 import {DataCard} from '#/main/app/data/components/card'
 
-import {locationTypes} from '#/main/core/administration/community/location/constants'
+import {getAddressString} from '#/main/app/data/types/address/utils'
 import {Location as LocationTypes} from '#/main/core/user/prop-types'
-
-// todo display address
-// todo display coords
 
 const LocationCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     icon="fa fa-location-arrow"
     title={props.data.name}
-    subtitle={locationTypes[props.data.type]}
+    subtitle={getAddressString(props.data.address, true)}
+    contentText={props.data.meta.description}
   />
 
 LocationCard.propTypes = {

@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Controller\Item;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,28 +21,15 @@ use UJM\ExoBundle\Serializer\UserSerializer;
  */
 class ShareController extends AbstractController
 {
-    /**
-     * @var UserRepository
-     */
+    /** @var UserRepository */
     private $userRepository;
 
-    /**
-     * @var UserSerializer
-     */
+    /** @var UserSerializer */
     private $userSerializer;
 
-    /**
-     * @var ShareManager
-     */
+    /** @var ShareManager */
     private $shareManager;
 
-    /**
-     * ShareController constructor.
-     *
-     * @param ObjectManager  $om
-     * @param UserSerializer $userSerializer
-     * @param ShareManager   $shareManager
-     */
     public function __construct(
         ObjectManager $om,
         UserSerializer $userSerializer,
@@ -58,13 +45,8 @@ class ShareController extends AbstractController
      *
      * @Route("", name="questions_share", methods={"POST"})
      * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param Request $request
-     * @param User    $user
-     *
-     * @return JsonResponse
      */
-    public function shareAction(Request $request, User $user)
+    public function shareAction(Request $request, User $user): JsonResponse
     {
         $errors = [];
 
@@ -84,17 +66,13 @@ class ShareController extends AbstractController
 
         if (!empty($errors)) {
             return new JsonResponse($errors, 422);
-        } else {
-            return new JsonResponse(null, 201);
         }
+
+        return new JsonResponse(null, 201);
     }
 
     /**
      * @Route("", name="question_share_update", methods={"DELETE"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function updateAction(Request $request)
     {
@@ -102,10 +80,6 @@ class ShareController extends AbstractController
 
     /**
      * @Route("", name="question_share_delete", methods={"DELETE"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function deleteAction(Request $request)
     {

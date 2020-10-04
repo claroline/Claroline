@@ -12,13 +12,13 @@
 namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CursusBundle\Entity\CourseSessionGroup;
+use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 
 class LogSessionGroupRegistrationEvent extends LogGenericEvent
 {
     const ACTION = 'course-session-group-registration';
 
-    public function __construct(CourseSessionGroup $sessionGroup)
+    public function __construct(SessionGroup $sessionGroup)
     {
         $session = $sessionGroup->getSession();
         $group = $sessionGroup->getGroup();
@@ -27,12 +27,11 @@ class LogSessionGroupRegistrationEvent extends LogGenericEvent
         $details['groupName'] = $group->getName();
         $details['sessionId'] = $session->getUuid();
         $details['sessionName'] = $session->getName();
-        $details['sessionCreationDate'] = $session->getCreationDate()->format('d/m/Y H:i:s');
         $details['courseId'] = $course->getUuid();
-        $details['courseTitle'] = $course->getTitle();
+        $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
-        $details['registrationDate'] = $sessionGroup->getRegistrationDate()->format('d/m/Y H:i:s');
-        $details['type'] = $sessionGroup->getGroupType();
+        $details['registrationDate'] = $sessionGroup->getDate()->format('d/m/Y H:i:s');
+        $details['type'] = $sessionGroup->getType();
 
         parent::__construct(
             self::ACTION,

@@ -17,8 +17,8 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Repository\GroupRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\GroupRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
@@ -40,13 +40,6 @@ class MessageManager
     /** @var WorkspaceRepository */
     private $workspaceRepo;
 
-    /**
-     * MessageManager constructor.
-     *
-     * @param MailManager           $mailManager
-     * @param ObjectManager         $om
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
         MailManager $mailManager,
         ObjectManager $om,
@@ -89,9 +82,8 @@ class MessageManager
     }
 
     /**
-     * @param Message $message
-     * @param bool    $setAsSent
-     * @param bool    $sendMail
+     * @param bool $setAsSent
+     * @param bool $sendMail
      *
      * @return Message
      */

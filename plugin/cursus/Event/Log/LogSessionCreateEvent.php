@@ -12,13 +12,13 @@
 namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\Session;
 
 class LogSessionCreateEvent extends LogGenericEvent
 {
     const ACTION = 'cursusbundle-course-session-create';
 
-    public function __construct(CourseSession $session)
+    public function __construct(Session $session)
     {
         $course = $session->getCourse();
         $workspace = $session->getWorkspace();
@@ -28,26 +28,23 @@ class LogSessionCreateEvent extends LogGenericEvent
         $details['id'] = $session->getUuid();
         $details['name'] = $session->getName();
         $details['defaultSession'] = $session->isDefaultSession();
-        $details['creationDate'] = $session->getCreationDate();
         $details['publicRegistration'] = $session->getPublicRegistration();
         $details['publicUnregistration'] = $session->getPublicUnregistration();
         $details['registrationValidation'] = $session->getRegistrationValidation();
         $details['startDate'] = $session->getStartDate();
         $details['endDate'] = $session->getEndDate();
         $details['userValidation'] = $session->getUserValidation();
-        $details['organizationValidation'] = $session->getOrganizationValidation();
         $details['maxUsers'] = $session->getMaxUsers();
-        $details['type'] = $session->getType();
 
         $details['courseId'] = $course->getUuid();
-        $details['courseTitle'] = $course->getTitle();
+        $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
 
         if (!is_null($workspace)) {
             $details['workspaceId'] = $workspace->getUuid();
             $details['workspaceName'] = $workspace->getName();
             $details['workspaceCode'] = $workspace->getCode();
-            $details['workspaceGuid'] = $workspace->getGuid();
+            $details['workspaceGuid'] = $workspace->getUuid();
         }
 
         if (!is_null($learnerRole)) {

@@ -29,28 +29,28 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
      *
      * Please respect lower caml case naming convention for property names
      */
-    public function __construct(ResourceNode $node, array $usersToNotify = array())
+    public function __construct(ResourceNode $node, array $usersToNotify = [])
     {
         $action = self::ACTION;
         $this->usersToNotify = $usersToNotify;
 
         parent::__construct(
             $action,
-            array(
-                'resource' => array(
+            [
+                'resource' => [
                     'name' => $node->getName(),
                     'path' => $node->getPathForDisplay(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $node->getWorkspace()->getName(),
                     'id' => $node->getWorkspace()->getId(),
-                    'guid' => $node->getWorkspace()->getGuid(),
-                ),
-                'owner' => array(
+                    'guid' => $node->getWorkspace()->getUuid(),
+                ],
+                'owner' => [
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             $node,
@@ -90,7 +90,7 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
      */
     public function getIncludeUserIds()
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($this->usersToNotify as $user) {
             $ids[] = $user->getId();
@@ -137,7 +137,7 @@ class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInte
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
+        $notificationDetails = array_merge($this->details, []);
 
         return $notificationDetails;
     }

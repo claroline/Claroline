@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetRepository;
 use Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -58,19 +58,6 @@ class UserSerializer
     /** @var FieldFacetValueRepository */
     private $fieldFacetValueRepo;
 
-    /**
-     * UserManager constructor.
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param ObjectManager                 $om
-     * @param PlatformConfigurationHandler  $config
-     * @param PublicFileSerializer          $fileSerializer
-     * @param ContainerInterface            $container
-     * @param StrictDispatcher              $eventDispatcher
-     * @param OrganizationSerializer        $organizationSerializer
-     * @param FieldFacetValueSerializer     $fieldFacetValueSerializer
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authChecker,
@@ -98,44 +85,27 @@ class UserSerializer
         $this->fieldFacetValueRepo = $om->getRepository(FieldFacetValue::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'user';
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return User::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/main/core/user.json';
     }
 
-    /**
-     * @return string
-     */
-    public function getSamples()
+    public function getSamples(): string
     {
         return '#/main/core/user';
     }
 
-    /**
-     * Serializes a User entity for the JSON api.
-     *
-     * @param User  $user    - the user to serialize
-     * @param array $options
-     *
-     * @return array - the serialized representation of the user
-     */
-    public function serialize($user, array $options = [])
+    public function serialize(User $user, array $options = []): array
     {
         $token = $this->tokenStorage->getToken();
 
@@ -225,13 +195,8 @@ class UserSerializer
     /**
      * Dispatches an event to let plugins add some custom data to the serialized user.
      * For example: AuthenticationBundle adds CAS Id to the serialized user.
-     *
-     * @param User  $user           - the original user entity
-     * @param array $serializedUser - the serialized version of the user
-     *
-     * @return array - the decorated user
      */
-    private function decorate(User $user, array $serializedUser)
+    private function decorate(User $user, array $serializedUser): array
     {
         $unauthorizedKeys = array_keys($serializedUser);
 
@@ -249,8 +214,6 @@ class UserSerializer
 
     /**
      * Serialize the user picture.
-     *
-     * @param User $user
      *
      * @return array|null
      */
@@ -270,12 +233,7 @@ class UserSerializer
         return null;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array
-     */
-    private function serializeMeta(User $user)
+    private function serializeMeta(User $user): array
     {
         $locale = $user->getLocale();
         if (empty($locale)) {
@@ -320,12 +278,7 @@ class UserSerializer
         }
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array
-     */
-    private function serializePermissions(User $user)
+    private function serializePermissions(User $user): array
     {
         $token = $this->tokenStorage->getToken();
 
@@ -352,12 +305,7 @@ class UserSerializer
         ];
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array
-     */
-    private function serializeRestrictions(User $user)
+    private function serializeRestrictions(User $user): array
     {
         return [
             'locked' => $user->isLocked(),
@@ -389,16 +337,7 @@ class UserSerializer
         }
     }
 
-    /**
-     * Deserialize method.
-     *
-     * @param array     $data
-     * @param User|null $user
-     * @param array     $options
-     *
-     * @return User
-     */
-    public function deserialize($data, $user = null, array $options = [])
+    public function deserialize(array $data, User $user = null, array $options = []): User
     {
         if (empty($user)) {
             $user = new User();

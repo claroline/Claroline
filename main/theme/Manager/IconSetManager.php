@@ -12,8 +12,8 @@
 
 namespace Claroline\ThemeBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\ThemeBundle\Entity\Icon\IconItem;
@@ -22,7 +22,6 @@ use Claroline\ThemeBundle\Library\Icon\IconSetTypeEnum;
 use Claroline\ThemeBundle\Library\Icon\ResourceIconSetIconItemList;
 use Claroline\ThemeBundle\Repository\Icon\IconItemRepository;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -44,17 +43,10 @@ class IconSetManager implements LoggerAwareInterface
     /** @var FileSystem */
     private $fs;
 
-    /**
-     * @param string                       $webDir
-     * @param string                       $iconSetsWebDir
-     * @param string                       $iconSetsDir
-     * @param ObjectManager                $om
-     * @param PlatformConfigurationHandler $ch
-     */
     public function __construct(
-        $webDir,
-        $iconSetsWebDir,
-        $iconSetsDir,
+        string $webDir,
+        string $iconSetsWebDir,
+        string $iconSetsDir,
         ObjectManager $om,
         PlatformConfigurationHandler $ch
     ) {
@@ -79,8 +71,7 @@ class IconSetManager implements LoggerAwareInterface
     }
 
     /**
-     * @param IconSet|null $iconSet
-     * @param bool|true    $includeDefault
+     * @param bool|true $includeDefault
      *
      * @return ResourceIconSetIconItemList
      */
@@ -130,9 +121,6 @@ class IconSetManager implements LoggerAwareInterface
         return true;
     }
 
-    /**
-     * @param IconSet $iconSet
-     */
     public function deleteIconSet(IconSet $iconSet)
     {
         if ($iconSet->isActive() || $iconSet->isDefault()) {
@@ -277,11 +265,6 @@ class IconSetManager implements LoggerAwareInterface
         $this->om->endFlushSuite();
 
         return $iconItems;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     private function fetchResourcesMimeTypes($fileName, array $mimeTypesList)

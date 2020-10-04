@@ -70,8 +70,7 @@ const ParametersTab = props => {
                 type: 'boolean',
                 label: trans('activate_self_unregistration'),
                 help: trans('self_unregistration_workspace_help')
-              },
-              {
+              }, {
                 name: 'registration.defaultRole',
                 type: 'choice',
                 label: trans('default_role'),

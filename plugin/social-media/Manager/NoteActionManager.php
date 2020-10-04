@@ -31,13 +31,10 @@ class NoteActionManager
     protected $noteActionRepository;
 
     /**
-     * @var \Claroline\CoreBundle\Repository\ResourceNodeRepository
+     * @var \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository
      */
     protected $resourceNodeRepository;
 
-    /**
-     * @param EntityManager $em
-     */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -55,7 +52,6 @@ class NoteActionManager
 
     /**
      * @param $resourceId
-     * @param User $user
      *
      * @return \Doctrine\ORM\QueryBuilder
      */

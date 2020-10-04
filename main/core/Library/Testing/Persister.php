@@ -61,7 +61,7 @@ class Persister
             $workspace->setName($username);
             $workspace->setCreator($user);
             $workspace->setCode($username);
-            $workspace->setGuid($username);
+            $workspace->setUuid($username);
 
             $user->setPersonalWorkspace($workspace);
             $this->om->persist($workspace);

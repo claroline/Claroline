@@ -31,13 +31,6 @@ class UserFinder extends AbstractFinder
     /** @var WorkspaceManager */
     private $workspaceManager;
 
-    /**
-     * UserFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
-     * @param WorkspaceManager              $workspaceManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage,
@@ -62,6 +55,10 @@ class UserFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'publicUrl':
+                    $qb->andWhere('UPPER(obj.publicUrl) = :publicUrl');
+                    $qb->setParameter('publicUrl', strtoupper($filterValue));
+                    break;
                 case 'name':
                     $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
@@ -155,6 +152,7 @@ class UserFinder extends AbstractFinder
                         $qb->leftJoin('oref.organization', 'oparent');
                         $qb->leftJoin('oref.organization', 'organization');
 
+                        $expr = [];
                         foreach ($roots as $root) {
                             $expr[] = $qb->expr()->andX(
                                   $qb->expr()->gte('organization.lft', $root->getLeft()),

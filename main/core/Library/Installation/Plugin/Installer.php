@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
@@ -30,36 +30,19 @@ class Installer implements LoggerAwareInterface
 
     /** @var Validator */
     private $validator;
-
     /** @var Recorder */
     private $recorder;
-
     /** @var InstallationManager */
     private $baseInstaller;
-
     /** @var ObjectManager */
     private $om;
-
     /** @var TranslatorInterface */
     private $translator;
-
     /** @var VersionManager */
     private $versionManager;
-
     /** @var PluginManager */
     private $pluginManager;
 
-    /**
-     * Installer constructor.
-     *
-     * @param Validator           $validator
-     * @param Recorder            $recorder
-     * @param InstallationManager $installer
-     * @param ObjectManager       $om
-     * @param PluginManager       $pluginManager
-     * @param TranslatorInterface $translator
-     * @param VersionManager      $versionManager
-     */
     public function __construct(
         Validator $validator,
         Recorder $recorder,
@@ -81,7 +64,7 @@ class Installer implements LoggerAwareInterface
     /**
      * @param LoggerInterface $logger
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
         $this->baseInstaller->setLogger($logger);
@@ -90,10 +73,6 @@ class Installer implements LoggerAwareInterface
 
     /**
      * Installs a plugin.
-     *
-     * PluginBundleInterface $plugin
-     *
-     * @param PluginBundleInterface $plugin
      *
      * @throws \Exception if the plugin doesn't pass the validation
      */
@@ -131,8 +110,6 @@ class Installer implements LoggerAwareInterface
 
     /**
      * Uninstalls a plugin.
-     *
-     * @param PluginBundleInterface $plugin
      */
     public function uninstall(PluginBundleInterface $plugin)
     {
@@ -145,9 +122,8 @@ class Installer implements LoggerAwareInterface
     /**
      * Upgrades/downgrades a plugin to a specific version.
      *
-     * @param PluginBundleInterface $plugin
-     * @param string                $currentVersion
-     * @param string                $targetVersion
+     * @param string $currentVersion
+     * @param string $targetVersion
      */
     public function update(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
@@ -173,9 +149,7 @@ class Installer implements LoggerAwareInterface
         if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
             $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
 
-            throw new \LogicException(
-                "Plugin '{$plugin->getName()}' is {$stateDiscr} installed."
-            );
+            throw new \LogicException("Plugin '{$plugin->getName()}' is {$stateDiscr} installed.");
         }
     }
 

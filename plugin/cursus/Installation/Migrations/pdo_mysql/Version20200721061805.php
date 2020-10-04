@@ -22,6 +22,9 @@ class Version20200721061805 extends AbstractMigration
             CHANGE icon poster VARCHAR(255) DEFAULT NULL
         ');
         $this->addSql('
+            UPDATE claro_cursusbundle_course course SET course.slug = REGEXP_REPLACE(SUBSTR(course.title,1,100), "[^A-Za-z0-9]+", "-") WHERE course.title IS NOT NULL
+        ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_cursus 
             DROP icon
         ');

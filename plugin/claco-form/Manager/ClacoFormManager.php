@@ -11,8 +11,8 @@
 
 namespace Claroline\ClacoFormBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
@@ -46,11 +46,10 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -106,16 +105,11 @@ class ClacoFormManager implements LoggerAwareInterface
     /** @var KeywordRepository */
     private $keywordRepo;
 
-    /**
-     * ClacoFormManager constructor.
-     *
-     * @param string $filesDir
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
         Filesystem $fileSystem,
-        $filesDir,
+        string $filesDir,
         MessageManager $messageManager,
         ObjectManager $om,
         RouterInterface $router,
@@ -1674,16 +1668,6 @@ class ClacoFormManager implements LoggerAwareInterface
         }
 
         return count($entryUsers);
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
     }
 
     /**

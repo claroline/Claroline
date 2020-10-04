@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Claroline\PlannedNotificationBundle\Repository\PlannedNotificationRepository;
@@ -45,13 +45,6 @@ class PlannedNotificationManager
     /** @var UserRepository */
     private $userRepo;
 
-    /**
-     * PlannedNotificationManager constructor.
-     *
-     * @param MailManager          $mailManager
-     * @param ObjectManager        $om
-     * @param ScheduledTaskManager $scheduledTaskManager
-     */
     public function __construct(
         MailManager $mailManager,
         ObjectManager $om,
@@ -169,8 +162,6 @@ class PlannedNotificationManager
     }
 
     /**
-     * @param array $data
-     *
      * @return array
      */
     public function generateManualScheduledTasks(array $data)

@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Role\Role as BaseRole;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\User\RoleRepository")
  * @ORM\Table(name="claro_role")
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("name")
@@ -264,9 +264,6 @@ class Role extends BaseRole
         return $this->users;
     }
 
-    /**
-     * @param User $user
-     */
     public function addUser(User $user)
     {
         $this->users->add($user);
@@ -276,9 +273,6 @@ class Role extends BaseRole
         }
     }
 
-    /**
-     * @param Group $group
-     */
     public function addGroup(Group $group)
     {
         $this->groups->add($group);
@@ -288,18 +282,12 @@ class Role extends BaseRole
         }
     }
 
-    /**
-     * @param User $user
-     */
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
         $user->removeRole($this);
     }
 
-    /**
-     * @param Group $group
-     */
     public function removeGroup(Group $group)
     {
         $this->groups->removeElement($group);

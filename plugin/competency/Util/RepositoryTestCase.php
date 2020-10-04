@@ -125,7 +125,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
             $workspace->setName('ws-jdoe');
             $workspace->setCreator($this->defaults['user']);
             $workspace->setCode('jdoe-123');
-            $workspace->setGuid('123');
+            $workspace->setUuid('123');
             $this->om->persist($workspace);
             $this->defaults['workspace'] = $workspace;
         }
@@ -142,7 +142,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $node->setCreator($this->defaults['user']);
         $node->setResourceType($this->defaults['activity_type']);
         $node->setWorkspace($this->defaults['workspace']);
-        $node->setGuid($name);
+        $node->setUuid($name);
 
         $this->om->persist($node);
 

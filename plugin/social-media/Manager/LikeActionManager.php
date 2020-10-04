@@ -28,7 +28,7 @@ class LikeActionManager
     protected $likeActionRepository;
 
     /**
-     * @var \Claroline\CoreBundle\Repository\ResourceNodeRepository
+     * @var \Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository
      */
     protected $resourceNodeRepository;
 
@@ -37,10 +37,6 @@ class LikeActionManager
      */
     protected $wallItemManager;
 
-    /**
-     * @param EntityManager   $em
-     * @param WallItemManager $wallItemManager
-     */
     public function __construct(EntityManager $em, WallItemManager $wallItemManager)
     {
         $this->em = $em;
@@ -50,13 +46,9 @@ class LikeActionManager
     }
 
     /**
-     * @param User    $user
-     * @param Request $request
-     * @param array   $criteria
-     *
      * @return LikeAction|null
      */
-    public function getLikeBy(User $user, Request $request = null, $criteria = [])
+    public function getLikeBy(User $user, Request $request = null, array $criteria = [])
     {
         $criteria = $this->getCriteriaFromRequest($request, $user, $criteria);
 

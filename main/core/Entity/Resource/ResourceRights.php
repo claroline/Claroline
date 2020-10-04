@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceRightsRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository")
  * @ORM\Table(
  *     name="claro_resource_rights",
  *     uniqueConstraints={

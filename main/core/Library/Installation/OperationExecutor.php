@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -45,7 +45,7 @@ class OperationExecutor implements LoggerAwareInterface
         $this->om = $om;
     }
 
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
         $this->baseInstaller->setLogger($logger);

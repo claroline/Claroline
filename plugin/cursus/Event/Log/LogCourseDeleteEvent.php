@@ -22,7 +22,7 @@ class LogCourseDeleteEvent extends LogGenericEvent
     {
         $details = [];
         $details['id'] = $course->getUuid();
-        $details['title'] = $course->getTitle();
+        $details['title'] = $course->getName();
         $details['code'] = $course->getCode();
         $details['publicRegistration'] = $course->getPublicRegistration();
         $details['publicUnregistration'] = $course->getPublicUnregistration();
@@ -30,7 +30,6 @@ class LogCourseDeleteEvent extends LogGenericEvent
         $details['tutorRoleName'] = $course->getTutorRoleName();
         $details['learnerRoleName'] = $course->getLearnerRoleName();
         $details['userValidation'] = $course->getUserValidation();
-        $details['organizationValidation'] = $course->getOrganizationValidation();
         $details['maxUsers'] = $course->getMaxUsers();
         $details['defaultSessionDuration'] = $course->getDefaultSessionDuration();
         $details['organizations'] = [];
@@ -42,7 +41,7 @@ class LogCourseDeleteEvent extends LogGenericEvent
             $details['workspaceId'] = $workspace->getId();
             $details['workspaceName'] = $workspace->getName();
             $details['workspaceCode'] = $workspace->getCode();
-            $details['workspaceGuid'] = $workspace->getGuid();
+            $details['workspaceGuid'] = $workspace->getUuid();
         }
         if (!is_null($workspaceModel)) {
             $details['workspaceModelId'] = $workspaceModel->getId();

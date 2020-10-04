@@ -18,20 +18,16 @@ services:
                   arguments:
                      - '@Claroline\AppBundle\Event\StrictDispatcher'
 
+    # Trainings
     Claroline\CursusBundle\Finder\CourseFinder: ~
-
-    Claroline\CursusBundle\Finder\CursusGroupFinder: ~
-
-    Claroline\CursusBundle\Finder\CursusUserFinder: ~
-
-    Claroline\CursusBundle\Finder\SessionEventFinder: ~
-
-    Claroline\CursusBundle\Finder\SessionEventUserFinder: ~
 
     Claroline\CursusBundle\Finder\SessionFinder: ~
 
+    Claroline\CursusBundle\Finder\EventFinder: ~
+
+    # Registrations
     Claroline\CursusBundle\Finder\SessionGroupFinder: ~
 
-    Claroline\CursusBundle\Finder\SessionQueueFinder: ~
-
     Claroline\CursusBundle\Finder\SessionUserFinder: ~
+
+    Claroline\CursusBundle\Finder\EventUserFinder: ~

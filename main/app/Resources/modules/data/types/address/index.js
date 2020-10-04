@@ -1,7 +1,6 @@
-import isEmpty from 'lodash/isEmpty'
-
 import {trans} from '#/main/app/intl/translation'
 
+import {getAddressString} from '#/main/app/data/types/address/utils'
 import {AddressDisplay} from '#/main/app/data/types/address/components/display'
 import {AddressInput} from '#/main/app/data/types/address/components/input'
 import {AddressGroup} from '#/main/app/data/types/address/components/group'
@@ -14,16 +13,7 @@ const dataType = {
     label: trans('address', {}, 'data'),
     description: trans('address_desc', {}, 'data')
   },
-  render: (raw) => {
-    if (!isEmpty(raw)) {
-      return Object.keys(raw)
-        .map((name) => raw[name])
-        .filter(addressPart => !isEmpty(addressPart))
-        .join(', ')
-    }
-
-    return null
-  },
+  render: (raw) => getAddressString(raw),
   components: {
     group: AddressGroup,
     input: AddressInput,

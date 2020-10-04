@@ -9,7 +9,7 @@ use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceWidgetSerializer
@@ -25,13 +25,6 @@ class ResourceWidgetSerializer
     /** @var ResourceNodeRepository */
     private $nodeRepo;
 
-    /**
-     * ResourceWidgetSerializer constructor.
-     *
-     * @param TokenStorageInterface  $tokenStorage
-     * @param ObjectManager          $om
-     * @param ResourceNodeSerializer $nodeSerializer
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
@@ -44,14 +37,11 @@ class ResourceWidgetSerializer
         $this->nodeRepo = $om->getRepository(ResourceNode::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'resource_widget';
     }
 
-    /**
-     * @return string
-     */
     public function getClass(): string
     {
         return ResourceWidget::class;

@@ -11,16 +11,20 @@
 
 namespace Claroline\InstallationBundle\Fixtures;
 
+use Claroline\AppBundle\Log\LoggableTrait;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Class responsible for loading the data fixtures of a bundle.
  */
-class FixtureLoader
+class FixtureLoader implements LoggerAwareInterface
 {
+    use LoggableTrait;
+
     private $container;
     private $executor;
 
@@ -64,12 +68,5 @@ class FixtureLoader
         }
 
         return false;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
     }
 }

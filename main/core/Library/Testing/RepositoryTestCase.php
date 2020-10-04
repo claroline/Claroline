@@ -171,7 +171,8 @@ abstract class RepositoryTestCase extends WebTestCase
             $role->setWorkspace($workspace);
         }
 
-        if ($exists = self::$om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name)) {
+        $exists = self::$om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
+        if ($exists) {
             self::set($name, $exists);
         } else {
             self::create($name, $role);
@@ -183,7 +184,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $workspace = new Workspace();
         $workspace->setName($name);
         $workspace->setCode($name.'Code');
-        $workspace->setDisplayable(false);
+        $workspace->setHidden(true);
 
         self::create($name, $workspace);
     }
@@ -193,7 +194,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $workspace = new Workspace();
         $workspace->setName($name);
         $workspace->setCode($name.'Code');
-        $workspace->setDisplayable(true);
+        $workspace->setHidden(false);
         $workspace->setSelfRegistration($selfRegistration);
 
         self::create($name, $workspace);
@@ -422,12 +423,6 @@ abstract class RepositoryTestCase extends WebTestCase
     /**
      * Sets the common properties of a resource.
      *
-     * @param AbstractResource $resource
-     * @param ResourceType     $type
-     * @param User             $creator
-     * @param Workspace        $workspace
-     * @param ResourceNode     $parent
-     *
      * @return AbstractResource
      */
     private static function prepareResource(
@@ -446,7 +441,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $node->setCreationDate(self::$time);
         $node->setName($name);
         $node->setMimeType($mimeType);
-        $node->setGuid(uniqid());
+        $node->setUuid(uniqid());
         $node->setIndex(self::$nodeIdx);
 
         if ($parent) {

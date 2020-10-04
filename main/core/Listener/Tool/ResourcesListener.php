@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 
 class ResourcesListener
 {
@@ -23,12 +23,6 @@ class ResourcesListener
     /** @var ResourceNodeRepository */
     private $resourceRepository;
 
-    /**
-     * ResourcesListener constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
-     */
     public function __construct(
         ObjectManager $om,
         SerializerProvider $serializer
@@ -39,8 +33,6 @@ class ResourcesListener
 
     /**
      * Displays resources on Desktop.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayDesktop(OpenToolEvent $event)
     {
@@ -52,8 +44,6 @@ class ResourcesListener
 
     /**
      * Displays resources on Workspace.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayWorkspace(OpenToolEvent $event)
     {

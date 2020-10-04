@@ -4,11 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {Course as CourseTypes} from '#/plugin/cursus/course/prop-types'
+import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 
 const CourseForm = (props) =>
   <FormData
     name={props.name}
+    meta={true}
     buttons={true}
     target={(data, isNew) => isNew ?
       ['apiv2_cursus_course_create'] :
@@ -81,25 +82,52 @@ const CourseForm = (props) =>
         title: trans('registration'),
         fields: [
           {
-            name: 'registration.publicRegistration',
+            name: 'registration.selfRegistration',
             type: 'boolean',
-            label: trans('public_registration')
+            label: trans('activate_self_registration'),
+            help: trans('self_registration_training_help', {}, 'cursus'),
+            onChange: (checked) => {
+              if (!checked) {
+                props.update(props.name, 'registration.validation', false)
+              }
+            },
+            linked: [
+              {
+                name: 'registration.validation',
+                type: 'boolean',
+                label: trans('validate_registration'),
+                help: trans('validate_registration_help', {}, 'cursus'),
+                displayed: (course) => course.registration && course.registration.selfRegistration
+              }
+            ]
           }, {
-            name: 'registration.publicUnregistration',
+            name: 'registration.selfUnregistration',
             type: 'boolean',
-            label: trans('public_unregistration')
+            label: trans('activate_self_unregistration'),
+            help: trans('self_unregistration_training_help', {}, 'cursus')
           }, {
-            name: 'registration.registrationValidation',
+            name: 'registration.mail',
             type: 'boolean',
-            label: trans('registration_validation', {}, 'cursus')
+            label: trans('registration_send_mail', {}, 'cursus'),
+            onChange: (checked) => {
+              if (!checked) {
+                props.update(props.name, 'registration.userValidation', false)
+              }
+            },
+            linked: [
+              {
+                name: 'registration.userValidation',
+                type: 'boolean',
+                label: trans('registration_user_validation', {}, 'cursus'),
+                help: trans('registration_user_validation_help', {}, 'cursus'),
+                displayed: (course) => course.registration && course.registration.mail
+              }
+            ]
           }, {
-            name: 'registration.userValidation',
+            name: 'registration.propagate',
             type: 'boolean',
-            label: trans('user_validation', {}, 'cursus')
-          }, {
-            name: 'registration.organizationValidation',
-            type: 'boolean',
-            label: trans('organization_validation', {}, 'cursus')
+            label: trans('propagate_registration', {}, 'cursus'),
+            help: trans('propagate_registration_help', {}, 'cursus')
           }
         ]
       }, {
@@ -109,7 +137,8 @@ const CourseForm = (props) =>
           {
             name: 'workspace',
             type: 'workspace',
-            label: trans('workspace')
+            label: trans('workspace'),
+            displayed: (course) => course.workspace || !course.workspaceModel
           }, {
             name: 'workspaceModel',
             type: 'workspace',
@@ -120,17 +149,7 @@ const CourseForm = (props) =>
                 title: trans('workspace_model')
               }
             },
-            displayed: (course) => !course.workspace
-          }, {
-            name: 'meta.tutorRoleName',
-            type: 'string',
-            label: trans('tutor_role', {}, 'cursus'),
-            displayed: (course) => !course.workspace && !course.workspaceModel
-          }, {
-            name: 'meta.learnerRoleName',
-            type: 'string',
-            label: trans('learner_role', {}, 'cursus'),
-            displayed: (course) => !course.workspace && !course.workspaceModel
+            displayed: (course) => course.workspaceModel || !course.workspace
           }, {
             name: 'meta.tutorRoleName',
             type: 'choice',
@@ -222,10 +241,15 @@ const CourseForm = (props) =>
         title: trans('access_restrictions'),
         fields: [
           {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden'),
+            help: trans('restrict_hidden_help')
+          }, {
             name: 'restrictions._restrictUsers',
             type: 'boolean',
             label: trans('restrict_users_count'),
-            calculated: (course) => course.restrictions.users || course.restrictions._restrictUsers,
+            calculated: (course) => !!course.restrictions.users || course.restrictions._restrictUsers,
             onChange: (value) => {
               if (!value) {
                 props.update(props.name, 'restrictions.users', null)

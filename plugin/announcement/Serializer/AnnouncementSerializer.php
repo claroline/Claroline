@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AnnouncementSerializer
@@ -48,17 +48,6 @@ class AnnouncementSerializer
     /** @var ResourceNodeSerializer */
     private $nodeSerializer;
 
-    /**
-     * AnnouncementSerializer constructor.
-     *
-     * @param TokenStorageInterface  $tokenStorage
-     * @param UserSerializer         $userSerializer
-     * @param ObjectManager          $om
-     * @param WorkspaceSerializer    $wsSerializer
-     * @param ResourceNodeSerializer $nodeSerializer
-     * @param PublicFileSerializer   $publicFileSerializer
-     * @param FileUtilities          $fileUt
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         UserSerializer $userSerializer,
@@ -85,12 +74,7 @@ class AnnouncementSerializer
         return 'announcement';
     }
 
-    /**
-     * @param Announcement $announce
-     *
-     * @return array
-     */
-    public function serialize(Announcement $announce)
+    public function serialize(Announcement $announce): array
     {
         $poster = null;
         if ($announce->getPoster()) {
@@ -131,14 +115,7 @@ class AnnouncementSerializer
         ];
     }
 
-    /**
-     * @param array        $data
-     * @param Announcement $announce
-     * @param array        $options
-     *
-     * @return Announcement
-     */
-    public function deserialize(array $data, Announcement $announce = null, array $options = [])
+    public function deserialize(array $data, Announcement $announce = null, array $options = []): Announcement
     {
         $announce = $announce ?: new Announcement();
 

@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Manager\Item;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Repository\ItemRepository;
@@ -21,12 +21,6 @@ class ShareManager
      */
     private $itemManager;
 
-    /**
-     * ShareManager constructor.
-     *
-     * @param ObjectManager $om
-     * @param ItemManager   $itemManager
-     */
     public function __construct(
         ObjectManager $om,
         ItemManager $itemManager)
@@ -37,9 +31,6 @@ class ShareManager
 
     /**
      * Shares a list of question to users.
-     *
-     * @param array $shareRequest - an object containing the questions and users to link
-     * @param User  $user
      *
      * @throws InvalidDataException
      */
@@ -89,7 +80,6 @@ class ShareManager
     /**
      * Gets an existing share link for a user in the share list of the question.
      *
-     * @param User     $user
      * @param Shared[] $shared
      *
      * @return Shared
@@ -109,8 +99,6 @@ class ShareManager
 
     /**
      * Validates a share request.
-     *
-     * @param array $shareRequest
      *
      * @return array
      */
@@ -144,9 +132,6 @@ class ShareManager
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

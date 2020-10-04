@@ -201,13 +201,6 @@ class Workspace
     protected $personal = false;
 
     /**
-     * @ORM\Column(name="workspace_type", type="integer", nullable=true)
-     *
-     * @var int
-     */
-    protected $workspaceType;
-
-    /**
      * @ORM\Column(name="disabled_notifications", type="boolean")
      *
      * @var bool
@@ -345,21 +338,11 @@ class Workspace
         return $this->orderedTools;
     }
 
-    /**
-     * Add an ordered tool.
-     *
-     * @param OrderedTool $tool
-     */
     public function addOrderedTool(OrderedTool $tool)
     {
         $this->orderedTools->add($tool);
     }
 
-    /**
-     * Remove an ordered tool.
-     *
-     * @param OrderedTool $tool
-     */
     public function removeOrderedTool(OrderedTool $tool)
     {
         $this->orderedTools->removeElement($tool);
@@ -375,11 +358,6 @@ class Workspace
         return $this->roles;
     }
 
-    /**
-     * Add a role.
-     *
-     * @param Role $role
-     */
     public function addRole(Role $role)
     {
         if (!$this->roles->contains($role)) {
@@ -387,62 +365,9 @@ class Workspace
         }
     }
 
-    /**
-     * Remove a role.
-     *
-     * @param Role $role
-     */
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
-    }
-
-    /**
-     * Set guid.
-     *
-     * @param string $guid
-     *
-     * @deprecated use setUuid()
-     */
-    public function setGuid($guid)
-    {
-        $this->uuid = $guid;
-    }
-
-    /**
-     * Get guid.
-     *
-     * @return string
-     *
-     * @deprecated use getUuid()
-     */
-    public function getGuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Set displayable.
-     *
-     * @param bool $displayable
-     *
-     * @deprecated use `setHidden()`
-     */
-    public function setDisplayable($displayable)
-    {
-        $this->displayable = $displayable;
-    }
-
-    /**
-     * Is displayable ?
-     *
-     * @deprecated use `isHidden()`
-     *
-     * @return bool
-     */
-    public function isDisplayable()
-    {
-        return $this->displayable;
     }
 
     /**
@@ -579,16 +504,6 @@ class Workspace
     public function isPersonal()
     {
         return $this->personal;
-    }
-
-    public function getWorkspaceType()
-    {
-        return $this->workspaceType;
-    }
-
-    public function setWorkspaceType($workspaceType)
-    {
-        $this->workspaceType = $workspaceType;
     }
 
     public function setMaxUsers($maxUsers)

@@ -36,10 +36,6 @@
           "type": "integer",
           "description": "The session type"
         },
-        "sessionStatus": {
-          "type": "integer",
-          "description": "The session status"
-        },
         "default": {
           "type": "boolean",
           "description": "Whether the session is the default one"
@@ -47,14 +43,6 @@
         "order": {
           "type": "integer",
           "description": "The cursus order"
-        },
-        "color": {
-          "type": ["string", "null"],
-          "description": "The session color"
-        },
-        "certificated": {
-          "type": "boolean",
-          "description": "Whether the session is certificated or not"
         }
       }
     },
@@ -77,26 +65,25 @@
     "registration": {
       "type": "object",
       "properties": {
-        "publicRegistration": {
+        "selfRegistration": {
           "type": "boolean"
         },
-        "publicUnregistration": {
+        "selfUnregistration": {
           "type": "boolean"
         },
-        "registrationValidation": {
+        "validation": {
           "type": "boolean"
         },
         "userValidation": {
           "type": "boolean"
         },
-        "organizationValidation": {
+        "mail": {
           "type": "boolean"
         },
         "eventRegistrationType": {
           "type": "integer"
         }
-      },
-      "required": ["publicRegistration", "publicUnregistration", "registrationValidation", "userValidation", "organizationValidation", "eventRegistrationType"]
+      }
     }
   },
   "required": ["name", "code"],

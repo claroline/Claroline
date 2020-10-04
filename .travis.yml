@@ -93,7 +93,7 @@ before_script:
 
 script:
   # run static analysis tools on modified files if needed
-  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
+  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/phpmd `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config=main/dev/Resources/travis/php-cs.php; fi
   - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch php tests

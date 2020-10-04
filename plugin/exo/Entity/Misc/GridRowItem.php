@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * GridRowItem.
@@ -13,7 +13,7 @@ use UJM\ExoBundle\Library\Model\OrderTrait;
  */
 class GridRowItem
 {
-    use OrderTrait;
+    use Order;
 
     /**
      * @ORM\Id
@@ -45,8 +45,6 @@ class GridRowItem
 
     /**
      * Set row.
-     *
-     * @param GridRow $row
      */
     public function setRow(GridRow $row)
     {
@@ -65,8 +63,6 @@ class GridRowItem
 
     /**
      * Set item.
-     *
-     * @param GridItem $item
      */
     public function setItem(GridItem $item)
     {

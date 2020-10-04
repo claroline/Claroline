@@ -19,7 +19,8 @@ import {
   createListDefinition,
   getDisplayableProps,
   getDisplayedProps,
-  getFilterableProps
+  getFilterableProps,
+  orderProps
 } from '#/main/app/content/list/utils'
 
 import {ListEmpty} from '#/main/app/content/list/components/empty'
@@ -185,7 +186,7 @@ class ListData extends Component {
             {
               data:          this.props.data,
               count:         this.props.totalResults,
-              columns:       this.state.definition.filter(prop => -1 !== this.state.currentColumns.indexOf(prop.name)),
+              columns:       orderProps(this.state.definition.filter(prop => -1 !== this.state.currentColumns.indexOf(prop.name))),
               sorting:       this.props.sorting,
               selection:     this.props.selection,
               primaryAction: this.props.primaryAction,

@@ -49,17 +49,9 @@
           "type": ["string", "null"],
           "description": "The course role for learner"
         },
-        "icon": {
-          "type": ["string", "null"],
-          "description": "The course icon"
-        },
         "duration": {
           "type": "integer",
           "description": "The default duration in days of session"
-        },
-        "withSessionEvent": {
-          "type": "boolean",
-          "description": "Whether a default session event is created at session creation"
         },
         "order": {
           "type": "integer",
@@ -80,23 +72,22 @@
     "registration": {
       "type": "object",
       "properties": {
-        "publicRegistration": {
+        "selfRegistration": {
           "type": "boolean"
         },
-        "publicUnregistration": {
+        "selfUnregistration": {
           "type": "boolean"
         },
-        "registrationValidation": {
+        "validation": {
           "type": "boolean"
         },
         "userValidation": {
           "type": "boolean"
         },
-        "organizationValidation": {
+        "mail": {
           "type": "boolean"
         }
-      },
-      "required": ["publicRegistration", "publicUnregistration", "registrationValidation", "userValidation", "organizationValidation"]
+      }
     }
   },
   "required": ["code", "name"],

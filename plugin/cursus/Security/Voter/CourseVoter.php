@@ -11,6 +11,8 @@
 
 namespace Claroline\CursusBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -18,29 +20,45 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class CourseVoter extends AbstractVoter
 {
-    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
-    {
-        switch ($attributes[0]) {
-            case self::CREATE: // EDIT right on tool
-            case self::EDIT: // admin of organization | EDIT right on tool
-            case self::DELETE: // admin of organization | EDIT right on tool
-            case self::OPEN: // member of organization & OPEN right on tool
-            case self::VIEW:
-                return $this->hasAdminToolAccess($token, 'claroline_cursus_tool') ?
-                    VoterInterface::ACCESS_GRANTED :
-                    VoterInterface::ACCESS_DENIED;
-        }
-
-        return VoterInterface::ACCESS_ABSTAIN;
-    }
-
     public function getClass()
     {
         return Course::class;
     }
 
-    public function getSupportedActions()
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE];
+        /** @var OrderedToolRepository $orderedToolRepo */
+        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
+
+        $trainingsTool = $orderedToolRepo->findOneByNameAndDesktop('trainings');
+        $toolEdit = $this->isGranted('EDIT', $trainingsTool);
+
+        switch ($attributes[0]) {
+            case self::CREATE: // EDIT right on tool
+                if ($toolEdit) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
+            case self::EDIT: // admin of organization | EDIT right on tool
+            case self::PATCH:
+            case self::DELETE:
+                if ($toolEdit || $this->isOrganizationManager($token, $object)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
+            case self::OPEN: // member of organization & OPEN right on tool
+            case self::VIEW:
+                if ($this->isGranted('OPEN', $trainingsTool) && $this->isOrganizationMember($token, $object)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 }

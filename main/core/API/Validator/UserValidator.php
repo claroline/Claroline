@@ -9,7 +9,7 @@ use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Doctrine\ORM\QueryBuilder;
 
 class UserValidator implements ValidatorInterface
@@ -21,12 +21,6 @@ class UserValidator implements ValidatorInterface
     /** @var UserRepository */
     private $repo;
 
-    /**
-     * UserValidator constructor.
-     *
-     * @param ObjectManager     $om
-     * @param ProfileSerializer $profileSerializer
-     */
     public function __construct(ObjectManager $om, ProfileSerializer $profileSerializer)
     {
         $this->om = $om;

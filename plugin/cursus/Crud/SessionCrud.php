@@ -14,37 +14,53 @@ namespace Claroline\CursusBundle\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Event\Log\LogSessionCreateEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionDeleteEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionEditEvent;
 use Claroline\CursusBundle\Manager\SessionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SessionCrud
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
     /** @var SessionManager */
     private $sessionManager;
 
-    /**
-     * SessionCrud constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param SessionManager           $sessionManager
-     */
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         SessionManager $sessionManager
     ) {
+        $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->sessionManager = $sessionManager;
     }
 
+    public function preCreate(CreateEvent $event)
+    {
+        /** @var User $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        /** @var Session $session */
+        $session = $event->getObject();
+
+        $session->setCreatedAt(new \DateTime());
+        $session->setUpdatedAt(new \DateTime());
+
+        if (empty($session->getCreator()) && $user instanceof User) {
+            $session->setCreator($user);
+        }
+    }
+
     public function postCreate(CreateEvent $event)
     {
-        /** @var CourseSession $session */
+        /** @var Session $session */
         $session = $event->getObject();
 
         // Removes default session flag on all other sessions if this one is the default one
@@ -82,9 +98,17 @@ class SessionCrud
         $this->eventDispatcher->dispatch($event, 'log');
     }
 
+    public function preUpdate(UpdateEvent $event)
+    {
+        /** @var Session $session */
+        $session = $event->getObject();
+
+        $session->setUpdatedAt(new \DateTime());
+    }
+
     public function postUpdate(UpdateEvent $event)
     {
-        /** @var CourseSession $session */
+        /** @var Session $session */
         $session = $event->getObject();
 
         // Removes default session flag on all other sessions if this one is the default one

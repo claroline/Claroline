@@ -126,6 +126,13 @@ const DataProperty = {
     options: T.object,
 
     /**
+     * A placeholder to display when the prop is empty.
+     *
+     * @type {*} - Type depends on the data type.
+     */
+    placeholder: T.any,
+
+    /**
      * The calculated value for virtual properties.
      *
      * @param {object} object - The full data object.

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -19,20 +20,11 @@ class WorkspaceRestrictionsManager
 {
     /** @var SessionInterface */
     private $session;
-
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-
     /** @var WorkspaceManager */
     private $workspaceManager;
 
-    /**
-     * ResourceRestrictionsManager constructor.
-     *
-     * @param SessionInterface              $session
-     * @param AuthorizationCheckerInterface $authorization
-     * @param WorkspaceManager              $workspaceManager
-     */
     public function __construct(
         SessionInterface $session,
         AuthorizationCheckerInterface $authorization,
@@ -45,10 +37,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * Checks access restrictions of a workspace.
-     *
-     * @param Workspace $workspace
-     *
-     * @return bool
      */
     public function isGranted(Workspace $workspace): bool
     {
@@ -60,11 +48,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * Gets the list of access error for a workspace and a user.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return array
      */
     public function getErrors(Workspace $workspace, User $user = null): array
     {
@@ -88,13 +71,9 @@ class WorkspaceRestrictionsManager
 
             if (!empty($workspace->getAccessibleFrom()) || !empty($workspace->getAccessibleUntil())) {
                 $errors['notStarted'] = !$this->isStarted($workspace);
-                $errors['startDate'] = $workspace->getAccessibleFrom() ?
-                    $workspace->getAccessibleFrom()->format('d/m/Y') :
-                    null;
+                $errors['startDate'] = DateNormalizer::normalize($workspace->getAccessibleFrom());
                 $errors['ended'] = $this->isEnded($workspace);
-                $errors['endDate'] = $workspace->getAccessibleUntil() ?
-                    $workspace->getAccessibleUntil()->format('d/m/Y') :
-                    null;
+                $errors['endDate'] = DateNormalizer::normalize($workspace->getAccessibleUntil());
             }
 
             if (!empty($workspace->getAllowedIps())) {
@@ -109,10 +88,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * Checks if a user has at least the right to access the workspace.
-     *
-     * @param Workspace $workspace
-     *
-     * @return bool
      */
     public function hasRights(Workspace $workspace): bool
     {
@@ -121,10 +96,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * Checks if the access period of the workspace is started.
-     *
-     * @param Workspace $workspace
-     *
-     * @return bool
      */
     public function isStarted(Workspace $workspace): bool
     {
@@ -133,10 +104,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * Checks if the access period of the workspace is over.
-     *
-     * @param Workspace $workspace
-     *
-     * @return bool
      */
     public function isEnded(Workspace $workspace): bool
     {
@@ -145,10 +112,6 @@ class WorkspaceRestrictionsManager
 
     /**
      * Checks if the ip of the current user is allowed to access the workspace.
-     *
-     * @param Workspace $workspace
-     *
-     * @return bool
      *
      * @todo works just with IPv4, should be working with IPv6
      */
@@ -184,10 +147,6 @@ class WorkspaceRestrictionsManager
     /**
      * Checks if a workspace is unlocked.
      * (aka it has no access code, or user has already submitted it).
-     *
-     * @param Workspace $workspace
-     *
-     * @return bool
      */
     public function isUnlocked(Workspace $workspace): bool
     {
@@ -210,10 +169,10 @@ class WorkspaceRestrictionsManager
      *
      * @throws InvalidDataException - If the submitted code is incorrect
      */
-    public function unlock(Workspace $workspace, $code = null)
+    public function unlock(Workspace $workspace, string $code = null)
     {
-        //if a code is defined
-        if ($accessCode = $workspace->getAccessCode()) {
+        $accessCode = $workspace->getAccessCode();
+        if ($accessCode) {
             if (empty($code) || $accessCode !== $code) {
                 $this->session->set($workspace->getUuid(), false);
 

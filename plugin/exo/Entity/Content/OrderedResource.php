@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity\Content;
 
+use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * Base class to create an ordered list of ResourceNodes in an entity.
@@ -13,7 +13,7 @@ use UJM\ExoBundle\Library\Model\OrderTrait;
  */
 abstract class OrderedResource
 {
-    use OrderTrait;
+    use Order;
 
     /**
      * Linked ResourceNode.
@@ -32,8 +32,6 @@ abstract class OrderedResource
 
     /**
      * Sets resource node.
-     *
-     * @param ResourceNode $resourceNode
      */
     public function setResourceNode(ResourceNode $resourceNode)
     {

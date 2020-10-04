@@ -16,12 +16,14 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,6 +44,8 @@ class CourseSerializer
     private $om;
     /** @var PublicFileSerializer */
     private $fileSerializer;
+    /** @var UserSerializer */
+    private $userSerializer;
     /** @var OrganizationSerializer */
     private $orgaSerializer;
     /** @var WorkspaceSerializer */
@@ -52,23 +56,13 @@ class CourseSerializer
     private $workspaceRepo;
     private $courseRepo;
 
-    /**
-     * CourseSerializer constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param ObjectManager                 $om
-     * @param PublicFileSerializer          $fileSerializer
-     * @param OrganizationSerializer        $orgaSerializer
-     * @param WorkspaceSerializer           $workspaceSerializer
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         PublicFileSerializer $fileSerializer,
+        UserSerializer $userSerializer,
         OrganizationSerializer $orgaSerializer,
         WorkspaceSerializer $workspaceSerializer
     ) {
@@ -77,6 +71,7 @@ class CourseSerializer
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
+        $this->userSerializer = $userSerializer;
         $this->orgaSerializer = $orgaSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
 
@@ -85,31 +80,23 @@ class CourseSerializer
         $this->courseRepo = $om->getRepository(Course::class);
     }
 
-    /**
-     * @return string
-     */
     public function getSchema()
     {
         return '#/plugin/cursus/course.json';
     }
 
-    /**
-     * @param Course $course
-     * @param array  $options
-     *
-     * @return array
-     */
-    public function serialize(Course $course, array $options = [])
+    public function serialize(Course $course, array $options = []): array
     {
         $serialized = [
             'id' => $course->getUuid(),
             'code' => $course->getCode(),
-            'name' => $course->getTitle(),
+            'name' => $course->getName(),
             'slug' => $course->getSlug(),
             'description' => $course->getDescription(),
             'poster' => $this->serializePoster($course),
             'thumbnail' => $this->serializeThumbnail($course),
             'permissions' => [
+                'open' => $this->authorization->isGranted('OPEN', $course),
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
             ],
@@ -120,20 +107,26 @@ class CourseSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'meta' => [
+                    'creator' => $course->getCreator() ?
+                        $this->userSerializer->serialize($course->getCreator(), [Options::SERIALIZE_MINIMAL]) :
+                        null,
+                    'created' => DateNormalizer::normalize($course->getCreatedAt()),
+                    'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
                     'tutorRoleName' => $course->getTutorRoleName(),
                     'learnerRoleName' => $course->getLearnerRoleName(),
                     'duration' => $course->getDefaultSessionDuration(),
-                    'order' => $course->getDisplayOrder(),
+                    'order' => $course->getOrder(),
                 ],
                 'restrictions' => [
                     'users' => $course->getMaxUsers(),
                 ],
                 'registration' => [
-                    'publicRegistration' => $course->getPublicRegistration(),
-                    'publicUnregistration' => $course->getPublicUnregistration(),
-                    'registrationValidation' => $course->getRegistrationValidation(),
+                    'propagate' => $course->getPropagateRegistration(),
+                    'selfRegistration' => $course->getPublicRegistration(),
+                    'selfUnregistration' => $course->getPublicUnregistration(),
+                    'validation' => $course->getRegistrationValidation(),
                     'userValidation' => $course->getUserValidation(),
-                    'organizationValidation' => $course->getOrganizationValidation(),
+                    'mail' => $course->getRegistrationMail(),
                 ],
                 'workspace' => $course->getWorkspace() ?
                     $this->workspaceSerializer->serialize($course->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
@@ -153,33 +146,43 @@ class CourseSerializer
         return $serialized;
     }
 
-    /**
-     * @param array  $data
-     * @param Course $course
-     * @param array  $options
-     *
-     * @return Course
-     */
-    public function deserialize($data, Course $course, array $options)
+    public function deserialize(array $data, Course $course, array $options): Course
     {
         $this->sipe('id', 'setUuid', $data, $course);
         $this->sipe('code', 'setCode', $data, $course);
-        $this->sipe('name', 'setTitle', $data, $course);
+        $this->sipe('name', 'setName', $data, $course);
         $this->sipe('description', 'setDescription', $data, $course);
 
         $this->sipe('meta.tutorRoleName', 'setTutorRoleName', $data, $course);
         $this->sipe('meta.learnerRoleName', 'setLearnerRoleName', $data, $course);
         $this->sipe('meta.icon', 'setIcon', $data, $course);
         $this->sipe('meta.duration', 'setDefaultSessionDuration', $data, $course);
-        $this->sipe('meta.order', 'setDisplayOrder', $data, $course);
+        $this->sipe('meta.order', 'setOrder', $data, $course);
 
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $course);
 
-        $this->sipe('registration.publicRegistration', 'setPublicRegistration', $data, $course);
-        $this->sipe('registration.publicUnregistration', 'setPublicUnregistration', $data, $course);
-        $this->sipe('registration.registrationValidation', 'setRegistrationValidation', $data, $course);
+        $this->sipe('registration.propagate', 'setPropagateRegistration', $data, $course);
+        $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $course);
+        $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $course);
+        $this->sipe('registration.validation', 'setRegistrationValidation', $data, $course);
         $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
-        $this->sipe('registration.organizationValidation', 'setOrganizationValidation', $data, $course);
+        $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
+
+        if (isset($data['meta'])) {
+            if (isset($data['meta']['created'])) {
+                $course->setCreatedAt(DateNormalizer::denormalize($data['meta']['created']));
+            }
+
+            if (isset($data['meta']['updated'])) {
+                $course->setUpdatedAt(DateNormalizer::denormalize($data['meta']['updated']));
+            }
+
+            if (!empty($data['meta']['creator'])) {
+                /** @var User $creator */
+                $creator = $this->om->getObject($data['meta']['creator'], User::class);
+                $course->setCreator($creator);
+            }
+        }
 
         if (isset($data['parent'])) {
             $parent = null;
@@ -269,10 +272,8 @@ class CourseSerializer
     /**
      * Serializes Course tags.
      * Forwards the tag serialization to ItemTagSerializer.
-     *
-     * @return array
      */
-    private function serializeTags(Course $course)
+    private function serializeTags(Course $course): array
     {
         $event = new GenericDataEvent([
             'class' => Course::class,
@@ -302,7 +303,7 @@ class CourseSerializer
                     [
                         'class' => Course::class,
                         'id' => $course->getUuid(),
-                        'name' => $course->getTitle(),
+                        'name' => $course->getName(),
                     ],
                 ],
                 'replace' => true,

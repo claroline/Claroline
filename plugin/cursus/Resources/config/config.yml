@@ -1,17 +1,13 @@
 plugin:
     has_options: false
 
-    admin_tools:
-        - name: claroline_cursus_tool
-          class: graduation-cap
-
     tools:
-        - name: claroline_session_events_tool
+        - name: training_events
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
-          class: clock-o
+          class: clock
 
-        - name: cursus
+        - name: trainings
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
           class: graduation-cap
@@ -28,17 +24,72 @@ plugin:
           tags: [community, event]
 
     templates:
-        - name: session_invitation
-          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, session_trainers]
-        - name: session_event_invitation
-          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, event_name, event_description, event_start, event_end, event_location_name, event_location_address, event_location_extra, event_trainers]
-        - name: session_certificate
-          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, session_trainers, events_list]
-        - name: session_event_certificate
-          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, event_name, event_description, event_start, event_end, event_location_name, event_location_address, event_location_extra, event_trainers]
-        - name: session_certificate_mail
-          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, session_trainers, events_list, certificate_link]
-        - name: session_event_certificate_mail
-          placeholders: [course_title, course_code, course_description, session_name, session_description, session_start, session_end, event_name, event_description, event_start, event_end, event_location_name, event_location_address, event_location_extra, event_trainers, certificate_link]
-        - name: admin_certificate_mail
-          placeholders: [certificates_link]
+        - name: training_course
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - course_poster
+              - course_default_duration
+              - course_public_registration
+              - course_max_users
+
+        - name: training_session
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_url
+              - session_name
+              - session_code
+              - session_description
+              - session_poster
+              - session_public_registration
+              - session_max_users
+              - session_start
+              - session_end
+
+        - name: training_session_invitation
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_url
+              - session_name
+              - session_description
+              - session_poster
+              - session_start
+              - session_end
+              - session_trainers
+
+        - name: training_session_confirmation
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_url
+              - session_name
+              - session_description
+              - session_poster
+              - session_start
+              - session_end
+              - session_trainers
+              - registration_confirmation_url
+
+        - name: training_event_invitation
+          placeholders:
+              - course_name
+              - course_code
+              - course_description
+              - session_name
+              - session_description
+              - session_start
+              - session_end
+              - event_name
+              - event_description
+              - event_start
+              - event_end
+              - event_location_name
+              - event_location_address
+              - event_location_extra
+              - event_trainers

@@ -12,6 +12,8 @@
 namespace Claroline\AgendaBundle\Security\Voter;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -21,9 +23,10 @@ class EventVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
-            case self::CREATE: return $this->checkEdit($token, $object);
-            case self::EDIT:   return $this->checkEdit($token, $object);
-            case self::DELETE: return $this->checkEdit($token, $object);
+            case self::CREATE:
+            case self::EDIT:
+            case self::DELETE:
+                return $this->checkEdit($token, $object);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -33,18 +36,29 @@ class EventVoter extends AbstractVoter
     {
         $workspace = $object->getWorkspace();
 
-        if ($workspace) {
-            $perm = $this->getWorkspaceToolPerm($workspace, 'agenda', $token);
+        $currentUser = $token->getUser();
+        $user = $object->getUser();
 
-            return $perm & 2 ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
-        } else {
-            $currentUser = $token->getUser();
-            $user = $object->getUser();
-
-            return 'anon.' !== $currentUser && (!$user || $currentUser->getUuid() === $user->getUuid()) ?
-                VoterInterface::ACCESS_GRANTED :
-                VoterInterface::ACCESS_DENIED;
+        // the user is the creator of the event
+        if ('anon.' !== $currentUser && (!$user || $currentUser->getUuid() === $user->getUuid())) {
+            return VoterInterface::ACCESS_GRANTED;
         }
+
+        // the user has EDIT right on the corresponding tool
+        /** @var OrderedToolRepository $orderedToolRepo */
+        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
+
+        if (!empty($workspace)) {
+            $agendaTool = $orderedToolRepo->findOneByNameAndWorkspace('agenda', $workspace);
+        } else {
+            $agendaTool = $orderedToolRepo->findOneByNameAndDesktop('agenda');
+        }
+
+        if ($this->isGranted('EDIT', $agendaTool)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()

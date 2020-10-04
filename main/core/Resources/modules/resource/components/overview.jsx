@@ -141,7 +141,7 @@ const ResourceOverview = props =>
         }
 
         {0 !== props.actions.length &&
-          <section className="user-actions">
+          <section className="overview-user-actions">
             <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
 
             {props.actions.map((action, index) => !action.disabled ?

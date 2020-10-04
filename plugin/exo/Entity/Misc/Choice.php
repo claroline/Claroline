@@ -2,10 +2,10 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
-use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * Choice.
@@ -15,7 +15,7 @@ use UJM\ExoBundle\Library\Model\OrderTrait;
  */
 class Choice extends AbstractChoice implements AnswerPartInterface
 {
-    use OrderTrait;
+    use Order;
     /**
      * The choice is part of the expected answer for the question.
      *
@@ -67,9 +67,6 @@ class Choice extends AbstractChoice implements AnswerPartInterface
         return $this->interactionQCM;
     }
 
-    /**
-     * @param ChoiceQuestion $interactionQCM
-     */
     public function setInteractionQCM(ChoiceQuestion $interactionQCM)
     {
         $this->interactionQCM = $interactionQCM;

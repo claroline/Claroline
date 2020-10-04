@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * A Resource on which the Item is referred.
@@ -14,7 +14,7 @@ use UJM\ExoBundle\Library\Model\OrderTrait;
  */
 class ItemObject
 {
-    use OrderTrait;
+    use Order;
 
     /**
      * @var int

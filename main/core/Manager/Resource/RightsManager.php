@@ -12,18 +12,18 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use Claroline\CoreBundle\Repository\ResourceRightsRepository;
-use Claroline\CoreBundle\Repository\ResourceTypeRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,15 +57,6 @@ class RightsManager implements LoggerAwareInterface
 
     private $container;
 
-    /**
-     * RightsManager constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager         $om
-     * @param RoleManager           $roleManager
-     * @param MaskManager           $maskManager
-     * @param ContainerInterface    $container
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
@@ -88,12 +79,6 @@ class RightsManager implements LoggerAwareInterface
     /**
      * Create a new ResourceRight. If the ResourceRight already exists, it's edited instead.
      *
-     * @param array|int    $permissions
-     * @param Role         $role
-     * @param ResourceNode $node
-     * @param bool         $isRecursive
-     * @param array        $creations
-     *
      * @deprecated
      *
      * @todo remove me. This does the same thing than editPerms, this is just written a different way
@@ -104,12 +89,10 @@ class RightsManager implements LoggerAwareInterface
     }
 
     /**
-     * @param array|int    $permissions - the permission mask
-     * @param Role|string  $role
-     * @param ResourceNode $node
-     * @param bool         $isRecursive
-     * @param array        $creations
-     * @param bool         $log
+     * @param array|int   $permissions - the permission mask
+     * @param Role|string $role
+     * @param bool        $isRecursive
+     * @param bool        $log
      */
     public function editPerms($permissions, $role, ResourceNode $node, $isRecursive = false, array $creations = [], $log = true)
     {
@@ -126,13 +109,8 @@ class RightsManager implements LoggerAwareInterface
     /**
      * Copy the rights from the parent to its children.
      * Should be removed sooner than later (see resourceNode copy).
-     *
-     * @param ResourceNode $original
-     * @param ResourceNode $node
-     *
-     * @return ResourceNode
      */
-    public function copy(ResourceNode $original, ResourceNode $node)
+    public function copy(ResourceNode $original, ResourceNode $node): ResourceNode
     {
         /** @var ResourceRights[] $originalRights */
         $originalRights = $this->rightsRepo->findBy(['resourceNode' => $original]);
@@ -152,13 +130,7 @@ class RightsManager implements LoggerAwareInterface
         return $node;
     }
 
-    /**
-     * @param string[]     $roles
-     * @param ResourceNode $node
-     *
-     * @return array
-     */
-    public function getCreatableTypes(array $roles, ResourceNode $node)
+    public function getCreatableTypes(array $roles, ResourceNode $node): array
     {
         $creationRights = $this->rightsRepo->findCreationRights($roles, $node);
 
@@ -168,9 +140,6 @@ class RightsManager implements LoggerAwareInterface
     }
 
     /**
-     * @param array        $roles
-     * @param ResourceNode $node
-     *
      * @return ResourceRights
      */
     public function getMaximumRights(array $roles, ResourceNode $node)
@@ -260,8 +229,6 @@ class RightsManager implements LoggerAwareInterface
      *   - It is the creator of the resource
      *   - It is the manager of the parent workspace
      *   - It is a platform admin
-     *
-     * @param ResourceNode $resourceNode
      *
      * @return bool
      */

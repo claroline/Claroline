@@ -187,7 +187,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         name: 'delete',
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
-        label: trans('delete', {}, 'actions'),
+        label: ownProps.delete.label || trans('delete', {}, 'actions'),
         dangerous: true,
         confirm: {
           title: trans('objects_delete_title'),

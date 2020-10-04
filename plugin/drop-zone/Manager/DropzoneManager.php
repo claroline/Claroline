@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Document;

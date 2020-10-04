@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 
 class VersionManager implements LoggerAwareInterface
 {
@@ -29,11 +28,6 @@ class VersionManager implements LoggerAwareInterface
     /** @var VersionRepository */
     private $repo;
 
-    /**
-     * VersionManager constructor.
-     *
-     * @param ObjectManager $om
-     */
     public function __construct(
         ObjectManager $om
     ) {
@@ -70,13 +64,6 @@ class VersionManager implements LoggerAwareInterface
         $version->setIsUpgraded(true);
         $this->om->persist($version);
         $this->om->flush();
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
     }
 
     public function getCurrent()

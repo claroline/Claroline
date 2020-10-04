@@ -631,6 +631,7 @@ class Version20200422153656 extends AbstractMigration
             ALTER TABLE ujm_paper 
             ADD CONSTRAINT FK_82972E4BA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
+            ON DELETE SET NULL
         ');
         $this->addSql('
             ALTER TABLE ujm_paper 

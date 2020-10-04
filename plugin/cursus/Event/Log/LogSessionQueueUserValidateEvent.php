@@ -12,7 +12,6 @@
 namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 
 class LogSessionQueueUserValidateEvent extends LogGenericEvent
 {
@@ -30,13 +29,11 @@ class LogSessionQueueUserValidateEvent extends LogGenericEvent
         $details['firsName'] = $user->getFirstName();
         $details['lastName'] = $user->getLastName();
         $details['courseId'] = $course->getUuid();
-        $details['courseTitle'] = $course->getTitle();
+        $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
         $details['sessionId'] = $session->getUuid();
         $details['sessionName'] = $session->getName();
-        $details['sessionStatus'] = $session->getSessionStatus();
-        $details['sessionType'] = $session->getType();
-        $details['userValidationDate'] = $queue->getUserValidationDate();
+        //$details['userValidationDate'] = $queue->getUserValidationDate();
 
         parent::__construct(
             self::ACTION,

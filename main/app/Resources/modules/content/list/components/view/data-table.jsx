@@ -35,6 +35,8 @@ const DataCellContent = props => {
   let cellRendering
   if (props.column.render) {
     cellRendering = props.column.render(props.rowData)
+  } else if (isEmpty(cellData) && props.column.placeholder) {
+    cellRendering = props.column.placeholder
   } else if (get(props.definition, 'components.table', null)) {
     // use custom component defined in the type definition
     cellRendering = React.createElement(props.definition.components.table, merge({}, props.column.options || {}, {

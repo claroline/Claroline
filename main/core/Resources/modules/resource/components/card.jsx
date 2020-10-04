@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
@@ -45,7 +46,7 @@ const ResourceCard = props => {
     <DataCard
       {...props}
       className={classes(props.className, {
-        'data-card-muted': !props.data.meta.published
+        'data-card-muted': !get(props.data, 'meta.published', false) || get(props.data, 'restrictions.hidden', false)
       })}
       id={props.data.id}
       poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}

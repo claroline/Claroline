@@ -12,16 +12,16 @@
 namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CursusBundle\Entity\SessionEventUser;
+use Claroline\CursusBundle\Entity\Registration\EventUser;
 
 class LogSessionEventUserRegistrationEvent extends LogGenericEvent
 {
     const ACTION = 'session-event-user-registration';
 
-    public function __construct(SessionEventUser $sessionEventUser)
+    public function __construct(EventUser $sessionEventUser)
     {
         $user = $sessionEventUser->getUser();
-        $sessionEvent = $sessionEventUser->getSessionEvent();
+        $sessionEvent = $sessionEventUser->getEvent();
         $session = $sessionEvent->getSession();
         $course = $session->getCourse();
         $details = [];
@@ -33,11 +33,11 @@ class LogSessionEventUserRegistrationEvent extends LogGenericEvent
         $details['sessionId'] = $session->getUuid();
         $details['sessionName'] = $session->getName();
         $details['courseId'] = $course->getUuid();
-        $details['courseTitle'] = $course->getTitle();
+        $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
-        $details['registrationStatus'] = $sessionEventUser->getRegistrationStatus();
-        $details['applicationDate'] = $sessionEventUser->getApplicationDate();
-        $details['registrationDate'] = $sessionEventUser->getRegistrationDate();
+        //$details['registrationStatus'] = $sessionEventUser->getStatus();
+        //$details['applicationDate'] = $sessionEventUser->getApplicationDate();
+        $details['registrationDate'] = $sessionEventUser->getDate();
 
         parent::__construct(
             self::ACTION,

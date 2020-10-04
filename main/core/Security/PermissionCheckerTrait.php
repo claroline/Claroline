@@ -38,6 +38,7 @@ trait PermissionCheckerTrait
     private function checkPermission($permission, $object, $options = [], $throwException = false)
     {
         if ('cli' === php_sapi_name()) {
+            // TODO : this should not be checked here (maybe create a Voter for that)
             return true;
         }
 
@@ -55,9 +56,7 @@ trait PermissionCheckerTrait
 
         $granted = $this->authorization->isGranted($permission, $collection);
         if (!$granted && $throwException) {
-            throw new AccessDeniedException(
-                sprintf('Operation "%s" cannot be done on object %s', $permission, get_class($object))
-            );
+            throw new AccessDeniedException(sprintf('Operation "%s" cannot be done on object %s', $permission, get_class($object)));
         }
 
         return $granted;

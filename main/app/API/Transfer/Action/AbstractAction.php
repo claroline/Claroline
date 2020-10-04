@@ -53,11 +53,6 @@ abstract class AbstractAction implements LoggerAwareInterface
         return [];
     }
 
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
     public function getMode()
     {
         return self::MODE_DEFAULT;

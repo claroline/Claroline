@@ -13,8 +13,8 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -22,10 +22,8 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -54,21 +52,6 @@ class UserManager implements LoggerAwareInterface
     /** @var UserRepository */
     private $userRepo;
 
-    /**
-     * UserManager Constructor.
-     *
-     * @param ContainerInterface           $container
-     * @param MailManager                  $mailManager
-     * @param ObjectManager                $objectManager
-     * @param OrganizationManager          $organizationManager
-     * @param PlatformConfigurationHandler $platformConfigHandler
-     * @param RoleManager                  $roleManager
-     * @param StrictDispatcher             $strictEventDispatcher
-     * @param TokenStorageInterface        $tokenStorage
-     * @param TranslatorInterface          $translator
-     * @param ValidatorInterface           $validator
-     * @param WorkspaceManager             $workspaceManager
-     */
     public function __construct(
         ContainerInterface $container,
         MailManager $mailManager,
@@ -103,8 +86,6 @@ class UserManager implements LoggerAwareInterface
      * @todo use crud instead
      * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand and default User in fixtures, and other things)
      *
-     * @param User  $user
-     * @param array $options
      * @param array $rolesToAdd
      *
      * @return User
@@ -139,9 +120,6 @@ class UserManager implements LoggerAwareInterface
 
     /**
      * Creates the personal workspace of a user.
-     *
-     * @param User      $user
-     * @param Workspace $model
      */
     public function setPersonalWorkspace(User $user, Workspace $model = null)
     {
@@ -288,8 +266,7 @@ class UserManager implements LoggerAwareInterface
      * @todo use crud instead
      * @todo REMOVE ME
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string                            $locale Language with format en, fr, es, etc
+     * @param string $locale Language with format en, fr, es, etc
      */
     public function setLocale(User $user, $locale = 'en')
     {
@@ -342,8 +319,6 @@ class UserManager implements LoggerAwareInterface
 
     /**
      * Activates a User and set the init date to now.
-     *
-     * @param User $user
      */
     public function activateUser(User $user)
     {
@@ -358,8 +333,6 @@ class UserManager implements LoggerAwareInterface
 
     /**
      * Logs the current user.
-     *
-     * @param User $user
      */
     public function logUser(User $user)
     {
@@ -440,62 +413,6 @@ class UserManager implements LoggerAwareInterface
         }
 
         $this->objectManager->endFlushSuite();
-    }
-
-    /**
-     * This method will bind each users who don't already have an organization to the default one.
-     *
-     * @deprecated only used in Updater120304
-     */
-    public function bindUserToGroup()
-    {
-        $limit = 250;
-        $offset = 0;
-        $this->log('Add default group to users...');
-        $this->objectManager->startFlushSuite();
-        $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
-        /** @var Group $default */
-        $default = $this->objectManager->getRepository(Group::class)->findOneBy(['name' => PlatformRoles::USER]);
-        $i = 0;
-
-        while ($offset < $countUsers) {
-            $users = $this->userRepo->findBy([], null, $limit, $offset);
-
-            /** @var User $user */
-            foreach ($users as $user) {
-                if (!$user->hasGroup($default)) {
-                    ++$i;
-                    $this->log('Add default group for user '.$user->getUsername());
-                    $user->addGroup($default);
-                    $this->objectManager->persist($user);
-
-                    if (0 === $i % 250) {
-                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
-                        $this->objectManager->forceFlush();
-                    }
-                } else {
-                    $this->log("group for user {$user->getUsername()} already exists");
-                }
-            }
-
-            $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
-            $this->objectManager->forceFlush();
-            $default = $this->objectManager->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
-
-            $offset += $limit;
-        }
-
-        $this->objectManager->endFlushSuite();
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
     }
 
     public function enable(User $user)
@@ -622,9 +539,6 @@ class UserManager implements LoggerAwareInterface
 
     /**
      * Merges two users and transfers every resource to the kept user.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */

@@ -7,7 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
 
@@ -24,11 +24,6 @@ class SectionSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /**
-     * SectionSerializer constructor.
-     *
-     * @param ContributionSerializer $contributionSerializer
-     */
     public function __construct(
         ObjectManager $om,
         ContributionSerializer $contributionSerializer,
@@ -60,12 +55,7 @@ class SectionSerializer
         return '#/plugin/wiki/section.json';
     }
 
-    /**
-     * @param Section $section
-     *
-     * @return array - The serialized representation of a contribution
-     */
-    public function serialize(Section $section, $options = [], $isNew = false)
+    public function serialize(Section $section, $options = [], $isNew = false): array
     {
         $author = $section->getAuthor();
         $extraMeta = [];
@@ -95,7 +85,6 @@ class SectionSerializer
     /**
      * Serializes a section tree, returned from Gedmo tree extension.
      *
-     * @param Wiki $wiki
      * @param $tree
      *
      * @return array
@@ -132,14 +121,7 @@ class SectionSerializer
         ];
     }
 
-    /**
-     * @param array          $data
-     * @param User           $user
-     * @param Section | null $section
-     *
-     * @return Section - The deserialized section entity
-     */
-    public function deserialize($data, User $user, Section $section = null)
+    public function deserialize(array $data, User $user, Section $section = null): Section
     {
         if (empty($section)) {
             $section = new Section();

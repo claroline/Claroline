@@ -14,6 +14,8 @@ services:
         arguments:
             - '@claroline.installation.fixture_loader.locator'
             - '@claroline.doctrine_fixture_executor'
+        calls:
+            - setLogger: ['@logger']
 
     claroline.symfony_fixture_loader:
         shared: false

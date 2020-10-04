@@ -54,7 +54,9 @@ const DataListProperty = {
      *
      * @type {bool}
      */
-    sortable: T.bool
+    sortable: T.bool,
+
+    order: T.number
   }),
 
   defaultProps: merge({}, DataProperty.defaultProps, {

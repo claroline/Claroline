@@ -2,19 +2,19 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
-use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * A step represents a group of items (questions or content) inside an exercise.
  * It also have its specific attempt parameters.
  *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\StepRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="ujm_step")
  */
 class Step
@@ -30,7 +30,7 @@ class Step
 
     use UuidTrait;
 
-    use OrderTrait;
+    use Order;
 
     use AttemptParametersTrait;
 
@@ -125,9 +125,6 @@ class Step
         return $this->description;
     }
 
-    /**
-     * @param Exercise $exercise
-     */
     public function setExercise(Exercise $exercise)
     {
         $this->exercise = $exercise;
@@ -149,9 +146,6 @@ class Step
         return $this->stepQuestions;
     }
 
-    /**
-     * @param StepItem $stepQuestion
-     */
     public function addStepQuestion(StepItem $stepQuestion)
     {
         if (!$this->stepQuestions->contains($stepQuestion)) {
@@ -159,9 +153,6 @@ class Step
         }
     }
 
-    /**
-     * @param StepItem $stepQuestion
-     */
     public function removeStepQuestion(StepItem $stepQuestion)
     {
         if ($this->stepQuestions->contains($stepQuestion)) {

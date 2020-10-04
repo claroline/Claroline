@@ -43,11 +43,6 @@ class Persister
      */
     private $userRole;
 
-    /**
-     * Persister constructor.
-     *
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -223,7 +218,7 @@ class Persister
             $node->setCreator($user);
             $node->setResourceType($this->exoType);
             $node->setWorkspace($user->getPersonalWorkspace());
-            $node->setGuid(uniqid('', true));
+            $node->setUuid(uniqid('', true));
             $exercise->setResourceNode($node);
             $this->om->persist($node);
         }
@@ -278,7 +273,7 @@ class Persister
         $workspace->setName($username);
         $workspace->setCreator($user);
         $workspace->setCode($username);
-        $workspace->setGuid($username);
+        $workspace->setUuid($username);
         $this->om->persist($workspace);
 
         $user->setPersonalWorkspace($workspace);

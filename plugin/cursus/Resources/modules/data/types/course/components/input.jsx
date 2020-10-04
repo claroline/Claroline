@@ -8,7 +8,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {CourseCard} from '#/plugin/cursus/course/components/card'
-import {Course as CourseTypes} from '#/plugin/cursus/course/prop-types'
+import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {MODAL_COURSES} from '#/plugin/cursus/modals/courses'
 
 const CourseButton = props =>

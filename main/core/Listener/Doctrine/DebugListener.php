@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Listener\Doctrine;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -77,13 +76,6 @@ class DebugListener implements LoggerAwareInterface
     private function logTrace(array $call)
     {
         $this->log('Function "'.$call['function'].'" was called from file '.$call['file'].' on line '.$call['line'].'.', LogLevel::DEBUG);
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
     }
 
     public function activateLog()

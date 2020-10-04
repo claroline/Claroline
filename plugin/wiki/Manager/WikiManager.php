@@ -37,7 +37,7 @@ class WikiManager
     private $contributionRepository;
 
     /**
-     * @var \Claroline\CoreBundle\Repository\UserRepository
+     * @var \Claroline\CoreBundle\Repository\User\UserRepository
      */
     private $userRepository;
 

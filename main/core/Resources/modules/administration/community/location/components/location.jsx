@@ -42,21 +42,58 @@ const LocationForm = props =>
         title: trans('general'),
         primary: true,
         fields: [
-          {name: 'name', type: 'string', label: trans('name'), required: true},
-          {name: 'meta.type', type: 'choice', label: trans('type'), options: {condensed: true, choices: locationTypes}}
+          {
+            name: 'name',
+            type: 'string',
+            label: trans('name'),
+            required: true
+          }
         ]
       }, {
-        title: trans('contact'),
-        icon: 'fa fa-fw fa-address-card',
-        primary: true,
+        title: trans('information'),
+        icon: 'fa fa-fw fa-info',
         fields: [
-          {name: 'phone', type: 'string', label: trans('phone')},
-          {name: 'street', type: 'string', label: trans('street'), required: true},
-          {name: 'boxNumber', type: 'string', label: trans('box_number')},
-          {name: 'streetNumber', type: 'string', label: trans('street_number'), required: true},
-          {name: 'zipCode', type: 'string', label: trans('postal_code'), required: true},
-          {name: 'town', type: 'string', label: trans('town'), required: true},
-          {name: 'country', type: 'string', label: trans('country'), required: true}
+          {
+            name: 'meta.type',
+            type: 'choice',
+            label: trans('type'),
+            options: {
+              condensed: true,
+              choices: locationTypes
+            }
+          }, {
+            name: 'meta.description',
+            type: 'html',
+            label: trans('description')
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
+        fields: [
+          {
+            name: 'poster',
+            type: 'image',
+            label: trans('poster')
+          }, {
+            name: 'thumbnail',
+            type: 'image',
+            label: trans('thumbnail')
+          }
+        ]
+      }, {
+        title: trans('contact_information'),
+        icon: 'fa fa-fw fa-id-card',
+        fields: [
+          {
+            name: 'phone',
+            type: 'string',
+            label: trans('phone')
+          }, {
+            name: 'address',
+            type: 'address',
+            label: trans('address')
+          }
         ]
       }, {
         title: trans('geolocation'),

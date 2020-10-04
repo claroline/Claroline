@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isUndefined from 'lodash/isUndefined'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, displayDate} from '#/main/app/intl'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 import {PageFull} from '#/main/app/page/components/full'
@@ -50,7 +50,7 @@ class WorkspaceRestrictions extends Component {
       >
         <div className="access-restrictions">
           <h2>{trans('restricted_access')}</h2>
-          <p>{trans('restricted_workspace.access_message')}</p>
+          <p>{trans('restricted_workspace.access_message', {}, 'workspace')}</p>
 
           {!this.props.errors.pendingRegistration &&
             <ContentRestriction
@@ -59,19 +59,19 @@ class WorkspaceRestrictions extends Component {
               onlyWarn={true}
               success={{
                 title: classes({
-                  [trans('restricted_workspace.you_are_manager')]: this.props.managed,
-                  [trans('restricted_workspace.can_access')]: !this.props.managed
+                  [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
+                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed
                 }),
                 help: classes({
-                  [trans('restricted_workspace.manager_rights_access')]: this.props.managed,
-                  [trans('restricted_workspace.rights_access')]: !this.props.managed
+                  [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed,
+                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed
                 })
               }}
               fail={{
-                title: trans('restricted_workspace.cannot_access'),
+                title: trans('restricted_workspace.cannot_access', {}, 'workspace'),
                 help: classes({
-                  [trans('restricted_workspace.contact_manager')]: !this.props.errors.selfRegistration,
-                  [trans('restricted_workspace.self_registration')]: this.props.errors.selfRegistration
+                  [trans('restricted_workspace.contact_manager', {}, 'workspace')]: !this.props.errors.selfRegistration,
+                  [trans('restricted_workspace.self_registration', {}, 'workspace')]: this.props.errors.selfRegistration
                 })
               }}
             >
@@ -80,7 +80,7 @@ class WorkspaceRestrictions extends Component {
                   style={{marginTop: 20}}
                   className="btn btn-block btn-emphasis"
                   type={CALLBACK_BUTTON}
-                  label={trans('restricted_workspace.self_register')}
+                  label={trans('restricted_workspace.self_register', {}, 'workspace')}
                   callback={this.props.selfRegister}
                   primary={true}
                 />
@@ -128,17 +128,17 @@ class WorkspaceRestrictions extends Component {
               failed={this.props.errors.noRights}
               success={{
                 title: classes({
-                  [trans('restricted_workspace.you_are_manager')]: this.props.managed,
-                  [trans('restricted_workspace.can_access')]: !this.props.managed
+                  [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
+                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed
                 }),
                 help: classes({
-                  [trans('restricted_workspace.manager_rights_access')]: this.props.managed,
-                  [trans('restricted_workspace.rights_access')]: !this.props.managed
+                  [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed,
+                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed
                 })
               }}
               fail={{
-                title: this.props.managed ? trans('restricted_workspace.you_are_manager') : trans('restricted_workspace.pending_registration'),
-                help: this.props.managed ? trans('restricted_workspace.manager_rights_access') : trans('restricted_workspace.wait_validation')
+                title: this.props.managed ? trans('restricted_workspace.you_are_manager', {}, 'workspace') : trans('restricted_workspace.pending_registration', {}, 'workspace'),
+                help: this.props.managed ? trans('restricted_workspace.manager_rights_access', {}, 'workspace') : trans('restricted_workspace.wait_validation', {}, 'workspace')
               }}
             />
           }
@@ -148,12 +148,17 @@ class WorkspaceRestrictions extends Component {
               icon="fa fa-fw fa-calendar"
               failed={this.props.errors.notStarted || this.props.errors.ended}
               success={{
-                title: '',
-                help: ''
+                title: trans('restricted_workspace.period_opened', {}, 'workspace'),
+                help: (this.props.errors.startDate || this.props.errors.endDate) ? trans('restricted_workspace.period_opened_help', {
+                  start: this.props.errors.startDate ? displayDate(this.props.errors.startDate, false, true) : `(${trans('empty_value')})`,
+                  end: this.props.errors.endDate ? displayDate(this.props.errors.endDate, false, true) : `(${trans('empty_value')})`
+                }, 'workspace') : trans('restricted_workspace.period_not_limited', {}, 'workspace')
               }}
               fail={{
-                title: this.props.errors.notStarted ? trans('restricted_workspace.not_started') : trans('restricted_workspace.ended'),
-                help: this.props.errors.notStarted ? `${trans('restricted_workspace.wait')} ${this.props.errors.startDate}` : ''
+                title: trans(this.props.errors.notStarted ? 'restricted_workspace.not_started' : 'restricted_workspace.ended', {}, 'workspace'),
+                help: this.props.errors.notStarted ?
+                  trans('restricted_workspace.not_started_help', {date: displayDate(this.props.errors.startDate, false, true)}, 'workspace') :
+                  trans('restricted_workspace.ended_help', {date: displayDate(this.props.errors.endDate, false, true)}, 'workspace')
               }}
             />
           }
@@ -164,12 +169,12 @@ class WorkspaceRestrictions extends Component {
               onlyWarn={true}
               failed={this.props.errors.locked}
               success={{
-                title: trans('restricted_workspace.unlocked'),
+                title: trans('restricted_workspace.unlocked', {}, 'workspace'),
                 help: ''
               }}
               fail={{
-                title: trans('restricted_workspace.code_required'),
-                help: trans('restricted_workspace.enter_code')
+                title: trans('restricted_workspace.code_required', {}, 'workspace'),
+                help: trans('restricted_workspace.enter_code', {}, 'workspace')
               }}
             >
               {this.props.errors.locked &&
@@ -185,7 +190,7 @@ class WorkspaceRestrictions extends Component {
                     type={CALLBACK_BUTTON}
                     icon="fa fa-fw fa-sign-in-alt"
                     disabled={!this.state.codeAccess}
-                    label={trans('restricted_workspace.access')}
+                    label={trans('restricted_workspace.access', {}, 'workspace')}
                     callback={this.submitCodeAccess}
                     primary={true}
                   />
@@ -200,12 +205,12 @@ class WorkspaceRestrictions extends Component {
               onlyWarn={true}
               failed={this.props.errors.invalidLocation}
               success={{
-                title: trans('restricted_workspace.authorized_ip'),
+                title: trans('restricted_workspace.authorized_ip', {}, 'workspace'),
                 help: ''
               }}
               fail={{
-                title: trans('restricted_workspace.authorized_ip_required'),
-                help: trans('restricted_workspace.use_authorized_ip')
+                title: trans('restricted_workspace.authorized_ip_required', {}, 'workspace'),
+                help: trans('restricted_workspace.use_authorized_ip', {}, 'workspace')
               }}
             />
           }
@@ -215,7 +220,7 @@ class WorkspaceRestrictions extends Component {
               className="btn btn-block btn-emphasis"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-sign-in-alt"
-              label={trans('restricted_workspace.access')}
+              label={trans('restricted_workspace.access', {}, 'workspace')}
               callback={this.props.dismiss}
               primary={true}
             />
@@ -223,7 +228,7 @@ class WorkspaceRestrictions extends Component {
 
           {this.props.managed &&
             <ContentHelp
-              help={trans('restricted_workspace.manager_info')}
+              help={trans('restricted_workspace.manager_info', {}, 'workspace')}
             />
           }
         </div>

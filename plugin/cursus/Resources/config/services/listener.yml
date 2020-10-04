@@ -2,22 +2,20 @@ services:
     _defaults:
         autowire: false
         autoconfigure: false
-        public: true
-        tags: ['claroline.crud']
+        public: false
 
-    Claroline\CursusBundle\Listener\CursusListener:
+    # Tools
+    Claroline\CursusBundle\Listener\Tool\TrainingEventsListener:
         arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CursusBundle\Manager\CourseManager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@claroline.manager.tool_manager'
-            - '@translator'
+            - '@Claroline\AppBundle\API\FinderProvider'
         tags:
-            - { name: kernel.event_listener, event: administration_tool_claroline_cursus_tool, method: onAdministrationToolOpen }
-            - { name: kernel.event_listener, event: open_tool_workspace_claroline_session_events_tool, method: onDisplayWorkspaceSessionEventTool }
-            - { name: kernel.event_listener, event: claroline_external_agenda_events, method: onAgendaEventsRequest }
-            - { name: kernel.event_listener, event: open_tool_desktop_cursus, method: onDisplayDesktopCursusTool }
+            - { name: kernel.event_listener, event: open_tool_workspace_training_events, method: onDisplayWorkspace }
 
+    Claroline\CursusBundle\Listener\Tool\TrainingsListener:
+        tags:
+            - { name: kernel.event_listener, event: open_tool_desktop_trainings, method: onDisplayDesktop }
+
+    # Data sources
     Claroline\CursusBundle\Listener\DataSource\PublicSessionSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'

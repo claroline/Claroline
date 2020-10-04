@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
@@ -30,7 +30,6 @@ use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\ThemeBundle\Entity\Theme;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -753,15 +752,5 @@ class DatabaseWriter implements LoggerAwareInterface
         $templateType->setPlaceholders(isset($templateTypeConfiguration['placeholders']) ? $templateTypeConfiguration['placeholders'] : []);
         $templateType->setPlugin($plugin);
         $this->em->persist($templateType);
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
     }
 }

@@ -7,7 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Repository\SectionRepository;
@@ -59,12 +59,7 @@ class ContributionSerializer
         return '#/plugin/wiki/contribution.json';
     }
 
-    /**
-     * @param Contribution $contribution
-     *
-     * @return array - The serialized representation of a contribution
-     */
-    public function serialize(Contribution $contribution)
+    public function serialize(Contribution $contribution): array
     {
         $contributor = $contribution->getContributor();
 
@@ -95,15 +90,7 @@ class ContributionSerializer
         ];
     }
 
-    /**
-     * @param array               $data
-     * @param User                $user
-     * @param Section             $section
-     * @param Contribution | null $contribution
-     *
-     * @return Contribution - The deserialized contribution entity
-     */
-    public function deserialize($data, User $user, Section $section, Contribution $contribution = null)
+    public function deserialize(array $data, User $user, Section $section, Contribution $contribution = null): Contribution
     {
         if (empty($contribution)) {
             $contribution = new Contribution();
@@ -111,8 +98,10 @@ class ContributionSerializer
             $contribution->setContributor($user);
             $contribution->refreshUuid();
         }
+
         $this->sipe('title', 'setTitle', $data, $contribution);
         $this->sipe('text', 'setText', $data, $contribution);
+
         if (empty($contribution->getTitle()) && !$section->isRoot()) {
             throw new BadRequestHttpException('Title cannot be blank');
         }

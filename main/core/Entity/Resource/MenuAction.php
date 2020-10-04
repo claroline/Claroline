@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceActionRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceActionRepository")
  * @ORM\Table(name="claro_menu_action")
  */
 class MenuAction
@@ -105,9 +105,6 @@ class MenuAction
         return $this->resourceType;
     }
 
-    /**
-     * @param ResourceType $resourceType
-     */
     public function setResourceType(ResourceType $resourceType = null)
     {
         $this->resourceType = $resourceType;
@@ -153,9 +150,6 @@ class MenuAction
         return $this->scope;
     }
 
-    /**
-     * @param array $scope
-     */
     public function setScope(array $scope)
     {
         $this->scope = $scope;
@@ -169,17 +163,11 @@ class MenuAction
         return $this->api;
     }
 
-    /**
-     * @param array $api
-     */
     public function setApi(array $api)
     {
         $this->api = $api;
     }
 
-    /**
-     * @param Plugin $plugin
-     */
     public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;

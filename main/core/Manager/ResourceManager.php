@@ -14,9 +14,9 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -31,9 +31,9 @@ use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use Claroline\CoreBundle\Repository\ResourceTypeRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerAwareInterface;
@@ -67,17 +67,6 @@ class ResourceManager implements LoggerAwareInterface
     /** @var RoleRepository */
     private $roleRepo;
 
-    /**
-     * ResourceManager constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param RightsManager                 $rightsManager
-     * @param StrictDispatcher              $dispatcher
-     * @param ObjectManager                 $om
-     * @param ClaroUtilities                $ut
-     * @param Crud                          $crud
-     * @param TempFileManager               $tempManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         RightsManager $rightsManager,
@@ -112,15 +101,6 @@ class ResourceManager implements LoggerAwareInterface
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      *
-     * @param AbstractResource $resource
-     * @param ResourceType     $resourceType
-     * @param User             $creator
-     * @param Workspace        $workspace
-     * @param ResourceNode     $parent
-     * @param array            $rights
-     * @param bool             $isPublished
-     * @param bool             $createRights
-     *
      * @deprecated: use directory listener: onAdd instead ? I don't know. This is weird.
      *
      * @return AbstractResource
@@ -132,8 +112,8 @@ class ResourceManager implements LoggerAwareInterface
         Workspace $workspace = null,
         ResourceNode $parent = null,
         array $rights = [],
-        $isPublished = true,
-        $createRights = true
+        bool $isPublished = true,
+        bool $createRights = true
     ) {
         $this->om->startFlushSuite();
         /** @var ResourceNode $node */
@@ -181,14 +161,8 @@ class ResourceManager implements LoggerAwareInterface
      * Gets a unique name for a resource in a folder.
      * If the name of the resource already exists here, ~*indice* will be appended
      * to its name.
-     *
-     * @param ResourceNode $node
-     * @param ResourceNode $parent
-     * @param bool         $isCopy
-     *
-     * @return string
      */
-    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, $isCopy = false)
+    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, bool $isCopy = false): string
     {
         $candidateName = $node->getName();
         $nodeType = $node->getResourceType();
@@ -244,13 +218,8 @@ class ResourceManager implements LoggerAwareInterface
      * array $rights should be defined that way:
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
-     *
-     * @param ResourceNode $node
-     * @param array        $rights
-     * @param bool         $withDefault
-     * @param bool         $log
      */
-    public function createRights(ResourceNode $node, array $rights = [], $withDefault = true, $log = true)
+    public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true, bool $log = true)
     {
         foreach ($rights as $data) {
             $resourceTypes = $this->checkResourceTypes($data['create']);
@@ -276,9 +245,6 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Moves a resource.
-     *
-     * @param ResourceNode $child  currently treated node
-     * @param ResourceNode $parent old parent
      *
      * @throws ResourceMoveException
      *
@@ -317,10 +283,6 @@ class ResourceManager implements LoggerAwareInterface
      * Copies a resource in a directory.
      *
      * @deprecated use crud instead
-     *
-     * @param ResourceNode $node
-     * @param ResourceNode $parent
-     * @param User         $user
      *
      * @return ResourceNode
      */
@@ -366,13 +328,8 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Removes a resource.
-     *
-     * @param ResourceNode $node
-     * @param bool         $softDelete
-     *
-     * @throws \LogicException
      */
-    public function delete(ResourceNode $node, $softDelete = false)
+    public function delete(ResourceNode $node, bool $softDelete = false)
     {
         $this->crud->delete($node, $softDelete ? [Options::SOFT_DELETE] : []);
     }
@@ -380,8 +337,7 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Returns an archive with the required content.
      *
-     * @param ResourceNode[] $elements     - the nodes being exported
-     * @param bool           $forceArchive
+     * @param ResourceNode[] $elements - the nodes being exported
      *
      * @throws ExportResourceException
      *
@@ -485,8 +441,6 @@ class ResourceManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Workspace $workspace
-     *
      * @return ResourceNode
      */
     public function getWorkspaceRoot(Workspace $workspace)
@@ -531,8 +485,6 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Returns the resource linked to a node.
      *
-     * @param ResourceNode $node
-     *
      * @return AbstractResource
      */
     public function getResourceFromNode(ResourceNode $node)
@@ -552,8 +504,6 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Check if a ResourceNode can be added in a Workspace (resource amount limit).
      *
-     * @param Workspace $workspace
-     *
      * @return bool
      */
     public function checkResourceLimitExceeded(Workspace $workspace)
@@ -563,8 +513,6 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Count the number of resources in a workspace.
-     *
-     * @param Workspace $workspace
      *
      * @return int
      */
@@ -596,9 +544,6 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
      *
      * @return int
      */
@@ -632,8 +577,6 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Restores a soft deleted resource node.
-     *
-     * @param ResourceNode $resourceNode
      */
     public function restore(ResourceNode $resourceNode)
     {
@@ -710,8 +653,7 @@ class ResourceManager implements LoggerAwareInterface
     }
 
     /**
-     * @param ResourceNode $node
-     * @param bool         $throwException
+     * @param bool $throwException
      *
      * @return ResourceNode|null
      *
@@ -747,9 +689,7 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Gets the relative path between 2 instances (not optimized yet).
      *
-     * @param ResourceNode $root
-     * @param ResourceNode $node
-     * @param string       $path
+     * @param string $path
      *
      * @return string
      */
@@ -794,9 +734,6 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Set the $node at the last position of the $parent.
-     *
-     * @param ResourceNode $parent
-     * @param ResourceNode $node
      */
     private function setLastIndex(ResourceNode $parent, ResourceNode $node)
     {
@@ -810,8 +747,6 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Checks if an array of resource type name exists.
      * Expects an array of types array(array('name' => 'type'),...).
-     *
-     * @param array $resourceTypes
      *
      * @return array
      *
@@ -835,9 +770,7 @@ class ResourceManager implements LoggerAwareInterface
                 return true;
             });
 
-            throw new ResourceTypeNotFoundException(
-                sprintf('The resource type(s) %s were not found.', implode(', ', $unknownTypes))
-            );
+            throw new ResourceTypeNotFoundException(sprintf('The resource type(s) %s were not found.', implode(', ', $unknownTypes)));
         }
 
         return $validTypes;
@@ -850,10 +783,6 @@ class ResourceManager implements LoggerAwareInterface
      * array $rights should be defined that way:
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
-     *
-     * @param ResourceNode $node
-     * @param ResourceNode $parent
-     * @param array        $rights
      *
      * @return ResourceNode
      */
@@ -897,8 +826,6 @@ class ResourceManager implements LoggerAwareInterface
             }
         }
 
-        $merge = array_merge($toAppend, $resources);
-
-        return $merge;
+        return array_merge($toAppend, $resources);
     }
 }

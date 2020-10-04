@@ -11,114 +11,97 @@
 
 namespace Claroline\CursusBundle\Manager;
 
-use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Template\Template;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CursusBundle\Entity\AbstractRegistrationQueue;
 use Claroline\CursusBundle\Entity\Course;
-use Claroline\CursusBundle\Entity\CourseSession;
-use Claroline\CursusBundle\Entity\CourseSessionGroup;
-use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
-use Claroline\CursusBundle\Entity\CourseSessionUser;
-use Claroline\CursusBundle\Entity\SessionEvent;
-use Claroline\CursusBundle\Entity\SessionEventUser;
+use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
+use Claroline\CursusBundle\Entity\Registration\SessionGroup;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
+use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Event\Log\LogSessionGroupRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionQueueCreateEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionQueueOrganizationValidateEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionQueueUserValidateEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionQueueValidateEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionQueueValidatorValidateEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionGroupUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionUserRegistrationEvent;
-use Claroline\CursusBundle\Repository\SessionEventRepository;
+use Claroline\CursusBundle\Event\Log\LogSessionUserUnregistrationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionManager
 {
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
+    /** @var TranslatorInterface */
+    private $translator;
     /** @var MailManager */
     private $mailManager;
     /** @var ObjectManager */
     private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var RoleManager */
-    private $roleManager;
     /** @var UrlGeneratorInterface */
     private $router;
+    /** @var PlatformManager */
+    private $platformManager;
+    /** @var RoleManager */
+    private $roleManager;
+    /** @var RoutingHelper */
+    private $routingHelper;
     /** @var TemplateManager */
     private $templateManager;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var WorkspaceManager */
     private $workspaceManager;
-    /** @var SessionEventManager */
+    /** @var EventManager */
     private $sessionEventManager;
 
-    private $courseSessionRepo;
+    private $sessionRepo;
     private $sessionUserRepo;
     private $sessionGroupRepo;
-    /** @var SessionEventRepository */
-    private $sessionEventRepo;
-    private $sessionQueueRepo;
 
-    /**
-     * SessionManager constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param MailManager              $mailManager
-     * @param ObjectManager            $om
-     * @param Crud                     $crud
-     * @param RoleManager              $roleManager
-     * @param UrlGeneratorInterface    $router
-     * @param TemplateManager          $templateManager
-     * @param TokenStorageInterface    $tokenStorage
-     * @param WorkspaceManager         $workspaceManager
-     * @param SessionEventManager      $sessionEventManager
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
+        TranslatorInterface $translator,
         MailManager $mailManager,
         ObjectManager $om,
-        Crud $crud,
-        RoleManager $roleManager,
         UrlGeneratorInterface $router,
+        PlatformManager $platformManager,
+        RoleManager $roleManager,
+        RoutingHelper $routingHelper,
         TemplateManager $templateManager,
         TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager,
-        SessionEventManager $sessionEventManager
+        EventManager $sessionEventManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
+        $this->translator = $translator;
         $this->mailManager = $mailManager;
         $this->om = $om;
-        $this->crud = $crud;
-        $this->roleManager = $roleManager;
         $this->router = $router;
+        $this->platformManager = $platformManager;
+        $this->roleManager = $roleManager;
+        $this->routingHelper = $routingHelper;
         $this->templateManager = $templateManager;
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
         $this->sessionEventManager = $sessionEventManager;
 
-        $this->courseSessionRepo = $om->getRepository(CourseSession::class);
-        $this->sessionUserRepo = $om->getRepository(CourseSessionUser::class);
-        $this->sessionGroupRepo = $om->getRepository(CourseSessionGroup::class);
-        $this->sessionEventRepo = $om->getRepository(SessionEvent::class);
-        $this->sessionQueueRepo = $om->getRepository(CourseSessionRegistrationQueue::class);
+        $this->sessionRepo = $om->getRepository(Session::class);
+        $this->sessionUserRepo = $om->getRepository(SessionUser::class);
+        $this->sessionGroupRepo = $om->getRepository(SessionGroup::class);
     }
 
-    public function setDefaultSession(Course $course, CourseSession $session = null)
+    public function setDefaultSession(Course $course, Session $session = null)
     {
-        /** @var CourseSession[] $defaultSessions */
-        $defaultSessions = $this->courseSessionRepo->findBy(['course' => $course, 'defaultSession' => true]);
+        /** @var Session[] $defaultSessions */
+        $defaultSessions = $this->sessionRepo->findBy(['course' => $course, 'defaultSession' => true]);
 
         foreach ($defaultSessions as $defaultSession) {
             if ($defaultSession !== $session) {
@@ -130,328 +113,268 @@ class SessionManager
         $this->om->flush();
     }
 
-    public function createDefaultEvent(CourseSession $session)
+    public function generateFromTemplate(Session $session, string $locale)
     {
-        $this->om->startFlushSuite();
+        $placeholders = [
+            'session_url' => $this->routingHelper->desktopUrl('trainings').'/catalog/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
+            'session_name' => $session->getName(),
+            'session_code' => $session->getCode(),
+            'session_description' => $session->getDescription(),
+            'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
+            'session_public_registration' => $this->translator->trans($session->getPublicRegistration() ? 'yes' : 'no', [], 'platform'),
+            'session_max_users' => $session->getMaxUsers(),
+            'session_start' => $session->getStartDate()->format('d/m/Y'),
+            'session_end' => $session->getEndDate()->format('d/m/Y'),
+        ];
 
-        /** @var SessionEvent $event */
-        $event = $this->crud->create(SessionEvent::class, [
-            'name' => $session->getName(),
-            'code' => $session->getCode(),
-            'meta' => [
-                'type' => SessionEvent::TYPE_NONE,
-            ],
-            'restrictions' => [
-                'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
-            ],
-            'registration' => [
-                'registrationType' => $session->getEventRegistrationType(),
-            ],
-        ], [Crud::THROW_EXCEPTION]);
-
-        $event->setSession($session);
-        $this->om->persist($event);
-        $this->om->flush();
-
-        $this->om->startFlushSuite();
-
-        return $event;
+        return $this->templateManager->getTemplate('training_session', $placeholders, $locale);
     }
 
     /**
      * Generates a workspace from CourseSession.
-     *
-     * @param CourseSession $session
-     *
-     * @return Workspace
      */
-    public function generateWorkspace(CourseSession $session)
+    public function generateWorkspace(Session $session): Workspace
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $course = $session->getCourse();
 
-        $model = $course->getWorkspaceModel();
+        $course = $session->getCourse();
+        if (!empty($course->getWorkspaceModel())) {
+            $model = $course->getWorkspaceModel();
+        } else {
+            $model = $this->workspaceManager->getDefaultModel();
+        }
 
         $workspace = new Workspace();
-        $workspace->setCreator($user);
-        $workspace->setName($course->getTitle().' ['.$session->getName().']');
-        $workspace->setCode($this->workspaceManager->getUniqueCode($course->getCode()));
-        $workspace->setDescription($course->getDescription());
+        $workspace->setName($session->getName());
+        $workspace->setCode($this->workspaceManager->getUniqueCode($session->getCode()));
 
-        if (is_null($model)) {
-            $defaultModel = $this->workspaceManager->getDefaultModel();
-            $workspace = $this->workspaceManager->copy($defaultModel, $workspace);
-        } else {
-            $workspace = $this->workspaceManager->copy($model, $workspace);
-        }
-        $workspace->setWorkspaceType(0);
+        $workspace = $this->workspaceManager->copy($model, $workspace);
+
+        $workspace->setCreator($user);
+
+        $workspace->setDescription($session->getDescription());
+        $workspace->setPoster($session->getPoster());
+        $workspace->setThumbnail($session->getThumbnail());
         $workspace->setAccessibleFrom($session->getStartDate());
         $workspace->setAccessibleUntil($session->getEndDate());
+        $workspace->setHidden($course->isHidden());
+
         $this->om->persist($workspace);
 
         return $workspace;
     }
 
-
-
     /**
      * Adds users to a session.
-     *
-     * @param CourseSession $session
-     * @param array         $users
-     * @param int           $type
-     *
-     * @return array
      */
-    public function addUsersToSession(CourseSession $session, array $users, $type = CourseSessionUser::TYPE_LEARNER)
+    public function addUsers(Session $session, array $users, string $type = AbstractRegistration::LEARNER, bool $validated = false): array
     {
         $results = [];
+
+        $course = $session->getCourse();
         $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
 
         foreach ($users as $user) {
-            $sessionUser = $this->sessionUserRepo->findOneBy(['session' => $session, 'user' => $user, 'userType' => $type]);
+            $sessionUser = $this->sessionUserRepo->findOneBy(['session' => $session, 'user' => $user, 'type' => $type]);
 
             if (empty($sessionUser)) {
-                $sessionUser = new CourseSessionUser();
+                $sessionUser = new SessionUser();
                 $sessionUser->setSession($session);
                 $sessionUser->setUser($user);
-                $sessionUser->setUserType($type);
-                $sessionUser->setRegistrationDate($registrationDate);
+                $sessionUser->setType($type);
+                $sessionUser->setDate($registrationDate);
 
-                // Registers user to session workspace
-                $role = CourseSessionGroup::TYPE_TEACHER === $type ? $session->getTutorRole() : $session->getLearnerRole();
+                if (AbstractRegistration::TUTOR === $type) {
+                    // no validation on tutors
+                    $sessionUser->setValidated(true);
+                    $sessionUser->setConfirmed(true);
+                } else {
+                    // set validations for users based on session config
+                    $sessionUser->setValidated(!$session->getRegistrationValidation() || $validated);
+                    $sessionUser->setConfirmed(!$session->getUserValidation());
+                }
 
-                if ($role) {
+                // grant workspace role if registration is fully validated
+                $role = AbstractRegistration::TUTOR === $type ? $session->getTutorRole() : $session->getLearnerRole();
+                if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed()) {
                     $this->roleManager->associateRole($user, $role);
                 }
                 $this->om->persist($sessionUser);
 
-                $this->eventDispatcher->dispatch('log', new LogSessionUserRegistrationEvent($sessionUser));
+                $this->eventDispatcher->dispatch(new LogSessionUserRegistrationEvent($sessionUser), 'log');
 
                 $results[] = $sessionUser;
             }
         }
-        if (CourseSessionUser::TYPE_LEARNER === $type) {
-            $events = $session->getEvents();
 
-            foreach ($events as $event) {
-                if (CourseSession::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
-                    $this->sessionEventManager->addUsersToSessionEvent($event, $users);
+        // TODO : what to do with this if he goes in pending state ?
+
+        if ($session->getRegistrationMail()) {
+            $this->sendSessionInvitation($session, $users, AbstractRegistration::LEARNER === $type);
+        }
+
+        // registers users to linked trainings
+        if ($course->getPropagateRegistration() && !empty($course->getChildren())) {
+            foreach ($course->getChildren() as $childCourse) {
+                $childSession = $childCourse->getDefaultSession();
+                if ($childSession && !$childSession->isTerminated()) {
+                    $this->addUsers($childSession, $users);
                 }
             }
         }
+
+        // registers users to linked events
+        $events = $session->getEvents();
+        foreach ($events as $event) {
+            if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
+                $this->sessionEventManager->addUsersToSessionEvent($event, $users);
+            }
+        }
+
         $this->om->endFlushSuite();
 
         return $results;
     }
 
+    public function removeUsers(Session $session, array $sessionUsers)
+    {
+        foreach ($sessionUsers as $sessionUser) {
+            $this->om->remove($sessionUser);
+
+            // unregister user from the linked workspace
+            if ($session->getWorkspace()) {
+                $this->workspaceManager->unregister($sessionUser->getUser(), $session->getWorkspace());
+            }
+
+            // TODO : unregister from events
+
+            $this->eventDispatcher->dispatch(new LogSessionUserUnregistrationEvent($sessionUser), 'log');
+        }
+
+        $this->om->flush();
+    }
+
+    /**
+     * @param SessionUser[] $sessionUsers
+     */
+    public function confirmUsers(Session $session, array $sessionUsers = []): array
+    {
+        // TODO : check capacity
+
+        $this->om->startFlushSuite();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $sessionUser->setConfirmed(true);
+            $this->om->persist($sessionUser);
+
+            // grant workspace role if registration is fully validated
+            $role = AbstractRegistration::TUTOR === $sessionUser->getType() ? $session->getTutorRole() : $session->getLearnerRole();
+            if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed()) {
+                $this->roleManager->associateRole($sessionUser->getUser(), $role);
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return $sessionUsers;
+    }
+
+    /**
+     * @param SessionUser[] $sessionUsers
+     */
+    public function validateUsers(Session $session, array $sessionUsers = []): array
+    {
+        // TODO : check capacity
+
+        $this->om->startFlushSuite();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $sessionUser->setValidated(true);
+            $this->om->persist($sessionUser);
+        }
+
+        $this->om->endFlushSuite();
+
+        return $sessionUsers;
+    }
+
     /**
      * Adds groups to a session.
-     *
-     * @param CourseSession $session
-     * @param array         $groups
-     * @param int           $type
-     *
-     * @return array
      */
-    public function addGroupsToSession(CourseSession $session, array $groups, $type = CourseSessionGroup::TYPE_LEARNER)
+    public function addGroups(Session $session, array $groups, string $type = AbstractRegistration::LEARNER): array
     {
         $results = [];
         $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
 
+        $users = [];
         foreach ($groups as $group) {
-            $sessionGroup = $this->sessionGroupRepo->findOneBy(['session' => $session, 'group' => $group, 'groupType' => $type]);
+            $sessionGroup = $this->sessionGroupRepo->findOneBy([
+                'session' => $session,
+                'group' => $group,
+                'type' => $type,
+            ]);
 
             if (empty($sessionGroup)) {
-                $sessionGroup = new CourseSessionGroup();
+                $sessionGroup = new SessionGroup();
                 $sessionGroup->setSession($session);
                 $sessionGroup->setGroup($group);
-                $sessionGroup->setGroupType($type);
-                $sessionGroup->setRegistrationDate($registrationDate);
+                $sessionGroup->setType($type);
+                $sessionGroup->setDate($registrationDate);
 
                 // Registers group to session workspace
-                $role = CourseSessionGroup::TYPE_TEACHER === $type ? $session->getTutorRole() : $session->getLearnerRole();
-
+                $role = AbstractRegistration::TUTOR === $type ? $session->getTutorRole() : $session->getLearnerRole();
                 if ($role) {
                     $this->roleManager->associateRole($group, $role);
                 }
+
                 $this->om->persist($sessionGroup);
 
-                $this->eventDispatcher->dispatch('log', new LogSessionGroupRegistrationEvent($sessionGroup));
+                $this->eventDispatcher->dispatch(new LogSessionGroupRegistrationEvent($sessionGroup), 'log');
 
                 $results[] = $sessionGroup;
+
+                foreach ($group->getUsers() as $user) {
+                    $users[$user->getUuid()] = $user;
+                }
             }
         }
+
+        if ($session->getRegistrationMail()) {
+            $this->sendSessionInvitation($session, $users, false);
+        }
+
         $this->om->endFlushSuite();
 
         return $results;
     }
 
-    /**
-     * Registers an user to a session if allowed.
-     *
-     * @param CourseSession $session
-     * @param User          $user
-     * @param bool          $skipValidation
-     *
-     * @return CourseSessionUser|CourseSessionRegistrationQueue|array
-     */
-    public function registerUserToSession(CourseSession $session, User $user, $skipValidation = false)
+    public function removeGroups(Session $session, array $sessionGroups)
     {
-        $validationMask = 0;
+        foreach ($sessionGroups as $sessionGroup) {
+            $this->om->remove($sessionGroup);
 
-        if (!$skipValidation) {
-            if ($session->getRegistrationValidation()) {
-                $validationMask += AbstractRegistrationQueue::WAITING;
-            }
-            if ($session->getUserValidation()) {
-                $validationMask += AbstractRegistrationQueue::WAITING_USER;
-            }
-            if (0 < count($session->getValidators())) {
-                $validationMask += AbstractRegistrationQueue::WAITING_VALIDATOR;
-            }
-            if ($session->getOrganizationValidation()) {
-                $validationMask += AbstractRegistrationQueue::WAITING_ORGANIZATION;
-            }
-        }
-
-        if (0 < $validationMask) {
-            $sessionQueue = $this->sessionQueueRepo->findOneBy(['session' => $session, 'user' => $user]);
-
-            if (!$sessionQueue) {
-                $sessionQueue = $this->createSessionQueue($session, $user, $validationMask);
+            // unregister group from the linked workspace
+            if ($session->getWorkspace()) {
+                $this->workspaceManager->unregister($sessionGroup->getGroup(), $session->getWorkspace());
             }
 
-            return $sessionQueue;
+            // TODO : unregister from events
+
+            $this->eventDispatcher->dispatch(new LogSessionGroupUnregistrationEvent($sessionGroup), 'log');
         }
 
-        if ($this->checkSessionCapacity($session)) {
-            return $this->addUsersToSession($session, [$user]);
-        }
-
-        return null;
-    }
-
-    /**
-     * Creates a queue for session and user.
-     *
-     * @param CourseSession $session
-     * @param User          $user
-     * @param int           $mask
-     * @param \DateTime     $date
-     *
-     * @return CourseSessionRegistrationQueue
-     */
-    public function createSessionQueue(CourseSession $session, User $user, $mask = 0, $date = null)
-    {
-        $this->om->startFlushSuite();
-        $queue = new CourseSessionRegistrationQueue();
-        $queue->setUser($user);
-        $queue->setSession($session);
-        $queue->setStatus($mask);
-
-        if ($date) {
-            $queue->setApplicationDate($date);
-        }
-        $this->om->persist($queue);
-
-        $this->eventDispatcher->dispatch('log', new LogSessionQueueCreateEvent($queue));
-
-        $this->om->endFlushSuite();
-
-        return $queue;
-    }
-
-    /**
-     * Validates user registration to session.
-     *
-     * @param CourseSessionRegistrationQueue $queue
-     * @param User                           $user
-     * @param int                            $type
-     */
-    public function validateSessionQueueByType(CourseSessionRegistrationQueue $queue, User $user, $type)
-    {
-        $mask = $queue->getStatus();
-
-        if ($type === ($mask & $type)) {
-            $this->om->startFlushSuite();
-
-            switch ($type) {
-                case CourseSessionRegistrationQueue::WAITING:
-                    $mask -= CourseSessionRegistrationQueue::WAITING;
-                    $queue->setValidationDate(new \DateTime());
-                    $queue->setStatus($mask);
-                    $this->om->persist($queue);
-
-                    $this->eventDispatcher->dispatch('log', new LogSessionQueueValidateEvent($queue));
-                    break;
-                case CourseSessionRegistrationQueue::WAITING_USER:
-                    $mask -= CourseSessionRegistrationQueue::WAITING_USER;
-                    $queue->setUserValidationDate(new \DateTime());
-                    $queue->setStatus($mask);
-                    $this->om->persist($queue);
-
-                    $this->eventDispatcher->dispatch('log', new LogSessionQueueUserValidateEvent($queue));
-                    break;
-                case CourseSessionRegistrationQueue::WAITING_VALIDATOR:
-                    $mask -= CourseSessionRegistrationQueue::WAITING_VALIDATOR;
-                    $queue->setValidatorValidationDate(new \DateTime());
-                    $queue->setValidator($user);
-                    $queue->setStatus($mask);
-                    $this->om->persist($queue);
-
-                    $this->eventDispatcher->dispatch('log', new LogSessionQueueValidatorValidateEvent($queue));
-                    break;
-                case CourseSessionRegistrationQueue::WAITING_ORGANIZATION:
-                    $mask -= CourseSessionRegistrationQueue::WAITING_ORGANIZATION;
-                    $queue->setOrganizationValidationDate(new \DateTime());
-                    $queue->setOrganizationAdmin($user);
-                    $queue->setStatus($mask);
-                    $this->om->persist($queue);
-
-                    $this->eventDispatcher->dispatch('log', new LogSessionQueueOrganizationValidateEvent($queue));
-                    break;
-            }
-            $this->om->endFlushSuite();
-        }
-        if (0 === $mask) {
-            $this->validateSessionQueue($queue);
-        }
-    }
-
-    /**
-     * Registers user to session from session queue.
-     *
-     * @param CourseSessionRegistrationQueue $queue
-     */
-    public function validateSessionQueue(CourseSessionRegistrationQueue $queue)
-    {
-        $session = $queue->getSession();
-        $user = $queue->getUser();
-
-        if ($this->checkSessionCapacity($session)) {
-            $this->om->startFlushSuite();
-            $this->addUsersToSession($session, [$user]);
-            $this->om->remove($queue);
-            $this->om->endFlushSuite();
-        }
+        $this->om->flush();
     }
 
     /**
      * Gets/generates workspace role for session depending on given role name and type.
-     *
-     * @param Workspace $workspace
-     * @param string    $roleName
-     * @param string    $type
-     *
-     * @return \Claroline\CoreBundle\Entity\Role
      */
-    public function generateRoleForSession(Workspace $workspace, $roleName, $type = 'learner')
+    public function generateRoleForSession(Workspace $workspace, string $roleName = null, string $type = 'learner'): Role
     {
         if (empty($roleName)) {
             if ('manager' === $type) {
@@ -488,209 +411,34 @@ class SessionManager
 
     /**
      * Checks user limit of a session to know if there is still place for the given number of users.
-     *
-     * @param CourseSession $session
-     * @param int           $count
-     *
-     * @return bool
      */
-    public function checkSessionCapacity(CourseSession $session, $count = 1)
+    public function checkSessionCapacity(Session $session, $count = 1): bool
     {
-        $hasPlace = true;
         $maxUsers = $session->getMaxUsers();
-
         if ($maxUsers) {
-            $sessionUsers = $this->sessionUserRepo->findBy(['session' => $session, 'userType' => CourseSessionUser::TYPE_LEARNER]);
-            $sessionGroups = $this->sessionGroupRepo->findBy(['session' => $session, 'groupType' => CourseSessionGroup::TYPE_LEARNER]);
-            $groups = [];
+            $nbUsers = $this->sessionRepo->countLearners($session);
 
-            foreach ($sessionGroups as $sessionGroup) {
-                $groups[] = $sessionGroup->getGroup();
-            }
-            $nbUsers = count($sessionUsers);
-
-            foreach ($groups as $group) {
-                $nbUsers += count($group->getUsers()->toArray());
-            }
-            $hasPlace = $nbUsers + $count <= $maxUsers;
+            return $nbUsers + $count <= $maxUsers;
         }
 
-        return $hasPlace;
-    }
-
-    /**
-     * Generates and sends session certificate for given users.
-     *
-     * @param CourseSession $session
-     * @param array         $users
-     * @param Template|null $template
-     */
-    public function generateSessionCertificates(CourseSession $session, array $users, Template $template = null)
-    {
-        $authenticatedUser = $this->tokenStorage->getToken()->getUser();
-        $course = $session->getCourse();
-
-        if ('anon.' !== $authenticatedUser) {
-            $data = [];
-            $trainersList = '';
-            /** @var CourseSessionUser[] $sessionTrainers */
-            $sessionTrainers = $this->sessionUserRepo->findBy([
-                'session' => $session,
-                'userType' => CourseSessionUser::TYPE_TEACHER,
-            ]);
-
-            if (0 < count($sessionTrainers)) {
-                $trainersList = '<ul>';
-
-                foreach ($sessionTrainers as $sessionTrainer) {
-                    $user = $sessionTrainer->getUser();
-                    $trainersList .= '<li>'.$user->getFirstName().' '.$user->getLastName().'</li>';
-                }
-                $trainersList .= '</ul>';
-            }
-            $basicPlaceholders = [
-                'course_title' => $course->getTitle(),
-                'course_code' => $course->getCode(),
-                'course_description' => $course->getDescription(),
-                'session_name' => $session->getName(),
-                'session_description' => $session->getDescription(),
-                'session_start' => $session->getStartDate()->format('Y-m-d'),
-                'session_end' => $session->getEndDate()->format('Y-m-d'),
-                'session_trainers' => $trainersList,
-            ];
-
-            foreach ($users as $user) {
-                $locale = $user->getLocale();
-
-                $eventsList = '';
-                /** @var SessionEvent[] $events */
-                $events = $this->sessionEventRepo->findSessionEventsBySessionAndUserAndRegistrationStatus(
-                    $session,
-                    $user,
-                    SessionEventUser::REGISTERED
-                );
-
-                if (0 < count($events)) {
-                    $eventsList = '<ul>';
-
-                    foreach ($events as $event) {
-                        $eventsList .= '<li>'.
-                            $event->getName().
-                            ' ['.$event->getStartDate()->format('d/m/Y H:i').
-                            ' -> '.
-                            $event->getEndDate()->format('d/m/Y H:i').']';
-                        $location = $event->getLocation();
-
-                        if ($location) {
-                            $locationHtml = '<br>'.$location->getStreet().', '.$location->getStreetNumber();
-
-                            if ($location->getBoxNumber()) {
-                                $locationHtml .= '/'.$location->getBoxNumber();
-                            }
-                            $locationHtml .= '<br>'.$location->getPc().' '.$location->getTown().'<br>'.$location->getCountry();
-
-                            if ($location->getPhone()) {
-                                $locationHtml .= '<br>'.$location->getPhone();
-                            }
-                            $eventsList .= $locationHtml;
-                        }
-                        $eventsList .= $event->getLocationExtra();
-                    }
-                    $eventsList .= '</ul>';
-                }
-                $placeholders = array_merge($basicPlaceholders, [
-                    'first_name' => $user->getFirstName(),
-                    'last_name' => $user->getLastName(),
-                    'username' => $user->getUsername(),
-                    'events_list' => $eventsList,
-                ]);
-                $certificateContent = $template ?
-                    $this->templateManager->getTemplateContent($template, $placeholders) :
-                    $this->templateManager->getTemplate('session_certificate', $placeholders, $locale);
-                $pdfName = $session->getName().'-'.$user->getUsername();
-                $pdf = $this->pdfManager->create($certificateContent, $pdfName, $authenticatedUser, 'session_certificate');
-                $pdfLink = $this->router->generate('claro_pdf_download', ['pdf' => $pdf->getGuid()], true);
-
-                $placeholders['certificate_link'] = $pdfLink;
-                $title = $this->templateManager->getTemplate('session_certificate_mail', $placeholders, $locale, 'title');
-                $content = $this->templateManager->getTemplate('session_certificate_mail', $placeholders, $locale);
-                $this->mailManager->send($title, $content, [$user]);
-                $data[] = ['user' => $user->getFirstName().' '.$user->getLastName(), 'pdf' => $pdfLink];
-            }
-            $links = '<ul>';
-
-            foreach ($data as $row) {
-                $links .= '<li><a href="'.$row['pdf'].'">'.$row['user'].'</a></li>';
-            }
-            $links .= '</ul>';
-            $adminTitle = $this->templateManager->getTemplate(
-                'admin_certificate_mail',
-                ['certificates_link' => $links],
-                $authenticatedUser->getLocale(),
-                'title'
-            );
-            $adminContent = $this->templateManager->getTemplate(
-                'admin_certificate_mail',
-                ['certificates_link' => $links],
-                $authenticatedUser->getLocale()
-            );
-            $this->mailManager->send($adminTitle, $adminContent, [$authenticatedUser]);
-        }
-    }
-
-    /**
-     * Generates certificates for all session learners.
-     *
-     * @param CourseSession $session
-     * @param Template|null $template
-     */
-    public function generateAllSessionCertificates(CourseSession $session, Template $template = null)
-    {
-        /** @var CourseSessionUser[] $sessionLearners */
-        $sessionLearners = $this->sessionUserRepo->findBy([
-            'session' => $session,
-            'userType' => CourseSessionUser::TYPE_LEARNER,
-        ]);
-        /** @var CourseSessionGroup[] $sessionGroups */
-        $sessionGroups = $this->sessionGroupRepo->findBy([
-            'session' => $session,
-            'groupType' => CourseSessionGroup::TYPE_LEARNER,
-        ]);
-        $users = [];
-
-        foreach ($sessionLearners as $sessionLearner) {
-            $user = $sessionLearner->getUser();
-            $users[$user->getUuid()] = $user;
-        }
-        foreach ($sessionGroups as $sessionGroup) {
-            $group = $sessionGroup->getGroup();
-            $groupUsers = $group->getUsers();
-
-            foreach ($groupUsers as $user) {
-                $users[$user->getUuid()] = $user;
-            }
-        }
-
-        $this->generateSessionCertificates($session, $users, $template);
+        return true;
     }
 
     /**
      * Sends invitation to all session learners.
-     *
-     * @param CourseSession $session
-     * @param Template|null $template
      */
-    public function inviteAllSessionLearners(CourseSession $session, Template $template = null)
+    public function inviteAllSessionLearners(Session $session)
     {
-        /** @var CourseSessionUser[] $sessionLearners */
+        /** @var SessionUser[] $sessionLearners */
         $sessionLearners = $this->sessionUserRepo->findBy([
             'session' => $session,
-            'userType' => CourseSessionUser::TYPE_LEARNER,
+            'type' => AbstractRegistration::LEARNER,
+            'validated' => true,
         ]);
-        /** @var CourseSessionGroup[] $sessionGroups */
+        /** @var SessionGroup[] $sessionGroups */
         $sessionGroups = $this->sessionGroupRepo->findBy([
             'session' => $session,
-            'groupType' => CourseSessionGroup::TYPE_LEARNER,
+            'type' => AbstractRegistration::LEARNER,
         ]);
         $users = [];
 
@@ -707,24 +455,25 @@ class SessionManager
             }
         }
 
-        $this->sendSessionInvitation($session, $users, $template);
+        $this->sendSessionInvitation($session, $users, false);
     }
 
     /**
      * Sends invitation to session to given users.
-     *
-     * @param CourseSession $session
-     * @param array         $users
-     * @param Template|null $template
      */
-    public function sendSessionInvitation(CourseSession $session, array $users, Template $template = null)
+    public function sendSessionInvitation(Session $session, array $users, bool $confirm = true)
     {
+        $templateName = 'training_session_invitation';
+        if ($confirm && $session->getUserValidation()) {
+            $templateName = 'training_session_confirmation';
+        }
+
         $course = $session->getCourse();
         $trainersList = '';
-        /** @var CourseSessionUser[] $sessionTrainers */
+        /** @var SessionUser[] $sessionTrainers */
         $sessionTrainers = $this->sessionUserRepo->findBy([
             'session' => $session,
-            'userType' => CourseSessionUser::TYPE_TEACHER,
+            'type' => AbstractRegistration::TUTOR,
         ]);
 
         if (0 < count($sessionTrainers)) {
@@ -736,15 +485,19 @@ class SessionManager
             }
             $trainersList .= '</ul>';
         }
+
         $basicPlaceholders = [
-            'course_title' => $course->getTitle(),
+            'course_name' => $course->getName(),
             'course_code' => $course->getCode(),
             'course_description' => $course->getDescription(),
+            'session_url' => $this->routingHelper->desktopUrl('trainings').'/catalog/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
+            'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
             'session_name' => $session->getName(),
             'session_description' => $session->getDescription(),
-            'session_start' => $session->getStartDate()->format('Y-m-d'),
-            'session_end' => $session->getEndDate()->format('Y-m-d'),
+            'session_start' => $session->getStartDate()->format('d/m/Y'),
+            'session_end' => $session->getEndDate()->format('d/m/Y'),
             'session_trainers' => $trainersList,
+            'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL), // TODO
         ];
 
         foreach ($users as $user) {
@@ -754,12 +507,10 @@ class SessionManager
                 'last_name' => $user->getLastName(),
                 'username' => $user->getUsername(),
             ]);
-            $title = $template ?
-                $this->templateManager->getTemplateContent($template, $placeholders, 'title') :
-                $this->templateManager->getTemplate('session_invitation', $placeholders, $locale);
-            $content = $template ?
-                $this->templateManager->getTemplateContent($template, $placeholders) :
-                $this->templateManager->getTemplate('session_invitation', $placeholders, $locale);
+
+            $title = $this->templateManager->getTemplate($templateName, $placeholders, $locale, 'title');
+            $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
+
             $this->mailManager->send($title, $content, [$user]);
         }
     }

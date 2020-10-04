@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\Tool\ToolRightsManager;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 
 class RoleSerializer
 {
@@ -46,15 +46,6 @@ class RoleSerializer
     /** @var UserRepository */
     private $userRepo;
 
-    /**
-     * RoleSerializer constructor.
-     *
-     * @param ObjectManager          $om
-     * @param ToolMaskDecoderManager $maskManager
-     * @param ToolRightsManager      $rightsManager
-     * @param WorkspaceSerializer    $workspaceSerializer
-     * @param UserSerializer         $userSerializer
-     */
     public function __construct(
         ObjectManager $om,
         ToolMaskDecoderManager $maskManager,
@@ -73,36 +64,22 @@ class RoleSerializer
         $this->userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'role';
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return Role::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/main/core/role.json';
     }
 
-    /**
-     * Serializes a Role entity.
-     *
-     * @param Role  $role
-     * @param array $options
-     *
-     * @return array
-     */
-    public function serialize(Role $role, array $options = [])
+    public function serialize(Role $role, array $options = []): array
     {
         $serialized = [
             'id' => $role->getUuid(),
@@ -115,8 +92,8 @@ class RoleSerializer
             $serialized['meta'] = $this->serializeMeta($role);
             $serialized['restrictions'] = $this->serializeRestrictions($role);
 
-            if ($workspace = $role->getWorkspace()) {
-                $serialized['workspace'] = $this->workspaceSerializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+            if ($role->getWorkspace()) {
+                $serialized['workspace'] = $this->workspaceSerializer->serialize($role->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
             }
 
             if (Role::USER_ROLE === $role->getType()) {
@@ -159,14 +136,7 @@ class RoleSerializer
         return $serialized;
     }
 
-    /**
-     * Serialize role metadata.
-     *
-     * @param Role $role
-     *
-     * @return array
-     */
-    public function serializeMeta(Role $role)
+    public function serializeMeta(Role $role): array
     {
         $meta = [
             'readOnly' => $role->isReadOnly(),
@@ -181,29 +151,14 @@ class RoleSerializer
         return $meta;
     }
 
-    /**
-     * Serialize role restrictions.
-     *
-     * @param Role $role
-     *
-     * @return array
-     */
-    public function serializeRestrictions(Role $role)
+    public function serializeRestrictions(Role $role): array
     {
         return [
             'maxUsers' => $role->getMaxUsers(),
         ];
     }
 
-    /**
-     * Serialize role tools rights.
-     *
-     * @param Role   $role
-     * @param string $workspaceId
-     *
-     * @return array
-     */
-    private function serializeTools(Role $role, $workspaceId = null)
+    private function serializeTools(Role $role, string $workspaceId = null): array
     {
         $tools = [];
 
@@ -226,16 +181,7 @@ class RoleSerializer
         return $tools;
     }
 
-    /**
-     * Deserializes data into a Role entity.
-     *
-     * @param \stdClass $data
-     * @param Role      $role
-     * @param array     $options
-     *
-     * @return Role
-     */
-    public function deserialize($data, Role $role, array $options = [])
+    public function deserialize(array $data, Role $role, array $options = []): Role
     {
         if (!$role->isReadOnly()) {
             $this->sipe('name', 'setName', $data, $role);

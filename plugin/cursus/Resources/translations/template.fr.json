@@ -1,11 +1,21 @@
 {
-    "admin_certificate_mail": "Mail pour l'administrateur avec les certificats",
-    "admin_certificate_mail_desc": "Template utilisé pour le mail envoyé à l'administrateur avec tous les certificats générés.",
-    "certificate_link_desc": "Le lien vers le certificat",
-    "certificates_link_desc": "La liste de liens vers les certificats",
+    "training_course": "Formation",
+    "training_course_desc": "Template utilisé pour l'impression des informations relatives à une formation du catalogue.",
+
+    "training_session": "Session de formation",
+    "training_session_desc": "Template utilisé pour l'impression des informations relatives à une session de formation.",
+
+    "training_event_invitation": "Invitation à une séance de formation",
+    "training_event_invitation_desc": "Template utilisé pour le mail d'invitation à une séance de formation.",
+
+    "training_session_invitation": "Invitation à une session de formation",
+    "training_session_invitation_desc": "Template utilisé pour le mail d'invitation à une session de formation.",
+    "training_session_confirmation": "Confirmation d'inscription à une session de formation",
+    "training_session_confirmation_desc": "Template utilisé pour le mail de demande de confirmation d'inscription à une session de formation.",
+
     "course_code_desc": "Le code de la formation",
     "course_description_desc": "La description de la formation",
-    "course_title_desc": "Le titre de la formation",
+    "course_name_desc": "Le nom de la formation",
     "event_description_desc": "La description de la séance",
     "event_end_desc": "La date de fin de la séance",
     "event_location_address_desc": "L'adresse de la séance",
@@ -15,21 +25,10 @@
     "event_start_desc": "La date de début de la séance",
     "event_trainers_desc": "La liste des formateurs de la séance",
     "events_list_desc": "La liste des séances",
-    "session_certificate": "Certificat de session de formation",
-    "session_certificate_desc": "Template utilisé pour le certificat de session de formation.",
-    "session_certificate_mail": "Mail pour le certificat de session de formation",
-    "session_certificate_mail_desc": "Template utilisé pour le mail envoyé pour le certificat de session de formation.",
     "session_description_desc": "La description de la session de formation",
     "session_end_desc": "La date de fin de la session de formation",
-    "session_event_certificate": "Certificat de séance",
-    "session_event_certificate_desc": "Template utilisé pour le certificat de séance.",
-    "session_event_certificate_mail": "Mail pour le certificat de séance",
-    "session_event_certificate_mail_desc": "Template utilisé pour le mail envoyé pour le certificat de séance.",
-    "session_event_invitation": "Invitation à une séance",
-    "session_event_invitation_desc": "Template utilisé pour le mail d'invitation à une séance.",
-    "session_invitation": "Invitation à une session de formation",
-    "session_invitation_desc": "Template utilisé pour le mail d'invitation à une session de formation.",
     "session_name_desc": "Le nom de la session de formation",
     "session_start_desc": "La date de début de la session de formation",
-    "session_trainers_desc": "La liste des formateurs de la session de formation"
+    "session_trainers_desc": "La liste des formateurs de la session de formation",
+    "registration_confirmation_url": "Le lien de confirmation de l'inscription"
 }

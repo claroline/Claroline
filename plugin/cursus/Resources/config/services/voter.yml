@@ -15,6 +15,6 @@ services:
 
     Claroline\CursusBundle\Security\Voter\CourseVoter: ~
 
-    Claroline\CursusBundle\Security\Voter\SessionEventVoter: ~
-
     Claroline\CursusBundle\Security\Voter\SessionVoter: ~
+
+    Claroline\CursusBundle\Security\Voter\EventVoter: ~

@@ -72,7 +72,7 @@ function getActions(items, actionsGenerator) {
  * @return {Array} - the list of displayable data properties
  */
 function getDisplayableProps(dataProps) {
-  return dataProps.filter(prop => prop.displayable)
+  return orderProps(dataProps.filter(prop => prop.displayable))
 }
 
 /**
@@ -83,7 +83,7 @@ function getDisplayableProps(dataProps) {
  * @return {Array} - the list of default displayed data properties
  */
 function getDisplayedProps(dataProps) {
-  return dataProps.filter(prop => prop.displayed)
+  return orderProps(dataProps.filter(prop => prop.displayed))
 }
 
 /**
@@ -94,7 +94,7 @@ function getDisplayedProps(dataProps) {
  * @return {Array} - the list of filterable data properties
  */
 function getFilterableProps(dataProps) {
-  return dataProps.filter(prop => prop.filterable)
+  return orderProps(dataProps.filter(prop => prop.filterable))
 }
 
 /**
@@ -105,7 +105,7 @@ function getFilterableProps(dataProps) {
  * @return {Array} - the list of sortable data properties
  */
 function getSortableProps(dataProps) {
-  return dataProps.filter(prop => prop.sortable)
+  return orderProps(dataProps.filter(prop => prop.sortable))
 }
 
 /**
@@ -118,6 +118,20 @@ function isRowSelected(row, selection) {
   return selection && -1 !== selection.indexOf(row.id)
 }
 
+function orderProps(dataProps) {
+  return dataProps.sort((a, b) => {
+    if (undefined === a.order && undefined === b.order) {
+      return 0
+    } else if (undefined === a.order) {
+      return 1
+    } else if (undefined === b.order) {
+      return -1
+    }
+
+    return a.order - b.order
+  })
+}
+
 export {
   createListDefinition,
   getPropDefinition,
@@ -127,5 +141,6 @@ export {
   getDisplayedProps,
   getFilterableProps,
   getSortableProps,
-  isRowSelected
+  isRowSelected,
+  orderProps
 }

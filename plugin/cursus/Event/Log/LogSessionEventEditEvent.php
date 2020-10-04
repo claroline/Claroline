@@ -30,7 +30,7 @@ class LogSessionEventEditEvent extends LogGenericEvent
         $details['sessionId'] = $session->getUuid();
         $details['sessionName'] = $session->getName();
         $details['courseId'] = $course->getUuid();
-        $details['courseTitle'] = $course->getTitle();
+        $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
         $details['tutors'] = [];
 

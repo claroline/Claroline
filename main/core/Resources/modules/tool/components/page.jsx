@@ -63,7 +63,7 @@ const ToolPage = props => {
       path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
       poster={get(props.toolData, 'poster.url')}
       icon={get(props.toolData, 'display.showIcon') ?
-        <ToolIcon type={get(props.toolData, 'icon')} className="" />
+        <ToolIcon type={get(props.toolData, 'icon')} />
         :
         undefined
       }

@@ -24,14 +24,14 @@ use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\Log\Connection\LogConnectPlatformRepository;
 use Claroline\CoreBundle\Repository\Log\Connection\LogConnectWorkspaceRepository;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use Claroline\CoreBundle\Repository\ResourceTypeRepository;
-use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
+use Claroline\CoreBundle\Repository\User\GroupRepository;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
+use Claroline\CoreBundle\Repository\User\UserRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -79,14 +79,6 @@ class AnalyticsManager
     /** @var FileManager */
     private $fileManager;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager         $objectManager
-     * @param LogManager            $logManager
-     * @param UserManager           $userManager
-     * @param WorkspaceManager      $workspaceManager
-     * @param FileManager           $fileManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
@@ -113,13 +105,9 @@ class AnalyticsManager
     }
 
     /**
-     * @param Workspace|null $workspace
-     *
-     * @return array
-     *
      * @todo count all in DQL
      */
-    public function count(Workspace $workspace = null)
+    public function count(Workspace $workspace = null): array
     {
         // get values for workspace only
         if ($workspace) {

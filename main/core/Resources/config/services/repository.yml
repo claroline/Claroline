@@ -19,12 +19,12 @@ services:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@claroline.manager.plugin_manager'
 
-    Claroline\CoreBundle\Repository\ResourceActionRepository:
+    Claroline\CoreBundle\Repository\Resource\ResourceActionRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@claroline.manager.plugin_manager'
 
-    Claroline\CoreBundle\Repository\ResourceTypeRepository:
+    Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@claroline.manager.plugin_manager'
@@ -34,7 +34,7 @@ services:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@claroline.manager.plugin_manager'
 
-    Claroline\CoreBundle\Repository\UserRepository:
+    Claroline\CoreBundle\Repository\User\UserRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
@@ -44,7 +44,7 @@ services:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@Claroline\CoreBundle\API\Finder\Log\LogFinder'
 
-    Claroline\CoreBundle\Repository\ResourceNodeRepository:
+    Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository:
         tags: [doctrine.repository_service]
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'

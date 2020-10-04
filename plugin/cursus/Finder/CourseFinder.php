@@ -26,30 +26,30 @@ class CourseFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'slug':
+                    // don't use default like on slugs
+                    $qb->andWhere("obj.slug = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'available':
                     $qb->leftJoin('obj.sessions', 's');
                     $qb->andWhere('s.id IS NOT NULL');
                     $qb->andWhere('s.endDate > :now');
                     $qb->setParameter('now', new \DateTime());
-
                     break;
+
                 case 'organizations':
                     $qb->join('obj.organizations', 'o');
                     $qb->andWhere("o.uuid IN (:{$filterName})");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 
         return $qb;
-    }
-
-    public function getExtraFieldMapping()
-    {
-        return [
-            'name' => 'title',
-        ];
     }
 }

@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Repository\ResourceMaskDecoderRepository;
+use Claroline\CoreBundle\Repository\Resource\ResourceMaskDecoderRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Log\LoggerAwareInterface;
 
@@ -39,14 +39,10 @@ class MaskManager implements LoggerAwareInterface
     /** @var ObjectRepository */
     private $menuRepo;
 
-    /**
-     * MaskManager constructor.
-     *
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+
         $this->maskRepo = $om->getRepository('ClarolineCoreBundle:Resource\MaskDecoder');
         $this->menuRepo = $om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
     }
@@ -104,8 +100,7 @@ class MaskManager implements LoggerAwareInterface
     /**
      * Returns an array containing the permission for a mask and a resource type.
      *
-     * @param int          $mask
-     * @param ResourceType $type
+     * @param int $mask
      *
      * @return array
      */
@@ -127,13 +122,8 @@ class MaskManager implements LoggerAwareInterface
      * The array of permissions should be defined that way:.
      *
      * array('open' => true, 'edit' => false, ...)
-     *
-     * @param array        $perms
-     * @param ResourceType $type
-     *
-     * @return int
      */
-    public function encodeMask($perms, ResourceType $type)
+    public function encodeMask(array $perms, ResourceType $type): int
     {
         /** @var MaskDecoder[] $decoders */
         $decoders = $this->maskRepo->findBy(['resourceType' => $type]);
@@ -151,8 +141,7 @@ class MaskManager implements LoggerAwareInterface
     /**
      * Retrieves and removes a mask decoder.
      *
-     * @param ResourceType $resourceType
-     * @param string       $name
+     * @param string $name
      */
     public function removeMask(ResourceType $resourceType, $name)
     {
@@ -165,9 +154,8 @@ class MaskManager implements LoggerAwareInterface
     /**
      * Retrieves and renames a mask decoder.
      *
-     * @param ResourceType $resourceType
-     * @param string       $currentName
-     * @param string       $newName
+     * @param string $currentName
+     * @param string $newName
      */
     public function renameMask(ResourceType $resourceType, $currentName, $newName)
     {
@@ -180,12 +168,8 @@ class MaskManager implements LoggerAwareInterface
 
     /**
      * Returns an array containing the possible permission for a resource type.
-     *
-     * @param ResourceType $type
-     *
-     * @return array
      */
-    public function getPermissionMap(ResourceType $type)
+    public function getPermissionMap(ResourceType $type): array
     {
         /** @var MaskDecoder[] $decoders */
         $decoders = $this->maskRepo->findBy(['resourceType' => $type]);
@@ -199,8 +183,7 @@ class MaskManager implements LoggerAwareInterface
     }
 
     /**
-     * @param ResourceType $type
-     * @param string       $action
+     * @param string $action
      *
      * @return MaskDecoder
      */
@@ -215,8 +198,6 @@ class MaskManager implements LoggerAwareInterface
     /**
      * Adds the default action to a resource type.
      *
-     * @param ResourceType $type
-     *
      * @todo reworks to avoid the use of self::$defaultActions
      */
     public function addDefaultPerms(ResourceType $type)
@@ -229,7 +210,6 @@ class MaskManager implements LoggerAwareInterface
             $actionNames[] = $decoder->getName();
         }
 
-        $createdPerms = [];
         // Add only non-existent default actions
         $defaultActions = array_diff(self::$defaultActions, $actionNames);
 
@@ -238,8 +218,8 @@ class MaskManager implements LoggerAwareInterface
             $maskDecoder->setValue(pow(2, $i));
             $maskDecoder->setName($action);
             $maskDecoder->setResourceType($type);
+
             $this->om->persist($maskDecoder);
-            $createdPerms[$action] = $maskDecoder;
         }
 
         $this->om->flush();
@@ -247,12 +227,8 @@ class MaskManager implements LoggerAwareInterface
 
     /**
      * Checks if a resource type has any menu actions.
-     *
-     * @param ResourceType $type
-     *
-     * @return bool
      */
-    public function hasMenuAction(ResourceType $type)
+    public function hasMenuAction(ResourceType $type): bool
     {
         $menuActions = $this->menuRepo->findBy(['resourceType' => $type]);
 

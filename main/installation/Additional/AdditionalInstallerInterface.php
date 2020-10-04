@@ -17,7 +17,7 @@ interface AdditionalInstallerInterface
 {
     public function setEnvironment($environment);
 
-    public function setLogger(LoggerInterface $logger);
+    public function setLogger(LoggerInterface $logger = null);
 
     public function preInstall();
 

@@ -3,7 +3,7 @@ import {URL_BUTTON} from '#/main/app/buttons'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {SessionCard} from '#/plugin/cursus/administration/cursus/session/data/components/session-card'
+import {SessionCard} from '#/plugin/cursus/session/components/card'
 
 export default {
   name: 'my-sessions',
@@ -27,11 +27,9 @@ export default {
         displayed: false
       }, {
         name: 'course',
-        alias: 'courseTitle',
-        type: 'string',
+        type: 'course',
         label: trans('course', {}, 'cursus'),
-        displayed: true,
-        calculated: (session) => session.meta.course.title
+        displayed: true
       }, {
         name: 'restrictions.dates[0]',
         alias: 'startDate',
@@ -51,19 +49,19 @@ export default {
         label: trans('max_participants', {}, 'cursus'),
         displayed: true
       }, {
-        name: 'registration.publicRegistration',
+        name: 'registration.selfRegistration',
         alias: 'publicRegistration',
         type: 'boolean',
         label: trans('public_registration'),
         displayed: false
       }, {
-        name: 'registration.publicUnregistration',
+        name: 'registration.selfUnRegistration',
         alias: 'publicUnregistration',
         type: 'boolean',
         label: trans('public_unregistration'),
         displayed: false
       }, {
-        name: 'registration.registrationValidation',
+        name: 'registration.validation',
         alias: 'registrationValidation',
         type: 'boolean',
         label: trans('registration_validation', {}, 'cursus'),
@@ -73,12 +71,6 @@ export default {
         alias: 'userValidation',
         type: 'boolean',
         label: trans('user_validation', {}, 'cursus'),
-        displayed: false
-      }, {
-        name: 'registration.organizationValidation',
-        alias: 'organizationValidation',
-        type: 'boolean',
-        label: trans('organization_validation', {}, 'cursus'),
         displayed: false
       }
     ],

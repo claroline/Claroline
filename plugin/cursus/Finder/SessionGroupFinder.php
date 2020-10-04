@@ -12,68 +12,64 @@
 namespace Claroline\CursusBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\CursusBundle\Entity\CourseSessionGroup;
+use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Doctrine\ORM\QueryBuilder;
 
 class SessionGroupFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return CourseSessionGroup::class;
+        return SessionGroup::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $sessionJoin = false;
         $groupJoin = false;
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'course':
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
+                    $qb->join('s.course', 'c');
+                    $qb->andWhere("c.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
                 case 'session':
-                    $qb->join('obj.session', 's');
+                    if (!$sessionJoin) {
+                        $qb->join('obj.session', 's');
+                        $sessionJoin = true;
+                    }
                     $qb->andWhere("s.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
                 case 'group':
                     if (!$groupJoin) {
                         $qb->join('obj.group', 'g');
                         $groupJoin = true;
                     }
+
                     $qb->andWhere("g.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'group.name':
+
+                case 'user':
                     if (!$groupJoin) {
                         $qb->join('obj.group', 'g');
                         $groupJoin = true;
                     }
-                    $qb->andWhere('g.name LIKE :groupName');
-                    $qb->setParameter('groupName', '%'.strtoupper($filterValue).'%');
-                    break;
-                case 'type':
-                    $qb->andWhere("obj.groupType = :{$filterName}");
+
+                    $qb->leftJoin('g.users', 'gu');
+                    $qb->andWhere("gu.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                default:
-                    if (is_bool($filterValue)) {
-                        $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                        $qb->setParameter($filterName, $filterValue);
-                    } else {
-                        $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                        $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-                    }
-            }
-        }
-        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
-            $sortByProperty = $sortBy['property'];
-            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
-            switch ($sortByProperty) {
-                case 'group.name':
-                    if (!$groupJoin) {
-                        $qb->join('obj.group', 'g');
-                    }
-                    $qb->orderBy('g.name', $sortByDirection);
-                    break;
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 
