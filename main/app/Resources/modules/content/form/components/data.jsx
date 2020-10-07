@@ -148,6 +148,7 @@ const FormData = (props) => {
               fields={primarySection.fields}
               data={props.data}
               errors={props.errors}
+              help={primarySection.help}
               validating={props.validating}
               updateProp={props.updateProp}
               setErrors={props.setErrors}
@@ -186,6 +187,7 @@ const FormData = (props) => {
                 fields={section.fields}
                 data={props.data}
                 errors={props.errors}
+                help={section.help}
                 validating={props.validating}
                 updateProp={props.updateProp}
                 setErrors={props.setErrors}

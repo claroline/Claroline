@@ -13,45 +13,33 @@ use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Manager\ChapterManager;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Icap\LessonBundle\Serializer\ChapterSerializer;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class LessonListener
 {
-    /** @var EngineInterface */
-    private $templating;
-
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /* @var ObjectManager */
     private $om;
-
     /** @var PlatformConfigurationHandler */
     private $config;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var ChapterManager */
     private $chapterManager;
 
     /** @var ChapterRepository */
     private $chapterRepository;
 
-    /**
-     * LessonListener constructor.
-     *
-     * @param EngineInterface              $templating
-     * @param ObjectManager                $om
-     * @param PlatformConfigurationHandler $config
-     * @param SerializerProvider           $serializer
-     * @param ChapterManager               $chapterManager
-     */
     public function __construct(
-        EngineInterface $templating,
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PlatformConfigurationHandler $config,
         SerializerProvider $serializer,
         ChapterManager $chapterManager
     ) {
-        $this->templating = $templating;
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->config = $config;
         $this->serializer = $serializer;
@@ -60,34 +48,29 @@ class LessonListener
         $this->chapterRepository = $this->om->getRepository(Chapter::class);
     }
 
-    /**
-     * Loads a lesson.
-     *
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var Lesson $lesson */
         $lesson = $event->getResource();
         $root = $this->chapterRepository->findOneBy(['lesson' => $lesson, 'level' => 0, 'parent' => null]);
 
+        $internalNotes = $this->authorization->isGranted('VIEW_INTERNAL_NOTES', $lesson->getResourceNode());
+
         $event->setData([
             'lesson' => $this->serializer->serialize($lesson),
             'tree' => $this->chapterManager->serializeChapterTree($lesson),
-            'root' => $root ? $this->serializer->serialize($root) : null,
+            'root' => $root ? $this->serializer->serialize($root, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []) : null,
         ]);
 
         $event->stopPropagation();
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var Lesson $lesson */
         $lesson = $event->getResource();
 
+        /** @var Lesson $newLesson */
         $newLesson = $event->getCopy();
         $newRoot = new Chapter();
         $newRoot->setLesson($newLesson);
@@ -105,13 +88,12 @@ class LessonListener
 
     public function onExport(ExportObjectEvent $exportEvent)
     {
+        /** @var Lesson $lesson */
         $lesson = $exportEvent->getObject();
 
-        $data = [
-          'root' => $this->chapterManager->serializeChapterTree($lesson),
-        ];
-
-        $exportEvent->overwrite('_data', $data);
+        $exportEvent->overwrite('_data', [
+            'root' => $this->chapterManager->serializeChapterTree($lesson),
+        ]);
     }
 
     public function onImport(ImportObjectEvent $event)
@@ -127,7 +109,7 @@ class LessonListener
             $children = $rootChapter['children'];
 
             foreach ($children as $child) {
-                $chapter = $this->importChapter($child, $lesson);
+                $chapter = $this->importChapter($lesson, $child);
                 $chapter->setLesson($lesson);
                 $chapter->setParent($root);
                 $this->om->persist($chapter);
@@ -135,7 +117,7 @@ class LessonListener
         }
     }
 
-    private function importChapter(array $data = [], Lesson $lesson)
+    private function importChapter(Lesson $lesson, array $data = [])
     {
         $chapter = new Chapter();
         $chapter->setTitle($data['title']);
@@ -143,7 +125,7 @@ class LessonListener
 
         if (isset($data['children'])) {
             foreach ($data['children'] as $child) {
-                $childChap = $this->importChapter($child, $lesson);
+                $childChap = $this->importChapter($lesson, $child);
                 $childChap->setParent($chapter);
             }
         }

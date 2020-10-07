@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {matchPath} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Summary} from '#/main/app/content/components/summary'
+import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
 
@@ -24,7 +24,7 @@ const PlayerMenu = props => {
 
   if (1 < props.scos.length) {
     return (
-      <Summary
+      <ContentSummary
         links={generateSummary(props.scorm.scos)}
       />
     )

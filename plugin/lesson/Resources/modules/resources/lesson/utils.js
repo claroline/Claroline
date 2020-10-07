@@ -4,7 +4,7 @@ const buildParentChapterChoices = (tree, chapter) => {
   let chapterSlug = chapter ? chapter.slug : null
 
   let flattenedChapters = {}
-  flattenedChapters[tree['slug']] = trans('Root', {}, 'icap_lesson')
+  flattenedChapters[tree['slug']] = trans('Root', {}, 'lesson')
 
   if (tree['children'] && Array.isArray(tree['children']) && tree['children'].length > 0) {
     flattenedChapters = Object.assign(flattenedChapters, buildFlattenedChapterChoices(tree['children'], chapterSlug))

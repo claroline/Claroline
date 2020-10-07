@@ -4,16 +4,21 @@ services:
         autoconfigure: false
         public: true #because controller
 
-    Icap\LessonBundle\Controller\API\ChapterController:
+    Icap\LessonBundle\Controller\ChapterController:
         arguments:
-          - '@service_container'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@templating'
+          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\LessonBundle\Serializer\ChapterSerializer'
           - '@Icap\LessonBundle\Manager\ChapterManager'
           - '@security.authorization_checker'
 
-    Icap\LessonBundle\Controller\Resource\LessonController:
+    Icap\LessonBundle\Controller\LessonController:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@templating'
+          - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\API\SerializerProvider'

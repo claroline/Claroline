@@ -7,5 +7,5 @@ plugin:
           tags: [content]
           exportable: false
           actions:
-              - name: chapter
-                decoder: edit
+              - name: view_internal_notes
+                decoder: view_internal_notes

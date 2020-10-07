@@ -1,17 +1,31 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {scrollTo} from '#/main/app/dom/scroll'
 import {LINK_BUTTON} from '#/main/app/buttons'
-
+import {ContentSummary} from '#/main/app/content/components/summary'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
-import {OverviewSummary} from '#/plugin/path/resources/path/overview/components/summary'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 
-const OverviewMain = props => {
+const PathOverview = props => {
+  function getStepSummary(step) {
+    return {
+      type: LINK_BUTTON,
+      icon: classes('step-progression fa fa-fw fa-circle', get(step, 'userProgression.status')),
+      label: step.title,
+      target: `${props.basePath}/play/${step.slug}`,
+      children: step.children ? step.children.map(getStepSummary) : [],
+      onClick: () => {
+        scrollTo(`#resource-${props.resourceId} > .page-content`)
+      }
+    }
+  }
+
   let score = {
     displayed: true,
     current: get(props.evaluation, 'progression', 0),
@@ -48,17 +62,15 @@ const OverviewMain = props => {
       <section className="resource-parameters">
         <h3 className="h2">{trans('summary')}</h3>
 
-        <OverviewSummary
-          basePath={props.basePath}
-          resourceId={props.resourceId}
-          steps={props.path.steps}
+        <ContentSummary
+          links={props.path.steps.map(getStepSummary)}
         />
       </section>
     </ResourceOverview>
   )
 }
 
-OverviewMain.propTypes = {
+PathOverview.propTypes = {
   basePath: T.string.isRequired,
   resourceId: T.string.isRequired,
   path: T.shape(
@@ -70,11 +82,11 @@ OverviewMain.propTypes = {
   )
 }
 
-OverviewMain.defaultProps = {
+PathOverview.defaultProps = {
   empty: true,
   evaluation: {}
 }
 
 export {
-  OverviewMain
+  PathOverview
 }

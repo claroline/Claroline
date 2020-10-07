@@ -1,39 +1,19 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Nicolas
- * Date: 18/10/13
- * Time: 09:36
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Icap\LessonBundle\Repository;
 
 use Doctrine\ORM\NoResultException;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Icap\LessonBundle\Entity\Chapter;
-use Icap\LessonBundle\Entity\Lesson;
 
 class ChapterRepository extends NestedTreeRepository
 {
-    public function getFirstChapter(Lesson $lesson)
-    {
-        return $this->findOneBy([
-            'lesson' => $lesson,
-            'root' => $lesson->getRoot()->getId(),
-            'left' => 2,
-        ]);
-    }
-
     public function getChapterTree(Chapter $chapter, bool $includeChapter = true)
     {
         return $this->childrenHierarchy($chapter, false, [], $includeChapter);
     }
 
     /**
-     * @param Chapter $chapter
-     * @param string  $fields
-     *
      * @return array
      */
     public function buildChapterTree(Chapter $chapter, $fields = 'chapter')
@@ -149,27 +129,6 @@ class ChapterRepository extends NestedTreeRepository
                 ->setParameter(3, $chapter->getLesson()->getRoot()->getId())
                 ->setFirstResult(0)
                 ->setMaxResults(1)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return;
-        }
-    }
-
-    public function getChapterById($chapterId, $lessonId)
-    {
-        try {
-            $qb = $this->_em->createQueryBuilder();
-
-            return $this->_em->createQueryBuilder()->add('select', 'c')
-                ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
-                ->innerJoin('c.lesson', ' l')
-                ->where($qb->expr()->andx(
-                    $qb->expr()->eq('c.id', '?1'),
-                    $qb->expr()->eq('l.id', '?2')
-                ))
-                ->setParameter(1, $chapterId)
-                ->setParameter(2, $lessonId)
                 ->getQuery()
                 ->getSingleResult();
         } catch (NoResultException $e) {

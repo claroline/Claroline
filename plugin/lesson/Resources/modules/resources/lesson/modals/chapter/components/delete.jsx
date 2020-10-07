@@ -40,7 +40,7 @@ class ChapterDeleteModal extends Component {
       <Modal
         {...omit(this.props, 'deleteChapter', 'chapterTitle')}
         icon="fa fa-fw fa-trash-o"
-        title={trans('delete_warning', {}, 'icap_lesson')}
+        title={trans('delete_warning', {}, 'lesson')}
       >
         <FormData
           level={5}
@@ -56,7 +56,7 @@ class ChapterDeleteModal extends Component {
                 {
                   name: 'children',
                   type: 'boolean',
-                  label: trans('delete_also_children', {}, 'icap_lesson')
+                  label: trans('delete_also_children', {}, 'lesson')
                 }
               ]
             }

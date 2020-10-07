@@ -4,28 +4,30 @@ namespace Icap\LessonBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Repository\ChapterRepository;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ChapterSerializer
 {
+    const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
+
     use SerializerTrait;
 
     /** @var ObjectManager */
     private $om;
 
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
+
     /** @var ChapterRepository */
     private $chapterRepository;
 
-    /**
-     * ChapterSerializer constructor.
-     *
-     * @param ObjectManager $om
-     */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, PublicFileSerializer $fileSerializer)
     {
         $this->om = $om;
+        $this->fileSerializer = $fileSerializer;
         $this->chapterRepository = $om->getRepository('IcapLessonBundle:Chapter');
     }
 
@@ -58,7 +60,7 @@ class ChapterSerializer
      *
      * @return array - the serialized representation of the Chapter resource
      */
-    public function serialize(Chapter $chapter, array $options = [])
+    public function serialize(Chapter $chapter, array $options = []): array
     {
         $previousChapter = $this->chapterRepository->getPreviousChapter($chapter);
         $nextChapter = $this->chapterRepository->getNextChapter($chapter);
@@ -67,11 +69,16 @@ class ChapterSerializer
             'id' => $chapter->getUuid(),
             'slug' => $chapter->getSlug(),
             'title' => $chapter->getTitle(),
+            'poster' => $this->serializePoster($chapter),
             'text' => $chapter->getText(),
             'parentSlug' => $chapter->getParent() ? $chapter->getParent()->getSlug() : null,
             'previousSlug' => $previousChapter ? $previousChapter->getSlug() : null,
             'nextSlug' => $nextChapter ? $nextChapter->getSlug() : null,
         ];
+
+        if (in_array(static::INCLUDE_INTERNAL_NOTES, $options)) {
+            $serialized['internalNote'] = $chapter->getInternalNote();
+        }
 
         return $serialized;
     }
@@ -86,6 +93,20 @@ class ChapterSerializer
     public function serializeChapterTree($tree)
     {
         return $this->serializeChapterTreeNode($tree);
+    }
+
+    public function deserialize(array $data, Chapter $chapter = null): Chapter
+    {
+        if (empty($chapter)) {
+            $chapter = new Chapter();
+        }
+
+        $this->sipe('title', 'setTitle', $data, $chapter);
+        $this->sipe('text', 'setText', $data, $chapter);
+        $this->sipe('poster.url', 'setPoster', $data, $chapter);
+        $this->sipe('internalNote', 'setInternalNote', $data, $chapter);
+
+        return $chapter;
     }
 
     private function serializeChapterTreeNode($node)
@@ -107,25 +128,20 @@ class ChapterSerializer
         ];
     }
 
-    /**
-     * @param array          $data
-     * @param Chapter | null $chapter
-     *
-     * @return Chapter - The deserialized chapter entity
-     */
-    public function deserialize($data, Chapter $chapter = null)
+    private function serializePoster(Chapter $chapter)
     {
-        if (empty($chapter)) {
-            $chapter = new Chapter();
-            $chapter->refreshUuid();
-        }
-        $this->sipe('title', 'setTitle', $data, $chapter);
-        $this->sipe('text', 'setText', $data, $chapter);
+        $poster = null;
+        if (!empty($chapter->getPoster())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+                ->findOneBy(['url' => $chapter->getPoster()]);
 
-        if (empty($chapter->getTitle())) {
-            throw new BadRequestHttpException('Title cannot be blank');
+            if ($file) {
+                $poster = $this->fileSerializer->serialize($file);
+            }
         }
 
-        return $chapter;
+        return $poster;
     }
 }

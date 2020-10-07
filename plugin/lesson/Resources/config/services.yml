@@ -1,14 +1,7 @@
 imports:
+    - { resource: services/controller.yml }
     - { resource: services/finder.yml }
-    - { resource: services/serializer.yml }
     - { resource: services/listener.yml }
     - { resource: services/manager.yml }
-    - { resource: services/controller.yml }     
-
-parameters:
-#    lesson.example.class: Icap\LessonBundle\Example
-
-services:
-#    lesson.example:
-#        class: %lesson.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    - { resource: services/serializer.yml }
+    - { resource: services/voter.yml }

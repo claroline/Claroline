@@ -24,6 +24,22 @@ class Lesson extends AbstractResource
     use Uuid;
 
     /**
+     * @ORM\Column(name="description", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $description;
+
+    /**
+     * Show overview to users or directly start the lesson.
+     *
+     * @ORM\Column(name="show_overview", type="boolean", options={"default" = 1})
+     *
+     * @var bool
+     */
+    private $showOverview = true;
+
+    /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -32,6 +48,39 @@ class Lesson extends AbstractResource
     public function __construct()
     {
         $this->refreshUuid();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description = null)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Set show overview.
+     *
+     * @param bool $showOverview
+     */
+    public function setShowOverview($showOverview)
+    {
+        $this->showOverview = $showOverview;
+    }
+
+    /**
+     * Is overview shown ?
+     *
+     * @return bool
+     */
+    public function getShowOverview()
+    {
+        return $this->showOverview;
     }
 
     /**

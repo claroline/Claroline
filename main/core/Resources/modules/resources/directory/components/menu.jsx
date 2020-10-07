@@ -8,7 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {matchPath} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
-import {Summary} from '#/main/app/content/components/summary'
+import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
@@ -44,7 +44,7 @@ class DirectoryMenu extends Component {
         {...omit(this.props, 'path')}
         title={trans('directory', {}, 'resource')}
       >
-        <Summary
+        <ContentSummary
           links={[
             {
               type: LINK_BUTTON,

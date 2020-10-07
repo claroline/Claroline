@@ -19,7 +19,7 @@
                     <div class="pdf-contents" style="margin-top:15px;">
                         <div class="pdf-contents-inner well">
                             <div class="pdf-contents-title">
-                                {{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
+                                {{ 'summary'|trans({}, 'platform') }}
                             </div>
                             {% include "IcapLessonBundle:lesson:lessonContents.pdf.twig" with {'chapters' : tree, 'delimeter' : '.', 'rootId' : ''} %}
                         </div>

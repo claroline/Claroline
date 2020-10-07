@@ -186,7 +186,6 @@ actions.cancelDropSubmission = (dropId) => ({
 actions.downloadDrops = (drops) => ({
   [API_REQUEST]: {
     url: ['claro_dropzone_drops_download'],
-    forceDownload: true,
     request: {
       method: 'POST',
       body: JSON.stringify({_ids: drops.map(d => d.id)})

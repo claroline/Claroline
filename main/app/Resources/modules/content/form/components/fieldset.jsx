@@ -2,9 +2,12 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
+import {Alert} from '#/main/app/alert/components/alert'
 import {DataInput} from '#/main/app/data/components/input'
+import {toKey} from '#/main/core/scaffolding/text'
 
 // todo : restore readOnly
 // todo : add auto focus
@@ -101,6 +104,18 @@ class FormFieldset extends Component {
     return rendered
   }
 
+  renderHelp() {
+    if (!isEmpty(this.props.help)) {
+      const helps = Array.isArray(this.props.help) ? this.props.help : [this.props.help]
+
+      return helps.map(help =>
+        <Alert key={toKey(help)} type="info">{help}</Alert>
+      )
+    }
+
+    return null
+  }
+
   render() {
     return (
       <fieldset
@@ -108,6 +123,7 @@ class FormFieldset extends Component {
         className={this.props.className}
         disabled={this.props.disabled}
       >
+        {this.renderHelp()}
         {this.renderFields(this.props.fields)}
 
         {this.props.children}
@@ -125,6 +141,7 @@ FormFieldset.propTypes = {
   errors: T.object,
   validating: T.bool,
   data: T.object,
+  help: T.oneOfType([T.string, T.arrayOf(T.string)]),
   fields: T.arrayOf(T.shape({
     // TODO : fields propTypes
   })).isRequired,

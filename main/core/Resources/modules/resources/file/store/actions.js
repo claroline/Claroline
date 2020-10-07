@@ -13,7 +13,6 @@ actions.download = (resourceNode) => ({
     url: ['claro_resource_download', {
       ids: [resourceNode.id]
     }],
-    forceDownload: true,
     request: {
       method: 'GET'
     }

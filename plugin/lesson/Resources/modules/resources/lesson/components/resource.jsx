@@ -4,12 +4,13 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Alert} from '#/main/app/alert/components/alert'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
-import {Editor} from '#/plugin/lesson/resources/lesson/editor/components/editor'
+import {Editor} from '#/plugin/lesson/resources/lesson/editor/containers/editor'
+import {LessonOverview} from '#/plugin/lesson/resources/lesson/containers/overview'
+import {ChapterList} from '#/plugin/lesson/resources/lesson/containers/list'
 
 class LessonResource extends Component {
   constructor(props) {
@@ -45,10 +46,13 @@ class LessonResource extends Component {
           }
         ]}
         redirect={[
-          {from: '/', exact: true, to: '/'+get(this.props.tree, 'children[0].slug'), disabled: !get(this.props.tree, 'children[0]')}
+          {from: '/', exact: true, to: '/'+get(this.props.tree, 'children[0].slug'), disabled: this.props.overview || !get(this.props.tree, 'children[0]')}
         ]}
         routes={[
           {
+            path: '/chapters',
+            component: ChapterList
+          }, {
             path: '/edit',
             component: Editor
           }, {
@@ -68,15 +72,14 @@ class LessonResource extends Component {
             path: '/:slug/copy',
             component: ChapterForm,
             onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
+          }, {
+            path: '/',
+            exact: true,
+            component: LessonOverview,
+            disabled: !this.props.overview
           }
         ]}
-      >
-        {0 === get(this.props.tree, 'children', []).length &&
-          <Alert type="info">
-            {trans('empty_lesson_message', {}, 'icap_lesson')}
-          </Alert>
-        }
-      </ResourcePage>
+      />
     )
   }
 }
@@ -86,6 +89,7 @@ LessonResource.propTypes = {
   invalidated: T.bool.isRequired,
   fetchChapterTree: T.func.isRequired,
   lesson: T.any.isRequired,
+  overview: T.bool.isRequired,
   canExport: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   tree: T.any.isRequired,

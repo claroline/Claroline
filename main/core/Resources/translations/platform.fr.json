@@ -672,17 +672,11 @@
     "months_short": "m",
     "more_actions": "Actions disponibles",
     "move": "Déplacer",
-    "my_account": "Mon compte",
-    "my_agenda": "Mon agenda",
     "my_applications": "Mes applications",
     "my_contacts": "Mes contacts",
-    "my_favourite_workspaces": "Mes espaces d'activités favoris",
-    "my_notes": "Mes notes",
-    "my_portfolio": "Mon portfolio",
     "my_profile": "Mon profil",
     "my_public_documents": "Mes documents publics",
     "name": "Nom",
-    "name_required": "Nom requis",
     "nb_attempts_participations": "Nombre de tentatives/participations",
     "nb_openings": "Nombre d'ouvertures",
     "new": "Nouveau",
@@ -1709,5 +1703,6 @@
     "active": "Actif",
     "inactive": "Inactif",
     "per_day": "par jour",
-    "per_day_short": "/jour"
+    "per_day_short": "/jour",
+    "internal_note": "Note interne"
 }

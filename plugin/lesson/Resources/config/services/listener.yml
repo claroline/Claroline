@@ -6,11 +6,11 @@ services:
 
     Icap\LessonBundle\Listener\Resource\LessonListener:
         arguments:
-           - '@templating'
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
-           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-           - '@Claroline\AppBundle\API\SerializerProvider'
-           - '@Icap\LessonBundle\Manager\ChapterManager'
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Icap\LessonBundle\Manager\ChapterManager'
         tags:
             - { name: kernel.event_listener, event: resource.icap_lesson.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.icap_lesson.copy, method: onCopy }
@@ -40,13 +40,6 @@ services:
     Icap\LessonBundle\Listener\NotificationListener:
         arguments:
             - '@translator'
-            - '@router'
         tags:
             - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_create, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-chapter_update, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_lesson-user_tagged, method: onCreateNotificationItem }
-
-    Icap\LessonBundle\Listener\ChapterListener:
-        arguments:
-            - '@Icap\NotificationBundle\Manager\NotificationManager'
-        tags: ['doctrine.entity_listener']

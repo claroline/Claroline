@@ -57,6 +57,7 @@ class ChapterManager
     {
         $root_copy->setTitle($root_original->getTitle());
         $root_copy->setText($root_original->getText());
+        $root_copy->setInternalNote($root_original->getInternalNote());
         $this->copyChildren($root_original, $root_copy, true);
     }
 
@@ -76,6 +77,7 @@ class ChapterManager
         }
         $chapter_copy->setTitle($copyName);
         $chapter_copy->setText($chapter_org->getText());
+        $chapter_copy->setInternalNote($chapter_org->getInternalNote());
         $chapter_copy->setLesson($parent->getLesson());
         $this->insertChapter($chapter_copy, $parent);
         if ($copy_children) {

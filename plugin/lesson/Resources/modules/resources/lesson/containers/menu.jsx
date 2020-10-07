@@ -14,7 +14,9 @@ const LessonMenu = withRouter(
     (state) => ({
       lesson: selectors.lesson(state),
       tree: selectors.treeData(state),
+      overview: selectors.showOverview(state),
       editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
+      internalNotes: hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)),
       canExport: selectors.canExport(state)
     }),
     (dispatch) => ({
@@ -28,6 +30,9 @@ const LessonMenu = withRouter(
             history.push(success.slug ? `${path}/${success.slug}` : path)
           })
         }))
+      },
+      search(searchStr, internalNotes = false) {
+        dispatch(actions.search(searchStr, internalNotes))
       }
     })
   )(LessonMenuComponent)

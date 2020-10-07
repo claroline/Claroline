@@ -2,29 +2,24 @@
 
 namespace Icap\LessonBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\NotificationBundle\Entity\UserPickerContent;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__lesson_chapter")
  * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
- * @ORM\EntityListeners({"Icap\LessonBundle\Listener\ChapterListener"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Chapter
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     */
-    private $id;
+    use Id;
+    use Uuid;
+    use Poster;
 
     /**
      * @ORM\Column(type="string", nullable=false)
@@ -36,6 +31,11 @@ class Chapter
      * @ORM\Column(type="text", nullable=true)
      */
     private $text;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $internalNote;
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Lesson")
@@ -80,41 +80,14 @@ class Chapter
      */
     private $parent;
 
-    protected $userPicker = null;
-
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set slug.
-     *
-     * @param string $slug
-     *
-     * @return Post
-     */
-    public function setSlug($slug)
+    public function setSlug(string $slug)
     {
         $this->slug = $slug;
-
-        return $this;
     }
 
     /**
@@ -127,151 +100,93 @@ class Chapter
         return $this->slug;
     }
 
-    /**
-     * @param mixed $left
-     */
     public function setLeft($left)
     {
         $this->left = $left;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLeft()
     {
         return $this->left;
     }
 
-    /**
-     * @param mixed $lesson
-     */
-    public function setLesson($lesson)
+    public function setLesson(Lesson $lesson)
     {
         $this->lesson = $lesson;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLesson()
+    public function getLesson(): Lesson
     {
         return $this->lesson;
     }
 
-    /**
-     * @param mixed $level
-     */
     public function setLevel($level)
     {
         $this->level = $level;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLevel()
     {
         return $this->level;
     }
 
-    /**
-     * @param mixed $parent
-     */
     public function setParent($parent)
     {
         $this->parent = $parent;
     }
 
-    /**
-     * @return mixed
-     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    /**
-     * @param mixed $right
-     */
     public function setRight($right)
     {
         $this->right = $right;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRight()
     {
         return $this->right;
     }
 
-    /**
-     * @param mixed $root
-     */
     public function setRoot($root)
     {
         $this->root = $root;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoot()
     {
         return $this->root;
     }
 
-    /**
-     * @param mixed $text
-     */
     public function setText($text)
     {
         $this->text = $text;
     }
 
-    /**
-     * @return mixed
-     */
     public function getText()
     {
         return $this->text;
     }
 
-    /**
-     * @param mixed $title
-     */
+    public function getInternalNote()
+    {
+        return $this->internalNote;
+    }
+
+    public function setInternalNote(string $internalNote = null)
+    {
+        $this->internalNote = $internalNote;
+    }
+
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @param UserPickerContent $userPicker
-     *
-     * @return $this
-     */
-    public function setUserPicker(UserPickerContent $userPicker)
-    {
-        $this->userPicker = $userPicker;
-
-        return $this;
-    }
-
-    /**
-     * @return \Icap\NotificationBundle\Entity\UserPickerContent
-     */
-    public function getUserPicker()
-    {
-        return $this->userPicker;
     }
 }

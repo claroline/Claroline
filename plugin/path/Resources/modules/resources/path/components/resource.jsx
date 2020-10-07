@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
-import {OverviewMain} from '#/plugin/path/resources/path/overview/containers/main'
+import {PathOverview} from '#/plugin/path/resources/path/containers/overview'
 import {EditorMain} from '#/plugin/path/resources/path/editor/containers/main'
 import {PlayerMain} from '#/plugin/path/resources/path/player/containers/main'
 
@@ -37,7 +37,7 @@ const PathResource = props =>
       }, {
         path: '/',
         exact: true,
-        component: OverviewMain,
+        component: PathOverview,
         disabled: !props.overview
       }
     ]}

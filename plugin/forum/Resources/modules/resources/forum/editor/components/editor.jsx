@@ -37,12 +37,12 @@ const EditorComponent = (props) =>
           {
             name: 'display.showOverview',
             type: 'boolean',
-            label: trans('show_overview', {}, 'forum'),
+            label: trans('enable_overview'),
             linked: [
               {
                 name: 'display.description',
                 type: 'html',
-                label: trans('overview_message', {}, 'forum'),
+                label: trans('overview_message'),
                 displayed: props.forumForm.display.showOverview,
                 options: {
                   workspace: props.workspace

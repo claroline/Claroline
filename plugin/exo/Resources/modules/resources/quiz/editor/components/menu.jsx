@@ -9,12 +9,12 @@ import {scrollTo} from '#/main/app/dom/scroll'
 import {matchPath} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {Summary} from '#/main/app/content/components/summary'
+import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/step-position'
 
 const EditorMenu = props =>
-  <Summary
+  <ContentSummary
     links={[{
       type: LINK_BUTTON,
       icon: 'fa fa-fw fa-cog',

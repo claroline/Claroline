@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -31,7 +32,7 @@ const ChapterFormComponent = props =>
     sections={[
       {
         id: 'chapter',
-        title: 'Chapter form',
+        title: trans('general'),
         primary: true,
         fields: [
           {
@@ -42,12 +43,12 @@ const ChapterFormComponent = props =>
           }, {
             name: 'move',
             type: 'boolean',
-            label: trans('move_chapter', {}, 'icap_lesson'),
+            label: trans('move_chapter', {}, 'lesson'),
             displayed: !props.isNew
           }, {
             name: 'parentSlug',
             type: 'choice',
-            label: trans('move_destination', {}, 'icap_lesson'),
+            label: trans('move_destination', {}, 'lesson'),
             required: true,
             displayed: props.isNew || props.chapterWillBeMoved,
             options: {
@@ -59,7 +60,7 @@ const ChapterFormComponent = props =>
           }, {
             name: 'position',
             type: 'choice',
-            label: trans('move_relation', {}, 'icap_lesson'),
+            label: trans('move_relation', {}, 'lesson'),
             required: false,
             displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && !props.isRootSelected,
             disabled: false,
@@ -67,8 +68,8 @@ const ChapterFormComponent = props =>
               condensed: false,
               multiple: false,
               choices: {
-                subchapter: trans('subchapter', {}, 'icap_lesson'),
-                sibling: trans('sibling', {}, 'icap_lesson')
+                subchapter: trans('subchapter', {}, 'lesson'),
+                sibling: trans('sibling', {}, 'lesson')
               }
             }
           }, {
@@ -81,8 +82,8 @@ const ChapterFormComponent = props =>
               condensed: false,
               multiple: false,
               choices: {
-                first: trans('first', {}, 'icap_lesson'),
-                last: trans('last', {}, 'icap_lesson')
+                first: trans('first'),
+                last: trans('last')
               }
             }
           }, {
@@ -95,8 +96,8 @@ const ChapterFormComponent = props =>
               condensed: false,
               multiple: false,
               choices: {
-                before: trans('before', {}, 'icap_lesson'),
-                after: trans('after', {}, 'icap_lesson')
+                before: trans('before'),
+                after: trans('after')
               }
             }
           }, {
@@ -104,6 +105,35 @@ const ChapterFormComponent = props =>
             type: 'html',
             label: trans('text'),
             required: true,
+            options: {
+              workspace: props.workspace,
+              minRows: 10
+            }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
+        fields: [
+          {
+            name: 'poster',
+            type: 'image',
+            label: trans('poster'),
+            options: {
+              ratio: '3:1'
+            }
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-sticky-note',
+        title: trans('internal_note'),
+        help: trans('internal_note_visibility_help', {}, 'lesson'),
+        displayed: props.internalNotes,
+        fields: [
+          {
+            name: 'internalNote',
+            type: 'html',
+            label: trans('text'),
             options: {
               workspace: props.workspace,
               minRows: 10
@@ -121,6 +151,7 @@ const ChapterForm = withRouter(connect(
     lesson: selectors.lesson(state),
     chapter: selectors.chapter(state),
     tree: selectors.treeData(state),
+    internalNotes: hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)),
     isNew: formSelectors.isNew(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)),
     slug: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).slug || null,
     parentSlug: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,

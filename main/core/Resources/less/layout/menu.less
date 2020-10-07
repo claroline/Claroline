@@ -1,4 +1,6 @@
 
+// todo : write a mixin to generate menu btns variant (for shortcuts, search btn, menu items)
+
 .app-menu {
     overflow-y: auto; // gets its own scrollbar
     max-width: @toolbar-size;
@@ -208,6 +210,38 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 2;
+}
+
+.app-menu-search {
+    margin: floor(@grid-gutter-width / 2);
+    margin-top: 0;
+
+    .form-control {
+        color: @toolbar-link-hover-color;
+        background: lighten(@toolbar-bg, 8%);
+        border-color: transparent;
+        box-shadow: none;
+
+        .placeholder(@toolbar-link-color);
+    }
+
+    .input-group-btn > .btn { // specific selector required to override default styles
+        color: @toolbar-link-color;
+        background: @toolbar-link-hover-bg;
+        border-color: transparent;
+
+        &.disabled, &.disabled:hover {
+            color: @toolbar-link-disabled-color;
+            background: @toolbar-link-disabled-bg;
+            border-color: lighten(@toolbar-bg, 8%);
+        }
+
+        &:hover {
+            color: @toolbar-link-active-color;
+            background: @toolbar-link-active-bg;
+            border-color: transparent;
+        }
+    }
 }
 
 // XS/SM screens :

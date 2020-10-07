@@ -110,10 +110,10 @@ implementPropTypes(SummaryLink, ActionTypes, {
   collapsible: false
 })
 
-const Summary = props => {
+const ContentSummary = props => {
   if (0 !== props.links.length ) {
     return (
-      <ul className="summary">
+      <ul className={classes('summary', props.className)}>
         {props.links
           .filter(link => undefined === link.displayed || link.displayed)
           .map((link, index) =>
@@ -130,7 +130,8 @@ const Summary = props => {
   return null
 }
 
-Summary.propTypes = {
+ContentSummary.propTypes = {
+  className: T.string,
   links: T.arrayOf(T.shape(merge({}, ActionTypes.propTypes, {
     collapsed: T.bool,
     // It forces the display of the collapse button even if children is empty
@@ -148,5 +149,5 @@ Summary.propTypes = {
 }
 
 export {
-  Summary
+  ContentSummary
 }

@@ -18,6 +18,10 @@
       "type": "string",
       "description": "The text of the chapter"
     },
+    "internalNote": {
+      "type": ["string", "null"],
+      "description": "A text only visible by users with the correct right"
+    },
     "parentSlug": {
       "type": "string",
       "description": "The slug of the chapter's parent chapter"

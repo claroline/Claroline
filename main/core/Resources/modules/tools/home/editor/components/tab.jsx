@@ -30,6 +30,7 @@ const EditorTab = props =>
     className="home-tool"
     showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
     path={[].concat(getToolBreadcrumb('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
+      id: props.currentTab.id,
       label: props.currentTab.longTitle,
       target: '/' // this don't work but it's never used as current tab is always last for now
     }] : [])}

@@ -3,14 +3,13 @@ import cloneDeep from 'lodash/cloneDeep'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store/reducer'
 import {FORM_SUBMIT_SUCCESS, FORM_RESET} from '#/main/app/content/form/store/actions'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
 import {
-  SUMMARY_PIN_TOGGLE,
-  SUMMARY_OPEN_TOGGLE,
   CHAPTER_LOAD,
   CHAPTER_RESET,
   TREE_LOADED,
@@ -18,43 +17,39 @@ import {
   POSITION_SELECTED
 } from '#/plugin/lesson/resources/lesson/store/actions'
 
-const formDefault = {
-  id: null,
-  slug: null,
-  title: null,
-  text: null,
-  parentSug: null,
-  previousSlug: null,
-  nextSlug: null,
-  move: false,
-  position: null,
-  order: {
-    sibling: null,
-    subchapter: null
-  }
-}
+import {reducer as editorReducer} from '#/plugin/lesson/resources/lesson/editor/store/reducer'
+import {selectors as editorSelectors} from '#/plugin/lesson/resources/lesson/editor/store/selectors'
 
 const reducer = combineReducers({
-  summary: combineReducers({
-    pinned: makeReducer(false, {
-      [SUMMARY_PIN_TOGGLE]: (state) => !state
-    }),
-    opened: makeReducer(false, {
-      [SUMMARY_OPEN_TOGGLE]: (state) => !state
-    })
-  }),
   lesson: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lesson
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lesson,
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
   }),
+  editor: editorReducer,
   chapter: makeReducer({}, {
     [CHAPTER_LOAD]: (state, action) => action.chapter,
     [CHAPTER_RESET]: () => ({}),
     [CHAPTER_DELETED]: () => null
   }),
+  chapters: makeListReducer(selectors.LIST_NAME),
   chapter_form: makeFormReducer(selectors.CHAPTER_EDIT_FORM_NAME, {}, {
     data: makeReducer({}, {
       [CHAPTER_LOAD]: (state, action) => Object.assign(cloneDeep(state), action.chapter),
-      [CHAPTER_RESET]: () => (formDefault),
+      [CHAPTER_RESET]: () => ({
+        id: null,
+        slug: null,
+        title: null,
+        text: null,
+        parentSug: null,
+        previousSlug: null,
+        nextSlug: null,
+        move: false,
+        position: null,
+        order: {
+          sibling: null,
+          subchapter: null
+        }
+      }),
       [POSITION_SELECTED]: (state, action) => {
         const data = cloneDeep(state)
         data.position = action.isRoot ? 'subchapter' : data.position

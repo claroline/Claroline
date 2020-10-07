@@ -12,97 +12,138 @@
     .step-children {
         padding-left: @summary-lvl-indent !important;
     }
-}
 
-.summary-link-container {
-    list-style: none;
-    font-size: @summary-font;
-    font-style: @summary-font-style;
-}
-
-.summary-link {
-    background-color: @summary-link-bg;
-    display: flex;
-    align-items: center;
-
-    &:hover {
-        background-color: @summary-link-hover-bg;
+    .summary-link-container {
+        list-style: none;
+        font-size: @summary-font;
+        font-style: @summary-font-style;
     }
 
-    &.active,
-    &:focus {
-        color: @summary-link-active-color;
-        background: @summary-link-active-bg;
-    }
-}
-
-.summary-link-actions {
-    white-space: nowrap; // avoid buttons to be displayed in column
-}
-
-.btn-summary-primary,
-.btn-summary {
-    border: none;
-    font-size: @summary-font; // required to override default button size
-    color: @summary-link-color;
-    padding: floor(@grid-gutter-width / 2) 0;
-
-    &:hover {
-        color: @summary-link-hover-color;
-        background: @summary-link-hover-bg;
+    .summary-link {
+        display: flex;
+        align-items: center;
     }
 
-    &:focus,
-    &:active,
-    &.active {
-        &,
-        &:hover,
-        &:focus {
-            color: @summary-link-active-color;
-            background: @summary-link-active-bg;
+    .summary-link-actions {
+        white-space: nowrap; // avoid buttons to be displayed in column
+    }
+
+    .btn-summary-primary,
+    .btn-summary {
+        border: none;
+        font-size: @summary-font; // required to override default button size
+        padding: floor(@grid-gutter-width / 2) 0;
+    }
+
+    .btn-summary-primary {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding-left: @grid-gutter-width;
+        padding-right: 5px;
+
+        .action-icon {
+            flex-shrink: 0;
+        }
+
+        .action-subscript {
+            margin-left: auto;
         }
     }
 
-    &[disabled],
-    &.disabled {
-        // avoid focus or hover effect on disabled
-        &,
-        &:hover,
-        &:focus {
-            color: @summary-link-disabled-color;
-            background: @summary-link-disabled-bg;
+    .btn-summary {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+// creates color variants
+.app-menu .summary {
+    .summary-variant(
+        @summary-link-color,
+        @summary-link-bg,
+        @summary-link-hover-color,
+        @summary-link-hover-bg,
+        @summary-link-active-color,
+        @summary-link-active-bg,
+        @summary-link-disabled-color,
+        @summary-link-disabled-bg
+    );
+}
+
+.app-content .summary {
+    .summary-variant(
+        @link-color,
+        @gray-lighter,
+        @link-hover-color,
+        @gray-lighter,
+        @link-hover-color,
+        @gray-lighter,
+        @text-color,
+        @gray-lightest
+    );
+
+    .summary-link {
+        border-radius: @border-radius-small;
+        margin-top: 5px;
+    }
+}
+
+.summary-variant(@link-color, @link-bg, @link-hover-color, @link-hover-bg, @link-active-color, @link-active-bg, @link-disabled-color, @link-disabled-bg) {
+    .summary-link {
+        background-color: @link-bg;
+
+        &:hover {
+            background-color: @link-hover-bg;
         }
 
-        // preserve active state on disabled (because active links are disabled)
+        &.active,
+        &:focus {
+            color: @link-active-color;
+            background: @link-active-bg;
+        }
+    }
+
+    .btn-summary-primary,
+    .btn-summary {
+        color: @link-color;
+
+        &:hover {
+            color: @link-hover-color;
+            background: @link-hover-bg;
+        }
+
+        &:focus,
+        &:active,
         &.active {
             &,
             &:hover,
             &:focus {
-                color: @summary-link-active-color;
-                background: @summary-link-active-bg;
-                opacity: 1;
+                color: @link-active-color;
+                background: @link-active-bg;
+            }
+        }
+
+        &[disabled],
+        &.disabled {
+            // avoid focus or hover effect on disabled
+            &,
+            &:hover,
+            &:focus {
+                color: @link-disabled-color;
+                background: @link-disabled-bg;
+            }
+
+            // preserve active state on disabled (because active links are disabled)
+            &.active {
+                &,
+                &:hover,
+                &:focus {
+                    color: @link-active-color;
+                    background: @link-active-bg;
+                    opacity: 1;
+                }
             }
         }
     }
-}
-
-.btn-summary-primary {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding-left: @grid-gutter-width;
-    padding-right: 5px;
-
-    .action-icon {
-        flex-shrink: 0;
-    }
-
-    .action-subscript {
-        margin-left: auto;
-    }
-}
-
-.btn-summary {
-    padding-left: 5px;
-    padding-right: 5px;
 }

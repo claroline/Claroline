@@ -23,9 +23,7 @@ const empty = createSelector(
 
 const showOverview = createSelector(
   [path],
-  (path) => {
-    return get(path, 'display.showOverview') || false
-  }
+  (path) => get(path, 'display.showOverview') || false
 )
 
 // is step navigation enabled ?

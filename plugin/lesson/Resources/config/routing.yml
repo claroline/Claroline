@@ -1,11 +1,5 @@
-icap_lesson_resource:
-    resource: "@IcapLessonBundle/Controller/Resource/LessonController.php"
-    type:     annotation
-    options:
-        expose: true
-
 icap_lesson_api:
-    resource: "@IcapLessonBundle/Controller/API/"
+    resource: "@IcapLessonBundle/Controller/"
     prefix: apiv2
     type: api
     options:

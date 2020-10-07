@@ -2,12 +2,10 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
+import {actions as listActions} from '#/main/app/content/list/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as resourceActions} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/lesson/resources/lesson/store/selectors'
-
-export const SUMMARY_PIN_TOGGLE  = 'SUMMARY_PIN_TOGGLE'
-export const SUMMARY_OPEN_TOGGLE = 'SUMMARY_OPEN_TOGGLE'
 
 export const CHAPTER_LOAD      = 'CHAPTER_LOAD'
 export const CHAPTER_RESET     = 'CHAPTER_RESET'
@@ -27,12 +25,22 @@ actions.chapterDeleted   = makeActionCreator(CHAPTER_DELETED, 'tree')
 actions.treeLoaded       = makeActionCreator(TREE_LOADED, 'tree')
 actions.positionSelected = makeActionCreator(POSITION_SELECTED, 'isRoot')
 
+actions.search = (searchStr, internalNotes = false) => (dispatch) => {
+  if (internalNotes) {
+    dispatch(listActions.resetFilters(selectors.LIST_NAME, [{property: 'contentAndNote', value: searchStr}]))
+  } else {
+    dispatch(listActions.resetFilters(selectors.LIST_NAME, [{property: 'content', value: searchStr}]))
+  }
+
+  dispatch(listActions.invalidateData(selectors.LIST_NAME))
+}
+
 actions.loadChapter = (lessonId, chapterSlug) => dispatch => {
   dispatch(actions.chapterReset())
 
   return dispatch({
     [API_REQUEST]: {
-      url:['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
+      url:['apiv2_lesson_chapter_get', {lessonId: lessonId, slug: chapterSlug}],
       silent: true,
       success: (response) => {
         dispatch(actions.chapterLoad(response))
@@ -55,7 +63,7 @@ actions.editChapter = (formName, lessonId, chapterSlug) => dispatch => {
   dispatch(formActions.resetForm(formName, {}, false))
   dispatch(actions.chapterEdit())
   dispatch({[API_REQUEST]: {
-    url: ['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
+    url: ['apiv2_lesson_chapter_get', {lessonId: lessonId, slug: chapterSlug}],
     success: (response, dispatch) => {
       dispatch(formActions.resetForm(formName, response, false))
       dispatch(actions.chapterLoad(response))
@@ -67,7 +75,7 @@ actions.copyChapter = (formName, lessonId, chapterSlug) => dispatch => {
   dispatch(formActions.resetForm(formName, {}, true))
   dispatch(actions.chapterEdit())
   dispatch({[API_REQUEST]: {
-    url: ['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
+    url: ['apiv2_lesson_chapter_get', {lessonId: lessonId, slug: chapterSlug}],
     success: (response, dispatch) => {
       dispatch(formActions.resetForm(formName, response, true))
       const data = cloneDeep(response)
@@ -85,7 +93,7 @@ actions.createChapter = (formName, lessonId, rootChapterSlug) => dispatch => {
 
 actions.deleteChapter = (lessonId, chapterSlug, deleteChildren = false) => dispatch =>
   dispatch({[API_REQUEST]: {
-    url: ['apiv2_lesson_chapter_delete', {lessonId, chapterSlug}],
+    url: ['apiv2_lesson_chapter_delete', {lessonId: lessonId, chapter: chapterSlug}],
     request: {
       method: 'DELETE',
       headers: {
@@ -114,7 +122,7 @@ actions.positionChange = value => (dispatch, getState) => {
 
 actions.downloadLessonPdf = (lessonId) => ({
   [API_REQUEST]: {
-    url: ['icap_lesson_export_pdf', {lesson: lessonId}],
+    url: ['icap_lesson_export_pdf', {id: lessonId}],
     request: {
       method: 'GET'
     }

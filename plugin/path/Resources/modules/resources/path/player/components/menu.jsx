@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {matchPath} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Summary} from '#/main/app/content/components/summary'
+import {ContentSummary} from '#/main/app/content/components/summary'
 
 const PlayerMenu = props => {
   function getStepSummary(step) {
@@ -41,7 +41,7 @@ const PlayerMenu = props => {
   }
 
   return (
-    <Summary
+    <ContentSummary
       links={baseLinks.concat(
         props.steps.map(getStepSummary)
       )}

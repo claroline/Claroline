@@ -2,10 +2,10 @@ import {connect} from 'react-redux'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store/selectors'
 
-import {OverviewMain as OverviewMainComponent} from '#/plugin/path/resources/path/overview/components/main'
+import {PathOverview as PathOverviewComponent} from '#/plugin/path/resources/path/components/overview'
 import {selectors} from '#/plugin/path/resources/path/store'
 
-const OverviewMain = connect(
+const PathOverview = connect(
   (state) => ({
     basePath: resourceSelectors.path(state),
     resourceId: resourceSelectors.id(state),
@@ -13,8 +13,8 @@ const OverviewMain = connect(
     empty: selectors.empty(state),
     evaluation: resourceSelectors.resourceEvaluation(state)
   })
-)(OverviewMainComponent)
+)(PathOverviewComponent)
 
 export {
-  OverviewMain
+  PathOverview
 }

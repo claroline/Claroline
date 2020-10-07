@@ -14,6 +14,7 @@ const LessonResource = withRouter(
         tree: selectors.treeData(state),
         invalidated: selectors.treeInvalidated(state),
         root: selectors.root(state),
+        overview: selectors.showOverview(state),
         canExport: selectors.canExport(state),
         canEdit: selectors.canEdit(state)
       }),

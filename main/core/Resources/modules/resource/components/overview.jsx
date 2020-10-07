@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
@@ -134,7 +135,7 @@ const ResourceOverview = props =>
 
     <div className="row">
       <div className="user-column col-md-4">
-        {props.progression &&
+        {!isEmpty(props.progression) &&
           <UserProgression
             {...props.progression}
           />
