@@ -68,6 +68,7 @@ class WorkspaceMain extends Component {
           checkAccessCode={(code) => this.props.checkAccessCode(this.props.workspace, code)}
           platformSelfRegistration={this.props.platformSelfRegistration}
           selfRegister={() => this.props.selfRegister(this.props.workspace)}
+          reload={() => this.props.reload(this.props.workspace)}
         />
       )
     }
@@ -126,7 +127,8 @@ WorkspaceMain.propTypes = {
   dismissRestrictions: T.func.isRequired,
   checkAccessCode: T.func,
   selfRegister: T.func,
-  close: T.func
+  close: T.func,
+  reload: T.func.isRequired
 }
 
 WorkspaceMain.defaultProps = {

@@ -75,6 +75,11 @@ actions.fetch = (slug) => (dispatch, getState) => {
   }
 }
 
+actions.reload = (workspace) => (dispatch) => {
+  dispatch(actions.setLoaded(false))
+  dispatch(actions.fetch(workspace.slug))
+}
+
 actions.closeWorkspace = (slug) => ({
   [API_REQUEST] : {
     silent: true,
