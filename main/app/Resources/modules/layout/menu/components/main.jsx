@@ -68,7 +68,7 @@ class MenuMain extends Component {
                   {...this.props.backAction}
                   id="app-menu-back"
                   className="app-menu-back"
-                  icon="fa fa-arrow-left"
+                  icon="fa fa-arrow-up"
                   tooltip="right"
                   onClick={this.autoClose}
                 />
