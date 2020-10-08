@@ -599,10 +599,10 @@ class ResourceManager implements LoggerAwareInterface
         if ($resource) {
             /** @var LoadResourceEvent $event */
             $event = $this->dispatcher->dispatch(
-              'resource.load',
-              LoadResourceEvent::class,
-              [$resource, $embedded]
-          );
+                'resource.load',
+                LoadResourceEvent::class,
+                [$resource, $embedded]
+            );
 
             return $event->getData();
         }

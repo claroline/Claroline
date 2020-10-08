@@ -147,6 +147,7 @@ class RightsManager implements LoggerAwareInterface
         return $this->rightsRepo->findMaximumRights($roles, $node);
     }
 
+    // TODO : this should be done by a serializer
     public function getRights(ResourceNode $resourceNode, array $options = [])
     {
         return array_map(function (ResourceRights $rights) use ($resourceNode, $options) {
@@ -173,7 +174,9 @@ class RightsManager implements LoggerAwareInterface
             }
 
             if ($role->getWorkspace()) {
+                $data['workspace']['id'] = $role->getWorkspace()->getUuid();
                 $data['workspace']['code'] = $role->getWorkspace()->getCode();
+                $data['workspace']['name'] = $role->getWorkspace()->getName();
             }
 
             return $data;

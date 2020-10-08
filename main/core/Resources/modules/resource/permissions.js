@@ -4,9 +4,9 @@ import {
   roleAnonymous,
   roleUser,
   roleWorkspace,
-  standardRoles,
   hasCustomRoles,
-  isWorkspaceRole
+  isWorkspaceRole,
+  isStandardRole
 } from '#/main/core/user/permissions'
 
 /**
@@ -45,9 +45,12 @@ const roleHaveCustomPerms = (rolePerms) => {
 
           return true
         }
+
+        return false
       }
 
-      return false
+      // open and download is enabled
+      return !rolePerms[permName]
     })
 
   return 0 < customPerms.length
@@ -68,8 +71,8 @@ const hasCustomRules = (perms, workspace = null) => {
   }
 
   // checks if standard roles have custom perms (aka. other perms than `open`)
-  const standard = standardRoles(workspace)
-  const roleWithCustomRules = standard.filter(roleName => roleHaveCustomPerms(findRolePermissions(roleName, perms)))
+  const standardPerms = perms.filter(rolePerm => isStandardRole(rolePerm.name, workspace))
+  const roleWithCustomRules = standardPerms.filter(standardPerm => roleHaveCustomPerms(standardPerm.permissions))
 
   return 0 < roleWithCustomRules.length
 }
@@ -94,8 +97,13 @@ const getSimpleAccessRule = (perms, workspace = null) => {
   }
 
   if (workspace) {
-    const wsUsers = findRolePermissions(roleWorkspace(workspace), perms)
-    if (wsUsers.open) {
+    const wsRoles = perms
+      // find perms for all non manager roles of the workspace
+      .filter(perm => perm.workspace && perm.name !== roleWorkspace(workspace, true) && perm.workspace.id === workspace.id)
+      // checks if at least one as open perm
+      .filter(perm => perm.permissions && perm.permissions.open)
+
+    if (0 !== wsRoles.length) {
       return 'workspace'
     }
   }

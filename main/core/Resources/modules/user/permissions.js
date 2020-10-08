@@ -3,22 +3,6 @@ const roleAnonymous = () => 'ROLE_ANONYMOUS'
 const roleUser = () => 'ROLE_USER'
 const roleWorkspace = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGER_':'ROLE_WS_COLLABORATOR_')+workspace.id
 
-/**
- * Gets standard roles that have permissions on the ResourceNode.
- *
- * @param workspace
- *
- * @returns {Array}
- */
-const standardRoles = (workspace = null) => {
-  const roles = [roleAnonymous(), roleUser()]
-  if (workspace) {
-    roles.push(roleWorkspace(workspace))
-  }
-
-  return roles
-}
-
 const hasCustomRoles = (perms, workspace = null) => {
   // checks if there are perms for custom roles
   const customRoles = perms.filter(rolePerm => !isStandardRole(rolePerm.name, workspace))
@@ -47,7 +31,6 @@ export {
   roleAnonymous,
   roleUser,
   roleWorkspace,
-  standardRoles,
   hasCustomRoles,
   isWorkspaceRole,
   isStandardRole
