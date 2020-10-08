@@ -3,25 +3,25 @@
 namespace Claroline\CoreBundle\API\Crud\Cryptography;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ApiToken
+class ApiTokenCrud
 {
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
-        /** @var Role $role */
+        /** @var ApiToken $apiToken */
         $apiToken = $event->getObject();
-        $apiToken->setUser($this->tokenStorage->getToken()->getUser());
+        if (empty($apiToken->getUser())) {
+            $apiToken->setUser($this->tokenStorage->getToken()->getUser());
+        }
     }
 }
