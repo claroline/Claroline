@@ -11,13 +11,20 @@
 
 namespace Claroline\InstallationBundle\Bundle;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 interface InstallableInterface extends BundleInterface
 {
     public function hasMigrations();
+
     public function getRequiredFixturesDirectory($environment);
+
     public function getOptionalFixturesDirectory($environment);
+
     public function getPostInstallFixturesDirectory($environment);
+
     public function getAdditionalInstaller();
+
+    public function getUpdaterServiceLocator(): ContainerInterface;
 }

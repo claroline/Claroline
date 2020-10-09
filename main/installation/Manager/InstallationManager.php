@@ -46,6 +46,11 @@ class InstallationManager implements LoggerAwareInterface
      */
     private $fixtureLoader;
 
+    /**
+     * @var bool whether additional installers should re-execute updaters that have been previously executed
+     */
+    private $shouldReplayUpdaters = false;
+
     public function __construct(
         ContainerInterface $container,
         Manager $migrationManager,
@@ -74,7 +79,8 @@ class InstallationManager implements LoggerAwareInterface
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {
+        $fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment);
+        if ($fixturesDir) {
             $this->log("Loading required fixtures ($fixturesDir)...");
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
@@ -90,7 +96,8 @@ class InstallationManager implements LoggerAwareInterface
             $additionalInstaller->postInstall();
         }
 
-        if ($fixturesDir = $bundle->getPostInstallFixturesDirectory($this->environment)) {
+        $fixturesDir = $bundle->getPostInstallFixturesDirectory($this->environment);
+        if ($fixturesDir) {
             $this->log("Loading post installation fixtures ($fixturesDir)...");
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
@@ -115,6 +122,7 @@ class InstallationManager implements LoggerAwareInterface
 
         if ($additionalInstaller) {
             $this->log('Launching pre-update actions...');
+            $additionalInstaller->setShouldReplayUpdaters($this->shouldReplayUpdaters);
             $additionalInstaller->preUpdate($currentVersion, $targetVersion);
         }
 
@@ -168,9 +176,12 @@ class InstallationManager implements LoggerAwareInterface
         }
     }
 
+    public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void
+    {
+        $this->shouldReplayUpdaters = $shouldReplayUpdaters;
+    }
+
     /**
-     * @param InstallableInterface $bundle
-     *
      * @return AdditionalInstallerInterface|bool
      */
     private function getAdditionalInstaller(InstallableInterface $bundle)

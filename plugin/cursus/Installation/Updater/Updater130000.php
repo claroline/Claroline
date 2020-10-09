@@ -6,20 +6,21 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData;
 use Claroline\InstallationBundle\Updater\Updater;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class Updater130000 extends Updater
 {
-    protected $logger;
-    private $container;
-    /** @var ObjectManager */
     private $om;
+    private $dataFixtures;
 
-    public function __construct(ContainerInterface $container, $logger = null)
-    {
+    public function __construct(
+        ObjectManager $om,
+        LoadTemplateData $dataFixtures,
+        LoggerInterface $logger = null
+    ) {
+        $this->om = $om;
+        $this->dataFixtures = $dataFixtures;
         $this->logger = $logger;
-        $this->container = $container;
-        $this->om = $container->get(ObjectManager::class);
     }
 
     public function preUpdate()
@@ -32,10 +33,7 @@ class Updater130000 extends Updater
 
     public function postUpdate()
     {
-        $dataFixtures = new LoadTemplateData();
-        $dataFixtures->setContainer($this->container);
-
-        $dataFixtures->load($this->om);
+        $this->dataFixtures->load($this->om);
     }
 
     private function renameTool($oldName, $newName)

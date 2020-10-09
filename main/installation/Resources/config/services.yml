@@ -33,3 +33,8 @@ services:
         class: '%claroline.doctrine_fixture_executor.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    Claroline\InstallationBundle\Repository\UpdaterExecutionRepository:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+        tags: ['doctrine.repository_service']

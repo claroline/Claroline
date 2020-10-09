@@ -11,9 +11,11 @@
 
 namespace Claroline\InstallationBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Claroline\InstallationBundle\DependencyInjection\Compiler\CollectUpdatersPass;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ClarolineInstallationBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -25,5 +27,12 @@ class ClarolineInstallationBundle extends Bundle implements AutoConfigurableInte
     public function getConfiguration($environment)
     {
         return new ConfigurationBuilder();
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new CollectUpdatersPass());
     }
 }

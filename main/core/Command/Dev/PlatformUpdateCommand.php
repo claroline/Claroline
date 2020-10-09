@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Library\Installation\PlatformInstaller;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -81,12 +80,15 @@ class PlatformUpdateCommand extends Command
                 'c',
                 InputOption::VALUE_NONE,
                 'When set to true, the cache is cleared at the end'
+            )
+            ->addOption(
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'When set to true, updaters will be executed regardless if they have been already.'
             );
     }
 
-    /**
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->refresher->setOutput($output);
@@ -101,6 +103,10 @@ class PlatformUpdateCommand extends Command
 
         if (!$input->getOption('no_symlink')) {
             $this->refresher->buildSymlinks();
+        }
+
+        if ($input->getOption('force')) {
+            $this->installer->setShouldReplayUpdaters(true);
         }
 
         $this->installer->setOutput($output);

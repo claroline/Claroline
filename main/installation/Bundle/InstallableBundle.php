@@ -11,6 +11,7 @@
 
 namespace Claroline\InstallationBundle\Bundle;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 abstract class InstallableBundle extends Bundle implements InstallableInterface
@@ -38,6 +39,11 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
     public function getAdditionalInstaller()
     {
         return;
+    }
+
+    public function getUpdaterServiceLocator(): ContainerInterface
+    {
+        return $this->container->get('claroline.updater_locator');
     }
 
     public function getComposer()
@@ -91,7 +97,7 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getInstalled()
     {
-        static $installed;
+        static $installed = null;
 
         if (!$installed) {
             $up = DIRECTORY_SEPARATOR.'..';

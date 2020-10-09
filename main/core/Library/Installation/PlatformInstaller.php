@@ -67,6 +67,11 @@ class PlatformInstaller implements LoggerAwareInterface
         $this->pluginInstaller->setLogger($logger);
     }
 
+    public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void
+    {
+        $this->baseInstaller->setShouldReplayUpdaters($shouldReplayUpdaters);
+    }
+
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;

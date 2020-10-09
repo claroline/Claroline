@@ -2,25 +2,15 @@
 
 namespace Claroline\CursusBundle\Installation;
 
+use Claroline\CursusBundle\Installation\Updater\Updater130000;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
 class AdditionalInstaller extends BaseInstaller
 {
-    public function preUpdate($currentVersion, $targetVersion)
+    public static function getUpdaters(): array
     {
-        if (version_compare($currentVersion, '13.0.0', '<')) {
-            $updater = new Updater\Updater130000($this->container, $this->logger);
-            $updater->setLogger($this->logger);
-            $updater->preUpdate();
-        }
-    }
-
-    public function postUpdate($currentVersion, $targetVersion)
-    {
-        if (version_compare($currentVersion, '13.0.0', '<')) {
-            $updater = new Updater\Updater130000($this->container, $this->logger);
-            $updater->setLogger($this->logger);
-            $updater->postUpdate();
-        }
+        return [
+            '13.0.0' => Updater130000::class,
+        ];
     }
 }

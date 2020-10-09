@@ -11,10 +11,9 @@
 
 namespace Claroline\InstallationBundle\Updater;
 
-use Claroline\AppBundle\Log\LoggableTrait;
-use Psr\Log\LoggerAwareInterface;
-
-abstract class Updater implements LoggerAwareInterface
+/**
+ * Marker interface for Updater which cannot be executed more than once.
+ */
+interface NonReplayableUpdaterInterface
 {
-    use LoggableTrait;
 }

@@ -114,6 +114,14 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:update' }
 
+    Claroline\CoreBundle\Command\Dev\ExecuteUpdaterCommand:
+        arguments:
+            - '@Claroline\InstallationBundle\Repository\UpdaterExecutionRepository'
+            - !tagged_locator
+                  tag: 'claroline.platform.updater'
+        tags:
+            - { name: 'console.command', command: 'claroline:updater:execute' }
+
     Claroline\CoreBundle\Command\Dev\RefreshCommand:
         arguments:
             - '@Claroline\CoreBundle\Library\Installation\Refresher'

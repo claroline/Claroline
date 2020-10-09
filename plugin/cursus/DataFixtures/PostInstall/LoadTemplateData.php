@@ -21,16 +21,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadTemplateData extends AbstractFixture implements ContainerAwareInterface
 {
-    private $container;
     private $om;
     private $translator;
+    private $config;
     private $templateTypeRepo;
     private $templateRepo;
     private $availableLocales;
 
     public function setContainer(ContainerInterface $container = null)
     {
-        $this->container = $container;
+        if (!$container) {
+            throw new \LogicException('Expected a service container, got null.');
+        }
+
+        $this->translator = $container->get('translator');
+        $this->config = $container->get(PlatformConfigurationHandler::class);
     }
 
     public function load(ObjectManager $om)
@@ -38,8 +43,7 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
         $this->om = $om;
         $this->templateTypeRepo = $om->getRepository(TemplateType::class);
         $this->templateRepo = $om->getRepository(Template::class);
-        $this->translator = $this->container->get('translator');
-        $this->availableLocales = $this->container->get(PlatformConfigurationHandler::class)->getParameter('locales.available');
+        $this->availableLocales = $this->config->getParameter('locales.available');
 
         $this->createCourseTemplates();
         $this->createSessionTemplates();

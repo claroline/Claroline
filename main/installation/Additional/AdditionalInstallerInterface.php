@@ -17,6 +17,10 @@ interface AdditionalInstallerInterface
 {
     public function setEnvironment($environment);
 
+    public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void;
+
+    public function shouldReplayUpdaters(): bool;
+
     public function setLogger(LoggerInterface $logger = null);
 
     public function preInstall();
@@ -32,4 +36,9 @@ interface AdditionalInstallerInterface
     public function postUninstall();
 
     public function end($currentVersion, $targetVersion);
+
+    /**
+     * @return string[] An array of Updater service identifiers (i.e. FQCN) indexed by version
+     */
+    public static function getUpdaters(): array;
 }

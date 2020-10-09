@@ -23,7 +23,7 @@ class ClarolineCursusBundle extends DistributionPluginBundle
 
     public function getAdditionalInstaller()
     {
-        return new AdditionalInstaller();
+        return new AdditionalInstaller($this->getUpdaterServiceLocator());
     }
 
     public function getPostInstallFixturesDirectory($environment)
