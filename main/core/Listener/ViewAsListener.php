@@ -11,58 +11,38 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\AuthenticationBundle\Security\Authentication\Token\ViewAsToken;
-use Claroline\CoreBundle\Library\Security\TokenUpdater;
+use Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Role\Role;
 
 class ViewAsListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var RoleManager */
-    private $roleManager;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
     /** @var TokenUpdater */
     private $tokenUpdater;
-    /** @var UserManager */
-    private $userManager;
+    /** @var RoleManager */
+    private $roleManager;
 
-    /**
-     * ViewAsListener constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     * @param EntityManager                 $em
-     * @param RoleManager                   $roleManager
-     * @param TokenUpdater                  $tokenUpdater
-     * @param UserManager                   $userManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        EntityManager $em,
-        RoleManager $roleManager,
         TokenUpdater $tokenUpdater,
-        UserManager $userManager
+        RoleManager $roleManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->em = $em;
-        $this->roleManager = $roleManager;
+        $this->tokenStorage = $tokenStorage;
         $this->tokenUpdater = $tokenUpdater;
-        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
     }
 
-    public function onViewAs(GetResponseEvent $event)
+    public function onViewAs(RequestEvent $event)
     {
         $request = $event->getRequest();
         $attributes = $request->query->all();
@@ -79,39 +59,28 @@ class ViewAsListener
             $viewAs = $attributes['view_as'];
             if ('exit' === $viewAs) {
                 if ($this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
-                    $viewAsToken = $this->tokenStorage->getToken();
-                    $user = $this->em->getRepository('ClarolineCoreBundle:User')
-                        ->findOneBy(['uuid' => $viewAsToken->getAttribute('user_uuid')]);
-                    $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-                    $this->tokenStorage->setToken($token);
+                    $this->tokenUpdater->cancelUsurpation($this->tokenStorage->getToken());
                 }
             } else {
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
                 $role = $this->roleManager->getRoleByName($viewAs);
-
                 if (null === $role) {
                     throw new \Exception("The role {$viewAs} does not exists");
                 }
 
-                $managerRole = $this->roleManager->getManagerRole($role->getWorkspace());
-
-                $tokenRoles = array_map(function (Role $role) {
-                    return $role->getRole();
-                }, $this->tokenStorage->getToken()->getRoles());
-
-                if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $tokenRoles)) {
-                    if ($this->authorization->isGranted($managerRole->getName())) {
+                if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $this->tokenStorage->getToken()->getRoleNames())) {
+                    // we are not already usurping a workspace role
+                    if ($this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
+                        // we have the right to usurp one the workspace role
                         if ('ROLE_ANONYMOUS' === $baseRole) {
-                            throw new \Exception('No implementation yet');
+                            $this->tokenUpdater->createAnonymous();
                         } else {
-                            // TODO : we may use a standard token. To check
-                            $token = new ViewAsToken(
-                              ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
+                            $token = new UsernamePasswordToken(
+                                $this->tokenStorage->getToken()->getUser(),
+                                null,
+                                'main',
+                                ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
                             );
-                            // store original user id to retrieve it at end
-                            $token->setAttribute('user_uuid', $this->tokenStorage->getToken()->getUser()->getUuid());
-                            // replace user
-                            $token->setUser($this->userManager->getDefaultClarolineUser());
 
                             // set new token
                             $this->tokenStorage->setToken($token);

@@ -23,7 +23,7 @@ class WorkspaceMain extends Component {
   }
 
   componentWillUnmount() {
-    if (!this.props.notFound) {
+    if (!this.props.notFound && this.props.workspace) {
       this.props.close(this.props.workspace.slug)
     }
   }

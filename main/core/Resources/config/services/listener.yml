@@ -241,12 +241,10 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@doctrine.orm.entity_manager'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater'
             - '@claroline.manager.role_manager'
-            - '@Claroline\CoreBundle\Library\Security\TokenUpdater'
-            - '@claroline.manager.user_manager'
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onViewAs }
+            - { name: kernel.event_listener, event: kernel.request, method: onViewAs, priority: 2 }
 
     Claroline\CoreBundle\Listener\ScheduledTaskListener:
         arguments:

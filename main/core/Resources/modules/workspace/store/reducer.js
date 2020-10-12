@@ -30,6 +30,10 @@ const reducer = combineReducers({
     [WORKSPACE_OPEN]: () => false,
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.impersonated || false
   }),
+  roles: makeReducer([], {
+    [WORKSPACE_OPEN]: () => [],
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.roles || []
+  }),
   managed: makeReducer(false, {
     [WORKSPACE_OPEN]: () => false,
     [WORKSPACE_LOAD]: (state, action) => action.workspaceData.managed || false

@@ -3,19 +3,14 @@
 namespace Claroline\AppBundle\Manager;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 class SecurityManager
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * SecurityManager constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage
     ) {
@@ -24,20 +19,13 @@ class SecurityManager
 
     public function isImpersonated()
     {
-        if ($token = $this->tokenStorage->getToken()) {
-            foreach ($token->getRoles() as $role) {
-                if ($role instanceof SwitchUserRole) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->tokenStorage->getToken() instanceof SwitchUserToken;
     }
 
     public function isAnonymous()
     {
-        if ($token = $this->tokenStorage->getToken()) {
+        $token = $this->tokenStorage->getToken();
+        if ($token) {
             $user = $token->getUser();
 
             return is_string($user);
@@ -46,9 +34,13 @@ class SecurityManager
         return true;
     }
 
+    /**
+     * @deprecated use TokenStorageInterface::getRoles()->getRolenames()
+     */
     public function getRoles()
     {
-        if ($token = $this->tokenStorage->getToken()) {
+        $token = $this->tokenStorage->getToken();
+        if ($token) {
             return array_map(function (Role $role) {
                 return $role->getRole();
             }, $token->getRoles());

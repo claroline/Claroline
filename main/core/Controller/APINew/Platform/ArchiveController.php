@@ -13,7 +13,6 @@
 namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
 use Claroline\AppBundle\Controller\AbstractSecurityController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,19 +21,13 @@ class ArchiveController extends AbstractSecurityController
     /** @var string */
     private $archivePath;
 
-    /**
-     * ArchiveController constructor.
-     *
-     * @param string $archivePath
-     */
-    public function __construct($archivePath)
+    public function __construct(string $archivePath)
     {
         $this->archivePath = $archivePath;
     }
 
     /**
      * @Route("/download/{archive}", name="claro_admin_archive_download")
-     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

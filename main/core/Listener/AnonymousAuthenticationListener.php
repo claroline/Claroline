@@ -12,10 +12,11 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
+use Symfony\Component\Security\Http\Firewall\AbstractListener;
 
 /**
  * AnonymousAuthenticationListener automatically adds a Token if none is already present.
@@ -23,7 +24,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
  * NB. This listener is not directly defined as a service as it only serves as a
  * replacement class for the Symfony original one (see app/config.yml).
  */
-class AnonymousAuthenticationListener implements ListenerInterface
+class AnonymousAuthenticationListener extends AbstractListener
 {
     private $tokenStorage;
     private $secret;
@@ -39,12 +40,15 @@ class AnonymousAuthenticationListener implements ListenerInterface
         $this->logger = $logger;
     }
 
+    public function supports(Request $request): ?bool
+    {
+        return true;
+    }
+
     /**
      * Authenticates anonymous with correct roles.
-     *
-     * @param GetResponseEvent $event
      */
-    public function handle(GetResponseEvent $event)
+    public function authenticate(RequestEvent $event)
     {
         if (null !== $this->tokenStorage->getToken()) {
             // user is already authenticated, there is nothing to do.

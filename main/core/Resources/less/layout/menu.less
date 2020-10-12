@@ -7,7 +7,7 @@
     bottom: 0;
     display: flex;
     flex-direction: column;
-    background: @toolbar-bg;
+    background-color: @toolbar-bg;
     color: @toolbar-color;
 
     .app-menu-header {
@@ -32,10 +32,11 @@
     }
 
     .app-menu-status {
-        background: @toolbar-link-hover-bg;
+        background-color: @toolbar-link-hover-bg;
         padding: floor(@grid-gutter-width / 2);
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
 
         .gauge {
@@ -43,6 +44,7 @@
         }
 
         .app-menu-status-info {
+            flex: 1 0;
             margin-left: floor(@grid-gutter-width / 2);
             font-style: italic;
             font-size: @font-size-small;
@@ -57,9 +59,25 @@
             }
         }
 
+        .app-menu-status-toolbar {
+            flex: 1 0 100%;
+            text-align: right;
+
+            > .btn-link {
+                text-transform: uppercase;
+                padding: 0;
+                border: none;
+            }
+        }
+
         + .app-menu-shortcuts {
             margin-top: 2px;
         }
+    }
+
+    .app-menu-impersonation {
+        #gradient > .striped(@color: @toolbar-bg; @angle: 45deg);
+        background-size: 100px 100px;
     }
 
     .app-menu-shortcuts {

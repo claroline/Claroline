@@ -3,9 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {url} from '#/main/app/api'
 import {trans, number} from '#/main/app/intl'
+import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
@@ -19,15 +21,45 @@ import {getActions} from '#/main/core/workspace/utils'
 import {Workspace as WorkspaceTypes, UserEvaluation as UserEvaluationTypes} from '#/main/core/workspace/prop-types'
 import {constants} from '#/main/core/workspace/constants'
 
-const WorkspaceShortcuts = props =>
-  <Toolbar
-    id="app-menu-shortcuts"
-    className="app-menu-shortcuts"
-    buttonName="btn btn-link"
-    tooltip="bottom"
-    actions={props.shortcuts}
-    onClick={props.autoClose}
-  />
+const WorkspaceImpersonation = (props) =>
+  <section className="app-menu-status app-menu-impersonation">
+    <LiquidGauge
+      id="workspace-impersonation"
+      type="warning"
+      value={0}
+      displayValue={() => <tspan className="fa fa-mask">&#xf6fa;</tspan>}
+      width={70}
+      height={70}
+      preFilled={true}
+    />
+
+    <div className="app-menu-status-info">
+      <h3 className="h4">
+        {!isEmpty(props.roles) ?
+          props.roles.map(role => trans(role.translationKey)).join(', ') :
+          trans('guest')
+        }
+      </h3>
+
+      {trans('view_as_info', {}, 'workspace')}
+    </div>
+
+    <div className="app-menu-status-toolbar">
+      <Button
+        className="btn-link"
+        type={URL_BUTTON}
+        label={trans('exit', {}, 'actions')}
+        target={url(['claro_index', {}], {view_as: 'exit'}) + '#' + workspaceRoute(props.workspace)}
+      />
+    </div>
+  </section>
+
+WorkspaceImpersonation.propTypes = {
+  roles: T.arrayOf(T.shape({
+    translationKey: T.string.isRequired
+  })),
+  workspace: T.object.isRequired
+}
 
 const WorkspaceProgression = props => {
   let progression = 0
@@ -76,6 +108,16 @@ WorkspaceProgression.propTypes = {
   )
 }
 
+const WorkspaceShortcuts = props =>
+  <Toolbar
+    id="app-menu-shortcuts"
+    className="app-menu-shortcuts"
+    buttonName="btn btn-link"
+    tooltip="bottom"
+    actions={props.shortcuts}
+    onClick={props.autoClose}
+  />
+
 const WorkspaceMenu = (props) => {
   let workspaceActions
   if (!isEmpty(props.workspace)) {
@@ -87,11 +129,6 @@ const WorkspaceMenu = (props) => {
         props.history.push(toolRoute('workspaces'))
       }
     }, props.basePath, props.currentUser)
-  }
-
-  let workspaceRoles = []
-  if (!isEmpty(props.workspace) && props.currentUser) {
-    workspaceRoles = props.currentUser.roles.filter(role => -1 !== role.name.indexOf(props.workspace.id))
   }
 
   return (
@@ -112,10 +149,17 @@ const WorkspaceMenu = (props) => {
       }))}
       actions={workspaceActions}
     >
-      {get(props.workspace, 'display.showProgression') &&
+      {!props.impersonated && get(props.workspace, 'display.showProgression') &&
         <WorkspaceProgression
-          roles={workspaceRoles}
+          roles={props.roles}
           userEvaluation={props.userEvaluation}
+        />
+      }
+
+      {!isEmpty(props.workspace) && props.impersonated &&
+        <WorkspaceImpersonation
+          roles={props.roles}
+          workspace={props.workspace}
         />
       }
 
@@ -169,6 +213,9 @@ WorkspaceMenu.propTypes = {
   userEvaluation: T.shape({
 
   }),
+  roles: T.arrayOf(T.shape({
+    translationKey: T.string.isRequired
+  })),
   shortcuts: T.arrayOf(T.shape({
     type: T.oneOf(['tool', 'action']).isRequired,
     name: T.string.isRequired

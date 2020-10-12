@@ -24,6 +24,11 @@ const impersonated = createSelector(
   (store) => store.impersonated
 )
 
+const roles = createSelector(
+  [store],
+  (store) => store.roles
+)
+
 const workspace = createSelector(
   [store],
   (store) => store.workspace
@@ -114,6 +119,7 @@ export const selectors = {
   notFound,
   workspace,
   managed,
+  roles,
   tools,
   shortcuts,
   userShortcuts,

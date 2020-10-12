@@ -17,7 +17,6 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AuthenticationBundle\Security\Authentication\Token\ViewAsToken;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -382,12 +381,15 @@ class WorkspaceManager implements LoggerAwareInterface
             }
         }
 
+        if (in_array('ROLE_ADMIN', $token->getRoleNames())) {
+            // this should be check at a higher level
+            return true;
+        }
+
         //or we have the role_manager
         $managerRole = $workspace->getManagerRole();
-        foreach ($token->getRoles() as $role) {
-            if (($managerRole && $managerRole->getName() === $role->getRole()) || 'ROLE_ADMIN' === $role->getRole()) {
-                return true;
-            }
+        if ($managerRole && in_array($managerRole->getName(), $token->getRoleNames())) {
+            return true;
         }
 
         return false;
@@ -395,17 +397,14 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function isImpersonated(TokenInterface $token)
     {
-        if ($token instanceof ViewAsToken) {
-            return true;
-        }
+        return in_array('ROLE_USURPATE_WORKSPACE_ROLE', $token->getRoleNames());
+    }
 
-        foreach ($token->getRoles() as $role) {
-            if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
-                return true;
-            }
-        }
-
-        return false;
+    public function getTokenRoles(TokenInterface $token, Workspace $workspace)
+    {
+        return array_values(array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($token) {
+            return in_array($role->getName(), $token->getRoleNames());
+        }));
     }
 
     /**

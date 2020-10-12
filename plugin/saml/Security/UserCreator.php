@@ -4,18 +4,18 @@ namespace Claroline\SamlBundle\Security;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater;
 use Claroline\CoreBundle\Entity\User;
 use LightSaml\Model\Protocol\Response;
 use LightSaml\SpBundle\Security\User\UserCreatorInterface;
 use LightSaml\SpBundle\Security\User\UsernameMapperInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserCreator implements UserCreatorInterface
 {
-    /** @var string */
-    private $secret;
+    /** @var TokenUpdater */
+    private $tokenUpdater;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var UsernameMapperInterface */
@@ -23,23 +23,15 @@ class UserCreator implements UserCreatorInterface
     /** @var Crud */
     private $crud;
 
-    /**
-     * @param string                  $secret
-     * @param TokenStorageInterface   $tokenStorage
-     * @param UsernameMapperInterface $usernameMapper
-     * @param Crud                    $crud
-     */
-    public function __construct(string $secret, TokenStorageInterface $tokenStorage, UsernameMapperInterface $usernameMapper, Crud $crud)
+    public function __construct(TokenStorageInterface $tokenStorage, TokenUpdater $tokenUpdater, UsernameMapperInterface $usernameMapper, Crud $crud)
     {
-        $this->secret = $secret;
         $this->tokenStorage = $tokenStorage;
+        $this->tokenUpdater = $tokenUpdater;
         $this->usernameMapper = $usernameMapper;
         $this->crud = $crud;
     }
 
     /**
-     * @param Response $response
-     *
      * @return UserInterface|null
      */
     public function createUser(Response $response)
@@ -96,8 +88,6 @@ class UserCreator implements UserCreatorInterface
         }
 
         // creates an anonymous token with a dedicated role.
-        $this->tokenStorage->setToken(
-            new AnonymousToken($this->secret, 'anon.', ['ROLE_ANONYMOUS'])
-        );
+        $this->tokenUpdater->createAnonymous();
     }
 }

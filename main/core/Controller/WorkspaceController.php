@@ -32,7 +32,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -97,15 +96,8 @@ class WorkspaceController
     /**
      * @Route("/{slug}", name="claro_workspace_open")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param string $slug
-     * @param User   $user
-     *
-     * @throws AccessDeniedException
-     *
-     * @return JsonResponse
      */
-    public function openAction($slug, User $user = null, Request $request)
+    public function openAction(string $slug, User $user = null, Request $request): JsonResponse
     {
         /** @var Workspace $workspace */
         $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['slug' => $slug]);
@@ -114,7 +106,7 @@ class WorkspaceController
             throw new NotFoundHttpException('Workspace not found');
         }
 
-        // switch to the workspace locale if needed
+        // switch to the workspace locale if needed (this is broken in UI atm)
         $this->forceWorkspaceLang($workspace, $request);
         $this->toolManager->addMissingWorkspaceTools($workspace);
 
@@ -132,9 +124,7 @@ class WorkspaceController
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
             } else {
                 // gets accessible tools by user
-                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, array_map(function (Role $role) {
-                    return $role->getRole();
-                }, $this->tokenStorage->getToken()->getRoles()));
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace, $this->tokenStorage->getToken()->getRoleNames());
             }
 
             $userEvaluation = null;
@@ -148,6 +138,10 @@ class WorkspaceController
                 'workspace' => $this->serializer->serialize($workspace),
                 'managed' => $isManager,
                 'impersonated' => $this->manager->isImpersonated($this->tokenStorage->getToken()),
+                // the list of current workspace roles the user owns
+                'roles' => array_map(function (Role $role) {
+                    return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                }, $this->manager->getTokenRoles($this->tokenStorage->getToken(), $workspace)),
                 // append access restrictions to the loaded data if any
                 // to let the manager knows that other users can not enter the workspace
                 'accessErrors' => $accessErrors,
@@ -166,6 +160,9 @@ class WorkspaceController
 
         return new JsonResponse([
             'impersonated' => $this->manager->isImpersonated($this->tokenStorage->getToken()),
+            'roles' => array_map(function (Role $role) {
+                return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+            }, $this->manager->getTokenRoles($this->tokenStorage->getToken(), $workspace)),
             'workspace' => $this->serializer->serialize($workspace),
             'accessErrors' => $accessErrors,
         ]);
@@ -180,12 +177,8 @@ class WorkspaceController
      *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param string $toolName
-     *
-     * @return Response
      */
-    public function openToolAction(Workspace $workspace, $toolName)
+    public function openToolAction(Workspace $workspace, string $toolName): JsonResponse
     {
         $orderedTool = $this->toolManager->getOrderedTool($toolName, Tool::WORKSPACE, $workspace->getUuid());
         if (!$orderedTool) {
@@ -215,10 +208,8 @@ class WorkspaceController
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function unlockAction(Workspace $workspace, Request $request)
+    public function unlockAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
 

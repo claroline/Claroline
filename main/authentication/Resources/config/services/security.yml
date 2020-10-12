@@ -1,8 +1,14 @@
 services:
     _defaults:
-        autowire: false #change to true
+        autowire: false
         autoconfigure: false
-        public: true #because controller
+        public: true
+
+    Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater:
+        arguments:
+            - '%secret%'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     # Authenticators
     Claroline\AuthenticationBundle\Security\Authentication\Authenticator:
