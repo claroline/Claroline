@@ -11,11 +11,10 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater;
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -25,20 +24,20 @@ class ViewAsListener
     private $authorization;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var TokenUpdater */
-    private $tokenUpdater;
+    /** @var Authenticator */
+    private $authenticator;
     /** @var RoleManager */
     private $roleManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
-        TokenUpdater $tokenUpdater,
+        Authenticator $authenticator,
         RoleManager $roleManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
-        $this->tokenUpdater = $tokenUpdater;
+        $this->authenticator = $authenticator;
         $this->roleManager = $roleManager;
     }
 
@@ -52,14 +51,14 @@ class ViewAsListener
             // ROLE_PREVIOUS_ADMIN means we're an administrator usurping a user account.
 
             if ($this->authorization->isGranted('ROLE_PREVIOUS_ADMIN')) {
-                $this->tokenUpdater->cancelUserUsurpation($this->tokenStorage->getToken());
+                $this->authenticator->cancelUserUsurpation($this->tokenStorage->getToken());
             }
 
             // then we go as intended
             $viewAs = $attributes['view_as'];
             if ('exit' === $viewAs) {
                 if ($this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
-                    $this->tokenUpdater->cancelUsurpation($this->tokenStorage->getToken());
+                    $this->authenticator->cancelUsurpation($this->tokenStorage->getToken());
                 }
             } else {
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
@@ -73,17 +72,9 @@ class ViewAsListener
                     if ($this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
                         // we have the right to usurp one the workspace role
                         if ('ROLE_ANONYMOUS' === $baseRole) {
-                            $this->tokenUpdater->createAnonymous();
+                            $this->authenticator->createAnonymousToken();
                         } else {
-                            $token = new UsernamePasswordToken(
-                                $this->tokenStorage->getToken()->getUser(),
-                                null,
-                                'main',
-                                ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
-                            );
-
-                            // set new token
-                            $this->tokenStorage->setToken($token);
+                            $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
                         }
                     } else {
                         throw new AccessDeniedException();

@@ -11,12 +11,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        #api:
-        #   pattern: ^/(api|apiv2)/
-        #   stateless: true
-        #   simple_preauth:
-        #      authenticator: Claroline\AuthenticationBundle\Security\Authentication\ApiTokenAuthenticator
-
         main:
             pattern: ^/
             anonymous: ~

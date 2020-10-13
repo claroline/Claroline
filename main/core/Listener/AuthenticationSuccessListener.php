@@ -17,6 +17,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\RoutingHelper;
@@ -34,36 +35,19 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var PlatformConfigurationHandler */
     private $config;
-
     /** @var StrictDispatcher */
     private $eventDispatcher;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var RoutingHelper */
     private $routingHelper;
-
     /** @var UserManager */
     private $userManager;
-
     /** @var ConnectionMessageManager */
     private $messageManager;
 
-    /**
-     * AuthenticationSuccessListener constructor.
-     *
-     * @param TokenStorageInterface        $tokenStorage
-     * @param PlatformConfigurationHandler $config
-     * @param StrictDispatcher             $eventDispatcher
-     * @param SerializerProvider           $serializer
-     * @param RoutingHelper                $routingHelper
-     * @param UserManager                  $userManager
-     * @param ConnectionMessageManager     $messageManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
@@ -82,22 +66,18 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->messageManager = $messageManager;
     }
 
-    /**
-     * @param Request        $request
-     * @param TokenInterface $token
-     *
-     * @return Response
-     */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         /** @var User $user */
         $user = $token->getUser();
 
-        $this->userManager->logUser($user);
+        $this->userManager->updateLastLogin($user);
 
         if ($user->getLocale()) {
             $request->setLocale($user->getLocale());
         }
+
+        $this->eventDispatcher->dispatch('log', LogUserLoginEvent::class, [$user]);
 
         $redirect = $this->getRedirection();
 
@@ -130,13 +110,13 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $user = $this->tokenStorage->getToken()->getUser();
 
         $redirect = $this->config->getParameter('authentication.redirect_after_login_option');
-        if (PlatformDefaults::$REDIRECT_OPTIONS['LAST'] === $redirect) {
+        if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect) {
             return [
                 'type' => 'last',
             ];
         } elseif (
-            PlatformDefaults::$REDIRECT_OPTIONS['WORKSPACE_TAG'] === $redirect
-            && null !== $defaultWorkspaceTag = $this->config->getParameter('workspace.default_tag')
+            PlatformDefaults::REDIRECT_OPTIONS['WORKSPACE_TAG'] === $redirect
+            && $this->config->getParameter('workspace.default_tag')
         ) {
             /** @var GenericDataEvent $event */
             $event = $this->eventDispatcher->dispatch(
@@ -144,7 +124,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 GenericDataEvent::class,
                 [
                     [
-                        'tag' => $defaultWorkspaceTag,
+                        'tag' => $this->config->getParameter('workspace.default_tag'),
                         'user' => $user,
                         'ordered_by' => 'id',
                         'order' => 'ASC',
@@ -161,12 +141,12 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 ];
             }
         } elseif (
-            PlatformDefaults::$REDIRECT_OPTIONS['URL'] === $redirect
-            && null !== $url = $this->config->getParameter('redirect_after_login_url')
+            PlatformDefaults::REDIRECT_OPTIONS['URL'] === $redirect
+            && $this->config->getParameter('redirect_after_login_url')
         ) {
             return [
                 'type' => 'url',
-                'data' => $url,
+                'data' => $this->config->getParameter('redirect_after_login_url'),
             ];
         }
 

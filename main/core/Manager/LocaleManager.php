@@ -26,13 +26,6 @@ class LocaleManager
     private $tokenStorage;
     private $configHandler;
 
-    /**
-     * LocaleManager constructor.
-     *
-     * @param PlatformConfigurationHandler $configHandler
-     * @param UserManager                  $userManager
-     * @param TokenStorageInterface        $tokenStorage
-     */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
         UserManager $userManager,
@@ -78,6 +71,11 @@ class LocaleManager
         return $locales;
     }
 
+    public function getDefault()
+    {
+        return $this->configHandler->getParameter('locales.default');
+    }
+
     /**
      * Get a list of available languages in the platform.
      *
@@ -109,8 +107,6 @@ class LocaleManager
      * This method returns the user locale and store it in session, if there is no user this method return default
      * language or the browser language if it is present in translations.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return string The locale string as en, fr, es, etc
      */
     public function getUserLocale(Request $request)
@@ -122,17 +118,18 @@ class LocaleManager
             $locale = $request->query->get('_locale');
         } elseif ($request->attributes->get('_locale')) {
             $locale = $request->attributes->get('_locale');
-        } elseif (($user = $this->getCurrentUser()) && $user->getLocale()) {
-            $locale = $user->getLocale();
-        } elseif ($request->getSession() && ($sessionLocale = $request->getSession()->get('_locale'))) {
-            $locale = $sessionLocale;
+        } elseif ($this->getCurrentUser() && $this->getCurrentUser()->getLocale()) {
+            $locale = $this->getCurrentUser()->getLocale();
+        } elseif ($request->getSession() && $request->getSession()->get('_locale')) {
+            $locale = $request->getSession()->get('_locale');
         } elseif (count($preferred) > 0 && isset($locales[$preferred[0]])) {
             $locale = $preferred[0];
         } else {
             $locale = $this->defaultLocale;
         }
 
-        if ($session = $request->getSession()) {
+        $session = $request->getSession();
+        if ($session) {
             $session->set('_locale', $locale);
         }
 

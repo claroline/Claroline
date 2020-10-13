@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,18 +43,17 @@ class GroupController extends AbstractCrudController
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /**
-     * GroupController constructor.
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authorization
-     */
+    /** @var MailManager */
+    private $mailManager;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        MailManager $mailManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->mailManager = $mailManager;
     }
 
     public function getName()
@@ -77,13 +77,8 @@ class GroupController extends AbstractCrudController
      *     },
      *     response={"$list"}
      * )
-     *
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
      */
-    public function listAction(Request $request, $class)
+    public function listAction(Request $request, $class): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -105,13 +100,8 @@ class GroupController extends AbstractCrudController
      *     },
      *     response={"$list"}
      * )
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listManagedAction(User $user, Request $request)
+    public function listManagedAction(User $user, Request $request): JsonResponse
     {
         $filters = [];
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
@@ -128,12 +118,8 @@ class GroupController extends AbstractCrudController
 
     /**
      * @Route("/password/reset", name="apiv2_group_initialize_password", methods={"POST"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function resetPasswordAction(Request $request)
+    public function resetPasswordAction(Request $request): JsonResponse
     {
         /** @var Group[] $groups */
         $groups = $this->decodeIdsString($request, Group::class);
@@ -142,8 +128,10 @@ class GroupController extends AbstractCrudController
         $i = 0;
         foreach ($groups as $group) {
             foreach ($group->getUsers() as $user) {
-                $this->container->get('claroline.manager.user_manager')->sendResetPassword($user);
-                ++$i;
+                if ($this->authorization->isGranted('ADMINISTRATE', $user)) {
+                    $this->mailManager->sendForgotPassword($user);
+                    ++$i;
+                }
 
                 if (0 === $i % 200) {
                     $this->om->forceFlush();

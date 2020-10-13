@@ -51,7 +51,7 @@ class RoleIntegrityCheckerCommand extends Command
         $workspaceCode = $input->getOption('workspace');
 
         if (!empty($userId)) {
-            $user = $this->userManager->getUserByUsernameOrMail($userId, $userId);
+            $user = $this->userManager->getUserByUsername($userId);
             if (empty($user)) {
                 $output->writeln("Could not find user \"{$userId}\"");
 

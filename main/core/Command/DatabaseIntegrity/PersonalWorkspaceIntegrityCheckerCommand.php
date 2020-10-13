@@ -57,7 +57,7 @@ class PersonalWorkspaceIntegrityCheckerCommand extends Command
 
         $userId = $input->getOption('user');
         if (!empty($userId)) {
-            $user = $userManager->getUserByUsernameOrMail($userId, $userId);
+            $user = $userManager->getUserByUsername($userId);
             if (empty($user)) {
                 $output->writeln("Could not find user \"{$userId}\"");
 

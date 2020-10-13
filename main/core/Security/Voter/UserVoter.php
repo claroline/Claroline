@@ -22,6 +22,14 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class UserVoter extends AbstractVoter
 {
+    /** @var PlatformConfigurationHandler */
+    private $config;
+
+    public function __construct(PlatformConfigurationHandler $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * @param User $object
      *
@@ -32,11 +40,18 @@ class UserVoter extends AbstractVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
-            case self::CREATE: return $this->checkCreate($token, $object);
-            case self::VIEW:   return $this->checkView($token, $object);
-            case self::EDIT:   return $this->checkEdit($token, $object);
-            case self::DELETE: return $this->checkDelete($token, $object);
-            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+            case self::CREATE:
+                return $this->checkCreate($token, $object);
+            case self::VIEW:
+                return $this->checkView($token, $object);
+            case self::ADMINISTRATE:
+                return $this->checkAdministrate($token, $object);
+            case self::EDIT:
+                return $this->checkEdit($token, $object);
+            case self::DELETE:
+                return $this->checkDelete($token, $object);
+            case self::PATCH:
+                return $this->checkPatch($token, $object, $collection);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -44,12 +59,30 @@ class UserVoter extends AbstractVoter
 
     private function checkEdit(TokenInterface $token, User $user): int
     {
-        //the user can edit himself too.
-        //He just can add roles and stuff and this should be checked later
-        if ($token->getUser() === $user) {
-            return true;
+        if ($this->isOrganizationManager($token, $user)) {
+            return VoterInterface::ACCESS_GRANTED;
         }
 
+        // the user can edit himself too.
+        if ($token->getUser() === $user) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        // allow defined roles
+        $allowedRoles = $this->config->getParameter('profile.roles_edition');
+        if (!empty($allowedRoles)) {
+            foreach ($token->getRoleNames() as $role) {
+                if (in_array($role, $allowedRoles)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    private function checkAdministrate(TokenInterface $token, User $user): int
+    {
         return $this->isOrganizationManager($token, $user) ?
             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
@@ -62,8 +95,16 @@ class UserVoter extends AbstractVoter
 
     private function checkDelete(TokenInterface $token, User $user): int
     {
-        return $this->isOrganizationManager($token, $user) ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        if ($this->isOrganizationManager($token, $user)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        // allow self unregistration
+        if ($this->config->getParameter('registration.selfUnregistration') && $token->getUser() === $user) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkPatch(TokenInterface $token, User $user, ObjectCollection $collection = null): int
@@ -150,10 +191,8 @@ class UserVoter extends AbstractVoter
         }
 
         // allow creation for self registration
-        /** @var PlatformConfigurationHandler $config */
-        $config = $this->getContainer()->get(PlatformConfigurationHandler::class);
-        if ($config->getParameter('registration.self')) {
-            $defaultRole = $config->getParameter('registration.default_role');
+        if ($this->config->getParameter('registration.self')) {
+            $defaultRole = $this->config->getParameter('registration.default_role');
 
             // allow anonymous registration only if the user is created with the default role
             if (0 === count(array_filter($user->getEntityRoles(), function (Role $role) use ($defaultRole) {
@@ -181,6 +220,6 @@ class UserVoter extends AbstractVoter
      */
     public function getSupportedActions()
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH, self::VIEW];
+        return [self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH, self::VIEW];
     }
 }

@@ -21,15 +21,12 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -40,58 +37,35 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
     use HasRolesTrait;
     use HasOrganizationsTrait;
     use HasGroupsTrait;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-
+    private $authorization;
     /** @var StrictDispatcher */
     private $eventDispatcher;
-
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
     /** @var UserManager */
     private $manager;
-
     /** @var MailManager */
     private $mailManager;
 
-    /** @var RegistrationManager */
-    private $registrationManager;
-
-    /**
-     * UserController constructor.
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param StrictDispatcher              $eventDispatcher
-     * @param PlatformConfigurationHandler  $config
-     * @param MailManager                   $mailManager
-     * @param UserManager                   $manager
-     * @param RegistrationManager           $registrationManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authChecker,
+        AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
-        PlatformConfigurationHandler $config,
         UserManager $manager,
-        MailManager $mailManager,
-        RegistrationManager $registrationManager
+        MailManager $mailManager
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->authChecker = $authChecker;
+        $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
-        $this->config = $config;
         $this->manager = $manager;
         $this->mailManager = $mailManager;
-        $this->registrationManager = $registrationManager;
     }
 
     public function getName()
@@ -115,158 +89,14 @@ class UserController extends AbstractCrudController
      *     },
      *     response={"$list"}
      * )
-     *
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
      */
-    public function listAction(Request $request, $class)
+    public function listAction(Request $request, $class): JsonResponse
     {
-        if (!$this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
 
         return parent::listAction($request, $class);
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Create the personal workspaces of an array of users.",
-     *     queryString={
-     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
-     *     }
-     * )
-     * @Route("/pws", name="apiv2_users_pws_create", methods={"POST"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function createPersonalWorkspaceAction(Request $request)
-    {
-        /** @var User[] $users */
-        $users = $this->decodeIdsString($request, User::class);
-
-        $this->om->startFlushSuite();
-
-        foreach ($users as $user) {
-            if (!$user->getPersonalWorkspace()) {
-                $this->manager->setPersonalWorkspace($user);
-            }
-        }
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(array_map(function (User $user) {
-            return $this->serializer->serialize($user);
-        }, $users));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Remove the personal workspaces of an array of users.",
-     *     queryString={
-     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
-     *     }
-     * )
-     * @Route("/pws", name="apiv2_users_pws_delete", methods={"DELETE"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function deletePersonalWorkspaceAction(Request $request)
-    {
-        /** @var User[] $users */
-        $users = $this->decodeIdsString($request, User::class);
-
-        $this->om->startFlushSuite();
-
-        foreach ($users as $user) {
-            $personalWorkspace = $user->getPersonalWorkspace();
-
-            if ($personalWorkspace) {
-                $this->crud->delete($personalWorkspace);
-            }
-        }
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(array_map(function (User $user) {
-            return $this->serializer->serialize($user);
-        }, $users));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Create and log a user.",
-     *     body={
-     *         "schema":"$schema"
-     *     }
-     * )
-     * @Route("/register", name="apiv2_user_register", methods={"POST"})
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function registerAction(Request $request)
-    {
-        $data = $this->decodeRequest($request);
-
-        $organizationRepository = $this->om->getRepository(Organization::class);
-
-        $organization = null;
-        $autoOrganization = $this->config->getParameter('registration.force_organization_creation');
-        // step one: creation the organization if it's here. If it exists, we fetch it.
-        if ($autoOrganization) {
-            // try to find orga first
-            // first find by vat
-            if (isset($data['mainOrganization'])) {
-                if (isset($data['mainOrganization']['vat']) && null !== $data['mainOrganization']['vat']) {
-                    $organization = $organizationRepository
-                      ->findOneBy(['vat' => $data['mainOrganization']['vat']]);
-                // then by code
-                } else {
-                    $organization = $organizationRepository
-                      ->findOneBy(['code' => $data['mainOrganization']['code']]);
-                }
-            }
-
-            if (!$organization && isset($data['mainOrganization'])) {
-                $organization = $this->crud->create(Organization::class, $data['mainOrganization']);
-            }
-
-            // error handling
-            if (is_array($organization)) {
-                return new JsonResponse($organization, 422);
-            }
-        }
-
-        /** @var array|User $user */
-        $user = $this->crud->create(
-            User::class,
-            $this->decodeRequest($request),
-            array_merge($this->options['create'], [Options::VALIDATE_FACET])
-        );
-
-        // error handling
-        if (is_array($user)) {
-            return new JsonResponse($user, 422);
-        }
-
-        if ($organization) {
-            $this->crud->replace($user, 'mainOrganization', $organization);
-        }
-
-        // TODO : dispatch an event for user registration and do next in a listener in AuthenticationBundle
-        $selfLog = $this->config->getParameter('registration.auto_logging');
-        $validation = $this->config->getParameter('registration.validation');
-        // auto log user if option is set and account doesn't need to be validated
-        if ($selfLog && PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL !== $validation && 'anon.' === $this->tokenStorage->getToken()->getUser()) {
-            return $this->registrationManager->loginUser($user, $request);
-        }
-
-        return new JsonResponse(null, 204);
     }
 
     /**
@@ -279,23 +109,18 @@ class UserController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
-     * @Route("/list/managed/organization", name="apiv2_user_list_managed_organization", methods={"GET"})
+     * @Route("/list/managed", name="apiv2_user_list_managed", methods={"GET"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listManagedOrganizationAction(User $user, Request $request)
+    public function listManagedOrganizationAction(User $user, Request $request): JsonResponse
     {
-        $filters = $this->authChecker->isGranted('ROLE_ADMIN') ?
-          [] :
-          [
-            'recursiveOrXOrganization' => array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray()),
-          ];
+        $filters = $this->authorization->isGranted('ROLE_ADMIN') ?
+            [] :
+            [
+                'recursiveOrXOrganization' => array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getAdministratedOrganizations()->toArray()),
+            ];
 
         return new JsonResponse($this->finder->search(
             User::class,
@@ -304,17 +129,76 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Create the personal workspaces of an array of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
+     * @Route("/pws", name="apiv2_users_pws_create", methods={"POST"})
+     */
+    public function createPersonalWorkspaceAction(Request $request): JsonResponse
+    {
+        /** @var User[] $users */
+        $users = $this->decodeIdsString($request, User::class);
+
+        $this->om->startFlushSuite();
+
+        $processed = [];
+        foreach ($users as $user) {
+            if (!$user->getPersonalWorkspace() && $this->checkPermission('ADMINISTRATE', $user)) {
+                $this->manager->setPersonalWorkspace($user);
+                $processed[] = $user;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $processed));
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Remove the personal workspaces of an array of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
+     * @Route("/pws", name="apiv2_users_pws_delete", methods={"DELETE"})
+     */
+    public function deletePersonalWorkspaceAction(Request $request): JsonResponse
+    {
+        /** @var User[] $users */
+        $users = $this->decodeIdsString($request, User::class);
+
+        $this->om->startFlushSuite();
+
+        $processed = [];
+        foreach ($users as $user) {
+            $personalWorkspace = $user->getPersonalWorkspace();
+            if ($personalWorkspace && $this->checkPermission('ADMINISTRATE', $user)) {
+                $this->crud->delete($personalWorkspace);
+                $processed[] = $user;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $processed));
+    }
+
+    /**
      * @Route("/{keep}/{remove}/merge", name="apiv2_user_merge", methods={"PUT"})
      * @EXT\ParamConverter("keep", options={"mapping": {"keep": "uuid"}})
      * @EXT\ParamConverter("remove", options={"mapping": {"remove": "uuid"}})
-     *
-     * @param User $keep
-     * @param User $remove
-     *
-     * @return JsonResponse
      */
-    public function mergeUsersAction(User $keep, User $remove)
+    public function mergeUsersAction(User $keep, User $remove): JsonResponse
     {
+        $this->checkPermission('ADMINISTRATE', $keep, true);
+        $this->checkPermission('ADMINISTRATE', $remove, true);
+
         // Dispatching an event for letting plugins and core do what they need to do
         /** @var MergeUsersEvent $event */
         $event = $this->eventDispatcher->dispatch(
@@ -346,27 +230,26 @@ class UserController extends AbstractCrudController
      *     }
      * )
      * @Route("/enable", name="apiv2_users_enable", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function enableUsersAction(Request $request)
+    public function enableUsersAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
 
         $this->om->startFlushSuite();
 
+        $processed = [];
         foreach ($users as $user) {
-            $user->setIsEnabled(true);
-            $this->om->persist($user);
+            if (!$user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
+                $this->manager->enable($user);
+                $processed[] = $user;
+            }
         }
         $this->om->endFlushSuite();
 
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
-        }, $users));
+        }, $processed));
     }
 
     /**
@@ -377,27 +260,26 @@ class UserController extends AbstractCrudController
      *     }
      * )
      * @Route("/disable", name="apiv2_users_disable", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function disableUsersAction(Request $request)
+    public function disableUsersAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
 
         $this->om->startFlushSuite();
 
+        $processed = [];
         foreach ($users as $user) {
-            $user->setIsEnabled(false);
-            $this->om->persist($user);
+            if ($user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
+                $this->manager->disable($user);
+                $processed[] = $user;
+            }
         }
         $this->om->endFlushSuite();
 
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
-        }, $users));
+        }, $processed));
     }
 
     /**
@@ -408,30 +290,26 @@ class UserController extends AbstractCrudController
      *     }
      * )
      * @Route("/password/reset", name="apiv2_users_password_reset", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function resetPasswordAction(Request $request)
+    public function resetPasswordAction(Request $request): JsonResponse
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
 
         $this->om->startFlushSuite();
 
+        $processed = [];
         foreach ($users as $user) {
-            $user->setHashTime(time());
-            $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
-            $user->setResetPasswordHash($password);
-            $this->om->persist($user);
-            $this->mailManager->sendForgotPassword($user);
+            if ($this->checkPermission('ADMINISTRATE', $user)) {
+                $this->mailManager->sendForgotPassword($user);
+                $processed[] = $user;
+            }
         }
         $this->om->endFlushSuite();
 
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
-        }, $users));
+        }, $processed));
     }
 
     public function getOptions()
@@ -448,10 +326,7 @@ class UserController extends AbstractCrudController
         ]);
     }
 
-    /**
-     * @return array
-     */
-    public function getRequirements()
+    public function getRequirements(): array
     {
         return array_merge(parent::getRequirements(), [
           'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|current|\/)).*'],
@@ -460,9 +335,9 @@ class UserController extends AbstractCrudController
         ]);
     }
 
-    protected function getDefaultHiddenFilters()
+    protected function getDefaultHiddenFilters(): array
     {
-        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
 
             return [

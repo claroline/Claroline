@@ -241,7 +241,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@claroline.manager.role_manager'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onViewAs, priority: 2 }

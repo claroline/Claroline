@@ -74,6 +74,8 @@ services:
 
     Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\UserVoter: ~
+    Claroline\CoreBundle\Security\Voter\UserVoter:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Security\Voter\WorkspaceVoter: ~

@@ -27,6 +27,11 @@ export const reducer = combineReducers({
     data: {roles: [], code: null}
   }, {
     data: makeReducer({}, {
+      [REGISTRATION_DATA_LOAD]: (state, action) => ({
+        preferences: {
+          locale: action.data.options.locale
+        }
+      }),
       [LIST_TOGGLE_SELECT+'/'+selectors.STORE_NAME+'.workspaces']: (state, action) => {
         const user = cloneDeep(state)
 

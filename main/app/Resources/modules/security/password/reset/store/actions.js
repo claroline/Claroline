@@ -7,9 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 
 // action creators
 export const actions = {}
-/**
- * Fetch the required data to open the current user desktop.
- */
+
 actions.reset = (data, callback = () => {}) => ({
   [API_REQUEST]: {
     url: ['claro_security_new_password'],

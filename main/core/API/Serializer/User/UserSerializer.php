@@ -33,7 +33,7 @@ class UserSerializer
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
-    private $authChecker;
+    private $authorization;
     /** @var ObjectManager */
     protected $om;
     /** @var PlatformConfigurationHandler */
@@ -59,7 +59,7 @@ class UserSerializer
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authChecker,
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         PlatformConfigurationHandler $config,
         PublicFileSerializer $fileSerializer,
@@ -69,7 +69,7 @@ class UserSerializer
         FieldFacetValueSerializer $fieldFacetValueSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->authChecker = $authChecker;
+        $this->authorization = $authorization;
         $this->om = $om;
         $this->config = $config;
         $this->fileSerializer = $fileSerializer;
@@ -280,27 +280,16 @@ class UserSerializer
     private function serializePermissions(User $user): array
     {
         $token = $this->tokenStorage->getToken();
-
         $currentUser = $token ? $token->getUser() : null;
 
         $isOwner = $currentUser instanceof User && $currentUser->getUuid() === $user->getUuid();
-        $isAdmin = $this->authChecker->isGranted('ROLE_ADMIN'); // todo maybe add those who have access to UserManagement tool
-
-        // todo : move role check elsewhere
-        $profileConfig = $this->config->getParameter('profile');
-        $editRoles = [];
-        if ($token && !empty($profileConfig['roles_edition'])) {
-            $editRoles = array_filter($token->getRoleNames(), function (string $role) use ($profileConfig) {
-                return in_array($role, $profileConfig['roles_edition']);
-            });
-        }
 
         return [
             'open' => true,
             'contact' => !$isOwner,
-            'edit' => $isAdmin || !empty($editRoles) || $isOwner,
-            'administrate' => $isAdmin,
-            'delete' => $isOwner || $isAdmin, // todo check platform param to now if current user can destroy is account
+            'edit' => $this->authorization->isGranted('EDIT', $user),
+            'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
+            'delete' => $this->authorization->isGranted('DELETE', $user),
         ];
     }
 

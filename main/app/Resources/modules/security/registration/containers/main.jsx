@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {trans} from '#/main/app/intl/translation'
-import {param} from '#/main/app/config/parameters'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
@@ -29,7 +28,7 @@ const RegistrationMain = withRouter(
             dispatch(modalActions.showModal(MODAL_CONFIRM, {
               icon: 'fa fa-fw fa-copyright',
               title: trans('term_of_service'),
-              question: termOfService[param('locales.default')] || termOfService[Object.keys(termOfService)[0]],
+              question: termOfService,
               isHtml: true,
               confirmButtonText: trans('accept_term_of_service'),
               handleConfirm: () => {

@@ -34,16 +34,12 @@ services:
 
     Claroline\CoreBundle\Manager\UserManager:
         arguments:
-          - '@service_container'
-          - '@claroline.manager.mail_manager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.organization.organization_manager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.role_manager'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@security.token_storage'
           - '@translator'
-          - '@validator'
           - '@claroline.manager.workspace_manager'
         calls:
           - setLogger: [ '@logger' ]
@@ -118,15 +114,6 @@ services:
         alias: Claroline\CoreBundle\Manager\ResourceManager
         public: true
 
-    Claroline\CoreBundle\Manager\RegistrationManager:
-        arguments:
-          - '@security.token_storage'
-          - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
-
-    claroline.manager.registration_manager:
-        alias: Claroline\CoreBundle\Manager\RegistrationManager
-        public: true
-
     Claroline\CoreBundle\Manager\PluginManager:
         arguments:
           - '%kernel.project_dir%/app'
@@ -140,11 +127,12 @@ services:
 
     Claroline\CoreBundle\Manager\MailManager:
         arguments:
-          - '@service_container'
           - '@Claroline\CoreBundle\Library\Mailing\Mailer'
-          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
           - '@router'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.template_manager'
+          - '@Claroline\CoreBundle\Manager\LocaleManager'
+          - '@Claroline\CoreBundle\Manager\UserManager'
 
     claroline.manager.mail_manager:
         alias: Claroline\CoreBundle\Manager\MailManager

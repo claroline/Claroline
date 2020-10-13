@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
@@ -25,97 +25,39 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    const MAX_USER_BATCH_SIZE = 100;
-    const MAX_EDIT_BATCH_SIZE = 100;
-
-    private $container;
-    private $mailManager;
-    private $objectManager;
+    private $crud;
+    private $om;
     private $organizationManager;
     private $platformConfigHandler;
     private $roleManager;
-    private $strictEventDispatcher;
-    private $tokenStorage;
     private $translator;
-    private $validator;
     private $workspaceManager;
     /** @var UserRepository */
     private $userRepo;
 
     public function __construct(
-        ContainerInterface $container,
-        MailManager $mailManager,
-        ObjectManager $objectManager,
+        ObjectManager $om,
+        Crud $crud,
         OrganizationManager $organizationManager,
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
-        StrictDispatcher $strictEventDispatcher,
-        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
-        ValidatorInterface $validator,
         WorkspaceManager $workspaceManager)
     {
-        $this->container = $container;
-        $this->mailManager = $mailManager;
-        $this->objectManager = $objectManager;
+        $this->crud = $crud;
+        $this->om = $om;
         $this->organizationManager = $organizationManager;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->roleManager = $roleManager;
-        $this->strictEventDispatcher = $strictEventDispatcher;
-        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
-        $this->validator = $validator;
         $this->workspaceManager = $workspaceManager;
-        $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
-    }
-
-    /**
-     * Create a user.
-     * Its basic properties (name, username,... ) must already be set.
-     *
-     * @todo use crud instead
-     * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand and default User in fixtures, and other things)
-     *
-     * @param array $rolesToAdd
-     *
-     * @return User
-     *
-     * @deprecated
-     */
-    public function createUser(
-        User $user,
-        array $options = [],
-        $rolesToAdd = []
-    ) {
-        $this->objectManager->startFlushSuite();
-        $additionalRoles = [];
-
-        $options = array_merge($options, [Options::ADD_NOTIFICATIONS]);
-
-        foreach ($rolesToAdd as $roleToAdd) {
-            $additionalRoles[] = is_string($roleToAdd) ? $this->roleManager->getRoleByName($roleToAdd) : $roleToAdd;
-        }
-
-        foreach ($additionalRoles as $role) {
-            if ($role) {
-                $this->roleManager->associateRole($user, $role);
-            }
-        }
-
-        $this->container->get('claroline.crud.user')->create($user, $options);
-        $this->objectManager->endFlushSuite();
-
-        return $user;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
@@ -124,8 +66,8 @@ class UserManager implements LoggerAwareInterface
     public function setPersonalWorkspace(User $user, Workspace $model = null)
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
-        $this->translator->setLocale($locale);
-        $created = $this->objectManager->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
+        $this->translator->setLocale($user->getLocale() ?? $locale);
+        $created = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
 
         if ($created) {
             $code = $user->getUsername().'~'.uniqid();
@@ -148,8 +90,8 @@ class UserManager implements LoggerAwareInterface
         $user->setPersonalWorkspace($workspace);
         $user->addRole($workspace->getManagerRole());
 
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     /**
@@ -245,8 +187,9 @@ class UserManager implements LoggerAwareInterface
         /** @var User $user */
         $user = $this->getByEmailValidationHash($validationHash);
         $user->setIsMailValidated(true);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     /**
@@ -271,8 +214,8 @@ class UserManager implements LoggerAwareInterface
     public function setLocale(User $user, $locale = 'en')
     {
         $user->setLocale($locale);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     public function countUsersByRoleIncludingGroup(Role $role)
@@ -298,18 +241,9 @@ class UserManager implements LoggerAwareInterface
 
             $user->setExpirationDate($expirationDate);
             $user->setInitDate(new \DateTime());
-            $this->objectManager->persist($user);
-            $this->objectManager->flush();
+            $this->om->persist($user);
+            $this->om->flush();
         }
-    }
-
-    public function getUserByUsernameOrMail($username, $email, $executeQuery = true)
-    {
-        return $this->userRepo->findUserByUsernameOrMail(
-            $username,
-            $email,
-            $executeQuery
-        );
     }
 
     public function countEnabledUsers(array $organizations = [])
@@ -327,33 +261,22 @@ class UserManager implements LoggerAwareInterface
         $user->setResetPasswordHash(null);
         $user->setInitDate(new \DateTime());
 
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     /**
-     * Logs the current user.
+     * Updates user last login date.
      */
-    public function logUser(User $user)
+    public function updateLastLogin(User $user)
     {
-        //need the refresh for some reason...
-        /** @var User $user */
-        $user = $this->objectManager->getRepository(User::class)->findOneBy([
-            'username' => $user->getUsername(),
-        ]);
-
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->tokenStorage->setToken($token);
-
-        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
-
         if (null === $user->getInitDate()) {
             $this->setUserInitDate($user);
         }
         $user->setLastLogin(new \DateTime());
 
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     public function initializePassword(User $user)
@@ -361,8 +284,8 @@ class UserManager implements LoggerAwareInterface
         $user->setHashTime(time());
         $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
         $user->setResetPasswordHash($password);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     /**
@@ -373,8 +296,8 @@ class UserManager implements LoggerAwareInterface
         $limit = 250;
         $offset = 0;
         $this->log('Add organizations to users...');
-        $this->objectManager->startFlushSuite();
-        $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
+        $this->om->startFlushSuite();
+        $countUsers = $this->om->count('ClarolineCoreBundle:User');
         $default = $this->organizationManager->getDefault();
         $i = 0;
 
@@ -394,32 +317,32 @@ class UserManager implements LoggerAwareInterface
                     ++$i;
                     $this->log('Add default organization for user '.$user->getUsername());
                     $user->addOrganization($default);
-                    $this->objectManager->persist($user);
+                    $this->om->persist($user);
 
                     if (0 === $i % 250) {
-                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
-                        $this->objectManager->forceFlush();
+                        $this->log("Flushing... [UOW = {$this->om->getUnitOfWork()->size()}]");
+                        $this->om->forceFlush();
                     }
                 } else {
                     $this->log("Organization for user {$user->getUsername()} already exists");
                 }
             }
 
-            $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
-            $this->objectManager->forceFlush();
+            $this->log("Flushing... [UOW = {$this->om->getUnitOfWork()->size()}]");
+            $this->om->forceFlush();
             $default = $this->organizationManager->getDefault();
 
             $offset += $limit;
         }
 
-        $this->objectManager->endFlushSuite();
+        $this->om->endFlushSuite();
     }
 
     public function enable(User $user)
     {
         $user->enable();
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
 
         return $user;
     }
@@ -427,8 +350,8 @@ class UserManager implements LoggerAwareInterface
     public function disable(User $user)
     {
         $user->disable();
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->om->persist($user);
+        $this->om->flush();
 
         return $user;
     }
@@ -438,25 +361,26 @@ class UserManager implements LoggerAwareInterface
         $user = $this->getUserByUsername('claroline-connect');
 
         if (!$user) {
-            $user = new User();
-
-            $user->setUsername('claroline-connect');
-            $user->setFirstName('Claroline');
-            $user->setLastName('Connect');
-            $user->setEmail('support@claroline.com');
-            $user->setPlainPassword(uniqid('', true));
-            $user->setAcceptedTerms(true);
-
-            $user->disable();
-            $user->remove();
-
-            $this->createUser($user, [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
+            $user = $this->crud->create(User::class, [
+                'firstName' => 'Claroline',
+                'lastName' => 'Connect',
+                'username' => 'claroline-connect',
+                'email' => 'support@claroline.com',
+                'plainPassword' => uniqid('', true),
+                'restrictions' => [
+                    'disabled' => true,
+                    'removed' => true,
+                ],
+            ], [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
         }
 
-        $roleAdmin = $this->roleManager->getRoleByName('ROLE_ADMIN');
-        $user->addRole($roleAdmin);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        if (!$user->hasRole('ROLE_ADMIN')) {
+            $roleAdmin = $this->roleManager->getRoleByName('ROLE_ADMIN');
+            $user->addRole($roleAdmin);
+
+            $this->om->persist($user);
+            $this->om->flush();
+        }
 
         return $user;
     }
@@ -464,26 +388,27 @@ class UserManager implements LoggerAwareInterface
     public function getDefaultClarolineUser()
     {
         $user = $this->getUserByUsername('claroline-connect-user');
-
         if (!$user) {
-            $user = new User();
-
-            $user->setUsername('claroline-connect-user');
-            $user->setFirstName('claroline-connect-user');
-            $user->setLastName('claroline-connect-user');
-            $user->setEmail('claroline-connect-user');
-            $user->setPlainPassword(uniqid('', true));
-            $user->setAcceptedTerms(true);
-            $user->disable();
-            $user->remove();
-
-            $this->createUser($user, [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
+            $user = $this->crud->create(User::class, [
+                'firstName' => 'claroline-connect-user',
+                'lastName' => 'claroline-connect-user',
+                'username' => 'claroline-connect-user',
+                'email' => 'claroline-connect-user',
+                'plainPassword' => uniqid('', true),
+                'restrictions' => [
+                    'disabled' => true,
+                    'removed' => true,
+                ],
+            ], [Options::NO_EMAIL, Options::NO_PERSONAL_WORKSPACE]);
         }
 
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $user->addRole($roleUser);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        if (!$user->hasRole('ROLE_USER')) {
+            $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+            $user->addRole($roleUser);
+
+            $this->om->persist($user);
+            $this->om->flush();
+        }
 
         return $user;
     }
@@ -497,7 +422,7 @@ class UserManager implements LoggerAwareInterface
         $flushSize = 250;
         $i = 0;
         $flushed = true;
-        $this->objectManager->startFlushSuite();
+        $this->om->startFlushSuite();
 
         for ($batch = 0; $batch < ceil($cntUsers / $batchSize); ++$batch) {
             $users = $this->userRepo->findUsersNotManagersOfPersonalWorkspace(0, $batchSize);
@@ -510,17 +435,17 @@ class UserManager implements LoggerAwareInterface
 
                 if (0 === $i % $flushSize) {
                     $this->log('Flushing, this may be very long for large databases');
-                    $this->objectManager->forceFlush();
+                    $this->om->forceFlush();
                     $flushed = true;
                 }
             }
             if (!$flushed) {
                 $this->log('Flushing, this may be very long for large databases');
-                $this->objectManager->forceFlush();
+                $this->om->forceFlush();
             }
-            $this->objectManager->clear();
+            $this->om->clear();
         }
-        $this->objectManager->endFlushSuite();
+        $this->om->endFlushSuite();
     }
 
     public function checkPersonalWorkspaceIntegrityForUser(User $user, $i = 1, $totalUsers = 1)
@@ -530,10 +455,10 @@ class UserManager implements LoggerAwareInterface
         $managerRole = $ws->getManagerRole();
         if (!$user->hasRole($managerRole->getRole())) {
             $this->log('Adding user as manager to his personal workspace', LogLevel::DEBUG);
-            $this->objectManager->startFlushSuite();
+            $this->om->startFlushSuite();
             $user->addRole($managerRole);
-            $this->objectManager->persist($user);
-            $this->objectManager->endFlushSuite();
+            $this->om->persist($user);
+            $this->om->endFlushSuite();
         }
     }
 
@@ -550,19 +475,9 @@ class UserManager implements LoggerAwareInterface
             $to->addRole($role);
         }
 
-        $this->objectManager->flush();
+        $this->om->flush();
 
         return count($roles);
-    }
-
-    public function sendResetPassword(User $user)
-    {
-        $user->setHashTime(time());
-        $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
-        $user->setResetPasswordHash($password);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-        $this->mailManager->sendForgotPassword($user);
     }
 
     public function hasReachedLimit()

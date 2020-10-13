@@ -4,7 +4,7 @@ namespace Claroline\SamlBundle\Security;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater;
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
 use LightSaml\Model\Protocol\Response;
 use LightSaml\SpBundle\Security\User\UserCreatorInterface;
@@ -14,8 +14,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserCreator implements UserCreatorInterface
 {
-    /** @var TokenUpdater */
-    private $tokenUpdater;
+    /** @var Authenticator */
+    private $authenticator;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var UsernameMapperInterface */
@@ -23,10 +23,14 @@ class UserCreator implements UserCreatorInterface
     /** @var Crud */
     private $crud;
 
-    public function __construct(TokenStorageInterface $tokenStorage, TokenUpdater $tokenUpdater, UsernameMapperInterface $usernameMapper, Crud $crud)
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        Authenticator $authenticator,
+        UsernameMapperInterface $usernameMapper,
+        Crud $crud
+    ) {
         $this->tokenStorage = $tokenStorage;
-        $this->tokenUpdater = $tokenUpdater;
+        $this->authenticator = $authenticator;
         $this->usernameMapper = $usernameMapper;
         $this->crud = $crud;
     }
@@ -88,6 +92,6 @@ class UserCreator implements UserCreatorInterface
         }
 
         // creates an anonymous token with a dedicated role.
-        $this->tokenUpdater->createAnonymous();
+        $this->authenticator->createAnonymousToken();
     }
 }

@@ -109,8 +109,11 @@ services:
         arguments:
           - '@security.token_storage'
           - '@security.authorization_checker'
+          - '@Claroline\CoreBundle\Manager\MailManager'
 
-    Claroline\CoreBundle\Controller\APINew\User\LocationController: ~
+    Claroline\CoreBundle\Controller\APINew\User\LocationController:
+        arguments:
+          - '@Claroline\CoreBundle\Manager\Organization\LocationManager'
 
     Claroline\CoreBundle\Controller\APINew\User\OrganizationController: ~
 
@@ -130,10 +133,8 @@ services:
           - '@security.token_storage'
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.mail_manager'
-          - '@claroline.manager.registration_manager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
         arguments:
@@ -237,15 +238,16 @@ services:
           - '%claroline.param.archive_directory%'
         tags: ['security.secure_service']
 
-    Claroline\CoreBundle\Controller\User\RegistrationController:
+    Claroline\CoreBundle\Controller\APINew\User\RegistrationController:
         arguments:
-          - '@security.token_storage'
-          - '@session'
-          - '@translator'
+          - '@security.authorization_checker'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-          - '@claroline.manager.user_manager'
-          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-          - '@Claroline\CoreBundle\Library\RoutingHelper'
+          - '@Claroline\CoreBundle\Manager\TermsOfServiceManager'
+          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\CoreBundle\Controller\AdministrationController:
         arguments:
@@ -257,16 +259,11 @@ services:
     Claroline\CoreBundle\Controller\AuthenticationController:
         tags: ['security.secure_service']
         arguments:
-          - '@request_stack'
           - '@claroline.manager.user_manager'
-          - '@security.encoder_factory'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@translator'
-          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
           - '@claroline.manager.mail_manager'
-          - '@router'
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
+          - '@Claroline\CoreBundle\Library\RoutingHelper'
+          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\CoreBundle\Controller\DesktopController:
         tags: ['security.secure_service']

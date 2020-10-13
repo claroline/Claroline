@@ -30,7 +30,7 @@ actions.createUser = (user, onCreated = () => {}) => ({
 
 actions.fetchRegistrationData = () => ({
   [API_REQUEST]: {
-    url: ['claro_user_registration_data_fetch'],
+    url: ['apiv2_user_initialize_registration'],
     request: {
       method: 'GET'
     },

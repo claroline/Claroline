@@ -128,7 +128,7 @@ const OrganizationForm = props =>
             icon: 'fa fa-fw fa-plus',
             label: trans('add_managers'),
             modal: [MODAL_USERS, {
-              url: ['apiv2_user_list_managed_organization'],
+              url: ['apiv2_user_list_managed'],
               selectAction: (users) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),
@@ -206,7 +206,7 @@ const OrganizationForm = props =>
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
             modal: [MODAL_USERS, {
-              url: ['apiv2_user_list_managed_organization'],
+              url: ['apiv2_user_list_managed'],
               selectAction: (users) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('add', {}, 'actions'),

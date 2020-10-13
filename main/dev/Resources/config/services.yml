@@ -26,14 +26,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:plugin:create' }
 
-    Claroline\DevBundle\Command\DebugServiceCommand:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Listener\Doctrine\DebugListener'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-        tags:
-            - { name: 'console.command', command: 'claroline:debug:service' }
-
     Claroline\DevBundle\Command\RouterDebugCommand:
         arguments:
             - '@router'

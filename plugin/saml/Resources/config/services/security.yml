@@ -24,8 +24,8 @@ services:
 
     Claroline\SamlBundle\Security\UserCreator:
         arguments:
-            - '%secret%'
             - '@security.token_storage'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@lightsaml_sp.username_mapper.simple'
             - '@Claroline\AppBundle\API\Crud'
 

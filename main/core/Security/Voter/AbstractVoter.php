@@ -194,7 +194,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
      */
     protected function isOrganizationManager(TokenInterface $token, $object)
     {
-        if ($token->getUser() instanceof User) {
+        if (method_exists($object, 'getOrganizations') && $token->getUser() instanceof User) {
             $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
             $objectOrganizations = $object->getOrganizations();
 

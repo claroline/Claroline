@@ -40,19 +40,11 @@ class OpenBadgeController
     /** @var ProfileSerializer */
     private $profileSerializer;
 
-    /**
-     * OpenBadgeController constructor.
-     *
-     * @param SerializerProvider $serializer
-     * @param CriteriaSerializer $criteriaSerializer
-     * @param ImageSerializer    $imageSerializer
-     * @param ProfileSerializer  $profileSerializer
-     */
-    public function _construct(
+    public function __construct(
         SerializerProvider $serializer,
         CriteriaSerializer $criteriaSerializer,
-        ImageSerializer    $imageSerializer,
-        ProfileSerializer  $profileSerializer
+        ImageSerializer $imageSerializer,
+        ProfileSerializer $profileSerializer
     ) {
         $this->serializer = $serializer;
         $this->criteriaSerializer = $criteriaSerializer;
@@ -63,12 +55,8 @@ class OpenBadgeController
     /**
      * @Route("/criteria/{badge}", name="apiv2_open_badge__criteria", methods={"GET"})
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
-     *
-     * @param BadgeClass $badge
-     *
-     * @return JsonResponse
      */
-    public function getCriteriaAction(BadgeClass $badge)
+    public function getCriteriaAction(BadgeClass $badge): JsonResponse
     {
         return new JsonResponse($this->criteriaSerializer->serialize($badge));
     }
@@ -76,24 +64,16 @@ class OpenBadgeController
     /**
      * @Route("/image/{image}", name="apiv2_open_badge__image", methods={"GET"})
      * @EXT\ParamConverter("image", class="ClarolineCoreBundle:File\PublicFile", options={"mapping": {"image": "id"}})
-     *
-     * @param PublicFile $image
-     *
-     * @return JsonResponse
      */
-    public function getImage(PublicFile $image)
+    public function getImage(PublicFile $image): JsonResponse
     {
         return new JsonResponse($this->imageSerializer->serialize($image));
     }
 
     /**
      * @Route("/profile/{profile}", name="apiv2_open_badge__profile", methods={"GET"})
-     *
-     * @param $profile
-     *
-     * @return JsonResponse
      */
-    public function getProfile($profile)
+    public function getProfile($profile): JsonResponse
     {
         return new JsonResponse($this->profileSerializer->serialize($profile));
     }
@@ -101,12 +81,8 @@ class OpenBadgeController
     /**
      * @Route("/badge/{badge}", name="apiv2_open_badge__badge_class", methods={"GET"})
      * @EXT\ParamConverter("badge", class="ClarolineOpenBadgeBundle:BadgeClass", options={"mapping": {"badge": "uuid"}})
-     *
-     * @param BadgeClass $badge
-     *
-     * @return JsonResponse
      */
-    public function getBadgeAction(BadgeClass $badge)
+    public function getBadgeAction(BadgeClass $badge): JsonResponse
     {
         return new JsonResponse($this->serializer->serialize($badge, [Options::ENFORCE_OPEN_BADGE_JSON]));
     }
@@ -114,12 +90,8 @@ class OpenBadgeController
     /**
      * @Route("/assertion/{assertion}.json", name="apiv2_open_badge__assertion", methods={"GET"})
      * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
-     *
-     * @param Assertion $assertion
-     *
-     * @return JsonResponse
      */
-    public function getAssertionAction(Assertion $assertion)
+    public function getAssertionAction(Assertion $assertion): JsonResponse
     {
         return new JsonResponse($this->serializer->serialize($assertion, [Options::ENFORCE_OPEN_BADGE_JSON]));
     }
@@ -127,12 +99,8 @@ class OpenBadgeController
     /**
      * @Route("/evidence/{evidence}", name="apiv2_open_badge__evidence", methods={"GET"})
      * @EXT\ParamConverter("evidence", class="ClarolineOpenBadgeBundle:Evidence", options={"mapping": {"evidence": "uuid"}})
-     *
-     * @param Evidence $evidence
-     *
-     * @return JsonResponse
      */
-    public function getEvidenceAction(Evidence $evidence)
+    public function getEvidenceAction(Evidence $evidence): JsonResponse
     {
         return new JsonResponse($this->serializer->serialize($evidence, [Options::ENFORCE_OPEN_BADGE_JSON]));
     }
@@ -140,24 +108,16 @@ class OpenBadgeController
     /**
      * @Route("/crypto/{key}", name="apiv2_open_badge__cryptographic_key", methods={"GET"})
      * @EXT\ParamConverter("key", class="ClarolineCoreBundle:Cryptography\CryptographicKey", options={"mapping": {"key": "uuid"}})
-     *
-     * @param CryptographicKey $key
-     *
-     * @return JsonResponse
      */
-    public function getCryptographicKeyAction(CryptographicKey $key)
+    public function getCryptographicKeyAction(CryptographicKey $key): JsonResponse
     {
         return new JsonResponse($this->serializer->serialize($key, [Options::ENFORCE_OPEN_BADGE_JSON]));
     }
 
     /**
      * @Route("/connect", name="apiv2_open_badge__connect", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function connectBackPackAction(Request $request)
+    public function connectBackPackAction(Request $request): JsonResponse
     {
         return new JsonResponse($request->query->all());
     }

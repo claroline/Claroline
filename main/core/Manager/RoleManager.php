@@ -213,29 +213,6 @@ class RoleManager implements LoggerAwareInterface
     }
 
     /**
-     * @param array $roles
-     * @param bool  $sendMail
-     */
-    public function associateRoles(AbstractRoleSubject $ars, $roles, $sendMail = false)
-    {
-        foreach ($roles as $role) {
-            $this->associateRole($ars, $role, $sendMail);
-        }
-        $this->om->persist($ars);
-        $this->om->flush();
-    }
-
-    /**
-     * @param AbstractRoleSubject[] $subjects
-     */
-    public function associateRoleToMultipleSubjects(array $subjects, Role $role)
-    {
-        foreach ($subjects as $subject) {
-            $this->associateRole($subject, $role);
-        }
-    }
-
-    /**
      * @throws RoleReadOnlyException
      */
     public function remove(Role $role)

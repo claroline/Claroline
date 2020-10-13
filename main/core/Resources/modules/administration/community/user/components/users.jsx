@@ -28,7 +28,7 @@ const UsersList = props =>
     <ListData
       name={`${baseSelectors.STORE_NAME}.users.list`}
       fetch={{
-        url: ['apiv2_user_list_managed_organization'],
+        url: ['apiv2_user_list_managed'],
         autoload: true
       }}
       delete={{

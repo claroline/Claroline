@@ -16,11 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-/**
- * Will be functional at the sf4 upgrade.
- */
-
- // use theses annotations later
+// TODO : to be tested. I'm not sure this is functional.
 class UserSwitchVoter extends Voter
 {
     protected function supports($attribute, $subject)
@@ -30,9 +26,8 @@ class UserSwitchVoter extends Voter
     }
 
     /**
-     * @param TokenInterface $token
-     * @param mixed          $object
-     * @param array          $attributes
+     * @param mixed $object
+     * @param array $attributes
      *
      * @return int
      */
@@ -44,8 +39,7 @@ class UserSwitchVoter extends Voter
     /**
      * Copied from the AbstractVoter.
      *
-     * @param TokenInterface $token
-     * @param User|Group     $object
+     * @param User $object
      *
      * @return bool
      */

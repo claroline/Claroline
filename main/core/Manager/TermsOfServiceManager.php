@@ -20,7 +20,6 @@ class TermsOfServiceManager
     private $configHandler;
     private $versionManager;
     private $contentManager;
-    private $isActive;
     private $userManager;
     private $workspaceManager;
 
@@ -34,7 +33,6 @@ class TermsOfServiceManager
         $this->configHandler = $configHandler;
         $this->versionManager = $versionManager;
         $this->contentManager = $contentManager;
-        $this->isActive = $configHandler->getParameter('terms_of_service');
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
     }
@@ -46,7 +44,7 @@ class TermsOfServiceManager
      */
     public function isActive()
     {
-        return $this->configHandler->getParameter('terms_of_service');
+        return $this->configHandler->getParameter('tos.enabled') ?? false;
     }
 
     public function getTermsOfService($translations = true)
@@ -56,6 +54,28 @@ class TermsOfServiceManager
         }
 
         return $this->contentManager->getContent(['type' => 'termsOfService']);
+    }
+
+    public function getLocalizedTermsOfService(string $locale = null)
+    {
+        $terms = null;
+
+        $allTerms = $this->getTermsOfService();
+        if (!empty($allTerms)) {
+            if ($locale && $allTerms[$locale]) {
+                $terms = $allTerms[$locale];
+            } elseif ($allTerms[$this->configHandler->getParameter('locales.default')]) {
+                $terms = $allTerms[$this->configHandler->getParameter('locales.default')];
+            } else {
+                $terms = $allTerms[0];
+            }
+        }
+
+        if ($terms) {
+            return $terms['content'];
+        }
+
+        return null;
     }
 
     /**

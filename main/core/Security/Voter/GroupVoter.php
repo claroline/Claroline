@@ -24,10 +24,15 @@ class GroupVoter extends AbstractVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
-            case self::EDIT:   return $this->checkEdit($token, $object);
-            case self::DELETE: return $this->checkDelete($token, $object);
-            case self::VIEW:   return $this->checkView($token, $object);
-            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+            case self::ADMINISTRATE:
+            case self::EDIT:
+                return $this->checkEdit($token, $object);
+            case self::DELETE:
+                return $this->checkDelete($token, $object);
+            case self::VIEW:
+                return $this->checkView($token, $object);
+            case self::PATCH:
+                return $this->checkPatch($token, $object, $collection);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -35,7 +40,7 @@ class GroupVoter extends AbstractVoter
 
     private function checkEdit($token, Group $group)
     {
-        if (!$this->isGroupManaged($token, $group)) {
+        if (!$this->isOrganizationManager($token, $group)) {
             return VoterInterface::ACCESS_DENIED;
         }
 
@@ -44,7 +49,7 @@ class GroupVoter extends AbstractVoter
 
     private function checkDelete($token, Group $group)
     {
-        if (!$this->isGroupManaged($token, $group)) {
+        if (!$this->isOrganizationManager($token, $group)) {
             return VoterInterface::ACCESS_DENIED;
         }
 
@@ -53,7 +58,7 @@ class GroupVoter extends AbstractVoter
 
     private function checkView($token, Group $group)
     {
-        if (!$this->isGroupManaged($token, $group)) {
+        if (!$this->isOrganizationManager($token, $group)) {
             return VoterInterface::ACCESS_DENIED;
         }
 
@@ -111,7 +116,7 @@ class GroupVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if ($this->isGroupManaged($token, $group)) {
+        if ($this->isOrganizationManager($token, $group)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -121,22 +126,6 @@ class GroupVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_DENIED;
-    }
-
-    private function isGroupManaged(TokenInterface $token, Group $group)
-    {
-        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
-        $groupOrganizations = $group->getOrganizations();
-
-        foreach ($adminOrganizations as $adminOrganization) {
-            foreach ($groupOrganizations as $groupOrganization) {
-                if ($groupOrganization === $adminOrganization) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -152,6 +141,6 @@ class GroupVoter extends AbstractVoter
      */
     public function getSupportedActions()
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::VIEW, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
     }
 }

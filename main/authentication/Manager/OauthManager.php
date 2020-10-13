@@ -18,8 +18,6 @@ use Claroline\AuthenticationBundle\Entity\OauthUser;
 use Claroline\AuthenticationBundle\Repository\OauthUserRepository;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\RegistrationManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,12 +37,6 @@ class OauthManager
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var UserManager */
-    private $userManager;
-
-    /** @var RegistrationManager */
-    private $registrationManager;
-
     /** @var Authenticator */
     private $authenticator;
 
@@ -56,16 +48,12 @@ class OauthManager
         CacheManager $cacheManager,
         PlatformConfigurationHandler $platformConfigHandler,
         TokenStorageInterface $tokenStorage,
-        UserManager $userManager,
-        registrationManager $registrationManager,
         Authenticator $authenticator
     ) {
         $this->em = $entityManager;
         $this->cacheManager = $cacheManager;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->tokenStorage = $tokenStorage;
-        $this->userManager = $userManager;
-        $this->registrationManager = $registrationManager;
         $this->authenticator = $authenticator;
         $this->oauthUserRepository = $entityManager->getRepository(OauthUser::class);
     }
@@ -166,15 +154,15 @@ class OauthManager
             $username = $request->get('_username');
             $password = $request->get('_password');
         }
-        $isAuthenticated = $this->authenticator->authenticate($username, $password, $verifyPassword);
-        if ($isAuthenticated) {
-            $user = $this->userManager->getUserByUsername($username);
-            $oauthUser = new OauthUser($service['name'], $service['id'], $user);
+
+        $authenticatedUser = $this->authenticator->authenticate($username, $password, $verifyPassword);
+        if ($authenticatedUser) {
+            $oauthUser = new OauthUser($service['name'], $service['id'], $authenticatedUser);
             $this->em->persist($oauthUser);
             $this->em->flush();
             $request->getSession()->remove('claroline.oauth.resource_owner');
 
-            return $this->registrationManager->loginUser($user, $request);
+            return $this->authenticator->login($authenticatedUser, $request);
         } else {
             return new JsonResponse(['error' => 'login_error'], 400);
         }

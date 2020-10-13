@@ -33,7 +33,6 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class WorkspaceManager implements LoggerAwareInterface
 {
@@ -229,12 +228,6 @@ class WorkspaceManager implements LoggerAwareInterface
     {
         $role = $workspace->getDefaultRole();
         $this->roleManager->associateRole($user, $role);
-
-        // nope
-        if ($user->getUuid() === $this->container->get('security.token_storage')->getToken()->getUser()->getUuid()) {
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->container->get('security.token_storage')->setToken($token);
-        }
 
         return $user;
     }
@@ -455,11 +448,6 @@ class WorkspaceManager implements LoggerAwareInterface
             $user = $workspaceCopy->getCreator();
             $user->addRole($managerRole);
             $this->om->persist($user);
-
-            if ($user->getUuid() === $this->container->get('security.token_storage')->getToken()->getUser()->getUuid()) {
-                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-                $this->container->get('security.token_storage')->setToken($token);
-            }
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspaceCopy);

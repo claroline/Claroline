@@ -11,74 +11,71 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Authentication/login controller.
- */
 class AuthenticationController
 {
-    private $request;
+    use RequestDecoderTrait;
+
     private $userManager;
-    private $encoderFactory;
     private $om;
     private $mailManager;
-    private $translator;
+    private $routingHelper;
     private $authenticator;
-    private $router;
-    private $ch;
-    private $dispatcher;
 
     public function __construct(
-        RequestStack $request,
         UserManager $userManager,
-        EncoderFactory $encoderFactory,
         ObjectManager $om,
-        TranslatorInterface $translator,
-        Authenticator $authenticator,
         MailManager $mailManager,
-        RouterInterface $router,
-        PlatformConfigurationHandler $ch,
-        StrictDispatcher $dispatcher
+        RoutingHelper $routingHelper,
+        Authenticator $authenticator
     ) {
-        $this->request = $request->getMasterRequest();
         $this->userManager = $userManager;
-        $this->encoderFactory = $encoderFactory;
         $this->om = $om;
-        $this->translator = $translator;
-        $this->authenticator = $authenticator;
         $this->mailManager = $mailManager;
-        $this->router = $router;
-        $this->ch = $ch;
-        $this->dispatcher = $dispatcher;
+        $this->routingHelper = $routingHelper;
+        $this->authenticator = $authenticator;
     }
 
     /**
-     * @Route(
-     *     "/sendmail",
-     *     name="claro_security_send_token",
-     *     options={"expose"=true},
-     *     methods={"POST"}
-     * )
+     * Activate and log in a user using the validation hash sent to him.
+     * ATTENTION : This is used to generate the validation URL sent by email. The URL must not change overtime.
+     *
+     * @Route("/user/registration/activate/{hash}", name="claro_security_activate_user")
      */
-    public function sendEmailAction(Request $request)
+    public function activateUserAction(string $hash, Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $user = $this->userManager->getByResetPasswordHash($hash);
+        if (!$user) {
+            return new RedirectResponse(
+                $this->routingHelper->indexPath()
+            );
+        }
+
+        $this->userManager->activateUser($user);
+
+        return $this->authenticator->login($user, $request);
+    }
+
+    /**
+     * Resets a user password and send an email to the user to let him choose a new one.
+     *
+     * @Route("/sendmail", name="claro_security_send_token", methods={"POST"})
+     */
+    public function sendForgotPasswordAction(Request $request): JsonResponse
+    {
+        $data = $this->decodeRequest($request);
         $user = $this->om->getRepository(User::class)->findOneByEmail($data['email']);
 
         if ($user) {
@@ -95,24 +92,17 @@ class AuthenticationController
             return new JsonResponse('mail_config_issue', 500);
         }
 
-        $error = [
-          'error' => ['email' => 'email_not_exist'],
-        ];
-
-        return new JsonResponse($error, 500);
+        return new JsonResponse([
+            'error' => ['email' => 'email_not_exist'],
+        ], 500);
     }
 
     /**
-     * @Route(
-     *     "/validatepassword",
-     *     name="claro_security_new_password",
-     *     options={"expose"=true},
-     *     methods={"POST"}
-     * )
+     * @Route("/validatepassword", name="claro_security_new_password", methods={"POST"})
      */
-    public function newPasswordAction(Request $request)
+    public function newPasswordAction(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $this->decodeRequest($request);
         $user = $this->userManager->getByResetPasswordHash($data['hash']);
 
         if (!$user) {
@@ -120,23 +110,20 @@ class AuthenticationController
         }
 
         if (null === $data['password'] && '' === trim($data['password'])) {
-            $error = [
-              'error' => ['password' => 'password_invalid'],
-            ];
-
-            return new JsonResponse($error, 400);
+            return new JsonResponse([
+                'error' => ['password' => 'password_invalid'],
+            ], 400);
         }
 
         if ($data['password'] !== $data['confirm']) {
-            $error = [
-              'error' => ['password' => 'password_value_mismatch'],
-            ];
-
-            return new JsonResponse($error, 400);
+            return new JsonResponse([
+                'error' => ['password' => 'password_value_mismatch'],
+            ], 400);
         }
 
         $user->setPlainPassword($data['password']);
         $this->userManager->activateUser($user);
+
         $this->om->persist($user);
         $this->om->flush();
 
@@ -144,38 +131,25 @@ class AuthenticationController
     }
 
     /**
-     * @Route(
-     *     "/validate/email/{hash}",
-     *     name="claro_security_validate_email",
-     *     options={"expose"=true},
-     *     methods={"GET"}
-     * )
+     * @Route("/validate/email/{hash}", name="claro_security_validate_email", methods={"GET"})
      */
-    public function validateEmailAction($hash)
+    public function validateEmailAction(string $hash): RedirectResponse
     {
         $this->userManager->validateEmailHash($hash);
 
         return new RedirectResponse(
-            $this->router->generate('claro_index')
+            $this->routingHelper->indexPath()
         );
     }
 
     /**
-     * @Route(
-     *     "/send/email/validation",
-     *     name="claro_security_validate_email_send",
-     *     options={"expose"=true}
-     * )
+     * @Route("/send/email/validation", name="claro_security_validate_email_send", options={"expose"=true})
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User $currentUser
-     *
-     * @return JsonResponse
      */
-    public function sendEmailValidationAction(User $currentUser)
+    public function sendEmailValidationAction(User $currentUser): JsonResponse
     {
-        $this->mailManager->sendValidateEmail($currentUser->getEmailValidationHash());
+        $this->mailManager->sendValidateEmail($currentUser);
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 }

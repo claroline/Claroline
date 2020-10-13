@@ -117,9 +117,7 @@ RegistrationMain.propTypes = {
   register: T.func.isRequired,
   fetchRegistrationData: T.func.isRequired,
   options: T.shape({
-    autoLog: T.bool,
     validation: T.bool,
-    localeLanguage: T.String,
     forceOrganizationCreation: T.bool,
     allowWorkspace: T.bool
   }).isRequired,

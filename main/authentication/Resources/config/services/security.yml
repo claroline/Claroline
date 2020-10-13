@@ -4,18 +4,14 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\AuthenticationBundle\Security\Authentication\TokenUpdater:
+    # Authenticators
+    Claroline\AuthenticationBundle\Security\Authentication\Authenticator:
         arguments:
             - '%secret%'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    # Authenticators
-    Claroline\AuthenticationBundle\Security\Authentication\Authenticator:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@security.token_storage'
             - '@security.encoder_factory'
+            - '@Claroline\CoreBundle\Listener\AuthenticationSuccessListener'
 
     Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator:
         arguments:

@@ -4,10 +4,6 @@ fos_js_routing:
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
     type: annotation
-
-claro_user_registration:
-    resource: "@ClarolineCoreBundle/Controller/User/RegistrationController.php"
-    type: annotation
     options: { expose: true }
 
 claro_legacy:

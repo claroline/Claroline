@@ -11,66 +11,52 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\API\Options;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MailManager
 {
-    /** @var ContainerInterface */
-    private $container;
-
     /** @var Mailer */
     private $mailer;
-
     /** @var UrlGeneratorInterface */
     private $router;
-
+    /** @var PlatformConfigurationHandler */
+    private $config;
     /** @var TemplateManager */
     private $templateManager;
+    /** @var LocaleManager */
+    private $localeManager;
+    /** @var UserManager */
+    private $userManager;
 
-    /**
-     * @param ContainerInterface    $container
-     * @param Mailer                $mailer
-     * @param ParametersSerializer  $parametersSerializer
-     * @param UrlGeneratorInterface $router
-     * @param TemplateManager       $templateManager
-     */
     public function __construct(
-        ContainerInterface $container,
         Mailer $mailer,
-        ParametersSerializer $parametersSerializer,
         UrlGeneratorInterface $router,
-        TemplateManager $templateManager
+        PlatformConfigurationHandler $config,
+        TemplateManager $templateManager,
+        LocaleManager $localeManager,
+        UserManager $userManager
     ) {
-        $this->container = $container;
         $this->mailer = $mailer;
         $this->router = $router;
+        $this->config = $config;
         $this->templateManager = $templateManager;
-        $this->serializer = $parametersSerializer;
+        $this->localeManager = $localeManager;
+        $this->userManager = $userManager;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMailerAvailable()
+    public function isMailerAvailable(): bool
     {
-        return $this->container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler')->getParameter('mailer.enabled');
+        return $this->config->getParameter('mailer.enabled');
     }
 
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @return bool
-     */
-    public function sendForgotPassword(User $user)
+    public function sendForgotPassword(User $user): bool
     {
-        $this->container->get('claroline.manager.user_manager')->initializePassword($user);
+        $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(
             'claro_index',
@@ -83,7 +69,7 @@ class MailManager
             'username' => $user->getUsername(),
             'password_reset_link' => $link,
         ];
-        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
+        $locale = $this->localeManager->getLocale($user);
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
 
@@ -92,14 +78,14 @@ class MailManager
 
     public function sendInitPassword(User $user)
     {
-        $this->container->get('claroline.manager.user_manager')->initializePassword($user);
+        $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(
             'claro_index',
             [],
             UrlGeneratorInterface::ABSOLUTE_URL
         )."#/newpassword/{$hash}";
-        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
+        $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -120,7 +106,7 @@ class MailManager
             ['hash' => $hash],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
+        $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -133,16 +119,14 @@ class MailManager
         return $this->send($subject, $body, [$user], null, [], true);
     }
 
-    public function sendValidateEmail($hash)
+    public function sendValidateEmail(User $user)
     {
-        /** @var User $user */
-        $user = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
         $url = $this->router->generate(
             'claro_security_validate_email',
-            ['hash' => $hash],
+            ['hash' => $user->getEmailValidationHash()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
+        $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -156,13 +140,11 @@ class MailManager
     }
 
     /**
-     * @param User $user
-     *
      * @return bool
      */
     public function sendCreationMessage(User $user)
     {
-        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
+        $locale = $this->localeManager->getLocale($user);
         $url = $this->router->generate(
             'claro_security_validate_email',
             ['hash' => $user->getEmailValidationHash()],
@@ -181,20 +163,8 @@ class MailManager
         return $this->send($subject, $body, [$user], null, [], true);
     }
 
-    /**
-     * @param string $subject
-     * @param string $body
-     * @param User[] $users
-     * @param User   $from
-     * @param array  $extra
-     * @param bool   $force
-     * @param string $replyToMail
-     *
-     * @return bool
-     */
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
-        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
@@ -203,21 +173,21 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $to = [];
 
-            $fromEmail = $parameters['mailer']['from'];
-            $locale = 1 === count($users) ? $users[0]->getLocale() : $parameters['locales']['default'];
+            $fromEmail = $this->config->getParameter('mailer.from');
+            $locale = 1 === count($users) ? $users[0]->getLocale() : $this->localeManager->getDefault();
 
             if (!$locale) {
-                $locale = $parameters['locales']['default'];
+                $locale = $this->localeManager->getDefault();
             }
 
             $body = $this->templateManager->getTemplate('claro_mail_layout', ['content' => $body], $locale);
-            $body = str_replace('%platform_name%', $parameters['display']['name'], $body);
+            $body = str_replace('%platform_name%', $this->config->getParameter('display.name'), $body);
 
             if ($from) {
                 $body = str_replace('%first_name%', $from->getFirstName(), $body);
                 $body = str_replace('%last_name%', $from->getLastName(), $body);
             } else {
-                $body = str_replace('%first_name%', $parameters['display']['name'], $body);
+                $body = str_replace('%first_name%', $this->config->getParameter('display.name'), $body);
                 $body = str_replace('%last_name%', '', $body);
             }
 
@@ -258,7 +228,7 @@ class MailManager
                 $message->attach($extra['attachment'], 'application/octet-stream');
             }
 
-            return $this->mailer->send($message) ? true : false;
+            return $this->mailer->send($message);
         }
 
         return false;
@@ -266,17 +236,17 @@ class MailManager
 
     public function getMailerFrom()
     {
-        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
-        if ($from = $parameters['mailer']['from']) {
+        $from = $this->config->getParameter('mailer.from');
+        if ($from) {
             if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
                 return $from;
             }
         }
 
-        if ($parameters['internet']['domain_name'] && '' !== trim($parameters['internet']['domain_name'])) {
-            return 'noreply@'.$parameters['internet']['domain_name'];
+        if ($this->config->getParameter('internet.domain_name') && '' !== trim($this->config->getParameter('internet.domain_name'))) {
+            return 'noreply@'.$this->config->getParameter('internet.domain_name');
         }
 
-        return $parameters['help']['support_email'];
+        return $this->config->getParameter('help.support_email');
     }
 }

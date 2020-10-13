@@ -96,6 +96,11 @@ const Parameters = (props) => {
                   condensed: true,
                   choices: registrationConst.registrationValidationTypes
                 }
+              }, {
+                name: 'registration.selfUnregistration',
+                type: 'boolean',
+                label: trans('activate_self_unregistration'),
+                help: trans('self_unregistration_workspace_help')
               }
             ]
           }, {
