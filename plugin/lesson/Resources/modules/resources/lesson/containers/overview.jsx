@@ -11,6 +11,7 @@ const LessonOverview = withRouter(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
+      resourceId: resourceSelectors.id(state),
       lesson: selectors.lesson(state),
       internalNotes: hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)),
       tree: selectors.treeData(state)

@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
@@ -32,7 +33,7 @@ const LessonOverview = (props) => {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-play icon-with-text-right',
           label: trans('start_lesson', {}, 'lesson'),
-          target: `${props.path}/${get(chapters, 'children[0].slug')}`,
+          target: `${props.path}/${get(chapters, '[0].slug')}`,
           primary: true,
           disabled: isEmpty(chapters),
           disabledMessages: isEmpty(chapters) ? [trans('start_disabled_empty', {}, 'lesson')]:[]
