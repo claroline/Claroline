@@ -24,19 +24,21 @@ class ResourceNodeCrud
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
+    /** @var Crud */
+    private $crud;
+    /** @var StrictDispatcher */
+    private $dispatcher;
+    /** @var ResourceLifecycleManager */
+    private $lifeCycleManager;
+    /** @var ResourceManager */
+    private $resourceManager;
+    /** @var ResourceNodeSerializer */
+    private $serializer;
+    /** @var string */
+    private $filesDirectory;
 
-    /**
-     * ResourceNodeCrud constructor.
-     *
-     * @param TokenStorageInterface    $tokenStorage
-     * @param ObjectManager            $om
-     * @param Crud                     $crud
-     * @param StrictDispatcher         $dispatcher
-     * @param ResourceLifecycleManager $lifeCycleManager
-     * @param ResourceManager          $resourceManager
-     * @param ResourceNodeSerializer   $serializer
-     * @param string                   $filesDirectory
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
@@ -45,7 +47,7 @@ class ResourceNodeCrud
         ResourceLifecycleManager $lifeCycleManager,
         ResourceManager $resourceManager,
         ResourceNodeSerializer $serializer,
-        $filesDirectory
+        string $filesDirectory
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
@@ -57,9 +59,6 @@ class ResourceNodeCrud
         $this->serializer = $serializer;
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function preCreate(CreateEvent $event)
     {
         /** @var ResourceNode $resourceNode */
@@ -76,9 +75,6 @@ class ResourceNodeCrud
         }
     }
 
-    /**
-     * @param DeleteEvent $event
-     */
     public function preDelete(DeleteEvent $event)
     {
         $node = $event->getObject();
@@ -203,22 +199,25 @@ class ResourceNodeCrud
         $newParent = $event->getExtra()['parent'];
         $user = $event->getExtra()['user'];
 
-        $this->om->persist($newNode);
-        /** @var AbstractResource $copy */
-        $copy = $this->crud->copy($resource, [Options::REFRESH_UUID]);
-        $copy->setResourceNode($newNode);
-        $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setCreator($user);
-        //unmapped but allow to retrieve it with the entity without any request for the following code
-        $newNode->setResource($copy);
-
         // link new node to its parent
+        $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
 
         // compute unique name for resource
         $name = $this->resourceManager->getUniqueName($newNode, $newParent, true);
         $newNode->setName($name);
+
+        $this->om->persist($newNode);
+
+        /** @var AbstractResource $copy */
+        $copy = $this->crud->copy($resource, [Options::REFRESH_UUID]);
+
+        // link node and abstract resource
+        $copy->setResourceNode($newNode);
+        //unmapped but allow to retrieve it with the entity without any request for the following code
+        $newNode->setResource($copy);
 
         $this->lifeCycleManager->copy($resource, $copy);
 
@@ -238,12 +237,7 @@ class ResourceNodeCrud
         $this->om->flush();
     }
 
-    /**
-     * @param string $dirName
-     *
-     * @return bool
-     */
-    private function isDirectoryEmpty($dirName)
+    private function isDirectoryEmpty(string $dirName): bool
     {
         $files = [];
         $dirHandle = opendir($dirName);

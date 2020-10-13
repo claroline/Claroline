@@ -44,16 +44,6 @@ class Crud
     /** @var SchemaProvider */
     private $schema;
 
-    /**
-     * Crud constructor.
-     *
-     * @param ObjectManager                 $om
-     * @param StrictDispatcher              $dispatcher
-     * @param SerializerProvider            $serializer
-     * @param ValidatorProvider             $validator
-     * @param SchemaProvider                $schema
-     * @param AuthorizationCheckerInterface $authorization
-     */
     public function __construct(
       ObjectManager $om,
       StrictDispatcher $dispatcher,
@@ -204,7 +194,7 @@ class Crud
      *
      * @param object $object  - the entity to copy
      * @param array  $options - additional copy options
-     * @param array  $extra
+     * @param array  $extra   - extra data used for copy
      *
      * @return object
      */
@@ -214,12 +204,12 @@ class Crud
             $this->checkPermission('COPY', $object, [], true);
         }
 
-        $class = get_class($object);
+        $class = $this->getRealClass($object);
         $new = new $class();
 
         //default option for copy
         $options[] = Options::REFRESH_UUID;
-        $serializer = $this->serializer->get($object);
+        $serializer = $this->serializer->get($new);
 
         if (method_exists($serializer, 'getCopyOptions')) {
             $options = array_merge($options, $serializer->getCopyOptions());
@@ -275,16 +265,14 @@ class Crud
      * @param string $property - the name of the property which holds the collection
      * @param string $action   - the action to execute on the collection (aka. add/remove/set)
      * @param array  $elements - the collection to patch
-     * @param array  $options
+     * @param array  $options  - additional patch options
      */
     public function patch($object, $property, $action, array $elements, array $options = [])
     {
         $methodName = $action.ucfirst(strtolower($property));
 
         if (!method_exists($object, $methodName)) {
-            throw new \LogicException(
-                sprintf('You have requested a non implemented action %s on %s', $methodName, get_class($object))
-            );
+            throw new \LogicException(sprintf('You have requested a non implemented action %s on %s', $methodName, get_class($object)));
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -320,9 +308,7 @@ class Crud
         $methodName = 'set'.ucfirst($property);
 
         if (!method_exists($object, $methodName)) {
-            throw new \LogicException(
-                sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', get_class($object), $methodName)
-            );
+            throw new \LogicException(sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', get_class($object), $methodName));
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -347,7 +333,7 @@ class Crud
      * @param string $class   - the class of the entity used for validation
      * @param mixed  $data    - the serialized data to validate
      * @param string $mode    - the validation mode
-     * @param array  $options
+     * @param array  $options - the validation options
      *
      * @return array
      */
@@ -362,25 +348,26 @@ class Crud
      *
      * @param string $action (create, copy, delete, patch, update)
      * @param string $when   (post, pre)
-     * @param array  $args
+     * @param array  $args   the event arguments
      *
      * @return bool
      */
     public function dispatch($action, $when, array $args)
     {
+        $className = $this->getRealClass($args[0]);
+
         $name = 'crud_'.$when.'_'.$action.'_object';
         $eventClass = ucfirst($action);
         /** @var CrudEvent $generic */
         $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
 
-        $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($args[0]))->getName();
         $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
         /** @var CrudEvent $specific */
         $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
         $isAllowed = $specific->isAllowed();
 
-        if ($this->serializer->has(get_class($args[0]))) {
-            $serializer = $this->serializer->get(get_class($args[0]));
+        if ($this->serializer->has($className)) {
+            $serializer = $this->serializer->get($className);
 
             if (method_exists($serializer, 'getName')) {
                 $shortName = 'crud.'.$when.'.'.$action.'.'.$serializer->getName();
@@ -389,5 +376,10 @@ class Crud
         }
 
         return $generic->isAllowed() && $specific->isAllowed() && $isAllowed;
+    }
+
+    private function getRealClass($object)
+    {
+        return $this->om->getMetadataFactory()->getMetadataFor(get_class($object))->getName();
     }
 }
