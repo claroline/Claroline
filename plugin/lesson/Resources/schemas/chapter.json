@@ -35,6 +35,7 @@
       "description": "The slug of the chapter's next sibling"
     }
   },
+  "required": ["title", "text"],
   "claroline": {
     "ids":  ["id"]
   }

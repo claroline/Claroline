@@ -100,6 +100,18 @@ class ChapterController
     }
 
     /**
+     * Get chapter tree.
+     *
+     * @Route("/tree", name="apiv2_lesson_tree_get", methods={"GET"})
+     */
+    public function getTreeAction(Lesson $lesson): JsonResponse
+    {
+        $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
+
+        return new JsonResponse($this->chapterManager->serializeChapterTree($lesson));
+    }
+
+    /**
      * Get chapter by its slug.
      *
      * @Route("/{slug}", name="apiv2_lesson_chapter_get", methods={"GET"})
@@ -173,18 +185,6 @@ class ChapterController
             'tree' => $this->chapterManager->serializeChapterTree($lesson),
             'slug' => $previousSlug,
         ]);
-    }
-
-    /**
-     * Get chapter tree.
-     *
-     * @Route("/tree", name="apiv2_lesson_tree_get", methods={"GET"})
-     */
-    public function getTreeAction(Lesson $lesson): JsonResponse
-    {
-        $this->checkPermission('OPEN', $lesson->getResourceNode(), [], true);
-
-        return new JsonResponse($this->chapterManager->serializeChapterTree($lesson));
     }
 
     /**

@@ -109,7 +109,7 @@ actions.deleteChapter = (lessonId, chapterSlug, deleteChildren = false) => dispa
     }
   }})
 
-actions.fetchChapterTree = lessonId => dispatch => {
+actions.fetchChapterTree = (lessonId) => (dispatch) => {
   dispatch({[API_REQUEST]: {
     url: ['apiv2_lesson_tree_get', {lessonId}],
     success: (response, dispatch) => dispatch(actions.treeLoaded(response))
