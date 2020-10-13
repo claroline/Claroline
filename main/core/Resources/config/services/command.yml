@@ -288,20 +288,16 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:storage:compute' }
 
-    Claroline\CoreBundle\Command\EvaluationCommand:
+    Claroline\CoreBundle\Command\Workspace\ComputeEvaluationCommand:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager'
         tags:
-            - { name: 'console.command', command: 'claroline:evaluation:compute' }
+            - { name: 'console.command', command: 'claroline:workspace:compute_evaluation' }
 
     Claroline\CoreBundle\Command\UpdateRichTextCommand:
         arguments:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: 'console.command', command: 'claroline:rich_texts:update' }
-
-
-
-

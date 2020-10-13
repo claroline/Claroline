@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EvaluationCommand extends Command implements AdminCliCommand
+class ComputeEvaluationCommand extends Command implements AdminCliCommand
 {
     private $om;
     private $evaluationManager;
@@ -37,7 +37,7 @@ class EvaluationCommand extends Command implements AdminCliCommand
 
     protected function configure()
     {
-        $this->setDescription('updates workspace & resource evaluations');
+        $this->setDescription('Recomputes workspace evaluation based on resources to do and user progression.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
