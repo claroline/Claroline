@@ -40,9 +40,6 @@ services:
                 - method: setCrud
                   arguments:
                      - '@Claroline\AppBundle\API\Crud'
-                - method: setSerializer
-                  arguments:
-                     - '@Claroline\AppBundle\API\SerializerProvider'
                 - method: setObjectManager
                   arguments:
                      - '@Claroline\AppBundle\Persistence\ObjectManager'

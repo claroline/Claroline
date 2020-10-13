@@ -3,28 +3,20 @@
 namespace Claroline\AppBundle\API\Transfer\Action;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 
 abstract class AbstractDeleteAction extends AbstractAction
 {
     /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
+    protected $om;
     /** @var Crud */
-    private $crud;
+    protected $crud;
 
     abstract public function getClass();
 
     public function setCrud(Crud $crud)
     {
         $this->crud = $crud;
-    }
-
-    public function setSerializer(SerializerProvider $serializer)
-    {
-        $this->serializer = $serializer;
     }
 
     public function setObjectManager(ObjectManager $om)
