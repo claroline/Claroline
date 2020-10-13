@@ -19,8 +19,6 @@ class ScormLib
     /**
      * Looks for the organization to use.
      *
-     * @param \DOMDocument $dom
-     *
      * @return array of Sco
      *
      * @throws InvalidScormArchiveException If a default organization
@@ -75,10 +73,6 @@ class ScormLib
 
     /**
      * Creates defined structure of SCOs.
-     *
-     * @param \DOMNode     $source
-     * @param \DOMNodeList $resources
-     * @param Sco          $parentSco
      *
      * @return array of Sco
      *
@@ -146,10 +140,6 @@ class ScormLib
      * Initializes parameters of the SCO defined in attributes of the node.
      * It also look for the associated resource if it is a SCO and not a block.
      *
-     * @param Sco          $sco
-     * @param \DOMNode     $item
-     * @param \DOMNodeList $resources
-     *
      * @throws InvalidScormArchiveException
      */
     private function findAttrParams(Sco $sco, \DOMNode $item, \DOMNodeList $resources)
@@ -189,9 +179,6 @@ class ScormLib
 
     /**
      * Initializes parameters of the SCO defined in children nodes.
-     *
-     * @param Sco      $sco
-     * @param \DOMNode $item
      */
     private function findNodeParams(Sco $sco, \DOMNode $item)
     {
@@ -240,9 +227,6 @@ class ScormLib
 
     /**
      * Searches for the resource with the given id and retrieve URL to its content.
-     *
-     * @param string       $identifierref id of the resource associated to the SCO
-     * @param \DOMNodeList $resources
      *
      * @return string URL to the resource associated to the SCO
      *

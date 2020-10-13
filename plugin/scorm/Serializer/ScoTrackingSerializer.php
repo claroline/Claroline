@@ -26,12 +26,6 @@ class ScoTrackingSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /**
-     * ScoTrackingSerializer constructor.
-     *
-     * @param ScoSerializer  $scoSerializer
-     * @param UserSerializer $userSerializer
-     */
     public function __construct(ScoSerializer $scoSerializer, UserSerializer $userSerializer)
     {
         $this->scoSerializer = $scoSerializer;
@@ -43,12 +37,7 @@ class ScoTrackingSerializer
         return 'sco_tracking';
     }
 
-    /**
-     * @param ScoTracking $scoTracking
-     *
-     * @return array
-     */
-    public function serialize(ScoTracking $scoTracking)
+    public function serialize(ScoTracking $scoTracking): array
     {
         $sco = $scoTracking->getSco();
         $user = $scoTracking->getUser();

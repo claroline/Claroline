@@ -54,8 +54,6 @@ function APIClass(sco, scormData, tracking, dispatch, currentUser) {
   this.apiLastError = 'scorm_12' === scormData.version ? '301' : '0'
   this.scoData = Array.isArray(tracking['details']) ? {} : Object.assign({}, tracking['details'])
 
-  console.log(sco)
-
   if ('scorm_12' === scormData.version) {
     this.scoData['cmi.core.student_id'] = currentUser ? currentUser.autoId : -1
     this.scoData['cmi.core.student_name'] = currentUser ? `${currentUser.firstName}, ${currentUser.lastName}` : 'anon., anon.'
