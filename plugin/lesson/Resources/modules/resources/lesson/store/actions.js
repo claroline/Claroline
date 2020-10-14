@@ -93,7 +93,7 @@ actions.createChapter = (formName, lessonId, rootChapterSlug) => dispatch => {
 
 actions.deleteChapter = (lessonId, chapterSlug, deleteChildren = false) => dispatch =>
   dispatch({[API_REQUEST]: {
-    url: ['apiv2_lesson_chapter_delete', {lessonId: lessonId, chapter: chapterSlug}],
+    url: ['apiv2_lesson_chapter_delete', {lessonId: lessonId, slug: chapterSlug}],
     request: {
       method: 'DELETE',
       headers: {
