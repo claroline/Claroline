@@ -804,28 +804,19 @@ class ResourceManager implements LoggerAwareInterface
      *
      * @return ResourceNode[]
      */
-    private function expandResources(array $nodes)
+    private function expandResources(array $nodes, bool $onlyActive = false)
     {
-        $dirs = [];
         $resources = [];
-        $toAppend = [];
-
         foreach ($nodes as $node) {
-            $resourceTypeName = $node->getResourceType()->getName();
-            ('directory' === $resourceTypeName) ? $dirs[] = $node : $resources[] = $node;
-        }
-
-        foreach ($dirs as $dir) {
-            $children = $this->resourceNodeRepo->findDescendants($dir);
-
-            foreach ($children as $child) {
-                if ($child->isActive() &&
-                    'directory' !== $child->getResourceType()->getName()) {
-                    $toAppend[] = $child;
+            if (!$onlyActive || ($node->isActive() && $node->isPublished())) {
+                if ('directory' === $node->getResourceType()->getName() && $node->getChildren()) {
+                    $resources = array_merge($resources, $this->expandResources($node->getChildren(), true));
+                } else {
+                    $resources[] = $node;
                 }
             }
         }
 
-        return array_merge($toAppend, $resources);
+        return $resources;
     }
 }
