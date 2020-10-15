@@ -24,7 +24,7 @@ const DashboardActivity = (props) =>
         file: {
           url: url(['apiv2_log_connect_workspace_list_csv', {workspace: props.workspaceId}])
         },
-        group: trans('export')
+        group: trans('transfer')
       }, {
         name: 'download',
         type: DOWNLOAD_BUTTON,
@@ -33,7 +33,7 @@ const DashboardActivity = (props) =>
         file: {
           url: url(['apiv2_workspace_tool_logs_list_csv', {workspaceId: props.workspaceId}])
         },
-        group: trans('export')
+        group: trans('transfer')
       }, {
         name: 'download-users',
         type: DOWNLOAD_BUTTON,
@@ -42,7 +42,7 @@ const DashboardActivity = (props) =>
         file: {
           url: url(['apiv2_workspace_tool_logs_list_users_csv', {workspaceId: props.workspaceId}])
         },
-        group: trans('export')
+        group: trans('transfer')
       }
     ]}
   >

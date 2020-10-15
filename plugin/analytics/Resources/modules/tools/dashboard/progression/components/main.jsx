@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {ProgressionUsers} from '#/plugin/analytics/tools/dashboard/progression/components/users'
@@ -23,6 +23,15 @@ const ProgressionMain = (props) =>
         target: `${props.path}/progression/parameters`,
         primary: true,
         displayed: props.canConfigure
+      }, {
+        name: 'download-progression',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export-progression', {}, 'actions'),
+        file: {
+          url: ['apiv2_workspace_export_progression', {workspace: props.workspaceId}]
+        },
+        group: trans('transfer')
       }
     ]}
   >

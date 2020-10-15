@@ -48,24 +48,15 @@ class DashboardController
     /** @var FinderProvider */
     private $finder;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
     /** @var AnalyticsManager */
     private $analyticsManager;
 
     /** @var EventManager */
     private $eventManager;
 
-    /**
-     * DashboardController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     * @param TranslatorInterface           $translator
-     * @param ObjectManager                 $om
-     * @param SerializerProvider            $serializer
-     * @param FinderProvider                $finder
-     * @param AnalyticsManager              $analyticsManager
-     * @param EventManager                  $eventManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
@@ -89,13 +80,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/activity", name="apiv2_workspace_analytics_activity", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function activityAction(Workspace $workspace, Request $request)
+    public function activityAction(Workspace $workspace, Request $request): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -120,13 +106,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/actions", name="apiv2_workspace_analytics_actions", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function actionsAction(Workspace $workspace, Request $request)
+    public function actionsAction(Workspace $workspace, Request $request): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -146,12 +127,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/time", name="apiv2_workspace_analytics_time", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function connectionTimeAction(Workspace $workspace)
+    public function connectionTimeAction(Workspace $workspace): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -166,12 +143,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/resources", name="apiv2_workspace_analytics_resources", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function resourcesAction(Workspace $workspace)
+    public function resourcesAction(Workspace $workspace): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -185,12 +158,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/resources/top", name="apiv2_workspace_analytics_top_resources", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function topResourcesAction(Workspace $workspace)
+    public function topResourcesAction(Workspace $workspace): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -223,12 +192,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/users", name="apiv2_workspace_analytics_users", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function usersAction(Workspace $workspace)
+    public function usersAction(Workspace $workspace): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -242,12 +207,8 @@ class DashboardController
     /**
      * @Route("/{workspace}/users/top", name="apiv2_workspace_analytics_top_users", methods={"GET"})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function topUsersAction(Workspace $workspace)
+    public function topUsersAction(Workspace $workspace): JsonResponse
     {
         if (!$this->checkDashboardToolAccess('OPEN', $workspace)) {
             throw new AccessDeniedException();
@@ -268,16 +229,68 @@ class DashboardController
     }
 
     /**
+     * @Route("/{workspace}/progression/export", name="apiv2_workspace_export_progression", methods={"GET"})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function exportProgressionAction(Workspace $workspace): StreamedResponse
+    {
+        if (!$this->checkDashboardToolAccess('EDIT', $workspace)) {
+            throw new AccessDeniedException();
+        }
+
+        /** @var Evaluation[] $workspaceEvaluations */
+        $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy(['workspace' => $workspace]);
+
+        $fileName = "progression-{$workspace->getName()}";
+        $fileName = TextNormalizer::toKey($fileName);
+
+        return new StreamedResponse(function () use ($workspace, $workspaceEvaluations) {
+            // Prepare CSV file
+            $handle = fopen('php://output', 'w+');
+
+            // Create header
+            fputcsv($handle, [
+                $this->translator->trans('lastName', [], 'platform'),
+                $this->translator->trans('firstName', [], 'platform'),
+                $this->translator->trans('date', [], 'platform'),
+                $this->translator->trans('status', [], 'platform'),
+                $this->translator->trans('progression', [], 'platform'),
+                $this->translator->trans('progressionMax', [], 'platform'),
+                $this->translator->trans('score', [], 'platform'),
+                $this->translator->trans('score_total', [], 'platform'),
+                $this->translator->trans('duration', [], 'platform'),
+            ], ';', '"');
+
+            foreach ($workspaceEvaluations as $workspaceEvaluation) {
+                // put Workspace evaluation
+                fputcsv($handle, [
+                    $workspaceEvaluation->getUser()->getLastName(),
+                    $workspaceEvaluation->getUser()->getFirstName(),
+                    DateNormalizer::normalize($workspaceEvaluation->getDate()),
+                    $workspaceEvaluation->getStatus(),
+                    $workspaceEvaluation->getProgression(),
+                    $workspaceEvaluation->getProgressionMax(),
+                    $workspaceEvaluation->getScore(),
+                    $workspaceEvaluation->getScoreMax(),
+                    $workspaceEvaluation->getDuration(),
+                ], ';', '"');
+            }
+
+            fclose($handle);
+
+            return $handle;
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
+        ]);
+    }
+
+    /**
      * @Route("/{workspace}/progression/{user}", name="apiv2_workspace_get_user_progression", methods={"GET"})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return JsonResponse
      */
-    public function getUserProgressionAction(Workspace $workspace, User $user)
+    public function getUserProgressionAction(Workspace $workspace, User $user): JsonResponse
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         if (!$this->checkDashboardToolAccess('EDIT', $workspace) && (!$currentUser instanceof User || $currentUser->getId() !== $user->getId())) {
@@ -296,13 +309,8 @@ class DashboardController
      * @Route("/{workspace}/progression/{user}/export", name="apiv2_workspace_export_user_progression", methods={"GET"})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return StreamedResponse
      */
-    public function exportUserProgressionAction(Workspace $workspace, User $user)
+    public function exportUserProgressionAction(Workspace $workspace, User $user): StreamedResponse
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         if (!$this->checkDashboardToolAccess('EDIT', $workspace) && (!$currentUser instanceof User || $currentUser->getId() !== $user->getId())) {
@@ -398,13 +406,8 @@ class DashboardController
     /**
      * @Route("/evaluations/{userEvaluationId}", name="apiv2_workspace_list_resource_evaluations", methods={"GET"})
      * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
-     *
-     * @param ResourceUserEvaluation $userEvaluation
-     * @param Request                $request
-     *
-     * @return JsonResponse
      */
-    public function listResourceEvaluationsAction(ResourceUserEvaluation $userEvaluation, Request $request)
+    public function listResourceEvaluationsAction(ResourceUserEvaluation $userEvaluation, Request $request): JsonResponse
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         if (!$this->checkDashboardToolAccess('EDIT', $userEvaluation->getResourceNode()->getWorkspace()) && (!$currentUser instanceof User || $currentUser->getId() !== $userEvaluation->getUser()->getId())) {
@@ -421,13 +424,8 @@ class DashboardController
 
     /**
      * Checks user rights to access logs tool.
-     *
-     * @param string    $permission
-     * @param Workspace $workspace
-     *
-     * @return bool
      */
-    private function checkDashboardToolAccess(string $permission, Workspace $workspace)
+    private function checkDashboardToolAccess(string $permission, Workspace $workspace): bool
     {
         if ($this->authorization->isGranted(['dashboard', $permission], $workspace)) {
             return true;

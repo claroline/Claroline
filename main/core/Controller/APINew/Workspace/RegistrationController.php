@@ -57,17 +57,6 @@ class RegistrationController extends AbstractApiController
     /** @var WorkspaceUserQueueManager */
     private $registrationQueueManager;
 
-    /**
-     * RegistrationController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param SerializerProvider            $serializer
-     * @param FinderProvider                $finder
-     * @param Crud                          $crud
-     * @param WorkspaceManager              $workspaceManager
-     * @param WorkspaceUserQueueManager     $registrationQueueManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
@@ -105,13 +94,8 @@ class RegistrationController extends AbstractApiController
      *    methods={"GET"}
      * )
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function listPendingAction(Request $request, Workspace $workspace)
+    public function listPendingAction(Request $request, Workspace $workspace): JsonResponse
     {
         return new JsonResponse($this->finder->search(
             WorkspaceRegistrationQueue::class,
@@ -135,13 +119,8 @@ class RegistrationController extends AbstractApiController
      *    methods={"PATCH"}
      * )
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function validateRegistrationAction(Request $request, Workspace $workspace)
+    public function validateRegistrationAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $users = $this->om->findList(User::class, 'uuid', $query['ids']);
@@ -177,13 +156,8 @@ class RegistrationController extends AbstractApiController
      *    methods={"DELETE"}
      * )
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function removeRegistrationAction(Request $request, Workspace $workspace)
+    public function removeRegistrationAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $users = $this->om->findList(User::class, 'uuid', $query['ids']);
@@ -217,13 +191,8 @@ class RegistrationController extends AbstractApiController
      *    methods={"DELETE"}
      * )
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function unregisterUsersAction(Request $request, Workspace $workspace)
+    public function unregisterUsersAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $users = $this->om->findList(User::class, 'uuid', $query['ids']);
@@ -255,13 +224,8 @@ class RegistrationController extends AbstractApiController
      *    methods={"DELETE"}
      * )
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
      */
-    public function unregisterGroupsAction(Request $request, Workspace $workspace)
+    public function unregisterGroupsAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
         $groups = $this->om->findList(Group::class, 'uuid', $query['ids']);
@@ -293,13 +257,8 @@ class RegistrationController extends AbstractApiController
      *    name="apiv2_workspace_bulk_register_users",
      *    methods={"PATCH"}
      * )
-     *
-     * @param string  $role
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function bulkRegisterUsersAction($role, Request $request)
+    public function bulkRegisterUsersAction(string $role, Request $request): JsonResponse
     {
         $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
         $users = $this->decodeIdsString($request, User::class, 'users');
@@ -332,13 +291,8 @@ class RegistrationController extends AbstractApiController
      *    name="apiv2_workspace_bulk_register_groups",
      *    methods={"PATCH"}
      * )
-     *
-     * @param string  $role
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function bulkRegisterGroupsAction($role, Request $request)
+    public function bulkRegisterGroupsAction(string $role, Request $request): JsonResponse
     {
         $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
         $groups = $this->decodeIdsString($request, Group::class, 'groups');
@@ -367,13 +321,8 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route("/register/{user}", name="apiv2_workspace_register", methods={"PATCH"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function registerAction(User $user, Request $request)
+    public function registerAction(User $user, Request $request): JsonResponse
     {
         // If user is admin or registration validation is disabled, subscribe user
         //see WorkspaceParametersController::userSubscriptionAction
@@ -408,13 +357,8 @@ class RegistrationController extends AbstractApiController
      * )
      * @Route("/unregister/{user}", name="apiv2_workspace_unregister", methods={"DELETE"})
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function unregisterAction(User $user, Request $request)
+    public function unregisterAction(User $user, Request $request): JsonResponse
     {
         $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
 
@@ -443,23 +387,19 @@ class RegistrationController extends AbstractApiController
      *     options={"mapping": {"workspace": "uuid"}}
      * )
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Workspace $workspace
-     * @param User      $currentUser
-     *
-     * @return JsonResponse
      */
-    public function selfRegisterAction(Workspace $workspace, User $currentUser)
+    public function selfRegisterAction(Workspace $workspace, User $currentUser): JsonResponse
     {
-        if (!$workspace->getSelfRegistration()) {
+        if (!$workspace->getSelfRegistration() || $workspace->isArchived()) {
             throw new AccessDeniedException();
         }
+
         if (!$workspace->getRegistrationValidation()) {
             $this->workspaceManager->addUser($workspace, $currentUser);
         } elseif (!$this->workspaceManager->isUserInValidationQueue($workspace, $currentUser)) {
             $this->workspaceManager->addUserQueue($workspace, $currentUser);
         }
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 }

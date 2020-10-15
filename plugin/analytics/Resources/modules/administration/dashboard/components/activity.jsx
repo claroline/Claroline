@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {schemeCategory20c} from 'd3-scale'
 
-import {url} from '#/main/app/api'
 import {trans, displayDuration} from '#/main/app/intl'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
@@ -19,30 +18,30 @@ const DashboardActivity = (props) =>
       {
         name: 'download-connection-times',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-download',
+        icon: 'fa fa-fw fa-download',
         label: trans('export-connections', {}, 'actions'),
         file: {
-          url: url(['apiv2_log_connect_platform_list_csv'])
+          url: ['apiv2_log_connect_platform_list_csv']
         },
-        group: trans('export')
+        group: trans('transfer')
       }, {
         name: 'download',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-download',
+        icon: 'fa fa-fw fa-download',
         label: trans('export-actions', {}, 'actions'),
         file: {
-          url: url(['apiv2_admin_tool_logs_list_csv'])
+          url: ['apiv2_admin_tool_logs_list_csv']
         },
-        group: trans('export')
+        group: trans('transfer')
       }, {
         name: 'download-users',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-download',
+        icon: 'fa fa-fw fa-download',
         label: trans('export-user-actions', {}, 'actions'),
         file: {
-          url: url(['apiv2_admin_tool_logs_list_users_csv'])
+          url: ['apiv2_admin_tool_logs_list_users_csv']
         },
-        group: trans('export')
+        group: trans('transfer')
       }
     ]}
   >

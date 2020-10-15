@@ -25,7 +25,7 @@ implementPropTypes(DownloadButton, ButtonTypes, {
   file: T.shape({
     name: T.string,
     mimeType: T.string,
-    url: T.string.isRequired
+    url: T.oneOfType(T.string, T.array).isRequired
   }).isRequired
 })
 
