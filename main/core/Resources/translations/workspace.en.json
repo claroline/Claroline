@@ -53,6 +53,8 @@
     "wait": "Please wait until",
     "you_are_manager": "You are a manager of the workspace.",
     "pending_registration": "Your registration request is pending validation.",
-    "wait_validation": "Please wait for a manager to validate your request to access the workspace."
+    "wait_validation": "Please wait for a manager to validate your request to access the workspace.",
+    "archived": "The workspace is archived.",
+    "archived_help": "You can no longer access the content of archived workspaces."
   }
 }

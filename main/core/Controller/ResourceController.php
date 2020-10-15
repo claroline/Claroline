@@ -108,7 +108,7 @@ class ResourceController
     public function openAction($id, $embedded = 0)
     {
         /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $id]);
+        $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneByUuidOrSlug($id);
         if (!$resourceNode) {
             return new JsonResponse(['resource_not_found'], 404);
         }

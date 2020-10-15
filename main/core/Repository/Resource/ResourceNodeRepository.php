@@ -39,7 +39,9 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Servi
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('n')
+            ->join('n.workspace', 'w')
             ->where('UPPER(n.name) LIKE :search')
+            ->andWhere('w.archived = false')
             ->andWhere('n.active = true')
             ->andWhere('n.published = true')
             ->andWhere('n.hidden = false')
@@ -48,6 +50,15 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Servi
             ->setParameter('search', '%'.strtoupper($search).'%')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneByUuidOrSlug($id)
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.uuid = :id OR n.slug = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

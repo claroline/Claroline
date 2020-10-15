@@ -22,18 +22,11 @@ class ResourceNodeFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
     private $usedJoin = [];
 
-    /**
-     * ResourceNodeFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
-     */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage
@@ -86,16 +79,6 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->andWhere('ow.uuid = :workspaceUuid');
                     $qb->setParameter('workspaceUuid', $filterValue);
                     break;
-                case 'workspace.name':
-                    $qb->andWhere('UPPER(ow.name) LIKE :workspace');
-                    $qb->setParameter('workspace', '%'.strtoupper($filterValue).'%');
-                    break;
-                case 'meta.parent.name':
-                    $qb->join('obj.parent', 'op');
-                    $qb->andWhere('UPPER(op.name) LIKE :parent');
-                    $qb->setParameter('parent', '%'.strtoupper($filterValue).'%');
-                    $this->usedJoin['parent'] = true;
-                    break;
                 case 'path.after':
                     $qb->andWhere('UPPER(obj.path) != :path'); // required otherwise we also get the parent in the results
                     $qb->andWhere('UPPER(obj.path) LIKE :pathLike');
@@ -111,14 +94,6 @@ class ResourceNodeFinder extends AbstractFinder
                         $qb->setParameter('parent', $filterValue);
                         $this->usedJoin['parent'] = true;
                     }
-                    break;
-                case 'uuid_or_slug':
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('obj.uuid', ':uuid_or_slug'),
-                        $qb->expr()->eq('obj.slug', ':uuid_or_slug')
-                    ));
-
-                    $qb->setParameter('uuid_or_slug', $filterValue);
                     break;
                 case 'managerRole':
                     $managerRoles = [];
@@ -174,14 +149,17 @@ class ResourceNodeFinder extends AbstractFinder
             }
         }
 
+        // if we don't explicitly set the parent, only grab resources from not archived workspaces
+        if (!isset($searches['workspace']) && !isset($searches['parent'])) {
+            $qb->andWhere('ow.archived = false');
+        }
+
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
             $sortByProperty = $sortBy['property'];
             $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
                 case 'meta.type':
-                    $qb->orderBy('ort.name', $sortByDirection);
-                    break;
                 case 'resourceType':
                     $qb->orderBy('ort.name', $sortByDirection);
                     break;
@@ -194,10 +172,10 @@ class ResourceNodeFinder extends AbstractFinder
                 case 'meta.created':
                     $qb->orderBy('obj.creationDate', $sortByDirection);
                     break;
-                case 'workspace.name':
+                case 'workspace':
                     $qb->orderBy('ow.name', $sortByDirection);
                     break;
-                case 'meta.parent.name':
+                case 'parent':
                     if (!$this->usedJoin['parent']) {
                         $qb->join('obj.parent', 'op');
                     }

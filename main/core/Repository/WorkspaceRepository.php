@@ -22,6 +22,7 @@ class WorkspaceRepository extends EntityRepository
         return $this->createQueryBuilder('w')
             ->where('(UPPER(w.name) LIKE :search OR UPPER(w.code) LIKE :search)')
             ->andWhere('w.displayable = true')
+            ->andWhere('w.archived = false')
             ->setFirstResult(0)
             ->setMaxResults($nbResults)
             ->setParameter('search', '%'.strtoupper($search).'%')
@@ -31,8 +32,6 @@ class WorkspaceRepository extends EntityRepository
 
     /**
      * Returns the workspaces a user is member of.
-     *
-     * @param User $user
      *
      * @return Workspace[]
      */
@@ -131,7 +130,7 @@ class WorkspaceRepository extends EntityRepository
      * at least one accessible tool will be considered open. Only the
      * ids are returned.
      *
-     * @param array       $roleNames
+     * @param string[]    $roleNames
      * @param Workspace[] $workspaces
      * @param string|null $toolName
      * @param string      $action
@@ -185,8 +184,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Returns the name, code and number of resources of each workspace.
      *
-     * @param int   $max
-     * @param array $organizations
+     * @param int $max
      *
      * @return array
      */

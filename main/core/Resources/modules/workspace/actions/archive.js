@@ -35,6 +35,7 @@ export default (workspaces, refresher) => {
       success: (response) => refresher.update(response)
     },
     group: trans('management'),
-    scope: ['object', 'collection']
+    scope: ['object', 'collection'],
+    dangerous: true
   }
 }

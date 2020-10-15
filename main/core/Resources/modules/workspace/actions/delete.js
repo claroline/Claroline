@@ -12,7 +12,7 @@ export default (workspaces, refresher) => ({
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-trash-o',
   label: trans('delete', {}, 'actions'),
-  displayed: 0 < workspaces.filter(w => hasPermission('delete', w) && w.code !== 'default_personal' && w.code !== 'default_workspace').length,
+  displayed: 0 < workspaces.filter(w => hasPermission('delete', w) && w.code !== 'default_personal' && w.code !== 'default_workspace' && w.meta.archived).length,
   dangerous: true,
   confirm: {
     title: trans('workspace_delete_confirm_title'),

@@ -75,7 +75,7 @@ class WorkspaceRestrictions extends Component {
                 })
               }}
             >
-              {this.props.authenticated && this.props.errors.selfRegistration &&
+              {this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
                 <Button
                   style={{marginTop: 20}}
                   className="btn btn-block btn-emphasis"
@@ -94,7 +94,7 @@ class WorkspaceRestrictions extends Component {
                   label={trans('login', {}, 'actions')}
                   modal={[MODAL_LOGIN, {
                     onLogin: () => {
-                      if (this.props.errors.selfRegistration) {
+                      if (!this.props.errors.archived && this.props.errors.selfRegistration) {
                         this.props.selfRegister()
                       } else {
                         this.props.reload()
@@ -105,7 +105,7 @@ class WorkspaceRestrictions extends Component {
                 />
               }
 
-              {!this.props.authenticated && this.props.platformSelfRegistration && this.props.errors.selfRegistration &&
+              {!this.props.authenticated && !this.props.errors.archived && this.props.platformSelfRegistration && this.props.errors.selfRegistration &&
                 <Button
                   className="btn btn-block"
                   type={MODAL_BUTTON}
@@ -116,7 +116,7 @@ class WorkspaceRestrictions extends Component {
                 />
               }
 
-              {!this.props.authenticated && this.props.errors.selfRegistration &&
+              {!this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
                 <ContentHelp
                   help="Vous serez automatiquement inscrit à l'espace d'activités après votre connexion ou inscription."
                 />
@@ -144,6 +144,18 @@ class WorkspaceRestrictions extends Component {
               }}
             />
           }
+
+          {this.props.errors.archived &&
+            <ContentRestriction
+              icon="fa fa-fw fa-eye"
+              failed={this.props.errors.archived}
+              fail={{
+                title: trans('restricted_workspace.archived', {}, 'workspace'),
+                help: trans('restricted_workspace.archived_help', {}, 'workspace')
+              }}
+            />
+          }
+
 
           {(!isUndefined(this.props.errors.notStarted) || !isUndefined(this.props.errors.ended)) &&
             <ContentRestriction
@@ -246,6 +258,7 @@ WorkspaceRestrictions.propTypes = {
     noRights: T.bool.isRequired,
     registered: T.bool,
     pendingRegistration: T.bool,
+    archived: T.bool,
     selfRegistration: T.bool,
     locked: T.bool,
     invalidLocation: T.bool,

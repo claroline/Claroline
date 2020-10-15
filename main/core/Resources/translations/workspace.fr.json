@@ -57,6 +57,8 @@
     "ended_help": "L'accès est fermé depuis le %date%.",
     "you_are_manager": "Vous êtes un gestionnaire de l'espace d'activités.",
     "pending_registration": "Votre demande d'inscription est en attente de validation.",
-    "wait_validation": "Veuillez attendre qu'un gestionnaire valide votre demande afin d'accéder à l'espace d'activités."
+    "wait_validation": "Veuillez attendre qu'un gestionnaire valide votre demande afin d'accéder à l'espace d'activités.",
+    "archived": "L'espace d'activités est archivé.",
+    "archived_help": "Vous ne pouvez plus accéder au contenu des espaces d'activités archivés."
   }
 }

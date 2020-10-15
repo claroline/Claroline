@@ -41,6 +41,7 @@ class WorkspaceRestrictionsManager
     public function isGranted(Workspace $workspace): bool
     {
         return $this->hasRights($workspace)
+            && !$workspace->isArchived()
             && ($this->isStarted($workspace) && !$this->isEnded($workspace))
             && $this->isUnlocked($workspace)
             && $this->isIpAuthorized($workspace);
@@ -56,6 +57,7 @@ class WorkspaceRestrictionsManager
             $errors = [
                 'noRights' => !$this->hasRights($workspace),
                 'selfRegistration' => $workspace->getSelfRegistration(),
+                'archived' => $workspace->isArchived(),
             ];
 
             if ($user) {

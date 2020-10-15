@@ -15,7 +15,7 @@ export default (workspaces, refresher) => ({
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-users',
   label: trans('register_groups'),
-  displayed: -1 !== workspaces.findIndex(workspace => hasPermission('administrate', workspace)),
+  displayed: -1 !== workspaces.findIndex(workspace => !workspace.meta.archived && hasPermission('administrate', workspace)),
   // open a modal to select the list of groups to register
   modal: [MODAL_GROUPS, {
     title: trans('register_groups'),

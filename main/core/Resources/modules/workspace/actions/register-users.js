@@ -15,7 +15,7 @@ export default (workspaces, refresher) => ({
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-user',
   label: trans('register_users'),
-  displayed: -1 !== workspaces.findIndex(workspace => hasPermission('administrate', workspace)),
+  displayed: -1 !== workspaces.findIndex(workspace => !workspace.meta.archived && hasPermission('administrate', workspace)),
   // open a modal to select the list of users to register
   modal: [MODAL_USERS, {
     title: trans('register_users'),

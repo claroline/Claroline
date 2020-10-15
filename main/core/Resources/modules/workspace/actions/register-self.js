@@ -15,7 +15,7 @@ export default (workspaces, refresher, path, currentUser) => ({
   label: trans('self-register', {}, 'actions'),
   // TODO : replace by workspace.permissions.register later
   displayed: !!currentUser && -1 !== workspaces.findIndex(workspace =>
-    !workspace.registered && !get(workspace, 'registration.waitingForRegistration') && (get(workspace, 'registration.selfRegistration') || isAdmin(currentUser))
+    !workspace.registered && !workspace.meta.archived && !get(workspace, 'registration.waitingForRegistration') && (get(workspace, 'registration.selfRegistration') || isAdmin(currentUser))
   ),
   request: {
     url: url(['apiv2_workspace_register', {user: get(currentUser, 'id')}], {workspaces: workspaces.map(workspace => workspace.id)}),

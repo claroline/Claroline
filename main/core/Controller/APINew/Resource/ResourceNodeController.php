@@ -42,15 +42,6 @@ class ResourceNodeController extends AbstractCrudController
     /** @var ParametersSerializer */
     private $parametersSerializer;
 
-    /**
-     * ResourceNodeController constructor.
-     *
-     * @param ResourceActionManager $actionManager
-     * @param ResourceManager       $resourceManager
-     * @param RightsManager         $rightsManager
-     * @param LogConnectManager     $logConnectManager
-     * @param ParametersSerializer  $parametersSerializer
-     */
     public function __construct(
         ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
@@ -76,21 +67,18 @@ class ResourceNodeController extends AbstractCrudController
     /**
      * @Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
      *
-     * @param Request $request
-     * @param string  $parent
-     * @param string  $all
-     * @param string  $class
-     *
-     * @return JsonResponse
+     * @param string $parent
+     * @param string $all
+     * @param string $class
      */
-    public function listAction(Request $request, $parent, $all = null, $class = ResourceNode::class)
+    public function listAction(Request $request, $parent, $all = null, $class = ResourceNode::class): JsonResponse
     {
         $options = $request->query->all();
 
         if ($parent) {
             // grab directory content
             /** @var ResourceNode $parentNode */
-            $parentNode = $this->finder->get(ResourceNode::class)->findOneBy(['uuid_or_slug' => $parent]);
+            $parentNode = $this->om->getRepository(ResourceNode::class)->findOneByUuidOrSlug($parent);
 
             if ($all) {
                 $options['hiddenFilters']['path.after'] = $parentNode ? $parentNode->getPath() : null;
@@ -132,24 +120,11 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/{parent}/files",
-     *     name="apiv2_resource_files_create"
-     * )
-     * @EXT\ParamConverter(
-     *     "parent",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"mapping": {"parent": "uuid"}}
-     * )
+     * @Route("/{parent}/files", name="apiv2_resource_files_create")
+     * @EXT\ParamConverter("parent", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"parent": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param ResourceNode $parent
-     * @param User         $user
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function resourceFilesCreateAction(ResourceNode $parent, User $user, Request $request)
+    public function resourceFilesCreateAction(ResourceNode $parent, User $user, Request $request): JsonResponse
     {
         $parameters = $this->parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
 
@@ -160,6 +135,8 @@ class ResourceNodeController extends AbstractCrudController
         ) {
             throw new AccessDeniedException();
         }
+
+        $attributes = [];
         $attributes['type'] = 'file';
         $collection = new ResourceCollection([$parent]);
         $collection->setAttributes($attributes);
@@ -215,31 +192,17 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @Route(
-     *     "/{workspace}/workspace",
-     *     name="apiv2_resource_workspace_removed_list"
-     * )
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
+     * @Route("/{workspace}/removed", name="apiv2_resource_workspace_removed_list")
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function listRemovedAction(Workspace $workspace, Request $request)
+    public function listRemovedAction(Workspace $workspace, Request $request): JsonResponse
     {
-        $filters = [
-            'workspace' => $workspace->getUuid(),
-            'active' => false,
-        ];
-
         return new JsonResponse(
             $this->finder->search(ResourceNode::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $filters]))
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'workspace' => $workspace->getUuid(),
+                'active' => false,
+            ]]))
         );
     }
 
@@ -247,14 +210,8 @@ class ResourceNodeController extends AbstractCrudController
      * @Route("/{slug}/close", name="claro_resource_close", methods={"PUT"})
      * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param ResourceNode $resourceNode
-     * @param Request      $request
-     * @param User         $user
-     *
-     * @return JsonResponse
      */
-    public function closeAction(ResourceNode $resourceNode, Request $request, User $user = null)
+    public function closeAction(ResourceNode $resourceNode, Request $request, User $user = null): JsonResponse
     {
         if ($user) {
             $data = $this->decodeRequest($request);
@@ -264,6 +221,6 @@ class ResourceNodeController extends AbstractCrudController
             }
         }
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 }
