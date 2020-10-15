@@ -5,7 +5,7 @@ namespace Claroline\AppBundle\Listener;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -16,11 +16,6 @@ class ApiListener
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * ApiListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage
     ) {
@@ -29,17 +24,15 @@ class ApiListener
 
     /**
      * Converts Exceptions in JSON for the async api.
-     *
-     * @param GetResponseForExceptionEvent $event
      */
-    public function onError(GetResponseForExceptionEvent $event)
+    public function onError(ExceptionEvent $event)
     {
         $user = null;
         if ($this->tokenStorage->getToken()) {
             $user = $this->tokenStorage->getToken()->getUser();
         }
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         if ($exception instanceof AccessDeniedException && !$user instanceof User) {
             // FIXME : this is really ugly to handle it here but I can't get the firewall returns 401 for anonymous
             // it always returns me 403 which is not correct in this case
