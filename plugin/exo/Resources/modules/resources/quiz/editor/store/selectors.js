@@ -35,6 +35,11 @@ const numberingType = createSelector(
   (quiz) => get(quiz, 'parameters.numbering')
 )
 
+const questionNumberingType = createSelector(
+  [quiz],
+  (quiz) => get(quiz, 'parameters.questionNumbering')
+)
+
 const hasExpectedAnswers = createSelector(
   [quiz],
   (quiz) => get(quiz, 'parameters.hasExpectedAnswers')
@@ -62,6 +67,7 @@ export const selectors = {
   quizType,
   steps,
   numberingType,
+  questionNumberingType,
   randomPick,
   tags,
   score,

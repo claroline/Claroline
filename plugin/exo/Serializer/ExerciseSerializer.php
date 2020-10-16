@@ -29,13 +29,6 @@ class ExerciseSerializer
     /** @var ItemManager */
     private $itemManager;
 
-    /**
-     * ExerciseSerializer constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param StepSerializer        $stepSerializer
-     * @param ItemManager           $itemManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         StepSerializer $stepSerializer,
@@ -53,13 +46,8 @@ class ExerciseSerializer
 
     /**
      * Converts an Exercise into a JSON-encodable structure.
-     *
-     * @param Exercise $exercise
-     * @param array    $options
-     *
-     * @return array
      */
-    public function serialize(Exercise $exercise, array $options = [])
+    public function serialize(Exercise $exercise, array $options = []): array
     {
         $serialized = [
             'id' => $exercise->getUuid(),
@@ -82,14 +70,8 @@ class ExerciseSerializer
 
     /**
      * Converts raw data into an Exercise entity.
-     *
-     * @param array    $data
-     * @param Exercise $exercise
-     * @param array    $options
-     *
-     * @return Exercise
      */
-    public function deserialize($data, Exercise $exercise = null, array $options = [])
+    public function deserialize(array $data, Exercise $exercise = null, array $options = []): Exercise
     {
         $exercise = $exercise ?: new Exercise();
 
@@ -122,12 +104,8 @@ class ExerciseSerializer
 
     /**
      * Serializes Exercise parameters.
-     *
-     * @param Exercise $exercise
-     *
-     * @return array
      */
-    private function serializeParameters(Exercise $exercise)
+    private function serializeParameters(Exercise $exercise): array
     {
         $parameters = [
             'type' => $exercise->getType(),
@@ -141,7 +119,9 @@ class ExerciseSerializer
             'anonymizeAttempts' => $exercise->getAnonymizeAttempts(),
             'interruptible' => $exercise->isInterruptible(),
             'numbering' => $exercise->getNumbering(),
+            'questionNumbering' => $exercise->getQuestionNumbering(),
             'showTitles' => $exercise->getShowTitles(),
+            'showQuestionTitles' => $exercise->getShowQuestionTitles(),
             'mandatoryQuestions' => $exercise->getMandatoryQuestions(),
             'answersEditable' => $exercise->isAnswersEditable(),
             'showOverview' => $exercise->getShowOverview(),
@@ -172,9 +152,6 @@ class ExerciseSerializer
 
     /**
      * Deserializes Exercise parameters.
-     *
-     * @param Exercise $exercise
-     * @param array    $parameters
      */
     private function deserializeParameters(Exercise $exercise, array $parameters)
     {
@@ -197,7 +174,9 @@ class ExerciseSerializer
         $this->sipe('showStatistics', 'setStatistics', $parameters, $exercise);
         $this->sipe('allPapersStatistics', 'setAllPapersStatistics', $parameters, $exercise);
         $this->sipe('numbering', 'setNumbering', $parameters, $exercise);
+        $this->sipe('questionNumbering', 'setQuestionNumbering', $parameters, $exercise);
         $this->sipe('showTitles', 'setShowTitles', $parameters, $exercise);
+        $this->sipe('showQuestionTitles', 'setShowQuestionTitles', $parameters, $exercise);
         $this->sipe('mandatoryQuestions', 'setMandatoryQuestions', $parameters, $exercise);
         $this->sipe('maxAttemptsPerDay', 'setMaxAttemptsPerDay', $parameters, $exercise);
         $this->sipe('maxPapers', 'setMaxPapers', $parameters, $exercise);
@@ -288,13 +267,8 @@ class ExerciseSerializer
     /**
      * Serializes Exercise steps.
      * Forwards the step serialization to StepSerializer.
-     *
-     * @param Exercise $exercise
-     * @param array    $options
-     *
-     * @return array
      */
-    private function serializeSteps(Exercise $exercise, array $options = [])
+    private function serializeSteps(Exercise $exercise, array $options = []): array
     {
         return array_values(array_map(function (Step $step) use ($options) {
             return $this->stepSerializer->serialize($step, $options);
@@ -304,10 +278,6 @@ class ExerciseSerializer
     /**
      * Deserializes Exercise steps.
      * Forwards the step deserialization to StepSerializer.
-     *
-     * @param Exercise $exercise
-     * @param array    $steps
-     * @param array    $options
      */
     private function deserializeSteps(Exercise $exercise, array $steps = [], array $options = [])
     {

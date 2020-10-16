@@ -77,7 +77,7 @@ const EditorStep = props => {
                 errors={get(props.errors, `items[${itemIndex}]`)}
 
                 enableScores={props.hasExpectedAnswers}
-                numbering={getNumbering(props.numberingType, props.index, itemIndex)}
+                numbering={getNumbering(props.questionNumberingType, props.index, itemIndex)}
                 item={item}
                 update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
                 actions={[
@@ -241,6 +241,7 @@ EditorStep.propsTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
   numberingType: T.string.isRequired,
+  questionNumberingType: T.string.isRequired,
   steps: T.arrayOf(T.shape({
     // TODO : prop types
   })),

@@ -63,10 +63,21 @@ const quizNumbering = createSelector(
   (parameters) => parameters.numbering || 'none' // todo : use constant
 )
 
+const questionNumbering = createSelector(
+  [paperParameters],
+  (parameters) => parameters.questionNumbering || 'none' // todo : use constant
+)
+
 const showTitles = createSelector(
   [paperParameters],
   // managing undefined is for retro-compatibility (I don't want to migrate all papers to set the parameter)
   (parameters) => parameters.showTitles === undefined ? true : parameters.showTitles
+)
+
+const showQuestionTitles = createSelector(
+  [paperParameters],
+  // managing undefined is for retro-compatibility (I don't want to migrate all papers to set the parameter)
+  (parameters) => parameters.showQuestionTitles === undefined ? true : parameters.showQuestionTitles
 )
 
 const quizEndMessage = createSelector(
@@ -282,5 +293,7 @@ export const select = {
   showTitles,
   showCorrectionAt,
   correctionDate,
-  tags
+  tags,
+  questionNumbering,
+  showQuestionTitles
 }

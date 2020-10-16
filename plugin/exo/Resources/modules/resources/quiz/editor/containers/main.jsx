@@ -27,6 +27,7 @@ const EditorMain = withRouter(
       quizType: selectors.quizType(state),
       workspace: resourceSelectors.workspace(state),
       numberingType: selectors.numberingType(state),
+      questionNumberingType: selectors.questionNumberingType(state),
       hasExpectedAnswers: selectors.hasExpectedAnswers(state),
       score: selectors.score(state),
       tags: selectors.tags(state),

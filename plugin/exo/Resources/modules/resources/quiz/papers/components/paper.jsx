@@ -76,11 +76,11 @@ const PaperStep = props => {
               <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
             }
 
-            {item.title &&
+            {props.showQuestionTitles && item.title &&
               <h4 className="item-title">{item.title}</h4>
             }
 
-            <ItemMetadata item={item} numbering={getNumbering(props.numberingType, props.index, idxItem)} />
+            <ItemMetadata item={item} numbering={getNumbering(props.questionNumberingType, props.index, idxItem)} />
 
             {React.createElement(getDefinition(item.type).paper, {
               item: item,
@@ -108,7 +108,9 @@ const PaperStep = props => {
 
 PaperStep.propTypes = {
   numberingType: T.string.isRequired,
+  questionNumberingType: T.string.isRequired,
   showTitle: T.bool,
+  showQuestionTitles: T.bool,
   index: T.number.isRequired,
   id: T.string.isRequired,
   title: T.string,
@@ -216,7 +218,9 @@ const PaperComponent = props =>
             <PaperStep
               key={step.id}
               showTitle={props.showTitles}
+              showQuestionTitles={props.showQuestionTitles}
               numberingType={props.numberingType}
+              questionNumberingType={props.questionNumberingType}
               index={index}
               id={step.id}
               title={step.title}
@@ -244,7 +248,9 @@ PaperComponent.propTypes = {
     PaperTypes.propTypes
   ),
   showTitles: T.bool,
+  showQuestionTitles: T.bool,
   numberingType: T.string,
+  questionNumberingType: T.string,
   showScore: T.bool.isRequired,
   showExpectedAnswers: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
@@ -265,7 +271,9 @@ const Paper = withRouter(
         paper: paper,
         showScore: paper ? showScore(paper, admin) : false,
         showTitles: selectors.showTitles(state),
+        showQuestionTitles: selectors.showQuestionTitles(state),
         numberingType: selectors.currentNumbering(state),
+        questionNumberingType: selectors.currentQuestionNumbering(state),
         showExpectedAnswers: selectors.showExpectedAnswers(state),
         showStatistics: selectors.showStatistics(state),
         stats: statSelectors.statistics(state)

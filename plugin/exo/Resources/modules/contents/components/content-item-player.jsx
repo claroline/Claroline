@@ -5,7 +5,7 @@ import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 const ContentItemPlayer = props =>
   <div className="item-player">
-    {props.item.title &&
+    {props.showTitle && props.item.title &&
       <h3 className="item-title">{props.item.title}</h3>
     }
 
@@ -24,6 +24,7 @@ ContentItemPlayer.propTypes = {
     title: T.string,
     description: T.string
   }).isRequired,
+  showTitle: T.bool,
   children: T.node.isRequired
 }
 

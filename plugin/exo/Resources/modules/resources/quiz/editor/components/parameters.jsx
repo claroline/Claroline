@@ -152,6 +152,24 @@ const EditorParameters = props => {
                     }
                   }
                 ]
+              }, {
+                name: 'parameters.showQuestionTitles',
+                type: 'boolean',
+                label: trans('show_question_titles', {}, 'quiz'),
+                linked: [
+                  {
+                    name: 'parameters.questionNumbering',
+                    type: 'choice',
+                    label: trans('quiz_question_numbering', {}, 'quiz'),
+                    required: true,
+                    displayed: (quiz) => get(quiz, 'parameters.showQuestionTitles', false),
+                    options: {
+                      noEmpty: true,
+                      condensed: true,
+                      choices: constants.QUIZ_NUMBERINGS
+                    }
+                  }
+                ]
               }
             ]
           }, {

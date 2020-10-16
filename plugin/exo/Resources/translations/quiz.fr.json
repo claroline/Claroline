@@ -422,6 +422,7 @@
     "selection_missing_click": "Pénalité par erreur",
     "choice_numbering": "Numérotation des choix",
     "quiz_numbering": "Numérotation des étapes et questions",
+    "quiz_question_numbering": "Numérotation des questions",
     "quiz_numbering_none": "Aucune",
     "quiz_numbering_literal": "Littérale",
     "quiz_numbering_numeric": "Numérique",
@@ -524,5 +525,6 @@
     "per_step": "Par étape",
     "per_tag": "Par tag",
     "show_step_titles": "Afficher le titre des étapes",
+    "show_question_titles": "Afficher le titre des questions",
     "show_back": "Autoriser le retour en arrière"
 }

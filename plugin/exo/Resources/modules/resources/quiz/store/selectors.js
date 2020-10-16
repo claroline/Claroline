@@ -54,9 +54,19 @@ const numbering = createSelector(
   (parameters) => parameters.numbering
 )
 
+const questionNumbering = createSelector(
+  [parameters],
+  (parameters) => parameters.questionNumbering
+)
+
 const showTitles = createSelector(
   [parameters],
   (parameters) => parameters.showTitles || false
+)
+
+const showQuestionTitles = createSelector(
+  [parameters],
+  (parameters) => parameters.showQuestionTitles || false
 )
 
 const showStatistics = createSelector(
@@ -77,7 +87,9 @@ export const selectors = {
   id,
   empty,
   numbering,
+  questionNumbering,
   showStatistics,
   showTitles,
+  showQuestionTitles,
   hasOverview
 }

@@ -54,6 +54,7 @@ const CurrentStep = props => {
         <Panel key={item.id}>
           {!isQuestionType(item.type) ?
             <ContentItemPlayer
+              showTitle={props.showQuestionTitles}
               item={item}
             >
               {React.createElement(getContentDefinition(item.type).player, {item: item})}
@@ -63,7 +64,8 @@ const CurrentStep = props => {
                 item={item}
                 showHint={props.showHint}
                 usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-                numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
+                showTitle={props.showQuestionTitles}
+                numbering={props.questionNumbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.questionNumbering, index): null}
               >
                 {React.createElement(getDefinition(item.type).player, {
                   item: item,
@@ -76,7 +78,8 @@ const CurrentStep = props => {
               <ItemFeedback
                 item={item}
                 usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-                numbering={props.numbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.numbering, index): null}
+                showTitle={props.showQuestionTitles}
+                numbering={props.questionNumbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.questionNumbering, index): null}
               >
                 {React.createElement(getDefinition(item.type).feedback, {
                   item: item,
@@ -92,8 +95,10 @@ const CurrentStep = props => {
 
 CurrentStep.propTypes = {
   numbering: T.string.isRequired,
+  questionNumbering: T.string.isRequired,
   number: T.number.isRequired,
   showTitle: T.bool,
+  showQuestionTitles: T.bool,
   step: T.shape({
     id: T.string.isRequired,
     title: T.string,
@@ -204,8 +209,10 @@ class PlayerComponent extends Component {
         {(!this.state.fetching && !this.state.error) &&
           <CurrentStep
             numbering={this.props.numbering}
+            questionNumbering={this.props.questionNumbering}
             number={this.props.number}
             showTitle={this.props.showTitles}
+            showQuestionTitles={this.props.showQuestionTitles}
             step={this.props.step}
             items={this.props.items}
             answers={this.props.answers}
@@ -254,7 +261,9 @@ PlayerComponent.propTypes = {
   quizId: T.string.isRequired,
   testMode: T.bool.isRequired,
   numbering: T.string.isRequired,
+  questionNumbering: T.string.isRequired,
   showTitles: T.bool,
+  showQuestionTitles: T.bool,
   number: T.number.isRequired,
   isTimed: T.bool.isRequired,
   duration: T.number,
@@ -318,7 +327,9 @@ const Player = withRouter(connect(
       // attempt parameters
       mandatoryQuestions: select.mandatoryQuestions(state),
       numbering: select.quizNumbering(state),
+      questionNumbering: select.questionNumbering(state),
       showTitles: select.showTitles(state),
+      showQuestionTitles: select.showQuestionTitles(state),
       isTimed: select.isTimed(state),
       duration: select.duration(state),
       answersEditable: select.answersEditable(state),

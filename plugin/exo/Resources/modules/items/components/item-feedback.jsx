@@ -7,7 +7,7 @@ import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 const ItemFeedback = props =>
   <div className="quiz-item quiz-item-feedback">
-    {props.item.title &&
+    {props.showTitle && props.item.title &&
       <h3 className="item-title">{props.item.title}</h3>
     }
 
@@ -33,6 +33,7 @@ ItemFeedback.propTypes = {
     hints: T.array,
     feedback: T.string
   }).isRequired,
+  showTitle: T.bool,
   usedHints: T.array.isRequired,
   children: T.node.isRequired,
   numbering: T.string

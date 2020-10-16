@@ -33,10 +33,21 @@ const currentNumbering = createSelector(
   (currentParameters) => currentParameters.numbering
 )
 
+const currentQuestionNumbering = createSelector(
+  [currentParameters],
+  (currentParameters) => currentParameters.questionNumbering
+)
+
 const showTitles = createSelector(
   [currentParameters],
   // managing undefined is for retro-compatibility (I don't want to migrate all papers to set the parameter)
   (currentParameters) => currentParameters.showTitles === undefined ? true : currentParameters.showTitles
+)
+
+const showQuestionTitles = createSelector(
+  [currentParameters],
+  // managing undefined is for retro-compatibility (I don't want to migrate all papers to set the parameter)
+  (currentParameters) => currentParameters.showQuestionTitles === undefined ? true : currentParameters.showQuestionTitles
 )
 
 const showExpectedAnswers = createSelector(
@@ -59,5 +70,7 @@ export const selectors = {
   currentNumbering,
   showTitles,
   showExpectedAnswers,
-  showStatistics
+  showStatistics,
+  currentQuestionNumbering,
+  showQuestionTitles
 }
