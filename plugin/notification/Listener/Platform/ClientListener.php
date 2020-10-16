@@ -41,7 +41,7 @@ class ClientListener
 
     public function onInjectCss(InjectStylesheetEvent $event)
     {
-        $content = $this->templating->render('IcapNotificationBundle:layout:stylesheets.html.twig', []);
+        $content = $this->templating->render('@IcapNotification/layout/stylesheets.html.twig', []);
 
         $event->addContent($content);
     }

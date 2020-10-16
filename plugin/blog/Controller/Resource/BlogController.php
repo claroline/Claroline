@@ -105,7 +105,7 @@ class BlogController
             }
         }
 
-        return new Response($this->templating->render('IcapBlogBundle:blog/rss:rss.html.twig', [
+        return new Response($this->templating->render('@IcapBlog/blog/rss/rss.html.twig', [
             'feed' => $feed,
             'items' => $items,
         ]), 200, [
@@ -146,7 +146,7 @@ class BlogController
         }
 
         $content = $this->templating->render(
-            'IcapBlogBundle:blog/pdf:view.pdf.twig',
+            '@IcapBlog/blog/pdf/view.pdf.twig',
             ['_resource' => $blog, 'posts' => $items]
         );
 

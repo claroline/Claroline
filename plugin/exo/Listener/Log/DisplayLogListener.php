@@ -10,25 +10,16 @@ class DisplayLogListener
 {
     use ContainerAwareTrait;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->setContainer($container);
     }
 
-    /**
-     * @param LogCreateDelegateViewEvent $event
-     */
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
-        $content = $this->container->get('templating')->render(
-            'UJMExoBundle:log:show.html.twig',
-            [
-                'log' => $event->getLog(),
-            ]
-        );
+        $content = $this->container->get('twig')->render('@UJMExo/log/show.html.twig', [
+            'log' => $event->getLog(),
+        ]);
 
         $event->setResponseContent($content);
         $event->stopPropagation();

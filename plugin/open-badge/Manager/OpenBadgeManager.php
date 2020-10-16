@@ -140,6 +140,6 @@ class OpenBadgeManager
 
         $content = $this->templateManager->getTemplate('badge_certificate', $placeholders);
 
-        return $this->templating->render('ClarolineOpenBadgeBundle::pdf.html.twig', ['content' => $content]);
+        return $this->templating->render('@ClarolineOpenBadge/pdf.html.twig', ['content' => $content]);
     }
 }

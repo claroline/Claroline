@@ -67,7 +67,7 @@ class WriterTest extends MockeryTestCase
         $this->twigEnvironment->shouldReceive('render')
             ->once()
             ->with(
-                'ClarolineMigrationBundle::migration_class.html.twig',
+                '@ClarolineMigration/migration_class.html.twig',
                 [
                     'namespace' => 'Bundle\Namespace\Installation\Migrations\some_driver',
                     'class' => 'Versionsome_version',

@@ -208,8 +208,8 @@ class NotificationListener
             break;
       }
 
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:notification:notification_item.html.twig',
+        $content = $this->container->get('twig')->render(
+            '@ClarolineCore/notification/notification_item.html.twig',
             [
                 'notification' => $notification,
                 'status' => $notificationView->getStatus(),

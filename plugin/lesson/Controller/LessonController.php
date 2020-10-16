@@ -86,7 +86,7 @@ class LessonController
         $domPdf->set_option('isHtml5ParserEnabled', true);
         $domPdf->set_option('isRemoteEnabled', true);
         $domPdf->set_option('tempDir', $this->config->getParameter('server.tmp_dir'));
-        $domPdf->loadHtml($this->templating->render('IcapLessonBundle:lesson:open.pdf.twig', [
+        $domPdf->loadHtml($this->templating->render('@IcapLesson/lesson/open.pdf.twig', [
             '_resource' => $lesson,
             'tree' => $this->chapterRepo->getChapterTree($lesson->getRoot(), false),
         ]));

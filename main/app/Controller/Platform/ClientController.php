@@ -81,7 +81,7 @@ class ClientController
         }
 
         return new Response(
-            $this->templating->render('ClarolineAppBundle::index.html.twig', [
+            $this->templating->render('@ClarolineApp/index.html.twig', [
                 'parameters' => $this->clientSerializer->serialize(),
                 'maintenance' => [
                     'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),

@@ -80,7 +80,7 @@ class WikiController
         $sectionTree = $this->sectionManager->getSerializedSectionTree($wiki, $user, $isAdmin);
 
         return new JsonResponse([
-            'content' => $this->templating->render('IcapWikiBundle:wiki:pdf.html.twig', [
+            'content' => $this->templating->render('@IcapWiki/wiki/pdf.html.twig', [
                 '_resource' => $wiki,
                 'tree' => $sectionTree,
                 'isAdmin' => $isAdmin,

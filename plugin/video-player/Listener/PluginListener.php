@@ -22,7 +22,7 @@ class PluginListener
     public function onInjectJs(InjectJavascriptEvent $event)
     {
         $event->addContent(
-            $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig')
+            $this->templating->render('@ClarolineVideoPlayer/scripts.html.twig')
         );
     }
 }

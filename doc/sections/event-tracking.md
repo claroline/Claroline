@@ -281,8 +281,8 @@ function is given below:
 ```php
 public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
 {
-    $content = $this->container->get('templating')->render(
-        'ICAPBlogBundle::log_list_item.html.twig',
+    $content = $this->container->get('twig')->render(
+        '@ICAPBlog/log_list_item.html.twig',
         array('log' => $event->getLog())
     );
     $event->setResponseContent($content);
@@ -333,12 +333,12 @@ its view are more complex.
 ```php
 public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
 {
-    $content = $this->container->get('templating')->render(
-        'ICAPBlogBundle::log_details.html.twig',
+    $content = $this->container->get('twig')->render(
+        '@ICAPBlog/log_details.html.twig',
         array(
             'log' => $event->getLog(),
-            'listItemView' => $this->container->get('templating')->render(
-                'ICAPBlogBundle::log_list_item.html.twig',
+            'listItemView' => $this->container->get('twig')->render(
+                '@ICAPBlog/log_list_item.html.twig',
                 array('log' => $event->getLog())
             )
         )

@@ -892,7 +892,7 @@ class ClacoFormController
         }
 
         return $this->templating->render(
-            'ClarolineClacoFormBundle:claco_form:entries_export.html.twig',
+            '@ClarolineClacoForm/claco_form/entries_export.html.twig',
             [
                 'fields' => $fields,
                 'entries' => $entriesData,
@@ -972,7 +972,7 @@ class ClacoFormController
         }
 
         return $this->templating->render(
-            'ClarolineClacoFormBundle:claco_form:entry.html.twig',
+            '@ClarolineClacoForm/claco_form/entry.html.twig',
             [
                 'entry' => $entry,
                 'template' => $template,

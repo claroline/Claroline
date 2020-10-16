@@ -31,7 +31,7 @@ class LayoutListener
     public function onInjectJs(InjectJavascriptEvent $event)
     {
         $event->addContent(
-            $this->templating->render('ClarolineOpenBadgeBundle::javascripts.html.twig')
+            $this->templating->render('@ClarolineOpenBadge/javascripts.html.twig')
         );
     }
 }

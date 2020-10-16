@@ -62,7 +62,7 @@ class Writer
         }
 
         $content = $this->twigEnvironment->render(
-            'ClarolineMigrationBundle::migration_class.html.twig',
+            '@ClarolineMigration/migration_class.html.twig',
             [
                 'namespace' => $namespace,
                 'class' => $class,

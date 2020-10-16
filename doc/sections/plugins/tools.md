@@ -69,15 +69,15 @@ private function workspace($workspaceId)
     $em = $this->container->get('doctrine.orm.entity_manager');
     $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
 
-    return $this->container->get('templating')->render(
-        'ClarolineExampleBundle::workspace_tool.html.twig', array('workspace' => $workspace)
+    return $this->container->get('twig')->render(
+        '@ClarolineExample/workspace_tool.html.twig', array('workspace' => $workspace)
     );
 }
 
 private function desktop()
 {
-    return $this->container->get('templating')->render(
-        'ClarolineExampleBundle::desktop_tool.html.twig'
+    return $this->container->get('twig')->render(
+        '@ClarolineExample/desktop_tool.html.twig'
     );
 }
 ```

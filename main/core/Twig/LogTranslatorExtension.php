@@ -22,6 +22,10 @@ use Twig\TwigFunction;
 
 class LogTranslatorExtension extends AbstractExtension
 {
+    private $helper;
+    private $translator;
+    private $templating;
+
     public function __construct(RoutingHelper $helper, TranslatorInterface $translator, Environment $templating)
     {
         $this->helper = $helper;
@@ -43,12 +47,12 @@ class LogTranslatorExtension extends AbstractExtension
 
     public function translateLog(Log $log)
     {
-        $resource = $this->templating->render('ClarolineCoreBundle:log:view_list_item_resource.html.twig', ['log' => $log]);
-        $receiverUser = $this->templating->render('ClarolineCoreBundle:log:view_list_item_receiver_user.html.twig', ['log' => $log]);
-        $receiverGroup = $this->templating->render('ClarolineCoreBundle:log:view_list_item_receiver_group.html.twig', ['log' => $log]);
-        $role = $this->templating->render('ClarolineCoreBundle:log:view_list_item_role.html.twig', ['log' => $log]);
-        $workspace = $this->templating->render('ClarolineCoreBundle:log:view_list_item_workspace.html.twig', ['log' => $log]);
-        $tool = $this->templating->render('ClarolineCoreBundle:log:view_list_item_tool.html.twig', ['log' => $log]);
+        $resource = $this->templating->render('@ClarolineCore/log/view_list_item_resource.html.twig', ['log' => $log]);
+        $receiverUser = $this->templating->render('@ClarolineCore/log/view_list_item_receiver_user.html.twig', ['log' => $log]);
+        $receiverGroup = $this->templating->render('@ClarolineCore/log/view_list_item_receiver_group.html.twig', ['log' => $log]);
+        $role = $this->templating->render('@ClarolineCore/log/view_list_item_role.html.twig', ['log' => $log]);
+        $workspace = $this->templating->render('@ClarolineCore/log/view_list_item_workspace.html.twig', ['log' => $log]);
+        $tool = $this->templating->render('@ClarolineCore/log/view_list_item_tool.html.twig', ['log' => $log]);
 
         $data = [
           '%resource%' => $resource,

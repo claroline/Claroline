@@ -191,8 +191,8 @@ public function onOpen(OpenResourceEvent $event)
     $isGranted = $this->container->get('security.authorization_checker')->isGranted('WRITE', $collection);
     $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
         ->getRepository('ClarolineCoreBundle:Resource\Revision');
-    $content = $this->container->get('templating')->render(
-        'ClarolineCoreBundle:Text:index.html.twig',
+    $content = $this->container->get('twig')->render(
+        '@ClarolineCore/text/index.html.twig',
         array(
             'text' => $revisionRepo->getLastRevision($text)->getContent(),
             '_resource' => $text,
@@ -220,8 +220,8 @@ public function onCompose(CustomActionResourceEvent $event)
     $activity = $event->getResource();
     ...
 
-    $content = $this->container->get('templating')->render(
-        'ClarolineCoreBundle:Activity:index.html.twig',
+    $content = $this->container->get('twig')->render(
+        '@ClarolineCore/activity/index.html.twig',
         array(
             'resourceTypes' => $resourceTypes,
             'resourceActivities' => $resourceActivities,

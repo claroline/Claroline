@@ -160,7 +160,7 @@ class ResourceController
         }
 
         return new Response(
-            $this->templating->render("ClarolineCoreBundle:resource:embed/{$view}.html.twig", [
+            $this->templating->render("@ClarolineCore/resource/embed/{$view}.html.twig", [
                 'resource' => $this->manager->getResourceFromNode($resourceNode),
             ])
         );

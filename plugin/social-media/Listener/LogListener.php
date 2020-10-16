@@ -21,21 +21,15 @@ class LogListener
 {
     use ContainerAwareTrait;
 
-    /**
-     * @param $container
-     */
     public function __construct($container)
     {
         $this->container = $container;
     }
 
-    /**
-     * @param LogCreateDelegateViewEvent $event
-     */
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
-        $content = $this->container->get('templating')->render(
-            'IcapSocialmediaBundle:log:log_list_item.html.twig',
+        $content = $this->container->get('twig')->render(
+            '@IcapSocialmedia/log/log_list_item.html.twig',
             ['log' => $event->getLog()]
         );
 
@@ -43,17 +37,14 @@ class LogListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param LogCreateDelegateViewEvent $event
-     */
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
-        $content = $this->container->get('templating')->render(
-            'IcapSocialmediaBundle:log:log_details.html.twig',
+        $content = $this->container->get('twig')->render(
+            '@IcapSocialmedia/log/log_details.html.twig',
             [
                 'log' => $event->getLog(),
-                'listItemView' => $this->container->get('templating')->render(
-                    'IcapSocialmediaBundle:log:log_list_item.html.twig',
+                'listItemView' => $this->container->get('twig')->render(
+                    '@IcapSocialmedia/log/log_list_item.html.twig',
                     ['log' => $event->getLog()]
                 ),
             ]

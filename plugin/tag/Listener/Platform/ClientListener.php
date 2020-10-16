@@ -20,7 +20,7 @@ class ClientListener
 
     public function onInjectCss(InjectStylesheetEvent $event)
     {
-        $content = $this->templating->render('ClarolineTagBundle:layout:stylesheets.html.twig', []);
+        $content = $this->templating->render('@ClarolineTag/layout/stylesheets.html.twig', []);
 
         $event->addContent($content);
     }

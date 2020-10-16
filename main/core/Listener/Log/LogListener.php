@@ -139,7 +139,8 @@ class LogListener
             $log->setReceiver($event->getReceiver());
         }
         if (LogGroupDeleteEvent::ACTION !== $event->getAction()) {
-            if ($receiverGroup = $event->getReceiverGroup()) {
+            $receiverGroup = $event->getReceiverGroup();
+            if ($receiverGroup) {
                 $this->om->merge($receiverGroup);
             }
             $log->setReceiverGroup($receiverGroup);
@@ -340,8 +341,8 @@ class LogListener
 
     public function onLogListItem(LogCreateDelegateViewEvent $event)
     {
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:log:view_list_item_sentence.html.twig',
+        $content = $this->container->get('twig')->render(
+            '@ClarolineCore/log/view_list_item_sentence.html.twig',
             ['log' => $event->getLog()]
         );
 
@@ -351,8 +352,8 @@ class LogListener
 
     public function onLogDetails(LogCreateDelegateViewEvent $event)
     {
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:log:view_details.html.twig',
+        $content = $this->container->get('twig')->render(
+            '@ClarolineCore/log/view_details.html.twig',
             ['log' => $event->getLog()]
         );
 
