@@ -55,7 +55,7 @@ class FileSerializer
         $options = [
             'id' => $file->getId(),
             'size' => $file->getSize(),
-            'autoDownload' => $file->getAutoDownload(),
+            'opening' => $file->getOpening(),
             'commentsActivated' => $file->getResourceNode()->isCommentsActivated(),
             'hashName' => $file->getHashName(),
 
@@ -86,7 +86,7 @@ class FileSerializer
     {
         $this->sipe('size', 'setSize', $data, $file);
         $this->sipe('hashName', 'setHashName', $data, $file);
-        $this->sipe('autoDownload', 'setAutoDownload', $data, $file);
+        $this->sipe('opening', 'setOpening', $data, $file);
 
         if (isset($data['commentsActivated']) && $file->getResourceNode()) {
             $resourceNode = $file->getResourceNode();

@@ -19,6 +19,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class File extends AbstractResource
 {
+    // propose to download raw file when opening the resource
+    const OPENING_DOWNLOAD = 'download';
+    // try to use the browser player to display the file
+    const OPENING_BROWSER = 'browser';
+    // use the claroline file player to display the file
+    const OPENING_PLAYER = 'player';
+
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
@@ -30,9 +37,9 @@ class File extends AbstractResource
     protected $hashName;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column()
      */
-    protected $autoDownload = false;
+    protected $opening = self::OPENING_PLAYER;
 
     /**
      * Returns the file size.
@@ -74,14 +81,14 @@ class File extends AbstractResource
         return round($this->size / 1099511627776, 2).' TB';
     }
 
-    public function setAutoDownload($autoDownload)
+    public function getOpening(): string
     {
-        $this->autoDownload = $autoDownload;
+        return $this->opening;
     }
 
-    public function getAutoDownload()
+    public function setOpening(string $opening)
     {
-        return $this->autoDownload;
+        $this->opening = $opening;
     }
 
     /**

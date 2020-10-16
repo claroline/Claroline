@@ -61,7 +61,10 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\Resource\Types\DirectoryController: ~
 
-    Claroline\CoreBundle\Controller\APINew\Resource\Types\FileController: ~
+    Claroline\CoreBundle\Controller\APINew\Resource\Types\FileController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Controller\APINew\Resource\Types\TextController: ~
 

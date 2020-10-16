@@ -10,6 +10,7 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {Await} from '#/main/app/components/await'
 
 import {getFile, getTypeName} from '#/main/core/files'
+import {constants} from '#/main/core/resources/file/constants'
 import {selectors} from '#/main/core/resources/file/editor/store/selectors'
 
 // TODO : find a way to reuse file creation form component
@@ -32,9 +33,14 @@ const EditorMain = (props) =>
         primary: true,
         fields: [
           {
-            name: 'autoDownload',
-            label: trans('auto_download'),
-            type: 'boolean'
+            name: 'opening',
+            label: trans('opening_parameters'),
+            type: 'choice',
+            required: true,
+            options: {
+              noEmpty: true,
+              choices: constants.OPENING_TYPES
+            }
           }, {
             name: 'commentsActivated',
             label: trans('activate_comments'),
