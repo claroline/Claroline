@@ -15,14 +15,14 @@ namespace Claroline\CoreBundle\Twig;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class LogTranslatorExtension extends AbstractExtension
 {
-    public function __construct(RoutingHelper $helper, TranslatorInterface $translator, TwigEngine $templating)
+    public function __construct(RoutingHelper $helper, TranslatorInterface $translator, Environment $templating)
     {
         $this->helper = $helper;
         $this->translator = $translator;

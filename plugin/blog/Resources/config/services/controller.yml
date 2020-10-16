@@ -37,5 +37,5 @@ services:
           - '@router'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@security.token_storage'
-          - '@templating'
+          - '@twig'
           - '@security.authorization_checker'

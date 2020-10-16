@@ -292,7 +292,7 @@ services:
     Claroline\CoreBundle\Controller\ResourceController:
         arguments:
           - '@security.token_storage'
-          - '@templating'
+          - '@twig'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@Claroline\AppBundle\API\SerializerProvider'

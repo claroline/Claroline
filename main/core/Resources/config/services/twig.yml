@@ -17,7 +17,7 @@ services:
        arguments:
           - '@Claroline\CoreBundle\Library\RoutingHelper'
           - '@translator'
-          - '@templating'
+          - '@twig'
 
     Claroline\CoreBundle\Twig\PcreExtension: ~
 

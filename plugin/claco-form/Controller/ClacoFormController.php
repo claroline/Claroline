@@ -34,7 +34,6 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Dompdf\Dompdf;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,6 +42,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class ClacoFormController
 {
@@ -75,7 +75,7 @@ class ClacoFormController
         LocationManager $locationManager,
         ObjectManager $om,
         RequestStack $request,
-        TwigEngine $templating,
+        Environment $templating,
         TranslatorInterface $translator,
         SerializerProvider $serializer,
         TokenStorageInterface $tokenStorage,
@@ -115,9 +115,8 @@ class ClacoFormController
      *
      * Returns the keyword
      *
-     * @param ClacoForm $clacoForm
-     * @param string    $name
-     * @param string    $uuid
+     * @param string $name
+     * @param string $uuid
      *
      * @return JsonResponse
      */
@@ -144,8 +143,6 @@ class ClacoFormController
      *
      * Returns id of a random entry
      *
-     * @param ClacoForm $clacoForm
-     *
      * @return JsonResponse
      */
     public function entryRandomAction(ClacoForm $clacoForm)
@@ -164,8 +161,6 @@ class ClacoFormController
      * )
      *
      * Deletes entries
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -204,8 +199,6 @@ class ClacoFormController
      *
      * Changes status of an entry
      *
-     * @param Entry $entry
-     *
      * @return JsonResponse
      */
     public function entryStatusChangeAction(Entry $entry)
@@ -230,8 +223,7 @@ class ClacoFormController
      *
      * Changes status of entries
      *
-     * @param int     $status
-     * @param Request $request
+     * @param int $status
      *
      * @return JsonResponse
      */
@@ -274,8 +266,6 @@ class ClacoFormController
      *
      * Retrieves comments of an entry
      *
-     * @param Entry $entry
-     *
      * @return JsonResponse
      */
     public function entryCommentsRetrieveAction(Entry $entry)
@@ -312,9 +302,6 @@ class ClacoFormController
      *     options={"mapping": {"entry": "uuid"}}
      * )
      *
-     * @param Entry   $entry
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function commentCreateAction(Entry $entry, Request $request)
@@ -345,9 +332,6 @@ class ClacoFormController
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param Comment $comment
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function commentEditAction(Comment $comment, Request $request)
@@ -375,8 +359,6 @@ class ClacoFormController
      *
      * Deletes a comment
      *
-     * @param Comment $comment
-     *
      * @return JsonResponse
      */
     public function commentDeleteAction(Comment $comment)
@@ -401,8 +383,6 @@ class ClacoFormController
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Activates a comment
-     *
-     * @param Comment $comment
      *
      * @return JsonResponse
      */
@@ -430,8 +410,6 @@ class ClacoFormController
      *
      * Blocks a comment
      *
-     * @param Comment $comment
-     *
      * @return JsonResponse
      */
     public function commentBlockAction(Comment $comment)
@@ -458,9 +436,6 @@ class ClacoFormController
      *
      * Retrieves an entry options for current user
      *
-     * @param Entry $entry
-     * @param User  $user
-     *
      * @return JsonResponse
      */
     public function entryUserRetrieveAction(Entry $entry, User $user)
@@ -481,9 +456,6 @@ class ClacoFormController
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Saves entry options for current user
-     *
-     * @param User  $user
-     * @param Entry $entry
      *
      * @return JsonResponse
      */
@@ -529,9 +501,6 @@ class ClacoFormController
      *
      * Downloads pdf version of entry
      *
-     * @param Entry $entry
-     * @param User  $user
-     *
      * @return StreamedResponse
      */
     public function entryPdfDownloadAction(Entry $entry, User $user)
@@ -571,8 +540,6 @@ class ClacoFormController
      *
      * Retrieves list of users the entry is shared with
      *
-     * @param Entry $entry
-     *
      * @return JsonResponse
      */
     public function entrySharedUsersListAction(Entry $entry)
@@ -604,9 +571,6 @@ class ClacoFormController
      *     options={"mapping": {"entry": "uuid"}}
      * )
      *
-     * @param Entry   $entry
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function entryUsersShareAction(Entry $entry, Request $request)
@@ -634,9 +598,6 @@ class ClacoFormController
      *     class="ClarolineClacoFormBundle:Entry",
      *     options={"mapping": {"entry": "uuid"}}
      * )
-     *
-     * @param Entry   $entry
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -668,8 +629,6 @@ class ClacoFormController
      * )
      *
      * Exports entries
-     *
-     * @param ClacoForm $clacoForm
      *
      * @return Response
      */
@@ -725,9 +684,6 @@ class ClacoFormController
      *
      * Changes owner of an entry
      *
-     * @param Entry $entry
-     * @param User  $user
-     *
      * @return JsonResponse
      */
     public function entryOwnerChangeAction(Entry $entry, User $user)
@@ -753,8 +709,6 @@ class ClacoFormController
      *
      * Switches lock of an entry
      *
-     * @param Entry $entry
-     *
      * @return JsonResponse
      */
     public function entryLockSwitchAction(Entry $entry)
@@ -775,8 +729,7 @@ class ClacoFormController
      *
      * Switches lock of entries
      *
-     * @param int     $locked
-     * @param Request $request
+     * @param int $locked
      *
      * @return JsonResponse
      */
@@ -827,9 +780,6 @@ class ClacoFormController
      *
      * Downloads a file associated to a FieldValue.
      *
-     * @param Entry $entry
-     * @param Field $field
-     *
      * @return StreamedResponse|JsonResponse
      */
     public function downloadAction(Entry $entry, Field $field)
@@ -873,8 +823,6 @@ class ClacoFormController
      * )
      *
      * Returns list of codes of all countries present in all entries
-     *
-     * @param ClacoForm $clacoForm
      *
      * @return JsonResponse
      */

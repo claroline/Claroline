@@ -36,7 +36,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Manages platform resources.
@@ -50,7 +50,7 @@ class ResourceController
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var EngineInterface */
+    /** @var Environment */
     private $templating;
     /** @var Utilities */
     private $security;
@@ -71,7 +71,7 @@ class ResourceController
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        EngineInterface $templating,
+        Environment $templating,
         FinderProvider $finder,
         Utilities $security,
         SerializerProvider $serializer,

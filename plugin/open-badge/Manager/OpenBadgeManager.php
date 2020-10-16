@@ -10,7 +10,7 @@ use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 class OpenBadgeManager
 {
@@ -28,19 +28,13 @@ class OpenBadgeManager
 
     /**
      * OpenBadgeManager constructor.
-     *
-     * @param Packages         $assets
-     * @param ObjectManager    $om
-     * @param TemplateManager  $templateManager
-     * @param WorkspaceManager $workspaceManager
-     * @param EngineInterface  $templating
      */
     public function __construct(
         Packages $assets,
         ObjectManager $om,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
-        EngineInterface $templating
+        Environment $templating
     ) {
         $this->assets = $assets;
         $this->om = $om;

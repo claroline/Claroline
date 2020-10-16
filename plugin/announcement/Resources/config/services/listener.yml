@@ -14,7 +14,7 @@ services:
     Claroline\AnnouncementBundle\Listener\Resource\AnnouncementListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@templating'
+            - '@twig'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'

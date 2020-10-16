@@ -22,7 +22,7 @@ services:
 
     Icap\WikiBundle\Listener\LogListener:
        arguments:
-          - '@templating'
+          - '@twig'
        tags:
           - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_create, method: onCreateLogListItem }
           - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_move, method: onCreateLogListItem }

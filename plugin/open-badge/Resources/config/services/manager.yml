@@ -9,7 +9,7 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@claroline.manager.template_manager'
           - '@claroline.manager.workspace_manager'
-          - '@templating'
+          - '@twig'
 
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:

@@ -22,7 +22,6 @@ services:
         arguments:
             - '@filesystem'
             - '@twig'
-            - '@templating'
 
     claroline.migration.migrator:
         class: '%claroline.migration_migrator.class%'

@@ -6,7 +6,6 @@ framework:
         utf8: true
     form:            true
     validation:      { enable_annotations: true }
-    templating:      { engines: ['twig'] }
     translator:      { fallback: en }
     default_locale: "%locale%"
     session:

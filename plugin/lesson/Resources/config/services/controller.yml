@@ -8,7 +8,7 @@ services:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@templating'
+          - '@twig'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\LessonBundle\Serializer\ChapterSerializer'
           - '@Icap\LessonBundle\Manager\ChapterManager'
@@ -19,6 +19,6 @@ services:
           - '@security.authorization_checker'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@templating'
+          - '@twig'
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\API\SerializerProvider'

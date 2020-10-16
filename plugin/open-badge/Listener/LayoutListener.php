@@ -12,24 +12,20 @@
 namespace Claroline\OpenBadgeBundle\Listener;
 
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 
 class LayoutListener
 {
     /**
      * LayoutListener constructor.
-     *
-     * @param EngineInterface    $templating
      */
     public function __construct(
-        EngineInterface $templating
+        Environment $templating
     ) {
         $this->templating = $templating;
     }
 
     /**
-     * @param InjectJavascriptEvent $event
-     *
      * @return string
      */
     public function onInjectJs(InjectJavascriptEvent $event)

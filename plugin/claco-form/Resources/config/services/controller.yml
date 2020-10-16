@@ -50,7 +50,7 @@ services:
           - '@claroline.manager.organization.location_manager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@request_stack'
-          - '@templating'
+          - '@twig'
           - '@translator'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@security.token_storage'

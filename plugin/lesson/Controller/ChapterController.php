@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * @Route("/lesson/{lessonId}/chapters")
@@ -36,7 +36,7 @@ class ChapterController
     private $om;
     /** @var PlatformConfigurationHandler */
     private $config;
-    /** @var EngineInterface */
+    /** @var Environment */
     private $templating;
     /** @var FinderProvider */
     private $finder;
@@ -55,7 +55,7 @@ class ChapterController
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $config,
-        EngineInterface $templating,
+        Environment $templating,
         FinderProvider $finder,
         ChapterSerializer $chapterSerializer,
         ChapterManager $chapterManager,

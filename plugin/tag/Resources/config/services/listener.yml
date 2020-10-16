@@ -38,7 +38,7 @@ services:
 
     Claroline\TagBundle\Listener\Platform\ClientListener:
         arguments:
-            - '@templating'
+            - '@twig'
         tags:
             - { name: kernel.event_listener, event: layout.inject.stylesheet, method: onInjectCss }
 

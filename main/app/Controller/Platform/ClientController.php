@@ -11,10 +11,10 @@ use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
 
 /**
  * ClientController.
@@ -25,7 +25,7 @@ class ClientController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var EngineInterface */
+    /** @var Environment */
     private $templating;
 
     /** @var StrictDispatcher */
@@ -45,18 +45,10 @@ class ClientController
 
     /**
      * ClientController constructor.
-     *
-     * @param TokenStorageInterface        $tokenStorage
-     * @param EngineInterface              $templating
-     * @param StrictDispatcher             $dispatcher
-     * @param PlatformConfigurationHandler $configHandler
-     * @param SecurityManager              $securityManager
-     * @param SerializerProvider           $serializer
-     * @param ClientSerializer             $clientSerializer
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        EngineInterface $templating,
+        Environment $templating,
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $configHandler,
         SecurityManager $securityManager,

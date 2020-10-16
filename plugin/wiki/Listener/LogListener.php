@@ -3,29 +3,24 @@
 namespace Icap\WikiBundle\Listener;
 
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Twig\Environment;
 
 /**
  * LogListener.
  */
 class LogListener
 {
-    /** @var TwigEngine */
+    /** @var Environment */
     private $templating;
 
     /**
      * LogListener constructor.
-     *
-     * @param TwigEngine $templating
      */
-    public function __construct(TwigEngine $templating)
+    public function __construct(Environment $templating)
     {
         $this->templating = $templating;
     }
 
-    /**
-     * @param LogCreateDelegateViewEvent $event
-     */
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
         $content = $this->templating->render(
@@ -37,9 +32,6 @@ class LogListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param LogCreateDelegateViewEvent $event
-     */
     public function onSectionCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
         $content = $this->templating->render(

@@ -12,7 +12,6 @@
 namespace Claroline\MigrationBundle\Generator;
 
 use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Twig\Environment;
@@ -26,35 +25,25 @@ class Writer
     private $fileSystem;
     /** @var Environment */
     private $twigEnvironment;
-    /** @var TwigEngine */
-    private $twigEngine;
     /** @var bool */
     private $hasSqlExtension = false;
 
     /**
      * Writer constructor.
-     *
-     * @param Filesystem  $fileSystem
-     * @param Environment $environment
-     * @param TwigEngine  $engine
      */
     public function __construct(
         Filesystem $fileSystem,
-        Environment $environment,
-        TwigEngine $engine
+        Environment $environment
     ) {
         $this->fileSystem = $fileSystem;
         $this->twigEnvironment = $environment;
-        $this->twigEngine = $engine;
     }
 
     /**
      * Writes a bundle migration class for a given driver.
      *
-     * @param Bundle $bundle
      * @param string $driverName
      * @param string $version
-     * @param array  $queries
      */
     public function writeMigrationClass(Bundle $bundle, $driverName, $version, array $queries)
     {
@@ -72,7 +61,7 @@ class Writer
             $this->fileSystem->mkdir($targetDir);
         }
 
-        $content = $this->twigEngine->render(
+        $content = $this->twigEnvironment->render(
             'ClarolineMigrationBundle::migration_class.html.twig',
             [
                 'namespace' => $namespace,
@@ -90,7 +79,6 @@ class Writer
      * Deletes bundle migration classes for a given driver which are above a
      * reference version.
      *
-     * @param Bundle $bundle
      * @param string $driverName
      * @param string $referenceVersion
      *
@@ -102,6 +90,7 @@ class Writer
         $deletedVersions = [];
 
         foreach ($migrations as $migration) {
+            $matches = [];
             if (preg_match('#Version(\d+)\.php#', $migration->getFilename(), $matches)) {
                 if ($matches[1] > $referenceVersion) {
                     $this->fileSystem->remove([$migration->getPathname()]);

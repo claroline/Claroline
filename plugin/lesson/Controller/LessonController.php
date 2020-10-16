@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 class LessonController
 {
@@ -30,7 +30,7 @@ class LessonController
     private $om;
     /** @var PlatformConfigurationHandler */
     private $config;
-    /** @var EngineInterface */
+    /** @var Environment */
     private $templating;
     /** @var Crud */
     private $crud;
@@ -44,7 +44,7 @@ class LessonController
         AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $config,
         ObjectManager $om,
-        EngineInterface $templating,
+        Environment $templating,
         Crud $crud,
         SerializerProvider $serializer
     ) {

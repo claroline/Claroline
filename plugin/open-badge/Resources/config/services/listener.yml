@@ -6,7 +6,7 @@ services:
 
     Claroline\OpenBadgeBundle\Listener\LayoutListener:
         arguments:
-            - '@templating'
+            - '@twig'
         tags:
             - { name: kernel.event_listener, event: layout.inject.javascript, method: onInjectJs }
 

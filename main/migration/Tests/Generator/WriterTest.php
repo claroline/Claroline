@@ -19,14 +19,12 @@ use org\bovigo\vfs\vfsStream;
 class WriterTest extends MockeryTestCase
 {
     private $twigEnvironment;
-    private $twigEngine;
     private $fileSystem;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->twigEnvironment = m::mock('Twig\Environment');
-        $this->twigEngine = m::mock('Symfony\Bundle\TwigBundle\TwigEngine');
         $this->fileSystem = m::mock('Symfony\Component\Filesystem\Filesystem');
     }
 
@@ -66,7 +64,7 @@ class WriterTest extends MockeryTestCase
         $this->fileSystem->shouldReceive('mkdir')
             ->once()
             ->with(vfsStream::url('root').'/bundle/path/Installation/Migrations/some_driver');
-        $this->twigEngine->shouldReceive('render')
+        $this->twigEnvironment->shouldReceive('render')
             ->once()
             ->with(
                 'ClarolineMigrationBundle::migration_class.html.twig',
@@ -82,7 +80,7 @@ class WriterTest extends MockeryTestCase
             ->once()
             ->with(vfsStream::url('root').'/bundle/path/Installation/Migrations/some_driver/Versionsome_version.php');
 
-        $writer = new Writer($this->fileSystem, $this->twigEnvironment, $this->twigEngine);
+        $writer = new Writer($this->fileSystem, $this->twigEnvironment);
         $writer->writeMigrationClass(
             $bundle,
             'some_driver',
@@ -130,7 +128,7 @@ class WriterTest extends MockeryTestCase
             ->once()
             ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver', 'Version3.php'])]);
 
-        $writer = new Writer($this->fileSystem, $this->twigEnvironment, $this->twigEngine);
+        $writer = new Writer($this->fileSystem, $this->twigEnvironment);
         $deletedVersions = $writer->deleteUpperMigrationClasses($bundle, 'some_driver', '1');
         $this->assertEquals(2, count($deletedVersions));
     }

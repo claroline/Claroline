@@ -45,6 +45,6 @@ services:
     Icap\WikiBundle\Controller\WikiController:
         arguments:
           - '@security.authorization_checker'
-          - '@templating'
+          - '@twig'
           - '@Icap\WikiBundle\Manager\WikiManager'
           - '@Icap\WikiBundle\Manager\SectionManager'
