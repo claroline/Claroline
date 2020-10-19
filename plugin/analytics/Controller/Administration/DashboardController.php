@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @Route("/tools/admin/analytics")
@@ -39,15 +38,6 @@ class DashboardController extends AbstractSecurityController
     /** @var FinderProvider */
     private $finder;
 
-    /**
-     * DashboardController constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param SerializerProvider    $serializer
-     * @param FinderProvider        $finder
-     * @param AnalyticsManager      $analyticsManager
-     * @param EventManager          $eventManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         SerializerProvider $serializer,
@@ -65,8 +55,6 @@ class DashboardController extends AbstractSecurityController
 
     /**
      * @Route("/activity", name="apiv2_admin_tool_analytics_activity")
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -89,8 +77,6 @@ class DashboardController extends AbstractSecurityController
 
     /**
      * @Route("/actions", name="apiv2_admin_tool_analytics_actions")
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -154,9 +140,7 @@ class DashboardController extends AbstractSecurityController
             ],
         ];
 
-        $roles = array_map(function (Role $role) {
-            return $role->getRole();
-        }, $this->tokenStorage->getToken()->getRoles());
+        $roles = $this->tokenStorage->getToken()->getRoleNames();
 
         if (!in_array('ROLE_ADMIN', $roles)) {
             $options['hiddenFilters']['roles'] = $roles;

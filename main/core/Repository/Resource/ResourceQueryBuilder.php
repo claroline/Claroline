@@ -12,10 +12,9 @@
 namespace Claroline\CoreBundle\Repository\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Builder for DQL queries on AbstractResource entities.
@@ -97,8 +96,6 @@ class ResourceQueryBuilder
     /**
      * Filters nodes belonging to a given workspace.
      *
-     * @param Workspace $workspace
-     *
      * @return ResourceQueryBuilder
      */
     public function whereInWorkspace(Workspace $workspace)
@@ -111,8 +108,6 @@ class ResourceQueryBuilder
 
     /**
      * Filters nodes that are the immediate children of a given node.
-     *
-     * @param ResourceNode $parent
      *
      * @return ResourceQueryBuilder
      */

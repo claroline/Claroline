@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class HomeTabFinder extends AbstractFinder
 {
@@ -24,8 +23,6 @@ class HomeTabFinder extends AbstractFinder
 
     /**
      * WorkspaceFinder constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
@@ -48,9 +45,7 @@ class HomeTabFinder extends AbstractFinder
         $qb->leftJoin('obj.homeTabConfigs', 'config');
 
         // only grab tabs accessible by user
-        $roleNames = array_map(function (Role $role) {
-            return $role->getRole();
-        }, $this->tokenStorage->getToken()->getRoles());
+        $roleNames = $this->tokenStorage->getToken()->getRoleNames();
 
         $isAdmin = in_array('ROLE_ADMIN', $roleNames) || (isset($searches['workspace']) && in_array('ROLE_MANAGER_'.$searches['workspace'], $roleNames));
         if (!$isAdmin) {

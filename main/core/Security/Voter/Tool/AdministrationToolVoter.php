@@ -30,10 +30,10 @@ class AdministrationToolVoter extends AbstractVoter implements VoterInterface
         }
 
         $roles = $object->getRoles();
-        $tokenRoles = $token->getRoles();
+        $tokenRoles = $token->getRoleNames();
         foreach ($tokenRoles as $tokenRole) {
             foreach ($roles as $role) {
-                if ($role->getRole() === $tokenRole->getRole()) {
+                if ($role->getRole() === $tokenRole) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
             }

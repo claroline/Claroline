@@ -109,8 +109,6 @@ class WorkspaceVoter extends AbstractVoter
      * This is not done yet but later a user might be able to edit its roles/groups himself
      * and it should be checked here.
      *
-     * @param TokenInterface   $token
-     * @param Workspace        $workspace
      * @param ObjectCollection $collection
      *
      * @return int
@@ -152,8 +150,8 @@ class WorkspaceVoter extends AbstractVoter
 
     protected function isWorkspaceCreator(TokenInterface $token)
     {
-        foreach ($token->getRoles() as $role) {
-            if (PlatformRoles::WS_CREATOR === $role->getRole()) {
+        foreach ($token->getRoleNames() as $role) {
+            if (PlatformRoles::WS_CREATOR === $role) {
                 return true;
             }
         }

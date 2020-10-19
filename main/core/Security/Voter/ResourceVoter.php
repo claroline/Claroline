@@ -15,7 +15,6 @@ use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -39,7 +38,6 @@ class ResourceVoter implements VoterInterface
     private $repository;
     private $translator;
     private $specialActions;
-    private $ut;
     private $maskManager;
     /** @var WorkspaceManager */
     private $workspaceManager;
@@ -50,7 +48,6 @@ class ResourceVoter implements VoterInterface
     public function __construct(
         EntityManager $em,
         TranslatorInterface $translator,
-        Utilities $ut,
         MaskManager $maskManager,
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
@@ -61,7 +58,6 @@ class ResourceVoter implements VoterInterface
         $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->translator = $translator;
         $this->specialActions = ['move', 'create', 'copy'];
-        $this->ut = $ut;
         $this->maskManager = $maskManager;
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
@@ -230,7 +226,7 @@ class ResourceVoter implements VoterInterface
 
         foreach ($nodes as $node) {
             if ($node->isActive()) {
-                $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
+                $mask = $this->repository->findMaximumRights($token->getRoleNames(), $node);
                 $type = $node->getResourceType();
                 $decoder = $this->maskManager->getDecoder($type, $action);
                 // Test if user can administrate
@@ -297,7 +293,7 @@ class ResourceVoter implements VoterInterface
         }
 
         //otherwise we need to check
-        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $node);
+        $rightsCreation = $this->repository->findCreationRights($token->getRoleNames(), $node);
 
         if (!$this->canCreate($rightsCreation, $type)) {
             $errors[] = $this->translator

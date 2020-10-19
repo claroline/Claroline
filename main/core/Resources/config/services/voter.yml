@@ -62,7 +62,6 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@translator'
-            - '@Claroline\CoreBundle\Library\Security\Utilities'
             - '@claroline.manager.mask_manager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@claroline.manager.resource_manager'

@@ -55,14 +55,6 @@ class PlatformListener
         'apiv2_platform_enable',
     ];
 
-    /**
-     * PlatformListener constructor.
-     *
-     * @param TokenStorageInterface        $tokenStorage
-     * @param PlatformConfigurationHandler $config
-     * @param TempFileManager              $tempManager
-     * @param LocaleManager                $localeManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
@@ -77,8 +69,6 @@ class PlatformListener
 
     /**
      * Sets the platform language.
-     *
-     * @param GetResponseEvent $event
      */
     public function setLocale(GetResponseEvent $event)
     {
@@ -92,8 +82,6 @@ class PlatformListener
 
     /**
      * Checks the app availability before displaying the platform.
-     *
-     * @param GetResponseEvent $event
      */
     public function checkAvailability(GetResponseEvent $event)
     {
@@ -125,8 +113,8 @@ class PlatformListener
             $isAdmin = false;
             $token = $this->tokenStorage->getToken();
             if ($token) {
-                foreach ($token->getRoles() as $role) {
-                    if ('ROLE_ADMIN' === $role->getRole()) {
+                foreach ($token->getRoleNames() as $role) {
+                    if ('ROLE_ADMIN' === $role) {
                         $isAdmin = true;
                         break;
                     }

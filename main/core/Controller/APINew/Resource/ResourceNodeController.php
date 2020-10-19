@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -42,18 +43,23 @@ class ResourceNodeController extends AbstractCrudController
     /** @var ParametersSerializer */
     private $parametersSerializer;
 
+    /** @var TokenStorageInterface */
+    private $token;
+
     public function __construct(
         ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         LogConnectManager $logConnectManager,
-        ParametersSerializer $parametersSerializer
+        ParametersSerializer $parametersSerializer,
+        TokenStorageInterface $token
     ) {
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
         $this->logConnectManager = $logConnectManager;
         $this->parametersSerializer = $parametersSerializer;
+        $this->token = $token;
     }
 
     /**
@@ -105,10 +111,7 @@ class ResourceNodeController extends AbstractCrudController
         //directly in the finder
         //it currently work (altough we can see stuff we shouldnt do through the api)
 
-        $roles = array_map(
-            function ($role) { return $role->getRole(); },
-            $this->container->get('security.token_storage')->getToken()->getRoles()
-        );
+        $roles = $this->token->getToken()->getRoleNames();
 
         if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
             $options['hiddenFilters']['roles'] = $roles;

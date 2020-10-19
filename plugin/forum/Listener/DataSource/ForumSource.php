@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\ForumBundle\Entity\Message;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class ForumSource
 {
@@ -26,12 +25,6 @@ class ForumSource
     /** @var FinderProvider */
     private $finder;
 
-    /**
-     * ForumSource constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param FinderProvider        $finder
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         FinderProvider $finder
@@ -40,9 +33,6 @@ class ForumSource
         $this->finder = $finder;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
@@ -54,10 +44,7 @@ class ForumSource
             $options['hiddenFilters']['roles'] = ['ROLE_ANONYMOUS'];
         } else {
             // filter by current user roles
-            $options['hiddenFilters']['roles'] = array_map(
-                function (Role $role) { return $role->getRole(); },
-                $this->tokenStorage->getToken()->getRoles()
-            );
+            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
         }
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {

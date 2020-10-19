@@ -4,7 +4,6 @@ namespace Claroline\AppBundle\Manager;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
-use Symfony\Component\Security\Core\Role\Role;
 
 class SecurityManager
 {
@@ -32,20 +31,5 @@ class SecurityManager
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated use TokenStorageInterface::getRoles()->getRolenames()
-     */
-    public function getRoles()
-    {
-        $token = $this->tokenStorage->getToken();
-        if ($token) {
-            return array_map(function (Role $role) {
-                return $role->getRole();
-            }, $token->getRoles());
-        }
-
-        return [];
     }
 }

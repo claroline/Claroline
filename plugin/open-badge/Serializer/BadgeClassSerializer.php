@@ -26,7 +26,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class BadgeClassSerializer
 {
@@ -307,9 +306,7 @@ class BadgeClassSerializer
         $isOrganizationManager = false;
         $allowedUserIds = [];
 
-        $roles = array_map(function (Role $role) {
-            return $role->getRole();
-        }, $this->tokenStorage->getToken()->getRoles());
+        $roles = $this->tokenStorage->getToken()->getRoleNames();
 
         //check if user manager of badge organization (issuer)
         $administratedOrganizationsIds = array_map(function (Organization $organization) {
@@ -369,8 +366,8 @@ class BadgeClassSerializer
         $isAdmin = false;
         //check administrator status here
 
-        foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
-            if ('ROLE_ADMIN' === $role->getRole()) {
+        foreach ($this->tokenStorage->getToken()->getRoleNames() as $role) {
+            if ('ROLE_ADMIN' === $role) {
                 $isAdmin = true;
             }
         }

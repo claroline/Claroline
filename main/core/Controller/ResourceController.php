@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -52,8 +51,6 @@ class ResourceController
     private $authorization;
     /** @var Environment */
     private $templating;
-    /** @var Utilities */
-    private $security;
     /** @var SerializerProvider */
     private $serializer;
     /** @var ResourceManager */
@@ -73,7 +70,6 @@ class ResourceController
         TokenStorageInterface $tokenStorage,
         Environment $templating,
         FinderProvider $finder,
-        Utilities $security,
         SerializerProvider $serializer,
         ResourceManager $manager,
         ResourceActionManager $actionManager,
@@ -83,7 +79,6 @@ class ResourceController
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
-        $this->security = $security;
         $this->serializer = $serializer;
         $this->manager = $manager;
         $this->actionManager = $actionManager;
@@ -114,7 +109,7 @@ class ResourceController
         }
 
         // gets the current user roles to check access restrictions
-        $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
+        $userRoles = $this->tokenStorage->getToken()->getRoleNames();
         $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
         $isManager = $this->manager->isManager($resourceNode);
 

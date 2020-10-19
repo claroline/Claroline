@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class FacetRepository extends EntityRepository
 {
@@ -32,9 +31,7 @@ class FacetRepository extends EntityRepository
         // retrieves current user roles
         $roleNames = [];
         if ($token) {
-            $roleNames = array_map(function (Role $role) {
-                return $role->getRole();
-            }, $token->getRoles());
+            $roleNames = $token->getRoleNames();
         }
 
         $qb = $this->createQueryBuilder('f');

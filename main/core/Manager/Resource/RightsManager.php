@@ -28,7 +28,6 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
  * @deprecated use OptimizedRightsManager instead
@@ -244,9 +243,7 @@ class RightsManager implements LoggerAwareInterface
             return false;
         }
 
-        $roleNames = array_map(function (BaseRole $role) {
-            return $role->getRole();
-        }, $token->getRoles());
+        $roleNames = $token->getRoleNames();
 
         $isWorkspaceUsurp = in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roleNames);
 
@@ -272,11 +269,7 @@ class RightsManager implements LoggerAwareInterface
     //maybe use that one in the voter later because it's going to be useful
     public function getCurrentPermissionArray(ResourceNode $resourceNode)
     {
-        $currentRoles = $this->tokenStorage->getToken()->getRoles();
-
-        $roleNames = array_map(function (BaseRole $roleName) {
-            return $roleName->getRole();
-        }, $currentRoles);
+        $roleNames = $this->tokenStorage->getToken()->getRoleNames();
 
         $creatable = [];
         if ($this->isManager($resourceNode)) {

@@ -290,7 +290,6 @@ services:
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@service_container'
         calls:
           - setLogger: [ '@logger' ]

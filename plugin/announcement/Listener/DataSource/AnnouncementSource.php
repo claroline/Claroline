@@ -16,7 +16,6 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class AnnouncementSource
 {
@@ -26,12 +25,6 @@ class AnnouncementSource
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * AnnouncementSource constructor.
-     *
-     * @param FinderProvider        $finder
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
       FinderProvider $finder,
       TokenStorageInterface $tokenStorage
@@ -40,9 +33,6 @@ class AnnouncementSource
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
@@ -54,10 +44,7 @@ class AnnouncementSource
             $options['hiddenFilters']['roles'] = ['ROLE_ANONYMOUS'];
         } else {
             // filter by current user roles
-            $options['hiddenFilters']['roles'] = array_map(
-                function (Role $role) { return $role->getRole(); },
-                $this->tokenStorage->getToken()->getRoles()
-            );
+            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
         }
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {

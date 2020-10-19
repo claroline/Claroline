@@ -23,7 +23,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RuntimeException;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("name")
  */
-class Role extends BaseRole
+class Role
 {
     use Id;
     use Uuid;
@@ -164,8 +163,6 @@ class Role extends BaseRole
 
     public function __construct()
     {
-        parent::__construct('');
-
         $this->refreshUuid();
 
         $this->users = new ArrayCollection();

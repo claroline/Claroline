@@ -17,19 +17,12 @@ use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class BlogPostsSource
 {
     /** @var FinderProvider */
     private $finder;
 
-    /**
-     * BlogPostsSource constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param FinderProvider        $finder
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         FinderProvider $finder
@@ -38,9 +31,6 @@ class BlogPostsSource
         $this->finder = $finder;
     }
 
-    /**
-     * @param GetDataEvent $event
-     */
     public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions() ?? [];
@@ -51,10 +41,7 @@ class BlogPostsSource
             $options['hiddenFilters']['roles'] = ['ROLE_ANONYMOUS'];
         } else {
             // filter by current user roles
-            $options['hiddenFilters']['roles'] = array_map(
-                function (Role $role) { return $role->getRole(); },
-                $this->tokenStorage->getToken()->getRoles()
-            );
+            $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
         }
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {

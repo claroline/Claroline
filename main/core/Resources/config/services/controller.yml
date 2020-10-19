@@ -74,6 +74,7 @@ services:
           - '@claroline.manager.rights_manager'
           - '@claroline.manager.log_connect'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+          - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:
         arguments:
@@ -294,7 +295,6 @@ services:
           - '@security.token_storage'
           - '@twig'
           - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\CoreBundle\Library\Security\Utilities'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@claroline.manager.resource_manager'
           - '@claroline.manager.resource_action'

@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\User\UserRepository;
@@ -50,7 +49,6 @@ class WorkspaceManager implements LoggerAwareInterface
     private $dispatcher;
     /** @var ObjectManager */
     private $om;
-    private $sut;
     /** @var Crud */
     private $crud;
     private $container;
@@ -68,12 +66,10 @@ class WorkspaceManager implements LoggerAwareInterface
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        Utilities $sut,
         ContainerInterface $container
     ) {
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
-        $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->container = $container;
@@ -152,7 +148,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $toolName = null,
         $action = 'open'
     ) {
-        $userRoleNames = $this->sut->getRoles($token);
+        $userRoleNames = $token->getRoleNames();
         $accesses = [];
 
         if (in_array('ROLE_ADMIN', $userRoleNames)) {

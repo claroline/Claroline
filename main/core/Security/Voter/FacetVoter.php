@@ -22,18 +22,13 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class FacetVoter
 {
-    private $em;
-    private $container;
-
     const VIEW = 'view';
     const EDIT = 'edit';
 
     /**
      * Attributes can either be "open" or "edit".
      *
-     * @param TokenInterface $token
      * @param $object
-     * @param array $attributes
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
@@ -63,13 +58,10 @@ class FacetVoter
 
     public function checkPanelView(TokenInterface $token, PanelFacet $panel)
     {
-        $userRoles = array_map(function ($el) {
-            return $el->getRole();
-        }, $token->getRoles());
         $panelRoles = $panel->getPanelFacetsRole();
 
         foreach ($panelRoles as $panelRole) {
-            if (in_array($panelRole->getRole()->getName(), $userRoles)) {
+            if (in_array($panelRole->getRole()->getName(), $token->getRoleNames())) {
                 if ($panelRole->canOpen()) {
                     return  VoterInterface::ACCESS_GRANTED;
                 }
@@ -81,13 +73,10 @@ class FacetVoter
 
     public function checkPanelEdit(TokenInterface $token, PanelFacet $panel)
     {
-        $userRoles = array_map(function ($el) {
-            return $el->getRole();
-        }, $token->getRoles());
         $panelRoles = $panel->getPanelFacetsRole();
 
         foreach ($panelRoles as $panelRole) {
-            if (in_array($panelRole->getRole()->getName(), $userRoles)) {
+            if (in_array($panelRole->getRole()->getName(), $token->getRoleNames())) {
                 if ($panelRole->canEdit()) {
                     return  VoterInterface::ACCESS_GRANTED;
                 }

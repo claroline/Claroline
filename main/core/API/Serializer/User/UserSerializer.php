@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 class UserSerializer
 {
@@ -112,8 +111,8 @@ class UserSerializer
         $showEmailRoles = $this->config->getParameter('profile.show_email') ?? [];
         $showEmail = false;
         if ($token) {
-            $showEmail = !empty(array_filter($token->getRoles(), function (BaseRole $role) use ($showEmailRoles) {
-                return 'ROLE_ADMIN' === $role->getRole() || in_array($role->getRole(), $showEmailRoles);
+            $showEmail = !empty(array_filter($token->getRoleNames(), function (string $role) use ($showEmailRoles) {
+                return 'ROLE_ADMIN' === $role || in_array($role, $showEmailRoles);
             }));
         }
 
@@ -291,8 +290,8 @@ class UserSerializer
         $profileConfig = $this->config->getParameter('profile');
         $editRoles = [];
         if ($token && !empty($profileConfig['roles_edition'])) {
-            $editRoles = array_filter($token->getRoles(), function (BaseRole $role) use ($profileConfig) {
-                return in_array($role->getRole(), $profileConfig['roles_edition']);
+            $editRoles = array_filter($token->getRoleNames(), function (string $role) use ($profileConfig) {
+                return in_array($role, $profileConfig['roles_edition']);
             });
         }
 
