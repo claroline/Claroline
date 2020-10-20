@@ -67,29 +67,15 @@ class FileListener
 
     /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
-    /**
-     * @var FileUtilities
-     */
+
+    /** @var FileUtilities */
     private $fileUtils;
 
-    /**
-     * FileListener constructor.
-     *
-     * @param TokenStorageInterface     $tokenStorage
-     * @param ObjectManager             $om
-     * @param StrictDispatcher          $eventDispatcher
-     * @param string                    $filesDir
-     * @param MimeTypeGuesser           $mimeTypeGuesser
-     * @param SerializerProvider        $serializer
-     * @param ResourceManager           $resourceManager
-     * @param ResourceEvaluationManager $resourceEvalManager
-     * @param FileUtilities             $fileUtils
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
-        $filesDir,
+        string $filesDir,
         MimeTypeGuesser $mimeTypeGuesser,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
@@ -107,9 +93,6 @@ class FileListener
         $this->fileUtils = $fileUtils;
     }
 
-    /**
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var File $resource */
@@ -153,8 +136,6 @@ class FileListener
 
     /**
      * Changes actual file associated to File resource.
-     *
-     * @param ResourceActionEvent $event
      */
     public function onFileChange(ResourceActionEvent $event)
     {
@@ -169,6 +150,7 @@ class FileListener
 
             $file->setMimeType($data['file']['mimeType']);
             $node->setMimeType($data['file']['mimeType']);
+            $node->setModificationDate(new \DateTime());
 
             $this->om->persist($file);
             $this->om->persist($node);
@@ -180,9 +162,6 @@ class FileListener
         );
     }
 
-    /**
-     * @param DeleteResourceEvent $event
-     */
     public function onDelete(DeleteResourceEvent $event)
     {
         /** @var File $file */
@@ -236,9 +215,6 @@ class FileListener
         //move filebags elements here
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var File $file */
@@ -273,9 +249,6 @@ class FileListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DownloadResourceEvent $event
-     */
     public function onDownload(DownloadResourceEvent $event)
     {
         /** @var File $file */
@@ -305,9 +278,6 @@ class FileListener
         return 'file.'.$eventName.'.'.$event;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onGenerateResourceTracking(GenericDataEvent $event)
     {
         $data = $event->getData();
