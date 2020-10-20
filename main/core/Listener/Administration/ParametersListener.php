@@ -7,7 +7,6 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\ThemeBundle\Entity\Icon\IconSet;
-use Claroline\ThemeBundle\Library\Icon\IconSetTypeEnum;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 
 class ParametersListener
@@ -24,14 +23,6 @@ class ParametersListener
     /** @var IconSetManager */
     private $iconSetManager;
 
-    /**
-     * ParametersListener constructor.
-     *
-     * @param ObjectManager        $om
-     * @param ParametersSerializer $serializer
-     * @param LocaleManager        $localeManager
-     * @param IconSetManager       $iconSetManager
-     */
     public function __construct(
         ObjectManager $om,
         ParametersSerializer $serializer,
@@ -46,12 +37,10 @@ class ParametersListener
 
     /**
      * Displays parameters administration tool.
-     *
-     * @param OpenToolEvent $event
      */
     public function onDisplayTool(OpenToolEvent $event)
     {
-        $iconSets = $this->iconSetManager->listIconSetsByType(IconSetTypeEnum::RESOURCE_ICON_SET);
+        $iconSets = $this->iconSetManager->listIconSetsByType(IconSet::RESOURCE_ICON_SET);
         $parameters = $this->serializer->serialize();
 
         $event->setData([

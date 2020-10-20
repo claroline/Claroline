@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\ThemeBundle\Entity\Icon\IconItem;
 use Claroline\ThemeBundle\Entity\Icon\IconSet;
-use Claroline\ThemeBundle\Library\Icon\IconSetTypeEnum;
 use Claroline\ThemeBundle\Library\Icon\ResourceIconSetIconItemList;
 use Claroline\ThemeBundle\Repository\Icon\IconItemRepository;
 use Psr\Log\LoggerAwareInterface;
@@ -163,11 +162,11 @@ class IconSetManager implements LoggerAwareInterface
                     $name = pathinfo($setDir->getFilename(), PATHINFO_FILENAME);
 
                     if (!in_array($name, ['.', ''])) {
-                        $iconSet = $this->iconSetRepo->findOneBy(['name' => $name, 'type' => IconSetTypeEnum::RESOURCE_ICON_SET]);
+                        $iconSet = $this->iconSetRepo->findOneBy(['name' => $name, 'type' => IconSet::RESOURCE_ICON_SET]);
 
                         if (!$iconSet) {
                             $iconSet = new IconSet();
-                            $iconSet->setType(IconSetTypeEnum::RESOURCE_ICON_SET);
+                            $iconSet->setType(IconSet::RESOURCE_ICON_SET);
                             $iconSet->setName($name);
 
                             if ('claroline' === $name) {

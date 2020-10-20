@@ -14,7 +14,6 @@
 namespace Claroline\ThemeBundle\Entity\Icon;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\ThemeBundle\Library\Icon\IconSetTypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -27,6 +26,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class IconSet
 {
     use Uuid;
+
+    const RESOURCE_ICON_SET = 'resource_icon_set';
+    const UTILITIES_ICON_SET = 'utilities_icon_set';
+    const THEME_ICON_SET = 'theme_icon_set';
 
     /**
      * @var int
@@ -176,14 +179,7 @@ class IconSet
      */
     public function setType($type)
     {
-        if (null === $type) {
-            $this->$type = $type;
-        } else {
-            $iconSetType = new IconSetTypeEnum($type);
-            $this->type = $iconSetType->getValue();
-        }
-
-        return $this;
+        $this->type = $type;
     }
 
     /**

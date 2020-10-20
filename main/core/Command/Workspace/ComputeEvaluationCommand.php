@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Command\Workspace;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;

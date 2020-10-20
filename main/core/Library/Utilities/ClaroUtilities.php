@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ClaroUtilities
@@ -23,17 +22,6 @@ class ClaroUtilities
     {
         $this->container = $container;
         $this->hasIntl = extension_loaded('intl');
-    }
-
-    public function formatCsvOutput($data)
-    {
-        // If encoding not UTF-8 then convert it to UTF-8
-        $data = $this->stringToUtf8($data);
-        $data = str_replace("\r\n", PHP_EOL, $data);
-        $data = str_replace("\r", PHP_EOL, $data);
-        $data = str_replace("\n", PHP_EOL, $data);
-
-        return $data;
     }
 
     /**
@@ -60,23 +48,12 @@ class ClaroUtilities
                     $result = $item;
                     break;
                 }
-            } catch (ContextErrorException $e) {
+            } catch (\Exception $e) {
                 unset($e);
             }
         }
 
         return $result;
-    }
-
-    public function stringToUtf8($string)
-    {
-        // If encoding not UTF-8 then convert it to UTF-8
-        $encoding = $this->detectEncoding($string);
-        if ($encoding && 'UTF-8' !== $encoding) {
-            $string = iconv($encoding, 'UTF-8', $string);
-        }
-
-        return $string;
     }
 
     public function html2Csv($htmlStr, $preserveMedia = false)
@@ -111,6 +88,7 @@ class ClaroUtilities
     {
         $ret = '['.$matches[1].(empty($matches[3]) ? '' : ' src="'.$matches[3].'"');
         if (!empty($matches[4])) {
+            $srcs = [];
             preg_match_all('/src=[\'"]([^\'"]+)[\'"]/', $matches[4], $srcs);
             foreach ($srcs[1] as $src) {
                 $ret .= ' src="'.$src.'"';
@@ -119,5 +97,27 @@ class ClaroUtilities
         $ret .= ']';
 
         return $ret;
+    }
+
+    private function formatCsvOutput($data)
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $data = $this->stringToUtf8($data);
+        $data = str_replace("\r\n", PHP_EOL, $data);
+        $data = str_replace("\r", PHP_EOL, $data);
+        $data = str_replace("\n", PHP_EOL, $data);
+
+        return $data;
+    }
+
+    private function stringToUtf8($string)
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $encoding = $this->detectEncoding($string);
+        if ($encoding && 'UTF-8' !== $encoding) {
+            $string = iconv($encoding, 'UTF-8', $string);
+        }
+
+        return $string;
     }
 }
