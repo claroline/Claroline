@@ -949,13 +949,14 @@ class ClacoFormController
                 } else {
                     $value = '';
                 }
-                $name = 'field_'.$field->getId();
 
                 if (is_array($value)) {
                     $value = implode(', ', $value);
                 }
 
-                $template = str_replace("%$name%", $value, $template);
+                $template = str_replace("%field_{$field->getUuid()}%", $value, $template);
+                // for retro-compatibility with very old templates
+                $template = str_replace("%field_{$field->getId()}%", $value, $template);
             }
         }
         $canViewComments = $this->clacoFormManager->canViewComments($clacoForm);
