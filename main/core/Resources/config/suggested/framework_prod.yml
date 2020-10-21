@@ -9,7 +9,7 @@ framework:
     translator:      { fallback: en }
     default_locale: "%locale%"
     session:
-      save_path: "%kernel.project_dir%/var/sessions"
+      handler_id: "%env(SESSION_HANDLER_ID)%"
       cookie_httponly: true
       cookie_secure: auto
       cookie_samesite: lax

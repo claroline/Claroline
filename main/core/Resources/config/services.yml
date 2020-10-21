@@ -15,11 +15,12 @@ imports:
     - { resource: services/listener.yml }
     - { resource: services/library.yml }
     - { resource: services/converter.yml }
+    - { resource: services/session.yml }
 
 services:
     Claroline\CoreBundle\Listener\AuthenticationFailureHandler:
         parent: security.authentication.failure_handler
-        
+
     Claroline\CoreBundle\Routing\ClaroRouter:
         parent: router.default
 

@@ -1,0 +1,26 @@
+parameters:
+    env(REDIS_HOST): 'localhost'
+    env(int:REDIS_PORT): '6379'
+    env(REDIS_PASSWORD): ''
+    env(SESSION_HANDLER_ID): 'claroline.session_handler.file'
+
+services:
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler:
+        arguments:
+            - "%kernel.project_dir%/var/sessions"
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - !service
+                class: Redis
+                calls:
+                    - connect: ['%env(REDIS_HOST)%', '%env(int:REDIS_PORT)%']
+                    - auth: ['%env(REDIS_PASSWORD)%']
+
+    claroline.session_handler.redis:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler
+        arguments: ['@Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler']
+
+    claroline.session_handler.file:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler
+        arguments: ['@Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler']
