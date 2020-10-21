@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {displayDuration} from '#/main/app/intl/date'
+import {displayDuration, displayDate} from '#/main/app/intl/date'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-types'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
@@ -19,7 +19,7 @@ const Parameters = props =>
       &nbsp;
       <b>
         {props.showCorrectionAt === SHOW_CORRECTION_AT_DATE ?
-          props.correctionDate :
+          displayDate(props.correctionDate, false, true) :
           trans(correctionModes.find(mode => mode[0] === props.showCorrectionAt)[1], {}, 'quiz')
         }
       </b>
