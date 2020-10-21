@@ -1,7 +1,7 @@
 imports:
     - { resource: services/controller.yml }
     - { resource: services/command.yml }
-  # - { resource: services/finder.yml }
+    - { resource: services/finder.yml }
     - { resource: services/manager.yml }
     - { resource: services/adapter.yml }
     - { resource: services/persistence.yml }
@@ -12,6 +12,12 @@ services:
         autowire: false
         autoconfigure: false
         public: true
+
+    Claroline\AppBundle\Routing\Router:
+        public: true
+        autowire: false
+        autoconfigure: false
+        parent: router.default
 
     Claroline\AppBundle\API\FinderProvider:
         arguments:
@@ -74,4 +80,3 @@ services:
         arguments:
             - '@file_locator'
             - '@annotation_reader'
-            - '@service_container'

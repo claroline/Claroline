@@ -45,11 +45,7 @@ class Loader
         }
 
         if (!file_exists($pluginPath)) {
-            throw new RuntimeException(
-                "No bundle class file matches the FQCN '{$pluginFqcn}' "
-                .'(expected path was : '.$pluginPath.')',
-                self::NO_PLUGIN_FOUND
-            );
+            throw new RuntimeException("No bundle class file matches the FQCN '{$pluginFqcn}' (expected path was : {$pluginPath})", self::NO_PLUGIN_FOUND);
         }
 
         return $this->getPluginInstance($pluginPath, $pluginFqcn);
@@ -60,26 +56,17 @@ class Loader
         require_once $pluginPath;
 
         if (!class_exists($pluginFqcn)) {
-            throw new RuntimeException(
-                "Class '{$pluginFqcn}' not found in '{$pluginPath}'.",
-                self::NON_EXISTENT_BUNDLE_CLASS
-            );
+            throw new RuntimeException("Class '{$pluginFqcn}' not found in '{$pluginPath}'.", self::NON_EXISTENT_BUNDLE_CLASS);
         }
 
         $reflectionClass = new \ReflectionClass($pluginFqcn);
 
         if (!$reflectionClass->IsInstantiable()) {
-            throw new RuntimeException(
-                "Class '{$pluginFqcn}' is not instantiable.",
-                self::NON_INSTANTIABLE_BUNDLE_CLASS
-            );
+            throw new RuntimeException("Class '{$pluginFqcn}' is not instantiable.", self::NON_INSTANTIABLE_BUNDLE_CLASS);
         }
 
         if (!$reflectionClass->isSubclassOf('Claroline\CoreBundle\Library\DistributionPluginBundle')) {
-            throw new RuntimeException(
-                "Class '{$pluginFqcn}' doesn't extend Claroline 'DistributionPluginBundle' class.",
-                self::UNEXPECTED_BUNDLE_TYPE
-            );
+            throw new RuntimeException("Class '{$pluginFqcn}' doesn't extend Claroline 'DistributionPluginBundle' class.", self::UNEXPECTED_BUNDLE_TYPE);
         }
 
         return new $pluginFqcn();

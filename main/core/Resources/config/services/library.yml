@@ -109,9 +109,7 @@ services:
 
     Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser: ~
 
-    Claroline\CoreBundle\Library\Utilities\ClaroUtilities:
-        arguments:
-            - '@service_container'
+    Claroline\CoreBundle\Library\Utilities\ClaroUtilities: ~
 
     Claroline\CoreBundle\Library\Session\SessionStorageOptionsFactory:
         arguments:

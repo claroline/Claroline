@@ -16,6 +16,9 @@ import {DesktopMain} from '#/main/app/layout/sections/desktop/containers/main'
 import {AdministrationMenu} from '#/main/app/layout/sections/administration/containers/menu'
 import {AdministrationMain} from '#/main/app/layout/sections/administration/containers/main'
 
+import {AccountMenu} from '#/main/app/layout/sections/account/containers/menu'
+import {AccountMain} from '#/main/app/layout/sections/account/containers/main'
+
 import {WorkspaceMenu} from '#/main/core/workspace/containers/menu'
 import {WorkspaceMain} from '#/main/core/workspace/containers/main'
 
@@ -48,6 +51,10 @@ const LayoutMain = props =>
               path: '/admin',
               component: AdministrationMenu,
               disabled: props.unavailable
+            }, {
+              path: '/account',
+              component: AccountMenu,
+              disabled: !props.authenticated
             }
           ]}
         />
@@ -73,6 +80,10 @@ const LayoutMain = props =>
               path: '/admin',
               component: AdministrationMain,
               disabled: props.unavailable
+            }, {
+              path: '/account',
+              component: AccountMain,
+              disabled: !props.authenticated
             },
             // it must be declared last otherwise it will always match.
             // and it cannot be set to exact: true because it contains sub routes for maintenance, login and registration.

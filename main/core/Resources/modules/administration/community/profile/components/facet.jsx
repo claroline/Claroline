@@ -6,6 +6,7 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
@@ -115,7 +116,11 @@ const ProfileFacetComponent = props =>
     }
 
     {0 === props.facet.sections.length &&
-      <div className="no-section-info">{trans('profile_facet_no_section')}</div>
+      <ContentPlaceholder
+        size="lg"
+        icon="fa fa-frown-o"
+        title={trans('profile_facet_no_section')}
+      />
     }
 
     <Button

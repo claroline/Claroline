@@ -1,103 +1,65 @@
 import React from 'react'
-import classes from 'classnames'
+import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {PageFull} from '#/main/app/page/components/full'
 
+import {User as UserTypes} from '#/main/core/user/prop-types'
 import {getActions} from '#/main/core/user/utils'
 import {route} from '#/main/core/user/routing'
-import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
-import {PageSimple} from '#/main/app/page/components/simple'
-import {PageContent} from '#/main/core/layout/page'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
-const UserPageHeader = props =>
-  <header className={classes('page-header', props.className)}>
-    <div className="page-header-picture">
-      <UserAvatar
-        className="img-thumbnail"
-        picture={props.picture}
-      />
-    </div>
-
-    <div className="page-header-content">
-      <h1 className="page-title">
-        {props.title}
-        &nbsp;
-        {props.subtitle && <small>{props.subtitle}</small>}
-      </h1>
-
-      {props.children}
-    </div>
-  </header>
-
-UserPageHeader.propTypes = {
-  className: T.string,
-  picture: T.shape({
-    url: T.string.isRequired
-  }),
-  title: T.string.isRequired,
-  subtitle: T.string,
-  children: T.node.isRequired
-}
-
 const UserPage = props =>
-  <PageSimple
+  <PageFull
     className="user-page"
     showBreadcrumb={props.showBreadcrumb}
     path={props.breadcrumb.concat([{
       label: props.user.name,
       target: ''
     }])}
+    title={props.user.name}
+    subtitle={props.user.username}
+    icon={
+      <UserAvatar className="user-avatar-lg img-thumbnail" picture={props.user.picture} />
+    }
+    header={{
+      title: `${trans('user_profile')} - ${props.user.name}`,
+      description: get(props.user, 'meta.description')
+    }}
+    toolbar="edit | send-message add-contact | more"
+    actions={
+      getActions([props.user], {
+        add: () => false,
+        update: (users) => props.history.push(route(users[0])),
+        delete: () => false
+      }, props.path, props.currentUser)
+        .then(actions => [
+          {
+            name: 'edit',
+            type: LINK_BUTTON,
+            icon: 'fa fa-pencil',
+            label: trans('edit', {}, 'actions'),
+            target: props.path + '/edit',
+            displayed: hasPermission('edit', props.user),
+            primary: true
+          }
+        ].concat(actions))
+    }
   >
-    <UserPageHeader
-      picture={props.user.picture}
-      title={props.user.name}
-      subtitle={props.user.username}
-    >
-      <Toolbar
-        id="user-actions"
-        className="page-actions"
-        tooltip="bottom"
-        toolbar="edit | send-message add-contact | more"
-        actions={
-          getActions([props.user], {
-            add: () => false,
-            update: (users) => props.history.push(route(users[0])),
-            delete: () => false
-          }, props.path, props.currentUser)
-            .then(actions => [
-              {
-                name: 'edit',
-                type: LINK_BUTTON,
-                icon: 'fa fa-pencil',
-                label: trans('edit', {}, 'actions'),
-                target: props.path + '/edit',
-                displayed: hasPermission('edit', props.user),
-                primary: true
-              }
-            ].concat(actions))
-        }
-        scope="object"
-      />
-    </UserPageHeader>
+    {props.children}
+  </PageFull>
 
-    <PageContent>
-      {props.children}
-    </PageContent>
-  </PageSimple>
-
-implementPropTypes(UserPage, PageTypes, {
+UserPage.propTypes = {
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,
   currentUser: T.object,
-  user: T.shape({
-    name: T.string.isRequired
-  }).isRequired,
+  user: T.shape(
+    UserTypes.propTypes
+  ).isRequired,
   children: T.node.isRequired,
   path: T.string.isRequired,
   showBreadcrumb: T.bool.isRequired,
@@ -107,9 +69,11 @@ implementPropTypes(UserPage, PageTypes, {
     displayed: T.bool,
     target: T.oneOfType([T.string, T.array])
   }))
-}, {
+}
+
+UserPage.defaultProps = {
   breadcrumb: []
-})
+}
 
 export {
   UserPage

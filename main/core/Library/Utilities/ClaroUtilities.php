@@ -11,16 +11,12 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class ClaroUtilities
 {
-    private $container;
     private $hasIntl;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->hasIntl = extension_loaded('intl');
     }
 

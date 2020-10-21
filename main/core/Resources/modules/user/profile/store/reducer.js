@@ -1,34 +1,36 @@
-import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {
-  PROFILE_FACET_OPEN
+  PROFILE_FACET_OPEN,
+  PROFILE_LOAD,
+  PROFILE_SET_LOADED
 } from '#/main/core/user/profile/store/actions'
 
 import {decorate} from '#/main/core/user/profile/decorator'
-import {makeListReducer} from '#/main/app/content/list/store'
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors as select} from '#/main/core/user/profile/store/selectors'
-import {selectors} from '#/main/core/tools/community/store'
+import {selectors} from '#/main/core/user/profile/store/selectors'
 
 const reducer = combineReducers({
+  loaded: makeReducer(false, {
+    [PROFILE_LOAD]: () => true,
+    [PROFILE_SET_LOADED]: (state, action) => action.loaded
+  }),
   currentFacet: makeReducer(null, {
     [PROFILE_FACET_OPEN]: (state, action) => action.id
   }),
-  contacts: makeListReducer(selectors.STORE_NAME + '.profile.contacts', {}),
   facets: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => decorate(action.toolData.profile)}
-  ),
-  user: makeFormReducer(select.FORM_NAME),
-  loaded: makeReducer(false, {
-    ['FORM_RESET/' + select.FORM_NAME]: () => true
+    [PROFILE_LOAD]: (state, action) => decorate(action.facets || [])
+  }),
+  user: makeFormReducer(selectors.FORM_NAME, {}, {
+    data: makeReducer({}, {
+      [PROFILE_LOAD]: (state, action) => action.user
+    }),
+    originalData: makeReducer({}, {
+      [PROFILE_LOAD]: (state, action) => action.user
+    })
   }),
   parameters: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters || {}
-  }),
-  badges: combineReducers({
-    mine: makeListReducer('badges.mine', {})
+    [PROFILE_LOAD]: (state, action) => action.parameters || {}
   })
 })
 

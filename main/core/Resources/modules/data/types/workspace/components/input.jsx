@@ -23,7 +23,6 @@ const WorkspacesButton = props =>
     modal={[MODAL_WORKSPACES, {
       url: props.model ? ['apiv2_workspace_list_model'] : ['apiv2_workspace_list_managed'],
       title: props.title,
-      model: props.model,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         callback: () => props.onChange(selected[0])

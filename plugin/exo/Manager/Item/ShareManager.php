@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Manager\Item;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\User\UserRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Repository\ItemRepository;
@@ -48,10 +47,8 @@ class ShareManager
         // Loaded questions (we load it to be sure it exist)
         $questions = $questionRepo->findByUuids($shareRequest['questions']);
 
-        /** @var UserRepository $userRepo */
-        $userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
         // Loaded users (we load it to be sure it exist)
-        $users = $userRepo->findByIds($shareRequest['users']);
+        $users = $this->om->findByIds(User::class, $shareRequest['users']);
 
         // Share each question with each user
         foreach ($questions as $question) {

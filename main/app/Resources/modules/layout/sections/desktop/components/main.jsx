@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ContentLoader} from '#/main/app/content/components/loader'
+import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ToolMain} from '#/main/core/tool/containers/main'
 
 class DesktopMain extends Component {
@@ -25,6 +26,16 @@ class DesktopMain extends Component {
         <ContentLoader
           size="lg"
           description={trans('loading', {}, 'desktop')}
+        />
+      )
+    }
+
+    if (0 === this.props.tools.length) {
+      return (
+        <ContentForbidden
+          size="lg"
+          title={trans('access_forbidden', {}, 'desktop')}
+          description={trans('access_forbidden_help', {}, 'desktop')}
         />
       )
     }

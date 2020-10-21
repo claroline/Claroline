@@ -1,39 +1,41 @@
-import {selectors as select} from '#/main/core/tools/community/store/selectors'
 import {createSelector} from 'reselect'
 
-const store = (state) => state[select.STORE_NAME]
-const FORM_NAME = select.STORE_NAME + '.profile.user'
+const STORE_NAME = 'userProfile'
+const FORM_NAME = STORE_NAME + '.user'
+
+const store = (state) => state[STORE_NAME]
 
 const facets = createSelector(
   [store],
   (store) => {
-    return store.profile.facets
+    return store.facets
   }
 )
 
 const loaded = createSelector(
   [store],
   (store) => {
-    return store.profile.loaded
+    return store.loaded
   }
 )
 
 const currentFacet = createSelector(
   [store],
   (store) => {
-    return store.profile.facets.find(facet => facet.id === store.profile.currentFacet) || {}
+    return store.facets.find(facet => facet.id === store.currentFacet) || {}
   }
 )
 
 const parameters = createSelector(
   [store],
-  (store) => store.profile.parameters
+  (store) => store.parameters
 )
 
 export const selectors = {
+  STORE_NAME,
+  FORM_NAME,
   facets,
   currentFacet,
   parameters,
-  loaded,
-  FORM_NAME
+  loaded
 }

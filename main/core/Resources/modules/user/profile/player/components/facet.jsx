@@ -9,7 +9,7 @@ import {selectors as detailsSelect} from '#/main/app/content/details/store'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
-import {selectors as select} from '#/main/core/user/profile/store/selectors'
+import {selectors} from '#/main/core/user/profile/store/selectors'
 import {getDetailsDefaultSection, formatDetailsSections} from '#/main/core/user/profile/utils'
 
 const ProfileFacetComponent = props => {
@@ -27,7 +27,7 @@ const ProfileFacetComponent = props => {
 
   return (
     <DetailsData
-      name={select.FORM_NAME}
+      name={selectors.FORM_NAME}
       title={props.facet.title}
       sections={sections}
     />
@@ -46,9 +46,9 @@ ProfileFacetComponent.propTypes = {
 const ProfileFacet = connect(
   state => ({
     currentUser: securitySelectors.currentUser(state),
-    user: detailsSelect.data(detailsSelect.details(state, select.FORM_NAME)),
-    facet: select.currentFacet(state),
-    parameters: select.parameters(state)
+    user: detailsSelect.data(detailsSelect.details(state, selectors.FORM_NAME)),
+    facet: selectors.currentFacet(state),
+    parameters: selectors.parameters(state)
   })
 )(ProfileFacetComponent)
 

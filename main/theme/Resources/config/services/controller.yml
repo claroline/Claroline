@@ -35,7 +35,7 @@ services:
 
     Claroline\ThemeBundle\Controller\IconController:
         arguments:
-          - '%kernel.project_dir%/app'
+          - '%kernel.project_dir%'
 
     Claroline\ThemeBundle\Controller\Icon\IconSetController: ~
 

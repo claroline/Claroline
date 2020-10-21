@@ -12,16 +12,11 @@ use Symfony\Component\Yaml\Yaml;
 class IconController
 {
     /** @var string */
-    private $kernelDir;
+    private $projectDir;
 
-    /**
-     * IconController constructor.
-     *
-     * @param string $kernelDir
-     */
-    public function __construct($kernelDir)
+    public function __construct(string $projectDir)
     {
-        $this->kernelDir = $kernelDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -31,7 +26,7 @@ class IconController
      */
     public function listSystemAction()
     {
-        $metadataPath = $this->kernelDir.'/../node_modules/@fortawesome/fontawesome-free/metadata/categories.yml';
+        $metadataPath = $this->projectDir.'/node_modules/@fortawesome/fontawesome-free/metadata/categories.yml';
 
         $icons = Yaml::parseFile($metadataPath);
 

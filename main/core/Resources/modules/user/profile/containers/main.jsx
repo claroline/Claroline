@@ -1,35 +1,31 @@
 import {connect} from 'react-redux'
-import merge from 'lodash/merge'
-import mergeWith from 'lodash/mergeWith'
 
 import {withRouter} from '#/main/app/router'
+import {withReducer} from '#/main/app/store/reducer'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as toolSelectors} from  '#/main/core/tool/store'
+import {selectors as detailSelectors} from '#/main/app/content/details/store'
 
-import {ProfileComponent} from '#/main/core/user/profile/components/main'
-import {selectors} from '#/main/app/content/details/store'
-import {selectors as profileSelect} from '#/main/core/user/profile/store/selectors'
-import {selectors as select} from '#/main/core/user/profile/store/selectors'
+import {Profile as ProfileComponent} from '#/main/core/user/profile/components/main'
+import {selectors, reducer, actions} from '#/main/core/user/profile/store'
 
 const Profile = withRouter(
-  connect(
-    (state) => {
-      // retrieve tool rights and pass it to the user page
-      const user = selectors.data(selectors.details(state, select.FORM_NAME))
-      const toolPerms = toolSelectors.permissions(state)
-
-      return ({
+  withReducer(selectors.STORE_NAME, reducer)(
+    connect(
+      (state) => ({
         currentContext: toolSelectors.context(state),
-        path: toolSelectors.path(state) + '/profile',
         currentUser: securitySelectors.currentUser(state),
-        user: merge({}, user, {
-          permissions: mergeWith({}, user.permissions || {}, toolPerms, (objValue, srcValue) => objValue || srcValue)
-        }),
-        parameters: profileSelect.parameters(state),
-        loaded: profileSelect.loaded(state)
+        user: detailSelectors.data(detailSelectors.details(state, selectors.FORM_NAME)),
+        parameters: selectors.parameters(state),
+        loaded: selectors.loaded(state)
+      }),
+      (dispatch) => ({
+        open(publicUrl) {
+          dispatch(actions.open(publicUrl))
+        }
       })
-    }
-  )(ProfileComponent)
+    )(ProfileComponent)
+  )
 )
 
 export {

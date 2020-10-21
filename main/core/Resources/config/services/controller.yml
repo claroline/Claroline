@@ -122,8 +122,11 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\User\ProfileController:
         arguments:
+          - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
 
     Claroline\CoreBundle\Controller\APINew\User\RoleController:

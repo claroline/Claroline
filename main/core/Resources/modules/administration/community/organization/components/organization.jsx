@@ -20,7 +20,7 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions, selectors} from '#/main/core/administration/community/organization/store'
 import {GroupList} from '#/main/core/administration/community/group/components/group-list'
 import {UserList} from '#/main/core/administration/community/user/components/user-list'
-import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
+import workspacesSource from '#/main/core/data/sources/workspaces'
 
 const OrganizationForm = props =>
   <FormData
@@ -185,12 +185,12 @@ const OrganizationForm = props =>
             url: ['apiv2_organization_list_workspaces', {id: props.organization.id}],
             autoload: props.organization.id && !props.new
           }}
-          primaryAction={WorkspaceList.open}
+          primaryAction={workspacesSource.parameters.primaryAction}
           delete={{
             url: ['apiv2_organization_remove_workspaces', {id: props.organization.id}]
           }}
-          definition={WorkspaceList.definition}
-          card={WorkspaceList.card}
+          definition={workspacesSource.parameters.definition}
+          card={workspacesSource.parameters.card}
         />
       </FormSection>
 

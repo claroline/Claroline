@@ -12,6 +12,7 @@
 namespace Claroline\AppBundle;
 
 use Claroline\AppBundle\DependencyInjection\Compiler\ApiConfigPass;
+use Claroline\AppBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -24,6 +25,7 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
         parent::build($container);
 
         $container->addCompilerPass(new ApiConfigPass());
+        $container->addCompilerPass(new RouterPass());
     }
 
     public function supports($environment)
@@ -35,7 +37,8 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
     {
         $config = new ConfigurationBuilder();
 
-        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
+        $routingFile = $this->getPath().'/Resources/config/routing.yml';
+        if (file_exists($routingFile)) {
             $config->addRoutingResource($routingFile);
         }
 

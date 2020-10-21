@@ -122,7 +122,10 @@ class UserRepositoryTest extends RepositoryTestCase
     public function testFindByRoles()
     {
         $users = self::$repo->findByRoles([self::get('ROLE_1')]);
-        $this->assertEquals(2, count($users));
+        foreach ($users as $user) {
+            var_dump($user->getUsername());
+        }
+        $this->assertEquals(3, count($users));
         $users = self::$repo->findByRoles([self::get('ROLE_2')]);
         $this->assertEquals(1, count($users));
     }

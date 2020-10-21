@@ -52,6 +52,7 @@ class Persister
         $user->addRole($roleUser);
         $user->setPublicUrl($username);
         $user->setCreationDate(new \DateTime());
+        $user->enable();
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
 

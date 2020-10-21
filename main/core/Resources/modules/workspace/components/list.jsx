@@ -91,6 +91,12 @@ const Workspaces = (props) => {
           type: 'number',
           alias: 'maxUsers'
         }, {
+          name: 'archived',
+          label: trans('archived'),
+          type: 'boolean',
+          filterable: true,
+          displayable: false
+        }, {
           name: 'tags',
           type: 'tag',
           label: trans('tags'),
@@ -102,6 +108,7 @@ const Workspaces = (props) => {
         }
       ].concat(props.customDefinition)}
       card={WorkspaceCard}
+      display={props.display}
 
       primaryAction={(row) => getDefaultAction(row, workspacesRefresher, props.basePath, props.currentUser)}
       actions={(rows) => getActions(rows, workspacesRefresher, props.basePath, props.currentUser)}
@@ -113,16 +120,19 @@ Workspaces.propTypes = {
   basePath: T.string,
   currentUser: T.object,
   name: T.string.isRequired,
+  model: T.bool,
   url: T.oneOfType([T.string, T.array]).isRequired,
   customDefinition: T.arrayOf(T.shape({
     // TODO : data list prop types
   })),
+  display: T.object,
   invalidate: T.func.isRequired
 }
 
 Workspaces.defaultProps = {
   basePath: '',
-  customDefinition: []
+  customDefinition: [],
+  model: false
 }
 
 const WorkspaceList = connect(

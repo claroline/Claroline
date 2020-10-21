@@ -7,8 +7,8 @@ import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
+import workspacesSource from '#/main/core/data/sources/workspaces'
 import {selectors} from '#/main/core/modals/workspaces/store'
-import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 
 const WorkspacesModal = props => {
@@ -28,8 +28,8 @@ const WorkspacesModal = props => {
           url: props.url,
           autoload: true
         }}
-        definition={props.model ? WorkspaceList.modelDefinition : WorkspaceList.definition}
-        card={WorkspaceList.card}
+        definition={workspacesSource.parameters.definition}
+        card={workspacesSource.parameters.card}
       />
 
       <Button

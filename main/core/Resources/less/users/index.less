@@ -16,7 +16,35 @@
     border-radius: 50%;
 
     // for .fa when no picture
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #CCCCCC;
+
+    // make avatar always look as a square
+    &:after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+    }
+
+    &.user-avatar-md {
+        // for picture
+        max-width: 70px;
+        max-height: 70px;
+
+        // for .fa when no picture
+        font-size: 70px;
+    }
+
+    &.user-avatar-lg {
+        // for picture
+        max-width: 200px;
+        max-height: 200px;
+
+        // for .fa when no picture
+        font-size: 90px;
+    }
 }
 
 .user-micro {
@@ -39,50 +67,25 @@
 }
 
 .user-page {
-    .page-header {
-        // todo : check if this can be partially moved on base avatar styles
-        // this should not break anything but it need tests.
-        .user-avatar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 72px;
-            max-width: 100%;
-            background: white;
+    // make avatar looks bigger than standard page icons
+    .page-icon {
+        width: 200px;
+        height: 200px;
+        margin-bottom: -40px;
 
-            // make avatar always look as a square
-            &:after {
-                content: "";
-                display: block;
-                padding-bottom: 100%;
-            }
+        .user-avatar {
+            background: white;
         }
     }
 
     .user-profile-aside {
-        margin-top: floor((@font-size-h2 * @headings-line-height) + (@line-height-computed / 2)); // because of the profile picture
-    }
-
-    .user-profile-content {
-        > .data-details > .h-title:first-child,
-        > h2:first-child {
-            margin-top: 0;
-        }
+        // because of the profile picture
+        margin-top: floor((@font-size-h2 * @headings-line-height) + (@line-height-computed / 2)) + @component-margin-bottom;
     }
 }
 
 .user-profile {
-    .no-section-info {
-        margin-bottom: @component-margin-bottom;
-        font-style: italic;
-        text-align: center;
-    }
-
     .btn-add-facet {
         text-align: left;
-
-        + .lateral-link {
-            margin-top: 5px;
-        }
     }
 }

@@ -12,9 +12,8 @@ import {ContentHelp} from '#/main/app/content/components/help'
 
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 
-import {route} from '#/main/core/user/routing'
+import {getPlatformRoles} from '#/main/core/user/utils'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {constants as roleConstants} from '#/main/core/user/constants'
 
 const UserMenu = props =>
   <div className="app-header-dropdown app-current-user dropdown-menu dropdown-menu-right">
@@ -34,10 +33,7 @@ const UserMenu = props =>
       </h2>
 
       <em>
-        {props.currentUser.roles
-          .filter(role => -1 !== [roleConstants.ROLE_PLATFORM, roleConstants.ROLE_CUSTOM].indexOf(role.type))
-          .map(role => trans(role.translationKey)).join(', ')
-        }
+        {getPlatformRoles(props.currentUser.roles).join(', ')}
       </em>
     </div>
 
@@ -117,8 +113,8 @@ const UserMenu = props =>
           type={LINK_BUTTON}
           className="list-group-item"
           icon="fa fa-fw fa-user"
-          label={trans('user_profile')}
-          target={route(props.currentUser)}
+          label={trans('my_account')}
+          target="/account"
           onClick={props.closeMenu}
         />
 

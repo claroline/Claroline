@@ -40,6 +40,8 @@ class UserVoter extends AbstractVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
+            case self::OPEN:
+                return $this->checkOpen($token, $object);
             case self::CREATE:
                 return $this->checkCreate($token, $object);
             case self::VIEW:
@@ -55,6 +57,34 @@ class UserVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    private function checkOpen(TokenInterface $token, User $user): int
+    {
+        if ($this->isOrganizationManager($token, $user)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        // the user can open himself too.
+        if ($token->getUser() === $user) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        if ($this->hasAdminToolAccess($token, 'community')) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        // allow open for all of those who have the open right on community tool
+        // TODO : this should also check user is in the same organization
+        /** @var OrderedToolRepository $orderedToolRepo */
+        $orderedToolRepo = $this->getObjectManager()->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        /** @var OrderedTool $communityTools */
+        $communityTool = $orderedToolRepo->findOneByNameAndDesktop('community');
+        if ($communityTool && $this->isGranted('OPEN', $communityTool)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit(TokenInterface $token, User $user): int
@@ -220,6 +250,6 @@ class UserVoter extends AbstractVoter
      */
     public function getSupportedActions()
     {
-        return [self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH, self::VIEW];
+        return [self::OPEN, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH, self::VIEW];
     }
 }

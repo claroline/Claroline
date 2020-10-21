@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Routing;
+namespace Claroline\AppBundle\Routing;
 
 /*
  * This file is part of the Claroline Connect package.
@@ -11,11 +11,11 @@ namespace Claroline\CoreBundle\Routing;
  * file that was distributed with this source code.
  */
 
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RequestContext;
 
-class ClaroRouter extends Router
+class Router extends BaseRouter
 {
     private $host;
     private $scheme;

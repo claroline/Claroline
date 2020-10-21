@@ -9,10 +9,8 @@ import {reducer as pendingReducer} from '#/main/core/tools/community/pending/sto
 import {reducer as usersReducer} from '#/main/core/tools/community/user/store/reducer'
 import {reducer as groupsReducer} from '#/main/core/tools/community/group/store/reducer'
 import {reducer as rolesReducer} from '#/main/core/tools/community/role/store/reducer'
-import {reducer as profileReducer} from '#/main/core/user/profile/store/reducer'
 
 const reducer = combineReducers({
-  profile: profileReducer,
   users: usersReducer,
   groups: groupsReducer,
   roles: rolesReducer,

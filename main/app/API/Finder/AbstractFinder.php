@@ -33,23 +33,6 @@ abstract class AbstractFinder implements FinderInterface
     /** @var StrictDispatcher */
     private $eventDispatcher;
 
-    /**
-     * AbstractFinder constructor.
-     *
-     * @param ObjectManager    $om
-     * @param EntityManager    $em
-     * @param StrictDispatcher $eventDispatcher
-     */
-    public function setDependencies(
-        ObjectManager $om,
-        EntityManager $em,
-        StrictDispatcher $eventDispatcher
-    ) {
-        $this->om = $om;
-        $this->_em = $em;
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
     public function setObjectManager(ObjectManager $om)
     {
         $this->om = $om;
@@ -68,11 +51,6 @@ abstract class AbstractFinder implements FinderInterface
     /**
      * The queried object is already named "obj".
      *
-     * @param QueryBuilder $qb
-     * @param array        $searches
-     * @param array|null   $sortBy
-     * @param array        $options
-     *
      * @return QueryBuilder
      */
     public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
@@ -86,12 +64,9 @@ abstract class AbstractFinder implements FinderInterface
 
     /**
      * Might not be fully functional with the unions.
-     *
-     * @param array $filters
      */
     public function delete(array $filters = [])
     {
-        /** @var QueryBuilder $qb */
         $qb = $this->om->createQueryBuilder();
         $qb->delete($this->getClass(), 'obj');
 
@@ -115,7 +90,6 @@ abstract class AbstractFinder implements FinderInterface
         //sorting is not required when we count stuff
         $sortBy = $count ? null : $sortBy;
 
-        /** @var QueryBuilder $qb */
         $qb = $this->om->createQueryBuilder();
         $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from($this->getClass(), 'obj');
         //make an option parameters for query builder ?
@@ -177,10 +151,6 @@ abstract class AbstractFinder implements FinderInterface
         return $data[0];
     }
 
-    /**
-     * @param QueryBuilder $qb
-     * @param array|null   $sortBy
-     */
     private function sortResults(QueryBuilder $qb, array $sortBy = null)
     {
         if ($sortBy && $sortBy['property'] && 0 !== $sortBy['direction']) {

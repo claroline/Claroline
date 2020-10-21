@@ -1,3 +1,5 @@
 {
-  "loading": "Nous chargeons votre bureau..."
+  "loading": "Nous chargeons votre bureau...",
+  "access_forbidden": "Accès au Bureau impossible",
+  "access_forbidden_help": "Vous n'avez accès à aucun outil du Bureau. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."
 }

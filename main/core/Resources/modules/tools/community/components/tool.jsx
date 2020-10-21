@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import {Routes} from '#/main/app/router'
 import {constants as toolConstants} from '#/main/core/tool/constants'
+import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 import {User as UserType} from '#/main/core/user/prop-types'
 import {Profile} from '#/main/core/user/profile/containers/main'
@@ -43,14 +44,23 @@ const CommunityTool = (props) =>
         disabled: !props.canAdministrate || props.contextType !== toolConstants.TOOL_WORKSPACE
       }, {
         path: '/profile/:publicUrl',
-        component: Profile,
-        onEnter: (params = {}) => props.loadUser(params.publicUrl)
+        render(routerProps) {
+          return (
+            <Profile
+              path={props.path + '/profile/' + routerProps.match.params.publicUrl}
+              showBreadcrumb={showToolBreadcrumb(props.contextType, props.contextData)}
+              breadcrumb={getToolBreadcrumb('community', props.contextType, props.contextData)}
+              publicUrl={routerProps.match.params.publicUrl}
+            />
+          )
+        }
       }
     ]}
   />
 
 CommunityTool.propTypes = {
   contextType: T.string,
+  contextData: T.object,
   path: T.string.isRequired,
   currentUser: T.shape(UserType.propTypes),
   workspace: T.object,

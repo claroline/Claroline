@@ -1,3 +1,5 @@
 {
-  "loading": "We are loading your desktop..."
+  "loading": "We are loading your desktop...",
+  "access_forbidden": "Access to the Desktop not possible",
+  "access_forbidden_help": "You do not have access to any Desktop tool. Please contact an administrator to give you the necessary rights."
 }

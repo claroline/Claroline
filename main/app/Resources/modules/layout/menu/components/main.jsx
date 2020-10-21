@@ -115,7 +115,7 @@ class MenuMain extends Component {
               </MenuSection>
             }
 
-            {(!isEmpty(this.props.actions) || typeof this.props.actions === 'object') &&
+            {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
               <MenuSection
                 className="actions"
                 icon="fa fa-fw fa-ellipsis-v"

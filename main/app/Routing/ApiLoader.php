@@ -4,12 +4,10 @@
 
 namespace Claroline\AppBundle\Routing;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Doctrine\Common\Annotations\Reader;
 use ReflectionMethod;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -33,18 +31,14 @@ class ApiLoader extends Loader
     private $loaded = false;
     /** @var FileLocatorInterface */
     private $locator;
-    /** @var ContainerInterface */
-    private $container;
     /** @var Reader */
     private $reader;
 
     public function __construct(
         FileLocatorInterface $locator,
-        Reader $reader,
-        ContainerInterface $container
+        Reader $reader
     ) {
         $this->locator = $locator;
-        $this->container = $container;
         $this->reader = $reader;
     }
 
@@ -140,7 +134,6 @@ class ApiLoader extends Loader
 
                     if ($found) {
                         //makeRouteMap is an array of generic routes we want to use
-                        //when ApiMeta is defined
                         foreach ($this->makeRouteMap($controller, $routes, $prefix, $ignore) as $name => $options) {
                             $pattern = '';
 

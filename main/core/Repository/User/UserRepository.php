@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -340,7 +341,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
      *
      * @return array
      */
-    public function findUserIdsInRoles($roleNames)
+    private function findUserIdsInRoles($roleNames)
     {
         $qb = $this->createQueryBuilder('user')
             ->select('DISTINCT(user.id) as id')
@@ -407,23 +408,38 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     }
 
     /**
-     * @param Role[] $roles
-     * @param bool   $getQuery
-     *
-     * @return Query|User[]
+     * @return User[]
      */
-    public function findByRoles(array $roles, $getQuery = false)
+    public function findByRoles(array $roles)
     {
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r WHERE r IN (:roles) AND u.isRemoved = false
-            ORDER BY u.lastName
-        ';
+        $rsm = new ResultSetMappingBuilder($this->_em);
+        $rsm->addRootEntityFromClassMetadata(User::class, 'u');
 
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-
-        return ($getQuery) ? $query : $query->getResult();
+        return $this->_em
+            ->createNativeQuery('
+                (
+                    SELECT u.* 
+                    FROM claro_user AS u
+                    LEFT JOIN claro_user_role AS ur ON (u.id = ur.user_id)
+                    WHERE (ur.role_id IN (:roles)) 
+                    AND u.is_removed = false 
+                    AND u.is_enabled = true
+                )
+                UNION DISTINCT
+                (
+                    SELECT u.* 
+                    FROM claro_user AS u
+                    LEFT JOIN claro_user_group AS ug ON (u.id = ug.user_id)
+                    LEFT JOIN claro_group_role AS gr ON (ug.group_id = gr.group_id)
+                    WHERE (gr.role_id IN (:roles)) 
+                    AND u.is_removed = false 
+                    AND u.is_enabled = true
+                )
+            ', $rsm)
+            ->setParameter('roles', array_map(function (Role $role) {
+                return $role->getId();
+            }, $roles))
+            ->getResult();
     }
 
     /**
@@ -545,299 +561,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findUserByUsernameOrMail($username, $email, $executeQuery = true)
-    {
-        $dql = '
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.username = :username
-            OR u.email = :email
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('username', $username);
-        $query->setParameter('email', $email);
-
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
-    }
-
-    public function findUsersForUserPicker(
-        $search = '',
-        $withUsername = true,
-        $withMail = false,
-        $withCode = false,
-        $orderedBy = 'id',
-        $order = 'ASC',
-        array $roleRestrictions = [],
-        array $groupRestrictions = [],
-        array $workspaceRestrictions = [],
-        array $excludedUsers = [],
-        array $forcedUsers = [],
-        array $forcedGroups = [],
-        array $forcedRoles = [],
-        array $forcedWorkspaces = [],
-        $withOrganizations = false,
-        array $forcedOrganizations = [],
-        $executeQuery = true
-    ) {
-        $withSearch = !empty($search);
-        $withGroups = count($groupRestrictions) > 0;
-        $withRoles = count($roleRestrictions) > 0;
-        $withWorkspaces = count($workspaceRestrictions) > 0;
-        $withExcludedUsers = count($excludedUsers) > 0;
-        $withForcedUsers = count($forcedUsers) > 0;
-        $withForcedGroups = count($forcedGroups) > 0;
-        $withForcedRoles = count($forcedRoles) > 0;
-        $withForcedWorkspaces = count($forcedWorkspaces) > 0;
-
-        $dql = '
-            SELECT DISTINCT u
-            FROM Claroline\CoreBundle\Entity\User u
-        ';
-
-        if ($withOrganizations) {
-            $dql .= '
-                JOIN u.organizations o
-            ';
-        }
-        $dql .= '
-            WHERE u.isRemoved = false
-        ';
-
-        if ($withGroups || $withRoles || $withWorkspaces) {
-            $dql .= '
-                AND (
-            ';
-
-            if ($withRoles) {
-                $dql .= '
-                    u IN (
-                        SELECT ur
-                        FROM Claroline\CoreBundle\Entity\User ur
-                        JOIN ur.roles urr
-                        WITH urr IN (:roleRestrictions)
-                    )
-                    OR u IN (
-                        SELECT ur2
-                        FROM Claroline\CoreBundle\Entity\User ur2
-                        JOIN ur2.groups ur2g
-                        JOIN ur2g.roles ur2gr
-                        WITH ur2gr IN (:roleRestrictions)
-                    )
-                ';
-            }
-            if ($withGroups) {
-                if ($withRoles) {
-                    $dql .= 'OR';
-                }
-
-                $dql .= '
-                    u IN (
-                        SELECT ug
-                        FROM Claroline\CoreBundle\Entity\User ug
-                        JOIN ug.groups ugg
-                        WITH ugg IN (:groupRestrictions)
-                    )
-                ';
-            }
-            if ($withWorkspaces) {
-                if ($withRoles || $withGroups) {
-                    $dql .= 'OR';
-                }
-
-                $dql .= '
-                    u IN (
-                        SELECT uw
-                        FROM Claroline\CoreBundle\Entity\User uw
-                        JOIN uw.roles uwr
-                        WITH uwr.workspace IN (:workspaceRestrictions)
-                    )
-                    OR u IN (
-                        SELECT uw2
-                        FROM Claroline\CoreBundle\Entity\User uw2
-                        JOIN uw2.groups uw2g
-                        JOIN uw2g.roles uw2gr
-                        WITH uw2gr.workspace IN (:workspaceRestrictions)
-                    )
-                ';
-            }
-            $dql .= '
-                )
-            ';
-        }
-        if ($withExcludedUsers) {
-            $dql .= '
-                AND u NOT IN (:excludedUsers)
-            ';
-        }
-        if ($withForcedUsers) {
-            $dql .= '
-                AND u IN (:forcedUsers)
-            ';
-        }
-        if ($withForcedGroups) {
-            $dql .= '
-                AND u IN (
-                    SELECT ufg
-                    FROM Claroline\CoreBundle\Entity\User ufg
-                    JOIN ufg.groups ufgg
-                    WITH ufgg IN (:forcedGroups)
-                )
-            ';
-        }
-        if ($withForcedRoles) {
-            $dql .= '
-                AND (
-                    u IN (
-                        SELECT ufr
-                        FROM Claroline\CoreBundle\Entity\User ufr
-                        JOIN ufr.roles ufrr
-                        WITH ufrr IN (:forcedRoles)
-                    )
-                    OR u IN (
-                        SELECT ufr2
-                        FROM Claroline\CoreBundle\Entity\User ufr2
-                        JOIN ufr2.groups ufr2g
-                        JOIN ufr2g.roles ufr2gr
-                        WITH ufr2gr IN (:forcedRoles)
-                    )
-                )
-            ';
-        }
-        if ($withForcedWorkspaces) {
-            $dql .= '
-                AND (
-                    u IN (
-                        SELECT ufw
-                        FROM Claroline\CoreBundle\Entity\User ufw
-                        JOIN ufw.roles ufwr
-                        WITH ufwr.workspace IN (:forcedWorkspaces)
-                    )
-                    OR u IN (
-                        SELECT ufw2
-                        FROM Claroline\CoreBundle\Entity\User ufw2
-                        JOIN ufw2.groups ufw2g
-                        JOIN ufw2g.roles ufw2gr
-                        WITH ufw2gr.workspace IN (:forcedWorkspaces)
-                    )
-                )
-            ';
-        }
-        if ($withSearch) {
-            $dql .= '
-                AND (
-                    UPPER(u.firstName) LIKE :search
-                    OR UPPER(u.lastName) LIKE :search
-                    OR CONCAT(UPPER(u.firstName), CONCAT(\' \', UPPER(u.lastName))) LIKE :search
-                    OR CONCAT(UPPER(u.lastName), CONCAT(\' \', UPPER(u.firstName))) LIKE :search
-            ';
-
-            if ($withUsername) {
-                $dql .= '
-                    OR UPPER(u.username) LIKE :search
-                ';
-            }
-
-            if ($withMail) {
-                $dql .= '
-                    OR UPPER(u.email) LIKE :search
-                ';
-            }
-
-            if ($withCode) {
-                $dql .= '
-                    OR UPPER(u.administrativeCode) LIKE :search
-                ';
-            }
-            $dql .= '
-                )
-            ';
-        }
-        if ($withOrganizations) {
-            $dql .= '
-                AND o IN (:forcedOrganizations)
-            ';
-        }
-        $dql .= "
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-
-        if ($withGroups) {
-            $query->setParameter('groupRestrictions', $groupRestrictions);
-        }
-        if ($withRoles) {
-            $query->setParameter('roleRestrictions', $roleRestrictions);
-        }
-        if ($withWorkspaces) {
-            $query->setParameter('workspaceRestrictions', $workspaceRestrictions);
-        }
-        if ($withForcedUsers) {
-            $query->setParameter('forcedUsers', $forcedUsers);
-        }
-        if ($withForcedGroups) {
-            $query->setParameter('forcedGroups', $forcedGroups);
-        }
-        if ($withForcedRoles) {
-            $query->setParameter('forcedRoles', $forcedRoles);
-        }
-        if ($withForcedWorkspaces) {
-            $query->setParameter('forcedWorkspaces', $forcedWorkspaces);
-        }
-        if ($withExcludedUsers) {
-            $query->setParameter('excludedUsers', $excludedUsers);
-        }
-        if ($withSearch) {
-            $upperSearch = strtoupper($search);
-            $query->setParameter('search', "%{$upperSearch}%");
-        }
-        if ($withOrganizations) {
-            $query->setParameter('forcedOrganizations', $forcedOrganizations);
-        }
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findUsersExcludingRoles(array $roles, $offset, $limit)
-    {
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isRemoved = false AND u NOT IN (
-                SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
-                LEFT JOIN u2.roles ur
-                LEFT JOIN u2.groups g
-                LEFT JOIN g.roles gr
-                WHERE (gr IN (:roles) OR ur IN (:roles))
-
-            )
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-        $query->setFirstResult($offset);
-        $query->setMaxResults($limit);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Finds users with a list of IDs.
-     *
-     * @return User[]
-     */
-    public function findByIds(array $ids)
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT u FROM Claroline\CoreBundle\Entity\User u
-                WHERE u IN (:ids)
-                  AND u.isRemoved = false
-                  AND u.isEnabled = true
-            ')
-            ->setParameter('ids', $ids)
-            ->getResult();
-    }
-
     public function countUsersNotManagersOfPersonalWorkspace()
     {
         $query = $this->getEntityManager()
@@ -846,7 +569,16 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                 INNER JOIN u.personalWorkspace ws
                 WHERE u.isRemoved = :notRemoved
                 AND ws.personal = :personal
-                AND u.id NOT IN ('.$this->findUsersManagersOfPersonalWorkspace(false)->getDQL().')
+                AND u.id NOT IN (
+                    SELECT u1.id FROM Claroline\CoreBundle\Entity\User u1
+                    INNER JOIN u1.personalWorkspace ws1
+                    INNER JOIN ws1.roles r1
+                    INNER JOIN r1.users us1
+                    WHERE us1.id = u1.id
+                    AND u1.isRemoved = :notRemoved
+                    AND ws1.personal = :personal
+                    AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
+                )
             ')
             ->setParameter('notRemoved', false)
             ->setParameter('personal', true);
@@ -862,7 +594,16 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                 INNER JOIN u.personalWorkspace ws
                 WHERE u.isRemoved = :notRemoved
                 AND ws.personal = :personal
-                AND u.id NOT IN ('.$this->findUsersManagersOfPersonalWorkspace(false)->getDQL().')
+                AND u.id NOT IN (
+                    SELECT u1.id FROM Claroline\CoreBundle\Entity\User u1
+                    INNER JOIN u1.personalWorkspace ws1
+                    INNER JOIN ws1.roles r1
+                    INNER JOIN r1.users us1
+                    WHERE us1.id = u1.id
+                    AND u1.isRemoved = :notRemoved
+                    AND ws1.personal = :personal
+                    AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
+                )
             ')
             ->setParameter('notRemoved', false)
             ->setParameter('personal', true)
@@ -873,43 +614,5 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         }
 
         return $query->getResult();
-    }
-
-    public function findUsersManagersOfPersonalWorkspace($execute = true)
-    {
-        $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT u1.id FROM Claroline\CoreBundle\Entity\User u1
-                INNER JOIN u1.personalWorkspace ws1
-                INNER JOIN ws1.roles r1
-                INNER JOIN r1.users us1
-                WHERE us1.id = u1.id
-                AND u1.isRemoved = :notRemoved
-                AND ws1.personal = :personal
-                AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
-            ')
-            ->setParameter('notRemoved', false)
-            ->setParameter('personal', true);
-
-        return $execute ? $query->getResult() : $query;
-    }
-
-    public function findUsersWithoutMainOrganization($count = false, $limit = -1, $offset = -1)
-    {
-        $selectUsr = $count ? 'COUNT(usr.id)' : 'usr';
-        $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT '.$selectUsr.' FROM Claroline\CoreBundle\Entity\User usr
-                WHERE usr.id NOT IN (
-                  SELECT IDENTITY(uo.user) FROM Claroline\CoreBundle\Entity\Organization\UserOrganizationReference uo
-                  WHERE uo.isMain = :main
-                )
-            ')
-            ->setParameter('main', true);
-        if (!$count && $limit > 0 && $offset > -1) {
-            $query->setMaxResults($limit)->setFirstResult($offset);
-        }
-
-        return $count ? $query->getSingleScalarResult() : $query->getResult();
     }
 }

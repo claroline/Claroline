@@ -38,23 +38,6 @@
         flex: 1;
     }
 
-    .page-header-content { // todo : remove me (old pages)
-        flex: 3;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        flex-shrink: 0;
-        flex-wrap: nowrap;
-    }
-
-    .page-header-picture { // todo : remove me (old pages)
-        flex: 1;
-        max-width: 200px;
-        margin-bottom: -40px;
-        padding: 0 floor(@grid-gutter-width / 2);
-        padding-top: 10px; // same as user progression gauge
-    }
-
     + .page-content-shift {
         margin-top: @component-margin-bottom;
     }
@@ -77,6 +60,7 @@
 
 .page-icon {
     order: 0;
+    flex-shrink: 0;
     width: 70px;
     height: 70px;
     margin: 10px floor(@grid-gutter-width / 2);
@@ -215,13 +199,5 @@
 @media (max-width: @screen-sm-min) {
     .page-header {
         flex-wrap: wrap;
-
-        .page-header-picture {
-            margin-bottom: floor(@grid-gutter-width / 2);
-        }
-
-        .page-header-content {
-            flex-wrap: wrap;
-        }
     }
 }

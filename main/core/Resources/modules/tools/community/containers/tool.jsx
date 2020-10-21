@@ -14,6 +14,7 @@ const CommunityTool = withRouter(
   connect(
     (state) => ({
       contextType: toolSelectors.contextType(state),
+      contextData: toolSelectors.contextData(state),
       currentUser: securitySelectors.currentUser(state),
       workspace: toolSelectors.contextData(state),
       canAdministrate: hasPermission('administrate', toolSelectors.toolData(state))

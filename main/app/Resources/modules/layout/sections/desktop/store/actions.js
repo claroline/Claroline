@@ -16,7 +16,12 @@ actions.open = () => ({
   [API_REQUEST]: {
     silent: true,
     url: ['claro_desktop_open'],
-    success: (response, dispatch) => dispatch(actions.load(response))
+    success: (response, dispatch) => dispatch(actions.load(response)),
+    error: (error, errorStatus, dispatch) => {
+      if (403 === errorStatus) {
+        dispatch(actions.load({}))
+      }
+    }
   }
 })
 
