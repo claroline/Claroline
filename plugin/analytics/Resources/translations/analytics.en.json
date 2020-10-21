@@ -15,5 +15,6 @@
   "not_started": "Not started",
   "requirements_info_1": "You can specify here the resources that have to be done in the workspace.",
   "requirements_info_2": "For that, you must first add roles and/or users for which you want to assign resources.",
-  "requirements_info_3": "And then, you will be able to define a list of resources to do on the dedicated page."
+  "requirements_info_3": "And then, you will be able to define a list of resources to do on the dedicated page.",
+  "initialize_evaluations": "Initialize evaluations"
 }

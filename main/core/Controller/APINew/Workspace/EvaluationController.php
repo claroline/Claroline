@@ -13,8 +13,12 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\Workspace\EvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,38 +33,34 @@ class EvaluationController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var ObjectManager */
+    private $om;
     /** @var FinderProvider */
     private $finder;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var EvaluationManager */
+    private $manager;
 
-    /**
-     * EvaluationController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param FinderProvider                $finder
-     * @param SerializerProvider            $serializer
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
         FinderProvider $finder,
-        SerializerProvider $serializer
+        SerializerProvider $serializer,
+        EvaluationManager $manager
     ) {
         $this->authorization = $authorization;
+        $this->om = $om;
         $this->finder = $finder;
         $this->serializer = $serializer;
+        $this->manager = $manager;
     }
 
     /**
      * @Route("/{workspace}/evaluations", name="apiv2_workspace_evaluations_list", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function listAction(Workspace $workspace, Request $request)
+    public function listAction(Workspace $workspace, Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted(['dashboard', 'OPEN'], $workspace)) {
             throw new AccessDeniedException();
@@ -72,5 +72,29 @@ class EvaluationController
                 'workspace' => $workspace->getUuid(),
             ]])
         ));
+    }
+
+    /**
+     * @Route("/{workspace}/evaluations/init/{role}", name="apiv2_workspace_evaluations_init", methods={"PUT"})
+     * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     * @EXT\ParamConverter("role", options={"mapping": {"role": "uuid"}})
+     */
+    public function initializeAction(Workspace $workspace, Role $role): JsonResponse
+    {
+        if (!$this->authorization->isGranted(['dashboard', 'EDIT'], $workspace)) {
+            throw new AccessDeniedException();
+        }
+
+        $users = $this->om->getRepository(User::class)->findByRoles([$role]);
+
+        $this->om->startFlushSuite();
+        foreach ($users as $user) {
+            // this will automatically create missing evaluation
+            $this->manager->getEvaluation($workspace, $user, true);
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(null, 204);
     }
 }

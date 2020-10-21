@@ -73,7 +73,7 @@ class EvaluationManager
             $evaluation->setUser($user);
             $evaluation->setUserName($user->getLastName().' '.$user->getFirstName());
             $evaluation->setDate(new \DateTime());
-            $evaluation->setStatus(AbstractEvaluation::STATUS_OPENED);
+            $evaluation->setStatus(AbstractEvaluation::STATUS_NOT_ATTEMPTED);
             $this->om->persist($evaluation);
             $this->om->flush();
         }

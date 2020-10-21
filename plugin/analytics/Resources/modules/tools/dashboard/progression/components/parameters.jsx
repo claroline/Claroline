@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
@@ -78,6 +78,21 @@ const ProgressionParameters = (props) =>
               displayed: true,
               primary: true,
               calculated: (row) => trans(row.role.translationKey)
+            }
+          ]}
+          actions={(rows) => [
+            {
+              name: 'initialize',
+              type: ASYNC_BUTTON,
+              icon: 'fa fa-fw fa-sync',
+              label: trans('initialize_evaluations', {}, 'analytics'),
+              request: {
+                url: ['apiv2_workspace_evaluations_init', {workspace: props.workspace.id, role: rows[0].role.id}],
+                request: {
+                  method: 'PUT'
+                }
+              },
+              scope: ['object']
             }
           ]}
         />

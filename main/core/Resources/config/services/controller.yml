@@ -142,8 +142,10 @@ services:
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
         arguments:
           - '@security.authorization_checker'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\CoreBundle\Manager\Workspace\EvaluationManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\RegistrationController:
         arguments:
