@@ -23,13 +23,14 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Class UserRepository.
  */
-class UserRepository extends ServiceEntityRepository implements UserProviderInterface, UserLoaderInterface
+class UserRepository extends ServiceEntityRepository implements UserProviderInterface, UserLoaderInterface, PasswordUpgraderInterface
 {
     /** @var PlatformConfigurationHandler */
     private $platformConfigHandler;
@@ -85,6 +86,15 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         }
 
         return $user;
+    }
+
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        $em = $this->getEntityManager();
+        $user->setPassword($newEncodedPassword);
+
+        $em->persist($user);
+        $em->flush();
     }
 
     /**

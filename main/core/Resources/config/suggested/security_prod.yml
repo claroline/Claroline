@@ -4,7 +4,12 @@ security:
             entity: { class: Claroline\CoreBundle\Entity\User }
 
     encoders:
-        Claroline\CoreBundle\Entity\User: sha512
+        legacy:
+            algorithm: sha256
+
+        Claroline\CoreBundle\Entity\User:
+            algorithm: native # Uses password_hash() with bcrypt/sodium (depends on the platform)
+            migrate_from: legacy # Enables seemless password upgrades from sha256 to modern hash algo
 
     firewalls:
         dev:
