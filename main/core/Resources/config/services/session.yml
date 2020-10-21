@@ -1,6 +1,6 @@
 parameters:
     env(REDIS_HOST): 'localhost'
-    env(int:REDIS_PORT): '6379'
+    env(REDIS_PORT): '6379'
     env(REDIS_PASSWORD): ''
     env(SESSION_HANDLER_ID): 'claroline.session_handler.file'
 
