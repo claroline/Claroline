@@ -16,6 +16,7 @@ use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\SessionConfigPass;
 use Claroline\CoreBundle\Installation\AdditionalInstaller;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
@@ -35,6 +36,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $container->addCompilerPass(new DynamicConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new MailingConfigPass());
+        $container->addCompilerPass(new SessionConfigPass());
     }
 
     public function supports($environment)

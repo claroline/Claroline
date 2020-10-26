@@ -111,21 +111,6 @@ services:
 
     Claroline\CoreBundle\Library\Utilities\ClaroUtilities: ~
 
-    Claroline\CoreBundle\Library\Session\SessionStorageOptionsFactory:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '%session.storage.options%'
-
-    Claroline\CoreBundle\Library\Session\SessionHandlerFactory:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '%session.save_path%'
-            - '%database_user%'
-            - '%database_password%'
-            - '%database_name%'
-
-    Claroline\CoreBundle\Library\Session\DatabaseSessionValidator: ~
-
     Claroline\CoreBundle\Library\RoutingHelper:
-       arguments:
-          - '@router'
+        arguments:
+            - '@router'

@@ -9,7 +9,7 @@ framework:
     translator:      { fallback: en }
     default_locale: "%locale%"
     session:
-      handler_id: "%env(SESSION_HANDLER_ID)%"
+      handler_id: "claroline.session_handler.file" # Overridden by SessionConfigPass
       cookie_httponly: true
       cookie_secure: auto
       cookie_samesite: lax

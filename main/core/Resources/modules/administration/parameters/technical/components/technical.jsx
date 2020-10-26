@@ -99,25 +99,6 @@ const mailers = [
   }
 ]
 
-const displayFields = {
-  'native': [],
-  'claro_pdo': [],
-  'pdo': [
-    'session.db_table',
-    'session.db_id_col',
-    'session.db_data_col',
-    'session.db_data_col',
-    'session.db_time_col',
-    'session.db_dsn',
-    'session.db_user',
-    'session.db_password'
-  ]
-}
-
-const display = (transport, property) => {
-  return displayFields[transport].indexOf(property) > -1
-}
-
 const Technical = props =>
   <FormData
     name={selectors.FORM_NAME}
@@ -201,62 +182,6 @@ const Technical = props =>
               }), {})
             },
             linked: props.mailer ? mailers.find(mailer => mailer.name === props.mailer.transport).fields: []
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-sign-out-alt',
-        title: trans('sessions'),
-        fields: [
-          {
-            name: 'security.cookie_lifetime',
-            type: 'number',
-            label: trans('cookie_lifetime'),
-            required: true
-          }, {
-            name: 'session.storage_type',
-            type: 'choice',
-            label: trans('storage_type'),
-            required: true,
-            options: {
-              choices: {
-                'native': 'native',
-                'claro_pdo': 'claro_pdo',
-                'pdo': 'pdo'
-              }
-            },
-            linked: [
-              {
-                name: 'session.db_table',
-                type: 'string',
-                label: trans('db_table'),
-                displayed: parameters => display(parameters.session.storage_type, 'session.db_table')
-              }, {
-                name: 'session.db_id_col',
-                type: 'string',
-                label: trans('id_col'),
-                displayed: parameters => display(parameters.session.storage_type, 'session.db_id_col')
-              }, {
-                name: 'session.db_data_col',
-                type: 'string',
-                label: trans('data_col'),
-                displayed: parameters => display(parameters.session.storage_type, 'session.db_data_col')
-              }, {
-                name: 'session.db_dsn',
-                type: 'string',
-                label: trans('DSN'),
-                displayed: parameters => display(parameters.session.storage_type, 'session.db_dsn')
-              }, {
-                name: 'session.db_user',
-                type: 'string',
-                label: trans('user'),
-                displayed: parameters => display(parameters.session.storage_type, 'session.db_user')
-              }, {
-                name: 'session.db_password',
-                type: 'string',
-                label: trans('password'),
-                displayed: parameters => display(parameters.session.storage_type, 'session.db_password')
-              }
-            ]
           }
         ]
       }, {
