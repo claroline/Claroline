@@ -3,5 +3,7 @@
   "open-workspace": "Ouvrir l'espace d'activités",
   "browse-resources": "Parcourir les ressources",
   "browse-workspaces": "Parcourir les espaces d'activités",
-  "create_user": "Inscrire un utilisateur"
+  "show-workspace": "Voir l'espace d'activités",
+  "create_user": "Inscrire un utilisateur",
+  "export-results": "Exporter les résultats (.csv)"
 }

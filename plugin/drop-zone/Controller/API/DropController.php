@@ -14,6 +14,8 @@ namespace Claroline\DropZoneBundle\Controller\API;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\DropZoneBundle\Entity\Document;
@@ -47,14 +49,6 @@ class DropController
     /** @var ObjectManager */
     private $om;
 
-    /**
-     * DropController constructor.
-     *
-     * @param FinderProvider                $finder
-     * @param DropzoneManager               $manager
-     * @param ObjectManager                 $om
-     * @param AuthorizationCheckerInterface $authorization
-     */
     public function __construct(
         FinderProvider $finder,
         DropzoneManager $manager,
@@ -75,12 +69,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop $drop
-     *
-     * @return JsonResponse
      */
-    public function getAction(Drop $drop)
+    public function getAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         /* TODO: checks if current user can edit resource or view this drop */
@@ -97,17 +87,12 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Dropzone $dropzone
-     * @param Request  $request
-     *
-     * @return JsonResponse
      */
-    public function listAction(Dropzone $dropzone, Request $request)
+    public function listAction(Dropzone $dropzone, Request $request): JsonResponse
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
-        $data = $this->finder->search('Claroline\DropZoneBundle\Entity\Drop', array_merge(
+        $data = $this->finder->search(Drop::class, array_merge(
             $request->query->all(),
             ['hiddenFilters' => ['dropzone' => $dropzone->getUuid()]]
         ));
@@ -122,14 +107,8 @@ class DropController
      * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"teamId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Dropzone $dropzone
-     * @param Team     $team
-     * @param User     $user
-     *
-     * @return JsonResponse
      */
-    public function createAction(Dropzone $dropzone, User $user, Team $team = null)
+    public function createAction(Dropzone $dropzone, User $user, Team $team = null): JsonResponse
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
 
@@ -161,13 +140,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop $drop
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function submitAction(Drop $drop, User $user)
+    public function submitAction(Drop $drop, User $user): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -194,12 +168,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop $drop
-     *
-     * @return JsonResponse
      */
-    public function cancelAction(Drop $drop)
+    public function cancelAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -224,14 +194,9 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Drop    $drop
-     * @param int     $type
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
+     * @param int $type
      */
-    public function addDocumentAction(Drop $drop, $type, User $user, Request $request)
+    public function addDocumentAction(Drop $drop, $type, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
@@ -276,13 +241,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Document $document
-     * @param User     $user
-     *
-     * @return JsonResponse
      */
-    public function deleteDocumentAction(Document $document, User $user)
+    public function deleteDocumentAction(Document $document, User $user): JsonResponse
     {
         $drop = $document->getDrop();
         $dropzone = $drop->getDropzone();
@@ -319,15 +279,9 @@ class DropController
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @param Drop     $drop
-     * @param Revision $revision
-     * @param int      $type
-     * @param User     $user
-     * @param Request  $request
-     *
-     * @return JsonResponse
+     * @param int $type
      */
-    public function addManagerDocumentAction(Drop $drop, Revision $revision, $type, User $user, Request $request)
+    public function addManagerDocumentAction(Drop $drop, Revision $revision, $type, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -368,12 +322,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Document $document
-     *
-     * @return JsonResponse
      */
-    public function deleteManagerDocumentAction(Document $document)
+    public function deleteManagerDocumentAction(Document $document): JsonResponse
     {
         $drop = $document->getDrop();
         $dropzone = $drop->getDropzone();
@@ -399,12 +349,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop $drop
-     *
-     * @return JsonResponse
      */
-    public function dropUnlockAction(Drop $drop)
+    public function dropUnlockAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -428,12 +374,8 @@ class DropController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Drop $drop
-     *
-     * @return JsonResponse
      */
-    public function dropUserUnlockAction(Drop $drop)
+    public function dropUserUnlockAction(Drop $drop): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -460,13 +402,8 @@ class DropController
      *     options={"mapping": {"document": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param DropzoneTool $tool
-     * @param Document     $document
-     *
-     * @return JsonResponse
      */
-    public function toolExecuteAction(DropzoneTool $tool, Document $document)
+    public function toolExecuteAction(DropzoneTool $tool, Document $document): JsonResponse
     {
         $dropzone = $document->getDrop()->getDropzone();
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
@@ -484,12 +421,8 @@ class DropController
      * Downloads drops documents into a ZIP archive.
      *
      * @Route("/drops/download", name="claro_dropzone_drops_download", methods={"POST"})
-     *
-     * @param Request $request
-     *
-     * @return StreamedResponse
      */
-    public function dropsDownloadAction(Request $request)
+    public function dropsDownloadAction(Request $request): StreamedResponse
     {
         $drops = $this->decodeIdsString($request, Drop::class);
         /** @var Dropzone $dropzone */
@@ -515,6 +448,72 @@ class DropController
     }
 
     /**
+     * @Route("/{id}/drops/csv", name="claro_dropzone_drops_csv", methods={"GET"})
+     * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
+     */
+    public function exportDropsCsvAction(Dropzone $dropzone): StreamedResponse
+    {
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
+
+        $fileName = "results-{$dropzone->getResourceNode()->getSlug()}";
+        $fileName = TextNormalizer::toKey($fileName);
+
+        $drops = $this->finder->searchEntities(Drop::class, [
+            'filters' => ['dropzone' => $dropzone->getUuid()],
+        ]);
+
+        return new StreamedResponse(function () use ($drops) {
+            // Prepare CSV file
+            $handle = fopen('php://output', 'w+');
+
+            // Create header
+            fputcsv($handle, [
+                'first_name',
+                'last_name',
+                'score',
+                'date',
+                'finished',
+                'corrector_first_name',
+                'corrector_last_name',
+                'corrector_score',
+                'corrector_comment',
+            ], ';', '"');
+
+            /** @var Drop $drop */
+            foreach ($drops['data'] as $drop) {
+                $dropData = [
+                    $drop->getUser()->getFirstName(),
+                    $drop->getUser()->getLastName(),
+                    $drop->getScore(),
+                    DateNormalizer::normalize($drop->getDropDate()),
+                    $drop->isFinished(),
+                ];
+
+                if (empty($drop->getCorrections())) {
+                    fputcsv($handle, array_merge($dropData, [null, null, null, null]), ';', '"');
+                } else {
+                    // add a line for each correction
+                    foreach ($drop->getCorrections() as $correction) {
+                        fputcsv($handle, array_merge($dropData, [
+                            $correction->getUser()->getFirstName(),
+                            $correction->getUser()->getLastName(),
+                            $correction->getScore(),
+                            $correction->getComment(),
+                        ]), ';', '"');
+                    }
+                }
+            }
+
+            fclose($handle);
+
+            return $handle;
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
+        ]);
+    }
+
+    /**
      * @Route(
      *     "/drop/{id}/next",
      *     name="claro_dropzone_drop_next"
@@ -524,13 +523,8 @@ class DropController
      *     class="ClarolineDropZoneBundle:Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Drop    $drop
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function nextDropAction(Drop $drop, Request $request)
+    public function nextDropAction(Drop $drop, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $collection = new ResourceCollection([$dropzone->getResourceNode()]);
@@ -569,13 +563,8 @@ class DropController
      *     class="ClarolineDropZoneBundle:Drop",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Drop    $drop
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function previousDropAction(Drop $drop, Request $request)
+    public function previousDropAction(Drop $drop, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
         $collection = new ResourceCollection([$dropzone->getResourceNode()]);
@@ -629,8 +618,7 @@ class DropController
     }
 
     /**
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return array
      */

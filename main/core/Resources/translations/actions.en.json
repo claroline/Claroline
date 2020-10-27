@@ -3,5 +3,7 @@
   "open-workspace": "Open workspace",
   "browse-resources": "Browse resources",
   "browse-workspaces": "Browse workspaces",
-  "create_user": "Register a user"
+  "show-workspace": "Show workspace",
+  "create_user": "Register a user",
+  "export-results": "Export results (.csv)"
 }

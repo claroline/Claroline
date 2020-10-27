@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -55,6 +55,15 @@ const DropzoneResource = props =>
         target: `${props.path}/revisions`,
         displayed: props.canEdit,
         exact: true
+      }, {
+        name: 'export-results',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export-results', {}, 'actions'),
+        file: {
+          url: ['claro_dropzone_drops_csv', {id: props.dropzone.id}]
+        },
+        group: trans('transfer')
       }
     ]}
     routes={[
