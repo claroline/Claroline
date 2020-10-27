@@ -15,34 +15,31 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/path")
  */
 class PathController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
 
     /** @var UserProgressionManager */
     private $userProgressionManager;
 
-    /**
-     * PathController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param UserProgressionManager        $userProgressionManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         UserProgressionManager $userProgressionManager
@@ -56,6 +53,11 @@ class PathController extends AbstractCrudController
         return Path::class;
     }
 
+    public function getName()
+    {
+        return 'path';
+    }
+
     /**
      * Update step progression for an user.
      *
@@ -66,20 +68,13 @@ class PathController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Step    $step
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function updateProgressionAction(Step $step, User $user, Request $request)
+    public function updateProgressionAction(Step $step, User $user, Request $request): JsonResponse
     {
         $node = $step->getPath()->getResourceNode();
 
-        if (!$this->authorization->isGranted('OPEN', new ResourceCollection([$node]))) {
-            throw new AccessDeniedException('Operation "OPEN" cannot be done on object'.get_class($node));
-        }
+        $this->checkPermission('EDIT', $node, [], true);
+
         $status = $this->decodeRequest($request)['status'];
         $this->userProgressionManager->update($step, $user, $status, true);
         $resourceUserEvaluation = $this->userProgressionManager->getResourceUserEvaluation($step->getPath(), $user);
@@ -106,29 +101,22 @@ class PathController extends AbstractCrudController
      *     class="InnovaPathBundle:Path\Path",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @param Path    $path
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function progressionsFetchAction(Path $path, Request $request)
+    public function progressionsFetchAction(Path $path, Request $request): JsonResponse
     {
         $node = $path->getResourceNode();
 
-        if (!$this->authorization->isGranted('EDIT', new ResourceCollection([$node]))) {
-            throw new AccessDeniedException('Operation "EDIT" cannot be done on object'.get_class($node));
-        }
+        $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
 
         $params = $request->query->all();
-
         if (!isset($params['hiddenFilters'])) {
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['resourceNode'] = [$node->getUuid()];
-        $data = $this->finder->search(ResourceUserEvaluation::class, $params, [Options::SERIALIZE_MINIMAL]);
 
-        return new JsonResponse($data, 200);
+        return new JsonResponse(
+            $this->finder->search(ResourceUserEvaluation::class, $params, [Options::SERIALIZE_MINIMAL])
+        );
     }
 
     /**
@@ -149,30 +137,64 @@ class PathController extends AbstractCrudController
      *     class="ClarolineCoreBundle:User",
      *     options={"mapping": {"user": "uuid"}}
      * )
-     *
-     * @param Path $path
-     * @param User $user
-     *
-     * @return JsonResponse
      */
-    public function userStepsProgressionFetchAction(Path $path, User $user)
+    public function userStepsProgressionFetchAction(Path $path, User $user): JsonResponse
     {
-        $node = $path->getResourceNode();
+        $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
 
-        if (!$this->authorization->isGranted('EDIT', new ResourceCollection([$node]))) {
-            throw new AccessDeniedException('Operation "EDIT" cannot be done on object'.get_class($node));
-        }
-        $data = $this->userProgressionManager->getStepsProgressionForUser($path, $user);
-
-        if (empty($data)) {
-            $data = new \stdClass();
-        }
-
-        return new JsonResponse($data, 200);
+        return new JsonResponse(
+            $this->userProgressionManager->getStepsProgressionForUser($path, $user)
+        );
     }
 
-    public function getName()
+    /**
+     * This should be managed by Core when possible.
+     *
+     * @Route("/{id}/progression/csv", name="innova_path_users_progression_csv", methods={"GET"})
+     * @EXT\ParamConverter(
+     *     "path",
+     *     class="InnovaPathBundle:Path\Path",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     */
+    public function exportProgressionCsvAction(Path $path)
     {
-        return 'path';
+        $this->checkPermission('EDIT', $path->getResourceNode(), [], true);
+
+        $fileName = "progression-{$path->getResourceNode()->getSlug()}";
+        $fileName = TextNormalizer::toKey($fileName);
+
+        $evaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
+            'filters' => ['resourceNode' => $path->getResourceNode()->getUuid()],
+        ]);
+
+        return new StreamedResponse(function () use ($path, $evaluations) {
+            // Prepare CSV file
+            $handle = fopen('php://output', 'w+');
+
+            // Create header
+            fputcsv($handle, [
+                'first_name',
+                'last_name',
+                'progression',
+                'progression_max',
+            ], ';', '"');
+
+            foreach ($evaluations['data'] as $evaluation) {
+                fputcsv($handle, [
+                    $evaluation->getUser()->getFirstName(),
+                    $evaluation->getUser()->getLastName(),
+                    $evaluation->getProgression(),
+                    $evaluation->getProgressionMax(),
+                ], ';', '"');
+            }
+
+            fclose($handle);
+
+            return $handle;
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
+        ]);
     }
 }
