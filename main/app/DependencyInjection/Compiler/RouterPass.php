@@ -10,6 +10,6 @@ class RouterPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $container->setAlias('router', Router::class);
+        $container->setAlias('router', Router::class)->setPublic(true);
     }
 }
