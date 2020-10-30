@@ -1,16 +1,18 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true #because I don't know
+    Claroline\AppBundle\Routing\Router:
+        parent: router.default
 
     Claroline\AppBundle\Routing\Finder:
         public: true
+        autowire: false
+        autoconfigure: false
         arguments:
             - '@router'
 
     Claroline\AppBundle\Routing\Documentator:
         public: true
+        autowire: false
+        autoconfigure: false
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'

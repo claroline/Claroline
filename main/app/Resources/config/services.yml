@@ -13,12 +13,6 @@ services:
         autoconfigure: false
         public: true
 
-    Claroline\AppBundle\Routing\Router:
-        public: true
-        autowire: false
-        autoconfigure: false
-        parent: router.default
-
     Claroline\AppBundle\API\FinderProvider:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
