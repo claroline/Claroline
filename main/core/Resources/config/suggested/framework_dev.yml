@@ -4,5 +4,3 @@ imports:
 framework:
     profiler:
         only_exceptions: false
-    session:
-        save_path: "%kernel.project_dir%/var/sessions"

@@ -24,8 +24,6 @@ class DynamicConfigPass implements CompilerPassInterface
      * Rewrites previous service definitions in order to force the dumped container to use
      * dynamic configuration parameters. Technique may vary depending on the target service
      * (see for example https://github.com/opensky/OpenSkyRuntimeConfigBundle).
-     *
-     * @param ContainerBuilder $container
      */
     public function process(ContainerBuilder $container)
     {
@@ -38,21 +36,6 @@ class DynamicConfigPass implements CompilerPassInterface
         );
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
-
-        //session storage
-        $handler = new Definition();
-        $handler->setClass('SessionHandlerInterface');
-        $handler->setFactory([
-            new Reference('Claroline\CoreBundle\Library\Session\SessionHandlerFactory'),
-            'getHandler', ]
-        );
-        $container->setDefinition('session.handler', $handler);
-
-        //cookie lifetime
-        if ('test' !== $container->getParameter('kernel.environment')) {
-            $storage = $container->findDefinition('session.storage');
-            $storage->addMethodCall('setOptions', [new Reference('claroline.session.storage_options')]);
-        }
 
         //notification
         $container->setAlias('icap.notification.orm.entity_manager', 'Claroline\AppBundle\Persistence\ObjectManager');

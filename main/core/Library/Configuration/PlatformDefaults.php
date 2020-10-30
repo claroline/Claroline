@@ -120,14 +120,10 @@ class PlatformDefaults implements ParameterProviderInterface
                 'default_root_anon_id' => null,
             ],
             'session' => [
-                'storage_type' => 'native',
-                'db_table' => null,
-                'db_id_col' => null,
-                'db_data_col' => null,
-                'db_time_col' => null,
-                'db_dsn' => null,
-                'db_user' => null,
-                'db_password' => null,
+                'storage_type' => 'file',
+                'redis_host' => 'localhost',
+                'redis_port' => '6379',
+                'redis_password' => '',
             ],
             'display' => [
                 'logo' => 'logo-sm.svg',
