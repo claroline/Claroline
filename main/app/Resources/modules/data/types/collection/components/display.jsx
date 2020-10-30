@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {DataDisplay} from '#/main/app/data/components/display'
 
 const CollectionDisplay = (props) =>
   <div className="collection-control collection-display">
@@ -24,7 +25,18 @@ const CollectionDisplay = (props) =>
 
           return (
             <li key={index} className="collection-item">
-              {customInput}
+              <DataDisplay
+                id={`${props.id}-${index}`}
+                type={props.type}
+                options={props.options}
+
+                label={`${props.label} #${index + 1}`}
+                size="sm"
+                hideLabel={true}
+                value={value}
+              >
+                {customInput}
+              </DataDisplay>
             </li>
           )
         })}

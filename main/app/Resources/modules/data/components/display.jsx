@@ -8,7 +8,6 @@ import {trans} from '#/main/app/intl/translation'
 import {getType} from '#/main/app/data/types'
 
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {validateProp} from '#/main/app/content/form/validator'
 
 // todo : add loading placeholder
 // todo : better error handling on undefined types
@@ -23,8 +22,6 @@ class DataDisplay extends Component {
       input: null,
       group: null
     }
-
-    this.onChange = this.onChange.bind(this)
   }
 
   static getDerivedStateFromError() {
@@ -79,19 +76,6 @@ class DataDisplay extends Component {
           this.setState({loaded: true, error: error})
         }
       )
-  }
-
-  onChange(value) {
-    // validate new value
-    if (this.props.onError) {
-      validateProp(this.props, value).then(errors => {
-        // forward error to the caller
-        this.props.onError(errors)
-      })
-    }
-
-    // forward updated value to the caller
-    return this.props.onChange(value)
   }
 
   renderInput() {

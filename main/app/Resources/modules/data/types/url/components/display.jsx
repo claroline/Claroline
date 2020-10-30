@@ -24,12 +24,14 @@ const UrlDisplay = (props) =>
       className="btn-link"
       icon="fa fa-fw fa-clipboard"
       callback={() => copy(props.data)}
+      size={props.size}
     />
   </div>
 
 UrlDisplay.propTypes = {
   id: T.string.isRequired,
-  data: T.string.isRequired
+  data: T.string.isRequired,
+  size: T.string
 }
 
 export {
