@@ -523,7 +523,8 @@ class ScormManager
         $file->move($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid(), $hashName);
 
         return [
-            'hashName' => $hashName,
+            'name' => $hashName,
+            'type' => $file->getMimeType(),
             'version' => $scormData['version'],
             'scos' => $scormData['scos'],
         ];
