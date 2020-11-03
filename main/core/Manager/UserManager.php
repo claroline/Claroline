@@ -184,7 +184,6 @@ class UserManager implements LoggerAwareInterface
 
     public function validateEmailHash($validationHash)
     {
-        /** @var User $user */
         $user = $this->getByEmailValidationHash($validationHash);
         $user->setIsMailValidated(true);
 

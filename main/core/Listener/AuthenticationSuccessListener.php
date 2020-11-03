@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,6 +46,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $routingHelper;
     /** @var UserManager */
     private $userManager;
+    /** @var ToolManager */
+    private $toolManager;
     /** @var ConnectionMessageManager */
     private $messageManager;
 
@@ -55,6 +58,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         SerializerProvider $serializer,
         RoutingHelper $routingHelper,
         UserManager $userManager,
+        ToolManager $toolManager,
         ConnectionMessageManager $messageManager
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -63,6 +67,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->serializer = $serializer;
         $this->routingHelper = $routingHelper;
         $this->userManager = $userManager;
+        $this->toolManager = $toolManager;
         $this->messageManager = $messageManager;
     }
 
@@ -84,6 +89,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'user' => $this->serializer->serialize($user),
+                'administration' => !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames())),
                 'redirect' => $redirect,
                 'messages' => $this->messageManager->getConnectionMessagesByUser($user),
             ]);

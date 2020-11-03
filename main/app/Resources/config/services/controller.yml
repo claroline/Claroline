@@ -36,6 +36,7 @@ services:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\AppBundle\Manager\SecurityManager'
+          - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
 

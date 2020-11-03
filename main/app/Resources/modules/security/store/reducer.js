@@ -8,5 +8,8 @@ export const reducer = combineReducers({
   }),
   impersonated: makeReducer(false, {
     [SECURITY_USER_CHANGE]: (state, action) => action.impersonated
+  }),
+  administration: makeReducer(false, {
+    [SECURITY_USER_CHANGE]: (state, action) => action.administration
   })
 })

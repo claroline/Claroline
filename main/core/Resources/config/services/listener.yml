@@ -280,6 +280,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@claroline.manager.user_manager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@claroline.manager.connection_message_manager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:

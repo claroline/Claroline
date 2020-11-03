@@ -59,13 +59,23 @@ const isAuthenticated = createSelector(
 )
 
 /**
- * Checks if the current is a platform admin (aka has the ROLE_ADMIN role).
+ * Checks if the current user is a platform admin (aka has the ROLE_ADMIN role).
  *
  * @return {bool}
  */
 const isAdmin = createSelector(
   [currentUser],
   (currentUser) => userIsAdmin(currentUser)
+)
+
+/**
+ * Checks if the current user has access to administration section.
+ *
+ * @return {bool}
+ */
+const hasAdministration = createSelector(
+  [store],
+  (store) => store.administration
 )
 
 export const selectors = {
@@ -76,5 +86,6 @@ export const selectors = {
   currentUserId,
   isImpersonated,
   isAuthenticated,
-  isAdmin
+  isAdmin,
+  hasAdministration
 }

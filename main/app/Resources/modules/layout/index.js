@@ -12,7 +12,8 @@ export default {
     config: initialData.config,
     security: {
       impersonated: initialData.impersonated,
-      currentUser: initialData.currentUser
+      currentUser: initialData.currentUser,
+      administration: initialData.administration
     }
   })
 }

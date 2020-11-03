@@ -58,6 +58,7 @@
             data-maintenance="{{ maintenance | json_encode | raw | escape }}"
             data-impersonated="{{ impersonated ? 'true' : 'false' }}"
             data-current-user="{{ currentUser | json_encode | raw | escape }}"
+            data-administration="{{ administration ? 'true' : 'false' }}"
             data-header="{{ header | json_encode | raw | escape }}"
             data-footer="{{ footer | json_encode | raw | escape }}"
             data-config="{{ parameters | json_encode | raw | escape }}"

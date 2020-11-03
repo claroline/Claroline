@@ -118,7 +118,7 @@ const UserMenu = props =>
           onClick={props.closeMenu}
         />
 
-        {props.isAdmin &&
+        {props.administration &&
           <Button
             type={LINK_BUTTON}
             className="list-group-item"
@@ -151,14 +151,13 @@ const UserMenu = props =>
         />
       )}
     </div>
-
   </div>
 
 UserMenu.propTypes = {
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
-  isAdmin: T.bool.isRequired,
+  administration: T.bool.isRequired,
   actions: T.array.isRequired,
   registration: T.bool,
   currentUser: T.shape({
@@ -222,7 +221,7 @@ class HeaderUser extends Component {
             unavailable={this.props.unavailable}
             authenticated={this.props.authenticated}
             impersonated={this.props.impersonated}
-            isAdmin={this.props.isAdmin}
+            administration={this.props.administration}
             currentUser={this.props.currentUser}
             registration={this.props.registration}
             locale={this.props.locale}
@@ -244,7 +243,7 @@ HeaderUser.propTypes = {
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
-  isAdmin: T.bool.isRequired,
+  administration: T.bool.isRequired,
   currentUser: T.shape({
     id: T.string,
     name: T.string,
