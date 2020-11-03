@@ -76,7 +76,7 @@
         "symfony/var-dumper": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "twig/twig": "2.11.2",
+        "twig/twig": "^2.14",
         "u01jmg3/ics-parser": "2.1.3",
         "willdurand/js-translation-bundle": "3.0.*",
         "php-http/httplug-bundle": "*",
