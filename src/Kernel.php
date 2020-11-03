@@ -21,6 +21,9 @@ class Kernel extends BaseKernel
         parent::__construct($environment, $debug);
 
         $this->kernelBundle = new ClarolineKernelBundle($this);
+        
+        // make sure dates are in UTC regardless to the server config
+        date_default_timezone_set('UTC');
     }
 
     public function registerBundles(): iterable
