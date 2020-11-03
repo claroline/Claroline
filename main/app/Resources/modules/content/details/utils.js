@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {DataDetailsSection, DataDetailsProperty} from '#/main/app/content/details/prop-types'
@@ -15,11 +16,11 @@ function createDetailsDefinition(sections) {
     .map(section => {
       // adds defaults to the section configuration
       const defaultedSection = merge({}, DataDetailsSection.defaultProps, section)
-      if (!!defaultedSection.displayed && defaultedSection.fields) {
+      if (!!defaultedSection.displayed && (defaultedSection.fields || defaultedSection.component || defaultedSection.render)) {
         // adds defaults to the field configuration
-        const defaultedFields = defaultedSection.fields.map(field => merge({}, DataDetailsProperty.defaultProps, field))
+        const defaultedFields = get(defaultedSection, 'fields', []).map(field => merge({}, DataDetailsProperty.defaultProps, field))
         const displayedFields = defaultedFields.filter(field => !!field.displayed)
-        if (0 < displayedFields.length) {
+        if (0 < displayedFields.length || defaultedSection.component || defaultedSection.render) {
           defaultedSection.fields = displayedFields
 
           return defaultedSection

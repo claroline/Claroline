@@ -19,17 +19,21 @@ const DataDetailsSection = {
   propTypes: {
     icon: T.string,
     title: T.string.isRequired,
+    className: T.string,
     primary: T.bool,
     displayed: T.bool,
     defaultOpened: T.bool,
     fields: T.arrayOf(T.shape(
       DataDetailsProperty.propTypes
-    )).isRequired
+    )),
+    component: T.node, // TODO : add warn if component and render are defined on the same section
+    render: T.func
   },
   defaultProps: {
     primary: false,
     displayed: true,
-    defaultOpened: false
+    defaultOpened: false,
+    fields: []
   }
 }
 

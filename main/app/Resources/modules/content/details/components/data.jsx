@@ -62,6 +62,9 @@ const DetailsData = props => {
                 data={props.data}
               />
             )}
+
+            {primarySection.component}
+            {!primarySection.component && primarySection.render && primarySection.render()}
           </div>
         </div>
       )}
@@ -77,6 +80,7 @@ const DetailsData = props => {
               key={toKey(section.title)}
               icon={section.icon}
               title={section.title}
+              className={section.className}
             >
               {section.fields.map(field =>
                 <DetailsProp
@@ -85,6 +89,9 @@ const DetailsData = props => {
                   data={props.data}
                 />
               )}
+
+              {section.component}
+              {!section.component && section.render && section.render()}
             </Section>
           )}
         </Sections>
