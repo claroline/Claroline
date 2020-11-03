@@ -2,23 +2,13 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {DataInput} from '#/main/app/data/components/input'
-
-// todo : restore readOnly
-// todo : add auto focus
+import {DataDisplay} from '#/main/app/data/components/display'
 
 /**
- * ATTENTION : as it's only be used in the FormData component, the `fields` are not defaulted by the component.
+ * ATTENTION : as it's only be used in the DetailsData component, the `fields` are not defaulted by the component.
  * You should consider apply `createFieldsetDefinition` on your fields list before using it.
  */
-class FormFieldset extends Component {
-  constructor(props) {
-    super(props)
-
-    this.update = this.update.bind(this)
-    this.setErrors = this.setErrors.bind(this)
-  }
-
+class DetailsFieldset extends Component {
   getFieldId(field) {
     let id = this.props.id ? `${this.props.id}-` : ''
 
@@ -46,7 +36,7 @@ class FormFieldset extends Component {
       }
 
       rendered.push(
-        <DataInput
+        <DataDisplay
           key={field.name}
           id={this.getFieldId(field)}
           name={field.name}
@@ -58,14 +48,12 @@ class FormFieldset extends Component {
           placeholder={field.placeholder}
           size={this.props.size}
           required={field.required}
-          disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
-          validating={this.props.validating}
 
           value={value}
           error={get(this.props.errors, field.name)}
         >
           {customInput}
-        </DataInput>
+        </DataDisplay>
       )
 
       if (field.linked && 0 !== field.linked.length) {
@@ -95,14 +83,12 @@ class FormFieldset extends Component {
   }
 }
 
-FormFieldset.propTypes = {
+DetailsFieldset.propTypes = {
   id: T.string,
   className: T.string,
   disabled: T.bool,
-  mode: T.string,
   size: T.oneOf(['sm', 'lg']),
   errors: T.object,
-  validating: T.bool,
   data: T.object,
   fields: T.arrayOf(T.shape({
     // TODO : fields propTypes
@@ -110,11 +96,10 @@ FormFieldset.propTypes = {
   children: T.node
 }
 
-FormFieldset.defaultProps = {
-  disabled: false,
+DetailsFieldset.defaultProps = {
   data: {}
 }
 
 export {
-  FormFieldset
+  DetailsFieldset
 }

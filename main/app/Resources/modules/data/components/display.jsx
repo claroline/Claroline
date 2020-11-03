@@ -1,4 +1,4 @@
-import {createElement, Component} from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
@@ -20,7 +20,8 @@ class DataDisplay extends Component {
       error: false,
       loaded: false,
       input: null,
-      group: null
+      group: null,
+      render: null
     }
   }
 
@@ -66,7 +67,8 @@ class DataDisplay extends Component {
         (result = []) => this.setState({
           loaded: true,
           group: get(result[0], 'components.group'),
-          display: get(result[0], 'components.display') || get(result[0], 'components.details') // components.details is for retro-compatibility
+          display: get(result[0], 'components.display') || get(result[0], 'components.details'), // components.details is for retro-compatibility
+          render: get(result[0], 'render')
         })
       )
       .then(
@@ -111,6 +113,19 @@ class DataDisplay extends Component {
         })
       )
     }
+
+    if (!this.props.value && false !== this.props.value) {
+      return (
+        <span className="data-details-empty">{trans('empty_value')}</span>
+      )
+    }
+
+    if (this.state.render) {
+      // type render method
+      return this.state.render(this.props.value, this.props.options || {})
+    }
+
+    return this.props.value
   }
 
   render() {
@@ -147,11 +162,6 @@ DataDisplay.propTypes = {
     T.arrayOf(T.arrayOf(T.string)),
     T.object
   ]),
-
-  // field callbacks
-  onChange: T.func.isRequired,
-  onError: T.func,
-  validate: T.func,
 
   // customization
   // It will replace the render of the input.

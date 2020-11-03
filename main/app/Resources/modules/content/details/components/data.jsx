@@ -10,10 +10,15 @@ import {Sections, Section} from '#/main/app/content/components/sections'
 
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/app/content/details/prop-types'
 import {createDetailsDefinition} from '#/main/app/content/details/utils'
-import {DetailsProp} from '#/main/app/content/details/components/prop'
+import {DetailsFieldset} from '#/main/app/content/details/components/fieldset'
 
-// TODO : there are big c/c from Form component but I don't know if we can do better
-// TODO : manage linked fields
+function getSectionId(section, formId = null) {
+  let id = formId ? `${formId}-` : ''
+
+  id += section.id || toKey(section.title)
+
+  return id
+}
 
 const DetailsData = props => {
   const hLevel = props.level + (props.title ? 1 : 0)
@@ -55,16 +60,16 @@ const DetailsData = props => {
               title={primarySection.title}
             />
 
-            {primarySection.fields.map(field =>
-              <DetailsProp
-                {...field}
-                key={field.name}
-                data={props.data}
-              />
-            )}
-
-            {primarySection.component}
-            {!primarySection.component && primarySection.render && primarySection.render()}
+            <DetailsFieldset
+              id={getSectionId(primarySection, props.id)}
+              fields={primarySection.fields}
+              data={props.data}
+              errors={props.errors}
+              help={primarySection.help}
+            >
+              {primarySection.component}
+              {!primarySection.component && primarySection.render && primarySection.render()}
+            </DetailsFieldset>
           </div>
         </div>
       )}
@@ -82,16 +87,18 @@ const DetailsData = props => {
               title={section.title}
               className={section.className}
             >
-              {section.fields.map(field =>
-                <DetailsProp
-                  {...field}
-                  key={field.name}
-                  data={props.data}
-                />
-              )}
-
-              {section.component}
-              {!section.component && section.render && section.render()}
+              <DetailsFieldset
+                id={getSectionId(section, props.id)}
+                fill={true}
+                className="panel-body"
+                fields={section.fields}
+                data={props.data}
+                errors={props.errors}
+                help={section.help}
+              >
+                {section.component}
+                {!section.component && section.render && section.render()}
+              </DetailsFieldset>
             </Section>
           )}
         </Sections>
@@ -103,11 +110,13 @@ const DetailsData = props => {
 }
 
 DetailsData.propTypes = {
+  id: T.string,
   className: T.string,
   level: T.number,
   displayLevel: T.number,
   title: T.string,
   data: T.object,
+  errors: T.object,
   meta: T.bool,
   sections: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
