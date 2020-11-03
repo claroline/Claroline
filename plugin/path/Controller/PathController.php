@@ -73,7 +73,7 @@ class PathController extends AbstractCrudController
     {
         $node = $step->getPath()->getResourceNode();
 
-        $this->checkPermission('EDIT', $node, [], true);
+        $this->checkPermission('OPEN', $node, [], true);
 
         $status = $this->decodeRequest($request)['status'];
         $this->userProgressionManager->update($step, $user, $status, true);
