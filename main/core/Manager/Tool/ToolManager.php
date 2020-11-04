@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager\Tool;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -47,14 +48,6 @@ class ToolManager implements LoggerAwareInterface
     /** @var AdministrationToolRepository */
     private $adminToolRepo;
 
-    /**
-     * ToolManager constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager                 $om
-     * @param ToolMaskDecoderManager        $toolMaskManager
-     * @param ToolRightsManager             $toolRightsManager
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
@@ -143,14 +136,13 @@ class ToolManager implements LoggerAwareInterface
         return $perms;
     }
 
-    /**
-     * @param string $name
-     * @param string $context
-     * @param string $contextId
-     *
-     * @return OrderedTool|null
-     */
-    public function getOrderedTool(string $name, string $context, string $contextId = null)
+    public function setPermissions(array $perms, OrderedTool $orderedTool, Role $role)
+    {
+        $mask = $this->toolMaskManager->encodeMask($perms, $orderedTool->getTool());
+        $this->toolRightsManager->setToolRights($orderedTool, $role, $mask);
+    }
+
+    public function getOrderedTool(string $name, string $context, string $contextId = null): ?OrderedTool
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = null;
@@ -173,11 +165,9 @@ class ToolManager implements LoggerAwareInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return OrderedTool[]
      */
-    public function getOrderedToolsByDesktop(User $user)
+    public function getOrderedToolsByDesktop(User $user): array
     {
         $roles = $user->getRoles();
         if (in_array('ROLE_ADMIN', $roles)) {
@@ -188,12 +178,9 @@ class ToolManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Workspace $workspace
-     * @param string[]  $roles
-     *
      * @return OrderedTool[]
      */
-    public function getOrderedToolsByWorkspace(Workspace $workspace, array $roles = [])
+    public function getOrderedToolsByWorkspace(Workspace $workspace, array $roles = []): array
     {
         if (empty($roles)) {
             $tools = $this->orderedToolRepo->findByWorkspace($workspace);
@@ -224,8 +211,6 @@ class ToolManager implements LoggerAwareInterface
     }
 
     /**
-     * @param array $roles
-     *
      * @return AdminTool[]
      */
     public function getAdminToolsByRoles(array $roles)
@@ -240,8 +225,6 @@ class ToolManager implements LoggerAwareInterface
 
     /**
      * Adds the tools missing in the database for a workspace.
-     *
-     * @param Workspace $workspace
      */
     public function addMissingWorkspaceTools(Workspace $workspace)
     {
@@ -277,9 +260,7 @@ class ToolManager implements LoggerAwareInterface
     }
 
     /**
-     * @param Tool      $tool
-     * @param int       $position
-     * @param Workspace $workspace
+     * @param int $position
      *
      * @return OrderedTool
      */

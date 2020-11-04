@@ -198,9 +198,8 @@ class RoleManager implements LoggerAwareInterface
 
         $this->crud->patch($ars, 'role', Crud::COLLECTION_ADD, [$role]);
 
-        $withMail = $this->configHandler->getParameter('send_mail_at_workspace_registration');
-
         if ($sendMail) {
+            $withMail = $this->configHandler->getParameter('send_mail_at_workspace_registration');
             $this->sendInscriptionMessage($ars, $role, $withMail);
         }
     }

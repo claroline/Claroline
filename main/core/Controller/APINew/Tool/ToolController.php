@@ -25,8 +25,6 @@ use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
-use Claroline\CoreBundle\Manager\Tool\ToolRightsManager;
-use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,15 +51,10 @@ class ToolController extends AbstractApiController
     private $serializer;
     /** @var ToolManager */
     private $toolManager;
-    /** @var ToolRightsManager */
-    private $rightsManager;
     /** @var ToolMaskDecoderManager */
     private $maskManager;
     /** @var LogConnectManager */
     private $logConnectManager;
-
-    /** @var OrderedToolRepository */
-    private $orderedToolRepo;
 
     /**
      * ToolController constructor.
@@ -73,7 +66,6 @@ class ToolController extends AbstractApiController
         Crud $crud,
         SerializerProvider $serializer,
         ToolManager $toolManager,
-        ToolRightsManager $rightsManager,
         ToolMaskDecoderManager $maskManager,
         LogConnectManager $logConnectManager
     ) {
@@ -83,11 +75,8 @@ class ToolController extends AbstractApiController
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->toolManager = $toolManager;
-        $this->rightsManager = $rightsManager;
         $this->maskManager = $maskManager;
         $this->logConnectManager = $logConnectManager;
-
-        $this->orderedToolRepo = $this->om->getRepository(OrderedTool::class);
     }
 
     /**
@@ -96,10 +85,8 @@ class ToolController extends AbstractApiController
      * @param string $name
      * @param string $context
      * @param string $contextId
-     *
-     * @return JsonResponse
      */
-    public function configureAction(Request $request, $name, $context, $contextId = null)
+    public function configureAction(Request $request, $name, $context, $contextId = null): JsonResponse
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
@@ -134,10 +121,8 @@ class ToolController extends AbstractApiController
      * @param string $name
      * @param string $context
      * @param string $contextId
-     *
-     * @return JsonResponse
      */
-    public function getRightsAction($name, $context, $contextId = null)
+    public function getRightsAction($name, $context, $contextId = null): JsonResponse
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
@@ -174,10 +159,8 @@ class ToolController extends AbstractApiController
      * @param string $name
      * @param string $context
      * @param string $contextId
-     *
-     * @return JsonResponse
      */
-    public function updateRightsAction($name, $context, $contextId = null, Request $request)
+    public function updateRightsAction(Request $request, $name, $context, $contextId = null): JsonResponse
     {
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
@@ -198,8 +181,7 @@ class ToolController extends AbstractApiController
             /** @var Role $role */
             $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
             if ($role) {
-                $this->rightsManager->setToolRights($orderedTool, $role, $this->maskManager->encodeMask($right['permissions'], $orderedTool->getTool()));
-
+                $this->toolManager->setPermissions($right['permissions'], $orderedTool, $role);
                 $roles[] = $role->getName();
             }
         }
@@ -225,10 +207,8 @@ class ToolController extends AbstractApiController
      * @param string $name
      * @param string $context
      * @param string $contextId
-     *
-     * @return JsonResponse
      */
-    public function closeAction(User $user = null, $name, $context, $contextId = null)
+    public function closeAction($name, $context, $contextId = null, User $user = null): JsonResponse
     {
         if ($user) {
             $this->logConnectManager->computeToolDuration($user, $name, $context, $contextId);
