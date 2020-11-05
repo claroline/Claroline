@@ -25,6 +25,12 @@ const ParametersMenu = (props) =>
           target: props.path+'/',
           exact: true
         }, {
+          name: 'privacy',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-shield',
+          label: trans('privacy'),
+          target: props.path+'/privacy'
+        }, {
           name: 'appearance',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-drafting-compass',

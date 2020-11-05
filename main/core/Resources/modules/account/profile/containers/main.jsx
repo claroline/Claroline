@@ -1,14 +1,14 @@
 import {connect} from 'react-redux'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {AccountMain as AccountMainComponent} from '#/main/app/layout/sections/account/components/main'
+import {ProfileMain as ProfileMainComponent} from '#/main/core/account/profile/components/main'
 
-const AccountMain = connect(
+const ProfileMain = connect(
   (state) => ({
     currentUser: securitySelectors.currentUser(state)
   })
-)(AccountMainComponent)
+)(ProfileMainComponent)
 
 export {
-  AccountMain
+  ProfileMain
 }

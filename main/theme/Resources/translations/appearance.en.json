@@ -3,5 +3,10 @@
   "themes": "Themes",
   "icons": "Icons",
   "posters": "Posters & thumbnails",
-  "colors": "Colors"
+  "colors": "Colors",
+
+  "footer": "Footer",
+  "footer_show_locale": "Show language",
+  "footer_show_help": "Show help",
+  "footer_show_terms_of_service": "Show terms of service"
 }

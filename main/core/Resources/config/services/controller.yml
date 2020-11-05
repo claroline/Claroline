@@ -123,6 +123,7 @@ services:
         arguments:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\Manager\File\TempFileManager'
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
@@ -140,6 +141,7 @@ services:
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@claroline.manager.user_manager'
           - '@claroline.manager.mail_manager'
+          - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\EvaluationController:
         arguments:
@@ -253,7 +255,7 @@ services:
           - '@Claroline\AppBundle\API\Crud'
           - '@Claroline\AppBundle\API\SerializerProvider'
           - '@Claroline\CoreBundle\API\Serializer\User\ProfileSerializer'
-          - '@Claroline\CoreBundle\Manager\TermsOfServiceManager'
+          - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
           - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\CoreBundle\Controller\AdministrationController:

@@ -17,7 +17,7 @@ import {AdministrationMenu} from '#/main/app/layout/sections/administration/cont
 import {AdministrationMain} from '#/main/app/layout/sections/administration/containers/main'
 
 import {AccountMenu} from '#/main/app/layout/sections/account/containers/menu'
-import {AccountMain} from '#/main/app/layout/sections/account/containers/main'
+import {AccountMain} from '#/main/app/layout/sections/account/components/main'
 
 import {WorkspaceMenu} from '#/main/core/workspace/containers/menu'
 import {WorkspaceMain} from '#/main/core/workspace/containers/main'

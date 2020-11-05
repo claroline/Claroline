@@ -49,14 +49,11 @@ class ClientSerializer
     /** @var ResourceTypeSerializer */
     private $resourceTypeSerializer;
 
-    /**
-     * ClientSerializer constructor.
-     *
-     * @param string $env
-     */
-    public function __construct(
-        $env,
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
+    public function __construct(
+        string $env,
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
@@ -140,6 +137,7 @@ class ClientSerializer
             'admin' => [ // TODO : find a better way to store and expose this
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
             ],
+            'privacy' => $this->config->getParameter('privacy'),
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'), // TODO : this should not be exposed here
             'stylesheets' => $this->config->getParameter('stylesheets'), // TODO : this should not be exposed here

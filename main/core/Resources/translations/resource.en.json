@@ -61,6 +61,7 @@
     "evaluation_failed_status": "You did not pass the resource.",
     "evaluation_completed_status": "You have finished the resource.",
     "evaluation_passed_status": "You have passed the resource.",
+    "show_resource_header" : "Show resource header",
 
     "restrictions": {
         "dismiss_help": "As a manager, you can still access the resource, even if the access conditions are not met.",

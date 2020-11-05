@@ -89,5 +89,7 @@
   "unpublish": "Unpublish",
   "unregister": "Unregister",
   "upload": "Upload",
-  "view-as": "Show as"
+  "view-as": "Show as",
+  "show-terms-of-service": "Show terms of service",
+  "accept-terms-of-service": "Accept terms of service"
 }

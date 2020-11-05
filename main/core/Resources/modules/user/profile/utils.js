@@ -14,9 +14,7 @@ function getDefaultFacet() {
     meta: {
       main: true
     },
-    sections: [
-
-    ]
+    sections: []
   }
 }
 
@@ -54,61 +52,80 @@ function getDetailsDefaultSection(parameters, user) {
   }
 }
 
-function getFormDefaultSection(userData, isNew = false) {
-  return {
-    id: 'default-props',
-    title: trans('general'),
-    primary: true,
-    fields: [
-      {
-        name: 'lastName',
-        type: 'string',
-        label: trans('last_name'),
-        required: true
-      }, {
-        name: 'firstName',
-        type: 'string',
-        label: trans('first_name'),
-        required: true
-      }, {
-        name: 'email',
-        type: 'email',
-        label: trans('email'),
-        required: true
-      }, {
-        name: 'username',
-        type: 'username',
-        label: trans('username'),
-        required: true,
-        disabled: !isNew && (!userData.meta || !userData.meta.administrate)
-      }, {
-        name: 'plainPassword',
-        type: 'password',
-        label: trans('password'),
-        displayed: isNew,
-        required: true
-      }, {
-        name: 'meta.description',
-        type: 'html',
-        label: trans('description'),
-        options: {
-          minRows: 5
+function getFormDefaultSections(userData, isNew = false) {
+  return [
+    {
+      id: 'default-props',
+      title: trans('general'),
+      primary: true,
+      fields: [
+        {
+          name: 'lastName',
+          type: 'string',
+          label: trans('last_name'),
+          required: true
+        }, {
+          name: 'firstName',
+          type: 'string',
+          label: trans('first_name'),
+          required: true
+        }, {
+          name: 'email',
+          type: 'email',
+          label: trans('email'),
+          required: true
+        }, {
+          name: 'username',
+          type: 'username',
+          label: trans('username'),
+          required: true,
+          disabled: !isNew && (!userData.meta || !userData.meta.administrate)
+        }, {
+          name: 'plainPassword',
+          type: 'password',
+          label: trans('password'),
+          displayed: isNew,
+          required: true
+        }, {
+          name: 'meta.description',
+          type: 'html',
+          label: trans('description'),
+          options: {
+            minRows: 5
+          }
+        }, {
+          name: 'meta.locale',
+          type: 'locale',
+          label: trans('language'),
+          required: true,
+          options: {
+            onlyEnabled: true
+          }
+        }, {
+          name: 'picture',
+          type: 'image',
+          label: trans('picture')
         }
-      }, {
-        name: 'meta.locale',
-        type: 'locale',
-        label: trans('language'),
-        required: true,
-        options: {
-          onlyEnabled: true
+      ]
+    }, {
+      icon: 'fa fa-fw fa-desktop',
+      title: trans('display_parameters'),
+      fields: [
+        {
+          name: 'poster',
+          label: trans('poster'),
+          type: 'image',
+          options: {
+            ratio: '3:1'
+          }
+        }, {
+          name: 'thumbnail',
+          label: trans('thumbnail'),
+          type: 'image'
         }
-      }, {
-        name: 'picture',
-        type: 'image',
-        label: trans('picture')
-      }
-    ]
-  }
+      ]
+    }
+  ]
 }
 
 //the `force` param is here for the user registration: just show everything
@@ -176,7 +193,7 @@ function hasRoles(roles, validRoleNames) {
 
 export {
   getDetailsDefaultSection,
-  getFormDefaultSection,
+  getFormDefaultSections,
   getMainFacet,
   getDefaultFacet,
   formatFormSections,

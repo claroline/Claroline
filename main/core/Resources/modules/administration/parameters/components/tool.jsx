@@ -12,6 +12,7 @@ import {Plugins} from '#/main/core/administration/parameters/plugin/containers/p
 import {Messages} from '#/main/core/administration/parameters/message/components/messages'
 import {Message} from '#/main/core/administration/parameters/message/containers/message'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
+import {PrivacyMain} from '#/main/core/administration/parameters/privacy/containers/main'
 
 import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
 
@@ -41,6 +42,7 @@ const ParametersTool = (props) => {
           path={props.path}
           routes={[
             {path: '/', exact: true, render: () => trans('general')},
+            {path: '/privacy',       render: () => trans('privacy')},
             {path: '/plugins',       render: () => trans('plugins')},
             {path: '/archives',      render: () => trans('archive')},
             {path: '/messages',      render: () => trans('connection_messages')},
@@ -57,6 +59,9 @@ const ParametersTool = (props) => {
             path: '/',
             exact: true,
             component: Meta
+          }, {
+            path: '/privacy',
+            component: PrivacyMain
           }, {
             path: '/plugins',
             component: Plugins

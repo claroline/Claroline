@@ -36,15 +36,13 @@ const ContactsComponent = props =>
         type: 'username',
         alias: 'username',
         label: trans('username'),
-        displayed: props.options.show_username,
-        primary: props.options.show_username
+        primary: true
       }, {
         name: 'data.lastName',
         type: 'string',
         alias: 'lastName',
         label: trans('last_name'),
-        displayed: true,
-        primary: !props.options.show_username
+        displayed: true
       }, {
         name: 'data.firstName',
         type: 'string',
@@ -84,7 +82,6 @@ ContactsComponent.propTypes = {
 const Contacts = connect(
   () => ({
     options: {
-      show_username: true,
       show_mail: true,
       show_phone: true
     }

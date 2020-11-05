@@ -11,6 +11,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {getPlatformRoles} from '#/main/core/user/utils'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
+import {getSections} from '#/main/app/layout/sections/account/utils'
 
 const CurrentUser = (props) =>
   <div className="app-menu-status">
@@ -40,40 +41,14 @@ const Links = (props) =>
     <Toolbar
       className="list-group"
       buttonName="list-group-item"
-      actions={[
-        {
-          name: 'profile',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-user',
-          label: trans('user_profile'),
-          target: '/account/profile',
-          onClick: props.autoClose
-        }, {
-          name: 'parameters',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-cog',
-          label: trans('parameters'),
-          target: '/account/parameters',
-          onClick: props.autoClose,
-          displayed: false
-        }, {
-          name: 'appearance',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-drafting-compass',
-          label: trans('appearance'),
-          target: '/account/appearance',
-          onClick: props.autoClose,
-          displayed: false
-        }, {
-          name: 'linked-accounts',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-plug',
-          label: trans('Comptes liés'),
-          target: '/account/linked',
-          onClick: props.autoClose,
-          displayed: false
-        }
-      ]}
+      actions={getSections().then(sections => sections.map(section => ({
+        name: section.name,
+        type: LINK_BUTTON,
+        icon: section.icon,
+        label: section.label,
+        target: '/account/'+section.name,
+        onClick: props.autoClose
+      })))}
     />
   </MenuSection>
 

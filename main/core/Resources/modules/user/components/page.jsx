@@ -3,13 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {PageFull} from '#/main/app/page/components/full'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
-import {getActions} from '#/main/core/user/utils'
-import {route} from '#/main/core/user/routing'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 const UserPage = props =>
@@ -21,7 +17,8 @@ const UserPage = props =>
       target: ''
     }])}
     title={props.user.name}
-    subtitle={props.user.username}
+    subtitle={props.title || props.user.username}
+    poster={props.user.poster ? props.user.poster.url : undefined}
     icon={
       <UserAvatar className="user-avatar-lg img-thumbnail" picture={props.user.picture} />
     }
@@ -29,46 +26,27 @@ const UserPage = props =>
       title: `${trans('user_profile')} - ${props.user.name}`,
       description: get(props.user, 'meta.description')
     }}
-    toolbar="edit | send-message add-contact | more"
-    actions={
-      getActions([props.user], {
-        add: () => false,
-        update: (users) => props.history.push(route(users[0])),
-        delete: () => false
-      }, props.path, props.currentUser)
-        .then(actions => [
-          {
-            name: 'edit',
-            type: LINK_BUTTON,
-            icon: 'fa fa-pencil',
-            label: trans('edit', {}, 'actions'),
-            target: props.path + '/edit',
-            displayed: hasPermission('edit', props.user),
-            primary: true
-          }
-        ].concat(actions))
-    }
+    toolbar={props.toolbar}
+    actions={props.actions}
   >
     {props.children}
   </PageFull>
 
 UserPage.propTypes = {
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
-  currentUser: T.object,
+  toolbar: T.string,
   user: T.shape(
     UserTypes.propTypes
   ).isRequired,
-  children: T.node.isRequired,
-  path: T.string.isRequired,
+  title: T.string,
   showBreadcrumb: T.bool.isRequired,
+  actions: T.any,
   breadcrumb: T.arrayOf(T.shape({
     type: T.string,
     label: T.string.isRequired,
     displayed: T.bool,
     target: T.oneOfType([T.string, T.array])
-  }))
+  })),
+  children: T.node.isRequired
 }
 
 UserPage.defaultProps = {

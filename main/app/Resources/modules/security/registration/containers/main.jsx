@@ -27,10 +27,10 @@ const RegistrationMain = withRouter(
           if (termOfService) {
             dispatch(modalActions.showModal(MODAL_CONFIRM, {
               icon: 'fa fa-fw fa-copyright',
-              title: trans('term_of_service'),
+              title: trans('terms_of_service'),
               question: termOfService,
               isHtml: true,
-              confirmButtonText: trans('accept_term_of_service'),
+              confirmButtonText: trans('accept_terms_of_service'),
               handleConfirm: () => {
                 // todo : set acceptedTerms flag
                 dispatch(actions.createUser(user, onRegister))

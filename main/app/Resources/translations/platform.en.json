@@ -9,5 +9,6 @@
     "dollar_short": "$"
   },
   "not_found": "Content not found",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "dpo": "Data protection officer"
 }

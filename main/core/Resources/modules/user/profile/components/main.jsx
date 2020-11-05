@@ -1,11 +1,16 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
+import {ContentLoader} from '#/main/app/content/components/loader'
+
 import {UserPage} from '#/main/core/user/components/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
-import {ContentLoader} from '#/main/app/content/components/loader'
+import {route} from '#/main/core/user/routing'
+import {getActions} from '#/main/core/user/utils'
 
 import {ProfileEdit} from '#/main/core/user/profile/editor/components/main'
 import {ProfileShow} from '#/main/core/user/profile/player/components/main'
@@ -41,9 +46,25 @@ class Profile extends Component {
         showBreadcrumb={this.props.showBreadcrumb}
         breadcrumb={this.props.breadcrumb}
         user={this.props.user}
-        path={this.props.path}
-        currentUser={this.props.currentUser}
-        history={this.props.history}
+        toolbar="edit | send-message add-contact | fullscreen more"
+        actions={
+          getActions([this.props.user], {
+            add: () => false,
+            update: (users) => this.props.history.push(route(users[0])),
+            delete: () => false
+          }, this.props.path, this.props.currentUser)
+            .then(actions => [
+              {
+                name: 'edit',
+                type: LINK_BUTTON,
+                icon: 'fa fa-pencil',
+                label: trans('edit', {}, 'actions'),
+                target: this.props.path + '/edit',
+                displayed: hasPermission('edit', this.props.user),
+                primary: true
+              }
+            ].concat(actions))
+        }
       >
         <Routes
           path={this.props.path}

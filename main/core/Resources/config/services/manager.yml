@@ -67,18 +67,6 @@ services:
         alias: Claroline\CoreBundle\Manager\Tool\ToolManager
         public: true
 
-    Claroline\CoreBundle\Manager\TermsOfServiceManager:
-        arguments:
-          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@Claroline\CoreBundle\Manager\VersionManager'
-          - '@claroline.manager.content_manager'
-          - '@claroline.manager.user_manager'
-          - '@claroline.manager.workspace_manager'
-
-    claroline.common.terms_of_service_manager:
-        alias: Claroline\CoreBundle\Manager\TermsOfServiceManager
-        public: true
-
     Claroline\CoreBundle\Manager\RoleManager:
         public: true
         arguments:

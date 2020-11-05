@@ -125,6 +125,8 @@ class UserSerializer
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
             'picture' => $this->serializePicture($user),
+            'poster' => $this->serializePoster($user),
+            'thumbnail' => $this->serializeThumbnail($user),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
@@ -224,6 +226,48 @@ class UserSerializer
             $file = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
                 ->findOneBy(['url' => $user->getPicture()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Serialize the user poster.
+     *
+     * @return array|null
+     */
+    private function serializePoster(User $user)
+    {
+        if (!empty($user->getPoster())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $user->getPoster()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Serialize the user thumbnail.
+     *
+     * @return array|null
+     */
+    private function serializeThumbnail(User $user)
+    {
+        if (!empty($user->getThumbnail())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $user->getThumbnail()]);
 
             if ($file) {
                 return $this->fileSerializer->serialize($file);
@@ -348,6 +392,14 @@ class UserSerializer
 
         if (isset($data['meta'])) {
             $this->deserializeMeta($data['meta'], $user);
+        }
+
+        if (isset($data['poster']) && isset($data['poster']['url'])) {
+            $user->setPoster($data['poster']['url']);
+        }
+
+        if (isset($data['thumbnail']) && isset($data['thumbnail']['url'])) {
+            $user->setThumbnail($data['thumbnail']['url']);
         }
 
         if (isset($data['restrictions'])) {

@@ -6,7 +6,6 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {getMenus} from '#/main/app/layout/header/utils'
-//import {selectors} from '#/main/theme/administration/appearance/store/selectors'
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
 
 class UiMain extends Component {
@@ -91,16 +90,24 @@ class UiMain extends Component {
             ]
           }, {
             icon: 'fa fa-fw fa-copyright',
-            title: trans('footer'),
+            title: trans('footer', {}, 'appearance'),
             fields: [
               {
+                name: 'footer.show_terms_of_service',
+                type: 'boolean',
+                label: trans('footer_show_terms_of_service', {}, 'appearance')
+              }, {
+                name: 'footer.show_help',
+                type: 'boolean',
+                label: trans('footer_show_help', {}, 'appearance')
+              }, {
                 name: 'footer.show_locale',
                 type: 'boolean',
-                label: trans('footer_locale')
+                label: trans('footer_show_locale', {}, 'appearance')
               }, {
                 name: 'footer.content',
                 type: 'html',
-                label: trans('footer')
+                label: trans('footer', {}, 'appearance')
               }
             ]
           }

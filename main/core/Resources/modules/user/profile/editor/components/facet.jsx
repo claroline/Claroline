@@ -11,7 +11,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {selectors as select} from '#/main/core/user/profile/store/selectors'
-import {getFormDefaultSection, formatFormSections} from '#/main/core/user/profile/utils'
+import {getFormDefaultSections, formatFormSections} from '#/main/core/user/profile/utils'
 
 // todo manage differences between main / default / plugin facets
 const ProfileFacetComponent = props => {
@@ -23,7 +23,7 @@ const ProfileFacetComponent = props => {
     }
 
     if (get(props.facet, 'meta.main')) {
-      sections.unshift(getFormDefaultSection(props.user))
+      sections = [].concat(getFormDefaultSections(props.user), sections)
     }
   }
 

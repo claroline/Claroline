@@ -15,13 +15,16 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,6 +41,8 @@ class ProfileController extends AbstractApiController
     private $authorization;
     /** @var ObjectManager */
     private $om;
+    /** @var TempFileManager */
+    private $tempManager;
     /** @var Crud */
     private $crud;
     /** @var SerializerProvider */
@@ -50,6 +55,7 @@ class ProfileController extends AbstractApiController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
+        TempFileManager $tempManager,
         Crud $crud,
         SerializerProvider $serializer,
         ParametersSerializer $parametersSerializer,
@@ -57,6 +63,7 @@ class ProfileController extends AbstractApiController
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
+        $this->tempManager = $tempManager;
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->parametersSerializer = $parametersSerializer;
@@ -66,6 +73,29 @@ class ProfileController extends AbstractApiController
     public function getName()
     {
         return 'profile';
+    }
+
+    /**
+     * @Route("/export", name="apiv2_profile_export", methods={"GET"})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function exportAction(User $user): BinaryFileResponse
+    {
+        $pathArch = $this->tempManager->generate();
+
+        $archive = new \ZipArchive();
+        $archive->open($pathArch, \ZipArchive::CREATE);
+
+        // add user json
+        $archive->addFromString('user.json', json_encode($this->serializer->serialize($user), JSON_PRETTY_PRINT));
+
+        $archive->close();
+
+        $fileName = TextNormalizer::toKey($user->getUsername()).'.zip';
+
+        return new BinaryFileResponse($pathArch, 200, [
+            'Content-Disposition' => "attachment; filename={$fileName}",
+        ]);
     }
 
     /**

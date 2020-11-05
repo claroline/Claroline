@@ -20,6 +20,7 @@
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
+        "ext-zip": "*",
         "claroline/json-quiz": "dev-master",
         "composer/composer": "^1.6",
         "doctrine/data-fixtures": "^1.3",

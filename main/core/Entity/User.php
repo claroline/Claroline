@@ -13,6 +13,9 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Model\GroupsTrait;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
@@ -26,7 +29,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -51,6 +53,11 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
 {
     use Id;
     use Uuid;
+
+    use Poster;
+    use Thumbnail;
+    use Description;
+
     use GroupsTrait;
     use OrganizationsTrait;
 
@@ -205,16 +212,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     protected $picture;
 
     /**
-     * @Assert\File(maxSize="6000000")
-     */
-    protected $pictureFile;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $description;
-
-    /**
      * @var bool
      *
      * @ORM\Column(type="boolean", nullable=true)
@@ -295,15 +292,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
      * @ORM\Column(nullable=true)
      */
     protected $authentication;
-
-    /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\UserOptions",
-     *     inversedBy="user"
-     * )
-     * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
-     */
-    protected $options;
 
     /**
      * @ORM\Column(name="email_validation_hash", nullable=true)
@@ -827,16 +815,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
         $this->hashTime = $hashTime;
     }
 
-    public function getPictureFile()
-    {
-        return $this->pictureFile;
-    }
-
-    public function setPictureFile(UploadedFile $pictureFile)
-    {
-        $this->pictureFile = $pictureFile;
-    }
-
     public function setPicture($picture)
     {
         $this->picture = $picture;
@@ -845,16 +823,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function getPicture()
     {
         return $this->picture;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = $description;
     }
 
     public function hasAcceptedTerms()
@@ -1009,16 +977,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
     public function getAuthentication()
     {
         return $this->authentication;
-    }
-
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    public function setOptions(UserOptions $options)
-    {
-        $this->options = $options;
     }
 
     public function setIsMailValidated($isMailValidated)

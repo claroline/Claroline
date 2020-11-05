@@ -130,6 +130,17 @@ registry.add('ClarolineCoreBundle', {
     'home'                : () => { return import(/* webpackChunkName: "core-tool-home" */            '#/main/core/tools/home') }
   },
 
+  /**
+   * Provides current user Account sections.
+   */
+  account: {
+    'profile': () => { return import(/* webpackChunkName: "core-account-profile" */ '#/main/core/account/profile') },
+    'privacy': () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') }
+  },
+
+  /**
+   * Provides new Widgets for homes.
+   */
   widgets: {
     'list'    : () => { return import(/* webpackChunkName: "core-widget-list" */     '#/main/core/widget/types/list') },
     'simple'  : () => { return import(/* webpackChunkName: "core-widget-simple" */   '#/main/core/widget/types/simple') },

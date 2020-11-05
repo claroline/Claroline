@@ -13,64 +13,24 @@ namespace Claroline\MessageBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\MessageBundle\Entity\Contact\Category;
 use Claroline\MessageBundle\Entity\Contact\Contact;
-use Claroline\MessageBundle\Entity\Contact\Options;
 
 class ContactManager
 {
     private $om;
 
-    private $categoryRepo;
     private $contactRepo;
-    private $optionsRepo;
 
-    /**
-     * @param ObjectManager $om
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
 
-        $this->categoryRepo = $om->getRepository(Category::class);
         $this->contactRepo = $om->getRepository(Contact::class);
-        $this->optionsRepo = $om->getRepository(Options::class);
-    }
-
-    /**
-     * Fetches user options.
-     *
-     * @param User $user
-     *
-     * @return Options
-     */
-    public function getUserOptions(User $user)
-    {
-        $options = $this->optionsRepo->findOneBy(['user' => $user]);
-
-        if (is_null($options)) {
-            $options = new Options();
-            $options->setUser($user);
-            $defaultValues = [
-                'show_all_my_contacts' => true,
-                'show_all_visible_users' => true,
-                'show_username' => true,
-                'show_mail' => false,
-                'show_phone' => false,
-                'show_picture' => true,
-            ];
-            $options->setOptions($defaultValues);
-            $this->om->persist($options);
-            $this->om->flush();
-        }
-
-        return $options;
     }
 
     /**
      * Creates contacts from a list of user.
      *
-     * @param User   $currentUser
      * @param User[] $users
      *
      * @return Contact[]
@@ -94,30 +54,5 @@ class ContactManager
         $this->om->endFlushSuite();
 
         return $createdContacts;
-    }
-
-    /**
-     * Removes a contact.
-     *
-     * @param Contact $contact
-     */
-    public function deleteContact(Contact $contact)
-    {
-        $this->om->remove($contact);
-        $this->om->flush();
-    }
-
-    /**
-     * Gets all contacts (User property) from given user.
-     *
-     * @param User $user
-     *
-     * @return User[]
-     */
-    public function getContactsUser(User $user)
-    {
-        return array_map(function (Contact $contact) {
-            return $contact->getContact();
-        }, $this->contactRepo->findBy(['user' => $user]));
     }
 }

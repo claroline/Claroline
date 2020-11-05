@@ -40,9 +40,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'show_email' => ['ROLE_USER'],
             ],
             'country' => '-',
-            'portfolio' => [
-                'url' => null,
-            ],
             'text' => [
                 'enable_opengraph' => true,
             ],
@@ -53,21 +50,6 @@ class PlatformDefaults implements ParameterProviderInterface
             'database_restoration' => [
                 'auto_validate_email' => false,
                 'auto_enable_email_redirect' => false,
-            ],
-            'statistics' => [
-                'url' => 'http://stats.claroline.net/insert.php',
-                'token' => null,
-                'confirmed' => null,
-            ],
-            'pdf' => [
-                'active' => false,
-            ],
-            'geolocation' => [
-                'google' => [
-                    'geocoding_client_id' => null,
-                    'geocoding_signature' => null,
-                    'geocoding_key' => null,
-                ],
             ],
             'help' => [
                 'url' => 'http://doc.claroline.com',
@@ -86,18 +68,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'max_storage_size' => '1 TB',
                 'max_upload_resources' => 10000,
                 'max_workspace_users' => 10000,
-                'enable_rich_text_file_import' => false,
-                'send_mail_at_registration' => true,
                 'default_tag' => null,
-                'list' => [
-                    'default_mode' => 'tiles-sm',
-                    'default_properties' => [
-                        'name',
-                        'code',
-                        'registration.selfRegistration',
-                        'registration.waitingForRegistration',
-                    ],
-                ],
             ],
             'authentication' => [
                 'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
@@ -109,13 +80,11 @@ class PlatformDefaults implements ParameterProviderInterface
                 'default_role' => 'ROLE_USER',
                 'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
                 'auto_logging' => false,
-                'register_button_at_login' => false,
                 'allow_workspace' => false,
                 'username_regex' => "/^[a-zA-Z0-9@\-_\.]*$/",
                 'force_organization_creation' => false,
             ],
             'security' => [
-                'cookie_lifetime' => 3600,
                 'account_duration' => null,
                 'default_root_anon_id' => null,
             ],
@@ -208,6 +177,21 @@ class PlatformDefaults implements ParameterProviderInterface
                 'max_storage_size' => null,
                 'max_storage_reached' => false,
                 'used_storage' => null,
+            ],
+            'privacy' => [
+                'countryStorage' => null,
+                'dpo' => [
+                    'name' => null,
+                    'email' => null,
+                    'address' => [
+                        'street1' => null,
+                        'street2' => null,
+                        'postalCode' => null,
+                        'city' => null,
+                        'state' => null,
+                        'country' => null,
+                    ],
+                ],
             ],
         ];
     }

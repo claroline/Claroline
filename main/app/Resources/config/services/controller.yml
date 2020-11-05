@@ -44,3 +44,9 @@ services:
         arguments:
           - '@claroline.manager.locale_manager'
           - '@security.token_storage'
+
+    Claroline\AppBundle\Controller\Platform\TermsOfServiceController:
+        arguments:
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\SerializerProvider'
+          - '@Claroline\AppBundle\Manager\TermsOfServiceManager'

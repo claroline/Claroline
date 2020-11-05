@@ -29,9 +29,6 @@ class AdditionalInstaller extends BaseInstaller
     public function postUpdate($currentVersion, $targetVersion)
     {
         $this->setUpdateDate();
-
-        $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
-        $termsOfServiceManager->sendData();
     }
 
     public function end($currentVersion, $targetVersion)

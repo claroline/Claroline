@@ -9,6 +9,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
 
 const FooterMain = (props) =>
   <footer className="app-footer-container">
@@ -30,8 +31,8 @@ const FooterMain = (props) =>
           className="app-footer-btn btn-link"
           type={MODAL_BUTTON}
           icon="fa fa-fw fa-copyright visible-xs"
-          label={<span key="label" className="hidden-xs">{trans('term_of_service')}</span>}
-          modal={[]}
+          label={<span key="label" className="hidden-xs">{trans('terms_of_service')}</span>}
+          modal={[MODAL_TERMS_OF_SERVICE]}
         />
       }
 

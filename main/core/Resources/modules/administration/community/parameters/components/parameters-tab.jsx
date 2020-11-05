@@ -55,11 +55,6 @@ const Parameters = (props) => {
                 help: trans('self_registration_platform_help'),
                 linked: [
                   {
-                    name: 'registration.register_button_at_login',
-                    type: 'boolean',
-                    label: trans('show_register_button_in_login_page'),
-                    displayed: props.parameters.registration && props.parameters.registration.self
-                  }, {
                     name: 'registration.force_organization_creation',
                     type: 'boolean',
                     label: trans('force_organization_creation'),
@@ -100,7 +95,7 @@ const Parameters = (props) => {
                 name: 'registration.selfUnregistration',
                 type: 'boolean',
                 label: trans('activate_self_unregistration'),
-                help: trans('self_unregistration_workspace_help')
+                help: trans('self_unregistration_platform_help')
               }
             ]
           }, {
@@ -199,26 +194,6 @@ const Parameters = (props) => {
                 }
               }
             ]
-          }, {
-            icon: 'fa fa-fw fa-copyright',
-            title: trans('term_of_service'),
-            fields: [
-              {
-                name: 'tos.enabled',
-                type: 'boolean',
-                label: trans('term_of_service_activation_message'),
-                help: trans('term_of_service_activation_help'),
-                linked: [
-                  {
-                    name: 'tos.text',
-                    type: 'translated',
-                    label: trans('term_of_service'),
-                    required: true,
-                    displayed: props.parameters.tos.enabled
-                  }
-                ]
-              }
-            ]
           }
         ]}
       />
@@ -232,10 +207,7 @@ Parameters.propTypes = {
   parameters: T.shape({
     registration: T.shape({
       self: T.bool
-    }),
-    tos: T.shape({
-      enabled: T.bool.isRequired
-    }).isRequired
+    })
   }).isRequired
 }
 

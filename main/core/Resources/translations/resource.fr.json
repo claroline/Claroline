@@ -61,6 +61,7 @@
     "evaluation_failed_status": "Vous n'avez pas réussi la ressource.",
     "evaluation_completed_status": "Vous avez terminé la ressource.",
     "evaluation_passed_status": "Vous avez réussi la ressource.",
+    "show_resource_header" : "Afficher l'entête de la ressource",
 
     "restrictions": {
         "dismiss_help": "En tant que gestionnaire vous pouvez toujours accéder à la ressource, même si les conditions d'accès ne sont pas satisfaites.",

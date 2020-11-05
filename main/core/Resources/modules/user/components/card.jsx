@@ -13,7 +13,7 @@ const UserCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     icon={<UserAvatar picture={props.data.picture} alt={true} />}
     title={props.data.username}
     subtitle={props.data.firstName + ' ' + props.data.lastName}

@@ -50,6 +50,8 @@ class UserManager implements LoggerAwareInterface
         $this->platformConfigHandler = $platformConfigHandler;
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
+
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
