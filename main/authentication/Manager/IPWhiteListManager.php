@@ -68,7 +68,8 @@ class IPWhiteListManager
             $ips = Yaml::parseFile($this->ipFile);
             if (is_array($ips)) {
                 foreach ($ips as $ip) {
-                    if (isset($_SERVER['REMOTE_ADDR']) && $ip === $_SERVER['REMOTE_ADDR']) {
+                    $callerIp = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+                    if (isset($callerIp) && $ip === $callerIp) {
                         return true;
                     }
                 }
@@ -92,7 +93,7 @@ class IPWhiteListManager
 
     private function validateRange($lowerBound, $higherBound)
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
 
         return ip2long($ip) <= ip2long($higherBound) && ip2long($lowerBound) <= ip2long($ip);
     }
