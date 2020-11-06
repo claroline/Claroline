@@ -15,16 +15,14 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Icap\NotificationBundle\Manager\NotificationUserParametersManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserCrud
 {
-    /** @var ContainerInterface */
-    private $container;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var ObjectManager */
@@ -39,21 +37,31 @@ class UserCrud
     private $userManager;
     /** @var OrganizationManager */
     private $organizationManager;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+    /** @var NotificationUserParametersManager */
+    private $notificationManager;
 
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-
-        $this->tokenStorage = $container->get('security.token_storage');
-        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $this->config = $container->get('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
-        $this->roleManager = $container->get('claroline.manager.role_manager');
-        $this->mailManager = $container->get('claroline.manager.mail_manager');
-        $this->userManager = $container->get('claroline.manager.user_manager');
-        $this->organizationManager = $container->get('claroline.manager.organization.organization_manager');
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        ObjectManager $om,
+        PlatformConfigurationHandler $config,
+        RoleManager $roleManager,
+        MailManager $mailManager,
+        UserManager $userManager,
+        OrganizationManager $organizationManager,
+        WorkspaceManager $workspaceManager,
+        NotificationUserParametersManager $notificationManager
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
+        $this->config = $config;
+        $this->roleManager = $roleManager;
+        $this->mailManager = $mailManager;
+        $this->userManager = $userManager;
+        $this->organizationManager = $organizationManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -75,7 +83,7 @@ class UserCrud
         $this->om->flush();
     }
 
-    public function create(User $user, $options = [], $extra = [])
+    public function create(User $user, $options = [])
     {
         $this->om->startFlushSuite();
 
@@ -121,9 +129,8 @@ class UserCrud
 
         if (in_array(Options::ADD_NOTIFICATIONS, $options)) {
             // TODO : this shouldn't be done in the core. Create a CrudListener in notification plugin
-            $nManager = $this->container->get('Icap\NotificationBundle\Manager\NotificationUserParametersManager');
             $notifications = $this->config->getParameter('auto_enable_notifications');
-            $nManager->processUpdate($notifications, $user);
+            $this->notificationManager->processUpdate($notifications, $user);
         }
 
         $createWs = false;
@@ -147,7 +154,7 @@ class UserCrud
         }
 
         if ($createWs) {
-            $this->userManager->setPersonalWorkspace($user);
+            $this->workspaceManager->setPersonalWorkspace($user);
         }
 
         $this->om->endFlushSuite();

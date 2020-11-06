@@ -291,6 +291,8 @@ class Crud
         }
 
         $this->dispatch('patch', 'post_collection', [$object, $options, $property, $elements, $action]);
+
+        return $object;
     }
 
     /**

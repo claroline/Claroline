@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -47,6 +48,8 @@ class RoleManager implements LoggerAwareInterface
     private $om;
     /** @var Container */
     private $container;
+    /** @var Authenticator */
+    private $authenticator;
     /** @var PlatformConfigurationHandler */
     private $configHandler;
     /** @var TemplateManager */
@@ -67,6 +70,7 @@ class RoleManager implements LoggerAwareInterface
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         Container $container,
+        Authenticator $authenticator,
         PlatformConfigurationHandler $configHandler,
         TemplateManager $templateManager,
         Crud $crud
@@ -74,6 +78,7 @@ class RoleManager implements LoggerAwareInterface
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->container = $container;
+        $this->authenticator = $authenticator;
         $this->configHandler = $configHandler;
         $this->templateManager = $templateManager;
         $this->crud = $crud;
@@ -196,7 +201,12 @@ class RoleManager implements LoggerAwareInterface
             throw new AddRoleException('ROLE_USER cannot be added to groups');
         }
 
-        $this->crud->patch($ars, 'role', Crud::COLLECTION_ADD, [$role]);
+         $this->crud->patch($ars, 'role', Crud::COLLECTION_ADD, [$role]);
+
+        if ($ars instanceof User && $this->authenticator->isAuthenticatedUser($ars)) {
+            // replace token for the current user to give him correct rights for the end of the request
+            $this->authenticator->createToken($ars);
+        }
 
         if ($sendMail) {
             $withMail = $this->configHandler->getParameter('send_mail_at_workspace_registration');
@@ -586,7 +596,7 @@ class RoleManager implements LoggerAwareInterface
         return $operationExecuted;
     }
 
-    public function getUserRole($username)
+    public function getUserRole($username): ?Role
     {
         return $this->roleRepo->findUserRoleByUsername($username);
     }

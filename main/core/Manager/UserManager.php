@@ -18,14 +18,12 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Claroline\CoreBundle\Repository\User\UserRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserManager implements LoggerAwareInterface
 {
@@ -35,70 +33,27 @@ class UserManager implements LoggerAwareInterface
     private $om;
     private $organizationManager;
     private $platformConfigHandler;
-    private $roleManager;
-    private $translator;
-    private $workspaceManager;
     /** @var UserRepository */
     private $userRepo;
+    /** @var RoleRepository */
+    private $roleRepo;
 
     public function __construct(
         ObjectManager $om,
         Crud $crud,
         OrganizationManager $organizationManager,
-        PlatformConfigurationHandler $platformConfigHandler,
-        RoleManager $roleManager,
-        TranslatorInterface $translator,
-        WorkspaceManager $workspaceManager)
-    {
+        PlatformConfigurationHandler $platformConfigHandler
+    ) {
         $this->crud = $crud;
         $this->om = $om;
         $this->organizationManager = $organizationManager;
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->roleManager = $roleManager;
-        $this->translator = $translator;
-        $this->workspaceManager = $workspaceManager;
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-    }
-
-    /**
-     * Creates the personal workspace of a user.
-     */
-    public function setPersonalWorkspace(User $user, Workspace $model = null)
-    {
-        $locale = $this->platformConfigHandler->getParameter('locale_language');
-        $this->translator->setLocale($user->getLocale() ?? $locale);
-        $created = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
-
-        if ($created) {
-            $code = $user->getUsername().'~'.uniqid();
-        } else {
-            $code = $user->getUsername();
-        }
-
-        $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername();
-        $workspace = new Workspace();
-        $workspace->setCode($code);
-        $workspace->setName($personalWorkspaceName);
-        $workspace->setCreator($user);
-
-        $workspace = !$model ?
-            $this->workspaceManager->copy($this->workspaceManager->getDefaultModel(true), $workspace) :
-            $this->workspaceManager->copy($model, $workspace);
-
-        $workspace->setPersonal(true);
-
-        $user->setPersonalWorkspace($workspace);
-        $user->addRole($workspace->getManagerRole());
-
-        $this->om->persist($user);
-        $this->om->flush();
+        $this->userRepo = $om->getRepository(User::class);
+        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     /**
      * @param string $username
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
      *
      * @return User
      */
@@ -115,7 +70,7 @@ class UserManager implements LoggerAwareInterface
 
     public function countUsersForPlatformRoles($organizations = null)
     {
-        $roles = $this->roleManager->getAllPlatformRoles();
+        $roles = $this->roleRepo->findAllPlatformRoles();
         $roleNames = array_map(function (Role $r) {return $r->getName(); }, $roles);
         $usersInRoles = [];
         foreach ($roles as $role) {
@@ -374,7 +329,7 @@ class UserManager implements LoggerAwareInterface
         }
 
         if (!$user->hasRole('ROLE_ADMIN')) {
-            $roleAdmin = $this->roleManager->getRoleByName('ROLE_ADMIN');
+            $roleAdmin = $this->roleRepo->findOneBy(['name' => 'ROLE_ADMIN']);
             $user->addRole($roleAdmin);
 
             $this->om->persist($user);
@@ -402,7 +357,7 @@ class UserManager implements LoggerAwareInterface
         }
 
         if (!$user->hasRole('ROLE_USER')) {
-            $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+            $roleUser = $this->roleRepo->findOneBy(['name' => 'ROLE_USER']);
             $user->addRole($roleUser);
 
             $this->om->persist($user);

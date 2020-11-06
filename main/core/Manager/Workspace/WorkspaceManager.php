@@ -33,6 +33,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorkspaceManager implements LoggerAwareInterface
 {
@@ -40,6 +41,8 @@ class WorkspaceManager implements LoggerAwareInterface
 
     const MAX_WORKSPACE_BATCH_SIZE = 10;
 
+    /** @var TranslatorInterface */
+    private $translator;
     /** @var RoleManager */
     private $roleManager;
     /** @var ResourceManager */
@@ -61,18 +64,21 @@ class WorkspaceManager implements LoggerAwareInterface
     private $workspaceOptionsRepo;
 
     public function __construct(
+        TranslatorInterface $translator,
+        Crud $crud,
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ContainerInterface $container
     ) {
+        $this->translator = $translator;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->container = $container;
-        $this->crud = $container->get('Claroline\AppBundle\API\Crud');
+        $this->crud = $crud;
 
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
@@ -97,6 +103,41 @@ class WorkspaceManager implements LoggerAwareInterface
 
         $this->om->persist($workspace);
 
+        $this->om->flush();
+    }
+
+    /**
+     * Creates the personal workspace of a user.
+     */
+    public function setPersonalWorkspace(User $user, Workspace $model = null)
+    {
+        if ($user->getLocale()) {
+            $this->translator->setLocale($user->getLocale());
+        }
+        $created = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $user->getUsername()]);
+
+        if ($created) {
+            $code = $user->getUsername().'~'.uniqid();
+        } else {
+            $code = $user->getUsername();
+        }
+
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername();
+        $workspace = new Workspace();
+        $workspace->setCode($code);
+        $workspace->setName($personalWorkspaceName);
+        $workspace->setCreator($user);
+
+        $workspace = !$model ?
+            $this->copy($this->getDefaultModel(true), $workspace) :
+            $this->copy($model, $workspace);
+
+        $workspace->setPersonal(true);
+
+        $user->setPersonalWorkspace($workspace);
+        $user->addRole($workspace->getManagerRole());
+
+        $this->om->persist($user);
         $this->om->flush();
     }
 

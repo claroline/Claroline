@@ -25,15 +25,19 @@ services:
 
     Claroline\CoreBundle\API\Crud\User\UserCrud:
         arguments:
-            - '@service_container'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
         tags:
           - { name: kernel.event_listener, event: crud_pre_create_object_claroline_corebundle_entity_user, method: preCreate }
           - { name: kernel.event_listener, event: crud.pre.delete.user, method: preDelete }
           - { name: kernel.event_listener, event: crud_pre_update_object_claroline_corebundle_entity_user, method: preUpdate }
-
-    claroline.crud.user:
-        alias: Claroline\CoreBundle\API\Crud\User\UserCrud
-        public: true
 
     Claroline\CoreBundle\API\Crud\User\RoleCrud:
         arguments:

@@ -84,6 +84,19 @@ class Authenticator
         return null;
     }
 
+    /**
+     * Checks if a user is the one stored in the token.
+     */
+    public function isAuthenticatedUser(User $user): bool
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($currentUser instanceof User && $currentUser->getId() === $user->getId()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function login(User $user, Request $request)
     {
         $token = $this->createToken($user);

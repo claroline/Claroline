@@ -38,9 +38,6 @@ services:
           - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.organization.organization_manager'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-          - '@claroline.manager.role_manager'
-          - '@translator'
-          - '@claroline.manager.workspace_manager'
         calls:
           - setLogger: [ '@logger' ]
 
@@ -88,6 +85,7 @@ services:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
           - '@service_container'
+          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@claroline.manager.template_manager'
           - '@Claroline\AppBundle\API\Crud'
@@ -274,6 +272,8 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceManager:
         arguments:
+          - '@translator'
+          - '@Claroline\AppBundle\API\Crud'
           - '@claroline.manager.role_manager'
           - '@claroline.manager.resource_manager'
           - '@Claroline\AppBundle\Event\StrictDispatcher'

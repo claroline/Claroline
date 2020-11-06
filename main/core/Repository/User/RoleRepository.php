@@ -143,15 +143,10 @@ class RoleRepository extends EntityRepository
 
     /**
      * Returns user-type role of an user.
-     *
-     * @param string $username
-     * @param bool   $executeQuery
-     *
-     * @return Role[]|Query
      */
-    public function findUserRoleByUsername($username, $executeQuery = true)
+    public function findUserRoleByUsername(string $username): ?Role
     {
-        $query = $this->_em
+        return $this->_em
             ->createQuery('
                 SELECT r
                 FROM Claroline\CoreBundle\Entity\Role r
@@ -161,9 +156,8 @@ class RoleRepository extends EntityRepository
             ')
             ->setParameter('type', Role::USER_ROLE)
             ->setParameter('name', 'ROLE_USER_'.strtoupper($username))
-            ->setParameter('key', $username);
-
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
+            ->setParameter('key', $username)
+            ->getOneOrNullResult();
     }
 
     public function findWorkspaceRoleWithToolAccess(Workspace $workspace)

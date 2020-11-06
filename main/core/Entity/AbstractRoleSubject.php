@@ -13,16 +13,13 @@ namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-//@todo move me to the trait list
 abstract class AbstractRoleSubject
 {
     protected $roles;
-    protected $rolesStringAsArray;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->rolesStringAsArray = [];
     }
 
     /**
@@ -81,17 +78,11 @@ abstract class AbstractRoleSubject
      */
     public function getRoles()
     {
-        if (is_array($this->rolesStringAsArray) && count($this->rolesStringAsArray) > 0) {
-            return $this->rolesStringAsArray;
-        }
-
         $roleNames = [];
 
         foreach ($this->getEntityRoles(true) as $role) {
             $roleNames[] = $role->getName();
         }
-
-        $this->rolesStringAsArray = $roleNames;
 
         return $roleNames;
     }

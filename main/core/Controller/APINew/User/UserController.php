@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,19 +54,23 @@ class UserController extends AbstractCrudController
     private $manager;
     /** @var MailManager */
     private $mailManager;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
         UserManager $manager,
-        MailManager $mailManager
+        MailManager $mailManager,
+        WorkspaceManager $workspaceManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->manager = $manager;
         $this->mailManager = $mailManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     public function getName()
@@ -147,7 +152,7 @@ class UserController extends AbstractCrudController
         $processed = [];
         foreach ($users as $user) {
             if (!$user->getPersonalWorkspace() && $this->checkPermission('ADMINISTRATE', $user)) {
-                $this->manager->setPersonalWorkspace($user);
+                $this->workspaceManager->setPersonalWorkspace($user);
                 $processed[] = $user;
             }
         }
