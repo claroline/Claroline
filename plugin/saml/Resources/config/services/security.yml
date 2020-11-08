@@ -31,12 +31,8 @@ services:
 
     Claroline\SamlBundle\Security\LogoutHandler:
         arguments:
-            - !service
-                class: Symfony\Component\DependencyInjection\ServiceLocator
-                arguments:
-                    - { Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler: '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler' }
-                    - { lightsaml.own.entity_descriptor_provider: '@lightsaml.own.entity_descriptor_provider' }
-                    - { lightsaml.service.binding_factory: '@lightsaml.service.binding_factory' }
-                    - { lightsaml.container.build: '@lightsaml.container.build' }
-                    - { router: '@router' }
-                tags: ['container.service_locator']
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@lightsaml.own.entity_descriptor_provider'
+            - '@lightsaml.service.binding_factory'
+            - '@lightsaml.container.build'
+            - '@router'
