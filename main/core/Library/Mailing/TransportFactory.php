@@ -35,7 +35,11 @@ class TransportFactory
             $transport = $this->getBaseSmtpTransport();
             $transport->setHost($this->configHandler->getParameter('mailer_host'));
             $transport->setPort($this->configHandler->getParameter('mailer_port'));
-            $transport->setEncryption($this->configHandler->getParameter('mailer_encryption'));
+            $encryption = null;
+            if (!empty($this->configHandler->getParameter('mailer_encryption')) && 'none' !== $this->configHandler->getParameter('mailer_encryption')) {
+                $encryption = $this->configHandler->getParameter('mailer_encryption');
+            }
+            $transport->setEncryption($encryption);
             $transport->setUsername($this->configHandler->getParameter('mailer_username'));
             $transport->setPassword($this->configHandler->getParameter('mailer_password'));
             $transport->setAuthMode($this->configHandler->getParameter('mailer_auth_mode'));
