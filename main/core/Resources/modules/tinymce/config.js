@@ -118,7 +118,7 @@ const config = getExternalPlugins().then(extPlugins => {
 
     // toolbars & buttons
     insert_button_items: 'resource-picker file-upload link media image | anchor charmap inserttable insertdatetime',
-    toolbar1: 'advanced-toolbar | insert | undo redo | formatselect | bold italic forecolor ', // TODO : find a way to restore fullscreen mode
+    toolbar1: 'advanced-toolbar | insert | undo redo | formatselect | bold italic underline | forecolor ', // TODO : find a way to restore fullscreen mode
     toolbar2: 'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat preview code' + extButtons
   }
 })

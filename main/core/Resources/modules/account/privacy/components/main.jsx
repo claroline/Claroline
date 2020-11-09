@@ -39,8 +39,8 @@ const PrivacyMain = (props) =>
     <AlertBlock
       type={get(props.currentUser, 'meta.acceptedTerms') ? 'info' : 'warning'}
       title={get(props.currentUser, 'meta.acceptedTerms') ?
-        "Vous avez accepté les conditions d'utilisation de la plateforme." :
-        "Vous n'avez pas encore accepté les conditions d'utilisation de la plateforme."
+        'Vous avez accepté les conditions d\'utilisation de la plateforme.' :
+        'Vous n\'avez pas encore accepté les conditions d\'utilisation de la plateforme.'
       }
     >
       {!get(props.currentUser, 'meta.acceptedTerms') &&
@@ -98,19 +98,21 @@ const PrivacyMain = (props) =>
     />
 
     <Button
-      className="btn btn-block"
+      className="btn btn-block component-container"
       type={CALLBACK_BUTTON}
       label={trans('Exporter mes données')}
       callback={props.exportAccount}
     />
 
-    <Button
-      className="btn btn-block component-container"
-      type={CALLBACK_BUTTON}
-      label={trans('Demander la suppression de mon compte')}
-      callback={() => true}
-      dangerous={true}
-    />
+    {false &&
+      <Button
+        className="btn btn-block component-container"
+        type={CALLBACK_BUTTON}
+        label={trans('Demander la suppression de mon compte')}
+        callback={() => true}
+        dangerous={true}
+      />
+    }
   </UserPage>
 
 PrivacyMain.propTypes = {
