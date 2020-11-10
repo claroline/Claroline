@@ -15,12 +15,6 @@ services:
             - { name: kernel.event_listener, event: administration_tool_community, method: onDisplayTool }
             - { name: kernel.event_listener, event: merge_users, method: onMergeUsers }
 
-    Claroline\CoreBundle\Listener\Administration\HomeListener:
-        arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
-        tags:
-            - { name: kernel.event_listener, event: administration_tool_home, method: onDisplayTool }
-
     Claroline\CoreBundle\Listener\Administration\IntegrationListener:
         tags:
             - { name: kernel.event_listener, event: administration_tool_integration, method: onDisplayTool }
@@ -193,16 +187,6 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_transfer, method: onDisplayWorkspace }
-
-    Claroline\CoreBundle\Listener\Tool\HomeListener:
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: open_tool_desktop_home, method: onDisplayDesktop }
-            - { name: kernel.event_listener, event: open_tool_workspace_home, method: onDisplayWorkspace }
 
     Claroline\CoreBundle\Listener\Tool\ParametersListener:
         tags:

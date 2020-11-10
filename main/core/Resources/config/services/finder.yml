@@ -99,12 +99,8 @@ services:
 
     Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectAdminToolFinder: ~
 
-    Claroline\CoreBundle\API\Finder\Home\WidgetInstanceFinder: ~
+    Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder: ~
 
-    Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder: ~
-
-    Claroline\CoreBundle\API\Finder\Home\HomeTabFinder:
-        arguments:
-          - '@security.token_storage'
+    Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder: ~
 
     Claroline\CoreBundle\API\Finder\ConnectionMessage\ConnectionMessageFinder: ~

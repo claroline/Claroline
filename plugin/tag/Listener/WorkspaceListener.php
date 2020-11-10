@@ -2,8 +2,8 @@
 
 namespace Claroline\TagBundle\Listener;
 
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\TagBundle\Manager\TagManager;
 
 class WorkspaceListener
@@ -11,29 +11,16 @@ class WorkspaceListener
     /** @var TagManager */
     private $manager;
 
-    /**
-     * WorkspaceListener constructor.
-     *
-     * @param TagManager $manager
-     */
     public function __construct(TagManager $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
-    public function onDelete(GenericDataEvent $event)
+    public function onDelete(DeleteEvent $event)
     {
-        /** @var Workspace[] $workspaces */
-        $workspaces = $event->getData();
+        /** @var Workspace $workspace */
+        $workspace = $event->getObject();
 
-        $ids = [];
-        foreach ($workspaces as $workspace) {
-            $ids[] = $workspace->getId();
-        }
-
-        $this->manager->removeTaggedObjectsByClassAndIds(Workspace::class, $ids);
+        $this->manager->removeTaggedObjectsByClassAndIds(Workspace::class, [$workspace->getId()]);
     }
 }

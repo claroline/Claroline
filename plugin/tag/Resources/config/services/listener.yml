@@ -8,7 +8,7 @@ services:
         arguments:
             - '@Claroline\TagBundle\Manager\TagManager'
         tags:
-            - { name: kernel.event_listener, event: claroline_workspaces_delete, method: onDelete }
+            - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: onDelete }
 
     Claroline\TagBundle\Listener\TagListener:
         arguments:

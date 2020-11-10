@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\HomeBundle\Entity\HomeTab;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_widget_container")
+ *
+ * @todo : remove dependency to HomeBundle
  */
 class WidgetContainer
 {
@@ -36,7 +38,7 @@ class WidgetContainer
      * The list of content instances.
      *
      * @ORM\ManyToOne(
-     *    targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTab",
+     *    targetEntity="Claroline\HomeBundle\Entity\HomeTab",
      *    inversedBy="widgetContainers"
      * )
      * @ORM\JoinColumn(name="hometab_id", onDelete="CASCADE", nullable=true)
@@ -99,8 +101,6 @@ class WidgetContainer
 
     /**
      * Add a WidgetInstance into the container.
-     *
-     * @param WidgetInstance $instance
      */
     public function addInstance(WidgetInstance $instance)
     {
@@ -112,8 +112,6 @@ class WidgetContainer
 
     /**
      * Remove a WidgetInstance from the container.
-     *
-     * @param WidgetInstance $instance
      */
     public function removeInstance(WidgetInstance $instance)
     {

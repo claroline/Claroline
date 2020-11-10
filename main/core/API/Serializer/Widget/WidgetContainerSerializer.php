@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Widget;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Finder\Home\WidgetInstanceFinder;
+use Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
@@ -28,14 +28,6 @@ class WidgetContainerSerializer
     /** @var PublicFileSerializer */
     private $publicFileSerializer;
 
-    /**
-     * WidgetContainerSerializer constructor.
-     *
-     * @param ObjectManager            $om
-     * @param WidgetInstanceSerializer $widgetInstanceSerializer
-     * @param WidgetInstanceFinder     $widgetInstanceFinder
-     * @param PublicFileSerializer     $publicFileSerializer
-     */
     public function __construct(
         ObjectManager $om,
         WidgetInstanceFinder $widgetInstanceFinder,

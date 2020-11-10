@@ -1,0 +1,13 @@
+services:
+  Claroline\HomeBundle\Manager\Workspace\Transfer\Home:
+    arguments:
+      - '@Claroline\AppBundle\API\SerializerProvider'
+      - '@Claroline\AppBundle\API\FinderProvider'
+      - '@Claroline\AppBundle\API\Crud'
+    calls:
+      - setLogger: [ '@logger' ]
+
+    #alias is required: todo: use tags
+    claroline.transfer.home:
+      alias: Claroline\HomeBundle\Manager\Workspace\Transfer\Home
+      public: true

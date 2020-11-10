@@ -88,19 +88,8 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Finder\Home\WidgetInstanceFinder'
+            - '@Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder'
             - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetInstanceSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
-
-    Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder'
-            - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
 
     Claroline\CoreBundle\API\Serializer\Widget\Type\SimpleWidgetSerializer:

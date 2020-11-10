@@ -18,12 +18,6 @@ services:
 
     Claroline\CoreBundle\Security\Voter\Template\TemplateVoter: ~
 
-    Claroline\CoreBundle\Security\Voter\Tool\Home\HomeTabVoter: ~
-
-    Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetContainerVoter: ~
-
-    Claroline\CoreBundle\Security\Voter\Tool\Home\WidgetInstanceVoter: ~
-
     Claroline\CoreBundle\Security\Voter\Tool\ToolVoter:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

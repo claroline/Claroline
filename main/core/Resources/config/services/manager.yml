@@ -336,19 +336,6 @@ services:
         alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\ResourceManager
         public: true
 
-    Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\Home:
-        arguments:
-          - '@Claroline\AppBundle\API\SerializerProvider'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\API\Crud'
-        calls:
-          - setLogger: [ '@logger' ]
-
-    #alias is required: todo: use tags
-    claroline.transfer.home:
-        alias: Claroline\CoreBundle\Manager\Workspace\Transfer\Tools\Home
-        public: true
-
     Claroline\CoreBundle\Manager\Template\PlaceholderManager:
         arguments:
           - '@security.token_storage'

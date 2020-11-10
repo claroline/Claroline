@@ -108,7 +108,6 @@ registry.add('ClarolineCoreBundle', {
    * Provides Desktop and/or Workspace tools.
    */
   tools: {
-    'home'           : () => { return import(/* webpackChunkName: "core-tool-home" */       '#/main/core/tools/home') },
     'workspaces'     : () => { return import(/* webpackChunkName: "core-tool-workspaces" */ '#/main/core/tools/workspaces') },
     'resources'      : () => { return import(/* webpackChunkName: "core-tool-resources" */  '#/main/core/tools/resources') },
     'parameters'     : () => { return import(/* webpackChunkName: "core-tool-parameters" */ '#/main/core/tools/parameters') },
@@ -126,8 +125,7 @@ registry.add('ClarolineCoreBundle', {
     'templates_management': () => { return import(/* webpackChunkName: "core-admin-template" */       '#/main/core/administration/template') },
     'tasks_scheduling'    : () => { return import(/* webpackChunkName: "core-admin-scheduled-task" */ '#/main/core/administration/scheduled-task') },
     'integration'         : () => { return import(/* webpackChunkName: "core-admin-integration" */    '#/main/core/administration/integration') },
-    'transfer'            : () => { return import(/* webpackChunkName: "core-tool-transfer" */        '#/main/core/tools/transfer') },
-    'home'                : () => { return import(/* webpackChunkName: "core-tool-home" */            '#/main/core/tools/home') }
+    'transfer'            : () => { return import(/* webpackChunkName: "core-tool-transfer" */        '#/main/core/tools/transfer') }
   },
 
   /**

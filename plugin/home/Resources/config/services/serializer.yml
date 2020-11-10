@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+    public: true
+
+  Claroline\HomeBundle\Serializer\HomeTabSerializer:
+    tags: [claroline.serializer]
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder'
+      - '@Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer'
+      - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+      - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+      - '@Claroline\CoreBundle\API\Serializer\User\RoleSerializer'
+      - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'

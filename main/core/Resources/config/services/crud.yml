@@ -14,8 +14,6 @@ services:
             - '@claroline.manager.role_manager'
             - '@claroline.manager.organization.organization_manager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Listener\Log\LogListener'
         tags:
             - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_workspace_workspace, method: preDelete }
@@ -79,37 +77,18 @@ services:
           - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: preDelete }
           - { name: kernel.event_listener, event: crud.pre.copy.resource_node, method: preCopy }
 
-    Claroline\CoreBundle\API\Crud\Home\WidgetInstanceCrud:
+    Claroline\CoreBundle\API\Crud\Widget\WidgetInstanceCrud:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
         tags:
           - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_widget_widgetinstance, method: preDelete }
 
-    claroline.crud.widget_instance:
-        alias: Claroline\CoreBundle\API\Crud\Home\WidgetInstanceCrud
-        public: true
-
-    Claroline\CoreBundle\API\Crud\Home\WidgetContainerCrud:
+    Claroline\CoreBundle\API\Crud\Widget\WidgetContainerCrud:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.crud.widget_instance'
+            - '@Claroline\CoreBundle\API\Crud\Widget\WidgetInstanceCrud'
         tags:
           - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_widget_widgetcontainer, method: preDelete }
-
-    claroline.crud.widget_container:
-        alias: Claroline\CoreBundle\API\Crud\Home\WidgetContainerCrud
-        public: true
-
-    Claroline\CoreBundle\API\Crud\Home\HomeTabCrud:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@claroline.crud.widget_container'
-        tags:
-          - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_tab_hometab, method: preDelete }
-
-    claroline.crud.widget_home_tab:
-        alias: Claroline\CoreBundle\API\Crud\Home\HomeTabCrud
-        public: true
 
     Claroline\CoreBundle\API\Crud\File\PublicFile:
         arguments:

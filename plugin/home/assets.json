@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "home-tool": "home.less"
+    }
+  }
+}

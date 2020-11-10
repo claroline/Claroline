@@ -12,7 +12,9 @@ import {WidgetEditor} from '#/main/core/widget/editor/components/widget'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {MODAL_WIDGET_CREATION} from '#/main/core/widget/editor/modals/creation'
 import {MODAL_WIDGET_PARAMETERS} from '#/main/core/widget/editor/modals/parameters'
-import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
+
+// TODO : remove dependency
+import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
 
 class WidgetGridEditor extends Component {
   constructor(props) {

@@ -87,15 +87,6 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateTypeController: ~
 
-    Claroline\CoreBundle\Controller\APINew\Tool\HomeController:
-        arguments:
-          - '@security.authorization_checker'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AppBundle\API\FinderProvider'
-          - '@Claroline\AppBundle\API\Crud'
-          - '@claroline.manager.lock_manager'
-          - '@Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer'
-
     Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
         arguments:
           - '@security.authorization_checker'

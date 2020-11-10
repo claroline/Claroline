@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+    public: true
+    tags: [claroline.crud]
+
+  Claroline\HomeBundle\Crud\HomeTabCrud:
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\CoreBundle\API\Crud\Widget\WidgetContainerCrud'
+    tags:
+      - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_homebundle_entity_hometab, method: preDelete }
