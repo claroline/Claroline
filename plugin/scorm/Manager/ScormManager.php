@@ -520,11 +520,11 @@ class ScormManager
         $scormData = $this->parseScormArchive($file);
         $this->unzipScormArchive($workspace, $file, $hashName);
         // Move Scorm archive in the files directory
-        $file->move($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid(), $hashName);
+        $finalFile = $file->move($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid(), $hashName);
 
         return [
             'name' => $hashName,
-            'type' => $file->getMimeType(),
+            'type' => $finalFile->getMimeType(),
             'version' => $scormData['version'],
             'scos' => $scormData['scos'],
         ];

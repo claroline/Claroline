@@ -45,7 +45,7 @@ const ScormCreation = connect(
   }),
   (dispatch) => ({
     update(data) {
-      dispatch(actions.updateResource('hashName', data.hashName))
+      dispatch(actions.updateResource('hashName', data.name))
       dispatch(actions.updateResource('version', data.version))
       dispatch(actions.updateResource('scos', data.scos))
     }

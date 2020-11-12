@@ -55,7 +55,7 @@ const Player = (props) => {
               return (
                 <ScormIframe
                   ratio={get(props.scorm, 'ratio')}
-                  baseUrl={`${asset('uploads/scorm/')}${props.workspaceUuid}/${props.scorm.hashName}`}
+                  baseUrl={`${asset('data/uploads/scorm/')}${props.workspaceUuid}/${props.scorm.hashName}`}
                   sco={currentSco}
                 />
               )
