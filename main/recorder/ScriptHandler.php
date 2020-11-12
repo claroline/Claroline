@@ -35,30 +35,15 @@ class ScriptHandler
         static::getRecorder($event)->buildBundleFile();
     }
 
-    public static function removeBupIniFile(Event $event)
-    {
-        static::getRecorder($event)->removeBupIniFile();
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @return Recorder
-     */
-    private static function getRecorder(Event $event)
+    private static function getRecorder(Event $event): Recorder
     {
         if (!isset(static::$recorder)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
             $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
             $logger = new ConsoleIoLogger($event->getIO());
-            $manager = $event->getComposer()->getRepositoryManager();
-            $rootPackage = $event->getComposer()->getPackage();
 
             static::$recorder = new Recorder(
-                $manager->getLocalRepository(),
-                new Detector($vendorDir),
                 new BundleHandler($bundleFile, $logger),
-                $rootPackage->getAliases(),
                 $vendorDir
             );
         }

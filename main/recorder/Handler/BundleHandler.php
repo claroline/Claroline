@@ -43,7 +43,7 @@ class BundleHandler extends BaseHandler
 
     private function doWriteBundleFile()
     {
-        $this->log('Writing bundle file...', '');
+        $this->logger->log('Writing bundle file...', '');
 
         $content = '';
 
