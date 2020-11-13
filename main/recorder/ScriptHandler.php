@@ -11,10 +11,10 @@
 
 namespace Claroline\BundleRecorder;
 
-use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
 use Claroline\BundleRecorder\Logger\ConsoleIoLogger;
 use Composer\Script\Event;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ScriptHandler
 {
@@ -27,8 +27,6 @@ class ScriptHandler
      * Writes the list of available bundles, based on currently installed packages.
      *
      * Should occur on "post-install-cmd" and "post-update-cmd" events.
-     *
-     * @param Event $event
      */
     public static function buildBundleFile(Event $event)
     {
@@ -39,13 +37,11 @@ class ScriptHandler
     {
         if (!isset(static::$recorder)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
+            $distBundlefile = realpath($vendorDir.'/claroline/distribution/main/installation/Resources/config').DIRECTORY_SEPARATOR.'bundles.ini-dist';
             $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
-            $logger = new ConsoleIoLogger($event->getIO());
+            $handler = new BundleHandler(new Filesystem(), $distBundlefile, $bundleFile, new ConsoleIoLogger($event->getIO()));
 
-            static::$recorder = new Recorder(
-                new BundleHandler($bundleFile, $logger),
-                $vendorDir
-            );
+            static::$recorder = new Recorder($handler, $vendorDir);
         }
 
         return static::$recorder;

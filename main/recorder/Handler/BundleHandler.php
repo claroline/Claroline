@@ -11,47 +11,43 @@
 
 namespace Claroline\BundleRecorder\Handler;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
-class BundleHandler extends BaseHandler
+class BundleHandler implements LoggerAwareInterface
 {
-    private $registeredBundles;
+    use LoggerAwareTrait;
 
-    public function __construct($bundleFile, LoggerInterface $logger = null)
+    private $fs;
+    private $sourceFile;
+    private $targetFile;
+
+    public function __construct(Filesystem $fs, string $sourceFile, string $targetFile, LoggerInterface $logger = null)
     {
-        parent::__construct($bundleFile, $logger);
-        $this->registeredBundles = parse_ini_file($this->targetFile);
-    }
-
-    public function writeBundleFile(array $bundleFqcns)
-    {
-        $bundles = [];
-
-        foreach ($bundleFqcns as $bundleFqcn) {
-            $isEnabled = true;
-
-            if (isset($this->registeredBundles[$bundleFqcn])) {
-                $isEnabled = $this->registeredBundles[$bundleFqcn];
-            }
-
-            $bundles[$bundleFqcn] = $isEnabled;
+        if (!file_exists($sourceFile)) {
+            throw new \LogicException(sprintf('Source file "%s" does not exist.', $sourceFile));
         }
 
-        $this->registeredBundles = $bundles;
-        $this->doWriteBundleFile();
+        $this->fs = $fs;
+        $this->sourceFile = $sourceFile;
+        $this->targetFile = $targetFile;
+
+        if ($logger) {
+            $this->setLogger($logger);
+        }
     }
 
-    private function doWriteBundleFile()
+    public function writeBundleFile()
     {
-        $this->logger->log('Writing bundle file...', '');
-
-        $content = '';
-
-        foreach ($this->registeredBundles as $bundle => $isEnabled) {
-            $isEnabled = $isEnabled ? 'true' : 'false';
-            $content .= "{$bundle} = {$isEnabled}".PHP_EOL;
+        // The bundle file should not be overwritten, it's versioned.
+        if ($this->fs->exists($this->targetFile)) {
+            return;
         }
 
-        file_put_contents($this->targetFile, $content);
+        $this->logger->info('Writing bundle file...');
+
+        $this->fs->copy($this->sourceFile, $this->targetFile);
     }
 }

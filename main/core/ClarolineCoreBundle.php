@@ -22,6 +22,19 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use FOS\JsRoutingBundle\FOSJsRoutingBundle;
+use Http\HttplugBundle\HttplugBundle;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle;
+use Symfony\Bundle\DebugBundle\DebugBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MakerBundle\MakerBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -121,5 +134,31 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
     private function buildPath($file, $folder = 'suggested')
     {
         return __DIR__."/Resources/config/{$folder}/{$file}.yml";
+    }
+
+    public function getRequiredThirdPartyBundles(string $environment): array
+    {
+        $bundles = [
+            new FrameworkBundle(),
+            new SecurityBundle(),
+            new MonologBundle(),
+            new SwiftmailerBundle(),
+            new DoctrineBundle(),
+            new DoctrineCacheBundle(),
+            new FOSJsRoutingBundle(),
+            new TwigBundle(),
+            new HttplugBundle(),
+            new StofDoctrineExtensionsBundle(),
+            new SensioFrameworkExtraBundle(),
+            new BazingaJsTranslationBundle(),
+        ];
+
+        if (\in_array($environment, ['dev', 'test'], true)) {
+            $bundles[] = new WebProfilerBundle();
+            $bundles[] = new DebugBundle();
+            $bundles[] = new MakerBundle();
+        }
+
+        return $bundles;
     }
 }

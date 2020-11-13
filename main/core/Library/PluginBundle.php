@@ -54,8 +54,9 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
+        $routingFile = $this->getPath().'/Resources/config/routing.yml';
 
-        if (file_exists($routingFile = $this->getPath().'/Resources/config/routing.yml')) {
+        if (file_exists($routingFile)) {
             $config->addRoutingResource($routingFile, null, null);
         }
 
@@ -186,5 +187,10 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         if (is_dir($path)) {
             return $path;
         }
+    }
+
+    public function getRequiredThirdPartyBundles(string $environment): array
+    {
+        return [];
     }
 }

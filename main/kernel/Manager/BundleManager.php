@@ -12,10 +12,12 @@
 namespace Claroline\KernelBundle\Manager;
 
 use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Psr\Log\LoggerAwareInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -58,7 +60,14 @@ class BundleManager implements LoggerAwareInterface
         foreach ($entries as $bundleClass => $isActive) {
             if (((bool) $isActive || $fetchAll || $updateMode) && 'Claroline\KernelBundle\ClarolineKernelBundle' !== $bundleClass) {
                 if (class_exists($bundleClass)) {
+                    /** @var BundleInterface $bundle */
                     $bundle = new $bundleClass($this->kernel);
+
+                    if ($bundle instanceof PluginBundleInterface) {
+                        foreach ($bundle->getRequiredThirdPartyBundles($environment) as $thirdPartyBundle) {
+                            $nonAutoConfigurableBundles[] = $thirdPartyBundle;
+                        }
+                    }
 
                     if ($bundle instanceof ConfigurationProviderInterface) {
                         $configProviderBundles[] = $bundle;
