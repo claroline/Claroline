@@ -84,7 +84,7 @@ class Installer implements LoggerAwareInterface
             $plugin->getName()
         );
 
-        if (!$this->pluginManager->isReady($pluginEntity) || !$this->pluginManager->isActivatedByDefault($pluginEntity)) {
+        if (!$this->pluginManager->isReady($pluginEntity)) {
             $errors = $this->pluginManager->getMissingRequirements($pluginEntity);
 
             foreach ($errors['extensions'] as $extension) {

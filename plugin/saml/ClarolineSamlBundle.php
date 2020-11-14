@@ -22,11 +22,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ClarolineSamlBundle extends DistributionPluginBundle implements ConfigurationProviderInterface
 {
-    public function isActiveByDefault()
-    {
-        return false;
-    }
-
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

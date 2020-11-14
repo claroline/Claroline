@@ -18,8 +18,4 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
  */
 class ClarolinePlannedNotificationBundle extends DistributionPluginBundle
 {
-    public function isActiveByDefault()
-    {
-        return false;
-    }
 }

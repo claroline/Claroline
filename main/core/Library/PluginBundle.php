@@ -145,16 +145,6 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Returns true if the plugin has to be activated by default.
-     *
-     * @return bool
-     */
-    public function isActiveByDefault()
-    {
-        return true;
-    }
-
-    /**
      * Returns true if the plugin has to be hidden.
      *
      * @return bool
