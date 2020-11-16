@@ -65,7 +65,7 @@ class BundleManager implements LoggerAwareInterface
 
                     if ($bundle instanceof PluginBundleInterface) {
                         foreach ($bundle->getRequiredThirdPartyBundles($environment) as $thirdPartyBundle) {
-                            $nonAutoConfigurableBundles[] = $thirdPartyBundle;
+                            $nonAutoConfigurableBundles[\get_class($thirdPartyBundle)] = $thirdPartyBundle;
                         }
                     }
 
@@ -74,7 +74,7 @@ class BundleManager implements LoggerAwareInterface
                     }
 
                     if (!$bundle instanceof AutoConfigurableInterface) {
-                        $nonAutoConfigurableBundles[] = $bundle;
+                        $nonAutoConfigurableBundles[$bundleClass] = $bundle;
                     } elseif ($bundle->supports($environment)) {
                         $activeBundles[] = [
                           self::BUNDLE_INSTANCE => $bundle,

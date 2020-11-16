@@ -106,6 +106,6 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         }
         $data = json_decode(file_get_contents($path), true);
 
-        return $data;
+        return $data['packages'] ?? $data;
     }
 }
