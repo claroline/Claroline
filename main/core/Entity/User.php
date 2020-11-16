@@ -49,7 +49,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ClaroAssert\Username()
  * @ClaroAssert\UserAdministrativeCode()
  */
-class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInterface, EquatableInterface
+class User extends AbstractRoleSubject implements \Serializable, EquatableInterface
 {
     use Id;
     use Uuid;
@@ -844,16 +844,6 @@ class User extends AbstractRoleSubject implements \Serializable, AdvancedUserInt
         }
 
         return $this->getExpirationDate() >= new \DateTime();
-    }
-
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-
-    public function isCredentialsNonExpired()
-    {
-        return true;
     }
 
     public function isLocked()

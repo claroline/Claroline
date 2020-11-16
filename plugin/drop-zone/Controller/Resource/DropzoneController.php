@@ -5,14 +5,14 @@ namespace Claroline\DropZoneBundle\Controller\Resource;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route("/", options={"expose"=true})
  */
-class DropzoneController extends Controller
+class DropzoneController extends AbstractController
 {
     public function __construct(RouterInterface $router)
     {

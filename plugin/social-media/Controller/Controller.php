@@ -22,11 +22,11 @@ use Icap\SocialmediaBundle\Manager\LikeActionManager;
 use Icap\SocialmediaBundle\Manager\NoteActionManager;
 use Icap\SocialmediaBundle\Manager\ShareActionManager;
 use Icap\SocialmediaBundle\Manager\WallItemManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class Controller extends BaseController
+class Controller extends AbstractController
 {
     const MAX_PER_PAGE = 10;
 
