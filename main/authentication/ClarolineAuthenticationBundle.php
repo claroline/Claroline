@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use HWI\Bundle\OAuthBundle\HWIOAuthBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,6 +27,13 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
         parent::build($container);
 
         $container->addCompilerPass(new OauthConfigPass());
+    }
+
+    public function getRequiredThirdPartyBundles(string $environment): array
+    {
+        return [
+            new HWIOAuthBundle(),
+        ];
     }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)

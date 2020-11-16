@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
-use Composer\Script\Event;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -95,18 +94,6 @@ class Refresher
 
         $baseCacheDir = "{$this->container->get('kernel')->getProjectDir()}/var/cache";
         $cacheDir = null === $environment ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
-        static::removeContentFrom($cacheDir);
-    }
-
-    public static function deleteCache(Event $event)
-    {
-        $options = array_merge(
-            ['symfony-var-dir' => 'var'],
-            $event->getComposer()->getPackage()->getExtra()
-        );
-
-        $cacheDir = $options['symfony-var-dir'].'/cache';
-        $event->getIO()->write('Clearing the cache...');
         static::removeContentFrom($cacheDir);
     }
 

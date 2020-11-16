@@ -11,10 +11,10 @@
 
 namespace Claroline\BundleRecorder;
 
-use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
 use Claroline\BundleRecorder\Logger\ConsoleIoLogger;
 use Composer\Script\Event;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ScriptHandler
 {
@@ -27,40 +27,21 @@ class ScriptHandler
      * Writes the list of available bundles, based on currently installed packages.
      *
      * Should occur on "post-install-cmd" and "post-update-cmd" events.
-     *
-     * @param Event $event
      */
     public static function buildBundleFile(Event $event)
     {
         static::getRecorder($event)->buildBundleFile();
     }
 
-    public static function removeBupIniFile(Event $event)
-    {
-        static::getRecorder($event)->removeBupIniFile();
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @return Recorder
-     */
-    private static function getRecorder(Event $event)
+    private static function getRecorder(Event $event): Recorder
     {
         if (!isset(static::$recorder)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
+            $distBundlefile = realpath($vendorDir.'/claroline/distribution/main/installation/Resources/config').DIRECTORY_SEPARATOR.'bundles.ini-dist';
             $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
-            $logger = new ConsoleIoLogger($event->getIO());
-            $manager = $event->getComposer()->getRepositoryManager();
-            $rootPackage = $event->getComposer()->getPackage();
+            $handler = new BundleHandler(new Filesystem(), $distBundlefile, $bundleFile, new ConsoleIoLogger($event->getIO()));
 
-            static::$recorder = new Recorder(
-                $manager->getLocalRepository(),
-                new Detector($vendorDir),
-                new BundleHandler($bundleFile, $logger),
-                $rootPackage->getAliases(),
-                $vendorDir
-            );
+            static::$recorder = new Recorder($handler, $vendorDir);
         }
 
         return static::$recorder;

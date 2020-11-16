@@ -67,7 +67,7 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
     {
         $installed = $this->getInstalled();
 
-        foreach ($installed as $package) {
+        foreach ($installed['packages'] as $package) {
             if ($package['name'] === $this->getComposerParameter('name')) {
                 return $package['version'];
             }
@@ -97,19 +97,15 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getInstalled()
     {
-        static $installed = null;
-
-        if (!$installed) {
-            $up = DIRECTORY_SEPARATOR.'..';
-            //usual package
-            $path = realpath($this->getPath().$up.$up.$up.'/vendor/composer/installed.json');
-            //meta package
-            if (!$path) {
-                $path = realpath($this->getPath().$up.$up.$up.$up.$up.'/vendor/composer/installed.json');
-            }
-            $data = json_decode(file_get_contents($path), true);
-
-            return $data;
+        $up = DIRECTORY_SEPARATOR.'..';
+        //usual package
+        $path = realpath($this->getPath().$up.$up.$up.'/vendor/composer/installed.json');
+        //meta package
+        if (!$path) {
+            $path = realpath($this->getPath().$up.$up.$up.$up.$up.'/vendor/composer/installed.json');
         }
+        $data = json_decode(file_get_contents($path), true);
+
+        return $data['packages'] ?? $data;
     }
 }

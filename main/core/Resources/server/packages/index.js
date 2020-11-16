@@ -29,7 +29,11 @@ function getDefinitions(rootDir) {
     throw new Error('Cannot found package info (composer/installed.json)')
   }
 
-  const packages = JSON.parse(data)
+  let packages = JSON.parse(data)
+
+  if (typeof packages['packages'] !== 'undefined') {
+    packages = packages['packages'];
+  }
 
   if (!(packages instanceof Array) || packages.length < 1) {
     throw new Error('Cannot find packages in composer/installed.json')

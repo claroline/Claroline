@@ -94,10 +94,6 @@ class OperationExecutor implements LoggerAwareInterface
                       $operation->getFromVersion(),
                       $operation->getToVersion()
                   );
-                    // there's no cleaner way to update the version of a package...
-                    $version = new \ReflectionProperty('Composer\Package\Package', 'version');
-                    $version->setAccessible(true);
-                    $version->setValue($operation->getPackage(), $operation->getToVersion());
                 } else {
                     $this->log("Could not update {$operation->getBundleFqcn()}... Please update manually.", LogLevel::ERROR);
                 }

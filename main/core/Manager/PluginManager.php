@@ -42,10 +42,8 @@ class PluginManager
     /**
      * PluginManager constructor.
      *
-     * @param string          $kernelRootDir
-     * @param                 $bundleFile
-     * @param ObjectManager   $om
-     * @param KernelInterface $kernel
+     * @param string $kernelRootDir
+     * @param        $bundleFile
      */
     public function __construct(
         $kernelRootDir,
@@ -280,18 +278,6 @@ class PluginManager
             + count($errors['extras']);
 
         return 0 === $errorCount;
-    }
-
-    /**
-     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     *
-     * @return bool
-     */
-    public function isActivatedByDefault($plugin)
-    {
-        $bundle = $this->getBundle($plugin);
-
-        return $bundle->isActiveByDefault();
     }
 
     /**
