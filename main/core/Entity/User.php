@@ -29,7 +29,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -49,7 +48,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ClaroAssert\Username()
  * @ClaroAssert\UserAdministrativeCode()
  */
-class User extends AbstractRoleSubject implements \Serializable, EquatableInterface
+class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface
 {
     use Id;
     use Uuid;
