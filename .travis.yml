@@ -37,7 +37,6 @@ mysql:
 
 before_install:
   - mysql --version
-  - composer self-update --1
   - composer --version
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
