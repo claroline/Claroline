@@ -1,15 +1,10 @@
 import {createSelector} from 'reselect'
 
-import {selectors as cursusSelectors} from '#/plugin/cursus/tools/trainings/store/selectors'
-
-const STORE_NAME = cursusSelectors.STORE_NAME + '.catalog'
+const STORE_NAME = 'trainingCatalog'
 const LIST_NAME = STORE_NAME + '.courses'
 const FORM_NAME = STORE_NAME + '.courseForm'
 
-const catalog = createSelector(
-  [cursusSelectors.store],
-  (store) => store.catalog
-)
+const catalog = (state) => state[STORE_NAME]
 
 const course = createSelector(
   [catalog],

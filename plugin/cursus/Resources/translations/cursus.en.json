@@ -62,5 +62,11 @@
     "registration_user_confirmation_pending_help": "As long as the registration has not been confirmed, it will appear in the pending list.",
     "registration_user_confirmation_manager_help": "As a session manager, you can still manually confirm user registrations.",
     "show_pending_list": "Show pending list",
-    "not_limited": "Not limited"
+    "not_limited": "Not limited",
+    "session_registration_tutor": "Vous êtes formateur pour cette session.",
+    "session_registration": "Vous êtes inscrit à cette session.",
+    "session_registration_pending": "Vous êtes en liste d'attente pour cette session.",
+    "session_registration_full_help": "The session is full at the moment. It will be possible to complete the registration if places become available.",
+    "session_registration_pending_help": "You must confirm your registration using the link that was sent to you.",
+    "session_registration_manager_help": "A manager must validate your registration request."
 }

@@ -33,14 +33,8 @@ const currentTabTitle = createSelector(
   }
 )
 
-const widgets = createSelector(
-  [currentTab],
-  (currentTab) => currentTab ? (currentTab.widgets || []) : []
-)
-
 export const selectors = {
   tabs,
   currentTab,
-  currentTabTitle,
-  widgets
+  currentTabTitle
 }

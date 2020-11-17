@@ -55,7 +55,21 @@ class WidgetCreationModal extends Component {
           <WidgetForm
             level={5}
             name={selectors.STORE_NAME}
-          />
+          >
+            <Button
+              id="widget-section-form-save"
+              className="modal-btn btn"
+              type={CALLBACK_BUTTON}
+              primary={true}
+              disabled={!this.props.saveEnabled}
+              label={trans('add', {}, 'actions')}
+              htmlType="submit"
+              callback={() => {
+                this.props.create(this.props.widget)
+                this.close()
+              }}
+            />
+          </WidgetForm>
         )
     }
   }
@@ -70,28 +84,12 @@ class WidgetCreationModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'widget', 'saveEnabled', 'startCreation', 'create', 'reset')}
-        className="home-section-creation"
         icon="fa fa-fw fa-plus"
         title={trans('new_section')}
         subtitle={this.renderStepTitle()}
         fadeModal={() => this.close()}
       >
         {this.renderStep()}
-
-        {'parameters' === this.state.currentStep &&
-          <Button
-            id="widget-section-form-save"
-            className="modal-btn btn"
-            type={CALLBACK_BUTTON}
-            primary={true}
-            disabled={!this.props.saveEnabled}
-            label={trans('add', {}, 'actions')}
-            callback={() => {
-              this.props.create(this.props.widget)
-              this.close()
-            }}
-          />
-        }
       </Modal>
     )
   }

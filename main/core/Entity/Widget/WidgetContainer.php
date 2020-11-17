@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Entity\Widget;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\HomeBundle\Entity\HomeTab;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_widget_container")
- *
- * @todo : remove dependency to HomeBundle
  */
 class WidgetContainer
 {
@@ -33,20 +30,6 @@ class WidgetContainer
      * @var ArrayCollection|WidgetInstance[]
      */
     private $instances;
-
-    /**
-     * The list of content instances.
-     *
-     * @ORM\ManyToOne(
-     *    targetEntity="Claroline\HomeBundle\Entity\HomeTab",
-     *    inversedBy="widgetContainers"
-     * )
-     * @ORM\JoinColumn(name="hometab_id", onDelete="CASCADE", nullable=true)
-     * @ORM\OrderBy({"position" = "ASC"})
-     *
-     * @var HomeTab
-     */
-    private $homeTab;
 
     /**
      * @ORM\OneToMany(
@@ -80,12 +63,7 @@ class WidgetContainer
         return $this->instances;
     }
 
-    /**
-     * @param string $instanceId
-     *
-     * @return WidgetInstance|null
-     */
-    public function getInstance($instanceId)
+    public function getInstance(string $instanceId): ?WidgetInstance
     {
         $found = null;
 
@@ -119,23 +97,6 @@ class WidgetContainer
             $this->instances->removeElement($instance);
             $instance->setContainer(null);
         }
-    }
-
-    public function setHomeTab(HomeTab $homeTab = null)
-    {
-        if ($this->homeTab) {
-            $this->homeTab->removeWidgetContainer($this);
-        }
-
-        if ($homeTab) {
-            $this->homeTab = $homeTab;
-            $this->homeTab->addWidgetContainer($this);
-        }
-    }
-
-    public function getHomeTab()
-    {
-        return $this->homeTab;
     }
 
     public function getWidgetContainerConfigs()

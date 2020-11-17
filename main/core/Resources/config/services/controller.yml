@@ -45,6 +45,7 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\Cryptography\ApiTokenController:
         arguments:
+          - '@security.authorization_checker'
           - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\APINew\Log\LogConnectController:

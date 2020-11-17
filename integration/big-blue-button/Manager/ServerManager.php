@@ -15,11 +15,6 @@ class ServerManager
     /** @var CurlManager */
     private $curlManager;
 
-    /**
-     * @param TokenStorageInterface        $tokenStorage
-     * @param PlatformConfigurationHandler $config
-     * @param CurlManager                  $curlManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
@@ -37,8 +32,10 @@ class ServerManager
         $servers = $this->config->getParameter('bbb.servers');
         if (!empty($servers)) {
             foreach ($servers as $server) {
-                $participants = $this->countParticipants($server['url']);
-                $available[$participants] = $server['url'];
+                if (!isset($server['disabled']) || !$server['disabled']) {
+                    $participants = $this->countParticipants($server['url']);
+                    $available[$participants] = $server['url'];
+                }
             }
         }
 
@@ -57,13 +54,7 @@ class ServerManager
         return $server['limit'] > $this->countParticipants($serverName);
     }
 
-    /**
-     * @param string $serverName
-     * @param string $tag
-     *
-     * @return int
-     */
-    public function countParticipants(string $serverName, string $tag = null)
+    public function countParticipants(string $serverName, string $tag = null): int
     {
         $meetings = $this->getMeetings($serverName, $tag);
 
@@ -75,13 +66,7 @@ class ServerManager
         return $count;
     }
 
-    /**
-     * @param string $serverName
-     * @param string $tag
-     *
-     * @return array
-     */
-    public function getMeetings(string $serverName, string $tag = null)
+    public function getMeetings(string $serverName, string $tag = null): array
     {
         $meetings = [];
 
@@ -150,10 +135,8 @@ class ServerManager
 
     /**
      * @param \DOMDocument|\DomElement $meetingXml
-     *
-     * @return array
      */
-    public function extractMeetingInfo($meetingXml)
+    public function extractMeetingInfo($meetingXml): array
     {
         $meetingId = $meetingXml->getElementsByTagName('meetingID')->item(0)->textContent;
 

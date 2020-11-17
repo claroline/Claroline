@@ -16,7 +16,7 @@ class WidgetsTab extends AbstractTab
     use Id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer")
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="claro_home_tab_widgets_containers",
      *      joinColumns={@ORM\JoinColumn(name="tab_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="container_id", referencedColumnName="id", unique=true)}
@@ -29,6 +29,16 @@ class WidgetsTab extends AbstractTab
     public function __construct()
     {
         $this->widgetContainers = new ArrayCollection();
+    }
+
+    public static function getType(): string
+    {
+        return 'widgets';
+    }
+
+    public function getWidgetContainers()
+    {
+        return $this->widgetContainers;
     }
 
     public function getWidgetContainer(string $containerId): ?WidgetContainer

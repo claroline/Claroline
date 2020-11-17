@@ -58,7 +58,7 @@ class PageFull extends Component {
 
     return (
       <PageSimple
-        {...omit(this.props, 'showHeader', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'fullscreen')}
+        {...omit(this.props, 'showHeader', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'fullscreen')}
         fullscreen={this.state.fullscreen}
       >
         {this.props.showHeader &&
@@ -70,7 +70,9 @@ class PageFull extends Component {
             toolbar={this.props.toolbar}
             disabled={this.props.disabled}
             actions={actions}
-          />
+          >
+            {this.props.header}
+          </PageHeader>
         }
 
         <PageContent className={classes({'main-page-content': !this.props.embedded})}>

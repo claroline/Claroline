@@ -104,7 +104,7 @@ const Form = connect(
   }
 )(FormComponent)
 
-FormComponent.propTypes = {
+Form.propTypes = {
   /**
    * The name of the data in the form.
    *

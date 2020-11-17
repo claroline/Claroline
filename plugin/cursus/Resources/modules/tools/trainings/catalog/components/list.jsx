@@ -78,7 +78,7 @@ class CatalogList extends Component {
           primaryAction={(row) => ({
             type: LINK_BUTTON,
             label: trans('open', {}, 'actions'),
-            target: route(row)
+            target: route(this.props.path, row)
           })}
           definition={[
             {
@@ -116,7 +116,7 @@ class CatalogList extends Component {
               type: LINK_BUTTON,
               icon: 'fa fa-fw fa-pencil',
               label: trans('edit', {}, 'actions'),
-              target: route(rows[0]) + '/edit',
+              target: route(this.props.path, rows[0]) + '/edit',
               displayed: hasPermission('delete', rows[0]),
               group: trans('management'),
               scope: ['object']

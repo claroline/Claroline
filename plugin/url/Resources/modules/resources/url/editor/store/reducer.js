@@ -15,9 +15,6 @@ const reducer = combineReducers({
     initialData: makeReducer({}, {
       [makeInstanceAction(RESOURCE_LOAD, urlSelectors.STORE_NAME)]: (state, action) => action.resourceData.url
     })
-  }),
-  availablePlaceholders: makeReducer([], {
-    [makeInstanceAction(RESOURCE_LOAD, urlSelectors.STORE_NAME)]: (state, action) => action.resourceData.placeholders
   })
 })
 

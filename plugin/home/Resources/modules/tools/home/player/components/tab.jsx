@@ -1,87 +1,49 @@
-import React from 'react'
+import {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
-import {PageSimple} from '#/main/app/page/components/simple'
-import {PageHeader, PageContent, PageActions, PageAction} from '#/main/core/layout/page'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {getTab} from '#/plugin/home/home'
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
-import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
-import {WidgetGrid} from '#/main/core/widget/player/components/grid'
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
-import {Tabs} from '#/plugin/home/tools/home/components/tabs'
+class PlayerTab extends Component {
+  constructor(props) {
+    super(props)
 
-const PlayerTab = props =>
-  <PageSimple
-    className="home-tool"
-    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-    path={[].concat(getToolBreadcrumb('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
-      id: props.currentTab.id,
-      label: props.currentTab.title,
-      target: '/' // this don't work but it's never used as current tab is always last for now
-    }] : [])}
-    header={{
-      title: `${trans('home', {}, 'tools')}${'workspace' === props.currentContext.type ? ' - ' + props.currentContext.data.code : ''}`,
-      description: 'workspace' === props.currentContext.type && props.currentContext.data.meta ? props.currentContext.data.meta.description : null
-    }}
-  >
-    <PageHeader
-      className={props.currentTab && props.currentTab.centerTitle ? 'text-center' : ''}
-      title={props.currentTabTitle}
-      poster={props.currentTab && props.currentTab.poster ? props.currentTab.poster.url: undefined}
-    >
-      {1 < props.tabs.length &&
-        <Tabs
-          prefix={props.path}
-          tabs={props.tabs}
-          currentContext={props.currentContext}
-        />
-      }
+    this.state = {
+      component: null
+    }
+  }
 
-      {(props.currentTab && props.editable) &&
-        <PageActions>
-          <PageAction
-            type={LINK_BUTTON}
-            label={trans('configure', {}, 'actions')}
-            icon="fa fa-fw fa-cog"
-            primary={true}
-            target={`${props.path}/edit/${props.currentTab.slug}`}
-          />
-          {props.desktopAdmin && props.administration &&
-            <PageAction
-              type={CALLBACK_BUTTON}
-              label={trans('switch_to_user_tabs')}
-              icon="fa fa-fw fa-exchange"
-              dangerous={true}
-              callback={() => {
-                props.setAdministration(false)
-                props.fetchTabs(props.currentContext, false)
-              }}
-            />
-          }
-          {props.desktopAdmin && !props.administration &&
-            <PageAction
-              type={CALLBACK_BUTTON}
-              label={trans('switch_to_admin_tabs')}
-              icon="fa fa-fw fa-exchange"
-              callback={() => {
-                props.setAdministration(true)
-                props.fetchTabs(props.currentContext, true)
-              }}
-            />
-          }
-        </PageActions>
-      }
-    </PageHeader>
+  componentDidMount() {
+    if (this.props.currentTab) {
+      getTab(this.props.currentTab.type).then(tabApp => this.setState({
+        component: tabApp.component
+      }))
+    }
+  }
 
-    <PageContent>
-      <WidgetGrid
-        currentContext={props.currentContext}
-        widgets={props.widgets}
-      />
-    </PageContent>
-  </PageSimple>
+  componentDidUpdate(prevProps) {
+    if (this.props.currentTab && get(prevProps, 'currentTab.type') !== get(this.props, 'currentTab.type')) {
+      getTab(this.props.currentTab.type).then(tabApp => this.setState({
+        component: tabApp.component
+      }))
+    }
+  }
+
+  render() {
+    if (this.props.currentTab && this.state.component) {
+      return createElement(this.state.component, {
+        path: `${this.props.path}/${this.props.currentTab.slug}`,
+        currentContext: this.props.currentContext,
+        tabs: this.props.tabs,
+        currentTab: this.props.currentTab,
+        currentTabTitle: this.props.currentTabTitle
+      })
+    }
+
+    return null
+  }
+}
 
 PlayerTab.propTypes = {
   path: T.string.isRequired,
@@ -90,15 +52,7 @@ PlayerTab.propTypes = {
     TabTypes.propTypes
   )),
   currentTabTitle: T.string.isRequired,
-  currentTab: T.shape(TabTypes.propTypes),
-  editable: T.bool.isRequired,
-  administration: T.bool.isRequired,
-  desktopAdmin: T.bool.isRequired,
-  widgets: T.arrayOf(T.shape(
-    WidgetContainerTypes.propTypes
-  )).isRequired,
-  setAdministration: T.func,
-  fetchTabs: T.func
+  currentTab: T.shape(TabTypes.propTypes)
 }
 
 export {

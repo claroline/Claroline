@@ -1,136 +1,171 @@
-import React from 'react'
+import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {PageSimple} from '#/main/app/page/components/simple'
-import {
-  PageHeader,
-  PageContent,
-  PageGroupActions,
-  PageActions,
-  MoreAction
-} from '#/main/core/layout/page'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {Form} from '#/main/app/content/form/containers/form'
 
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
-import {WidgetGrid} from '#/main/core/widget/player/components/grid'
-import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
-import {Tabs} from '#/plugin/home/tools/home/components/tabs'
+import {MODAL_HOME_CREATION} from '#/plugin/home/tools/home/editor/modals/creation'
+import {MODAL_HOME_PARAMETERS} from '#/plugin/home/tools/home/editor/modals/parameters'
+import {MODAL_HOME_POSITION} from '#/plugin/home/tools/home/editor/modals/position'
+import {HomePage} from '#/plugin/home/tools/home/containers/page'
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
+import {getTab} from '#/plugin/home/home'
 
-import {EditorForm} from '#/plugin/home/tools/home/editor/components/form'
 import {selectors} from '#/plugin/home/tools/home/editor/store/selectors'
 
-const EditorTab = props =>
-  <PageSimple
-    className="home-tool"
-    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
-    path={[].concat(getToolBreadcrumb('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
-      id: props.currentTab.id,
-      label: props.currentTab.longTitle,
-      target: '/' // this don't work but it's never used as current tab is always last for now
-    }] : [])}
-    header={{
-      title: `${trans('home', {}, 'tools')}${'workspace' === props.currentContext.type ? ' - ' + props.currentContext.data.code : ''}`,
-      description: 'workspace' === props.currentContext.type && props.currentContext.data.meta ? props.currentContext.data.meta.description : null
-    }}
-  >
-    <PageHeader
-      alignTitle={props.currentTab && props.currentTab.centerTitle ? 'center' : 'left'}
-      title={props.currentTabTitle}
-      poster={props.currentTab && props.currentTab.poster ? props.currentTab.poster.url: undefined}
-    >
-      <Tabs
-        prefix={`${props.path}/edit`}
-        tabs={props.tabs}
-        create={() => props.createTab(props.currentContext, props.administration, props.currentUser, props.tabs.length, (path) => props.history.push(props.path+path))}
-        currentContext={props.currentContext}
-      />
+class EditorTab extends Component {
+  constructor(props) {
+    super(props)
 
-      <PageActions>
-        <PageGroupActions>
-          <MoreAction
-            actions={[
-              {
+    this.state = {
+      parameters: null
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.currentTab) {
+      getTab(this.props.currentTab.type).then(tabApp => this.setState({
+        parameters: tabApp.parameters
+      }))
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.currentTab && get(prevProps, 'currentTab.type') !== get(this.props, 'currentTab.type')) {
+      getTab(this.props.currentTab.type).then(tabApp => this.setState({
+        parameters: tabApp.parameters
+      }))
+    }
+  }
+
+  renderParameters() {
+    if (this.props.currentTab && this.state.parameters) {
+      return createElement(this.state.parameters, {
+        path: `${this.props.path}/${this.props.currentTab ? this.props.currentTab.slug : ''}`,
+        readOnly: this.props.readOnly,
+        currentContext: this.props.currentContext,
+        tabs: this.props.tabs,
+        currentTab: this.props.currentTab,
+        currentTabTitle: this.props.currentTabTitle,
+        currentTabIndex: this.props.currentTabIndex,
+        update: (prop, data, tabIndex = null) => {
+          if (tabIndex === null) {
+            tabIndex = this.props.currentTabIndex
+          }
+
+          this.props.updateTab(tabIndex, data, 'parameters.' + prop)
+        }
+      })
+    }
+
+    return null
+  }
+
+  render() {
+    return (
+      <HomePage
+        path="/edit"
+        tabs={this.props.tabs}
+        currentTab={this.props.currentTab}
+        currentTabTitle={this.props.currentTabTitle}
+        actions={[
+          {
+            name: 'add',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-plus',
+            label: trans('add_tab', {}, 'home'),
+            modal: [MODAL_HOME_CREATION, {
+              position: this.props.tabs.length,
+              create: (tab) => this.props.createTab(this.props.tabs.length, tab, (slug) => this.props.history.push(`${this.props.path}/edit/${slug}`))
+            }],
+            primary: true,
+            group: trans('management')
+          }, {
+            name: 'configure',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-cog',
+            label: trans('configure', {}, 'actions'),
+            disabled: this.props.readOnly,
+            modal: [MODAL_HOME_PARAMETERS, {
+              tab: this.props.currentTab,
+              save: (tab) => this.props.updateTab(this.props.currentTabIndex, tab)
+            }],
+            group: trans('management')
+          }, {
+            name: 'move',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-arrows',
+            label: trans('move', {}, 'actions'),
+            modal: [MODAL_HOME_POSITION, {
+              tab: this.props.currentTab,
+              tabs: this.props.tabs,
+              selectAction: (position) => ({
                 type: CALLBACK_BUTTON,
-                label: trans('delete', {}, 'actions'),
-                icon: 'fa fa-fw fa-trash-o',
-                dangerous: true,
-                confirm: {
-                  title: trans('home_tab_delete_confirm_title', {}, 'home'),
-                  message: trans('home_tab_delete_confirm_message', {}, 'home'),
-                  subtitle: props.currentTab && props.currentTab.title
-                },
-                disabled: props.readOnly || 1 >= props.tabs.length,
-                callback: () => props.deleteTab(props.tabs, props.currentTab, (path) => props.history.push(props.path+path))
-              }
-            ]}
-          />
-        </PageGroupActions>
-      </PageActions>
-    </PageHeader>
-
-    <PageContent>
-      {props.readOnly &&
-        <AlertBlock
-          type="warning"
-          title={trans('home_tab_locked', {}, 'home')}
-        >
-          {trans('home_tab_locked_message', {}, 'home')}
-        </AlertBlock>
-      }
-
-      {props.readOnly &&
-        <FormData
+                label: trans('move', {}, 'actions'),
+                callback: () => this.props.moveTab(this.props.currentTab.id, position)
+              })
+            }],
+            group: trans('management')
+          }, {
+            name: 'delete',
+            type: CALLBACK_BUTTON,
+            label: trans('delete', {}, 'actions'),
+            icon: 'fa fa-fw fa-trash-o',
+            dangerous: true,
+            confirm: {
+              title: trans('home_tab_delete_confirm_title', {}, 'home'),
+              message: trans('home_tab_delete_confirm_message', {}, 'home'),
+              subtitle: this.props.currentTabTitle
+            },
+            disabled: this.props.readOnly || 1 >= this.props.tabs.length,
+            callback: () => this.props.deleteTab(this.props.tabs, this.props.currentTab, (path) => this.props.history.push(this.props.path+path)),
+            group: trans('management')
+          }
+        ]}
+      >
+        <Form
           name={selectors.FORM_NAME}
-          dataPart={`[${props.currentTabIndex}]`}
+          dataPart={`[${this.props.currentTabIndex}]`}
           buttons={true}
-          lock={props.currentTab ? {
-            id: props.currentTab.id,
+          lock={this.props.currentTab ? {
+            id: this.props.currentTab.id,
             className: 'Claroline\\HomeBundle\\Entity\\HomeTab'
           } : undefined}
-          target={[props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
-            context: props.currentContext.type,
-            contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.id : get(props.currentUser, 'id')
+          disabled={this.props.readOnly}
+          target={[this.props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
+            context: this.props.currentContext.type,
+            contextId: !isEmpty(this.props.currentContext.data) ? this.props.currentContext.data.id : get(this.props.currentUser, 'id')
           }]}
-          sections={[]}
           cancel={{
             type: LINK_BUTTON,
-            target: `${props.path}/${props.currentTab ? props.currentTab.slug : ''}`,
+            target: `${this.props.path}/${this.props.currentTab ? this.props.currentTab.slug : ''}`,
             exact: true
           }}
         >
-          <WidgetGrid
-            currentContext={props.currentContext}
-            widgets={props.widgets}
-          />
-        </FormData>
-      }
+          {this.props.readOnly &&
+            <AlertBlock
+              type="warning"
+              title={trans('home_tab_locked', {}, 'home')}
+            >
+              {trans('home_tab_locked_message', {}, 'home')}
+            </AlertBlock>
+          }
 
-      {!props.readOnly &&
-        <EditorForm
-          path={props.path}
-          currentUser={props.currentUser}
-          currentContext={props.currentContext}
-          currentTabIndex={props.currentTabIndex}
-          currentTab={props.currentTab}
-          widgets={props.widgets}
-          administration={props.administration}
-          tabs={props.tabs}
-
-          update={props.updateTab}
-          move={props.moveTab}
-          setErrors={props.setErrors}
-        />
-      }
-    </PageContent>
-  </PageSimple>
+          {this.renderParameters()}
+        </Form>
+      </HomePage>
+    )
+  }
+}
 
 EditorTab.propTypes = {
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   path: T.string.isRequired,
   currentUser: T.object,
   currentContext: T.object.isRequired,
@@ -142,17 +177,10 @@ EditorTab.propTypes = {
   currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
   currentTabIndex: T.number.isRequired,
-  widgets: T.arrayOf(T.shape(
-    WidgetContainerTypes.propTypes
-  )).isRequired,
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
   createTab: T.func.isRequired,
   updateTab: T.func.isRequired,
-  setErrors: T.func.isRequired,
-  deleteTab: T.func.isRequired,
-  moveTab: T.func.isRequired
+  moveTab: T.func.isRequired,
+  deleteTab: T.func.isRequired
 }
 
 export {

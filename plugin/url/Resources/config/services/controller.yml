@@ -29,4 +29,6 @@ services:
                 arguments:
                   - '@service_container'
 
-    HeVinci\UrlBundle\Controller\UrlController: ~
+    HeVinci\UrlBundle\Controller\UrlController:
+      arguments:
+        - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'

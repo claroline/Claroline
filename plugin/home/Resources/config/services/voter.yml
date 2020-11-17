@@ -13,4 +13,6 @@ services:
           arguments:
             - '@service_container'
 
-  Claroline\HomeBundle\Security\Voter\HomeTabVoter: ~
+  Claroline\HomeBundle\Security\Voter\HomeTabVoter:
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'

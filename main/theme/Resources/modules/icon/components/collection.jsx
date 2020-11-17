@@ -56,6 +56,7 @@ class IconCollection extends Component {
 
         <div className="icons-container">
           <Select
+            id={this.props.id+'-select'}
             size="sm"
             value={this.state.category}
             onChange={this.changeCategory}
@@ -89,6 +90,7 @@ class IconCollection extends Component {
 
 
 IconCollection.propTypes = {
+  id: T.string.isRequired,
   selected: T.string,
   showCurrent: T.bool,
   onChange: T.func,

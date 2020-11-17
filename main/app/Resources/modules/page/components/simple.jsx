@@ -24,11 +24,11 @@ const PageSimple = props =>
     })}
   >
     <Helmet>
-      {!props.embedded && props.header && props.header.title &&
-        <title>{props.header.title}</title>
+      {!props.embedded && props.meta && props.meta.title &&
+        <title>{props.meta.title}</title>
       }
-      {!props.embedded && props.header && props.header.description &&
-        <meta name="description" content={props.header.description} />
+      {!props.embedded && props.meta && props.meta.description &&
+        <meta name="description" content={props.meta.description} />
       }
     </Helmet>
 

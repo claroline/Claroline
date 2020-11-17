@@ -4,37 +4,14 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {WidgetGridEditor} from '#/main/core/widget/editor/components/grid'
-import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
-
-import {selectors} from '#/plugin/home/tools/home/editor/store/selectors'
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
-
-const EditorForm = props =>
+const TabForm = props =>
   <FormData
-    name={selectors.FORM_NAME}
-    dataPart={`[${props.currentTabIndex}]`}
-    buttons={true}
-    lock={props.currentTab ? {
-      id: props.currentTab.id,
-      className: 'Claroline\\HomeBundle\\Entity\\HomeTab'
-    } : undefined}
-    disabled={props.readOnly}
-    target={[props.administration ? 'apiv2_home_admin' : 'apiv2_home_update', {
-      context: props.currentContext.type,
-      contextId: !isEmpty(props.currentContext.data) ? props.currentContext.data.id : get(props.currentUser, 'id')
-    }]}
-    cancel={{
-      type: LINK_BUTTON,
-      target: `${props.path}/${props.currentTab ? props.currentTab.slug : ''}`,
-      exact: true
-    }}
+    level={props.level}
+    name={props.name}
     sections={[
       {
-        icon: 'fa fa-fw fa-plus',
         title: trans('general'),
         primary: true,
         fields: [
@@ -43,7 +20,7 @@ const EditorForm = props =>
             type: 'string',
             label: trans('title'),
             required: true,
-            onChange: (title) => props.update(props.currentTabIndex, 'title', title.substring(0, 20))
+            onChange: (title) => props.update('title', title.substring(0, 20))
           }
         ]
       }, {
@@ -51,16 +28,6 @@ const EditorForm = props =>
         title: trans('menu'),
         fields: [
           {
-            name: 'position',
-            type: 'number',
-            label: trans('position'),
-            options : {
-              min: 0,
-              max: props.tabs.length + 1
-            },
-            required: true,
-            onChange: (newPosition) => props.move(props.tabs, props.currentTab, newPosition)
-          }, {
             name: 'title',
             type: 'string',
             label: trans('title'),
@@ -70,9 +37,7 @@ const EditorForm = props =>
             },
             onChange: (value) => {
               if (isEmpty(value) && 0 === props.currentTab.icon.length) {
-                props.setErrors({
-                  [props.currentTabIndex]: {title: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas d\'icône'}
-                })
+                props.setErrors({title: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas d\'icône'})
               }
             }
           }, {
@@ -82,9 +47,7 @@ const EditorForm = props =>
             help: trans('icon_tab_help'),
             onChange: (icon) => {
               if (0 === icon.length && 0 === props.currentTab.title.length) {
-                props.setErrors({
-                  [props.currentTabIndex]: {icon: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas de titre.'}
-                })
+                props.setErrors({icon: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas de titre.'})
               }
             }
           }
@@ -98,7 +61,7 @@ const EditorForm = props =>
             label: trans('color'),
             type: 'color'
           }, {
-            name: 'centerTitle',
+            name: 'display.centerTitle',
             type: 'boolean',
             label: trans('center_title')
           }, {
@@ -113,7 +76,7 @@ const EditorForm = props =>
       }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
-        displayed: props.administration || 'desktop' !== props.currentContext.type,
+        displayed: (props.administration || 'desktop' !== props.currentContext.type),
         fields: [
           {
             name: 'restrictions.hidden',
@@ -126,7 +89,7 @@ const EditorForm = props =>
             calculated: (tab) => tab.restrictByRole || !isEmpty(get(tab, 'restrictions.roles')),
             onChange: (checked) => {
               if (!checked) {
-                props.update(props.currentTabIndex, 'restrictions.roles', [])
+                props.update('restrictions.roles', [])
               }
             },
             linked: [
@@ -149,40 +112,25 @@ const EditorForm = props =>
       }
     ]}
   >
-    <WidgetGridEditor
-      disabled={props.readOnly}
-      currentContext={props.currentContext}
-      widgets={props.widgets}
-      tabs={props.tabs}
-      currentTabIndex={props.currentTabIndex}
-      update={(widgets, tabIndex = null) => {
-        if (tabIndex === null) tabIndex = props.currentTabIndex
-        props.update(tabIndex, 'widgets', widgets)}
-      }
-    />
+    {props.children}
   </FormData>
 
-EditorForm.propTypes = {
-  path: T.string.isRequired,
-  currentUser: T.object,
-  currentContext: T.object.isRequired,
-  currentTab: T.shape(TabTypes.propTypes),
+TabForm.propTypes = {
+  level: T.number,
+  name: T.string.isRequired,
 
+  currentTab: T.object,
   administration: T.bool.isRequired,
-  tabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )).isRequired,
-  created: T.bool,
-  readOnly: T.bool,
-  currentTabIndex: T.number.isRequired,
-  widgets: T.arrayOf(T.shape(
-    WidgetContainerTypes.propTypes
-  )).isRequired,
+  currentContext: T.shape({
+    type: T.string.isRequired,
+    data: T.object
+  }),
+
   update: T.func.isRequired,
   setErrors: T.func.isRequired,
-  move: T.func.isRequired
+  children: T.node
 }
 
 export {
-  EditorForm
+  TabForm
 }

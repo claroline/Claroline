@@ -1,14 +1,15 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
+import {hasPermission} from '#/main/app/security'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {HomeMenu as HomeMenuComponent} from '#/plugin/home/tools/home/components/menu'
-import {selectors} from '#/plugin/home/tools/home/store'
 
 const HomeMenu = withRouter(
   connect(
     (state) => ({
-      editable: selectors.editable(state)
+      canEdit: hasPermission('edit', toolSelectors.toolData(state))
     })
   )(HomeMenuComponent)
 )

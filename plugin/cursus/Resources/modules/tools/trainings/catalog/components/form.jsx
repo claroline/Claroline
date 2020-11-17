@@ -24,9 +24,9 @@ const CatalogForm = (props) => {
           }, {
             type: LINK_BUTTON,
             label: props.course.name,
-            target: route(props.course)
+            target: route(props.path, props.course)
           }, {
-            label: trans('edit', {}, 'actions'),
+            label: trans('edit', {}, 'actions')
           }
         ]}
         currentContext={props.currentContext}
@@ -37,7 +37,7 @@ const CatalogForm = (props) => {
           course={props.formData}
           cancel={{
             type: LINK_BUTTON,
-            target: route(props.course),
+            target: route(props.path, props.course),
             exact: true
           }}
         />
@@ -53,7 +53,7 @@ const CatalogForm = (props) => {
           label: trans('catalog', {}, 'cursus'),
           target: `${props.path}/catalog`
         }, {
-          label: trans('new_course', {}, 'cursus'),
+          label: trans('new_course', {}, 'cursus')
         }
       ]}
       title={trans('trainings', {}, 'tools')}

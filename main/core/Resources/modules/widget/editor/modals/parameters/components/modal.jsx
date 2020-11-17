@@ -20,19 +20,23 @@ const ParametersModal = props =>
     subtitle={props.widget.name}
     onEntering={() => props.loadWidget(props.widget)}
   >
-    <WidgetForm level={5} name={selectors.STORE_NAME} />
-
-    <Button
-      className="modal-btn btn"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled}
-      callback={() => {
-        props.save(props.formData)
-        props.fadeModal()
-      }}
-    />
+    <WidgetForm
+      level={5}
+      name={selectors.STORE_NAME}
+    >
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled}
+        htmlType="submit"
+        callback={() => {
+          props.save(props.formData)
+          props.fadeModal()
+        }}
+      />
+    </WidgetForm>
   </Modal>
 
 ParametersModal.propTypes = {

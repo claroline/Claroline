@@ -139,13 +139,19 @@ class UserManager implements LoggerAwareInterface
         return $user;
     }
 
-    public function validateEmailHash($validationHash)
+    public function validateEmailHash($validationHash): bool
     {
         $user = $this->getByEmailValidationHash($validationHash);
-        $user->setIsMailValidated(true);
+        if ($user) {
+            $user->setIsMailValidated(true);
 
-        $this->om->persist($user);
-        $this->om->flush();
+            $this->om->persist($user);
+            $this->om->flush();
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

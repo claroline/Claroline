@@ -44,14 +44,9 @@ const currentTabTitle = createSelector(
   }
 )
 
-const widgets = createSelector(
-  [currentTab],
-  (currentTab) => currentTab ? currentTab.widgets : []
-)
-
 const readOnly = createSelector(
   [homeSelectors.context, homeSelectors.administration, currentTab],
-  (context, administration, currentTab) => !currentTab || (currentTab.type === 'administration' &&
+  (context, administration, currentTab) => !currentTab || (currentTab.context === 'administration' &&
     context.type === 'desktop' && !administration)
 )
 
@@ -62,6 +57,5 @@ export const selectors = {
   currentTab,
   currentTabIndex,
   currentTabTitle,
-  widgets,
   readOnly
 }

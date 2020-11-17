@@ -15,7 +15,7 @@ import {getSections} from '#/main/app/layout/sections/account/utils'
 
 const CurrentUser = (props) =>
   <div className="app-menu-status">
-    <UserAvatar className="user-avatar-md" picture={props.currentUser.picture} alt={true} />
+    <UserAvatar className="user-avatar-md" picture={props.currentUser.picture} alt={false} />
 
     <div className="app-menu-status-info">
       <h3 className="h4">

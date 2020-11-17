@@ -1,37 +1,22 @@
-import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/app/intl/translation'
-import {makeId} from '#/main/core/scaffolding/id'
-
+import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {selectors} from '#/plugin/home/tools/home/editor/store/selectors'
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
+
+export const HOME_MOVE_TAB = 'HOME_MOVE_TAB'
 
 // action creators
 export const actions = {}
 
-actions.createTab = (context, administration, position, currentUser, navigate) => (dispatch) => {
-  const newTabId = makeId()
-  const newSlug = 'new' + newTabId
+actions.moveTab = makeActionCreator(HOME_MOVE_TAB, 'id', 'position')
 
-  dispatch(formActions.updateProp(selectors.FORM_NAME, `[${position}]`, merge({}, TabTypes.defaultProps, {
-    id: newTabId,
-    title: trans('tab'),
-    longTitle: trans('tab'),
-    position: position + 1,
-    slug: newSlug,
-    type: administration ?
-      'desktop' === context.type ? 'administration' : 'admin' :
-      context.type,
-    administration: administration,
-    user: context.type === 'desktop' && !administration ? currentUser : null,
-    workspace: context.type === 'workspace' ? {id: context.data.id} : null
-  })))
+actions.createTab = (index, tab, navigate) => (dispatch) => {
+  dispatch(formActions.updateProp(selectors.FORM_NAME, `[${index}]`, tab))
 
   // open new tab
-  navigate(`/edit/${newSlug}`)
+  navigate(tab.slug)
 }
 
 actions.deleteTab = (tabs, tabToDelete) => (dispatch) => {
@@ -46,31 +31,7 @@ actions.deleteTab = (tabs, tabToDelete) => (dispatch) => {
   // inject updated data into the form
   dispatch(formActions.update(selectors.FORM_NAME, newTabs
     // recalculate tabs positions
-    .sort((a,b) => a.position - b.position)
-    .map((tab, index) => merge({}, tab, {
-      position: index + 1
-    }))
-  ))
-}
-
-actions.moveTab = (tabs, tabToMove, newPosition) => (dispatch) => {
-  let newTabs = cloneDeep(tabs)
-
-  const tabIndex = tabs.findIndex(tab => tab.id === tabToMove.id)
-  newTabs.splice(tabIndex, 1)
-
-  // if moving to the right
-  if (tabToMove.position < newPosition) {
-    newTabs = newTabs
-      .sort((a,b) => a.position - b.position)
-      .map((tab, index) => merge({}, tab, {
-        position: index + 1
-      }))
-  }
-
-  dispatch(formActions.update(selectors.FORM_NAME, [merge({}, tabToMove, {position: newPosition})]
-    .concat(newTabs)
-    .sort((a,b) => a.position - b.position)
+    .sort((a, b) => a.position - b.position)
     .map((tab, index) => merge({}, tab, {
       position: index + 1
     }))

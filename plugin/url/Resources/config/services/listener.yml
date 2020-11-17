@@ -4,9 +4,8 @@ services:
         autoconfigure: false
         public: false
 
-    HeVinci\UrlBundle\Listener\UrlListener:
+    HeVinci\UrlBundle\Listener\Resource\UrlListener:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
         tags:
             - { name: kernel.event_listener, event: resource.hevinci_url.load, method: onLoad }

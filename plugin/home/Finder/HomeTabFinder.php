@@ -53,7 +53,7 @@ class HomeTabFinder extends AbstractFinder
             $qb->andWhere('config.visible = true');
 
             // only get tabs visible by the current user roles
-            if (!isset($searches['type']) || HomeTab::TYPE_DESKTOP !== $searches['type']) {
+            if (!isset($searches['context']) || HomeTab::TYPE_DESKTOP !== $searches['context']) {
                 // no need to check roles for DESKTOP tabs because it's directly linked to the user
                 $qb->leftJoin('config.roles', 'r');
                 $qb->andWhere('(r.id IS NULL OR r.name IN (:roles))');
@@ -63,8 +63,8 @@ class HomeTabFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'type':
-                    $qb->andWhere("obj.type = :{$filterName}");
+                case 'context':
+                    $qb->andWhere("obj.context = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     if (HomeTab::TYPE_DESKTOP === $filterValue) {
                         // only get DESKTOP tabs for the current user

@@ -33,6 +33,7 @@ class IconInput extends Component {
         menu={
           <div className="dropdown-menu">
             <IconCollection
+              id={this.props.id}
               selected={this.props.value}
               onChange={this.props.onChange}
             />
@@ -56,7 +57,7 @@ class IconInput extends Component {
         </span>
 
         <input
-          id={this.props.id}
+          id={this.props.id+'-input'}
           type="text"
           autoComplete={this.props.autoComplete}
           className="form-control"

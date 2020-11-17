@@ -26,7 +26,7 @@ const HomeMain = connect(
   (dispatch) => ({
     openHome(type, data) {
       if (constants.HOME_TYPE_URL === type) {
-        window.location.href = data
+        window.location.replace(data)
       } else if (constants.HOME_TYPE_TOOL === type) {
         dispatch(toolActions.open('home', {
           type: 'home', // TODO : use var

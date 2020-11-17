@@ -1,8 +1,8 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {actions as formActions} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {EditorMain as EditorMainComponent} from '#/plugin/home/tools/home/editor/components/main'
@@ -19,7 +19,6 @@ const EditorMain = withRouter(
 
       readOnly: editorSelectors.readOnly(state),
       tabs: editorSelectors.editorTabs(state),
-      widgets: editorSelectors.widgets(state),
       currentTabIndex: editorSelectors.currentTabIndex(state),
       currentTabTitle: editorSelectors.currentTabTitle(state),
       currentTab: editorSelectors.currentTab(state)
@@ -28,17 +27,18 @@ const EditorMain = withRouter(
       setCurrentTab(tab){
         dispatch(actions.setCurrentTab(tab))
       },
-      updateTab(currentTabIndex, field, value) {
-        dispatch(formActions.updateProp(editorSelectors.FORM_NAME, `[${currentTabIndex}].${field}`, value))
+      createTab(index, tab, navigate) {
+        dispatch(editorActions.createTab(index, tab, navigate))
       },
-      setErrors(errors) {
-        dispatch(formActions.setErrors(editorSelectors.FORM_NAME, errors))
+      moveTab(tabId, newPosition) {
+        dispatch(editorActions.moveTab(tabId, newPosition))
       },
-      createTab(context, administration, currentUser, position, navigate) {
-        dispatch(editorActions.createTab(context, administration, position, currentUser, navigate))
-      },
-      moveTab(tabs, currentTab, newPosition) {
-        dispatch(editorActions.moveTab(tabs, currentTab, newPosition))
+      updateTab(tabIndex, data, path = null) {
+        if (path) {
+          dispatch(formActions.updateProp(editorSelectors.FORM_NAME, `[${tabIndex}].${path}`, data))
+        } else {
+          dispatch(formActions.updateProp(editorSelectors.FORM_NAME, `[${tabIndex}]`, data))
+        }
       },
       deleteTab(tabs, currentTab, navigate) {
         let tabIndex = tabs.findIndex(tab => tab.id === currentTab.id)

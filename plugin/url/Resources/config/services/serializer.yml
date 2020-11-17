@@ -4,7 +4,12 @@ services:
         autoconfigure: false
         public: true
 
-    HeVinci\UrlBundle\Serializer\UrlSerializer:
+    HeVinci\UrlBundle\Serializer\Home\UrlTabSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
+
+    HeVinci\UrlBundle\Serializer\Resource\UrlSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'

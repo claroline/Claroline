@@ -47,10 +47,9 @@ class Player extends Component {
         style={{
           marginTop: 20 // FIXME
         }}
+        label={trans('open', {}, 'actions')}
         primary={true}
-      >
-        {trans('open', {}, 'actions')}
-      </Button>
+      />
     )
   }
 }

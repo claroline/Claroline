@@ -38,7 +38,7 @@ const CoursePage = (props) => {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('edit', {}, 'actions'),
-          target: route(props.course) + '/edit',
+          target: route(props.path, props.course) + '/edit',
           displayed: hasPermission('edit', props.course),
           primary: true
         }, {
@@ -52,7 +52,7 @@ const CoursePage = (props) => {
         }
       ]}
 
-      header={{
+      meta={{
         title: `${trans('trainings', {}, 'tools')} - ${props.course.name}`,
         description: props.course.description
       }}

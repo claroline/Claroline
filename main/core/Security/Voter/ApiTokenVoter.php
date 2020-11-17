@@ -12,14 +12,38 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Cryptography\ApiToken;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ApiTokenVoter extends AbstractVoter
 {
+    /**
+     * @param ApiToken $object
+     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        return VoterInterface::ACCESS_GRANTED;
+        if ($token->getUser() instanceof User) {
+            $isAdmin = $this->hasAdminToolAccess($token, 'integration');
+
+            switch ($attributes[0]) {
+                case self::CREATE:
+                    if ($isAdmin) {
+                        return VoterInterface::ACCESS_GRANTED;
+                    }
+                    break;
+
+                case self::EDIT:
+                case self::DELETE:
+                case self::VIEW:
+                    if ($isAdmin || (!empty($object->getUser()) && $object->getUser()->getUuid() === $token->getUser()->getUuid())) {
+                        return VoterInterface::ACCESS_GRANTED;
+                    }
+                    break;
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()
@@ -29,6 +53,6 @@ class ApiTokenVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::VIEW, self::CREATE, self::EDIT, self::DELETE];
     }
 }

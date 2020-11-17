@@ -47,7 +47,7 @@ const ResourcePage = (props) => {
     <ToolPage
       id={`resource-${props.resourceNode.id}`}
       className={classes('resource-page', `${props.resourceNode.meta.type}-page`)}
-      header={{
+      meta={{
         title: props.resourceNode.name,
         description: props.resourceNode.meta ? props.resourceNode.meta.description : null
       }}

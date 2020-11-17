@@ -7,7 +7,7 @@ import {CatalogDetails as CatalogDetailsComponent} from '#/plugin/cursus/tools/t
 
 const CatalogDetails = connect(
   (state) => ({
-    path: toolSelectors.path(state),
+    //path: toolSelectors.path(state),
     currentContext: toolSelectors.context(state),
     course: selectors.course(state),
     activeSession: selectors.activeSession(state),

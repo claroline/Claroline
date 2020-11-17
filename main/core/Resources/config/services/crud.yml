@@ -77,19 +77,6 @@ services:
           - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: preDelete }
           - { name: kernel.event_listener, event: crud.pre.copy.resource_node, method: preCopy }
 
-    Claroline\CoreBundle\API\Crud\Widget\WidgetInstanceCrud:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags:
-          - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_widget_widgetinstance, method: preDelete }
-
-    Claroline\CoreBundle\API\Crud\Widget\WidgetContainerCrud:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Crud\Widget\WidgetInstanceCrud'
-        tags:
-          - { name: kernel.event_listener, event: crud_pre_delete_object_claroline_corebundle_entity_widget_widgetcontainer, method: preDelete }
-
     Claroline\CoreBundle\API\Crud\File\PublicFile:
         arguments:
             - '%claroline.param.files_directory%'

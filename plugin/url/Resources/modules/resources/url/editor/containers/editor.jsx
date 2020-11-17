@@ -9,8 +9,7 @@ import {selectors} from '#/plugin/url/resources/url/editor/store'
 const Editor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
-    url: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
-    availablePlaceholders: selectors.availablePlaceholders(state)
+    url: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
   }),
   (dispatch) => ({
     updateProp(propName, propValue) {

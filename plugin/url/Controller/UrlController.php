@@ -12,7 +12,9 @@
 namespace HeVinci\UrlBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 use HeVinci\UrlBundle\Entity\Url;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,6 +22,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UrlController extends AbstractCrudController
 {
+    private $placeholderManager;
+
+    public function __construct(PlaceholderManager $placeholderManager)
+    {
+        $this->placeholderManager = $placeholderManager;
+    }
+
     public function getName()
     {
         return 'url';
@@ -28,5 +37,15 @@ class UrlController extends AbstractCrudController
     public function getClass()
     {
         return Url::class;
+    }
+
+    /**
+     * @Route("/placeholders", name="apiv2_url_placeholders", methods={"GET"})
+     */
+    public function getPlaceholdersAction(): JsonResponse
+    {
+        return new JsonResponse(
+            $this->placeholderManager->getAvailablePlaceholders()
+        );
     }
 }

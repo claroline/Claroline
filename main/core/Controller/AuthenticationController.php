@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AuthenticationController
@@ -135,7 +136,10 @@ class AuthenticationController
      */
     public function validateEmailAction(string $hash): RedirectResponse
     {
-        $this->userManager->validateEmailHash($hash);
+        $foundAndValidated = $this->userManager->validateEmailHash($hash);
+        if (!$foundAndValidated) {
+            throw new NotFoundHttpException('User not found.');
+        }
 
         return new RedirectResponse(
             $this->routingHelper->indexPath()

@@ -18,20 +18,13 @@ class WidgetInstanceSerializer
 
     /** @var ObjectManager */
     private $om;
-
     /** @var SerializerProvider */
     private $serializer;
 
-    /**
-     * WidgetInstanceSerializer constructor.
-     *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
-     */
     public function __construct(
         ObjectManager $om,
-        SerializerProvider $serializer)
-    {
+        SerializerProvider $serializer
+    ) {
         $this->om = $om;
         $this->serializer = $serializer;
     }
@@ -121,9 +114,7 @@ class WidgetInstanceSerializer
                 }
 
                 // deserializes custom config and link it to the instance
-                $typeParameters = $this->serializer
-                  ->get($parametersClass)
-                  ->deserialize($data['parameters'], $typeParameters, $options);
+                $typeParameters = $this->serializer->deserialize($data['parameters'], $typeParameters, $options);
                 $typeParameters->setWidgetInstance($widgetInstance);
 
                 // We either do this or cascade persist ¯\_(ツ)_/¯

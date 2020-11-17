@@ -13,6 +13,7 @@ namespace Claroline\HomeBundle\DataFixtures\PostInstall;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\HomeBundle\Entity\HomeTab;
+use Claroline\HomeBundle\Entity\Type\WidgetsTab;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -42,35 +43,39 @@ class LoadAdminHomeData extends AbstractFixture implements ContainerAwareInterfa
             'title' => $this->translator->trans('informations', [], 'platform'),
             'longTitle' => $this->translator->trans('informations', [], 'platform'),
             'slug' => 'informations',
-            'type' => HomeTab::TYPE_ADMIN,
+            'context' => HomeTab::TYPE_ADMIN,
+            'type' => WidgetsTab::getType(),
+            'class' => WidgetsTab::class,
             'position' => 1,
             'restrictions' => [
                 'hidden' => false,
             ],
-            'widgets' => [[
-                'visible' => true,
-                'display' => [
-                    'layout' => [1],
-                    'color' => '#333333',
-                    'backgroundType' => 'color',
-                    'background' => '#ffffff',
-                ],
-                'parameters' => [],
-                'contents' => [[
-                    'type' => 'list',
-                    'source' => 'admin_tools',
-                    'parameters' => [
-                        'display' => 'tiles-sm',
-                        'enableDisplays' => false,
-                        'availableDisplays' => [],
-                        'card' => [
-                            'display' => ['icon', 'flags', 'subtitle'],
-                        ],
-                        'paginated' => false,
-                        'count' => false,
+            'parameters' => [
+                'widgets' => [[
+                    'visible' => true,
+                    'display' => [
+                        'layout' => [1],
+                        'color' => '#333333',
+                        'backgroundType' => 'color',
+                        'background' => '#ffffff',
                     ],
+                    'parameters' => [],
+                    'contents' => [[
+                        'type' => 'list',
+                        'source' => 'admin_tools',
+                        'parameters' => [
+                            'display' => 'tiles-sm',
+                            'enableDisplays' => false,
+                            'availableDisplays' => [],
+                            'card' => [
+                                'display' => ['icon', 'flags', 'subtitle'],
+                            ],
+                            'paginated' => false,
+                            'count' => false,
+                        ],
+                    ]],
                 ]],
-            ]],
+            ],
         ];
 
         $tab = $this->serializer->deserialize($defaultTab, new HomeTab());

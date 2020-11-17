@@ -22,7 +22,7 @@ const UserPage = props =>
     icon={
       <UserAvatar className="user-avatar-lg img-thumbnail" picture={props.user.picture} />
     }
-    header={{
+    meta={{
       title: `${trans('user_profile')} - ${props.user.name}`,
       description: get(props.user, 'meta.description')
     }}

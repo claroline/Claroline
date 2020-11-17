@@ -10,31 +10,33 @@ import {CatalogForm} from '#/plugin/cursus/tools/trainings/catalog/containers/fo
 
 const CatalogMain = (props) =>
   <Routes
-    path={props.path}
+    path={props.path+'/catalog'}
     routes={[
       {
-        path: '/catalog',
+        path: '/',
         exact: true,
-        render: () => {
-          const List = (
-            <CatalogList path={props.path} />
-          )
-
-          return List
-        }
+        render: () => (
+          <CatalogList path={props.path} />
+        )
       }, {
-        path: '/catalog/new',
-        component: CatalogForm,
+        path: '/new',
         exact: true,
-        onEnter: () => props.openForm(null, CourseTypes.defaultProps)
+        onEnter: () => props.openForm(null, CourseTypes.defaultProps),
+        render: () => (
+          <CatalogForm path={props.path} />
+        )
       }, {
-        path: '/catalog/:slug/edit',
-        component: CatalogForm,
-        onEnter: (params = {}) => props.openForm(params.slug)
+        path: '/:slug/edit',
+        onEnter: (params = {}) => props.openForm(params.slug),
+        render: () => (
+          <CatalogForm path={props.path} />
+        )
       }, {
-        path: '/catalog/:slug',
-        component: CatalogDetails,
-        onEnter: (params = {}) => props.open(params.slug)
+        path: '/:slug',
+        onEnter: (params = {}) => props.open(params.slug),
+        render: () => (
+          <CatalogDetails path={props.path} />
+        )
       }
     ]}
   />

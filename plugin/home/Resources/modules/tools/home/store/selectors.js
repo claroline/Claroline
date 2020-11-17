@@ -15,7 +15,9 @@ const defaultTab = createSelector(
   [context],
   (context) => ({
     id: makeId(),
-    type: 'administration' === context.type ? 'admin' : context.type,
+    context: 'administration' === context.type ? 'admin' : context.type,
+    type: 'widgets',
+    class: 'Claroline\\HomeBundle\\Entity\\Type\\WidgetsTab',
     title: trans('home'),
     longTitle: trans('home'),
     slug: 'default',
@@ -24,7 +26,9 @@ const defaultTab = createSelector(
     restrictions: {
       hidden: false
     },
-    widgets: []
+    parameters: {
+      widgets: []
+    }
   })
 )
 
@@ -33,19 +37,9 @@ const currentTabId = createSelector(
   (store) => store.currentTabId
 )
 
-const editable = createSelector(
-  [store],
-  (store) => store.editable
-)
-
 const administration = createSelector(
   [store],
   (store) => store.administration
-)
-
-const desktopAdmin = createSelector(
-  [store],
-  (store) => store.desktopAdmin
 )
 
 export const selectors = {
@@ -54,8 +48,6 @@ export const selectors = {
   store,
   defaultTab,
   currentTabId,
-  editable,
   administration,
-  desktopAdmin,
   context
 }

@@ -12,11 +12,13 @@ abstract class AbstractTab
 {
     /**
      * @ORM\OneToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab")
-     * @ORM\JoinColumn(name="tab_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tab_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var HomeTab
      */
     private $tab;
+
+    abstract public static function getType(): string;
 
     public function getTab()
     {

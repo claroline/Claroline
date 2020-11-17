@@ -111,11 +111,14 @@ const WidgetForm = props =>
         ]
       }
     ]}
-  />
+  >
+    {props.children}
+  </FormData>
 
 WidgetForm.propTypes = {
   level: T.number,
-  name: T.string.isRequired
+  name: T.string.isRequired,
+  children: T.node
 }
 
 export {

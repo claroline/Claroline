@@ -12,7 +12,7 @@ const HomeTool = props =>
     routes={[
       {
         path: '/edit',
-        disabled: !props.editable,
+        disabled: !props.canEdit,
         component: EditorMain
       }, {
         path: '/',
@@ -23,7 +23,7 @@ const HomeTool = props =>
 
 HomeTool.propTypes = {
   path: T.string.isRequired,
-  editable: T.bool.isRequired
+  canEdit: T.bool.isRequired
 }
 
 export {

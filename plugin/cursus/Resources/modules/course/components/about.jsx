@@ -25,11 +25,11 @@ import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
 const CurrentRegistration = (props) => {
-  let registrationTitle = 'Vous êtes en liste d\'attente pour cette session.'
+  let registrationTitle = trans('session_registration_pending', {}, 'cursus')
   if (constants.TEACHER_TYPE === props.registration.type) {
-    registrationTitle = 'Vous êtes formateur pour cette session.'
+    registrationTitle = trans('session_registration_tutor', {}, 'cursus')
   } else if (isFullyRegistered(props.registration)) {
-    registrationTitle = 'Vous êtes inscrit à cette session.'
+    registrationTitle = trans('session_registration', {}, 'cursus')
   }
 
   return (
@@ -38,14 +38,14 @@ const CurrentRegistration = (props) => {
       title={trans(registrationTitle, {}, 'cursus')}
     >
       {props.sessionFull &&
-        <div>La session est complète pour le moment. Il sera possible de terminer l'inscription si des places se libèrent.</div>
+        <div>{trans('session_registration_full_help', {}, 'cursus')}</div>
       }
 
       {!props.sessionFull && undefined !== props.registration.confirmed && !props.registration.confirmed &&
-        <div>Vous devez confirmer votre inscription grâce au lien qui vous a été envoyé.</div>
+        <div>{trans('session_registration_pending_help', {}, 'cursus')}</div>
       }
       {!props.sessionFull && undefined !== props.registration.validated && !props.registration.validated &&
-        <div>Un gestionnaire doit valider votre demande d'inscription.</div>
+        <div>{trans('session_registration_manager_help', {}, 'cursus')}</div>
       }
     </AlertBlock>
   )
@@ -140,6 +140,7 @@ const CourseAbout = (props) => {
               type={MODAL_BUTTON}
               label={trans(!props.activeSession || isFull(props.activeSession) ? 'register_waiting_list' : 'self-register', {}, 'actions')}
               modal={[MODAL_COURSE_REGISTRATION, {
+                path: props.path,
                 course: props.course,
                 session: props.activeSession,
                 register: props.register
@@ -296,7 +297,7 @@ const CourseAbout = (props) => {
             data={props.course.parent}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(props.course.parent)
+              target: route(props.path, props.course.parent)
             }}
           />
         }
@@ -318,7 +319,7 @@ const CourseAbout = (props) => {
             data={child}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(child)
+              target: route(props.path, child)
             }}
           />
         )}
@@ -340,7 +341,7 @@ const CourseAbout = (props) => {
             data={session}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(props.course, session)
+              target: route(props.path, props.course, session)
             }}
           />
         )}

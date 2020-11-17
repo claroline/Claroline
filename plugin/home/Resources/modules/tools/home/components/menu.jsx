@@ -11,7 +11,7 @@ import {PlayerMenu} from '#/plugin/home/tools/home/player/containers/menu'
 
 const HomeMenu = props =>
   <MenuSection
-    {...omit(props, 'path', 'editable')}
+    {...omit(props, 'path', 'canEdit')}
     title={trans('home', {}, 'tools')}
   >
     <Routes
@@ -19,7 +19,7 @@ const HomeMenu = props =>
       routes={[
         {
           path: '/edit',
-          disabled: !props.editable,
+          disabled: !props.canEdit,
           render() {
             const Menu = (
               <EditorMenu autoClose={props.autoClose} />
@@ -43,7 +43,7 @@ const HomeMenu = props =>
 
 HomeMenu.propTypes = {
   path: T.string.isRequired,
-  editable: T.bool.isRequired,
+  canEdit: T.bool.isRequired,
 
   // from menu
   opened: T.bool.isRequired,

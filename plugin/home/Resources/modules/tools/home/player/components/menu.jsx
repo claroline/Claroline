@@ -5,6 +5,8 @@ import get from 'lodash/get'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
+
 const PlayerMenu = (props) => {
   if (0 < props.tabs.length) {
     return (
@@ -32,9 +34,9 @@ const PlayerMenu = (props) => {
 
 PlayerMenu.propTypes = {
   path: T.string,
-  tabs: T.arrayOf(T.shape({
-    // TODO : tab types
-  })),
+  tabs: T.arrayOf(T.shape(
+    TabTypes.propTypes
+  )),
   autoClose: T.func.isRequired
 }
 

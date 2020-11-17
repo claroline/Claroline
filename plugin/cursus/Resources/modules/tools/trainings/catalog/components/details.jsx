@@ -22,7 +22,7 @@ const CatalogDetails = (props) =>
       }, {
         type: LINK_BUTTON,
         label: props.course.name,
-        target: route(props.course)
+        target: route(props.path, props.course)
       }
     ] : undefined}
     currentContext={props.currentContext}

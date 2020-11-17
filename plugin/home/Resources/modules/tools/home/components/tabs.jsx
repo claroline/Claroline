@@ -8,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
 const Tabs = props =>
   <nav className="tool-nav">

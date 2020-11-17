@@ -15,7 +15,6 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,7 +40,23 @@ class HomeTab
      *
      * @var string
      */
+    private $context;
+
+    /**
+     * @ORM\Column(nullable=false)
+     *
+     * @var string
+     */
     private $type;
+
+    /**
+     * The class that holds the tab custom configuration if any.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $class = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -49,7 +64,7 @@ class HomeTab
      *
      * @var User
      */
-    private $user;
+    private $user = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
@@ -70,26 +85,21 @@ class HomeTab
      */
     private $homeTabConfigs;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
-     *     mappedBy="homeTab",
-     *     cascade={"persist", "remove"}
-     * )
-     *
-     * @var WidgetContainer[]|ArrayCollection
-     */
-    private $widgetContainers;
-
-    /**
-     * HomeTab constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->homeTabConfigs = new ArrayCollection();
-        $this->widgetContainers = new ArrayCollection();
+    }
+
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    public function setContext(string $context)
+    {
+        $this->context = $context;
     }
 
     public function getType()
@@ -102,7 +112,17 @@ class HomeTab
         $this->type = $type;
     }
 
-    public function getUser()
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(string $class = null)
+    {
+        $this->class = $class;
+    }
+
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -112,10 +132,7 @@ class HomeTab
         $this->user = $user;
     }
 
-    /**
-     * @return Workspace
-     */
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
@@ -125,7 +142,7 @@ class HomeTab
         $this->workspace = $workspace;
     }
 
-    public function getHomeTabConfigs()
+    public function getHomeTabConfigs(): ArrayCollection
     {
         return $this->homeTabConfigs;
     }
@@ -141,47 +158,6 @@ class HomeTab
     {
         if ($this->homeTabConfigs->contains($config)) {
             $this->homeTabConfigs->removeElement($config);
-        }
-    }
-
-    /**
-     * @return WidgetContainer[]|ArrayCollection
-     */
-    public function getWidgetContainers()
-    {
-        return $this->widgetContainers;
-    }
-
-    /**
-     * @param string $containerId
-     *
-     * @return WidgetContainer|null
-     */
-    public function getWidgetContainer($containerId)
-    {
-        $found = null;
-
-        foreach ($this->widgetContainers as $container) {
-            if ($container->getUuid() === $containerId) {
-                $found = $container;
-                break;
-            }
-        }
-
-        return $found;
-    }
-
-    public function addWidgetContainer(WidgetContainer $widgetContainer)
-    {
-        if (!$this->widgetContainers->contains($widgetContainer)) {
-            $this->widgetContainers->add($widgetContainer);
-        }
-    }
-
-    public function removeWidgetContainer(WidgetContainer $widgetContainer)
-    {
-        if ($this->widgetContainers->contains($widgetContainer)) {
-            $this->widgetContainers->removeElement($widgetContainer);
         }
     }
 }

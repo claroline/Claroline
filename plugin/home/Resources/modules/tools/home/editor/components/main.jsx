@@ -3,9 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
-import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
-
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {EditorTab} from '#/plugin/home/tools/home/editor/components/tab'
 
 const EditorMain = props =>
@@ -23,6 +21,7 @@ const EditorMain = props =>
             const Editor = (
               <EditorTab
                 {...props}
+                path={props.path}
               />
             )
 
@@ -52,17 +51,11 @@ EditorMain.propTypes = {
   currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
   currentTabIndex: T.number.isRequired,
-  widgets: T.arrayOf(T.shape(
-    WidgetContainerTypes.propTypes
-  )).isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,
   createTab: T.func.isRequired,
-  updateTab: T.func.isRequired,
-  setErrors: T.func.isRequired,
-  deleteTab: T.func.isRequired,
-  moveTab: T.func.isRequired
+  deleteTab: T.func.isRequired
 }
 
 export {

@@ -3,8 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
-import {Tab as TabTypes} from '#/plugin/home/tools/home/prop-types'
-import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {PlayerTab} from '#/plugin/home/tools/home/player/components/tab'
 
 const PlayerMain = props =>
@@ -26,12 +25,6 @@ const PlayerMain = props =>
                 tabs={props.tabs}
                 currentTabTitle={props.currentTabTitle}
                 currentTab={props.currentTab}
-                editable={props.editable}
-                administration={props.administration}
-                desktopAdmin={props.desktopAdmin}
-                widgets={props.widgets}
-                setAdministration={props.setAdministration}
-                fetchTabs={props.desktopAdmin ? props.fetchTabs : () => false}
               />
             )
 
@@ -56,16 +49,7 @@ PlayerMain.propTypes = {
   )),
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
-  editable: T.bool.isRequired,
-  administration: T.bool.isRequired,
-  desktopAdmin: T.bool.isRequired,
-  widgets: T.arrayOf(T.shape(
-    WidgetContainerTypes.propTypes
-  )).isRequired,
-
-  setCurrentTab: T.func.isRequired,
-  setAdministration: T.func.isRequired,
-  fetchTabs: T.func.isRequired
+  setCurrentTab: T.func.isRequired
 }
 
 export {

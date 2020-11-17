@@ -53,11 +53,11 @@ class HomeListener
     public function onDisplayDesktop(OpenToolEvent $event)
     {
         $adminTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP],
+            'filters' => ['context' => HomeTab::TYPE_ADMIN_DESKTOP],
         ]);
 
         $userTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['type' => HomeTab::TYPE_DESKTOP],
+            'filters' => ['context' => HomeTab::TYPE_DESKTOP],
         ]);
 
         // generate the final list of tabs
@@ -69,9 +69,7 @@ class HomeListener
         }
 
         $event->setData([
-            'editable' => true,
             'tabs' => $orderedTabs,
-            'desktopAdmin' => $this->authorization->isGranted('ROLE_ADMIN'),
         ]);
         $event->stopPropagation();
     }
@@ -85,13 +83,12 @@ class HomeListener
 
         $tabs = $this->finder->search(HomeTab::class, [
             'filters' => [
-                'type' => HomeTab::TYPE_WORKSPACE,
+                'context' => HomeTab::TYPE_WORKSPACE,
                 'workspace' => $workspace->getUuid(),
             ],
         ]);
 
         $event->setData([
-            'editable' => $this->authorization->isGranted(['home', 'edit'], $workspace),
             'tabs' => $tabs['data'],
         ]);
         $event->stopPropagation();
@@ -102,25 +99,14 @@ class HomeListener
      */
     public function onDisplayAdministration(OpenToolEvent $event)
     {
-        $homeTabs = $this->finder->search(
+        $tabs = $this->finder->search(
             HomeTab::class,
-            ['filters' => ['type' => HomeTab::TYPE_ADMIN]]
+            ['filters' => ['context' => HomeTab::TYPE_ADMIN]]
         );
 
-        $tabs = array_filter($homeTabs['data'], function ($data) {
-            return $data !== [];
-        });
-        $orderedTabs = [];
-
-        foreach ($tabs as $tab) {
-            $orderedTabs[$tab['position']] = $tab;
-        }
-        ksort($orderedTabs);
-
         $event->setData([
-            'editable' => true,
             'administration' => true,
-            'tabs' => array_values($orderedTabs),
+            'tabs' => $tabs['data'],
         ]);
         $event->stopPropagation();
     }

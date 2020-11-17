@@ -56,6 +56,7 @@
     "react/prop-types": [
       "error", {
       "skipUndeclared": true
-    }]
+    }],
+    "react/display-name": "off"
   }
 }

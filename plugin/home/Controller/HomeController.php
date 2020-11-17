@@ -61,23 +61,31 @@ class HomeController extends AbstractApiController
     /**
      * Get the platform home data.
      *
-     * @Route("/", name="apiv2_home", options={"method_prefix"=false}, methods={"GET"})
+     * @Route("/", name="apiv2_home", methods={"GET"})
      */
     public function homeAction(): JsonResponse
     {
         $tabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['type' => HomeTab::TYPE_HOME],
+            'filters' => ['context' => HomeTab::TYPE_HOME],
         ]);
 
+        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN') || $this->authorization->isGranted('ROLE_HOME_MANAGER');
+
         return new JsonResponse([
-            'editable' => $this->authorization->isGranted('ROLE_ADMIN') || $this->authorization->isGranted('ROLE_HOME_MANAGER'),
-            'administration' => false,
             'tabs' => $tabs['data'],
+            'data' => [
+                // mimic standard tool perms
+                'permissions' => [
+                    'edit' => $isAdmin,
+                    'administrate' => $isAdmin,
+                    'delete' => $isAdmin,
+                ],
+            ],
         ]);
     }
 
     /**
-     * @Route("/{context}/{contextId}", name="apiv2_home_update", options={"method_prefix"=false}, methods={"PUT"})
+     * @Route("/{context}/{contextId}", name="apiv2_home_update", methods={"PUT"})
      */
     public function updateAction(Request $request, string $context, string $contextId = null): JsonResponse
     {
@@ -89,7 +97,7 @@ class HomeController extends AbstractApiController
 
         foreach ($tabs as $tab) {
             // do not update tabs set by the administration tool
-            if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['type']) {
+            if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['context']) {
                 $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
                 $ids[] = $tab['id']; // will be used to determine deleted tabs
             } else {
@@ -100,16 +108,16 @@ class HomeController extends AbstractApiController
         // retrieve existing tabs for the context to remove deleted ones
         /** @var HomeTab[] $installedTabs */
         $installedTabs = HomeTab::TYPE_HOME === $context ?
-            $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_HOME]) :
+            $this->finder->fetch(HomeTab::class, ['context' => HomeTab::TYPE_HOME]) :
             $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
-                'type' => HomeTab::TYPE_DESKTOP,
+                'context' => HomeTab::TYPE_DESKTOP,
             ] : [
                 $context => $contextId,
             ]);
 
         // do not delete tabs set by the administration tool
         $installedTabs = array_filter($installedTabs, function (HomeTab $tab) {
-            return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getType();
+            return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getContext();
         });
 
         $this->cleanDatabase($installedTabs, $ids);
@@ -120,7 +128,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @Route("/admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false}, methods={"PUT"})
+     * @Route("/admin/{context}/{contextId}", name="apiv2_home_admin", methods={"PUT"})
      */
     public function adminUpdateAction(Request $request, string $context): JsonResponse
     {
@@ -139,7 +147,7 @@ class HomeController extends AbstractApiController
         /** @var HomeTab[] $installedTabs */
         $installedTabs = $this->finder->fetch(
             HomeTab::class,
-            ['type' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN]
+            ['context' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN]
         );
 
         $this->cleanDatabase($installedTabs, $ids);
@@ -150,16 +158,16 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @Route("/home/tabs/fetch", name="apiv2_home_user_fetch", options={"method_prefix"=false}, methods={"GET"})
+     * @Route("/home/tabs/fetch", name="apiv2_home_user_fetch", methods={"GET"})
      */
     public function userTabsFetchAction(): JsonResponse
     {
         $adminTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP],
+            'filters' => ['context' => HomeTab::TYPE_ADMIN_DESKTOP],
         ]);
 
         $userTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['type' => HomeTab::TYPE_DESKTOP],
+            'filters' => ['context' => HomeTab::TYPE_DESKTOP],
         ]);
 
         // generate the final list of tabs
@@ -174,16 +182,16 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @Route("/admin/home/tabs/fetch", name="apiv2_home_admin_fetch", options={"method_prefix"=false}, methods={"GET"})
+     * @Route("/admin/home/tabs/fetch", name="apiv2_home_admin_fetch", methods={"GET"})
      */
     public function adminTabsFetchAction(): JsonResponse
     {
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $tabs = $this->finder->search(HomeTab::class, ['filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP]]);
+        $tabs = $this->finder->search(HomeTab::class, ['filters' => ['context' => HomeTab::TYPE_ADMIN_DESKTOP]]);
         $tabs = array_filter($tabs['data'], function ($data) {
-            return $data !== [];
+            return !empty($data); // todo : check why this is required
         });
         $orderedTabs = [];
 

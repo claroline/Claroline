@@ -76,7 +76,7 @@ const RegistrationModal = props =>
           className="btn modal-btn"
           type={LINK_BUTTON}
           label={trans('show_other_sessions', {}, 'actions')}
-          target={route(props.course, props.session)+'/sessions'}
+          target={route(props.path, props.course, props.session)+'/sessions'}
           onClick={() => props.fadeModal()}
         />
       </Fragment>
@@ -95,6 +95,7 @@ const RegistrationModal = props =>
   </Modal>
 
 RegistrationModal.propTypes = {
+  path: T.string.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ).isRequired,

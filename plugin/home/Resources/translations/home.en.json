@@ -3,5 +3,11 @@
     "home_tab_delete_confirm_title": "Tab deletion",
     "home_tab_delete_confirm_message": "Are you sure you want to delete this tab ?",
     "home_tab_locked": "You can not modify this tab",
-    "home_tab_locked_message": "This tab has been configured by an administrator and can not be deleted or modified."
+    "home_tab_locked_message": "This tab has been configured by an administrator and can not be deleted or modified.",
+    "new_tab": "New tab",
+    "new_tab_configure": "2. Configure the tab",
+    "new_tab_select": "1. Choose the type of tab to create",
+
+    "widgets": "Widgets",
+    "widgets_desc": "Allows to create a grid of different types of widgets."
 }

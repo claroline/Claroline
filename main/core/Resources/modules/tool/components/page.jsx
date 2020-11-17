@@ -67,7 +67,7 @@ const ToolPage = props => {
         :
         undefined
       }
-      header={{
+      meta={{
         title: `${trans(props.name, {}, 'tools')} - ${'workspace' === props.currentContext.type ? props.currentContext.data.code : trans(props.currentContext.type)}`,
         description: get(props.currentContext.data, 'meta.description')
       }}

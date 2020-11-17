@@ -4,20 +4,20 @@ namespace Claroline\HomeBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Finder\Widget\WidgetContainerFinder;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\API\Serializer\Widget\WidgetContainerSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Entity\HomeTabConfig;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\HomeBundle\Entity\Type\AbstractTab;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @todo simplify relationships (there are lots of duplicates)
@@ -27,12 +27,12 @@ class HomeTabSerializer
 {
     use SerializerTrait;
 
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var ObjectManager */
     private $om;
-    /** @var WidgetContainerFinder */
-    private $widgetContainerFinder;
-    /** @var WidgetContainerSerializer */
-    private $widgetContainerSerializer;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var WorkspaceSerializer */
     private $workspaceSerializer;
     /** @var UserSerializer */
@@ -42,29 +42,18 @@ class HomeTabSerializer
     /** @var PublicFileSerializer */
     private $publicFileSerializer;
 
-    /**
-     * HomeTabSerializer constructor.
-     *
-     * @param ObjectManager             $om
-     * @param WidgetContainerFinder     $widgetContainerFinder
-     * @param WidgetContainerSerializer $widgetContainerSerializer
-     * @param WorkspaceSerializer       $workspaceSerializer
-     * @param UserSerializer            $userSerializer
-     * @param RoleSerializer            $roleSerializer
-     * @param PublicFileSerializer      $publicFileSerializer
-     */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        WidgetContainerFinder $widgetContainerFinder,
-        WidgetContainerSerializer $widgetContainerSerializer,
+        SerializerProvider $serializer,
         WorkspaceSerializer $workspaceSerializer,
         UserSerializer $userSerializer,
         RoleSerializer $roleSerializer,
         PublicFileSerializer $publicFileSerializer
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
-        $this->widgetContainerFinder = $widgetContainerFinder;
-        $this->widgetContainerSerializer = $widgetContainerSerializer;
+        $this->serializer = $serializer;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->userSerializer = $userSerializer;
         $this->roleSerializer = $roleSerializer;
@@ -90,27 +79,7 @@ class HomeTabSerializer
             return [];
         }
 
-        /** @var WidgetContainer[] $savedContainers */
-        $savedContainers = $homeTab->getWidgetContainers()->toArray();
-        $containers = [];
-
-        foreach ($savedContainers as $container) {
-            //temporary
-            $widgetContainerConfig = $container->getWidgetContainerConfigs()[0];
-            if ($widgetContainerConfig) {
-                if (!array_key_exists($widgetContainerConfig->getPosition(), $containers)) {
-                    $containers[$widgetContainerConfig->getPosition()] = $container;
-                } else {
-                    $containers[] = $container;
-                }
-            }
-        }
-
-        ksort($containers);
-        $containers = array_values($containers);
-
         $poster = null;
-
         if ($homeTab->getPoster()) {
             /** @var PublicFile $file */
             $file = $this->om
@@ -127,11 +96,17 @@ class HomeTabSerializer
             'title' => $homeTabConfig->getName(),
             'slug' => $homeTabConfig->getLongTitle() ? substr(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $homeTabConfig->getLongTitle()))), 0, 128) : 'new',
             'longTitle' => $homeTabConfig->getLongTitle(),
-            'centerTitle' => $homeTabConfig->isCenterTitle(),
             'poster' => $poster,
             'icon' => $homeTabConfig->getIcon(),
+            'context' => $homeTab->getContext(),
             'type' => $homeTab->getType(),
+            'class' => $homeTab->getClass(),
             'position' => $homeTabConfig->getTabOrder(),
+            'permissions' => [
+                'open' => $this->authorization->isGranted('OPEN', $homeTab),
+                'edit' => $this->authorization->isGranted('EDIT', $homeTab),
+                'delete' => $this->authorization->isGranted('DELETE', $homeTab),
+            ],
             'restrictions' => [
                 'hidden' => !$homeTabConfig->isVisible(),
                 'roles' => array_map(function (Role $role) {
@@ -140,15 +115,31 @@ class HomeTabSerializer
             ],
             'display' => [
                 'color' => $homeTabConfig->getColor(),
+                'centerTitle' => $homeTabConfig->isCenterTitle(),
             ],
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
-            'widgets' => array_map(function ($container) use ($options) {
-                return $this->widgetContainerSerializer->serialize($container, $options);
-            }, $containers),
         ];
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $data['workspace'] = $homeTab->getWorkspace() ? $this->workspaceSerializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null;
+        }
+
+        // retrieves the custom configuration of the widget if any
+        if ($homeTab->getClass()) {
+            // loads configuration entity for the current instance
+            $typeParameters = $this->om
+                ->getRepository($homeTab->getClass())
+                ->findOneBy(['tab' => $homeTab]);
+
+            $parameters = [];
+            if ($typeParameters && $this->serializer->has($typeParameters)) {
+                // serializes custom configuration
+                $parameters = $this->serializer->serialize($typeParameters, $options);
+            }
+
+            if (!empty($parameters)) {
+                $data['parameters'] = $parameters;
+            }
         }
 
         return $data;
@@ -162,9 +153,7 @@ class HomeTabSerializer
             $homeTab->refreshUuid();
         }
 
-        $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
-          ->findOneBy(['homeTab' => $homeTab]);
-
+        $homeTabConfig = $this->getConfig($homeTab);
         if (!$homeTabConfig) {
             $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
@@ -173,11 +162,13 @@ class HomeTabSerializer
         $this->sipe('title', 'setName', $data, $homeTabConfig);
         $this->sipe('position', 'setPosition', $data, $homeTabConfig);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTabConfig);
-        $this->sipe('centerTitle', 'setCenterTitle', $data, $homeTabConfig);
         $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTabConfig);
+        $this->sipe('context', 'setContext', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
+        $this->sipe('class', 'setClass', $data, $homeTab);
         $this->sipe('display.color', 'setColor', $data, $homeTabConfig);
+        $this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTabConfig);
 
         if (isset($data['restrictions'])) {
             if (isset($data['restrictions']['hidden'])) {
@@ -208,59 +199,49 @@ class HomeTabSerializer
         }
 
         if (isset($data['workspace'])) {
+            /** @var Workspace $workspace */
             $workspace = $this->om->getObject($data['workspace'], Workspace::class);
             $homeTab->setWorkspace($workspace);
         }
 
         if (isset($data['user'])) {
+            /** @var User $user */
             $user = $this->om->getObject($data['user'], User::class);
             $homeTab->setUser($user);
         }
 
-        if (isset($data['widgets'])) {
-            /** @var WidgetContainer[] $currentContainers */
-            $currentContainers = $homeTab->getWidgetContainers()->toArray();
-            $containerIds = [];
+        // process custom configuration of the tab if any
+        if ($homeTab->getClass()) {
+            $parametersClass = $homeTab->getClass();
 
-            // update containers
-            foreach ($data['widgets'] as $position => $widgetContainerData) {
-                if (isset($widgetContainerData['id'])) {
-                    $widgetContainer = $homeTab->getWidgetContainer($widgetContainerData['id']);
-                }
+            // loads configuration entity for the current instance
+            $typeParameters = $this->om
+                ->getRepository($parametersClass)
+                ->findOneBy(['tab' => $homeTab]);
 
-                if (empty($widgetContainer)) {
-                    $widgetContainer = new WidgetContainer();
-                }
+            if (!$typeParameters || in_array(Options::REFRESH_UUID, $options)) {
+                // no existing parameters => initializes one
 
-                $this->widgetContainerSerializer->deserialize($widgetContainerData, $widgetContainer, $options);
-                $widgetContainer->setHomeTab($homeTab);
-                $widgetContainerConfig = $widgetContainer->getWidgetContainerConfigs()[0];
-                $widgetContainerConfig->setPosition($position);
-                $containerIds[] = $widgetContainer->getUuid();
+                /** @var AbstractTab $typeParameters */
+                $typeParameters = new $parametersClass();
             }
 
-            // removes containers which no longer exists
-            foreach ($currentContainers as $currentContainer) {
-                if (!in_array($currentContainer->getUuid(), $containerIds)) {
-                    $currentContainer->setHomeTab(null);
-                    $this->om->remove($currentContainer);
-                }
+            // deserializes custom config and link it to the instance
+            if (isset($data['parameters']) && $this->serializer->has($typeParameters)) {
+                $typeParameters = $this->serializer->deserialize($data['parameters'], $typeParameters, $options);
             }
+            $typeParameters->setTab($homeTab);
+            $this->om->persist($typeParameters);
         }
 
         return $homeTab;
     }
 
-    /**
-     * @param HomeTab $tab
-     *
-     * @return HomeTabConfig
-     */
-    public function getConfig(HomeTab $tab)
+    private function getConfig(HomeTab $tab): ?HomeTabConfig
     {
         /** @var HomeTabConfig $homeTabConfig */
         $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
-          ->findOneBy(['homeTab' => $tab]);
+            ->findOneBy(['homeTab' => $tab]);
 
         return $homeTabConfig;
     }

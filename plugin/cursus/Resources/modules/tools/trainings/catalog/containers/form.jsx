@@ -8,7 +8,7 @@ import {CatalogForm as CatalogFormComponent} from '#/plugin/cursus/tools/trainin
 
 const CatalogForm = connect(
   (state) => ({
-    path: toolSelectors.path(state),
+    //path: toolSelectors.path(state),
     currentContext: toolSelectors.context(state),
     isNew: formSelectors.isNew(formSelectors.form(state, selectors.FORM_NAME)),
     formData: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),

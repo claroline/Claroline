@@ -94,12 +94,8 @@ class HomeTabConfig
      */
     private $roles;
 
-    /**
-     * HomeTabConfig constructor.
-     */
     public function __construct()
     {
-        $this->centerTitle = false;
         $this->roles = new ArrayCollection();
     }
 

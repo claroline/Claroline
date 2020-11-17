@@ -1,17 +1,15 @@
 import {connect} from 'react-redux'
 
-import {withRouter} from '#/main/app/router'
+import {hasPermission} from '#/main/app/security'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {HomeTool as HomeToolComponent} from '#/plugin/home/tools/home/components/tool'
-import {selectors} from '#/plugin/home/tools/home/store'
 
-const HomeTool = withRouter(
-  connect(
-    (state) => ({
-      editable: selectors.editable(state)
-    })
-  )(HomeToolComponent)
-)
+const HomeTool = connect(
+  (state) => ({
+    canEdit: hasPermission('edit', toolSelectors.toolData(state))
+  })
+)(HomeToolComponent)
 
 export {
   HomeTool

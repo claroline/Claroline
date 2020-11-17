@@ -7,6 +7,13 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineHomeBundle', {
   /**
+   * Provides tab types for Home tools.
+   */
+  home: {
+    'widgets': () => { return import(/* webpackChunkName: "home-home-widgets" */ '#/plugin/home/home/widgets') }
+  },
+
+  /**
    * Provides Desktop and/or Workspace tools.
    */
   tools: {
