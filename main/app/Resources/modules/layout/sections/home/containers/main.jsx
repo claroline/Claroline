@@ -24,8 +24,10 @@ const HomeMain = connect(
     selfRegistration: configSelectors.param(state, 'selfRegistration')
   }),
   (dispatch) => ({
-    openHome(type) {
-      if (constants.HOME_TYPE_TOOL === type) {
+    openHome(type, data) {
+      if (constants.HOME_TYPE_URL === type) {
+        window.location.href = data
+      } else if (constants.HOME_TYPE_TOOL === type) {
         dispatch(toolActions.open('home', {
           type: 'home', // TODO : use var
           url: ['apiv2_home'],

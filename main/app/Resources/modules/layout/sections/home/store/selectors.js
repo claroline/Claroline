@@ -16,7 +16,7 @@ const homeType = createSelector(
 
 const hasHome = createSelector(
   [homeType],
-  (homeType) => constants.HOME_TYPE_TOOL === homeType || constants.HOME_TYPE_HTML === homeType
+  (homeType) => homeType && constants.HOME_TYPE_NONE !== homeType
 )
 
 // either the html content or a redirect URL

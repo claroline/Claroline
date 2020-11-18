@@ -74,7 +74,7 @@ const HomeMain = (props) =>
       }, {
         path: '/home',
         disabled: props.unavailable || !props.hasHome,
-        onEnter: () => props.openHome(props.homeType),
+        onEnter: () => props.openHome(props.homeType, props.homeData),
         render: () => {
           const Home = (
             <HomeContent
