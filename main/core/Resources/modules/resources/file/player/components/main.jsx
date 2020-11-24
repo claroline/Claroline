@@ -19,7 +19,7 @@ const PlayerMain = (props) => {
   if (constants.OPENING_DOWNLOAD === props.file.opening) {
     props.download(props.resourceNode)
   } else if (constants.OPENING_BROWSER === props.file.opening) {
-    window.location.href = url(['claro_resource_file_raw', {file: props.file.id}])
+    window.location.replace(url(['claro_resource_file_raw', {file: props.file.id}]))
   }
 
   return (
