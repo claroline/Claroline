@@ -63,16 +63,6 @@ class ItemManager
      */
     private $hintSerializer;
 
-    /**
-     * ItemManager constructor.
-     *
-     * @param ObjectManager             $om
-     * @param ScoreManager              $scoreManager
-     * @param ItemValidator             $validator
-     * @param ItemSerializer            $serializer
-     * @param ItemDefinitionsCollection $itemDefinitions
-     * @param HintSerializer            $hintSerializer
-     */
     public function __construct(
         ObjectManager $om,
         ScoreManager $scoreManager,
@@ -111,8 +101,6 @@ class ItemManager
     /**
      * Validates and creates a new Item from raw data.
      *
-     * @param array $data
-     *
      * @return Item
      *
      * @throws InvalidDataException
@@ -124,9 +112,6 @@ class ItemManager
 
     /**
      * Validates and updates a Item entity with raw data.
-     *
-     * @param Item  $question
-     * @param array $data
      *
      * @return Item
      *
@@ -174,10 +159,6 @@ class ItemManager
     /**
      * Deserializes a question.
      *
-     * @param array     $itemData
-     * @param Item|null $item
-     * @param array     $options
-     *
      * @return Item
      */
     public function deserialize(array $itemData, Item $item = null, array $options = [])
@@ -189,7 +170,6 @@ class ItemManager
      * Deletes an Item.
      * It's only possible if the Item is not used in an Exercise.
      *
-     * @param Item $item
      * @param $user
      * @param bool $skipErrors
      *
@@ -211,9 +191,6 @@ class ItemManager
 
     /**
      * Deletes a list of Items.
-     *
-     * @param array $questions - the uuids of questions to delete
-     * @param User  $user
      */
     public function deleteBulk(array $questions, User $user)
     {
@@ -229,10 +206,6 @@ class ItemManager
 
     /**
      * Calculates the score of an answer to a question.
-     *
-     * @param Item   $question
-     * @param Answer $answer
-     * @param bool   $applyHints
      *
      * @return float
      */
@@ -273,8 +246,6 @@ class ItemManager
     /**
      * Calculates the total score of a question.
      *
-     * @param Item $question
-     *
      * @return float
      */
     public function calculateTotal(Item $question)
@@ -296,9 +267,6 @@ class ItemManager
 
     /**
      * Get all scores for an Answerable Item.
-     *
-     * @param Exercise $exercise
-     * @param Item     $question
      *
      * @return array
      */
@@ -326,10 +294,6 @@ class ItemManager
 
     /**
      * Get question statistics inside an Exercise.
-     *
-     * @param Item     $question
-     * @param Exercise $exercise
-     * @param bool     $finishedPapersOnly
      *
      * @return array
      */
@@ -393,8 +357,6 @@ class ItemManager
 
     /**
      * Generates new UUIDs for the entities of an item.
-     *
-     * @param Item $item
      */
     public function refreshIdentifiers(Item $item)
     {
@@ -425,9 +387,6 @@ class ItemManager
     /**
      * Find all content for a given user and the replace him by another.
      *
-     * @param User $from
-     * @param User $to
-     *
      * @return int
      */
     public function replaceUser(User $from, User $to)
@@ -443,5 +402,10 @@ class ItemManager
         }
 
         return count($items);
+    }
+
+    public function isQuestionType(string $type): bool
+    {
+        return $this->itemDefinitions->isQuestionType($type);
     }
 }

@@ -133,82 +133,79 @@ class EvaluationManager
     {
         $evaluation = $this->getEvaluation($workspace, $user);
 
-        // no computation if workspace has already been passed or completed
-        if (!in_array($evaluation->getStatus(), [AbstractEvaluation::STATUS_PASSED, AbstractEvaluation::STATUS_COMPLETED])) {
-            $statusCount = [
-                AbstractEvaluation::STATUS_PASSED => 0,
-                AbstractEvaluation::STATUS_FAILED => 0,
-                AbstractEvaluation::STATUS_COMPLETED => 0,
-                AbstractEvaluation::STATUS_INCOMPLETE => 0,
-                AbstractEvaluation::STATUS_NOT_ATTEMPTED => 0,
-                AbstractEvaluation::STATUS_UNKNOWN => 0,
-                AbstractEvaluation::STATUS_OPENED => 0,
-                AbstractEvaluation::STATUS_PARTICIPATED => 0,
-                AbstractEvaluation::STATUS_TODO => 0,
-            ];
-            $resources = $this->computeResourcesToDo($workspace, $user);
+        $statusCount = [
+            AbstractEvaluation::STATUS_PASSED => 0,
+            AbstractEvaluation::STATUS_FAILED => 0,
+            AbstractEvaluation::STATUS_COMPLETED => 0,
+            AbstractEvaluation::STATUS_INCOMPLETE => 0,
+            AbstractEvaluation::STATUS_NOT_ATTEMPTED => 0,
+            AbstractEvaluation::STATUS_UNKNOWN => 0,
+            AbstractEvaluation::STATUS_OPENED => 0,
+            AbstractEvaluation::STATUS_PARTICIPATED => 0,
+            AbstractEvaluation::STATUS_TODO => 0,
+        ];
+        $resources = $this->computeResourcesToDo($workspace, $user);
 
-            $score = 0;
-            $scoreMax = 0;
-            $progressionMax = count($resources);
+        $score = 0;
+        $scoreMax = 0;
+        $progressionMax = count($resources);
 
-            // if there is a triggering resource evaluation checks if is part of the workspace requirements
-            // if not, no evaluation is computed
-            if ($currentRue) {
-                $currentResourceId = $currentRue->getResourceNode()->getUuid();
+        // if there is a triggering resource evaluation checks if is part of the workspace requirements
+        // if not, no evaluation is computed
+        if ($currentRue) {
+            $currentResourceId = $currentRue->getResourceNode()->getUuid();
 
-                if (isset($resources[$currentResourceId])) {
-                    if ($currentRue->getStatus()) {
-                        ++$statusCount[$currentRue->getStatus()];
-                        $score += $currentRue->getScore() ?? 0;
-                        $scoreMax += $currentRue->getScoreMax() ?? 0;
-                    }
-                    unset($resources[$currentResourceId]);
+            if (isset($resources[$currentResourceId])) {
+                if ($currentRue->getStatus()) {
+                    ++$statusCount[$currentRue->getStatus()];
+                    $score += $currentRue->getScore() ?? 0;
+                    $scoreMax += $currentRue->getScoreMax() ?? 0;
                 }
+                unset($resources[$currentResourceId]);
             }
-
-            foreach ($resources as $resource) {
-                $resourceEval = $this->resourceUserEvalRepo->findOneBy(['resourceNode' => $resource, 'user' => $user]);
-
-                if ($resourceEval && $resourceEval->getStatus()) {
-                    ++$statusCount[$resourceEval->getStatus()];
-                    $score += $resourceEval->getScore() ?? 0;
-                    $scoreMax += $resourceEval->getScoreMax() ?? 0;
-                }
-            }
-
-            $progression = $statusCount[AbstractEvaluation::STATUS_PASSED] +
-                $statusCount[AbstractEvaluation::STATUS_FAILED] +
-                $statusCount[AbstractEvaluation::STATUS_COMPLETED] +
-                $statusCount[AbstractEvaluation::STATUS_PARTICIPATED];
-
-            $status = AbstractEvaluation::STATUS_INCOMPLETE;
-            if (0 !== $statusCount[AbstractEvaluation::STATUS_FAILED]) {
-                // if there is one failed resource the workspace is considered as failed also
-                $status = AbstractEvaluation::STATUS_FAILED;
-            } elseif ($progression === $progressionMax) {
-                // if all resources have been done without failure the workspace is completed
-                $status = AbstractEvaluation::STATUS_COMPLETED;
-            }
-
-            $evaluation->setProgressionMax($progressionMax);
-            $evaluation->setProgression($progression);
-            $evaluation->setStatus($status);
-
-            if ($date) {
-                $evaluation->setDate($date);
-            }
-
-            if ($scoreMax) {
-                $evaluation->setScore($score);
-                $evaluation->setScoreMax($scoreMax);
-            }
-
-            $this->om->persist($evaluation);
-            $this->om->flush();
-
-            $this->eventDispatcher->dispatch(new UserEvaluationEvent($evaluation), 'workspace.evaluate');
         }
+
+        foreach ($resources as $resource) {
+            $resourceEval = $this->resourceUserEvalRepo->findOneBy(['resourceNode' => $resource, 'user' => $user]);
+
+            if ($resourceEval && $resourceEval->getStatus()) {
+                ++$statusCount[$resourceEval->getStatus()];
+                $score += $resourceEval->getScore() ?? 0;
+                $scoreMax += $resourceEval->getScoreMax() ?? 0;
+            }
+        }
+
+        $progression = $statusCount[AbstractEvaluation::STATUS_PASSED] +
+            $statusCount[AbstractEvaluation::STATUS_FAILED] +
+            $statusCount[AbstractEvaluation::STATUS_COMPLETED] +
+            $statusCount[AbstractEvaluation::STATUS_PARTICIPATED];
+
+        $status = AbstractEvaluation::STATUS_INCOMPLETE;
+        if (0 !== $statusCount[AbstractEvaluation::STATUS_FAILED]) {
+            // if there is one failed resource the workspace is considered as failed also
+            $status = AbstractEvaluation::STATUS_FAILED;
+        } elseif ($progression === $progressionMax) {
+            // if all resources have been done without failure the workspace is completed
+            $status = AbstractEvaluation::STATUS_COMPLETED;
+        }
+
+        $evaluation->setProgressionMax($progressionMax);
+        $evaluation->setProgression($progression);
+        $evaluation->setStatus($status);
+
+        if ($date) {
+            $evaluation->setDate($date);
+        }
+
+        if ($scoreMax) {
+            $evaluation->setScore($score);
+            $evaluation->setScoreMax($scoreMax);
+        }
+
+        $this->om->persist($evaluation);
+        $this->om->flush();
+
+        $this->eventDispatcher->dispatch(new UserEvaluationEvent($evaluation), 'workspace.evaluate');
 
         return $evaluation;
     }

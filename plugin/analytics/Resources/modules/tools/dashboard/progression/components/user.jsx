@@ -76,7 +76,7 @@ const WorkspaceProgression = (props) => {
           <li className="list-group-item">
             {trans('score')}
             <span className="value">
-              {get(props.workspaceEvaluation, 'score') || '?'} / {get(props.workspaceEvaluation, 'scoreMax')}
+              {get(props.workspaceEvaluation, 'score') ? number((get(props.workspaceEvaluation, 'score') / get(props.workspaceEvaluation, 'scoreMax')) * 100) : '?'} / 100
             </span>
           </li>
         }

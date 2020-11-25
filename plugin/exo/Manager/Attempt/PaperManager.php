@@ -402,7 +402,10 @@ class PaperManager
         $structure = $paper->getStructure(true);
         if (isset($structure['steps'])) {
             foreach ($structure['steps'] as $step) {
-                $nbQuestions += count($step['items']); // TODO : remove content items
+                $nbQuestions += count(array_filter($step['items'], function (array $item) {
+                    /// only get answerable items
+                    return $this->itemManager->isQuestionType($item['type']);
+                }));
             }
         }
         $nbAnswers = 0;
