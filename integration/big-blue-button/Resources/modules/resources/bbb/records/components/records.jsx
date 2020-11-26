@@ -1,17 +1,14 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {Sections} from '#/main/app/content/components/sections'
 
-import {
-  BBB as BBBTypes,
-  Recording as RecordingTypes
-} from '#/integration/big-blue-button/resources/bbb/prop-types'
-import {Record} from '#/integration/big-blue-button/resources/bbb/records/components/record'
+import {BBB as BBBTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
+import {selectors} from '#/integration/big-blue-button/resources/bbb/records/store/selectors'
+import {Recordings} from '#/integration/big-blue-button/components/recordings'
 
 const Records = props =>
   <Fragment>
@@ -25,40 +22,24 @@ const Records = props =>
       }}
     />
 
-    {0 === props.recordings.length &&
-      <ContentPlaceholder
-        size="lg"
-        icon="fa fa-video"
-        title={trans('no_record', {}, 'bbb')}
-      />
-    }
-
-    <Sections
-      level={3}
-    >
-      {props.recordings.map((record) =>
-        <Record
-          key={record.recordID}
-          id={record.recordID}
-          meetingId={props.bbb.id}
-          canEdit={props.canEdit}
-          recording={record}
-          deleteRecording={props.deleteRecording}
-        />
-      )}
-    </Sections>
+    <Recordings
+      name={selectors.LIST_NAME}
+      url={['apiv2_bbb_meeting_recordings_list', {id: props.bbb.id}]}
+      delete={['apiv2_bbb_meeting_recording_delete', {id: props.bbb.id}]}
+      primaryAction={(row) => ({
+        type: URL_BUTTON,
+        label: trans('open', {}, 'actions'),
+        target: get(row, 'medias.presentation', '')
+      })}
+      customDefinition={[]}
+    />
   </Fragment>
 
 Records.propTypes = {
   path: T.string.isRequired,
   bbb: T.shape(
     BBBTypes.propTypes
-  ),
-  canEdit: T.bool.isRequired,
-  recordings: T.arrayOf(T.shape(
-    RecordingTypes.propTypes
-  )),
-  deleteRecording: T.func.isRequired
+  )
 }
 
 export {

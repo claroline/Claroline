@@ -4,6 +4,8 @@ import classes from 'classnames'
 
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
+// TODO : add Content prefix to components
+
 const TableCell = props =>
   <td className={classes(`text-${props.align}`, props.className)}>
     {props.children}

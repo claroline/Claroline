@@ -9,6 +9,7 @@ import {Editor as EditorComponent} from '#/integration/big-blue-button/resources
 const Editor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
+    servers: selectors.servers(state),
     bbb: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.bbbForm')),
     allowRecords: selectors.allowRecords(state)
   }),

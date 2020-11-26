@@ -2,8 +2,10 @@
 
 namespace Claroline\BigBlueButtonBundle\Manager;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
+use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\BigBlueButtonBundle\Repository\BBBRepository;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -11,7 +13,7 @@ use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\CurlManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BBBManager
 {
@@ -23,6 +25,8 @@ class BBBManager
     private $config;
     /** @var ObjectManager */
     private $om;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var CurlManager */
     private $curlManager;
     /** @var RoutingHelper */
@@ -33,20 +37,12 @@ class BBBManager
     /** @var BBBRepository */
     private $bbbRepo;
 
-    /**
-     * @param TokenStorageInterface        $tokenStorage
-     * @param TranslatorInterface          $translator
-     * @param PlatformConfigurationHandler $config
-     * @param ObjectManager                $om
-     * @param CurlManager                  $curlManager
-     * @param RoutingHelper                $routingHelper
-     * @param ServerManager                $serverManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         PlatformConfigurationHandler $config,
         ObjectManager $om,
+        SerializerProvider $serializer,
         CurlManager $curlManager,
         RoutingHelper $routingHelper,
         ServerManager $serverManager
@@ -55,6 +51,7 @@ class BBBManager
         $this->translator = $translator;
         $this->config = $config;
         $this->om = $om;
+        $this->serializer = $serializer;
         $this->curlManager = $curlManager;
         $this->routingHelper = $routingHelper;
         $this->serverManager = $serverManager;
@@ -62,10 +59,16 @@ class BBBManager
         $this->bbbRepo = $this->om->getRepository(BBB::class);
     }
 
+    public function getServers(bool $onlyAvailable = true): array
+    {
+        return $this->serverManager->getServers($onlyAvailable);
+    }
+
     public function getMeetingUrl(BBB $bbb, bool $moderator = false, string $username = null)
     {
         $user = null;
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
+            /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
         }
 
@@ -155,10 +158,10 @@ class BBBManager
         if ($serverUrl && $securitySalt) {
             $resourceNode = $bbb->getResourceNode();
             $now = new \DateTime();
-            $endDate = $resourceNode->getAccessibleUntil();
+            $endTime = $resourceNode->getAccessibleUntil();
 
-            if (!$endDate || $now < $endDate) {
-                $duration = $endDate ? ceil(abs($now->getTimestamp() - $endDate->getTimestamp()) / 60) : null;
+            if (!$endTime || $now < $endTime) {
+                $duration = $endTime ? ceil(abs($now->getTimestamp() - $endTime->getTimestamp()) / 60) : null;
 
                 if (0 === $duration) {
                     $duration = 1;
@@ -200,9 +203,6 @@ class BBBManager
         return $success;
     }
 
-    /**
-     * @param BBB $bbb
-     */
     public function endMeeting(BBB $bbb)
     {
         $meetingId = $bbb->getUuid();
@@ -220,14 +220,9 @@ class BBBManager
         }
     }
 
-    /**
-     * @param BBB $bbb
-     *
-     * @return array
-     */
-    public function getMeetingInfo(BBB $bbb)
+    public function getMeetingInfo(BBB $bbb): array
     {
-        $info = null;
+        $info = [];
 
         $meetingId = $bbb->getUuid();
         $server = $this->getMeetingServer($bbb);
@@ -244,7 +239,9 @@ class BBBManager
             try {
                 $dom = new \DOMDocument();
                 if ($dom->loadXML($response)) {
-                    $info = $this->serverManager->extractMeetingInfo($dom);
+                    $info = array_merge($this->serverManager->extractMeetingInfo($dom), [
+                        'server' => $serverUrl,
+                    ]);
                 }
             } catch (\Exception $e) {
             }
@@ -253,12 +250,7 @@ class BBBManager
         return $info;
     }
 
-    /**
-     * @param BBB $bbb
-     *
-     * @return bool
-     */
-    public function isMeetingRunning(BBB $bbb)
+    public function isMeetingRunning(BBB $bbb): bool
     {
         $info = $this->getMeetingInfo($bbb);
         if (!empty($info) && isset($info['running']) && $info['running']) {
@@ -268,7 +260,7 @@ class BBBManager
         return false;
     }
 
-    public function hasMeetingModerators(BBB $bbb)
+    public function hasMeetingModerators(BBB $bbb): bool
     {
         $info = $this->getMeetingInfo($bbb);
         if (!empty($info) && isset($info['moderatorCount']) && 0 > $info['moderatorCount']) {
@@ -324,12 +316,59 @@ class BBBManager
         return $meetingsWithParticipants;
     }
 
-    /**
-     * @param BBB $bbb
-     *
-     * @return array
-     */
-    public function getRecordings(BBB $bbb)
+    public function syncAllRecordings()
+    {
+        $meetings = $this->bbbRepo->findAll();
+        foreach ($meetings as $bbb) {
+            $this->syncRecordings($bbb);
+        }
+    }
+
+    public function syncRecordings(BBB $bbb)
+    {
+        $recordings = $this->getRecordings($bbb);
+        $existingRecordings = $bbb->getRecordings()->toArray();
+
+        $updated = [];
+        foreach ($recordings as $recording) {
+            $existingRecording = null;
+            // check if recording already exists in platform
+            foreach ($existingRecordings as $existing) {
+                if ($existing->getRecordId() === $recording['id']) {
+                    $existingRecording = $existing;
+                    break;
+                }
+            }
+
+            if (empty($existingRecording)) {
+                $existingRecording = new Recording();
+                $bbb->addRecording($existingRecording);
+            }
+
+            // update local recording with bbb server values
+            $existingRecording->setRecordId($recording['id']);
+            $existingRecording->setStatus($recording['state']);
+            $existingRecording->setStartTime($recording['startTime']);
+            $existingRecording->setEndTime($recording['endTime']);
+
+            $existingRecording->setParticipants($recording['participants']);
+            $existingRecording->setMedias($recording['medias']);
+
+            $updated[] = $existingRecording->getId();
+            $this->om->persist($existingRecording);
+        }
+
+        // remove recordings deleted from the server
+        foreach ($existingRecordings as $recording) {
+            if (!in_array($recording->getId(), $updated)) {
+                $this->om->remove($recording);
+            }
+        }
+
+        $this->om->flush();
+    }
+
+    private function getRecordings(BBB $bbb): array
     {
         $recordings = [];
 
@@ -362,50 +401,46 @@ class BBBManager
                     }
 
                     $recordings[] = [
-                        'recordID' => $recordingEl->getElementsByTagName('recordID')->item(0)->textContent,
+                        'id' => $recordingEl->getElementsByTagName('recordID')->item(0)->textContent,
                         'meetingID' => $recordingEl->getElementsByTagName('meetingID')->item(0)->textContent,
                         'name' => $recordingEl->getElementsByTagName('name')->item(0)->textContent,
                         'state' => $recordingEl->getElementsByTagName('state')->item(0)->textContent,
-                        'startTime' => (int) $recordingEl->getElementsByTagName('startTime')->item(0)->textContent,
-                        'endTime' => (int) $recordingEl->getElementsByTagName('endTime')->item(0)->textContent,
+                        'startTime' => $recordingEl->getElementsByTagName('startTime')->item(0)->textContent,
+                        'endTime' => $recordingEl->getElementsByTagName('endTime')->item(0)->textContent,
                         'participants' => intval($recordingEl->getElementsByTagName('participants')->item(0)->textContent),
-                        'media' => $media,
+                        'medias' => $media,
                     ];
                 }
             }
         }
 
-        // sort by date
-        usort($recordings, function (array $a, array $b) {
-            return ($a['startTime'] >= $b['endTime']) ? -1 : 1;
-        });
-
         return $recordings;
     }
 
-    public function getLastRecording(BBB $bbb)
+    public function deleteRecording(Recording $recording)
     {
-        $recordings = $this->getRecordings($bbb);
-        if (!empty($recordings)) {
-            return $recordings[0];
-        }
+        $server = $this->getMeetingServer($recording->getMeeting());
+        $serverUrl = $server['url'];
+        $securitySalt = $server['token'];
+        if ($serverUrl && $securitySalt) {
+            $ids = $recording->getRecordId();
+            $queryString = "recordID=$ids";
+            $checksum = sha1("deleteRecordings$queryString$securitySalt");
+            $url = "$serverUrl/bigbluebutton/api/deleteRecordings?$queryString&checksum=$checksum";
 
-        return null;
+            $this->curlManager->exec($url);
+        }
     }
 
-    /**
-     * @param BBB   $bbb
-     * @param array $recordIds - the list of records to delete. If empty, it will delete all the $bbb recordings.
-     */
-    public function deleteMeetingRecordings(BBB $bbb, array $recordIds = [])
+    public function deleteRecordings(BBB $bbb)
     {
-        if (empty($recordIds)) {
-            // grab all recordings
-            $recordings = $this->getRecordings($bbb);
-            if (0 < count($recordings)) {
-                foreach ($recordings as $recording) {
-                    $recordIds[] = $recording['recordID'];
-                }
+        $recordIds = [];
+
+        // grab all recordings
+        $recordings = $this->getRecordings($bbb);
+        if (0 < count($recordings)) {
+            foreach ($recordings as $recording) {
+                $recordIds[] = $recording['recordID'];
             }
         }
 
@@ -432,9 +467,9 @@ class BBBManager
         } elseif ($bbb->getServer()) {
             $server = $bbb->getServer();
         } else {
-            $available = $this->serverManager->getAvailableServers();
+            $available = $this->serverManager->getServers();
             if (!empty($available)) {
-                $server = $available[0];
+                $server = $available[0]['url'];
             }
         }
 

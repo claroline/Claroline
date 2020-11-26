@@ -22,7 +22,9 @@ const HomeMain = (props) =>
 
       {from: '/', exact: true, to: '/login',   disabled: props.hasHome || props.authenticated},
       {from: '/', exact: true, to: '/home',    disabled: props.unavailable || !props.hasHome},
-      {from: '/', exact: true, to: '/desktop', disabled: props.unavailable || props.hasHome || !props.authenticated}
+      {from: '/', exact: true, to: '/desktop', disabled: props.unavailable || props.hasHome || !props.authenticated},
+
+      {from: '/login', to: '/', disabled: !props.authenticated}
     ]}
     routes={[
       {

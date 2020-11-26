@@ -1695,5 +1695,6 @@
     "file_opening_download": "Proposer le téléchargement du fichier",
     "file_opening_browser": "Ouvrir le fichier avec le lecteur du navigateur",
     "file_opening_player": "Ouvrir le fichier avec le lecteur Claroline",
-    "privacy": "Vie privée"
+    "privacy": "Vie privée",
+    "full": "Complet"
 }

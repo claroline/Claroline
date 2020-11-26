@@ -1,16 +1,14 @@
 {
-    "activate_meeting": "Activate meeting",
-    "active_meetings": "Active meetings",
+    "meetings": "Meetings",
+    "active_meetings": "Opened meetings",
     "allow_record": "Allow recording",
     "connecting_to_meeting": "Connecting to meeting...",
     "end_meeting": "Close meeting",
     "end_message": "End message",
     "meeting_id": "Meeting ID",
     "meeting_name": "Meeting name",
-    "meetings_limit": "Limit of meetings",
     "nb_participants": "Number of participants",
-    "meeting_participants_limit": "Number of participants per meeting",
-    "participants_limit": "Limit of participants of the platform",
+    "meeting_participants": "Participants per meeting",
     "podcast": "Podcast",
     "presentation": "Presentation",
     "processed": "Available soon",
@@ -29,9 +27,25 @@
 
     "join": "Join the meeting",
     "meeting_cannot_join": "You can not join this meeting.",
-    "no_active_meeting": "No meeting is open at the moment.",
     "no_record": "No recordings were made in this room.",
 
     "allow_custom_usernames": "Allow users to change their username in the room",
-    "open_meeting_in_new_tab": "Open in a new tab"
+    "open_meeting_in_new_tab": "Open in a new tab",
+    "server": "Server",
+    "servers": "Servers",
+    "available_servers": "Available servers",
+    "force_server": "Force server",
+    "force_server_help": "By default, the meeting will be assigned to one of the servers available when it is opened for the first time.",
+    "force_server_help2": "Activate this option to choose the server to use yourself.",
+    "force_server_help3": "Once the meeting has been assigned to a server, it is no longer possible to change it.",
+    "running_on_server": "The meeting is assigned to the server: %server%.",
+    "meeting_disabled_help": "Disabled rooms can no longer be opened.",
+
+    "show_presentation": "Show recording",
+    "show_podcast": "Listen to the podcast",
+    "recorded_at": "Recording of %date%",
+    "opened": "Opened",
+    "sync_recordings": "Retrieve recordings",
+    "meeting_recorded": "Recording is activated in the meeting.",
+    "meeting_recorded_help": "Upon entering the room, you may be registered. Please contact a manager for more information."
 }

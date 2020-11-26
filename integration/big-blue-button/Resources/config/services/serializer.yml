@@ -5,4 +5,9 @@ services:
         public: true
         tags: ['claroline.serializer']
 
-    Claroline\BigBlueButtonBundle\Serializer\BBBSerializer: ~
+    Claroline\BigBlueButtonBundle\Serializer\BBBSerializer:
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+
+    Claroline\BigBlueButtonBundle\Serializer\RecordingSerializer: ~

@@ -13,6 +13,7 @@ namespace Claroline\BigBlueButtonBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,7 +25,7 @@ class BBB extends AbstractResource
     use Uuid;
 
     /**
-     * @ORM\Column(name="welcome_message", nullable=true)
+     * @ORM\Column(name="welcome_message", type="text", nullable=true)
      *
      * @var string
      */
@@ -70,7 +71,7 @@ class BBB extends AbstractResource
      *
      * @var bool
      */
-    private $activated = false;
+    private $activated = true;
 
     /**
      * Forces the server on which the room will be running.
@@ -100,11 +101,21 @@ class BBB extends AbstractResource
     private $customUsernames = false;
 
     /**
+     * @ORM\OneToMany(targetEntity="Claroline\BigBlueButtonBundle\Entity\Recording", mappedBy="meeting", orphanRemoval=true)
+     * @ORM\OrderBy({"startTime": "DESC"})
+     *
+     * @var ArrayCollection|Recording[]
+     */
+    private $recordings;
+
+    /**
      * BBB constructor.
      */
     public function __construct()
     {
         $this->refreshUuid();
+
+        $this->recordings = new ArrayCollection();
     }
 
     public function getWelcomeMessage()
@@ -185,9 +196,6 @@ class BBB extends AbstractResource
         return $this->server;
     }
 
-    /**
-     * @param string|null $server
-     */
     public function setServer(string $server = null)
     {
         $this->server = $server;
@@ -201,9 +209,6 @@ class BBB extends AbstractResource
         return $this->runningOn;
     }
 
-    /**
-     * @param string|null $server
-     */
     public function setRunningOn(string $server = null)
     {
         $this->runningOn = $server;
@@ -217,11 +222,37 @@ class BBB extends AbstractResource
         return $this->customUsernames;
     }
 
-    /**
-     * @param bool $customUsernames
-     */
     public function setCustomUsernames(bool $customUsernames)
     {
         $this->customUsernames = $customUsernames;
+    }
+
+    public function getRecordings()
+    {
+        return $this->recordings;
+    }
+
+    public function addRecording(Recording $recording)
+    {
+        if (!$this->recordings->contains($recording)) {
+            $this->recordings->add($recording);
+            $recording->setMeeting($this);
+        }
+    }
+
+    public function removeRecording(Recording $recording)
+    {
+        if ($this->recordings->contains($recording)) {
+            $this->recordings->removeElement($recording);
+        }
+    }
+
+    public function getLastRecording()
+    {
+        if (!empty($this->recordings)) {
+            return $this->recordings[0];
+        }
+
+        return null;
     }
 }

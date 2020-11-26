@@ -1663,5 +1663,6 @@
     "file_opening_download": "Suggest file download",
     "file_opening_browser": "Open file with browser player",
     "file_opening_player": "Open file with Claroline player",
-    "privacy": "Private life"
+    "privacy": "Private life",
+    "full": "Full"
 }

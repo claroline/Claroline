@@ -364,6 +364,7 @@ class Crud
         $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
 
         $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
+
         /** @var CrudEvent $specific */
         $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
         $isAllowed = $specific->isAllowed();

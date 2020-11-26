@@ -10,7 +10,7 @@ import {
   TableHeaderCell,
   TableRow,
   TableCell
-} from '#/main/core/layout/table/components/table'
+} from '#/main/app/content/components/table'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'

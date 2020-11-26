@@ -10,25 +10,30 @@ const BBB = {
     ratio: T.number,
     activated: T.boolean,
     customUsernames: T.boolean,
+    runningOn: T.string,
     restrictions: T.shape({
-      server: T.string,
-      dates: T.arrayOf(T.string)
+      disabled: T.bool,
+      server: T.string
     })
   }
 }
 
 const Recording = {
   propTypes: {
-    recordID: T.string,
-    meetingID: T.string,
-    name: T.string,
-    state: T.string,
-    startTime: T.number,
-    endTime: T.number,
+    id: T.string,
+    status: T.string,
+    startTime: T.string,
+    endTime: T.string,
     participants: T.number,
-    media: T.shape({
+    medias: T.shape({
       podcast: T.string,
       presentation: T.string
+    }),
+    // this contains info from resource node
+    meeting: T.shape({
+      id: T.string.isRequired,
+      name: T.string.isRequired,
+      slug: T.string.isRequired
     })
   }
 }

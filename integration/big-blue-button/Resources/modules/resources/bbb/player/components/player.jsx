@@ -25,13 +25,13 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    if (this.props.canStart && get(this.props.bbb, 'activated', false)) {
+    if (this.props.canStart && !get(this.props.bbb, 'restrictions.disabled', true)) {
       this.props.createMeeting(this.props.bbb).then(() => this.setState({ready: true}))
     }
   }
 
   isClosed() {
-    return !get(this.props.bbb, 'activated', false) || !this.props.canStart
+    return get(this.props.bbb, 'restrictions.disabled', true) || !this.props.canStart
   }
 
   openTab() {
@@ -52,7 +52,7 @@ class Player extends Component {
     return (
       <Fragment>
         {this.props.bbb.newTab && this.props.bbb.welcomeMessage &&
-          <div className="panel panel-default">
+          <div className="panel panel-default" style={{marginTop: 20}}>
             <ContentHtml className="panel-body">
               {this.props.bbb.welcomeMessage}
             </ContentHtml>
@@ -61,7 +61,7 @@ class Player extends Component {
 
         {this.isClosed() &&
           <AlertBlock type="danger" title={trans('meeting_is_closed', {}, 'bbb')} className="component-container">
-            {trans(get(this.props.bbb, 'activated', false) ? 'meetings_limit_reached':'meeting_disabled', {}, 'bbb')}
+            {trans(!get(this.props.bbb, 'restrictions.disabled', true) ? 'meetings_limit_reached':'meeting_disabled', {}, 'bbb')}
           </AlertBlock>
         }
 
@@ -82,6 +82,12 @@ class Player extends Component {
                 required={true}
                 onChange={(value) => this.setState({username: value})}
               />
+            }
+
+            {this.props.allowRecords && this.props.bbb.record &&
+              <AlertBlock type="warning" title={trans('meeting_recorded', {}, 'bbb')} className="component-container">
+                {trans('meeting_recorded_help', {}, 'bbb')}
+              </AlertBlock>
             }
 
             <Button
@@ -109,7 +115,7 @@ class Player extends Component {
           />
         }
 
-        {this.props.bbb.newTab && this.props.allowRecords && this.props.bbb.record &&
+        {this.props.bbb.newTab && this.props.allowRecords && this.props.bbb.record && !isEmpty(this.props.lastRecording) &&
           <Button
             type={LINK_BUTTON}
             className="btn btn-block"
@@ -161,7 +167,7 @@ Player.propTypes = {
   ).isRequired,
   lastRecording: T.shape(
     RecordingTypes.propTypes
-  ).isRequired,
+  ),
   allowRecords: T.bool,
   canStart: T.bool.isRequired,
   joinStatus: T.string,

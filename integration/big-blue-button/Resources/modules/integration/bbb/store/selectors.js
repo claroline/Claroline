@@ -1,12 +1,22 @@
 import {createSelector} from 'reselect'
 
-const STORE_NAME = 'bbbadmin'
+const STORE_NAME = 'bbbIntegration'
 
 const store = (state) => state[STORE_NAME]
 
 const loaded = createSelector(
   [store],
   (store) => store.loaded
+)
+
+const servers = createSelector(
+  [store],
+  (store) => store.servers
+)
+
+const allowRecords = createSelector(
+  [store],
+  (store) => store.allowRecords
 )
 
 const maxMeetings = createSelector(
@@ -34,11 +44,6 @@ const participantsCount = createSelector(
   (store) => store.participantsCount
 )
 
-const meetings = createSelector(
-  [store],
-  (store) => store.meetings
-)
-
 export const selectors = {
   STORE_NAME,
 
@@ -48,5 +53,6 @@ export const selectors = {
   maxParticipants,
   activeMeetingsCount,
   participantsCount,
-  meetings
+  servers,
+  allowRecords
 }

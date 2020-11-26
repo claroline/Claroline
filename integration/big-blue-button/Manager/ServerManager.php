@@ -25,21 +25,31 @@ class ServerManager
         $this->curlManager = $curlManager;
     }
 
-    public function getAvailableServers()
+    public function getServers(bool $onlyAvailable = true)
     {
         $available = [];
 
         $servers = $this->config->getParameter('bbb.servers');
         if (!empty($servers)) {
             foreach ($servers as $server) {
-                if (!isset($server['disabled']) || !$server['disabled']) {
-                    $participants = $this->countParticipants($server['url']);
-                    $available[$participants] = $server['url'];
+                if (!$onlyAvailable || !isset($server['disabled']) || !$server['disabled']) {
+                    $available[] = [
+                        'url' => $server['url'],
+                        'limit' => isset($server['limit']) ? $server['limit'] : null,
+                        'participants' => $this->countParticipants($server['url']),
+                        'disabled' => isset($server['disabled']) ? $server['disabled'] : false,
+                    ];
                 }
             }
         }
 
-        ksort($available);
+        usort($available, function (array $a, array $b) {
+            if ($a['participants'] === $b['participants']) {
+                return 0;
+            }
+
+            return ($a['participants'] < $b['participants']) ? -1 : 1;
+        });
 
         return array_values($available);
     }
@@ -146,7 +156,7 @@ class ServerManager
             'createTime' => $meetingXml->getElementsByTagName('createTime')->item(0)->textContent,
             'createDate' => $meetingXml->getElementsByTagName('createDate')->item(0)->textContent,
             'hasBeenForciblyEnded' => $meetingXml->getElementsByTagName('hasBeenForciblyEnded')->item(0)->textContent,
-            'running' => $meetingXml->getElementsByTagName('running')->item(0)->textContent,
+            'running' => (bool) $meetingXml->getElementsByTagName('running')->item(0)->textContent,
             'moderatorCount' => intval($meetingXml->getElementsByTagName('moderatorCount')->item(0)->textContent),
             'participantCount' => intval($meetingXml->getElementsByTagName('participantCount')->item(0)->textContent),
             'listenerCount' => $meetingXml->getElementsByTagName('listenerCount')->item(0)->textContent,

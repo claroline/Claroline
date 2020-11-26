@@ -16,14 +16,18 @@ const BBBTool = withReducer(selectors.STORE_NAME, reducer)(
       maxParticipants: selectors.maxParticipants(state),
       activeMeetingsCount: selectors.activeMeetingsCount(state),
       participantsCount: selectors.participantsCount(state),
-      meetings: selectors.meetings(state)
+      servers: selectors.servers(state),
+      allowRecords: selectors.allowRecords(state)
     }),
     (dispatch) => ({
-      loadMeetings() {
-        dispatch(actions.fetchMeetings())
+      loadInfo() {
+        dispatch(actions.fetchInfo())
       },
-      endMeeting(meetingId) {
-        dispatch(actions.endMeeting(meetingId))
+      endMeetings(meetingIds) {
+        dispatch(actions.endMeetings(meetingIds))
+      },
+      syncRecordings() {
+        dispatch(actions.syncRecordings())
       }
     })
   )(BBBToolComponent)

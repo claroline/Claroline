@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -27,12 +28,9 @@ const Editor = props =>
         icon: 'fa fa-fw fa-cogs',
         title: trans('general'),
         primary: true,
+        help: props.bbb.runningOn ? trans('running_on_server', {server: props.bbb.runningOn}, 'bbb') : undefined,
         fields: [
           {
-            name: 'activated',
-            type: 'boolean',
-            label: trans('activate_meeting', {}, 'bbb')
-          }, {
             name: 'record',
             type: 'boolean',
             label: trans('allow_recording', {}, 'bbb'),
@@ -99,9 +97,41 @@ const Editor = props =>
         title: trans('access_restrictions'),
         fields: [
           {
+            name: 'restrictions.disabled',
+            type: 'boolean',
+            label: trans('disable'),
+            help: trans('meeting_disabled_help', {}, 'bbb')
+          }, {
             name: 'moderatorRequired',
             type: 'boolean',
             label: trans('wait_for_moderator', {}, 'bbb')
+          }, {
+            name: 'forceServer',
+            type: 'boolean',
+            label: trans('force_server', {}, 'bbb'),
+            disabled: (bbb) => !!bbb.runningOn,
+            calculated: (bbb) => bbb.forceServer || get(bbb, 'restrictions.server'),
+            help: [
+              trans('force_server_help', {}, 'bbb'),
+              trans('force_server_help2', {}, 'bbb'),
+              trans('force_server_help3', {}, 'bbb')
+            ],
+            linked: [
+              {
+                name: 'restrictions.server',
+                type: 'choice',
+                label: trans('server', {}, 'bbb'),
+                disabled: (bbb) => !!bbb.runningOn,
+                displayed: (bbb) => bbb.forceServer || get(bbb, 'restrictions.server'),
+                required: true,
+                options: {
+                  condensed: false,
+                  choices: props.servers.reduce((acc, server) => Object.assign({}, acc, {
+                    [server.url]: server.url
+                  }), {})
+                }
+              }
+            ]
           }
         ]
       }
@@ -113,6 +143,7 @@ Editor.propTypes = {
   bbb: T.shape(
     BBBTypes.propTypes
   ),
+  servers: T.arrayOf(T.string),
   allowRecords: T.bool,
   updateProp: T.func.isRequired
 }

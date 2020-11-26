@@ -19,7 +19,7 @@ import {
   TableSortingCell,
   TableRow,
   TableCell
-} from '#/main/core/layout/table/components/table'
+} from '#/main/app/content/components/table'
 import {DataListView, DataListProperty} from '#/main/app/content/list/prop-types'
 import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/app/content/list/components/actions'
 import {toKey} from '#/main/core/scaffolding/text'

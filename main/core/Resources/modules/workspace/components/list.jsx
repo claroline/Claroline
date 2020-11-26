@@ -91,12 +91,6 @@ const Workspaces = (props) => {
           type: 'number',
           alias: 'maxUsers'
         }, {
-          name: 'archived',
-          label: trans('archived'),
-          type: 'boolean',
-          filterable: true,
-          displayable: false
-        }, {
           name: 'tags',
           type: 'tag',
           label: trans('tags'),

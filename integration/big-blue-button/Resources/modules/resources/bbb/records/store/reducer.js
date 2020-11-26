@@ -1,10 +1,8 @@
-import {makeReducer} from '#/main/app/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store/reducer'
 
-import {RECORDINGS_LOAD} from '#/integration/big-blue-button/resources/bbb/records/store/actions'
+import {selectors} from '#/integration/big-blue-button/resources/bbb/records/store/selectors'
 
-const reducer = makeReducer([], {
-  [RECORDINGS_LOAD]: (state, action) => action.recordings
-})
+const reducer = makeListReducer(selectors.LIST_NAME, {sortBy: {property: 'startTime', direction: -1}})
 
 export {
   reducer

@@ -27,13 +27,6 @@ class BBBListener
     /** @var SerializerProvider */
     private $serializer;
 
-    /**
-     * BBBListener constructor.
-     *
-     * @param PlatformConfigurationHandler $config
-     * @param BBBManager                   $bbbManager
-     * @param SerializerProvider           $serializer
-     */
     public function __construct(
         PlatformConfigurationHandler $config,
         BBBManager $bbbManager,
@@ -44,11 +37,6 @@ class BBBListener
         $this->serializer = $serializer;
     }
 
-    /**
-     * Loads the BBB resource.
-     *
-     * @param LoadResourceEvent $event
-     */
     public function onLoad(LoadResourceEvent $event)
     {
         /** @var BBB $bbb */
@@ -64,10 +52,16 @@ class BBBListener
 
         $lastRecording = null;
         if ($allowRecords && $bbb->isRecord()) {
-            $lastRecording = $this->bbbManager->getLastRecording($bbb);
+            // not the best place to do it
+            $this->bbbManager->syncRecordings($bbb);
+
+            if ($bbb->getLastRecording()) {
+                $lastRecording = $this->serializer->serialize($bbb->getLastRecording());
+            }
         }
 
         $event->setData([
+            'servers' => $this->bbbManager->getServers(),
             'bbb' => $this->serializer->serialize($bbb),
             'allowRecords' => $allowRecords,
             'canStart' => $canStart,
@@ -77,14 +71,11 @@ class BBBListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param DeleteResourceEvent $event
-     */
     public function onDelete(DeleteResourceEvent $event)
     {
         /** @var BBB $bbb */
         $bbb = $event->getResource();
-        $this->bbbManager->deleteMeetingRecordings($bbb);
+        $this->bbbManager->deleteRecordings($bbb);
 
         $event->stopPropagation();
     }

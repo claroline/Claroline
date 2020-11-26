@@ -29,12 +29,19 @@ services:
                 arguments:
                   - '@service_container'
 
+    Claroline\BigBlueButtonBundle\Controller\AdministrationController:
+        arguments:
+          - '@security.authorization_checker'
+          - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+          - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '@Claroline\AppBundle\API\Crud'
+          - '@Claroline\AppBundle\API\FinderProvider'
+          - '@claroline.manager.tool_manager'
+          - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+
     Claroline\BigBlueButtonBundle\Controller\BBBController:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
-            - '@claroline.manager.curl_manager'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@router'
-            - '@claroline.manager.tool_manager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'

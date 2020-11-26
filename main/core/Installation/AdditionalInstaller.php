@@ -22,12 +22,16 @@ class AdditionalInstaller extends BaseInstaller
 {
     public function postInstall()
     {
+        parent::postInstall();
+
         $this->setInstallationDate();
         $this->setUpdateDate();
     }
 
     public function postUpdate($currentVersion, $targetVersion)
     {
+        parent::postUpdate($currentVersion, $targetVersion);
+
         $this->setUpdateDate();
     }
 

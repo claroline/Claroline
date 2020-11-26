@@ -13,6 +13,11 @@ const bbb = createSelector(
   (resource) => resource.bbb
 )
 
+const servers = createSelector(
+  [resource],
+  (resource) => resource.servers
+)
+
 const allowRecords = createSelector(
   [resource],
   (resource) => resource.allowRecords
@@ -43,6 +48,7 @@ export const selectors = {
 
   resource,
   bbb,
+  servers,
   allowRecords,
   canEdit,
   canStart,

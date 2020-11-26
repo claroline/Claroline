@@ -1,16 +1,14 @@
 {
-    "activate_meeting": "Activer la salle",
-    "active_meetings": "Les salles actives",
+    "meetings": "Salles",
+    "active_meetings": "Salles ouvertes",
     "allow_recording": "Autoriser l'enregistrement",
     "connecting_to_meeting": "Connexion à la salle en cours...",
     "end_meeting": "Fermer la salle",
     "end_message": "Message de fin",
     "meeting_id": "Identifiant de la salle",
     "meeting_name": "Nom de la salle",
-    "meetings_limit": "Limite de salles",
     "nb_participants": "Nombre de participants",
-    "meeting_participants_limit": "Nombre de participants par salle",
-    "participants_limit": "Limite de participants de la plateforme",
+    "meeting_participants": "Participants par salle",
     "podcast": "Podcast",
     "presentation": "Présentation",
     "processed": "Bientôt disponible",
@@ -29,9 +27,25 @@
 
     "join": "Rejoindre la salle",
     "meeting_cannot_join": "Vous ne pouvez pas rejoindre la classe virtuelle.",
-    "no_active_meeting": "Aucune classe virtuelle n'est ouverte pour le moment.",
     "no_record": "Aucun enregistrement n'a été fait dans cette salle.",
 
     "allow_custom_usernames": "Autoriser les utilisateurs à modifier leur nom d'utilisateur dans la salle",
-    "open_meeting_in_new_tab": "Ouvrir dans un nouvel onglet"
+    "open_meeting_in_new_tab": "Ouvrir dans un nouvel onglet",
+    "server": "Serveur",
+    "servers": "Serveurs",
+    "available_servers": "Serveurs disponibles",
+    "force_server": "Forcer le serveur",
+    "force_server_help": "Par défaut la salle sera attribuée à l'un des serveurs disponibles à la première ouverture.",
+    "force_server_help2": "Activez cette option pour choisir vous-même le serveur à utiliser.",
+    "force_server_help3": "Une fois la salle attribuée à un serveur, il n'est plus possible d'en changer.",
+    "running_on_server": "La salle est attribuée au serveur : %server%.",
+    "meeting_disabled_help": "Les salles désactivées ne peuvent plus être ouvertes.",
+
+    "show_presentation": "Voir l'enregistrement",
+    "show_podcast": "Ecouter le podcast",
+    "recorded_at": "Enregistrement du %date%",
+    "opened": "Ouverte",
+    "sync_recordings": "Récupérer les enregistrements",
+    "meeting_recorded": "L'enregistrement est activé dans la salle.",
+    "meeting_recorded_help": "En entrant dans la salle, il est possible que vous soyez enregistré. Veuillez contactez un gestionnaire pour de plus amples informations."
 }

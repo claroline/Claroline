@@ -16,11 +16,12 @@ const BBBResource = props =>
     customActions={[
       {
         type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-stop',
+        icon: 'fa fa-fw fa-door-closed',
         label: trans('end_meeting', {}, 'bbb'),
         displayed: props.canEdit,
         callback: () => props.endMeeting(props.bbb.id),
-        group: trans('management')
+        group: trans('management'),
+        dangerous: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-video',
@@ -47,7 +48,6 @@ const BBBResource = props =>
       }, {
         path: '/records',
         component: Records,
-        onEnter: () => props.loadRecordings(props.bbb.id),
         disabled: !props.allowRecords || !props.bbb.record
       }
     ]}
@@ -61,8 +61,7 @@ BBBResource.propTypes = {
   allowRecords: T.bool,
   canEdit: T.bool.isRequired,
   resetForm: T.func.isRequired,
-  endMeeting: T.func.isRequired,
-  loadRecordings: T.func.isRequired
+  endMeeting: T.func.isRequired
 }
 
 export {

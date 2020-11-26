@@ -5,7 +5,6 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {actions, selectors} from '#/integration/big-blue-button/resources/bbb/store'
-import {actions as recordsActions} from '#/integration/big-blue-button/resources/bbb/records/store'
 import {BBBResource as BBBResourceComponent} from '#/integration/big-blue-button/resources/bbb/components/resource'
 
 const BBBResource = withRouter(
@@ -22,9 +21,6 @@ const BBBResource = withRouter(
       },
       endMeeting(bbbId) {
         dispatch(actions.endMeeting(bbbId))
-      },
-      loadRecordings(meetingId) {
-        dispatch(recordsActions.fetchRecordings(meetingId))
       }
     })
   )(BBBResourceComponent)
