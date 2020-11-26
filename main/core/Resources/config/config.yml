@@ -146,9 +146,6 @@ plugin:
         - name: community
           class: user
 
-        - name: home
-          class: home
-
         - name: tasks_scheduling
           class: clock-o
 
