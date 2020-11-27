@@ -61,8 +61,8 @@ const ProgressionUsers = (props) =>
         calculated: (row) => {
           if (row.scoreMax) {
             return {
-              current: row.score,
-              total: row.scoreMax
+              current: (row.score / row.scoreMax) * 100,
+              total: 100
             }
           }
 

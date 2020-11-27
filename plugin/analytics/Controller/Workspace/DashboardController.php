@@ -256,6 +256,7 @@ class DashboardController
                 $this->translator->trans('score', [], 'platform'),
                 $this->translator->trans('score_total', [], 'platform'),
                 $this->translator->trans('duration', [], 'platform'),
+                $this->translator->trans('score_percent', [], 'platform'),
             ], ';', '"');
 
             foreach ($workspaceEvaluations as $workspaceEvaluation) {
@@ -270,6 +271,7 @@ class DashboardController
                     $workspaceEvaluation->getScore(),
                     $workspaceEvaluation->getScoreMax(),
                     $workspaceEvaluation->getDuration(),
+                    $workspaceEvaluation->getScoreMax() ? ($workspaceEvaluation->getScore() / $workspaceEvaluation->getScoreMax()) * 100 : null,
                 ], ';', '"');
             }
 
