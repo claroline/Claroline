@@ -39,48 +39,54 @@ class LoadAdminHomeData extends AbstractFixture implements ContainerAwareInterfa
 
     public function load(ObjectManager $manager)
     {
-        $defaultTab = [
-            'title' => $this->translator->trans('informations', [], 'platform'),
-            'longTitle' => $this->translator->trans('informations', [], 'platform'),
-            'slug' => 'informations',
+        $existingTabs = $manager->getRepository(HomeTab::class)->findBy([
             'context' => HomeTab::TYPE_ADMIN,
-            'type' => WidgetsTab::getType(),
-            'class' => WidgetsTab::class,
-            'position' => 1,
-            'restrictions' => [
-                'hidden' => false,
-            ],
-            'parameters' => [
-                'widgets' => [[
-                    'visible' => true,
-                    'display' => [
-                        'layout' => [1],
-                        'color' => '#333333',
-                        'backgroundType' => 'color',
-                        'background' => '#ffffff',
-                    ],
-                    'parameters' => [],
-                    'contents' => [[
-                        'type' => 'list',
-                        'source' => 'admin_tools',
-                        'parameters' => [
-                            'display' => 'tiles-sm',
-                            'enableDisplays' => false,
-                            'availableDisplays' => [],
-                            'card' => [
-                                'display' => ['icon', 'flags', 'subtitle'],
-                            ],
-                            'paginated' => false,
-                            'count' => false,
+        ]);
+
+        if (empty($existingTabs)) {
+            $defaultTab = [
+                'title' => $this->translator->trans('informations', [], 'platform'),
+                'longTitle' => $this->translator->trans('informations', [], 'platform'),
+                'slug' => 'informations',
+                'context' => HomeTab::TYPE_ADMIN,
+                'type' => WidgetsTab::getType(),
+                'class' => WidgetsTab::class,
+                'position' => 1,
+                'restrictions' => [
+                    'hidden' => false,
+                ],
+                'parameters' => [
+                    'widgets' => [[
+                        'visible' => true,
+                        'display' => [
+                            'layout' => [1],
+                            'color' => '#333333',
+                            'backgroundType' => 'color',
+                            'background' => '#ffffff',
                         ],
+                        'parameters' => [],
+                        'contents' => [[
+                            'type' => 'list',
+                            'source' => 'admin_tools',
+                            'parameters' => [
+                                'display' => 'tiles-sm',
+                                'enableDisplays' => false,
+                                'availableDisplays' => [],
+                                'card' => [
+                                    'display' => ['icon', 'flags', 'subtitle'],
+                                ],
+                                'paginated' => false,
+                                'count' => false,
+                            ],
+                        ]],
                     ]],
-                ]],
-            ],
-        ];
+                ],
+            ];
 
-        $tab = $this->serializer->deserialize($defaultTab, new HomeTab());
+            $tab = $this->serializer->deserialize($defaultTab, new HomeTab());
 
-        $manager->persist($tab);
-        $manager->flush();
+            $manager->persist($tab);
+            $manager->flush();
+        }
     }
 }

@@ -18,8 +18,8 @@ class WidgetsTab extends AbstractTab
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="claro_home_tab_widgets_containers",
-     *      joinColumns={@ORM\JoinColumn(name="tab_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="container_id", referencedColumnName="id", unique=true)}
+     *      joinColumns={@ORM\JoinColumn(name="tab_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="container_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      * )
      *
      * @var WidgetContainer[]|ArrayCollection

@@ -39,55 +39,61 @@ class LoadDesktopHomeData extends AbstractFixture implements ContainerAwareInter
 
     public function load(ObjectManager $manager)
     {
-        $defaultTab = [
-            'title' => $this->translator->trans('informations', [], 'platform'),
-            'longTitle' => $this->translator->trans('informations', [], 'platform'),
-            'slug' => 'informations',
+        $existingTabs = $manager->getRepository(HomeTab::class)->findBy([
             'context' => HomeTab::TYPE_ADMIN_DESKTOP,
-            'type' => WidgetsTab::getType(),
-            'class' => WidgetsTab::class,
-            'position' => 1,
-            'restrictions' => [
-                'hidden' => false,
-            ],
-            'parameters' => [
-                'widgets' => [[
-                    'name' => $this->translator->trans('my_workspaces', [], 'workspace'),
-                    'visible' => true,
-                    'display' => [
-                        'layout' => [1],
-                        'color' => '#333333',
-                        'backgroundType' => 'color',
-                        'background' => '#ffffff',
-                    ],
-                    'parameters' => [],
-                    'contents' => [[
-                        'type' => 'list',
-                        'source' => 'my_workspaces',
-                        'parameters' => [
-                            'display' => 'tiles-sm',
-                            'enableDisplays' => false,
-                            'availableDisplays' => [],
-                            'card' => [
-                                'display' => [
-                                    'icon',
-                                    'flags',
-                                    'subtitle',
-                                    'description',
-                                    'footer',
-                                ],
-                            ],
-                            'paginated' => true,
-                            'count' => true,
+        ]);
+
+        if (empty($existingTabs)) {
+            $defaultTab = [
+                'title' => $this->translator->trans('informations', [], 'platform'),
+                'longTitle' => $this->translator->trans('informations', [], 'platform'),
+                'slug' => 'informations',
+                'context' => HomeTab::TYPE_ADMIN_DESKTOP,
+                'type' => WidgetsTab::getType(),
+                'class' => WidgetsTab::class,
+                'position' => 1,
+                'restrictions' => [
+                    'hidden' => false,
+                ],
+                'parameters' => [
+                    'widgets' => [[
+                        'name' => $this->translator->trans('my_workspaces', [], 'workspace'),
+                        'visible' => true,
+                        'display' => [
+                            'layout' => [1],
+                            'color' => '#333333',
+                            'backgroundType' => 'color',
+                            'background' => '#ffffff',
                         ],
+                        'parameters' => [],
+                        'contents' => [[
+                            'type' => 'list',
+                            'source' => 'my_workspaces',
+                            'parameters' => [
+                                'display' => 'tiles-sm',
+                                'enableDisplays' => false,
+                                'availableDisplays' => [],
+                                'card' => [
+                                    'display' => [
+                                        'icon',
+                                        'flags',
+                                        'subtitle',
+                                        'description',
+                                        'footer',
+                                    ],
+                                ],
+                                'paginated' => true,
+                                'count' => true,
+                            ],
+                        ]],
                     ]],
-                ]],
-            ],
-        ];
+                ],
+            ];
 
-        $tab = $this->serializer->deserialize($defaultTab, new HomeTab());
+            $tab = $this->serializer->deserialize($defaultTab, new HomeTab());
 
-        $manager->persist($tab);
-        $manager->flush();
+            $manager->persist($tab);
+            $manager->flush();
+        }
     }
 }
