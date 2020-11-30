@@ -38,7 +38,7 @@ const reducer = combineReducers({
     },
     [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME + '.editor')]: (state, action) => action.updatedData,
     [TABS_LOAD]: (state, action) => {
-      const tabs = [].concat(action.toolData.tabs || [])
+      const tabs = [].concat(action.tabs || [])
 
       if (isEmpty(tabs) || -1 === tabs.findIndex(tab => !get(tab, 'restrictions.hidden', false))) {
         tabs.push(
