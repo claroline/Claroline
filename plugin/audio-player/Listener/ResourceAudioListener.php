@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AudioPlayerBundle\Entity\Resource\AudioParams;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
 use Claroline\AudioPlayerBundle\Manager\AudioPlayerManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -23,18 +24,11 @@ class ResourceAudioListener
 {
     /** @var AudioPlayerManager */
     private $manager;
-
     /** @var SerializerProvider */
     private $serializer;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @param AudioPlayerManager    $manager
-     * @param SerializerProvider    $serializer
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
         AudioPlayerManager $manager,
         SerializerProvider $serializer,
@@ -45,19 +39,16 @@ class ResourceAudioListener
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param LoadFileEvent $event
-     *
-     * @return array
-     */
     public function onResourceAudioLoad(LoadFileEvent $event)
     {
+        /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         $resourceNode = $event->getResource()->getResourceNode();
         $audioParams = $this->manager->getAudioParams($resourceNode);
         $audioData = $this->serializer->serialize($audioParams);
 
+        $audioData['sections'] = [];
         switch ($audioParams->getSectionsType()) {
             case AudioParams::MANAGER_TYPE:
                 $audioData['sections'] = array_values(array_map(function (Section $section) use ($user) {
@@ -93,9 +84,6 @@ class ResourceAudioListener
         $event->setData(array_merge($audioData, $event->getData()));
     }
 
-    /**
-     * @param GenericDataEvent $event
-     */
     public function onResourceAudioDeserialize(GenericDataEvent $event)
     {
         $eventData = $event->getData();

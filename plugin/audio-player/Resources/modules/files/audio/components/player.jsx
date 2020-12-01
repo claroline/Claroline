@@ -280,7 +280,7 @@ class Audio extends Component {
         {(!this.props.canEdit || !this.state.displayAllComments) &&
           <Waveform
             id={`resource-audio-${this.props.file.id}`}
-            url={asset(this.props.file.hashName)}
+            url={this.props.file.url}
             editable={constants.USER_TYPE === this.props.file.sectionsType}
             rateControl={this.props.file.rateControl}
             regions={-1 < [constants.MANAGER_TYPE, constants.USER_TYPE].indexOf(this.props.file.sectionsType) && this.props.file.sections ?
