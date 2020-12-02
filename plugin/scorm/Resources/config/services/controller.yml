@@ -34,5 +34,5 @@ services:
           - '@security.authorization_checker'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Claroline\ScormBundle\Manager\ScormManager'
-          - '@claroline.serializer.scorm.sco.tracking'
+          - '@Claroline\ScormBundle\Serializer\ScoTrackingSerializer'
           - '@translator'

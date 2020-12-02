@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
@@ -23,10 +23,19 @@ const ScormResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('results_list', {}, 'scorm'),
-        disabled: !props.editable,
         displayed: props.editable,
         target: `${props.path}/results`,
         exact: true
+      }, {
+        name: 'export-results',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export-results', {}, 'actions'),
+        displayed: props.editable,
+        file: {
+          url: ['apiv2_scormscotracking_export', {scorm: props.scorm.id}]
+        },
+        group: trans('transfer')
       }
     ]}
     redirect={[

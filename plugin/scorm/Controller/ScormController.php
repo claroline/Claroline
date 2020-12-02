@@ -14,22 +14,26 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
+use Claroline\ScormBundle\Entity\ScoTracking;
 use Claroline\ScormBundle\Manager\Exception\InvalidScormArchiveException;
 use Claroline\ScormBundle\Manager\ScormManager;
 use Claroline\ScormBundle\Serializer\ScoTrackingSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ScormController extends AbstractApiController
 {
+    use PermissionCheckerTrait;
+
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /* @var FinderProvider */
@@ -41,13 +45,6 @@ class ScormController extends AbstractApiController
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @param AuthorizationCheckerInterface $authorization
-     * @param FinderProvider                $finder
-     * @param ScormManager                  $scormManager
-     * @param ScoTrackingSerializer         $scoTrackingSerializer
-     * @param TranslatorInterface           $translator
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         FinderProvider $finder,
@@ -63,22 +60,10 @@ class ScormController extends AbstractApiController
     }
 
     /**
-     * @Route(
-     *    "/workspace/{workspace}/scorm/archive/upload",
-     *    name="apiv2_scorm_archive_upload"
-     * )
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
+     * @Route("/workspace/{workspace}/scorm/archive/upload", name="apiv2_scorm_archive_upload")
+     * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function uploadAction(Workspace $workspace, Request $request)
+    public function uploadAction(Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();
         $data = null;
@@ -98,90 +83,49 @@ class ScormController extends AbstractApiController
 
         if (empty($error)) {
             return new JsonResponse($data, 200);
-        } else {
-            return new JsonResponse($error, 500);
         }
+
+        return new JsonResponse($error, 500);
     }
 
     /**
-     * @Route(
-     *    "/scorm/{scorm}/update",
-     *    name="apiv2_scorm_update"
-     * )
-     * @EXT\ParamConverter(
-     *     "scorm",
-     *     class="ClarolineScormBundle:Scorm",
-     *     options={"mapping": {"scorm": "uuid"}}
-     * )
-     *
-     * @param Scorm   $scorm
-     * @param Request $request
-     *
-     * @return JsonResponse
+     * @Route("/scorm/{scorm}/update", name="apiv2_scorm_update")
+     * @EXT\ParamConverter("scorm", class="ClarolineScormBundle:Scorm", options={"mapping": {"scorm": "uuid"}})
      */
-    public function updateAction(Scorm $scorm, Request $request)
+    public function updateAction(Scorm $scorm, Request $request): JsonResponse
     {
-        $this->checkScormRights($scorm, 'EDIT');
-        $data = $this->decodeRequest($request);
-        $dataToUpdate = [];
+        $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
 
-        if (isset($data['ratio'])) {
-            $dataToUpdate['ratio'] = $data['ratio'];
-        }
-        $serializedScorm = $this->scormManager->updateScorm($scorm, $dataToUpdate);
-
-        return new JsonResponse($serializedScorm, 200);
+        return new JsonResponse(
+            $this->scormManager->updateScorm($scorm, $this->decodeRequest($request))
+        );
     }
 
     /**
-     * @Route(
-     *    "/sco/{sco}/{mode}/commit",
-     *    name="apiv2_scorm_sco_commit"
-     * )
-     * @EXT\ParamConverter(
-     *     "sco",
-     *     class="ClarolineScormBundle:Sco",
-     *     options={"mapping": {"sco": "uuid"}}
-     * )
+     * @Route("/sco/{sco}/{mode}/commit", name="apiv2_scorm_sco_commit")
+     * @EXT\ParamConverter("sco", class="ClarolineScormBundle:Sco", options={"mapping": {"sco": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Sco     $sco
-     * @param string  $mode
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function scoCommitAction(Sco $sco, $mode, User $user, Request $request)
+    public function scoCommitAction(Sco $sco, $mode, User $user, Request $request): JsonResponse
     {
         $scorm = $sco->getScorm();
-        $this->checkScormRights($scorm, 'OPEN');
+        $this->checkPermission('OPEN', $scorm->getResourceNode(), [], true);
 
         $data = $this->decodeRequest($request);
         $tracking = $this->scormManager->updateScoTracking($sco, $user, $mode, $data);
 
-        return new JsonResponse($this->scoTrackingSerializer->serialize($tracking), 200);
+        return new JsonResponse(
+            $this->scoTrackingSerializer->serialize($tracking)
+        );
     }
 
     /**
-     * @Route(
-     *     "/scorm/{scorm}/trackings/list",
-     *     name="apiv2_scormscotracking_list"
-     * )
-     * @EXT\ParamConverter(
-     *     "scorm",
-     *     class="ClarolineScormBundle:Scorm",
-     *     options={"mapping": {"scorm": "uuid"}}
-     * )
-     *
-     * @param Scorm   $scorm
-     * @param Request $request
-     *
-     * @return JsonResponse
+     * @Route("/scorm/{scorm}/trackings/list", name="apiv2_scormscotracking_list")
+     * @EXT\ParamConverter("scorm", class="ClarolineScormBundle:Scorm", options={"mapping": {"scorm": "uuid"}})
      */
-    public function scoTrackingsListAction(Scorm $scorm, Request $request)
+    public function listTrackingsAction(Scorm $scorm, Request $request): JsonResponse
     {
-        $this->checkScormRights($scorm, 'EDIT');
+        $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
 
         $params = $request->query->all();
 
@@ -189,17 +133,73 @@ class ScormController extends AbstractApiController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['scorm'] = $scorm->getId();
-        $data = $this->finder->search('Claroline\ScormBundle\Entity\ScoTracking', $params);
 
-        return new JsonResponse($data, 200);
+        return new JsonResponse(
+            $this->finder->search(ScoTracking::class, $params)
+        );
     }
 
-    private function checkScormRights(Scorm $scorm, $right)
+    /**
+     * @Route("/scorm/{scorm}/trackings/export", name="apiv2_scormscotracking_export")
+     * @EXT\ParamConverter("scorm", class="ClarolineScormBundle:Scorm", options={"mapping": {"scorm": "uuid"}})
+     */
+    public function exportTrackingsAction(Scorm $scorm): StreamedResponse
     {
-        $collection = new ResourceCollection([$scorm->getResourceNode()]);
+        $this->checkPermission('EDIT', $scorm->getResourceNode(), [], true);
 
-        if (!$this->authorization->isGranted($right, $collection)) {
-            throw new AccessDeniedException();
-        }
+        // I use finder to automatically retrieve info from ResourceUserEvaluation
+        // which are exposed by ScoTracking serializer
+        $trackingList = $this->finder->search(ScoTracking::class, ['filters' => [
+            'scorm' => $scorm->getId(),
+        ]]);
+
+        $fileName = "results-{$scorm->getResourceNode()->getName()}";
+        $fileName = TextNormalizer::toKey($fileName);
+
+        return new StreamedResponse(function () use ($trackingList) {
+            // Prepare CSV file
+            $handle = fopen('php://output', 'w+');
+
+            // Create header
+            fputcsv($handle, [
+                $this->translator->trans('last_name', [], 'platform'),
+                $this->translator->trans('first_name', [], 'platform'),
+                $this->translator->trans('email', [], 'platform'),
+                $this->translator->trans('views', [], 'platform'),
+                $this->translator->trans('attempts', [], 'platform'),
+                $this->translator->trans('last_session_date', [], 'scorm'),
+                $this->translator->trans('total_time', [], 'platform'),
+                $this->translator->trans('score', [], 'platform'),
+                $this->translator->trans('score_min', [], 'platform'),
+                $this->translator->trans('score_max', [], 'platform'),
+                $this->translator->trans('progression', [], 'platform'),
+                $this->translator->trans('status', [], 'platform'),
+            ], ';', '"');
+
+            foreach ($trackingList['data'] as $tracking) {
+                // put Workspace evaluation
+                fputcsv($handle, [
+                    $tracking['user']['lastName'],
+                    $tracking['user']['firstName'],
+                    $tracking['user']['email'],
+                    $tracking['views'],
+                    $tracking['attempts'],
+                    $tracking['latestDate'],
+                    $tracking['totalTime'],
+                    $tracking['scoreRaw'],
+                    $tracking['scoreMin'],
+                    $tracking['scoreMax'],
+                    $tracking['progression'],
+                    $tracking['lessonStatus'],
+                ], ';', '"');
+            }
+
+            fclose($handle);
+
+            return $handle;
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
+        ]);
     }
 }
