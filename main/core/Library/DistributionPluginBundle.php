@@ -16,8 +16,11 @@ namespace Claroline\CoreBundle\Library;
  */
 abstract class DistributionPluginBundle extends PluginBundle
 {
-    public function getVersionFilePath()
+    public function getVersion(): string
     {
-        return realpath($this->getPath().'/../../VERSION.txt');
+        $data = file_get_contents(realpath($this->getPath().'/../../VERSION.txt'));
+        $dataParts = explode("\n", $data);
+
+        return trim($dataParts[0]);
     }
 }

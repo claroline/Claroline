@@ -43,15 +43,6 @@ class ParametersController
     /** @var ParametersSerializer */
     private $serializer;
 
-    /**
-     * ParametersController constructor.
-     *
-     * @param StrictDispatcher             $dispatcher
-     * @param PlatformConfigurationHandler $ch
-     * @param AnalyticsManager             $analyticsManager
-     * @param VersionManager               $versionManager
-     * @param ParametersSerializer         $serializer
-     */
     public function __construct(
         StrictDispatcher $dispatcher,
         PlatformConfigurationHandler $ch,
@@ -68,12 +59,8 @@ class ParametersController
 
     /**
      * @Route("/parameters", name="apiv2_parameters_update", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function updateAction(Request $request)
+    public function updateAction(Request $request): JsonResponse
     {
         $parametersData = $this->decodeRequest($request);
 
@@ -95,7 +82,7 @@ class ParametersController
     /**
      * @Route("/info", name="apiv2_platform_info", methods={"GET"})
      */
-    public function getAction()
+    public function getAction(): JsonResponse
     {
         $parameters = $this->serializer->serialize();
 
@@ -110,7 +97,7 @@ class ParametersController
         $this->serializer->deserialize($parameters);
 
         return new JsonResponse([
-            'version' => $this->versionManager->getDistributionVersion(),
+            'version' => $this->versionManager->getCurrent(),
             'meta' => $parameters['meta'],
             'analytics' => $analytics, // TODO : add analytics through eventing to avoid hard dependency to a plugin
         ]);
@@ -120,10 +107,8 @@ class ParametersController
      * Enables the platform.
      *
      * @Route("/enable", name="apiv2_platform_enable", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function enableAction()
+    public function enableAction(): JsonResponse
     {
         /** @var EnableEvent $event */
         $event = $this->dispatcher->dispatch('platform.enable', EnableEvent::class);
@@ -140,10 +125,8 @@ class ParametersController
      * Extends the period of availability of the platform.
      *
      * @Route("/extend", name="apiv2_platform_extend", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function extendAction()
+    public function extendAction(): JsonResponse
     {
         $newEnd = null;
 
@@ -173,10 +156,8 @@ class ParametersController
 
     /**
      * @Route("/disable", name="apiv2_platform_disable", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function disableAction()
+    public function disableAction(): JsonResponse
     {
         $this->config->setParameter('restrictions.disabled', true);
 
@@ -185,12 +166,8 @@ class ParametersController
 
     /**
      * @Route("/maintenance/enable", name="apiv2_maintenance_enable", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function enableMaintenanceAction(Request $request)
+    public function enableMaintenanceAction(Request $request): JsonResponse
     {
         $this->config->setParameter('maintenance.enable', true);
         if (!empty($request->getContent())) {
@@ -204,10 +181,8 @@ class ParametersController
 
     /**
      * @Route("/maintenance/disable", name="apiv2_maintenance_disable", methods={"PUT"})
-     *
-     * @return JsonResponse
      */
-    public function disableMaintenanceAction()
+    public function disableMaintenanceAction(): JsonResponse
     {
         $this->config->setParameter('maintenance.enable', false);
 

@@ -27,4 +27,6 @@ interface InstallableInterface extends BundleInterface
     public function getAdditionalInstaller();
 
     public function getUpdaterServiceLocator(): ContainerInterface;
+
+    public function getVersion(): string;
 }

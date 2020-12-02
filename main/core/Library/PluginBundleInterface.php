@@ -36,10 +36,17 @@ interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterfa
 
     public function getExtraRequirements();
 
+    public function getOrigin();
+
+    public function getDescription();
+
     /**
      * @return BundleInterface[] A list of third party bundle instances required by the plugin
      */
     public function getRequiredThirdPartyBundles(string $environment): array;
 
+    /**
+     * @deprecated
+     */
     public function isHidden();
 }

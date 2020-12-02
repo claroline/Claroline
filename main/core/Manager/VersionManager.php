@@ -68,7 +68,7 @@ class VersionManager implements LoggerAwareInterface
 
     public function getCurrent()
     {
-        return $this->getVersionFile()[0];
+        return trim($this->getVersionFile()[0]);
     }
 
     /**
@@ -88,18 +88,8 @@ class VersionManager implements LoggerAwareInterface
 
     public function getVersionFile()
     {
-        $data = file_get_contents($this->getDistributionVersionFilePAth());
+        $data = file_get_contents(__DIR__.'/../../../VERSION.txt');
 
         return explode("\n", $data);
-    }
-
-    public function getDistributionVersion()
-    {
-        return trim($this->getVersionFile()[0]);
-    }
-
-    public function getDistributionVersionFilePAth()
-    {
-        return __DIR__.'/../../../VERSION.txt';
     }
 }

@@ -64,9 +64,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Deprecated: use getConfiguration instead.
-     *
-     * @deprecated
+     * @deprecated use getConfiguration instead
      */
     public function getRoutingResourcesPaths()
     {
@@ -155,16 +153,6 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
-     * Returns the version file path.
-     *
-     * @return bool
-     */
-    public function getVersionFilePath()
-    {
-        return null;
-    }
-
-    /**
      * Returns path to the folder of the icon sets for resources.
      *
      * @return string
@@ -182,5 +170,52 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function getRequiredThirdPartyBundles(string $environment): array
     {
         return [];
+    }
+
+    /**
+     * @deprecated find another way to retrieve it
+     */
+    public function getOrigin()
+    {
+        return $this->getComposerParameter('name');
+    }
+
+    public function getDescription()
+    {
+        return file_exists($this->getPath().'/DESCRIPTION.md') ? file_get_contents($this->getPath().'/DESCRIPTION.md') : '';
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getComposer()
+    {
+        static $data;
+
+        if (!$data) {
+            $ds = DIRECTORY_SEPARATOR;
+            $path = realpath($this->getPath().$ds.'composer.json');
+            //metapackage are 2 directories above
+            if (!$path) {
+                $path = realpath($this->getPath()."{$ds}..{$ds}..{$ds}composer.json");
+            }
+            $data = json_decode(file_get_contents($path));
+        }
+
+        return $data;
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getComposerParameter($parameter, $default = null)
+    {
+        $data = $this->getComposer();
+
+        if ($data && property_exists($data, $parameter)) {
+            return $data->{$parameter};
+        }
+
+        return $default;
     }
 }
