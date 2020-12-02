@@ -19,18 +19,15 @@ services:
     Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Utilities\FileUtilities'
             - '@router'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@claroline.manager.organization.organization_manager'
             - '@Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer'
-            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\User\GroupSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\ImageSerializer'
-            - '@security.token_storage'
             - '@Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\RuleSerializer'

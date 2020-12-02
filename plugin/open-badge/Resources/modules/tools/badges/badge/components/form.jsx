@@ -11,10 +11,8 @@ import {actions as formActions, selectors as formSelect} from '#/main/app/conten
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
-import {constants} from '#/plugin/open-badge/tools/badges/badge/constants'
 import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
-const isManualIssuing = (badge) => badge._manualIssuing || !isEmpty(badge.issuingMode)
 const isAutoIssuing = (badge) => badge._autoIssuing || !isEmpty(badge.rules)
 
 const BadgeFormComponent = (props) =>
@@ -126,59 +124,24 @@ const BadgeFormComponent = (props) =>
         ]
       }, {
         icon: 'fa fa-fw fa-certificate',
-        title: trans('Règles d\'attribution', {}, 'badge'),
+        title: trans('award_rules', {}, 'badge'),
         fields: [
           {
-            name: '_manualIssuing',
+            name: 'criteria',
+            label: trans('criteria', {}, 'badge'),
+            type: 'html'
+          }, {
+            name: 'issuingPeer',
             type: 'boolean',
-            label: trans('enable_manual_issuing', {}, 'badge'),
-            help: trans('enable_manual_issuing_help', {}, 'badge'),
-            calculated: isManualIssuing,
-            onChange: (enabled) => {
-              if (!enabled) {
-                props.updateProp('issuingMode', [])
-                props.updateProp('allowedUsers', [])
-                props.updateProp('allowedGroups', [])
-              }
-            },
-            linked: [
-              {
-                name: 'criteria',
-                label: trans('criteria', {}, 'badge'),
-                type: 'html',
-                required: true,
-                displayed: isManualIssuing
-              }, {
-                name: 'issuingMode',
-                type: 'choice',
-                label: trans('allowed_issuers', {}, 'badge'),
-                required: true,
-                displayed: isManualIssuing,
-                options: {
-                  choices: constants.ISSUING_MODES,
-                  multiple: true,
-                  inline: false
-                }
-              }, {
-                name: 'allowedUsers',
-                label: trans('users'),
-                type: 'users',
-                displayed: badge => isManualIssuing(badge) && (badge.issuingMode && badge.issuingMode.indexOf(constants.ISSUING_MODE_USER) > -1)
-              }, {
-                name: 'allowedGroups',
-                label: trans('groups'),
-                type: 'groups',
-                displayed: badge => isManualIssuing(badge) && (badge.issuingMode && badge.issuingMode.indexOf(constants.ISSUING_MODE_GROUP) > -1)
-              }
-            ]
+            label: trans('enable_manual_issuing', {}, 'badge')
           }, {
             name: '_autoIssuing',
             type: 'boolean',
             label: trans('enable_auto_issuing', {}, 'badge'),
-            help: isManualIssuing(props.badge) ? [
+            help: [
               trans('enable_auto_issuing_help', {}, 'badge'),
               trans('enable_auto_issuing_help_manual', {}, 'badge')
-            ] : trans('enable_auto_issuing_help', {}, 'badge'),
+            ],
             calculated: isAutoIssuing,
             onChange: (enabled) => {
               if (!enabled) {

@@ -12,8 +12,8 @@
 namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
@@ -24,33 +24,32 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/assertion")
  */
 class AssertionController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var PlatformConfigurationHandler */
     private $config;
-
     /** @var OpenBadgeManager */
     private $manager;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * AssertionController constructor.
-     *
-     * @param PlatformConfigurationHandler $config
-     * @param OpenBadgeManager             $manager
-     * @param TokenStorageInterface        $tokenStorage
-     */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $config,
         OpenBadgeManager $manager,
         TokenStorageInterface $tokenStorage
     ) {
+        $this->authorization = $authorization;
         $this->config = $config;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
@@ -67,33 +66,14 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences", methods={"GET"})
-     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Assertion $assertion
-     *
-     * @return JsonResponse
-     */
-    public function getEvidencesAction(Request $request, Assertion $assertion)
-    {
-        return new JsonResponse(
-            $this->finder->search(Evidence::class, array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => ['assertion' => $assertion->getUuid()]]
-            ))
-        );
-    }
-
-    /**
      * @Route("/current-user", name="apiv2_assertion_current_user_list", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function getMyAssertionsAction(Request $request)
+    public function listMyAssertionsAction(Request $request): JsonResponse
     {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
         $user = $this->tokenStorage->getToken()->getUser();
         $assertions = $this->finder->search(Assertion::class, array_merge(
             $request->query->all(),
@@ -104,49 +84,31 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/user/{user}", name="apiv2_assertion_user_list", methods={"GET"})
-     * @EXT\ParamConverter("user", class="ClarolineCoreBundle:User", options={"mapping": {"user": "uuid"}})
-     *
-     * @param Request $request
-     * @param User    $user
-     *
-     * @return JsonResponse
+     * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences", methods={"GET"})
+     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      */
-    public function getUserAssertionsAction(Request $request, User $user)
+    public function listEvidencesAction(Request $request, Assertion $assertion): JsonResponse
     {
-        $assertions = $this->finder->search(Assertion::class, array_merge(
-            $request->query->all(),
-            ['hiddenFilters' => ['recipient' => $user->getUuid()]]
-        ));
+        $this->checkPermission('OPEN', $assertion, [], true);
 
-        return new JsonResponse($assertions);
+        return new JsonResponse(
+            $this->finder->search(Evidence::class, array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['assertion' => $assertion->getUuid()]]
+            ))
+        );
     }
 
     /**
      * Downloads pdf version of assertion.
      *
-     * @Route(
-     *     "/{assertion}/pdf/download",
-     *     name="apiv2_assertion_pdf_download",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "assertion",
-     *     class="ClarolineOpenBadgeBundle:Assertion",
-     *     options={"mapping": {"assertion": "uuid"}}
-     * )
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param Assertion $assertion
-     * @param User      $currentUser
-     * @param Request   $request
-     *
-     * @throws \Exception
-     *
-     * @return StreamedResponse
+     * @Route("/{assertion}/pdf/download", name="apiv2_assertion_pdf_download", methods={"GET"})
+     * @EXT\ParamConverter("assertion", class="ClarolineOpenBadgeBundle:Assertion", options={"mapping": {"assertion": "uuid"}})
      */
-    public function assertionPdfDownloadAction(Assertion $assertion, User $currentUser, Request $request)
+    public function downloadPdfAction(Assertion $assertion, Request $request): StreamedResponse
     {
+        $this->checkPermission('OPEN', $assertion, [], true);
+
         $badge = $assertion->getBadge();
         $user = $assertion->getRecipient();
 

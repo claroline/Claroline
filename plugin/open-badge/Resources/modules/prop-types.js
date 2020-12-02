@@ -2,8 +2,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {User} from '#/main/core/user/prop-types'
 
-import {constants} from '#/plugin/open-badge/tools/badges/badge/constants'
-
 const Badge = {
   propTypes: {
     id: T.string,
@@ -22,7 +20,7 @@ const Badge = {
     })
   },
   defaultProps: {
-    issuingMode: [constants.ISSUING_MODE_ORGANIZATION],
+    issuingPeer: false,
     description: '',
     meta: {
       enabled: true

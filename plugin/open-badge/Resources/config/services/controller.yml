@@ -38,13 +38,16 @@ services:
 
     Claroline\OpenBadgeBundle\Controller\API\AssertionController:
         arguments:
+          - '@security.authorization_checker'
           - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
           - '@Claroline\OpenBadgeBundle\Manager\OpenBadgeManager'
           - '@security.token_storage'
 
     Claroline\OpenBadgeBundle\Controller\API\BadgeClassController:
         arguments:
+          - '@security.authorization_checker'
           - '@security.token_storage'
+          - '@translator'
           - '@Claroline\OpenBadgeBundle\Manager\OpenBadgeManager'
 
     Claroline\OpenBadgeBundle\Controller\API\EndorsementController: ~

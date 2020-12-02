@@ -14,9 +14,7 @@ namespace Claroline\OpenBadgeBundle\Entity;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Color;
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,12 +29,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class BadgeClass
 {
-    const ISSUING_MODE_ORGANIZATION = 'organization';
-    const ISSUING_MODE_USER = 'user';
-    const ISSUING_MODE_GROUP = 'group';
-    const ISSUING_MODE_PEER = 'peer';
-    const ISSUING_MODE_WORKSPACE = 'workspace';
-
     // identifiers
     use Id;
     use Uuid;
@@ -143,33 +135,19 @@ class BadgeClass
     protected $updated;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
+     * Allows whose owns the badge to grant it to others.
      *
-     * @var User[]|ArrayCollection
-     */
-    private $allowedIssuers;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group")
+     * @ORM\Column(type="boolean")
      *
-     * @var Group[]|ArrayCollection
+     * @var bool
      */
-    private $allowedIssuersGroups;
-
-    /**
-     * @ORM\Column(type="json_array")
-     *
-     * @var array
-     */
-    private $issuingMode = [self::ISSUING_MODE_ORGANIZATION];
+    private $issuingPeer = false;
 
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->rules = new ArrayCollection();
-        $this->allowedIssuers = new ArrayCollection();
-        $this->allowedIssuersGroups = new ArrayCollection();
     }
 
     /**
@@ -281,8 +259,6 @@ class BadgeClass
     /**
      * Set the value of Issuer.
      *
-     * @param Organization $issuer
-     *
      * @return self
      */
     public function setIssuer(Organization $issuer)
@@ -350,66 +326,14 @@ class BadgeClass
         return $this->created;
     }
 
-    public function setAllowedIssuers(array $users)
+    public function setIssuingPeer(bool $issuingPeer)
     {
-        $this->allowedIssuers->clear();
-        $this->allowedIssuers = $users;
+        $this->issuingPeer = $issuingPeer;
     }
 
-    public function setAllowedIssuersGroups(array $groups)
+    public function hasIssuingPeer(): bool
     {
-        $this->allowedIssuersGroups->clear();
-        $this->allowedIssuersGroups = $groups;
-    }
-
-    /**
-     * @param bool $includeGroups
-     *
-     * @return User[]|ArrayCollection
-     */
-    public function getAllowedIssuers($includeGroups = false)
-    {
-        if ($includeGroups) {
-            $users = [];
-
-            foreach ($this->getAllowedIssuersGroups() as $group) {
-                foreach ($group->getUsers() as $user) {
-                    $users[$user->getId()] = $user;
-                }
-            }
-
-            foreach ($this->allowedIssuers as $user) {
-                $users[$user->getId()] = $user;
-            }
-
-            return $users;
-        }
-
-        return $this->allowedIssuers;
-    }
-
-    /**
-     * @return Group[]|ArrayCollection
-     */
-    public function getAllowedIssuersGroups()
-    {
-        return $this->allowedIssuersGroups;
-    }
-
-    /**
-     * @param array $issuingMode
-     */
-    public function setIssuingMode(array $issuingMode)
-    {
-        $this->issuingMode = $issuingMode;
-    }
-
-    /**
-     * @return array
-     */
-    public function getIssuingMode()
-    {
-        return $this->issuingMode;
+        return $this->issuingPeer;
     }
 
     /**
@@ -420,9 +344,6 @@ class BadgeClass
         return $this->rules;
     }
 
-    /**
-     * @param Rule $rule
-     */
     public function addRule(Rule $rule)
     {
         if (!$this->rules->contains($rule)) {
@@ -431,9 +352,6 @@ class BadgeClass
         }
     }
 
-    /**
-     * @param Rule $rule
-     */
     public function removeRule(Rule $rule)
     {
         if ($this->rules->contains($rule)) {
@@ -450,9 +368,6 @@ class BadgeClass
         return $this->assertions;
     }
 
-    /**
-     * @param Assertion $assertion
-     */
     public function addAssertion(Assertion $assertion)
     {
         if (!$this->assertions->contains($assertion)) {
@@ -460,13 +375,20 @@ class BadgeClass
         }
     }
 
-    /**
-     * @param Assertion $assertion
-     */
     public function removeAssertion(Assertion $assertion)
     {
         if ($this->assertions->contains($assertion)) {
             $this->assertions->removeElement($assertion);
         }
+    }
+
+    // this is for security checks
+    public function getOrganizations()
+    {
+        if (!empty($this->issuer)) {
+            return [$this->issuer];
+        }
+
+        return [];
     }
 }

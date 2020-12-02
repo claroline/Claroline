@@ -8,7 +8,7 @@ import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, DOWNLOAD_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
@@ -25,7 +25,7 @@ const BadgeDetailsComponent = (props) => {
     {
       name: 'granting',
       icon: 'fa fa-fw fa-certificate',
-      label: 'Règles d\'attribution',
+      label: trans('award_rules', {}, 'badge'),
       render() {
         return (
           <Fragment>
@@ -40,7 +40,7 @@ const BadgeDetailsComponent = (props) => {
               <ContentHtml className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</ContentHtml>
             </div>
 
-            {get(props.badge, 'permissions.assign') &&
+            {get(props.badge, 'permissions.grant') &&
               <Button
                 className="btn btn-block btn-emphasis component-container"
                 type={MODAL_BUTTON}
@@ -81,7 +81,7 @@ const BadgeDetailsComponent = (props) => {
             })}
             delete={{
               url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
-              displayed: () => get(props.badge, 'permissions.assign')
+              displayed: () => get(props.badge, 'permissions.grant')
             }}
             definition={[
               {
@@ -90,6 +90,12 @@ const BadgeDetailsComponent = (props) => {
                 label: trans('user'),
                 displayed: true,
                 sortable: false
+              }, {
+                name: 'user.email',
+                type: 'email',
+                label: trans('email'),
+                sortable: false,
+                filterable: false
               }, {
                 name: 'issuedOn',
                 label: trans('granted_date', {}, 'badge'),
@@ -139,6 +145,16 @@ const BadgeDetailsComponent = (props) => {
           target: props.path + `/badges/${props.badge.id}/edit`,
           displayed: get(props.badge, 'permissions.edit'),
           group: trans('management')
+        }, {
+          name: 'export-results',
+          type: DOWNLOAD_BUTTON,
+          icon: 'fa fa-fw fa-file-csv',
+          label: trans('export', {}, 'actions'),
+          displayed: get(props.badge, 'permissions.grant'),
+          file: {
+            url: ['apiv2_badge-class_export_users', {badge: props.badge.id}]
+          },
+          group: trans('transfer')
         }, {
           name: 'enable',
           type: CALLBACK_BUTTON,

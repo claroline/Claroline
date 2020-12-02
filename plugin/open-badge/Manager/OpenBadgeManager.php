@@ -5,41 +5,26 @@ namespace Claroline\OpenBadgeBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use Symfony\Component\Asset\Packages;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Twig\Environment;
 
 class OpenBadgeManager
 {
-    /** @var Packages */
-    private $assets;
-
     /** @var ObjectManager */
     private $om;
-
     /** @var TemplateManager */
     private $templateManager;
+    /** @var Environment */
+    private $templating;
 
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-
-    /**
-     * OpenBadgeManager constructor.
-     */
     public function __construct(
-        Packages $assets,
         ObjectManager $om,
         TemplateManager $templateManager,
-        WorkspaceManager $workspaceManager,
         Environment $templating
     ) {
-        $this->assets = $assets;
         $this->om = $om;
         $this->templateManager = $templateManager;
-        $this->workspaceManager = $workspaceManager;
         $this->templating = $templating;
     }
 
@@ -65,49 +50,6 @@ class OpenBadgeManager
         $assertion->setRevoked(true);
         $this->om->persist($assertion);
         $this->om->flush();
-    }
-
-    public function isAllowedBadgeManagement(TokenInterface $token, BadgeClass $badge)
-    {
-        $issuingMode = $badge->getIssuingMode();
-        $user = $token->getUser();
-
-        foreach ($issuingMode as $mode) {
-            switch ($mode) {
-              case BadgeClass::ISSUING_MODE_ORGANIZATION:
-                $organization = $badge->getIssuer();
-
-                foreach ($user->getAdministratedOrganizations() as $orga) {
-                    if ($orga->getId() === $organization->getId()) {
-                        return true;
-                    }
-                }
-                break;
-              case BadgeClass::ISSUING_MODE_USER:
-                foreach ($badge->getAllowedIssuers() as $issuer) {
-                    if ($issuer->getId() === $user->getId()) {
-                        return true;
-                    }
-                }
-                break;
-              case BadgeClass::ISSUING_MODE_GROUP:
-                foreach ($badge->getAllowedIssuersGroups() as $issuer) {
-                    foreach ($user->getGroups() as $group) {
-                        if ($issuer->getId() === $group->getId()) {
-                            return true;
-                        }
-                    }
-                }
-                break;
-              case BadgeClass::ISSUING_MODE_WORKSPACE:
-                $workspace = $badge->getWorkspace();
-                if ($workspace) {
-                }
-                break;
-            }
-        }
-
-        return false;
     }
 
     public function generateCertificate(Assertion $assertion, $basePath)

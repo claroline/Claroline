@@ -12,18 +12,25 @@
 namespace Claroline\OpenBadgeBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BadgeClassFinder extends AbstractFinder
 {
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var ToolMaskDecoderManager */
+    private $toolMaskDecoderManager;
+
+    public function __construct(TokenStorageInterface $tokenStorage, ToolMaskDecoderManager $toolMaskDecoderManager)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->toolMaskDecoderManager = $toolMaskDecoderManager;
     }
 
     public function getClass()
@@ -33,47 +40,95 @@ class BadgeClassFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = [])
     {
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
+
+        $workspaceJoin = false;
+
+        $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
+            $this->om->getRepository(Tool::class)->findOneBy(['name' => 'badges']),
+            'grant'
+        );
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'recipient':
-                  $qb->join('obj.assertions', 'a');
-                  $qb->join('a.recipient', 'r');
-                  $qb->andWhere('r.uuid = :uuid');
-                  $qb->setParameter('uuid', $filterValue);
-                  break;
-              case 'workspace':
-                  $qb->join('obj.workspace', 'w');
-                  $qb->andWhere('w.uuid = :workspace');
-                  $qb->setParameter('workspace', $filterValue);
-                  break;
-              case 'assignable':
-                  $qb->leftJoin('obj.allowedIssuers', 'user');
-                  $qb->leftJoin('obj.allowedIssuersGroups', 'group');
-                  $qb->leftJoin('group.users', 'groupUser');
-                  $qb->leftJoin('obj.assertions', 'assertion');
-                  $qb->leftJoin('assertion.recipient', 'recipient');
+                case 'recipient':
+                    $qb->join('obj.assertions', 'a');
+                    $qb->join('a.recipient', 'r');
+                    $qb->andWhere('r.uuid = :uuid');
+                    $qb->setParameter('uuid', $filterValue);
+                    break;
 
-                  $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->eq('user.id', $user->getId()),
-                    $qb->expr()->eq('groupUser.id', $user->getId()),
-                    $qb->expr()->orX(
-                      $qb->expr()->andX(
-                          $qb->expr()->eq('recipient.id', $user->getId()),
-                          $qb->expr()->like('obj.issuingMode', '%'.BadgeClass::ISSUING_MODE_PEER.'%')
-                      )
-                    )
-                  ));
-                  //also from those who already have the badge
+                case 'workspace':
+                    if (!$workspaceJoin) {
+                        $qb->leftJoin('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
 
-                  break;
-              case 'meta.enabled':
-                  $qb->andWhere('obj.enabled = :enabled');
-                  $qb->setParameter('enabled', $filterValue);
-                  break;
-              default:
-                $this->setDefaults($qb, $filterName, $filterValue);
+                    $qb->andWhere('w.uuid = :workspace');
+                    $qb->setParameter('workspace', $filterValue);
+                    break;
+
+                case 'assignable':
+                    if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()->getRoleNames())) {
+                        $qb->leftJoin('obj.issuer', 'o');
+                        if (!$workspaceJoin) {
+                            $qb->leftJoin('obj.workspace', 'w');
+                            $workspaceJoin = true;
+                        }
+
+                        $qb->leftJoin('obj.assertions', 'assertion');
+                        $qb->leftJoin('assertion.recipient', 'recipient');
+
+                        $subQb = $this->om->createQueryBuilder()
+                            ->select('ot')
+                            ->from('Claroline\CoreBundle\Entity\Tool\OrderedTool', 'ot')
+                            ->leftJoin('ot.workspace', 'otw')
+                            ->join('ot.rights', 'r')
+                            ->join('r.role', 'rr')
+                            ->where('ot.user IS NULL')
+                            ->andWhere('((w.id IS NULL AND ot.workspace IS NULL) OR otw.id = w.id)')
+                            ->andWhere('BIT_AND(r.mask, :grantMask) = :grantMask')
+                            ->andWhere('rr.name IN (:userRoles)')
+                            ->getDQL()
+                        ;
+
+                        $qb->andWhere($qb->expr()->orX(
+                        // always assignable by organization managers
+                            $qb->expr()->in('o.id', array_map(function (Organization $organization) {
+                                return $organization->getId();
+                            }, $user->getAdministratedOrganizations()->toArray())),
+
+                            // always assignable by workspaces managers
+                            $qb->expr()->andX(
+                                $qb->expr()->isNotNull('w'),
+                                // ATTENTION : Doctrine does not allow strings to be double quoted
+                                $qb->expr()->in('CONCAT(\'ROLE_WS_MANAGER_\', w.uuid)', $this->tokenStorage->getToken()->getRoleNames())
+                            ),
+
+                            // assignable by users with GRANT rights on the tool
+                            $qb->expr()->exists($subQb),
+
+                            // assignable by owners of the badge if enabled
+                            $qb->expr()->andX(
+                                $qb->expr()->eq('recipient.id', $user->getId()),
+                                $qb->expr()->eq('obj.issuingPeer', true)
+                            )
+                        ))
+                            ->setParameter(':grantMask', $grantDecoder->getValue())
+                            ->setParameter(':userRoles', $this->tokenStorage->getToken()->getRoleNames())
+                        ;
+                    }
+
+                    break;
+
+                case 'meta.enabled':
+                    $qb->andWhere('obj.enabled = :enabled');
+                    $qb->setParameter('enabled', $filterValue);
+                    break;
+
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 

@@ -14,7 +14,9 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -172,12 +174,20 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         return true;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    protected function hasAdminToolAccess(TokenInterface $token, $name)
+    protected function isToolGranted($permission, string $toolName, Workspace $workspace = null)
+    {
+        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
+
+        if ($workspace) {
+            $orderedTool = $orderedToolRepo->findOneByNameAndWorkspace($toolName, $workspace);
+        } else {
+            $orderedTool = $orderedToolRepo->findOneByNameAndDesktop($toolName);
+        }
+
+        return $this->isGranted($permission, $orderedTool);
+    }
+
+    protected function hasAdminToolAccess(TokenInterface $token, string $name): bool
     {
         /** @var \Claroline\CoreBundle\Entity\Tool\Tool */
         $tool = $this->getObjectManager()

@@ -38,7 +38,7 @@ const AssertionDetailsComponent = (props) =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('download', {}, 'actions'),
-        displayed: get(props.assertion.badge, 'permissions.assign') || get(props.currentUser, 'id') === get(props.assertion, 'user.id'),
+        displayed: get(props.assertion.badge, 'permissions.grant') || get(props.currentUser, 'id') === get(props.assertion, 'user.id'),
         callback: () => props.download(props.assertion)
       }
     ]}
@@ -62,7 +62,7 @@ const AssertionDetailsComponent = (props) =>
                   modal: [MODAL_BADGE_EVIDENCE, {
                     evidence: row,
                     assertion: props.assertion,
-                    disabled: get(props.assertion.badge, 'permissions.assign')
+                    disabled: get(props.assertion.badge, 'permissions.grant')
                   }]
                 })}
                 delete={{
@@ -87,7 +87,7 @@ const AssertionDetailsComponent = (props) =>
                 ]}
               />
 
-              {get(props.assertion.badge, 'permissions.assign') &&
+              {get(props.assertion.badge, 'permissions.grant') &&
                 <Button
                   className="btn btn-block btn-emphasis component-container"
                   type={MODAL_BUTTON}

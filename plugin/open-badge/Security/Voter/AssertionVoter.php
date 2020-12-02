@@ -11,37 +11,56 @@
 
 namespace Claroline\OpenBadgeBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
-use Claroline\OpenBadgeBundle\Manager\OpenBadgeManager;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AssertionVoter extends AbstractVoter
 {
-    public function setManager(OpenBadgeManager $manager)
-    {
-        $this->manager = $manager;
-    }
-
-    //ready to be overrided
-    public function checkCreation(TokenInterface $token, $object)
-    {
-        return $this->manager->isAllowedBadgeManagement($token, $object->getBadge());
-    }
-
-    //ready to be overrided
-    public function checkDelete(TokenInterface $token, $object)
-    {
-        return $this->isAllowedBadgeManagement($token, $object->getBadge());
-    }
-
-    //ready to be overrided
-    public function checkEdit(TokenInterface $token, $object)
-    {
-        return $this->isAllowedBadgeManagement($token, $object->getBadge());
-    }
-
     public function getClass()
     {
         return Assertion::class;
+    }
+
+    /**
+     * @param Assertion $object
+     */
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    {
+        $currentUser = null;
+        if ($token->getUser() instanceof User) {
+            $currentUser = $token->getUser();
+        }
+
+        switch ($attributes[0]) {
+            case self::OPEN:
+                // has grant rights on the badge or is owner
+                if ($this->isGranted('GRANT', $object->getBadge())
+                    || (!empty($currentUser) && !empty($object->getRecipient()) && $currentUser->getId() === $object->getRecipient()->getId())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+
+            case self::CREATE:
+            case self::EDIT:
+            case self::ADMINISTRATE:
+            case self::DELETE:
+                // has grant rights on the badge
+                if ($this->isGranted('GRANT', $object->getBadge())) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    public function getSupportedActions()
+    {
+        return [self::OPEN, self::CREATE, self::EDIT, self::DELETE];
     }
 }

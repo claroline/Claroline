@@ -13,6 +13,8 @@ plugin:
           is_exportable: false
           is_anonymous_excluded: true
           is_locked_for_admin: false
+          tool_rights:
+              - name: grant
 
     data_sources:
         - name: badges

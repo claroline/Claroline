@@ -1,15 +1,13 @@
 services:
     _defaults:
         autoconfigure: false
-        public: false #because lazy
+        public: false
 
     Claroline\OpenBadgeBundle\Manager\OpenBadgeManager:
         arguments:
-          - '@assets.packages'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@claroline.manager.template_manager'
-          - '@claroline.manager.workspace_manager'
-          - '@twig'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@twig'
 
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:
