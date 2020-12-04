@@ -51,6 +51,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
+        self::ensureKernelShutdown();
         self::$client = static::createClient();
         self::$om = self::$client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         self::$persister = self::$client->getContainer()->get('claroline.library.testing.persister');
