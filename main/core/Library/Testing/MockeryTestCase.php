@@ -76,7 +76,6 @@ abstract class MockeryTestCase extends TestCase
     private function initMockery()
     {
         m::getConfiguration()->allowMockingNonExistentMethods(false);
-        m::getConfiguration()->allowMockingMethodsUnnecessarily(false);
     }
 
     private function isCloneable($class)
