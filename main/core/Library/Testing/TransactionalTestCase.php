@@ -25,6 +25,7 @@ abstract class TransactionalTestCase extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        self::ensureKernelShutdown();
         $this->client = self::createClient();
         $this->client->disableReboot();
         $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager')->beginTransaction();
