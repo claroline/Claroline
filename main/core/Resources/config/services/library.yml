@@ -107,8 +107,6 @@ services:
             - '%claroline.param.public_files_directory%'
             - '@security.token_storage'
 
-    Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser: ~
-
     Claroline\CoreBundle\Library\Utilities\ClaroUtilities: ~
 
     Claroline\CoreBundle\Library\RoutingHelper:

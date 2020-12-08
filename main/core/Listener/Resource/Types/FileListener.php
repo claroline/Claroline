@@ -27,7 +27,6 @@ use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Ramsey\Uuid\Uuid;
@@ -59,9 +58,6 @@ class FileListener
     /** @var string */
     private $filesDir;
 
-    /** @var MimeTypeGuesser */
-    private $mimeTypeGuesser;
-
     /** @var SerializerProvider */
     private $serializer;
 
@@ -76,7 +72,6 @@ class FileListener
         ObjectManager $om,
         StrictDispatcher $eventDispatcher,
         string $filesDir,
-        MimeTypeGuesser $mimeTypeGuesser,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
         ResourceEvaluationManager $resourceEvalManager,
@@ -86,7 +81,6 @@ class FileListener
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
         $this->filesDir = $filesDir;
-        $this->mimeTypeGuesser = $mimeTypeGuesser;
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->resourceEvalManager = $resourceEvalManager;

@@ -125,7 +125,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '%claroline.param.files_directory%'
-            - '@Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@claroline.manager.resource_evaluation_manager'

@@ -37,8 +37,7 @@ use Claroline\CoreBundle\Repository\User\RoleRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerAwareInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ResourceManager implements LoggerAwareInterface
@@ -367,18 +366,17 @@ class ResourceManager implements LoggerAwareInterface
             $extension = $event->getExtension();
             $hasExtension = '' !== pathinfo($nodes[0]->getName(), PATHINFO_EXTENSION);
 
-            $extGuesser = ExtensionGuesser::getInstance();
-            $mimeGuesser = MimeTypeGuesser::getInstance();
+            $mimeTypeGuesser = new MimeTypes();
 
             if (!$hasExtension) {
-                $extension = $extGuesser->guess($nodes[0]->getMimeType());
+                $extension = $mimeTypeGuesser->getExtensions($nodes[0]->getMimeType())[0];
             }
 
             $data['name'] = $hasExtension ?
                 $nodes[0]->getName() :
                 $nodes[0]->getName().'.'.$extension;
             $data['file'] = $event->getItem();
-            $data['mimeType'] = $nodes[0]->getMimeType() ? $nodes[0]->getMimeType() : $mimeGuesser->guess($extension);
+            $data['mimeType'] = $nodes[0]->getMimeType() ? $nodes[0]->getMimeType() : $mimeTypeGuesser->guessMimeType($event->getItem());
 
             return $data;
         }
