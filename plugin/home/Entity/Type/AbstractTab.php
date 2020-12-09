@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractTab
 {
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab")
+     * @ORM\OneToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="tab_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var HomeTab

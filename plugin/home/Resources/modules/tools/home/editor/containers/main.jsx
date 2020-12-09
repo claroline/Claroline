@@ -2,7 +2,6 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {actions as formActions} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {EditorMain as EditorMainComponent} from '#/plugin/home/tools/home/editor/components/main'
@@ -19,7 +18,6 @@ const EditorMain = withRouter(
 
       readOnly: editorSelectors.readOnly(state),
       tabs: editorSelectors.editorTabs(state),
-      currentTabIndex: editorSelectors.currentTabIndex(state),
       currentTabTitle: editorSelectors.currentTabTitle(state),
       currentTab: editorSelectors.currentTab(state)
     }),
@@ -27,27 +25,17 @@ const EditorMain = withRouter(
       setCurrentTab(tab){
         dispatch(actions.setCurrentTab(tab))
       },
-      createTab(index, tab, navigate) {
-        dispatch(editorActions.createTab(index, tab, navigate))
+      createTab(parent = null, tab, navigate) {
+        dispatch(editorActions.createTab(parent, tab, navigate))
       },
       moveTab(tabId, newPosition) {
         dispatch(editorActions.moveTab(tabId, newPosition))
       },
-      updateTab(tabIndex, data, path = null) {
-        if (path) {
-          dispatch(formActions.updateProp(editorSelectors.FORM_NAME, `[${tabIndex}].${path}`, data))
-        } else {
-          dispatch(formActions.updateProp(editorSelectors.FORM_NAME, `[${tabIndex}]`, data))
-        }
+      updateTab(tabs, tabId, data, path = null) {
+        dispatch(editorActions.updateTab(tabs, tabId, data, path))
       },
-      deleteTab(tabs, currentTab, navigate) {
-        let tabIndex = tabs.findIndex(tab => tab.id === currentTab.id)
-        tabIndex === 0 ? tabIndex++: tabIndex--
-
+      deleteTab(tabs, currentTab) {
         dispatch(editorActions.deleteTab(tabs, currentTab))
-        const redirected = tabs[tabIndex]
-        // redirect
-        navigate('/edit/' + redirected.slug)
       }
     })
   )(EditorMainComponent)

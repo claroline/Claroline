@@ -13,9 +13,11 @@ import {MODAL_HOME_PARAMETERS} from '#/plugin/home/tools/home/editor/modals/para
 import {MODAL_HOME_POSITION} from '#/plugin/home/tools/home/editor/modals/position'
 import {HomePage} from '#/plugin/home/tools/home/containers/page'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
+import {flattenTabs} from '#/plugin/home/tools/home/utils'
 import {getTab} from '#/plugin/home/home'
 
 import {selectors} from '#/plugin/home/tools/home/editor/store/selectors'
+import {getFormDataPart} from '#/plugin/home/tools/home/editor/utils'
 
 class EditorTab extends Component {
   constructor(props) {
@@ -51,13 +53,12 @@ class EditorTab extends Component {
         tabs: this.props.tabs,
         currentTab: this.props.currentTab,
         currentTabTitle: this.props.currentTabTitle,
-        currentTabIndex: this.props.currentTabIndex,
-        update: (prop, data, tabIndex = null) => {
-          if (tabIndex === null) {
-            tabIndex = this.props.currentTabIndex
+        update: (prop, data, tabId = null) => {
+          if (tabId === null) {
+            tabId = this.props.currentTab.id
           }
 
-          this.props.updateTab(tabIndex, data, 'parameters.' + prop)
+          this.props.updateTab(this.props.tabs, tabId, data, 'parameters.' + prop)
         }
       })
     }
@@ -66,6 +67,10 @@ class EditorTab extends Component {
   }
 
   render() {
+    if (!this.props.currentTab) {
+      return null
+    }
+
     return (
       <HomePage
         path="/edit"
@@ -80,7 +85,7 @@ class EditorTab extends Component {
             label: trans('add_tab', {}, 'home'),
             modal: [MODAL_HOME_CREATION, {
               position: this.props.tabs.length,
-              create: (tab) => this.props.createTab(this.props.tabs.length, tab, (slug) => this.props.history.push(`${this.props.path}/edit/${slug}`))
+              create: (tab) => this.props.createTab(null, tab, (slug) => this.props.history.push(`${this.props.path}/edit/${slug}`))
             }],
             primary: true,
             group: trans('management')
@@ -92,7 +97,7 @@ class EditorTab extends Component {
             disabled: this.props.readOnly,
             modal: [MODAL_HOME_PARAMETERS, {
               tab: this.props.currentTab,
-              save: (tab) => this.props.updateTab(this.props.currentTabIndex, tab)
+              save: (tab) => this.props.updateTab(this.props.tabs, tab.id, tab)
             }],
             group: trans('management')
           }, {
@@ -102,7 +107,7 @@ class EditorTab extends Component {
             label: trans('move', {}, 'actions'),
             modal: [MODAL_HOME_POSITION, {
               tab: this.props.currentTab,
-              tabs: this.props.tabs,
+              tabs: flattenTabs(this.props.tabs),
               selectAction: (position) => ({
                 type: CALLBACK_BUTTON,
                 label: trans('move', {}, 'actions'),
@@ -122,14 +127,14 @@ class EditorTab extends Component {
               subtitle: this.props.currentTabTitle
             },
             disabled: this.props.readOnly || 1 >= this.props.tabs.length,
-            callback: () => this.props.deleteTab(this.props.tabs, this.props.currentTab, (path) => this.props.history.push(this.props.path+path)),
+            callback: () => this.props.deleteTab(this.props.tabs, this.props.currentTab),
             group: trans('management')
           }
         ]}
       >
         <Form
           name={selectors.FORM_NAME}
-          dataPart={`[${this.props.currentTabIndex}]`}
+          dataPart={getFormDataPart(this.props.currentTab.id, this.props.tabs)}
           buttons={true}
           lock={this.props.currentTab ? {
             id: this.props.currentTab.id,
@@ -176,7 +181,6 @@ EditorTab.propTypes = {
   )),
   currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
-  currentTabIndex: T.number.isRequired,
   createTab: T.func.isRequired,
   updateTab: T.func.isRequired,
   moveTab: T.func.isRequired,

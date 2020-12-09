@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
@@ -11,8 +12,18 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/plugin/home/tools/home/editor/modals/position/store/selectors'
 
 const PositionModal = props => {
+  const parentChoices = props.tabs
+    .filter(tab => tab.id !== props.tab.id)
+    .filter(tab => props.administration || 'administration' !== tab.context)
+    .reduce((tabChoices, current) => Object.assign(tabChoices, {
+      [current.id]: current.title
+    }), {})
+
   const stepChoices = props.tabs
-    .reduce((stepChoices, current) => Object.assign(stepChoices, {
+    // only display the sub steps of the selected `parent`
+    .filter(tab => tab.id !== props.tab.id && get(tab, 'parent.id') === props.positionData.parent)
+    .filter(tab => props.administration || 'administration' !== tab.context)
+    .reduce((tabChoices, current) => Object.assign(tabChoices, {
       [current.id]: current.title
     }), {})
 
@@ -21,27 +32,34 @@ const PositionModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'tab', 'tabs', 'positionData', 'selectEnabled', 'selectAction', 'reset', 'update')}
+      {...omit(props, 'tab', 'tabs', 'administration', 'positionData', 'selectEnabled', 'selectAction', 'reset', 'update')}
       icon="fa fa-fw fa-arrows"
       title={trans('movement')}
       subtitle={props.tab.title}
       onEntering={() => {
-        // get the current step (I don't have access to `parent` in props.step)
+        // get the current step (I don't have access to `parent` in props.tab)
         const currentTab = props.tabs.find(tab => tab.id === props.tab.id)
 
         // convert current step position to display in form
         const currentPosition = {}
 
-        const siblingIndex = props.tabs.findIndex(tab => tab.id === currentTab.id)
-        if (1 === props.tabs.length || 0 === siblingIndex) {
+        // get parent
+        if (currentTab.parent) {
+          currentPosition.parent = currentTab.parent.id
+        }
+
+        // get position between current parent children
+        const siblings = props.tabs.filter(tab => get(tab, 'parent.id') === get(currentTab, 'parent.id'))
+        const siblingIndex = siblings.findIndex(tab => tab.id === currentTab.id)
+        if (1 === siblings.length || 0 === siblingIndex) {
           // first or only child
           currentPosition.order = 'first'
-        } else if (props.tabs.length === siblingIndex + 1) {
+        } else if (siblings.length === siblingIndex + 1) {
           // last child
           currentPosition.order = 'last'
         } else {
           currentPosition.order = 'after'
-          currentPosition.tab = props.tabs[siblingIndex - 1].id
+          currentPosition.tab = siblings[siblingIndex - 1].id
         }
 
         props.reset(currentPosition)
@@ -55,6 +73,18 @@ const PositionModal = props => {
             primary: true,
             fields: [
               {
+                name: 'parent',
+                label: trans('parent'),
+                type: 'choice',
+                options: {
+                  condensed: true,
+                  choices: parentChoices
+                },
+                onChange: () => {
+                  props.update('order', 'last')
+                  props.update('tab', null)
+                }
+              }, {
                 name: 'order',
                 label: trans('position'),
                 type: 'choice',
@@ -73,7 +103,7 @@ const PositionModal = props => {
                 },
                 onChange: (order) => {
                   if (-1 !== ['first', 'last'].indexOf(order)) {
-                    props.update('step', null)
+                    props.update('tab', null)
                   } else if (!props.positionData.tab) {
                     // auto select a step
                     const siblings = Object.keys(stepChoices)
@@ -131,9 +161,11 @@ PositionModal.propTypes = {
     title: T.string.isRequired
   })),
   positionData: T.shape({
+    parent: T.string,
     order: T.oneOf(['first', 'before', 'after', 'last']),
     tab: T.string
   }),
+  administration: T.bool.isRequired,
   selectEnabled: T.bool,
   selectAction: T.func.isRequired, // action generator
   reset: T.func.isRequired,

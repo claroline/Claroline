@@ -101,7 +101,7 @@ class HomeTabSerializer
             'context' => $homeTab->getContext(),
             'type' => $homeTab->getType(),
             'class' => $homeTab->getClass(),
-            'position' => $homeTabConfig->getTabOrder(),
+            'position' => $homeTab->getOrder(),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $homeTab),
                 'edit' => $this->authorization->isGranted('EDIT', $homeTab),
@@ -118,6 +118,9 @@ class HomeTabSerializer
                 'centerTitle' => $homeTabConfig->isCenterTitle(),
             ],
             'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+            'children' => array_map(function (HomeTab $child) use ($options) {
+                return $this->serialize($child, $options);
+            }, $homeTab->getChildren()->toArray()),
         ];
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
@@ -160,7 +163,7 @@ class HomeTabSerializer
         }
 
         $this->sipe('title', 'setName', $data, $homeTabConfig);
-        $this->sipe('position', 'setPosition', $data, $homeTabConfig);
+        $this->sipe('position', 'setOrder', $data, $homeTab);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTabConfig);
         $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTabConfig);
@@ -232,6 +235,47 @@ class HomeTabSerializer
             }
             $typeParameters->setTab($homeTab);
             $this->om->persist($typeParameters);
+        }
+
+        // Set children steps
+        if (isset($data['children'])) {
+            /** @var HomeTab[] $currentChildren */
+            $currentChildren = $homeTab->getChildren()->toArray();
+            $ids = [];
+
+            // updates tabs
+            foreach ($data['children'] as $childIndex => $childData) {
+                $child = null;
+                if ($childData['id']) {
+                    $child = $this->om->getRepository(HomeTab::class)->findOneBy(['uuid' => $childData['id']]);
+                    // TODO manage tabs moving
+                    /*foreach ($currentChildren as $currentChild) {
+                        if ($currentChild->getUuid() === $childData['id']) {
+                            $child = $currentChild;
+                            break;
+                        }
+                    }*/
+                }
+
+                if (empty($child)) {
+                    $child = new HomeTab();
+                    //$this->om->persist($child);
+                }
+
+                $child->setOrder($childIndex);
+                $homeTab->addChild($child);
+
+                $this->deserialize($childData, $child, $options);
+                $ids[] = $child->getUuid();
+            }
+
+            // removes tabs which no longer exists
+            foreach ($currentChildren as $currentTab) {
+                if (!in_array($currentTab->getUuid(), $ids)) {
+                    //$this->om->remove($currentTab);
+                    $homeTab->removeChild($currentTab);
+                }
+            }
         }
 
         return $homeTab;

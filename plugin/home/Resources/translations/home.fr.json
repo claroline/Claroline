@@ -1,5 +1,6 @@
 {
     "add_tab": "Ajouter un onglet",
+    "tab_add_child": "Ajouter un sous-onglet",
     "home_tab_delete_confirm_title": "Suppression d'un onglet",
     "home_tab_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cet onglet ?",
     "home_tab_locked": "Vous ne pouvez pas modifier cet onglet",

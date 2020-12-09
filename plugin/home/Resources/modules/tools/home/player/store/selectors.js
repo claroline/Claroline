@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect'
 
 import {trans} from '#/main/app/intl/translation'
+import {flattenTabs} from '#/plugin/home/tools/home/utils'
 import {selectors as homeSelectors} from '#/plugin/home/tools/home/store/selectors'
 
 const tabs = (state) => {
@@ -11,7 +12,11 @@ const tabs = (state) => {
 
 const currentTab = createSelector(
   [tabs, homeSelectors.currentTabId],
-  (tabs, currentTabId) => tabs.find(tab => currentTabId === tab.slug)
+  (tabs, currentTabId) => {
+    const flattened = flattenTabs(tabs)
+
+    return flattened.find(tab => currentTabId === tab.slug)
+  }
 )
 
 const currentTabTitle = createSelector(

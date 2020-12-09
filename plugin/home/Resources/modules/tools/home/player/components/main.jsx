@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
+import {flattenTabs} from '#/plugin/home/tools/home/utils'
 import {PlayerTab} from '#/plugin/home/tools/home/player/components/tab'
 
 const PlayerMain = props =>
@@ -17,7 +18,8 @@ const PlayerMain = props =>
         path: '/:slug',
         onEnter: (params = {}) => props.setCurrentTab(params.slug),
         render: (routeProps) => {
-          if (props.tabs.find(tab => tab.slug === routeProps.match.params.slug)) {
+          const flattened = flattenTabs(props.tabs)
+          if (flattened.find(tab => tab.slug === routeProps.match.params.slug)) {
             const Player = (
               <PlayerTab
                 path={props.path}

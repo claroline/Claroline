@@ -27,7 +27,8 @@ const Tab = {
         Role.propTypes
       ))
     }),
-    parameters: T.object
+    parameters: T.object,
+    children: T.array
   },
   defaultProps: {
     icon: null,
@@ -39,7 +40,8 @@ const Tab = {
       hidden: false,
       roles: []
     },
-    parameters: {}
+    parameters: {},
+    children: []
   }
 }
 

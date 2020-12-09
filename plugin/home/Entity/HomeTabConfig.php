@@ -73,13 +73,6 @@ class HomeTabConfig
     private $visible = true;
 
     /**
-     * @ORM\Column(type="integer", name="tab_order")
-     *
-     * @var int
-     */
-    private $tabOrder;
-
-    /**
      * @ORM\Column(type="json_array", nullable=true)
      *
      * @var array
@@ -165,11 +158,6 @@ class HomeTabConfig
         $this->visible = $visible;
     }
 
-    public function getTabOrder()
-    {
-        return $this->tabOrder;
-    }
-
     public function getIcon()
     {
         return $this->icon;
@@ -178,11 +166,6 @@ class HomeTabConfig
     public function setIcon($icon)
     {
         $this->icon = $icon;
-    }
-
-    public function setTabOrder($tabOrder)
-    {
-        $this->tabOrder = $tabOrder;
     }
 
     public function getDetails()
@@ -223,15 +206,5 @@ class HomeTabConfig
     public function setCenterTitle($centerTitle)
     {
         $this->centerTitle = $centerTitle;
-    }
-
-    /**
-     * Alias of setTabOrder.
-     *
-     * @param int $position
-     */
-    public function setPosition($position)
-    {
-        $this->setTabOrder($position);
     }
 }

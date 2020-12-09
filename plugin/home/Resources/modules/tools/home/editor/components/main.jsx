@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
+import {flattenTabs} from '#/plugin/home/tools/home/utils'
 import {EditorTab} from '#/plugin/home/tools/home/editor/components/tab'
 
 const EditorMain = props =>
@@ -17,7 +18,8 @@ const EditorMain = props =>
         path: '/edit/:slug',
         onEnter: (params = {}) => props.setCurrentTab(params.slug),
         render: (routeProps) => {
-          if (props.tabs.find(tab => tab.slug === routeProps.match.params.slug)) {
+          const flattened = flattenTabs(props.tabs)
+          if (flattened.find(tab => tab.slug === routeProps.match.params.slug)) {
             const Editor = (
               <EditorTab
                 {...props}
@@ -50,7 +52,6 @@ EditorMain.propTypes = {
   )),
   currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
-  currentTabIndex: T.number.isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,

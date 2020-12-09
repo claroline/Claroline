@@ -62,22 +62,22 @@ class WidgetsTabParameters extends Component {
                 let movingContentIndex = -1
 
                 let oldWidgets = null
-                let oldParentTabIndex = null
+                let oldParentId = null
                 let oldParent = null
 
                 //this is not pretty but we need to be aware of all the tabs because widget can move from one to an other
-                this.props.tabs.forEach((tab, index) => {
-                  tab.parameters.widgets.forEach(widget => {
+                this.props.tabs.forEach((tab) => {
+                  get(tab, 'parameters.widgets', []).forEach(widget => {
                     if (widget.contents.findIndex(content => content && content.id === movingContentId) > -1) {
                       oldWidgets = tab.parameters.widgets
-                      oldParentTabIndex = index
+                      oldParentId = tab.id
                       movingContentIndex = widget.contents.findIndex(content => content && content.id === movingContentId)
                     }
                   })
                 })
 
                 if (oldWidgets && -1 !== movingContentIndex) {
-                  if (this.props.currentTabIndex !== oldParentTabIndex) {
+                  if (this.props.currentTab.id !== oldParentId) {
                     oldWidgets = cloneDeep(oldWidgets)
                   } else {
                     oldWidgets = newWidgets
@@ -99,7 +99,7 @@ class WidgetsTabParameters extends Component {
                   oldParent.contents[movingContentIndex] = null
 
                   this.props.update('widgets', newWidgets)
-                  this.props.update('widgets', oldWidgets, oldParentTabIndex)
+                  this.props.update('widgets', oldWidgets, oldParentId)
                 }
 
                 this.stopMovingContent()
@@ -226,7 +226,6 @@ class WidgetsTabParameters extends Component {
 WidgetsTabParameters.propTypes = {
   readOnly: T.bool,
   currentContext: T.object.isRequired,
-  currentTabIndex: T.number.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes
   ),

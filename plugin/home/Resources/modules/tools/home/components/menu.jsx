@@ -11,6 +11,7 @@ import {PlayerMenu} from '#/plugin/home/tools/home/player/containers/menu'
 
 const HomeMenu = props =>
   <MenuSection
+    className="home-menu"
     {...omit(props, 'path', 'canEdit')}
     title={trans('home', {}, 'tools')}
   >

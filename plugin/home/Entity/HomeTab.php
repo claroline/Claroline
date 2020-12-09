@@ -13,6 +13,7 @@ namespace Claroline\HomeBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -26,8 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
 class HomeTab
 {
     use Id;
-    use Poster;
     use Uuid;
+    use Order;
+    use Poster;
 
     const TYPE_WORKSPACE = 'workspace';
     const TYPE_DESKTOP = 'desktop';
@@ -75,6 +77,26 @@ class HomeTab
     private $workspace = null;
 
     /**
+     * Parent tab.
+     *
+     * @var HomeTab
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $parent = null;
+
+    /**
+     * Children tabs.
+     *
+     * @var ArrayCollection|HomeTab[]
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\HomeBundle\Entity\HomeTab", mappedBy="parent", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"order" = "ASC"})
+     */
+    protected $children;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\HomeBundle\Entity\HomeTabConfig",
      *     mappedBy="homeTab",
@@ -89,6 +111,7 @@ class HomeTab
     {
         $this->refreshUuid();
 
+        $this->children = new ArrayCollection();
         $this->homeTabConfigs = new ArrayCollection();
     }
 
@@ -159,5 +182,63 @@ class HomeTab
         if ($this->homeTabConfigs->contains($config)) {
             $this->homeTabConfigs->removeElement($config);
         }
+    }
+
+    /**
+     * Set parent.
+     */
+    public function setParent(HomeTab $parent = null)
+    {
+        if ($parent !== $this->parent) {
+            $this->parent = $parent;
+
+            if (null !== $parent) {
+                $parent->addChild($this);
+            }
+        }
+    }
+
+    /**
+     * Get parent.
+     *
+     * @return HomeTab
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Get children of the tab.
+     *
+     * @return ArrayCollection|HomeTab[]
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Add new child to the tab.
+     */
+    public function addChild(HomeTab $homeTab)
+    {
+        if (!$this->children->contains($homeTab)) {
+            $this->children->add($homeTab);
+            $homeTab->setParent($this);
+        }
+    }
+
+    /**
+     * Remove a tab from children.
+     */
+    public function removeChild(HomeTab $homeTab)
+    {
+        if ($this->children->contains($homeTab)) {
+            $this->children->removeElement($homeTab);
+            $homeTab->setParent(null);
+        }
+
+        return $this;
     }
 }

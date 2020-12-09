@@ -81,13 +81,21 @@ class HomeTabFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
 
                     break;
+                case 'parent':
+                    if (empty($filterValue)) {
+                        $qb->andWhere('obj.parent IS NULL');
+                    } else {
+                        $qb->andWhere("obj.parent = :{$filterName}");
+                        $qb->setParameter($filterName, $filterValue);
+                    }
 
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 
-        $qb->orderBy('config.tabOrder', 'ASC');
+        $qb->orderBy('obj.order', 'ASC');
 
         return $qb;
     }

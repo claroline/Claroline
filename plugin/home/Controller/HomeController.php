@@ -92,19 +92,6 @@ class HomeController extends AbstractApiController
         // grab tabs data
         $tabs = $this->decodeRequest($request);
 
-        $ids = [];
-        $updated = [];
-
-        foreach ($tabs as $tab) {
-            // do not update tabs set by the administration tool
-            if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['context']) {
-                $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
-                $ids[] = $tab['id']; // will be used to determine deleted tabs
-            } else {
-                $updated[] = $this->om->getObject($tab, HomeTab::class);
-            }
-        }
-
         // retrieve existing tabs for the context to remove deleted ones
         /** @var HomeTab[] $installedTabs */
         $installedTabs = HomeTab::TYPE_HOME === $context ?
@@ -115,12 +102,29 @@ class HomeController extends AbstractApiController
                 $context => $contextId,
             ]);
 
-        // do not delete tabs set by the administration tool
-        $installedTabs = array_filter($installedTabs, function (HomeTab $tab) {
-            return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getContext();
-        });
+        $this->om->startFlushSuite();
+
+        $ids = [];
+        $updated = [];
+        foreach ($tabs as $tab) {
+            // do not update tabs set by the administration tool
+            if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['context']) {
+                $entity = $this->crud->update(HomeTab::class, $tab, [$context, Crud::THROW_EXCEPTION]);
+            } else {
+                $entity = $this->om->getObject($tab, HomeTab::class);
+            }
+
+            if ($entity) {
+                $updated[] = $entity;
+                $ids = array_merge($ids, [$entity->getUuid()], array_map(function (HomeTab $child) {
+                    return $child->getUuid();
+                }, $entity->getChildren()->toArray())); // will be used to determine deleted tabs
+            }
+        }
 
         $this->cleanDatabase($installedTabs, $ids);
+
+        $this->om->endFlushSuite();
 
         return new JsonResponse(array_values(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);
@@ -135,14 +139,6 @@ class HomeController extends AbstractApiController
         // grab tabs data
         $tabs = $this->decodeRequest($request);
 
-        $ids = [];
-        $updated = [];
-
-        foreach ($tabs as $tab) {
-            $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
-            $ids[] = $tab['id']; // will be used to determine deleted tabs
-        }
-
         // retrieve existing tabs for the context to remove deleted ones
         /** @var HomeTab[] $installedTabs */
         $installedTabs = $this->finder->fetch(
@@ -150,7 +146,21 @@ class HomeController extends AbstractApiController
             ['context' => 'desktop' === $context ? HomeTab::TYPE_ADMIN_DESKTOP : HomeTab::TYPE_ADMIN]
         );
 
+        $this->om->startFlushSuite();
+
+        $ids = [];
+        $updated = [];
+        foreach ($tabs as $tab) {
+            $entity = $this->crud->update(HomeTab::class, $tab, [$context]);
+            $updated[] = $entity;
+            $ids = array_merge($ids, [$entity->getUuid()], array_map(function (HomeTab $child) {
+                return $child->getUuid();
+            }, $entity->getChildren()->toArray())); // will be used to determine deleted tabs
+        }
+
         $this->cleanDatabase($installedTabs, $ids);
+
+        $this->om->endFlushSuite();
 
         return new JsonResponse(array_values(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);
@@ -211,8 +221,6 @@ class HomeController extends AbstractApiController
             if (!in_array($installedTab->getUuid(), $ids)) {
                 // the tab no longer exist we can remove it
                 $this->crud->delete($installedTab);
-            } else {
-                $this->om->refresh($installedTab);
             }
         }
     }

@@ -4,6 +4,8 @@ import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as homeSelectors} from '#/plugin/home/tools/home/store/selectors'
 
+import {flattenTabs} from '#/plugin/home/tools/home/utils'
+
 const FORM_NAME = `${homeSelectors.STORE_NAME}.editor`
 
 const editorTabs = (state) => {
@@ -11,18 +13,11 @@ const editorTabs = (state) => {
     .sort((a, b) => a.position - b.position)
 }
 
-const currentTabIndex = (state) => {
-  const currentTabId = homeSelectors.currentTabId(state)
-  const tabs = formSelectors.data(formSelectors.form(state, FORM_NAME)) || []
-
-  return tabs.findIndex(tab => currentTabId === tab.slug)
-}
-
 const currentTab = (state) => {
-  const currentIndex = currentTabIndex(state)
-  const tabs = formSelectors.data(formSelectors.form(state, FORM_NAME)) || []
+  const currentTabId = homeSelectors.currentTabId(state)
+  const tabs = flattenTabs(formSelectors.data(formSelectors.form(state, FORM_NAME)) || [])
 
-  return tabs[currentIndex]
+  return tabs.find(tab => currentTabId === tab.slug)
 }
 
 const currentTabTitle = createSelector(
@@ -55,7 +50,6 @@ export const selectors = {
 
   editorTabs,
   currentTab,
-  currentTabIndex,
   currentTabTitle,
   readOnly
 }

@@ -53,11 +53,17 @@ class HomeListener
     public function onDisplayDesktop(OpenToolEvent $event)
     {
         $adminTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['context' => HomeTab::TYPE_ADMIN_DESKTOP],
+            'filters' => [
+                'context' => HomeTab::TYPE_ADMIN_DESKTOP,
+                'parent' => null,
+            ],
         ]);
 
         $userTabs = $this->finder->search(HomeTab::class, [
-            'filters' => ['context' => HomeTab::TYPE_DESKTOP],
+            'filters' => [
+                'context' => HomeTab::TYPE_DESKTOP,
+                'parent' => null,
+            ],
         ]);
 
         // generate the final list of tabs
@@ -85,6 +91,7 @@ class HomeListener
             'filters' => [
                 'context' => HomeTab::TYPE_WORKSPACE,
                 'workspace' => $workspace->getUuid(),
+                'parent' => null,
             ],
         ]);
 
@@ -99,10 +106,12 @@ class HomeListener
      */
     public function onDisplayAdministration(OpenToolEvent $event)
     {
-        $tabs = $this->finder->search(
-            HomeTab::class,
-            ['filters' => ['context' => HomeTab::TYPE_ADMIN]]
-        );
+        $tabs = $this->finder->search(HomeTab::class, [
+            'filters' => [
+                'context' => HomeTab::TYPE_ADMIN,
+                'parent' => null,
+            ],
+        ]);
 
         $event->setData([
             'administration' => true,

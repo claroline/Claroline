@@ -2,7 +2,6 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 
-import {hasPermission} from '#/main/app/security'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
@@ -14,15 +13,23 @@ const EditorMenu = withRouter(
   connect(
     (state) => ({
       path: toolSelectors.path(state),
-      canEdit: hasPermission('edit', toolSelectors.toolData(state)),
       currentContext: toolSelectors.context(state),
       currentUser: securitySelectors.currentUser(state),
       tabs: selectors.editorTabs(state),
       administration: homeSelectors.administration(state)
     }),
     (dispatch) => ({
-      createTab(index, tab, navigate) {
-        dispatch(actions.createTab(index, tab, navigate))
+      createTab(parent = null, tab, navigate) {
+        dispatch(actions.createTab(parent, tab, navigate))
+      },
+      moveTab(tabId, newPosition) {
+        dispatch(actions.moveTab(tabId, newPosition))
+      },
+      updateTab(tabs, tabId, data, path = null) {
+        dispatch(actions.updateTab(tabs, tabId, data, path))
+      },
+      deleteTab(tabs, currentTab) {
+        dispatch(actions.deleteTab(tabs, currentTab))
       }
     })
   )(EditorMenuComponent)

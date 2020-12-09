@@ -1,5 +1,6 @@
 {
     "add_tab": "Add a tab",
+    "tab_add_child": "Add a sub tab",
     "home_tab_delete_confirm_title": "Tab deletion",
     "home_tab_delete_confirm_message": "Are you sure you want to delete this tab ?",
     "home_tab_locked": "You can not modify this tab",
