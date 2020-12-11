@@ -11,7 +11,7 @@
 
 namespace Claroline\ScormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Scorm extends AbstractResource
 {
-    use UuidTrait;
+    use Uuid;
 
     const SCORM_12 = 'scorm_12';
     const SCORM_2004 = 'scorm_2004';

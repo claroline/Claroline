@@ -24,8 +24,6 @@ class EventUserFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
-        $userJoin = false;
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'event':
@@ -35,10 +33,7 @@ class EventUserFinder extends AbstractFinder
                     break;
 
                 case 'user':
-                    if (!$userJoin) {
-                        $qb->join('obj.user', 'u');
-                        $userJoin = true;
-                    }
+                    $qb->join('obj.user', 'u');
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;

@@ -76,7 +76,7 @@ class GridQuestion extends AbstractItem
      *
      * @ORM\Column(type="integer")
      *
-     * @var string
+     * @var int
      */
     private $borderWidth = 1;
 
@@ -129,8 +129,6 @@ class GridQuestion extends AbstractItem
 
     /**
      * Add cell.
-     *
-     * @param Cell $cell
      */
     public function addCell(Cell $cell)
     {
@@ -142,8 +140,6 @@ class GridQuestion extends AbstractItem
 
     /**
      * Remove cell.
-     *
-     * @param Cell $cell
      */
     public function removeCell(Cell $cell)
     {

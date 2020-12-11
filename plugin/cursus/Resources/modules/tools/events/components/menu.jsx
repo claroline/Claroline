@@ -19,23 +19,25 @@ const EventsMenu = (props) =>
         {
           name: 'registered',
           type: LINK_BUTTON,
-          label: trans('Mes séances', {}, 'cursus'),
+          label: trans('my_events', {}, 'cursus'),
           target: props.path + '/registered'
         }, {
           name: 'public',
           type: LINK_BUTTON,
-          label: trans('Séances publics', {}, 'cursus'),
+          label: trans('public_events', {}, 'cursus'),
           target: props.path + '/public'
         }, {
           name: 'all',
           type: LINK_BUTTON,
-          label: trans('Toutes les séances', {}, 'cursus'),
-          target: props.path + '/all'
+          label: trans('all_events', {}, 'cursus'),
+          target: props.path + '/all',
+          displayed: props.canEdit
         }, {
           name: 'pending',
           type: LINK_BUTTON,
           label: trans('pending_registrations'),
-          target: props.path + '/pending'
+          target: props.path + '/pending',
+          displayed: false && props.canAdministrate
         }
       ]}
       onClick={props.autoClose}
@@ -43,9 +45,11 @@ const EventsMenu = (props) =>
   </MenuSection>
 
 EventsMenu.propTypes = {
-  path: T.string,
+  canEdit: T.bool.isRequired,
+  canAdministrate: T.bool.isRequired,
 
   // from menu
+  path: T.string,
   opened: T.bool.isRequired,
   toggle: T.func.isRequired,
   autoClose: T.func.isRequired

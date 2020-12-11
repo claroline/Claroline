@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Attempt;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Item\Item;
 
@@ -23,7 +23,7 @@ class Answer
      */
     private $id;
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @var string
@@ -240,9 +240,6 @@ class Answer
         }
     }
 
-    /**
-     * @param Paper $paper
-     */
     public function setPaper(Paper $paper)
     {
         $this->paper = $paper;

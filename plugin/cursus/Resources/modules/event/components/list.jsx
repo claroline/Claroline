@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-//import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {constants} from '#/plugin/cursus/constants'
@@ -16,32 +16,16 @@ const EventList = (props) =>
       url: props.url,
       autoload: true
     }}
-    primaryAction={props.primaryAction}
-    actions={props.actions/*(rows) => [
-      {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-pencil',
-        label: trans('edit'),
-        scope: ['object'],
-        target: `${props.path}/events/form/${rows[0].id}`
-      }, {
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-plus-square',
-        label: trans('invite_learners_to_session_event', {}, 'cursus'),
-        scope: ['object'],
-        callback: () => props.inviteAll(rows[0].id)
-      }, {
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-graduation-cap',
-        label: trans('generate_event_certificates', {}, 'cursus'),
-        scope: ['object'],
-        callback: () => props.generateAllCertificates(rows[0].id)
-      }
-    ]*/}
+    actions={props.actions}
     delete={{
       url: ['apiv2_cursus_event_delete_bulk'],
       displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
     }}
+    primaryAction={(row) => ({
+      type: LINK_BUTTON,
+      target: props.path+'/'+row.id,
+      label: trans('open', {}, 'actions')
+    })}
     definition={[
       {
         name: 'name',
@@ -88,7 +72,7 @@ const EventList = (props) =>
         name: 'registration.registrationType',
         alias: 'registrationType',
         type: 'choice',
-        label: trans('session_event_registration', {}, 'cursus'),
+        label: trans('registration'),
         displayed: false,
         options: {
           choices: constants.REGISTRATION_TYPES

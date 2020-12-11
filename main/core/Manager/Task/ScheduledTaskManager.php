@@ -15,8 +15,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException;
 use Claroline\CoreBundle\Repository\Task\ScheduledTaskRepository;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 
 class ScheduledTaskManager
 {
@@ -29,16 +29,9 @@ class ScheduledTaskManager
     /** @var ScheduledTaskRepository */
     private $repository;
 
-    /** @var SerializerProvider */
+    /** @var ScheduledTaskSerializer */
     private $serializer;
 
-    /**
-     * ScheduledTaskManager constructor.
-     *
-     * @param ObjectManager                $om
-     * @param PlatformConfigurationHandler $configHandler
-     * @param ScheduledTaskSerializer      $serializer
-     */
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
@@ -52,24 +45,16 @@ class ScheduledTaskManager
 
     /**
      * Serializes a ScheduledTask entity for the JSON api.
-     *
-     * @param ScheduledTask $scheduledTask - the task to serialize
-     *
-     * @return array - the serialized representation of the task
      */
-    public function serialize(ScheduledTask $scheduledTask)
+    public function serialize(ScheduledTask $scheduledTask): array
     {
         return $this->serializer->serialize($scheduledTask);
     }
 
     /**
      * Creates a new ScheduledTask.
-     *
-     * @param array $data
-     *
-     * @return ScheduledTask
      */
-    public function create(array $data)
+    public function create(array $data): ?ScheduledTask
     {
         if ($this->configHandler->hasParameter('is_cron_configured') &&
             $this->configHandler->getParameter('is_cron_configured')) {
@@ -81,22 +66,17 @@ class ScheduledTaskManager
 
     /**
      * Updates a ScheduledTask.
-     *
-     * @param array         $data
-     * @param ScheduledTask $scheduledTask
-     *
-     * @return ScheduledTask
-     *
-     * @throws InvalidDataException
      */
-    public function update(array $data, ScheduledTask $scheduledTask)
+    public function update(array $data, ScheduledTask $scheduledTask = null): ScheduledTask
     {
         $errors = $this->validate($data);
         if (count($errors) > 0) {
             throw new InvalidDataException('Scheduled task is not valid', $errors);
         }
 
-        $scheduledTask = $this->om->getObject($data, ScheduledTask::class);
+        if (empty($scheduledTask)) {
+            $scheduledTask = $this->om->getObject($data, ScheduledTask::class);
+        }
         $scheduledTask = $this->serializer->deserialize($data, $scheduledTask);
 
         $this->om->persist($scheduledTask);
@@ -105,12 +85,7 @@ class ScheduledTaskManager
         return $scheduledTask;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    public function validate(array $data)
+    public function validate(array $data): array
     {
         $errors = [];
 
@@ -131,8 +106,6 @@ class ScheduledTaskManager
 
     /**
      * Deletes a ScheduledTask.
-     *
-     * @param ScheduledTask $scheduledTask
      */
     public function delete(ScheduledTask $scheduledTask)
     {
@@ -156,9 +129,6 @@ class ScheduledTaskManager
 
     /**
      * Flags a ScheduledTask as executed.
-     *
-     * @param ScheduledTask $task
-     * @param \DateTime     $executionDate
      */
     public function markAsExecuted(ScheduledTask $task, \DateTime $executionDate = null)
     {

@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Drop
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -226,9 +226,6 @@ class Drop
         return $this->dropzone;
     }
 
-    /**
-     * @param Dropzone $dropzone
-     */
     public function setDropzone(Dropzone $dropzone)
     {
         $this->dropzone = $dropzone;
@@ -242,9 +239,6 @@ class Drop
         return $this->user;
     }
 
-    /**
-     * @param User|null $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -258,9 +252,6 @@ class Drop
         return $this->documents->toArray();
     }
 
-    /**
-     * @param Document $document
-     */
     public function addDocument(Document $document)
     {
         if (!$this->documents->contains($document)) {
@@ -268,9 +259,6 @@ class Drop
         }
     }
 
-    /**
-     * @param Document $document
-     */
     public function removeDocument(Document $document)
     {
         if ($this->documents->contains($document)) {
@@ -291,9 +279,6 @@ class Drop
         return $this->dropDate;
     }
 
-    /**
-     * @param \DateTime|null $dropDate
-     */
     public function setDropDate(\DateTime $dropDate = null)
     {
         $this->dropDate = $dropDate;
@@ -467,9 +452,6 @@ class Drop
         return $this->corrections->toArray();
     }
 
-    /**
-     * @param Correction $correction
-     */
     public function addCorrection(Correction $correction)
     {
         if (!$this->corrections->contains($correction)) {
@@ -477,9 +459,6 @@ class Drop
         }
     }
 
-    /**
-     * @param Correction $correction
-     */
     public function removeCorrection(Correction $correction)
     {
         if ($this->corrections->contains($correction)) {
@@ -501,8 +480,6 @@ class Drop
     }
 
     /**
-     * @param User $user
-     *
      * @return bool
      */
     public function hasUser(User $user)
@@ -510,9 +487,6 @@ class Drop
         return $this->users->contains($user);
     }
 
-    /**
-     * @param User $user
-     */
     public function addUser(User $user)
     {
         if (!$this->users->contains($user)) {
@@ -520,9 +494,6 @@ class Drop
         }
     }
 
-    /**
-     * @param User $user
-     */
     public function removeUser(User $user)
     {
         if ($this->users->contains($user)) {

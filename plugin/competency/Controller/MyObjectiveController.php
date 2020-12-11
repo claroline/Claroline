@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * todo: use firewall instead for security, check if role user for route /my-objectives.
- *
  * @Route("/my-objectives", requirements={"id"="\d+"}, options={"expose"=true}, methods={"GET"})
  */
 class MyObjectiveController
@@ -23,11 +21,6 @@ class MyObjectiveController
     private $objectiveManager;
     private $progressManager;
 
-    /**
-     * @param CompetencyManager $competencyManager
-     * @param ObjectiveManager  $objectiveManager
-     * @param ProgressManager   $progressManager
-     */
     public function __construct(
         CompetencyManager $competencyManager,
         ObjectiveManager $objectiveManager,
@@ -46,10 +39,6 @@ class MyObjectiveController
      *     name="hevinci_my_objectives_competency"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
-     *
-     * @param Objective  $objective
-     * @param Competency $competency
-     * @param User       $user
      *
      * @return JsonResponse
      */
@@ -106,9 +95,7 @@ class MyObjectiveController
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
-     * @param Competency $competency
-     * @param int        $level
-     * @param User       $user
+     * @param int $level
      *
      * @return JsonResponse
      */
@@ -131,9 +118,7 @@ class MyObjectiveController
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
-     * @param Competency $competency
-     * @param int        $level
-     * @param User       $user
+     * @param int $level
      *
      * @return JsonResponse
      */
@@ -156,9 +141,6 @@ class MyObjectiveController
      * @Route("/{id}/competencies", name="hevinci_load_my_objective_competencies")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
-     * @param Objective $objective
-     * @param User      $user
-     *
      * @return JsonResponse
      */
     public function userObjectiveCompetenciesAction(Objective $objective, User $user)
@@ -171,10 +153,6 @@ class MyObjectiveController
      *
      * @Route("/competencies/{id}/history", name="hevinci_competency_my_history")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
-     * @EXT\Template("HeVinciCompetencyBundle::competencyHistory.html.twig")
-     *
-     * @param Competency $competency
-     * @param User       $user
      *
      * @return array
      */

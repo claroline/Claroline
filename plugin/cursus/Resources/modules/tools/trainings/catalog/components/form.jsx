@@ -16,11 +16,12 @@ const CatalogForm = (props) => {
   if (!props.isNew) {
     return (
       <CoursePage
+        basePath={props.path}
         path={[
           {
             type: LINK_BUTTON,
             label: trans('catalog', {}, 'cursus'),
-            target: `${props.path}/catalog`
+            target: props.path
           }, {
             type: LINK_BUTTON,
             label: props.course.name,
@@ -51,7 +52,7 @@ const CatalogForm = (props) => {
         {
           type: LINK_BUTTON,
           label: trans('catalog', {}, 'cursus'),
-          target: `${props.path}/catalog`
+          target: props.path
         }, {
           label: trans('new_course', {}, 'cursus')
         }
@@ -65,7 +66,7 @@ const CatalogForm = (props) => {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('add_course', {}, 'cursus'),
-          target: `${props.path}/catalog/new`,
+          target: `${props.path}/new`,
           group: trans('management'),
           primary: true
         }
@@ -75,7 +76,7 @@ const CatalogForm = (props) => {
         name={selectors.FORM_NAME}
         cancel={{
           type: LINK_BUTTON,
-          target: `${props.path}/catalog`,
+          target: props.path,
           exact: true
         }}
       />

@@ -16,7 +16,7 @@ import {MODAL_GROUPS} from '#/main/core/modals/groups'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {constants} from '#/plugin/cursus/constants'
-import {isFull} from '#/plugin/cursus/course/utils'
+import {isFull} from '#/plugin/cursus/utils'
 
 import {SessionGroups} from '#/plugin/cursus/session/components/groups'
 import {SessionUsers} from '#/plugin/cursus/session/components/users'
@@ -124,14 +124,14 @@ const CourseParticipants = (props) =>
       </div>
 
       {hasPermission('edit', props.activeSession) &&
-        <div className="analytics-card">
-          <span className="fa fa-hourglass-half" style={{backgroundColor: schemeCategory20c[9]}} />
+      <div className="analytics-card">
+        <span className="fa fa-hourglass-half" style={{backgroundColor: schemeCategory20c[9]}} />
 
-          <h1 className="h3">
-            <small>{trans('En attente')}</small>
-            {get(props.activeSession, 'participants.pending', 0)}
-          </h1>
-        </div>
+        <h1 className="h3">
+          <small>{trans('En attente')}</small>
+          {get(props.activeSession, 'participants.pending', 0)}
+        </h1>
+      </div>
       }
 
       <div className="analytics-card">
@@ -201,18 +201,18 @@ const CourseParticipants = (props) =>
                 const Users = (
                   <Fragment>
                     {isFull(props.activeSession) &&
-                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                        {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
-                      </AlertBlock>
+                    <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+                      {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
+                    </AlertBlock>
                     }
 
                     {get(props.activeSession, 'registration.userValidation') &&
-                      <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
-                        {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
-                        <br/>
-                        {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
-                        (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
-                      </AlertBlock>
+                    <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
+                      {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
+                      <br/>
+                      {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
+                      (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
+                    </AlertBlock>
                     }
 
                     <CourseUsers
@@ -249,9 +249,9 @@ const CourseParticipants = (props) =>
                 const Pending = (
                   <Fragment>
                     {isFull(props.activeSession) && hasPermission('edit', props.activeSession) &&
-                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                        {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
-                      </AlertBlock>
+                    <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+                      {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
+                    </AlertBlock>
                     }
 
                     <SessionUsers

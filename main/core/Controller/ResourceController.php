@@ -192,7 +192,7 @@ class ResourceController
 
         $data = $this->manager->download($nodes, $forceArchive);
 
-        $file = $data['file'] ?: @tempnam('tmp', 'tmp');
+        $file = $data['file'];
         $fileName = $data['name'];
 
         if (!file_exists($file)) {

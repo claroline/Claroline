@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Criterion
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -97,9 +97,6 @@ class Criterion
         return $this->dropzone;
     }
 
-    /**
-     * @param Dropzone $dropzone
-     */
     public function setDropzone(Dropzone $dropzone)
     {
         $this->dropzone = $dropzone;

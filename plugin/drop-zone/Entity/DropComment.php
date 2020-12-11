@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DropComment
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -111,9 +111,6 @@ class DropComment
         return $this->drop;
     }
 
-    /**
-     * @param Drop $drop
-     */
     public function setDrop(Drop $drop)
     {
         $this->drop = $drop;
@@ -127,9 +124,6 @@ class DropComment
         return $this->user;
     }
 
-    /**
-     * @param User|null $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -143,9 +137,6 @@ class DropComment
         return $this->creationDate;
     }
 
-    /**
-     * @param \DateTime $creationDate
-     */
     public function setCreationDate(\DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
@@ -159,9 +150,6 @@ class DropComment
         return $this->editionDate;
     }
 
-    /**
-     * @param \DateTime $editionDate
-     */
     public function setEditionDate(\DateTime $editionDate = null)
     {
         $this->editionDate = $editionDate;

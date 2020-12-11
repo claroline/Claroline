@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Document
 {
-    use UuidTrait;
+    use Uuid;
 
     const DOCUMENT_TYPE_FILE = 'file';
     const DOCUMENT_TYPE_TEXT = 'html';
@@ -158,9 +158,6 @@ class Document
         return $this->drop;
     }
 
-    /**
-     * @param Drop $drop
-     */
     public function setDrop(Drop $drop)
     {
         $this->drop = $drop;
@@ -190,9 +187,6 @@ class Document
         return $this->file;
     }
 
-    /**
-     * @param array|null $file
-     */
     public function setFile(array $file = null)
     {
         $this->file = $file;
@@ -238,9 +232,6 @@ class Document
         return $this->resource;
     }
 
-    /**
-     * @param ResourceNode|null $resource
-     */
     public function setResource(ResourceNode $resource = null)
     {
         $this->resource = $resource;
@@ -254,9 +245,6 @@ class Document
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;
@@ -270,9 +258,6 @@ class Document
         return $this->dropDate;
     }
 
-    /**
-     * @param \DateTime $dropDate
-     */
     public function setDropDate(\DateTime $dropDate)
     {
         $this->dropDate = $dropDate;
@@ -303,9 +288,6 @@ class Document
         return $data;
     }
 
-    /**
-     * @param mixed $data
-     */
     public function setData($data)
     {
         switch ($this->type) {
@@ -332,9 +314,6 @@ class Document
         return $this->toolDocuments->toArray();
     }
 
-    /**
-     * @param DropzoneToolDocument $toolDocument
-     */
     public function addToolDocument(DropzoneToolDocument $toolDocument)
     {
         if (!$this->toolDocuments->contains($toolDocument)) {
@@ -342,9 +321,6 @@ class Document
         }
     }
 
-    /**
-     * @param DropzoneToolDocument $toolDocument
-     */
     public function removeToolDocument(DropzoneToolDocument $toolDocument)
     {
         if ($this->toolDocuments->contains($toolDocument)) {
@@ -365,9 +341,6 @@ class Document
         return $this->revision;
     }
 
-    /**
-     * @param Revision $revision
-     */
     public function setRevision(Revision $revision = null)
     {
         $this->revision = $revision;

@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Library\Model\ContentTrait;
@@ -25,11 +25,9 @@ class Label
      */
     private $id;
 
-    use UuidTrait;
-
-    use Order;
-
     use ContentTrait;
+    use Order;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\MatchQuestion", inversedBy="labels")

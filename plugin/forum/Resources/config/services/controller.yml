@@ -1,38 +1,17 @@
 services:
     _defaults:
-        autowire: false #change to true
-        autoconfigure: false
         public: true #because controller
 
-    _instanceof:
-        Claroline\AppBundle\Controller\AbstractCrudController:
-            calls:
-              - method: setFinder
-                arguments:
-                  - '@Claroline\AppBundle\API\FinderProvider'
-              - method: setSerializer
-                arguments:
-                  - '@Claroline\AppBundle\API\SerializerProvider'
-              - method: setCrud
-                arguments:
-                  - '@Claroline\AppBundle\API\Crud'
-              - method: setObjectManager
-                arguments:
-                  - '@Claroline\AppBundle\Persistence\ObjectManager'
-              - method: setRouterFinder
-                arguments:
-                  - '@Claroline\AppBundle\Routing\Finder'
-              - method: setRouterDocumentator
-                arguments:
-                  - '@Claroline\AppBundle\Routing\Documentator'
-              - method: setContainer
-                arguments:
-                  - '@service_container'
-
     Claroline\ForumBundle\Controller\API\ForumController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
         arguments:
              - '@Claroline\ForumBundle\Manager\ForumManager'
 
-    Claroline\ForumBundle\Controller\API\MessageController: ~
+    Claroline\ForumBundle\Controller\API\MessageController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
 
-    Claroline\ForumBundle\Controller\API\SubjectController: ~
+    Claroline\ForumBundle\Controller\API\SubjectController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

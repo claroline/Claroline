@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Order;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,7 +25,7 @@ class ItemObject
      */
     private $id;
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * Owning Item.

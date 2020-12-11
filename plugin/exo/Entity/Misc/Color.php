@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
@@ -33,7 +33,7 @@ class Color
      */
     private $colorCode;
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\SelectionQuestion", inversedBy="colors")
@@ -81,9 +81,6 @@ class Color
         return $this->interactionSelection;
     }
 
-    /**
-     * @param SelectionQuestion $interactionSelection
-     */
     public function setInteractionSelection(SelectionQuestion $interactionSelection)
     {
         $this->interactionSelection = $interactionSelection;
@@ -101,8 +98,6 @@ class Color
 
     /**
      * Adds a color selection.
-     *
-     * @param ColorSelection $colorSelection
      */
     public function addColorSelection(ColorSelection $colorSelection)
     {
@@ -114,8 +109,6 @@ class Color
 
     /**
      * Removes a color selection.
-     *
-     * @param ColorSelection $colorSelection
      */
     public function removeColor(ColorSelection $colorSelection)
     {

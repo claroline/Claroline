@@ -27,7 +27,7 @@ class PluginInstallCommand extends AbstractPluginCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $plugin = $this->getPlugin($input, false);
+        $plugin = $this->getPlugin($input);
         $this->pluginInstaller->install($plugin);
         $this->resetCache($output);
 

@@ -12,6 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**

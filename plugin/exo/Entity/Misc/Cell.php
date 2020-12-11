@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,7 +27,7 @@ class Cell
      */
     private $id;
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * Data associated to the cell.
@@ -127,9 +127,6 @@ class Cell
         return $this->id;
     }
 
-    /**
-     * @param GridQuestion $question
-     */
     public function setQuestion(GridQuestion $question)
     {
         $this->question = $question;
@@ -294,8 +291,6 @@ class Cell
 
     /**
      * Sets choices collection.
-     *
-     * @param array $choices
      */
     public function setChoices(array $choices)
     {
@@ -313,9 +308,6 @@ class Cell
         });
     }
 
-    /**
-     * @param CellChoice $choice
-     */
     public function addChoice(CellChoice $choice)
     {
         if (!$this->choices->contains($choice)) {
@@ -324,9 +316,6 @@ class Cell
         }
     }
 
-    /**
-     * @param CellChoice $choice
-     */
     public function removeChoice(CellChoice $choice)
     {
         if ($this->choices->contains($choice)) {

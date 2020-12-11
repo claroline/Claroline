@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Content;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Image
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @var int

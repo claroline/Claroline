@@ -9,7 +9,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {GroupCard} from '#/main/core/user/data/components/group-card'
 
-import {isFull} from '#/plugin/cursus/course/utils'
+import {isFull} from '#/plugin/cursus/utils'
 import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
 const SessionGroups = (props) =>

@@ -2,8 +2,9 @@
 
 namespace Icap\BlogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Blog extends AbstractResource
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * Blog constructor.
@@ -55,13 +56,11 @@ class Blog extends AbstractResource
     protected $infos;
 
     /**
-     * @param ArrayCollection $posts
-     *
      * @return Blog
      */
     public function setPosts(ArrayCollection $posts)
     {
-        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
+        /** @var Post[] $posts */
         foreach ($posts as $post) {
             $post->setBlog($this);
         }
@@ -88,8 +87,6 @@ class Blog extends AbstractResource
     }
 
     /**
-     * @param BlogOptions $options
-     *
      * @return Blog
      */
     public function setOptions(BlogOptions $options)
@@ -107,23 +104,6 @@ class Blog extends AbstractResource
     public function getOptions()
     {
         return $this->options;
-    }
-
-    /**
-     * @param ArrayCollection $posts
-     *
-     * @return Blog
-     */
-    public function setLateralbars(ArrayCollection $posts)
-    {
-        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
-        foreach ($posts as $post) {
-            $post->setBlog($this);
-        }
-
-        $this->posts = $posts;
-
-        return $this;
     }
 
     /**
@@ -155,7 +135,7 @@ class Blog extends AbstractResource
      */
     public function isAutoPublishComment()
     {
-        return BlogOptions::COMMENT_MODERATION_NONE === $this->getOptions()->getCommentModerationMode() ? true : false;
+        return BlogOptions::COMMENT_MODERATION_NONE === $this->getOptions()->getCommentModerationMode();
     }
 
     /**
@@ -175,7 +155,7 @@ class Blog extends AbstractResource
     }
 
     /**
-     * @return array|\Claroline\CoreBundle\Entity\User[]
+     * @return User[]
      */
     public function getAuthors()
     {

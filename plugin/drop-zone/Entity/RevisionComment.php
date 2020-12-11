@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RevisionComment
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -111,9 +111,6 @@ class RevisionComment
         return $this->revision;
     }
 
-    /**
-     * @param Revision $revision
-     */
     public function setRevision(Revision $revision)
     {
         $this->revision = $revision;
@@ -127,9 +124,6 @@ class RevisionComment
         return $this->user;
     }
 
-    /**
-     * @param User|null $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -143,9 +137,6 @@ class RevisionComment
         return $this->creationDate;
     }
 
-    /**
-     * @param \DateTime $creationDate
-     */
     public function setCreationDate(\DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
@@ -159,9 +150,6 @@ class RevisionComment
         return $this->editionDate;
     }
 
-    /**
-     * @param \DateTime $editionDate
-     */
     public function setEditionDate(\DateTime $editionDate = null)
     {
         $this->editionDate = $editionDate;

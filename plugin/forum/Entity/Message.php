@@ -71,9 +71,6 @@ class Message extends AbstractMessage
      */
     protected $first = false;
 
-    //required because we use a "property_exists" somewhere in the crud and it doesn't work otherwise.
-    protected $uuid;
-
     /**
      * Message constructor.
      */
@@ -95,8 +92,8 @@ class Message extends AbstractMessage
      */
     public function getSubject()
     {
-        if ($parent = $this->getParent()) {
-            return $parent->getSubject();
+        if ($this->getParent()) {
+            return $this->getParent()->getSubject();
         }
 
         return $this->subject;

@@ -18,24 +18,21 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Organization\Location;
-use Claroline\CoreBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\EventRepository")
  * @ORM\Table(name="claro_cursusbundle_session_event")
  */
 class Event
 {
-    use Id;
-    use Uuid;
-
     use Code;
     use Description;
+    use Id;
     use Poster;
     use Thumbnail;
+    use Uuid;
 
     /**
      * @ORM\Column(name="event_name")

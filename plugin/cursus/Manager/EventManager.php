@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
+use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Event\Log\LogSessionEventUserRegistrationEvent;
@@ -60,10 +61,15 @@ class EventManager
         $this->eventUserRepo = $om->getRepository(EventUser::class);
     }
 
+    public function generateFromTemplate(Event $sessionEvent, string $locale)
+    {
+        // TODO : implement
+    }
+
     /**
      * Adds users to a session event.
      */
-    public function addUsersToSessionEvent(Event $event, array $users): array
+    public function addUsersToSessionEvent(Event $event, array $users, string $type = AbstractRegistration::LEARNER): array
     {
         $results = [];
         $registrationDate = new \DateTime();
@@ -77,7 +83,12 @@ class EventManager
                 $eventUser = new EventUser();
                 $eventUser->setEvent($event);
                 $eventUser->setUser($user);
+                $eventUser->setType($type);
                 $eventUser->setDate($registrationDate);
+                // no validation for events
+                $eventUser->setValidated(true);
+                $eventUser->setConfirmed(true);
+
                 $this->om->persist($eventUser);
 
                 $this->eventDispatcher->dispatch(new LogSessionEventUserRegistrationEvent($eventUser), 'log');
@@ -124,7 +135,12 @@ class EventManager
         $maxUsers = $event->getMaxUsers();
 
         if (Session::REGISTRATION_AUTO !== $event->getRegistrationType() && $maxUsers) {
-            $eventUsers = $this->eventUserRepo->findBy(['sessionEvent' => $event, 'registrationStatus' => SessionEventUser::REGISTERED]);
+            // only get fully registered users
+            $eventUsers = $this->eventUserRepo->findBy([
+                'sessionEvent' => $event,
+                'confirmed' => true,
+                'validated' => true,
+            ]);
             $nbUsers = count($eventUsers);
             $hasPlace = $nbUsers + $count <= $maxUsers;
         }
@@ -135,23 +151,25 @@ class EventManager
     /**
      * Sends invitation to all session event users.
      */
-    public function inviteAllSessionEventUsers(Event $event, Template $template = null)
+    public function inviteAllSessionEventLearners(Event $event, Template $template = null)
     {
+        // only get fully registered users
         $eventUsers = $this->eventUserRepo->findBy([
             'sessionEvent' => $event,
-            'registrationStatus' => SessionEventUser::REGISTERED,
+            'confirmed' => true,
+            'validated' => true,
         ]);
         $users = array_map(function (EventUser $eventUser) {
             return $eventUser->getUser();
         }, $eventUsers);
 
-        $this->sendEventInvitation($event, $users, $template);
+        $this->sendSessionEventInvitation($event, $users, $template);
     }
 
     /**
      * Sends invitation to session event to given users.
      */
-    public function sendEventInvitation(Event $event, array $users, Template $template = null)
+    public function sendSessionEventInvitation(Event $event, array $users, Template $template = null)
     {
         $session = $event->getSession();
         $course = $session->getCourse();

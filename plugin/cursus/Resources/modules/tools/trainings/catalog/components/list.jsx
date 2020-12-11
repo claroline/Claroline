@@ -28,7 +28,7 @@ class CatalogList extends Component {
         path={[{
           type: LINK_BUTTON,
           label: trans('catalog', {}, 'cursus'),
-          target: `${this.props.path}/catalog`
+          target: this.props.path
         }]}
         subtitle={trans('catalog', {}, 'cursus')}
         primaryAction="add"
@@ -38,7 +38,7 @@ class CatalogList extends Component {
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_course', {}, 'cursus'),
-            target: `${this.props.path}/catalog/new`,
+            target: `${this.props.path}/new`,
             group: trans('management'),
             primary: true
           }
@@ -48,18 +48,18 @@ class CatalogList extends Component {
           <ContentTabs
             sections={[
               {
+                name: 'available',
+                type: CALLBACK_BUTTON,
+                label: trans('Formations disponibles', {}, 'cursus'),
+                target: `${this.props.path}/available`,
+                callback: () => this.setState({section: 'available'}),
+                active: 'available' === this.state.section
+              }, {
                 name: 'all',
                 type: CALLBACK_BUTTON,
                 label: trans('Toutes les formations', {}, 'cursus'),
                 callback: () => this.setState({section: 'all'}),
                 active: 'all' === this.state.section
-              }, {
-                name: 'available',
-                type: CALLBACK_BUTTON,
-                label: trans('Formations disponibles', {}, 'cursus'),
-                target: `${this.props.path}/catalog/available`,
-                callback: () => this.setState({section: 'available'}),
-                active: 'available' === this.state.section
               }
             ]}
           />

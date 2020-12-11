@@ -1,37 +1,14 @@
 services:
     _defaults:
-        autowire: false #change to true
-        autoconfigure: false
         public: true #because controller
 
-    _instanceof:
-        Claroline\AppBundle\Controller\AbstractCrudController:
-            calls:
-              - method: setFinder
-                arguments:
-                  - '@Claroline\AppBundle\API\FinderProvider'
-              - method: setSerializer
-                arguments:
-                  - '@Claroline\AppBundle\API\SerializerProvider'
-              - method: setCrud
-                arguments:
-                  - '@Claroline\AppBundle\API\Crud'
-              - method: setObjectManager
-                arguments:
-                  - '@Claroline\AppBundle\Persistence\ObjectManager'
-              - method: setRouterFinder
-                arguments:
-                  - '@Claroline\AppBundle\Routing\Finder'
-              - method: setRouterDocumentator
-                arguments:
-                  - '@Claroline\AppBundle\Routing\Documentator'
-              - method: setContainer
-                arguments:
-                  - '@service_container'
-
     Claroline\AudioPlayerBundle\Controller\API\SectionCommentController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
         arguments:
-          - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-          - '@translator'
+            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
+            - '@translator'
 
-    Claroline\AudioPlayerBundle\Controller\API\SectionController: ~ 
+    Claroline\AudioPlayerBundle\Controller\API\SectionController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

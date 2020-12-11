@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Import;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -27,7 +27,7 @@ class File
     const STATUS_SUCCESS = 'success';
     const STATUS_ERROR = 'error';
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

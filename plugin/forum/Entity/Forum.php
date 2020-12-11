@@ -11,7 +11,7 @@
 
 namespace Claroline\ForumBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Forum extends AbstractResource
 {
-    use UuidTrait;
+    use Uuid;
 
     const VALIDATE_NONE = 'NONE';
     const VALIDATE_PRIOR_ONCE = 'PRIOR_ONCE';

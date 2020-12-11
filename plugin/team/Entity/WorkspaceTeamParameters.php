@@ -11,7 +11,7 @@
 
 namespace Claroline\TeamBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class WorkspaceTeamParameters
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Column(type="integer")

@@ -11,7 +11,7 @@
 
 namespace Claroline\PlannedNotificationBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -149,9 +149,6 @@ class Message
         return $this->notifications;
     }
 
-    /**
-     * @param PlannedNotification $notification
-     */
     public function addNotification(PlannedNotification $notification)
     {
         if (!$this->notifications->contains($notification)) {
@@ -159,9 +156,6 @@ class Message
         }
     }
 
-    /**
-     * @param PlannedNotification $notification
-     */
     public function removeNotification(PlannedNotification $notification)
     {
         if ($this->notifications->contains($notification)) {

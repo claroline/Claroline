@@ -2,7 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -16,7 +16,7 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Comment extends Statusable
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @var int
@@ -149,8 +149,6 @@ class Comment extends Statusable
     /**
      * Set author.
      *
-     * @param User $author
-     *
      * @return Comment
      */
     public function setAuthor(User $author = null)
@@ -172,8 +170,6 @@ class Comment extends Statusable
 
     /**
      * Set post.
-     *
-     * @param Post $post
      *
      * @return Comment
      */
@@ -235,8 +231,6 @@ class Comment extends Statusable
     }
 
     /**
-     * @param UserPickerContent $userPicker
-     *
      * @return $this
      */
     public function setUserPicker(UserPickerContent $userPicker)

@@ -12,15 +12,15 @@
 namespace Claroline\CursusBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CursusBundle\Entity\SessionEventUser;
+use Claroline\CursusBundle\Entity\Registration\EventUser;
 
 class LogSessionEventUserUnregistrationEvent extends LogGenericEvent
 {
     const ACTION = 'session-event-user-unregistration';
 
-    public function __construct(SessionEventUser $sessionEventUser)
+    public function __construct(EventUser $sessionEventUser)
     {
-        $sessionEvent = $sessionEventUser->getSessionEvent();
+        $sessionEvent = $sessionEventUser->getEvent();
         $session = $sessionEvent->getSession();
         $course = $session->getCourse();
         $user = $sessionEventUser->getUser();
@@ -35,7 +35,7 @@ class LogSessionEventUserUnregistrationEvent extends LogGenericEvent
         $details['courseId'] = $course->getUuid();
         $details['courseTitle'] = $course->getName();
         $details['courseCode'] = $course->getCode();
-        $registrationDate = $sessionEventUser->getRegistrationDate();
+        $registrationDate = $sessionEventUser->getDate();
 
         if (!is_null($registrationDate)) {
             $details['registrationDate'] = $registrationDate->format('d/m/Y H:i:s');

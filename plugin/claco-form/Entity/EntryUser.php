@@ -2,7 +2,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EntryUser
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

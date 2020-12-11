@@ -28,6 +28,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ResourceNodeController extends AbstractCrudController
 {
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
+
     /** @var ResourceManager */
     private $resourceManager;
 
@@ -47,6 +50,7 @@ class ResourceNodeController extends AbstractCrudController
     private $token;
 
     public function __construct(
+        StrictDispatcher $eventDispatcher,
         ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
@@ -54,6 +58,7 @@ class ResourceNodeController extends AbstractCrudController
         ParametersSerializer $parametersSerializer,
         TokenStorageInterface $token
     ) {
+        $this->eventDispatcher = $eventDispatcher;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->actionManager = $actionManager;
@@ -155,8 +160,6 @@ class ResourceNodeController extends AbstractCrudController
         $handler = $request->get('handler');
         $publicFiles = [];
         $resources = [];
-        /** @var StrictDispatcher */
-        $dispatcher = $this->container->get('Claroline\AppBundle\Event\StrictDispatcher');
 
         foreach ($files as $file) {
             $publicFile = $this->crud->create(
@@ -164,7 +167,7 @@ class ResourceNodeController extends AbstractCrudController
                 [],
                 ['file' => $file]
             );
-            $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$publicFile]);
+            $this->eventDispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$publicFile]);
             $publicFiles[] = $publicFile;
         }
         $resourceType = $this->resourceManager->getResourceTypeByName('file');

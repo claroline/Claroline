@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
@@ -26,11 +26,9 @@ class Area implements AnswerPartInterface
      */
     private $id;
 
-    use UuidTrait;
-
-    use ScoreTrait;
-
     use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
 
     /**
      * @var string
@@ -153,9 +151,6 @@ class Area implements AnswerPartInterface
         return $this->interactionGraphic;
     }
 
-    /**
-     * @param GraphicQuestion $interactionGraphic
-     */
     public function setInteractionGraphic(GraphicQuestion $interactionGraphic)
     {
         $this->interactionGraphic = $interactionGraphic;

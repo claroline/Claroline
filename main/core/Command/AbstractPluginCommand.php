@@ -12,10 +12,8 @@
 namespace Claroline\CoreBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
-use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Library\PluginBundle;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,7 +27,6 @@ abstract class AbstractPluginCommand extends Command
 {
     use BaseCommandTrait;
 
-    private $params = ['bundle' => 'the bundle name'];
     protected $pluginInstaller;
 
     public function __construct(Installer $pluginInstaller)
@@ -44,79 +41,35 @@ abstract class AbstractPluginCommand extends Command
         $this->addArgument('bundle', InputArgument::REQUIRED, 'The bundle name');
     }
 
-    protected function getPlugin(InputInterface $input, $fromKernel = true)
+    protected function getPlugin(InputInterface $input)
     {
         $bundleName = $input->getArgument('bundle');
         $kernel = $this->getApplication()->getKernel();
 
-        if ($fromKernel) {
-            return $kernel->getBundle($bundleName);
+        $bundle = $kernel->getBundle($bundleName);
+        if (empty($bundle)) {
+            throw new \Exception("Cannot found bundle '{$bundleName}' in the bundles.ini");
         }
 
-        $detector = new Detector();
-        $bundles = $detector->detectBundles($kernel->getProjectDir().'/vendor');
-
-        foreach ($bundles as $bundleFqcn) {
-            $parts = explode('\\', $bundleFqcn);
-            $name = array_pop($parts);
-
-            if ($name === $bundleName) {
-                $bundle = new $bundleFqcn($kernel);
-
-                if (!$bundle instanceof PluginBundle) {
-                    throw new \Exception("Bundle {$bundle->getName()} must extend (Distribution)PluginBundle");
-                }
-
-                return $bundle;
-            }
+        if (!$bundle instanceof PluginBundle) {
+            throw new \Exception("Bundle {$bundle->getName()} must extend (Distribution)PluginBundle");
         }
 
-        throw new \Exception("Cannot found bundle '{$bundleName}' in the vendor directory");
-    }
-
-    protected function getPluginInstaller(OutputInterface $output)
-    {
-        return $this->pluginInstaller;
+        return $bundle;
     }
 
     /**
-     * @todo Remove ?
-     *
-     * Clears the cache in production environment (mandatory after plugin
-     * installation/uninstallation)
+     * Clears the cache (mandatory after plugin installation/uninstallation).
      */
     protected function resetCache(OutputInterface $output)
     {
-        if ('prod' === $this->getApplication()->getKernel()->getEnvironment()) {
-            $command = $this->getApplication()->get('cache:clear');
+        $command = $this->getApplication()->get('cache:clear');
 
-            $input = new ArrayInput(
-                [
-                    'command' => 'cache:clear',
-                    '--no-warmup' => true,
-                ]
-            );
+        $input = new ArrayInput([
+            'command' => 'cache:clear',
+            '--no-warmup' => true,
+        ]);
 
-            $command->run($input, $output);
-        }
-    }
-
-    /**
-     * @todo Remove ?
-     *
-     * Refreshes the asset folder (mandatory after plugin installation/uninstallation)
-     */
-    protected function installAssets(OutputInterface $output)
-    {
-        $webDir = $this->getApplication()->getKernel()->getProjectDir().'/web';
-        $command = $this->getApplication()->get('assets:install');
-        $input = new ArrayInput(
-            [
-                'command' => 'assets:install',
-                'target' => realpath($webDir),
-                '--symlink' => true,
-            ]
-        );
         $command->run($input, $output);
     }
 }

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Cryptography;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApiToken
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Column(type="integer")

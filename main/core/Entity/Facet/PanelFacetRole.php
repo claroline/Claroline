@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PanelFacetRole
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -81,25 +81,16 @@ class PanelFacetRole
         return $this->id;
     }
 
-    /**
-     * @param Role $role
-     */
     public function setRole(Role $role)
     {
         $this->role = $role;
     }
 
-    /**
-     * return Role.
-     */
     public function getRole()
     {
         return $this->role;
     }
 
-    /**
-     * @param PanelFacet $panelFacet
-     */
     public function setPanelFacet(PanelFacet $panelFacet)
     {
         $this->panelFacet = $panelFacet;

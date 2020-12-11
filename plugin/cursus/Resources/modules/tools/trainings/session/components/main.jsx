@@ -37,7 +37,7 @@ const SessionMain = (props) =>
           }, {
             name: 'pending',
             type: LINK_BUTTON,
-            label: trans('Inscriptions en attente', {}, 'cursus'),
+            label: trans('pending_registrations'),
             target: `${props.path}/registered/pending`
           }
         ]}
@@ -54,6 +54,7 @@ const SessionMain = (props) =>
           render: () => {
             const Current = (
               <SessionList
+                path={props.path}
                 name={selectors.STORE_NAME}
                 url={['apiv2_cursus_my_sessions_active']}
                 actions={(rows) => [
@@ -101,6 +102,7 @@ const SessionMain = (props) =>
           render: () => {
             const Pending = (
               <SessionList
+                path={props.path}
                 name={selectors.STORE_NAME}
                 url={['apiv2_cursus_my_sessions_pending']}
                 actions={() => [

@@ -80,7 +80,7 @@ class SessionController
     /**
      * List the sessions for which the user is in pending list.
      *
-     * @Route("/", name="apiv2_cursus_my_sessions_pending", methods={"GET"})
+     * @Route("/pending", name="apiv2_cursus_my_sessions_pending", methods={"GET"})
      */
     public function listPendingAction(Request $request): JsonResponse
     {

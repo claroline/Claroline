@@ -35,8 +35,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
-    Icap\SocialmediaBundle\Controller\NoteActionController: ~
-
     Icap\SocialmediaBundle\Controller\ShareActionController: ~
 
     Icap\SocialmediaBundle\Controller\WallController: ~

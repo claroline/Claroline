@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DropzoneTool
 {
-    use UuidTrait;
+    use Uuid;
 
     const COMPILATIO = 0;
 

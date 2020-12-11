@@ -40,7 +40,7 @@ class HomeTabVoter extends AbstractVoter
         switch ($attributes[0]) {
             case self::EDIT:   return $this->check($token, $object);
             case self::DELETE: return $this->check($token, $object);
-      }
+        }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }

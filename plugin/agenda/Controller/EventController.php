@@ -12,9 +12,11 @@
 namespace Claroline\AgendaBundle\Controller;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -29,22 +31,23 @@ class EventController extends AbstractCrudController
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var FileUtilities */
+    private $fileUtils;
+    /** @var AgendaManager */
+    private $manager;
 
-    /**
-     * EventController constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TokenStorageInterface         $tokenStorage
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FileUtilities $fileUtils,
+        AgendaManager $manager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
+        $this->fileUtils = $fileUtils;
+        $this->manager = $manager;
     }
 
     public function getClass()
@@ -58,8 +61,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -95,8 +97,6 @@ class EventController extends AbstractCrudController
      *
      * @Route("/done", name="apiv2_task_mark_done", methods={"PUT"})
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function markDoneAction(Request $request)
@@ -122,8 +122,6 @@ class EventController extends AbstractCrudController
      *
      * @Route("/todo", name="apiv2_task_mark_todo", methods={"PUT"})
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function markTodoAction(Request $request)
@@ -147,14 +145,12 @@ class EventController extends AbstractCrudController
     /**
      * @Route("/download", name="apiv2_download_agenda", methods={"GET"})
      *
-     * @param Request $request
-     *
      * @return StreamedResponse
      */
     public function exportAction(Request $request)
     {
         $id = $request->query->get('workspace');
-        $file = $this->container->get('Claroline\AgendaBundle\Manager\AgendaManager')->export($id);
+        $file = $this->manager->export($id);
 
         $response = new StreamedResponse();
 
@@ -178,8 +174,6 @@ class EventController extends AbstractCrudController
     /**
      * @Route("/import", name="apiv2_event_import", methods={"POST"})
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function importAction(Request $request)
@@ -190,8 +184,8 @@ class EventController extends AbstractCrudController
         $workspace = $workspace['id'] ? $this->om->getObject($workspace, Workspace::class) : null;
         $fileEntity = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
         $file = $this->serializer->deserialize($file, $fileEntity);
-        $fileData = $this->container->get('Claroline\CoreBundle\Library\Utilities\FileUtilities')->getContents($file);
-        $events = $this->container->get('Claroline\AgendaBundle\Manager\AgendaManager')->import($fileData, $workspace);
+        $fileData = $this->fileUtils->getContents($file);
+        $events = $this->manager->import($fileData, $workspace);
 
         return new JsonResponse(array_map(function (Event $event) {
             return $this->serializer->serialize($event);

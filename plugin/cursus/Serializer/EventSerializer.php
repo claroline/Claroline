@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Repository\User\LocationRepository;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Session;
+use Claroline\CursusBundle\Repository\EventRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -44,6 +45,8 @@ class EventSerializer
     private $locationRepo;
     /** @var ObjectRepository */
     private $sessionRepo;
+    /** @var EventRepository */
+    private $eventRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -60,6 +63,7 @@ class EventSerializer
 
         $this->locationRepo = $om->getRepository(Location::class);
         $this->sessionRepo = $om->getRepository(Session::class);
+        $this->eventRepo = $om->getRepository(Event::class);
     }
 
     public function serialize(Event $event, array $options = []): array
@@ -89,6 +93,7 @@ class EventSerializer
                     'users' => $event->getMaxUsers(),
                     'dates' => DateRangeNormalizer::normalize($event->getStartDate(), $event->getEndDate()),
                 ],
+                'participants' => $this->eventRepo->countParticipants($event),
                 'registration' => [
                     'registrationType' => $event->getRegistrationType(),
                 ],

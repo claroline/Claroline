@@ -14,6 +14,7 @@ import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors
 const CourseSessions = (props) =>
   <Fragment>
     <SessionList
+      path={props.path}
       name={selectors.STORE_NAME+'.courseSessions'}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
       delete={{

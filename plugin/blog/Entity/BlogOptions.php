@@ -2,7 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class BlogOptions
 {
-    use UuidTrait;
+    use Uuid;
 
     const BANNER_NO_REPEAT = 'no-repeat';
     const BANNER_REPEAT = 'no-repeat';
@@ -189,8 +189,6 @@ class BlogOptions
     }
 
     /**
-     * @param Blog $blog
-     *
      * @return BlogOptions
      */
     public function setBlog(Blog $blog)
@@ -489,8 +487,6 @@ class BlogOptions
     }
 
     /**
-     * @param UploadedFile $file
-     *
      * @return BlogOptions
      */
     public function setFile(UploadedFile $file)

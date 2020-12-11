@@ -11,7 +11,6 @@ use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,9 +42,6 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     protected $options = [];
 
-    /** @var ContainerInterface */
-    protected $container;
-
     /**
      * Get the name of the managed entity.
      *
@@ -53,23 +49,6 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     abstract public function getName();
 
-    /**
-     * @param ContainerInterface $container
-     *
-     * @deprecated use setter injection instead
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-        $this->finder = $container->get('Claroline\AppBundle\API\FinderProvider');
-        $this->serializer = $container->get('Claroline\AppBundle\API\SerializerProvider');
-        $this->crud = $container->get('Claroline\AppBundle\API\Crud');
-        $this->om = $container->get('Claroline\AppBundle\Persistence\ObjectManager');
-        $this->routerFinder = $container->get('Claroline\AppBundle\Routing\Finder');
-        $this->routerDocumentator = $container->get('Claroline\AppBundle\Routing\Documentator');
-    }
-
-    //these are the injectors you should use
     public function setFinder(FinderProvider $finder)
     {
         $this->finder = $finder;
@@ -101,8 +80,6 @@ abstract class AbstractCrudController extends AbstractApiController
         $this->routerDocumentator = $routerDocumentator;
     }
 
-    //end
-
     /**
      * @ApiDoc(
      *     description="Find a single object of class $class.",
@@ -110,8 +87,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     response={"$object"}
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -162,7 +138,6 @@ abstract class AbstractCrudController extends AbstractApiController
      *     response={"$object"}
      * )
      *
-     * @param Request    $request
      * @param string|int $id
      * @param string     $class
      *
@@ -225,8 +200,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     response={"$list"}
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -258,8 +232,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     }
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return BinaryFileResponse
      */
@@ -324,8 +297,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     response={"$object"}
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -363,7 +335,6 @@ abstract class AbstractCrudController extends AbstractApiController
      * )
      *
      * @param string|int $id
-     * @param Request    $request
      * @param string     $class
      *
      * @return JsonResponse
@@ -404,8 +375,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     }
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -435,8 +405,7 @@ abstract class AbstractCrudController extends AbstractApiController
      *     response={"$array"}
      * )
      *
-     * @param Request $request
-     * @param string  $class
+     * @param string $class
      *
      * @return JsonResponse
      */
@@ -454,7 +423,7 @@ abstract class AbstractCrudController extends AbstractApiController
             $options
         );
 
-        return new JsonResponse(array_map(function ($copy) use ($options) {
+        return new JsonResponse(array_map(function ($copy) {
             return $this->serializer->serialize($copy, $this->options['get']);
         }, $copies), 200);
     }

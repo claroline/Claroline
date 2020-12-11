@@ -2,6 +2,7 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,24 +14,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventInvitation
 {
+    use Id;
+
     const IGNORE = 0;
     const JOIN = 1;
     const MAYBE = 2;
     const RESIGN = 3;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @var bool
-     *
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $status = self::IGNORE;
 
@@ -60,16 +54,6 @@ class EventInvitation
     {
         $this->event = $event;
         $this->user = $user;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -123,11 +107,9 @@ class EventInvitation
     /**
      * Set event.
      *
-     * @param \Claroline\AgendaBundle\Entity\Event $event
-     *
      * @return EventInvitation
      */
-    public function setEvent(\Claroline\AgendaBundle\Entity\Event $event)
+    public function setEvent(Event $event)
     {
         $this->event = $event;
 
@@ -137,7 +119,7 @@ class EventInvitation
     /**
      * Get event.
      *
-     * @return \Claroline\AgendaBundle\Entity\Event
+     * @return Event
      */
     public function getEvent()
     {
@@ -147,11 +129,9 @@ class EventInvitation
     /**
      * Set user.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
      * @return EventInvitation
      */
-    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -161,7 +141,7 @@ class EventInvitation
     /**
      * Get user.
      *
-     * @return \Claroline\CoreBundle\Entity\User
+     * @return User
      */
     public function getUser()
     {

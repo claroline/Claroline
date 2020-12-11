@@ -2,8 +2,8 @@
 
 namespace Claroline\AudioPlayerBundle\Entity\Quiz\Misc;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AudioPlayerBundle\Entity\Quiz\ItemType\WaveformQuestion;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
@@ -24,11 +24,9 @@ class Section implements AnswerPartInterface
      */
     private $id;
 
-    use UuidTrait;
-
-    use ScoreTrait;
-
     use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
 
     /**
      * @ORM\Column(name="section_start", type="float", nullable=false)
@@ -166,9 +164,6 @@ class Section implements AnswerPartInterface
         return $this->waveform;
     }
 
-    /**
-     * @param WaveformQuestion $waveform
-     */
     public function setWaveform(WaveformQuestion $waveform)
     {
         $this->waveform = $waveform;

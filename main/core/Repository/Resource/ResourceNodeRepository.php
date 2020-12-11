@@ -30,7 +30,8 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Servi
 
     public function __construct(ManagerRegistry $managerRegistry, PluginManager $pluginManager)
     {
-        $this->builder = new ResourceQueryBuilder($pluginManager->getEnabled(true));
+        $this->builder = new ResourceQueryBuilder();
+        $this->builder->setBundles($pluginManager->getEnabled(true));
         $em = $managerRegistry->getManager();
 
         parent::__construct($em, $em->getClassMetadata(ResourceNode::class));

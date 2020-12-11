@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -35,22 +36,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/workspace")
  */
 class WorkspaceController extends AbstractCrudController
 {
+    use HasGroupsTrait;
     use HasOrganizationsTrait;
     use HasRolesTrait;
     use HasUsersTrait;
-    use HasGroupsTrait;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var RoleManager */
+    private $roleManager;
     /** @var ResourceManager */
     private $resourceManager;
     /** @var TranslatorInterface */
@@ -64,21 +67,10 @@ class WorkspaceController extends AbstractCrudController
     /** @var LogConnectManager */
     private $logConnectManager;
 
-    /**
-     * WorkspaceController constructor.
-     *
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authorization
-     * @param ResourceManager               $resourceManager
-     * @param TranslatorInterface           $translator
-     * @param WorkspaceManager              $workspaceManager
-     * @param TransferManager               $importer
-     * @param string                        $logDir
-     * @param LogConnectManager             $logConnectManager
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
+        RoleManager $roleManager,
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
         WorkspaceManager $workspaceManager,
@@ -88,6 +80,7 @@ class WorkspaceController extends AbstractCrudController
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->roleManager = $roleManager;
         $this->importer = $importer;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
@@ -117,12 +110,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/list/registerable", name="apiv2_workspace_list_registerable", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listRegisterableAction(Request $request)
+    public function listRegisterableAction(Request $request): JsonResponse
     {
         return new JsonResponse($this->finder->search(
             Workspace::class,
@@ -147,12 +136,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/list/registered", name="apiv2_workspace_list_registered", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listRegisteredAction(Request $request)
+    public function listRegisteredAction(Request $request): JsonResponse
     {
         return new JsonResponse($this->finder->search(
             Workspace::class,
@@ -172,12 +157,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/list/administrated", name="apiv2_workspace_list_managed", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listManagedAction(Request $request)
+    public function listManagedAction(Request $request): JsonResponse
     {
         return new JsonResponse($this->finder->search(
             Workspace:: class,
@@ -197,12 +178,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/list/model", name="apiv2_workspace_list_model", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listModelAction(Request $request)
+    public function listModelAction(Request $request): JsonResponse
     {
         return new JsonResponse($this->finder->search(
             Workspace:: class,
@@ -219,14 +196,9 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      *
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
-     *
      * @todo all of this should be handled by crud (this method should not be overridden)
      */
-    public function createAction(Request $request, $class)
+    public function createAction(Request $request, $class): JsonResponse
     {
         $data = $this->decodeRequest($request);
 
@@ -262,13 +234,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
-     *
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
      */
-    public function copyBulkAction(Request $request, $class)
+    public function copyBulkAction(Request $request, $class): JsonResponse
     {
         //add params for the copy here
         $isModel = 1 === (int) $request->query->get('model') || 'true' === $request->query->get('model') ? true : false;
@@ -296,12 +263,8 @@ class WorkspaceController extends AbstractCrudController
      * )
      * @Route("/{id}/export", name="apiv2_workspace_export", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Workspace $workspace
-     *
-     * @return BinaryFileResponse
      */
-    public function exportAction(Workspace $workspace)
+    public function exportAction(Workspace $workspace): BinaryFileResponse
     {
         $pathArch = $this->importer->export($workspace);
         $filename = TextNormalizer::toKey($workspace->getCode()).'.zip';
@@ -320,13 +283,8 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
-     *
-     * @param Request $request
-     * @param string  $class
-     *
-     * @return JsonResponse
      */
-    public function deleteBulkAction(Request $request, $class)
+    public function deleteBulkAction(Request $request, $class): JsonResponse
     {
         /** @var Workspace[] $workspaces */
         $workspaces = parent::decodeIdsString($request, Workspace::class);
@@ -372,12 +330,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/archive", name="apiv2_workspace_archive", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function archiveBulkAction(Request $request)
+    public function archiveBulkAction(Request $request): JsonResponse
     {
         $processed = [];
 
@@ -404,12 +358,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/unarchive", name="apiv2_workspace_unarchive", methods={"PUT"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function unarchiveBulkAction(Request $request)
+    public function unarchiveBulkAction(Request $request): JsonResponse
     {
         $processed = [];
 
@@ -443,16 +393,10 @@ class WorkspaceController extends AbstractCrudController
      * )
      * @Route("/{id}/managers", name="apiv2_workspace_list_managers", methods={"GET"})
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function listManagersAction(Workspace $workspace, Request $request)
+    public function listManagersAction(Workspace $workspace, Request $request): JsonResponse
     {
-        /** @var Role $role */
-        $role = $this->container->get('claroline.manager.role_manager')->getManagerRole($workspace);
+        $role = $this->roleManager->getManagerRole($workspace);
 
         return new JsonResponse($this->finder->search(
             User::class,
@@ -468,12 +412,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/roles/common", name="apiv2_workspace_roles_common", methods={"GET"})
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function getCommonRolesAction(Request $request)
+    public function getCommonRolesAction(Request $request): JsonResponse
     {
         /** @var Workspace[] $workspaces */
         $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
@@ -523,13 +463,8 @@ class WorkspaceController extends AbstractCrudController
      *     }
      * )
      * @Route("/{id}/role/configurable", name="apiv2_workspace_list_roles_configurable", methods={"GET"})
-     *
-     * @param string  $id
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function listConfigurableRolesAction($id, Request $request)
+    public function listConfigurableRolesAction(string $id, Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->finder->search(Role::class, array_merge(
@@ -550,14 +485,8 @@ class WorkspaceController extends AbstractCrudController
      * @Route("/{workspace}/role/{role}/shortcuts/add", name="apiv2_workspace_shortcuts_add", methods={"PUT"})
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Role      $role
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function shortcutsAddAction(Workspace $workspace, Role $role, Request $request)
+    public function shortcutsAddAction(Workspace $workspace, Role $role, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
 
@@ -582,14 +511,8 @@ class WorkspaceController extends AbstractCrudController
      * @Route("/{workspace}/role/{role}/shortcut/remove", name="apiv2_workspace_shortcut_remove", methods={"PUT"})
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      * @EXT\ParamConverter("role", class="ClarolineCoreBundle:Role", options={"mapping": {"role": "uuid"}})
-     *
-     * @param Workspace $workspace
-     * @param Role      $role
-     * @param Request   $request
-     *
-     * @return JsonResponse
      */
-    public function shortcutRemoveAction(Workspace $workspace, Role $role, Request $request)
+    public function shortcutRemoveAction(Workspace $workspace, Role $role, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
 
@@ -613,13 +536,8 @@ class WorkspaceController extends AbstractCrudController
      * @Route("/{slug}/close", name="apiv2_workspace_close", methods={"PUT"})
      * @EXT\ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return JsonResponse
      */
-    public function closeAction(Workspace $workspace, User $user = null)
+    public function closeAction(Workspace $workspace, User $user = null): JsonResponse
     {
         if ($user) {
             $this->logConnectManager->computeWorkspaceDuration($user, $workspace);
@@ -628,12 +546,7 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @param Workspace $workspace
-     *
-     * @return string
-     */
-    private function getLogFile(Workspace $workspace)
+    private function getLogFile(Workspace $workspace): string
     {
         $fs = new Filesystem();
         $fs->mkDir($this->logDir);

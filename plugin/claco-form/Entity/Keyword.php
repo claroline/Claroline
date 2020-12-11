@@ -2,7 +2,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Keyword
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

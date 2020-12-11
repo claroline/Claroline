@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Correction
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -204,9 +204,6 @@ class Correction
         return $this->drop;
     }
 
-    /**
-     * @param Drop $drop
-     */
     public function setDrop(Drop $drop)
     {
         $this->drop = $drop;
@@ -220,9 +217,6 @@ class Correction
         return $this->user;
     }
 
-    /**
-     * @param User|null $user
-     */
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -284,9 +278,6 @@ class Correction
         return $this->startDate;
     }
 
-    /**
-     * @param \DateTime $startDate
-     */
     public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = $startDate;
@@ -300,9 +291,6 @@ class Correction
         return $this->lastEditionDate;
     }
 
-    /**
-     * @param \DateTime $lastEditionDate
-     */
     public function setLastEditionDate(\DateTime $lastEditionDate)
     {
         $this->lastEditionDate = $lastEditionDate;
@@ -316,9 +304,6 @@ class Correction
         return $this->endDate;
     }
 
-    /**
-     * @param \DateTime|null $endDate
-     */
     public function setEndDate(\DateTime $endDate = null)
     {
         $this->endDate = $endDate;
@@ -476,9 +461,6 @@ class Correction
         return $this->grades->toArray();
     }
 
-    /**
-     * @param Grade $grade
-     */
     public function addGrade(Grade $grade)
     {
         if (!$this->grades->contains($grade)) {
@@ -486,9 +468,6 @@ class Correction
         }
     }
 
-    /**
-     * @param Grade $grade
-     */
     public function removeGrade(Grade $grade)
     {
         if ($this->grades->contains($grade)) {

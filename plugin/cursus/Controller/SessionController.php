@@ -102,34 +102,15 @@ class SessionController extends AbstractCrudController
      */
     public function listPublicAction(Request $request): JsonResponse
     {
+        $options = $this->options['list'];
         $params = $request->query->all();
+
         $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
         $params['hiddenFilters']['publicRegistration'] = true;
         $params['hiddenFilters']['terminated'] = false;
 
         return new JsonResponse(
-            $this->finder->search(Session::class, $params)
-        );
-    }
-
-    /**
-     * @Route("/registered", name="apiv2_cursus_session_registered", methods={"GET"})
-     */
-    public function listRegisteredAction(Request $request): JsonResponse
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $params = $request->query->all();
-        $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
-        $params['hiddenFilters']['user'] = $user->getUuid();
-
-        return new JsonResponse(
-            $this->finder->search(Session::class, $params)
+            $this->finder->search(Session::class, $params, $options ?? [])
         );
     }
 
@@ -451,6 +432,6 @@ class SessionController extends AbstractCrudController
 
         $this->manager->sendSessionInvitation($session, $users, false);
 
-        return new JsonResponse();
+        return new JsonResponse(null, 204);
     }
 }

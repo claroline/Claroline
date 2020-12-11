@@ -196,7 +196,7 @@ class DatabaseWriter implements LoggerAwareInterface
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
-            $this->createTool($tool, $plugin);
+            $this->updateTool($tool, $plugin);
         }
 
         foreach ($processedConfiguration['themes'] as $theme) {
@@ -569,15 +569,6 @@ class DatabaseWriter implements LoggerAwareInterface
         } else {
             return $this->persistDataSource($sourceConfiguration, $source);
         }
-    }
-
-    /**
-     * @param array $toolConfiguration
-     */
-    private function createTool($toolConfiguration, Plugin $plugin)
-    {
-        $tool = new Tool();
-        $this->persistTool($toolConfiguration, $plugin, $tool);
     }
 
     /**

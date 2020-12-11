@@ -48,6 +48,7 @@
     "registration_user_validation": "Demander à l'utilisateur de confirmer son inscription",
     "registration_user_validation_help": "L'utilisateur devra cliquer sur le lien envoyé dans l'email pour terminer son inscription.",
     "training_loading": "Nous chargeons la formation...",
+    "event_loading": "Nous chargeons la séance...",
     "default_session_help": "La session par défaut est affichée à l'ouverture de la formation dans le catalogue.",
     "default_session_help_registration": "La session par défaut est utilisée lors de l'inscription automatique des utilisateurs depuis une formation parente.",
     "propagate_registration": "Inscrire automatiquement les utilisateurs aux formations liées",
@@ -68,5 +69,8 @@
     "session_registration_pending": "Vous êtes en liste d'attente pour cette session.",
     "session_registration_full_help": "La session est complète pour le moment. Il sera possible de terminer l'inscription si des places se libèrent.",
     "session_registration_pending_help": "Vous devez confirmer votre inscription grâce au lien qui vous a été envoyé.",
-    "session_registration_manager_help": "Un gestionnaire doit valider votre demande d'inscription."
+    "session_registration_manager_help": "Un gestionnaire doit valider votre demande d'inscription.",
+    "my_events": "Mes séances",
+    "public_events": "Séances publiques",
+    "all_events": "Toutes les séances"
 }

@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
@@ -22,13 +22,10 @@ abstract class AbstractChoice
      */
     protected $id;
 
-    use UuidTrait;
-
-    use ScoreTrait;
-
-    use FeedbackTrait;
-
     use ContentTrait;
+    use FeedbackTrait;
+    use ScoreTrait;
+    use Uuid;
 
     public function __construct()
     {

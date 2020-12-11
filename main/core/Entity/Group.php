@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -30,8 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Group extends AbstractRoleSubject
 {
-    use UuidTrait;
     use OrganizationsTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

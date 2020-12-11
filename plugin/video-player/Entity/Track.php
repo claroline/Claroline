@@ -11,7 +11,7 @@
 
 namespace Claroline\VideoPlayerBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Track
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

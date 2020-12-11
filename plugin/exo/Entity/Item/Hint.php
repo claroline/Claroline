@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Attempt\PenaltyItemInterface;
 use UJM\ExoBundle\Library\Model\ContentTrait;
@@ -25,11 +25,9 @@ class Hint implements PenaltyItemInterface
      */
     private $id;
 
-    use UuidTrait;
-
     use ContentTrait;
-
     use PenaltyTrait;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(targetEntity="Item", inversedBy="hints")
@@ -51,9 +49,6 @@ class Hint implements PenaltyItemInterface
         return $this->id;
     }
 
-    /**
-     * @param Item $question
-     */
     public function setQuestion(Item $question)
     {
         $this->question = $question;

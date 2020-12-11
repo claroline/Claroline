@@ -11,7 +11,8 @@
 
 namespace Claroline\DropZoneBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dropzone extends AbstractResource
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     const STATE_NOT_STARTED = 'not_started';
     const STATE_ALLOW_DROP = 'drop';
@@ -36,15 +38,6 @@ class Dropzone extends AbstractResource
 
     const DROP_TYPE_USER = 'user';
     const DROP_TYPE_TEAM = 'team';
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
 
     /**
      * 1 = common
@@ -246,7 +239,7 @@ class Dropzone extends AbstractResource
     /**
      * @ORM\Column(name="criteria_total", type="smallint", nullable=false)
      *
-     * @var bool
+     * @var int
      */
     protected $criteriaTotal = 4;
 
@@ -325,16 +318,6 @@ class Dropzone extends AbstractResource
     {
         $this->refreshUuid();
         $this->criteria = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getEditionState()

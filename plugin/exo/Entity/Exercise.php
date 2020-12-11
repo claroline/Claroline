@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,59 +19,58 @@ use UJM\ExoBundle\Library\Options\ShowScoreAt;
  */
 class Exercise extends AbstractResource
 {
-    use UuidTrait;
-
     use AttemptParametersTrait;
+    use Uuid;
 
     /**
      * Type of the Exercise.
      *
-     * @var string
-     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     private $type = ExerciseType::CUSTOM;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
+     *
+     * @var string
      */
     private $description = '';
 
     /**
      * When corrections are available to the Users ?
      *
-     * @var string
-     *
      * @ORM\Column(name="correction_mode", type="string")
+     *
+     * @var string
      */
     private $correctionMode = ShowCorrectionAt::AFTER_END;
 
     /**
      * Date of availability of the corrections.
      *
-     * @var string
-     *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
+     *
+     * @var string
      */
     private $dateCorrection;
 
     /**
      * When marks are available to the Users ?
      *
-     * @var string
-     *
      * @ORM\Column(name="mark_mode", type="string")
+     *
+     * @var string
      */
     private $markMode = ShowScoreAt::WITH_CORRECTION;
 
     /**
      * Add a button to stop the Exercise before the end.
      *
-     * @var bool
-     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     private $interruptible = true;
 
@@ -164,18 +163,18 @@ class Exercise extends AbstractResource
     /**
      * Show the Exercise meta in the overview of the Exercise.
      *
-     * @var bool
-     *
      * @ORM\Column(name="metadata_visible", type="boolean")
+     *
+     * @var bool
      */
     private $metadataVisible = true;
 
     /**
      * Show stats about User responses in the Correction.
      *
-     * @var bool
-     *
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     private $statistics = false;
 
@@ -184,24 +183,26 @@ class Exercise extends AbstractResource
      * (equals hide Awaited answer filed) when displaying instant feedback and exercise correction page.
      *
      * @ORM\Column(name="minimal_correction", type="boolean")
+     *
+     * @var bool
      */
     private $minimalCorrection = false;
 
     /**
      * If true, the users who pass the exercise are anonymized in papers.
      *
-     * @var bool
-     *
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
+     *
+     * @var bool
      */
     private $anonymizeAttempts = false;
 
     /**
      * Show feedback flag.
      *
-     * @var string
-     *
      * @ORM\Column(name="show_feedback", type="boolean")
+     *
+     * @var bool
      */
     private $showFeedback = false;
 
@@ -224,18 +225,18 @@ class Exercise extends AbstractResource
     /**
      * Displays step numbering.
      *
-     * @var string
-     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     private $numbering = ExerciseNumbering::NONE;
 
     /**
      * Displays question numbering.
      *
-     * @var string
-     *
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     private $questionNumbering = ExerciseNumbering::NONE;
 
@@ -270,18 +271,18 @@ class Exercise extends AbstractResource
     /**
      * Use all papers to compute stats.
      *
-     * @var bool
-     *
      * @ORM\Column(name="all_papers_stats", type="boolean", options={"default" = 1})
+     *
+     * @var bool
      */
     private $allPapersStatistics = true;
 
     /**
      * Sets the mandatory question flag.
      *
-     * @var string
-     *
      * @ORM\Column(name="mandatory_questions", type="boolean")
+     *
+     * @var bool
      */
     private $mandatoryQuestions = false;
 
@@ -289,6 +290,8 @@ class Exercise extends AbstractResource
      * If true, the time to answer the exercise will be limited by the defined duration.
      *
      * @ORM\Column(name="time_limited", type="boolean", options={"default" = 0})
+     *
+     * @var bool
      */
     private $timeLimited = false;
 

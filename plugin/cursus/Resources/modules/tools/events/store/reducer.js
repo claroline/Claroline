@@ -1,7 +1,10 @@
-import {makeReducer} from '#/main/app/store/reducer'
+import {combineReducers} from '#/main/app/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
-const reducer = makeReducer()
+import {selectors} from '#/plugin/cursus/tools/events/store/selectors'
 
-export {
-  reducer
-}
+export const reducer = combineReducers({
+  list: makeListReducer(selectors.LIST_NAME, {
+    sortBy: {property: 'startDate', direction: 1}
+  })
+})

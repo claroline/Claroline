@@ -45,23 +45,21 @@ class ObjectLock
     /**
      * @ORM\Column(name="locked", type="boolean")
      *
-     * @var string
+     * @var bool
      */
     private $locked = false;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="update")
+     *
+     * @var \DateTime
      */
     protected $lastModification;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      *
      * @var User
      */

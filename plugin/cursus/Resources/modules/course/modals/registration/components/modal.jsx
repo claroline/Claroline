@@ -12,7 +12,7 @@ import {DetailsData} from '#/main/app/content/details/components/data'
 
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {route} from '#/plugin/cursus/routing'
-import {getInfo, isFull} from '#/plugin/cursus/course/utils'
+import {getInfo, isFull} from '#/plugin/cursus/utils'
 
 const RegistrationModal = props =>
   <Modal

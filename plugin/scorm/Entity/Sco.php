@@ -11,7 +11,7 @@
 
 namespace Claroline\ScormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sco
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

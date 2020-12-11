@@ -11,7 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Category
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Column(type="integer")

@@ -2,7 +2,8 @@
 
 namespace Icap\NotificationBundle\Controller\API;
 
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Manager\NotificationManager;
@@ -14,32 +15,20 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/notificationfollower")
  */
-class FollowerResourceController extends AbstractCrudController
+class FollowerResourceController
 {
+    use RequestDecoderTrait;
+
+    private $serializer;
     /** @var NotificationManager */
     private $manager;
 
-    /**
-     * @param NotificationManager $manager
-     */
-    public function __construct(NotificationManager $manager)
-    {
+    public function __construct(
+        SerializerProvider $serializer,
+        NotificationManager $manager
+    ) {
+        $this->serializer = $serializer;
         $this->manager = $manager;
-    }
-
-    public function getClass()
-    {
-        return 'HeVinci\FavouriteBundle\Entity\Favourite';
-    }
-
-    public function getIgnore()
-    {
-        return ['create', 'update', 'deleteBulk', 'exist', 'list', 'copyBulk', 'schema', 'find', 'get'];
-    }
-
-    public function getName()
-    {
-        return 'notificationfollower';
     }
 
     /**
@@ -47,14 +36,8 @@ class FollowerResourceController extends AbstractCrudController
      *
      * @Route("resources/toggle/{mode}", name="icap_notification_follower_resources_toggle", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param string  $mode
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function followerResourcesToggleAction($mode, User $user, Request $request)
+    public function followerResourcesToggleAction(string $mode, User $user, Request $request): JsonResponse
     {
         $nodes = $this->decodeIdsString($request, ResourceNode::class);
         $this->manager->toggleFollowResources($user, $nodes, $mode);

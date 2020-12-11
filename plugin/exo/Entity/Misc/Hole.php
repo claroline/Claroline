@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,7 +27,7 @@ class Hole
      */
     private $id;
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * The display size of the hole input.
@@ -201,8 +201,6 @@ class Hole
 
     /**
      * Sets keywords collection.
-     *
-     * @param array $keywords
      */
     public function setKeywords(array $keywords)
     {
@@ -222,8 +220,6 @@ class Hole
 
     /**
      * Adds a keyword.
-     *
-     * @param Keyword $keyword
      */
     public function addKeyword(Keyword $keyword)
     {
@@ -235,8 +231,6 @@ class Hole
 
     /**
      * Removes a keyword.
-     *
-     * @param Keyword $keyword
      */
     public function removeKeyword(Keyword $keyword)
     {

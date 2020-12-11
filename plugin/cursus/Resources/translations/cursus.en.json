@@ -48,6 +48,7 @@
     "registration_user_validation": "Ask the user to confirm their registration",
     "registration_user_validation_help": "The user will have to click on the link sent in the email to complete their registration.",
     "training_loading": "We are loading the training...",
+    "event_loading": "We are loading the event...",
     "default_session_help": "The default session is displayed when opening the training in the catalog.",
     "default_session_help_registration": "The default session is used when automatically registering users from a parent training.",
     "propagate_registration": "Automatically register users to linked trainings",
@@ -68,5 +69,8 @@
     "session_registration_pending": "Vous êtes en liste d'attente pour cette session.",
     "session_registration_full_help": "The session is full at the moment. It will be possible to complete the registration if places become available.",
     "session_registration_pending_help": "You must confirm your registration using the link that was sent to you.",
-    "session_registration_manager_help": "A manager must validate your registration request."
+    "session_registration_manager_help": "A manager must validate your registration request.",
+    "my_events": "My session events",
+    "public_events": "Public session events",
+    "all_events": "All session events"
 }

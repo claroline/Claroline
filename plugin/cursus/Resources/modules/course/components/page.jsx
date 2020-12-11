@@ -11,7 +11,7 @@ import {PageFull} from '#/main/app/page/components/full'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 import {route} from '#/plugin/cursus/routing'
-import {getInfo} from '#/plugin/cursus/course/utils'
+import {getInfo} from '#/plugin/cursus/utils'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
 const CoursePage = (props) => {
@@ -38,7 +38,7 @@ const CoursePage = (props) => {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('edit', {}, 'actions'),
-          target: route(props.path, props.course) + '/edit',
+          target: route(props.basePath, props.course) + '/edit',
           displayed: hasPermission('edit', props.course),
           primary: true
         }, {
@@ -64,6 +64,7 @@ const CoursePage = (props) => {
 
 CoursePage.propTypes = {
   path: T.array,
+  basePath: T.string.isRequired,
   currentContext: T.shape({
     type: T.oneOf(['administration', 'desktop', 'workspace']),
     data: T.object

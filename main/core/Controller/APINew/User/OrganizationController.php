@@ -23,32 +23,46 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/organization")
  */
 class OrganizationController extends AbstractCrudController
 {
+    use HasGroupsTrait;
+    use HasParentTrait;
+    use HasUsersTrait;
+    use HasWorkspacesTrait;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
+    public function __construct(AuthorizationCheckerInterface $authorization)
+    {
+        $this->authorization = $authorization;
+    }
+
     public function getName()
     {
         return 'organization';
     }
 
-    use HasParentTrait;
-    use HasUsersTrait;
-    use HasGroupsTrait;
-    use HasWorkspacesTrait;
+    public function getClass()
+    {
+        return Organization::class;
+    }
 
     /**
      * @Route("/list/recursive", name="apiv2_organization_list_recursive")
      */
-    public function recursiveListAction()
+    public function recursiveListAction(): JsonResponse
     {
         /**
          * we need to filter the results with the filterOrganization method; we can already filter with parent = null for the administrator
          * because we'll retrieve everything. This is a small needed optimization for large datatrees.
          */
-        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
+        $filters = $this->authorization->isGranted('ROLE_ADMIN') ?
             ['hiddenFilters' => ['parent' => null]] :
             [];
 
@@ -66,12 +80,8 @@ class OrganizationController extends AbstractCrudController
     /**
      * @Route("/{id}/managers", name="apiv2_organization_list_managers", methods={"GET"})
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Organization $organization
-     *
-     * @return JsonResponse
      */
-    public function listManagersAction(Organization $organization)
+    public function listManagersAction(Organization $organization): JsonResponse
     {
         return new JsonResponse($this->finder->search(
              'Claroline\CoreBundle\Entity\User',
@@ -84,13 +94,8 @@ class OrganizationController extends AbstractCrudController
      *
      * @Route("/{id}/manager", name="apiv2_organization_add_managers", methods={"PATCH"})
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Organization $organization
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function addManagersAction(Organization $organization, Request $request)
+    public function addManagersAction(Organization $organization, Request $request): JsonResponse
     {
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_ADD, $users);
@@ -103,23 +108,13 @@ class OrganizationController extends AbstractCrudController
      *
      * @Route("/{id}/manager", name="apiv2_organization_remove_managers", methods={"DELETE"})
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Organization $organization
-     * @param Request      $request
-     *
-     * @return JsonResponse
      */
-    public function removeManagersAction(Organization $organization, Request $request)
+    public function removeManagersAction(Organization $organization, Request $request): JsonResponse
     {
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_REMOVE, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Organization\Organization';
     }
 
     /**

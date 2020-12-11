@@ -2,7 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +18,7 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Post extends Statusable
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @var int
@@ -217,8 +217,6 @@ class Post extends Statusable
     /**
      * Set creationDate.
      *
-     * @param \DateTime $creationDate
-     *
      * @return Post
      */
     public function setCreationDate(\DateTime $creationDate)
@@ -240,8 +238,6 @@ class Post extends Statusable
 
     /**
      * Set modificationDate.
-     *
-     * @param \DateTime $modificationDate
      *
      * @return Post
      */
@@ -265,8 +261,6 @@ class Post extends Statusable
     /**
      * Set publicationDate.
      *
-     * @param \DateTime $publicationDate
-     *
      * @return Post
      */
     public function setPublicationDate(\DateTime $publicationDate = null)
@@ -289,8 +283,6 @@ class Post extends Statusable
     /**
      * Add comments.
      *
-     * @param Comment $comments
-     *
      * @return Post
      */
     public function addComment(Comment $comments)
@@ -303,8 +295,6 @@ class Post extends Statusable
     /**
      * Remove comments.
      *
-     * @param Comment $comments
-     *
      * @return Post
      */
     public function removeComment(Comment $comments)
@@ -314,16 +304,14 @@ class Post extends Statusable
         return $this;
     }
 
-    /***
-     * Set comments
-     *
-     * @param  ArrayCollection $comments
+    /**
+     * Set comments.
      *
      * @return Post
      */
     public function setComments(ArrayCollection $comments)
     {
-        /** @var \Icap\BlogBundle\Entity\Comment[] $comments */
+        /** @var Comment[] $comments */
         foreach ($comments as $comment) {
             $comment->setPost($this);
         }
@@ -345,8 +333,6 @@ class Post extends Statusable
 
     /**
      * Set author.
-     *
-     * @param User $author
      *
      * @return Post
      */
@@ -370,8 +356,6 @@ class Post extends Statusable
     /**
      * Set blog.
      *
-     * @param Blog $blog
-     *
      * @return Post
      */
     public function setBlog(Blog $blog = null)
@@ -392,7 +376,7 @@ class Post extends Statusable
     }
 
     /**
-     * @param \Icap\BlogBundle\Entity\Tag[]|\Doctrine\Common\Collections\ArrayCollection $tags
+     * @param Tag[]|ArrayCollection $tags
      *
      * @return Post
      */
@@ -404,7 +388,7 @@ class Post extends Statusable
     }
 
     /**
-     * @return \Icap\BlogBundle\Entity\Tag[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return Tag[]|ArrayCollection
      */
     public function getTags()
     {
@@ -412,8 +396,6 @@ class Post extends Statusable
     }
 
     /**
-     * @param Tag $tag
-     *
      * @return Post
      */
     public function addTag(Tag $tag)
@@ -424,8 +406,6 @@ class Post extends Statusable
     }
 
     /**
-     * @param Tag $tag
-     *
      * @return Post
      */
     public function removeTag(Tag $tag)
@@ -517,8 +497,6 @@ class Post extends Statusable
     }
 
     /**
-     * @param UserPickerContent $userPicker
-     *
      * @return $this
      */
     public function setUserPicker(UserPickerContent $userPicker)
