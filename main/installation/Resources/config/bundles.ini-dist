@@ -44,4 +44,5 @@ Claroline\OpenBadgeBundle\ClarolineOpenBadgeBundle = true
 Claroline\AudioPlayerBundle\ClarolineAudioPlayerBundle = true
 Claroline\SamlBundle\ClarolineSamlBundle = false
 Claroline\CursusBundle\ClarolineCursusBundle = true
+Claroline\BookingBundle\ClarolineBookingBundle = false
 Claroline\BigBlueButtonBundle\ClarolineBigBlueButtonBundle = false

@@ -14,13 +14,8 @@ class DateRangeNormalizer
 
     /**
      * Normalizes two DateTimes to an array of date strings.
-     *
-     * @param \DateTime|null $startDate
-     * @param \DateTime|null $endDate
-     *
-     * @return string[]
      */
-    public static function normalize(\DateTime $startDate = null, \DateTime $endDate = null)
+    public static function normalize(\DateTimeInterface $startDate = null, \DateTimeInterface $endDate = null): array
     {
         if (!empty($startDate) || !empty($endDate)) {
             return [
@@ -34,12 +29,8 @@ class DateRangeNormalizer
 
     /**
      * Denormalizes an array of date strings into DateTime objects.
-     *
-     * @param string[] $dateRange
-     *
-     * @return \DateTime[]
      */
-    public static function denormalize($dateRange = [])
+    public static function denormalize(array $dateRange = []): array
     {
         if (!empty($dateRange)) {
             return [

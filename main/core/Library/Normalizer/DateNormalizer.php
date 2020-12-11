@@ -14,12 +14,8 @@ class DateNormalizer
 
     /**
      * Normalizes a DateTime to a string.
-     *
-     * @param \DateTime|null $date
-     *
-     * @return string|null
      */
-    public static function normalize(\DateTime $date = null)
+    public static function normalize(\DateTimeInterface $date = null): ?string
     {
         if (!empty($date)) {
             return $date->format(static::DATE_FORMAT);
@@ -30,18 +26,12 @@ class DateNormalizer
 
     /**
      * Denormalizes a string into a DateTime object.
-     *
-     * @param string $dateString
-     *
-     * @return \DateTime|null
      */
-    public static function denormalize($dateString = null)
+    public static function denormalize(string $dateString = null): ?\DateTimeInterface
     {
         if (!empty($dateString)) {
             try {
-                $dateTime = \DateTime::createFromFormat(static::DATE_FORMAT, $dateString);
-
-                return $dateTime;
+                return \DateTime::createFromFormat(static::DATE_FORMAT, $dateString);
             } catch (\Exception $e) {
             }
         }

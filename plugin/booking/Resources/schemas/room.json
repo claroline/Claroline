@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The room uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The room name",
+      "minLength": 1
+    },
+    "code": {
+      "type": "string",
+      "description": "The room code",
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The room description"
+    },
+    "meta": {}
+  },
+  "required": ["code", "name"],
+  "claroline": {
+    "ids": ["id", "code"]
+  }
+}

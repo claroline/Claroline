@@ -1696,5 +1696,7 @@
     "file_opening_browser": "Ouvrir le fichier avec le lecteur du navigateur",
     "file_opening_player": "Ouvrir le fichier avec le lecteur Claroline",
     "privacy": "Vie privée",
-    "full": "Complet"
+    "full": "Complet",
+    "quantity": "Quantité",
+    "capacity": "Capacité"
 }

@@ -1664,5 +1664,7 @@
     "file_opening_browser": "Open file with browser player",
     "file_opening_player": "Open file with Claroline player",
     "privacy": "Private life",
-    "full": "Full"
+    "full": "Full",
+    "quantity": "Quantity",
+    "capacity": "Capacity"
 }

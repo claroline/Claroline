@@ -123,8 +123,6 @@
             "Icap\\FormulaPluginBundle\\": "plugin/formula",
             "Innova\\PathBundle\\": "plugin/path",
             "Claroline\\DevBundle\\": "main/dev",
-            "Claroline\\ChatBundle\\": "plugin/chat",
-            "Claroline\\WebInstaller\\": "main/web-installer/",
             "UJM\\ExoBundle\\": "plugin/exo",
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
@@ -138,6 +136,7 @@
             "Claroline\\SlideshowBundle\\": "plugin/slideshow",
             "Claroline\\AudioPlayerBundle\\": "plugin/audio-player",
             "Claroline\\CursusBundle\\": "plugin/cursus",
+            "Claroline\\BookingBundle\\": "plugin/booking",
             "Claroline\\BigBlueButtonBundle\\": "integration/big-blue-button"
         }
     }
