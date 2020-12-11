@@ -33,7 +33,6 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MakerBundle\MakerBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -91,7 +90,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle' => 'framework',
             'Symfony\Bundle\SecurityBundle\SecurityBundle' => 'security',
             'Symfony\Bundle\MonologBundle\MonologBundle' => 'monolog',
-            'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => 'swiftmailer',
             'Doctrine\Bundle\DoctrineBundle\DoctrineBundle' => 'doctrine',
         ];
 
@@ -142,7 +140,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             new FrameworkBundle(),
             new SecurityBundle(),
             new MonologBundle(),
-            new SwiftmailerBundle(),
             new DoctrineBundle(),
             new DoctrineCacheBundle(),
             new FOSJsRoutingBundle(),

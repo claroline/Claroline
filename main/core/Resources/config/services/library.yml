@@ -82,17 +82,19 @@ services:
     Claroline\CoreBundle\Library\Mailing\TransportFactory:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@event_dispatcher'
+            - '@logger'
 
     Claroline\CoreBundle\Library\Mailing\Mailer:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '%kernel.logs_dir%'
 
-    Claroline\CoreBundle\Library\Mailing\Client\SwiftMailer:
+    Claroline\CoreBundle\Library\Mailing\Client\SymfonyMailer:
         tags: ['claroline.mailing']
         arguments:
             - '@mailer'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@logger'
 
     Claroline\CoreBundle\Library\Mailing\Client\Postal:
         tags: ['claroline.mailing']

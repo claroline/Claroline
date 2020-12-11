@@ -12,14 +12,29 @@
 namespace Claroline\CoreBundle\Library\Mailing;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\Bridge\Google\Transport\GmailSmtpTransport;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TransportFactory
 {
-    private $configHandler;
+    private const COMMAND = '/usr/sbin/sendmail -bs';
+    private const TIMEOUT = 30;
 
-    public function __construct(PlatformConfigurationHandler $configHandler)
-    {
+    private $configHandler;
+    private $eventDispatcher;
+    private $logger;
+
+    public function __construct(
+        PlatformConfigurationHandler $configHandler,
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger
+    ) {
         $this->configHandler = $configHandler;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     public function getTransport()
@@ -27,57 +42,44 @@ class TransportFactory
         $type = $this->configHandler->getParameter('mailer_transport');
 
         if ('sendmail' === $type) {
-            return new \Swift_Transport_SendmailTransport(
-                new \Swift_Transport_StreamBuffer(new \Swift_StreamFilters_StringReplacementFilterFactory()),
-                new \Swift_Events_SimpleEventDispatcher()
+            return new SendmailTransport(
+                self::COMMAND,
+                $this->eventDispatcher,
+                $this->logger
             );
-        } elseif ('smtp' === $type) {
-            $transport = $this->getBaseSmtpTransport();
-            $transport->setHost($this->configHandler->getParameter('mailer_host'));
-            $transport->setPort($this->configHandler->getParameter('mailer_port'));
-            $encryption = null;
-            if (!empty($this->configHandler->getParameter('mailer_encryption')) && 'none' !== $this->configHandler->getParameter('mailer_encryption')) {
-                $encryption = $this->configHandler->getParameter('mailer_encryption');
-            }
-            $transport->setEncryption($encryption);
-            $transport->setUsername($this->configHandler->getParameter('mailer_username'));
-            $transport->setPassword($this->configHandler->getParameter('mailer_password'));
-            $transport->setAuthMode($this->configHandler->getParameter('mailer_auth_mode'));
-            // should probably be configurable too
-            $transport->setTimeout(30);
-            $transport->setSourceIp(null);
-
-            return $transport;
         } elseif ('gmail' === $type) {
-            $transport = $this->getBaseSmtpTransport();
-            $transport->setHost('smtp.gmail.com');
-            $transport->setPort(465);
-            $transport->setEncryption('ssl');
-            $transport->setAuthMode('login');
-            $transport->setUsername($this->configHandler->getParameter('mailer_username'));
-            $transport->setPassword($this->configHandler->getParameter('mailer_password'));
+            $transport = new GmailSmtpTransport(
+                $this->configHandler->getParameter('mailer_username'),
+                $this->configHandler->getParameter('mailer_password'),
+                $this->eventDispatcher,
+                $this->logger
+            );
 
             return $transport;
         }
 
-        //default
-        return $this->getBaseSmtpTransport();
-    }
+        // Default smtp
+        $encryption = 'none' === $this->configHandler->getParameter('mailer_encryption') ? false : null; // null lets the transport choose the best value based on the platform.
+        if (!empty($this->configHandler->getParameter('mailer_encryption'))) {
+            $encryption = (bool) $this->configHandler->getParameter('mailer_encryption');
+        }
 
-    private function getBaseSmtpTransport()
-    {
-        return new \Swift_Transport_EsmtpTransport(
-            new \Swift_Transport_StreamBuffer(new \Swift_StreamFilters_StringReplacementFilterFactory()),
-            [
-                new \Swift_Transport_Esmtp_AuthHandler(
-                    [
-                        new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
-                        new \Swift_Transport_Esmtp_Auth_LoginAuthenticator(),
-                        new \Swift_Transport_Esmtp_Auth_PlainAuthenticator(),
-                    ]
-                ),
-            ],
-            new \Swift_Events_SimpleEventDispatcher()
+        $transport = new EsmtpTransport(
+            $this->configHandler->getParameter('mailer_host'),
+            $this->configHandler->getParameter('mailer_port') ?? 0,
+            $encryption,
+            $this->eventDispatcher,
+            $this->logger
         );
+        if ($this->configHandler->getParameter('mailer_username')) {
+            $transport->setUsername($this->configHandler->getParameter('mailer_username'));
+        }
+        if ($this->configHandler->getParameter('mailer_password')) {
+            $transport->setPassword($this->configHandler->getParameter('mailer_password'));
+        }
+        // should probably be configurable too
+        $transport->getStream()->setTimeout(self::TIMEOUT);
+
+        return $transport;
     }
 }

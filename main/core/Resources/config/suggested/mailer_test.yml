@@ -1,0 +1,6 @@
+imports:
+    - { resource: mailer_dev.yml }
+
+framework:
+    mailer:
+        dsn: 'null://null'

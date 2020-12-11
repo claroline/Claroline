@@ -117,7 +117,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'encryption' => null,
                 'username' => null,
                 'password' => null,
-                'auth_mode' => null,
                 'api_key' => null,
                 'tag' => null,
                 'from' => null,

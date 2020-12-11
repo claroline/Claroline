@@ -61,11 +61,6 @@ class Mailer
         $this->clients[] = $client;
     }
 
-    public function test($data)
-    {
-        return $this->getClient($data['transport'])->test($data);
-    }
-
     public function getClient()
     {
         $transport = $this->ch->getParameter('mailer_transport');

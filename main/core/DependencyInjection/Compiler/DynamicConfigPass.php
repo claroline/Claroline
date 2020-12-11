@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mailer\Transport\Transports;
 
 class DynamicConfigPass implements CompilerPassInterface
 {
@@ -29,13 +31,15 @@ class DynamicConfigPass implements CompilerPassInterface
     {
         //mailing
         $transport = new Definition();
-        $transport->setClass('Swift_Transport');
+        $transport->setClass(TransportInterface::class);
         $transport->setFactory([
             new Reference('Claroline\CoreBundle\Library\Mailing\TransportFactory'),
             'getTransport', ]
         );
-        $container->removeDefinition('swiftmailer.mailer.default.transport');
-        $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
+        $container->removeDefinition('mailer.default_transport');
+        $container->setDefinition('mailer.default_transport', $transport);
+        $container->removeDefinition('mailer.transports');
+        $container->register('mailer.transports', Transports::class)->addArgument([new Reference('mailer.default_transport')]);
 
         //notification
         $container->setAlias('icap.notification.orm.entity_manager', 'Claroline\AppBundle\Persistence\ObjectManager');

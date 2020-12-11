@@ -6,8 +6,9 @@
 - doctrine/doctrine-bundle
 - doctrine/orm
 - stof/doctrine-extensions-bundle
+- symfony/google-mailer
+- symfony/mailer
 - symfony/monolog-bundle
-- symfony/swiftmailer-bundle
 - symfony/symfony
 - johngrogg/ics-parser (standard pour les Calendrier)
 - friendsofsymfony/oauth-server-bundle
