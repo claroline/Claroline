@@ -39,6 +39,7 @@ class OauthConfigPass implements CompilerPassInterface
                 $factory,
                 "get{$resourceOwnerNoSpaces}ResourceOwner",
             ]);
+            $conf->setPublic(true);
             $container->removeDefinition(
                 'hwi_oauth.resource_owner.'.str_replace(' ', '_', strtolower($resourceOwner))
             );
