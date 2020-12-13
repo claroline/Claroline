@@ -13,7 +13,7 @@ namespace HeVinci\CompetencyBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

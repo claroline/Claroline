@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Collection;
+namespace Claroline\CoreBundle\Security\Collection;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * This is the class used by the ResourceVoter to take access decisions.
+ *
+ * @deprecated
  */
 class ResourceCollection
 {

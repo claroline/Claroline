@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
-import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {
   Course as CourseTypes,
   Session as SessionTypes
@@ -39,6 +39,15 @@ const CourseEvents = (props) =>
           scope: ['object'],
           group: trans('management'),
           displayed: hasPermission('edit', rows[0])
+        }, {
+          name: 'export-pdf',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-file-pdf-o',
+          label: trans('export-pdf', {}, 'actions'),
+          displayed: hasPermission('open', rows[0]),
+          scope: ['object'],
+          group: trans('transfer'),
+          target: ['apiv2_cursus_event_download_pdf', {id: rows[0].id}]
         }
       ]}
     />

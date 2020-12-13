@@ -9,17 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Collection;
+namespace Claroline\CoreBundle\Security\Collection;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * This is the class used by the UserVoter to take access decisions.
+ *
+ * @deprecated
  */
 class FieldFacetCollection
 {
-    private $groups;
     private $errors;
 
     public function __construct(array $fields, User $user)

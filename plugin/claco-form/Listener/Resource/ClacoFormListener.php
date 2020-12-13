@@ -28,8 +28,8 @@ use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -45,16 +45,6 @@ class ClacoFormListener
     private $tokenStorage;
     private $authorization;
 
-    /**
-     * @param ClacoFormManager              $clacoFormManager
-     * @param ObjectManager                 $om
-     * @param FinderProvider                $finder
-     * @param PlatformConfigurationHandler  $platformConfigHandler
-     * @param RoleManager                   $roleManager,
-     * @param SerializerProvider            $serializer
-     * @param TokenStorageInterface         $tokenStorage
-     * @param AuthorizationCheckerInterface $authorization
-     */
     public function __construct(
         ClacoFormManager $clacoFormManager,
         ObjectManager $om,
@@ -77,8 +67,6 @@ class ClacoFormListener
 
     /**
      * Loads the ClacoForm resource.
-     *
-     * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {
@@ -125,9 +113,6 @@ class ClacoFormListener
         $event->stopPropagation();
     }
 
-    /**
-     * @param CopyResourceEvent $event
-     */
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var ClacoForm $clacoForm */
@@ -143,6 +128,7 @@ class ClacoFormListener
     {
         $clacoForm = $exportEvent->getObject();
         $data = $exportEvent->getData();
+        $params = [];
         $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
         $data['_data']['entries'] = $this->finder->search(Entry::class, $params)['data'];
 

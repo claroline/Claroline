@@ -47,15 +47,15 @@ class TransportFactory
                 $this->eventDispatcher,
                 $this->logger
             );
-        } elseif ('gmail' === $type) {
-            $transport = new GmailSmtpTransport(
+        }
+
+        if ('gmail' === $type) {
+            return new GmailSmtpTransport(
                 $this->configHandler->getParameter('mailer_username'),
                 $this->configHandler->getParameter('mailer_password'),
                 $this->eventDispatcher,
                 $this->logger
             );
-
-            return $transport;
         }
 
         // Default smtp

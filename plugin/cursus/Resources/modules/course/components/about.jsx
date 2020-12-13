@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans, displayDuration, displayDate, now} from '#/main/app/intl'
+import {hasPermission} from '#/main/app/security'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
@@ -149,7 +150,7 @@ const CourseAbout = (props) => {
             />
           }
 
-          {isFullyRegistered(props.activeSessionRegistration) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')) &&
+          {(isFullyRegistered(props.activeSessionRegistration) || hasPermission('edit', props.course)) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')) &&
             <Button
               className="btn btn-block"
               type={LINK_BUTTON}

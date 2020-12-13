@@ -19,8 +19,7 @@
     "description": {
       "type": ["string", "null"],
       "description": "The room description"
-    },
-    "meta": {}
+    }
   },
   "required": ["code", "name"],
   "claroline": {

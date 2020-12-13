@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class SymfonyMailer
+class SymfonyMailer implements MailClientInterface
 {
     private $mailer;
     private $logger;

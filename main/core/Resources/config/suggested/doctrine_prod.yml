@@ -14,12 +14,3 @@ doctrine:
         auto_mapping: true
         mappings:
             StofDoctrineExtensionsBundle: false
-        filters:
-            softdeleteable:
-                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
-                enabled: true
-        dql:
-            string_functions:
-                if: Claroline\CoreBundle\Doctrine\Query\IfElse
-                regexp: Claroline\CoreBundle\Doctrine\Query\Regexp
-                replace: Claroline\CoreBundle\Doctrine\Query\Replace

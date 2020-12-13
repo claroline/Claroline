@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Refresher
 {

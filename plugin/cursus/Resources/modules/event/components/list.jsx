@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {constants} from '#/plugin/cursus/constants'
@@ -16,16 +16,23 @@ const EventList = (props) =>
       url: props.url,
       autoload: true
     }}
-    actions={props.actions}
+    actions={(rows) => [
+      {
+        name: 'export-pdf',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf-o',
+        label: trans('export-pdf', {}, 'actions'),
+        displayed: hasPermission('open', rows[0]),
+        scope: ['object'],
+        group: trans('transfer'),
+        target: ['apiv2_cursus_event_download_pdf', {id: rows[0].id}]
+      }
+    ].concat(props.actions(rows))}
     delete={{
       url: ['apiv2_cursus_event_delete_bulk'],
       displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
     }}
-    primaryAction={(row) => ({
-      type: LINK_BUTTON,
-      target: props.path+'/'+row.id,
-      label: trans('open', {}, 'actions')
-    })}
+    primaryAction={props.primaryAction}
     definition={[
       {
         name: 'name',
@@ -83,12 +90,15 @@ const EventList = (props) =>
   />
 
 EventList.propTypes = {
-  path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
 
   primaryAction: T.func,
   actions: T.func
+}
+
+EventList.defaultProps = {
+  actions: () => []
 }
 
 export {

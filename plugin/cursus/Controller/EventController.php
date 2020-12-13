@@ -276,7 +276,7 @@ class EventController extends AbstractCrudController
             ]], 422); // not the best status (same as form validation errors)
         }
 
-        $sessionEventUsers = $this->manager->addUsersToSessionEvent($sessionEvent, $users, $type);
+        $sessionEventUsers = $this->manager->addUsers($sessionEvent, $users, $type);
 
         return new JsonResponse(array_map(function (EventUser $sessionEventUser) {
             return $this->serializer->serialize($sessionEventUser);
@@ -292,7 +292,7 @@ class EventController extends AbstractCrudController
         $this->checkPermission('EDIT', $sessionEvent, [], true);
 
         $sessionEventUsers = $this->decodeIdsString($request, EventUser::class);
-        $this->manager->removeUsersFromSessionEvent($sessionEventUsers);
+        $this->manager->removeUsers($sessionEventUsers);
 
         return new JsonResponse(null, 204);
     }

@@ -3,7 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans, displayDate, now} from '#/main/app/intl'
+import {trans, displayDate, displayDuration, now} from '#/main/app/intl'
+import {getTimeDiff} from '#/main/app/intl/date'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
@@ -79,6 +80,16 @@ const EventAbout = (props) =>
                 {(get(props.event, 'restrictions.users') - get(props.event, 'participants.learners')) + ' / ' + get(props.event, 'restrictions.users')}
               </span>
             }
+          </li>
+
+          <li className="list-group-item">
+            {trans('duration')}
+            <span className="value">
+              {get(props.event, 'restrictions.dates[0]') && get(props.event, 'restrictions.dates[1]') ?
+                displayDuration(getTimeDiff(get(props.event, 'restrictions.dates[0]'), get(props.event, 'restrictions.date[1]')), true) :
+                trans('empty_value')
+              }
+            </span>
           </li>
         </ul>
       </div>
@@ -170,19 +181,7 @@ const EventAbout = (props) =>
 
           {get(props.event, 'restrictions.dates[0]') &&
             <h1 className="content-resume-title h2">
-              {displayDate(get(props.event, 'restrictions.dates[0]'))}
-            </h1>
-          }
-        </div>
-
-        <div className="content-resume-info">
-          <span className="text-muted">
-            {trans('end_date')}
-          </span>
-
-          {get(props.event, 'restrictions.dates[1]') &&
-            <h1 className="content-resume-title h2">
-              {displayDate(get(props.event, 'restrictions.dates[1]'))}
+              {displayDate(get(props.event, 'restrictions.dates[0]'), false, true)}
             </h1>
           }
         </div>

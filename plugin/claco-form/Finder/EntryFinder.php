@@ -16,8 +16,8 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
+use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -39,14 +39,6 @@ class EntryFinder extends AbstractFinder
 
     private $usedJoin = [];
 
-    /**
-     * EntryFinder constructor.
-     *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param LocationManager               $locationManager
-     * @param TokenStorageInterface         $tokenStorage
-     * @param TranslatorInterface           $translator
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         LocationManager $locationManager,

@@ -7,8 +7,11 @@ use Claroline\CoreBundle\Library\Mailing\Message;
 use Postal\Client;
 use Postal\SendMessage;
 
-class Postal implements MailClientInterface
+class PostalMailer implements MailClientInterface
 {
+    /** @var PlatformConfigurationHandler */
+    private $ch;
+
     public function __construct(PlatformConfigurationHandler $ch)
     {
         $this->ch = $ch;
@@ -16,12 +19,7 @@ class Postal implements MailClientInterface
 
     public function getTransports()
     {
-        return['postal'];
-    }
-
-    public function test(array $data)
-    {
-        return [];
+        return ['postal'];
     }
 
     public function send(Message $message)

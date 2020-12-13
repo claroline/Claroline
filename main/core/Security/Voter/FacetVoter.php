@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
-use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
+use Claroline\CoreBundle\Security\Collection\FieldFacetCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -63,7 +63,7 @@ class FacetVoter
         foreach ($panelRoles as $panelRole) {
             if (in_array($panelRole->getRole()->getName(), $token->getRoleNames())) {
                 if ($panelRole->canOpen()) {
-                    return  VoterInterface::ACCESS_GRANTED;
+                    return VoterInterface::ACCESS_GRANTED;
                 }
             }
         }
@@ -78,7 +78,7 @@ class FacetVoter
         foreach ($panelRoles as $panelRole) {
             if (in_array($panelRole->getRole()->getName(), $token->getRoleNames())) {
                 if ($panelRole->canEdit()) {
-                    return  VoterInterface::ACCESS_GRANTED;
+                    return VoterInterface::ACCESS_GRANTED;
                 }
             }
         }
@@ -112,7 +112,7 @@ class FacetVoter
             }
         }
 
-        return  VoterInterface::ACCESS_GRANTED;
+        return VoterInterface::ACCESS_GRANTED;
     }
 
     public function supportsAttribute($attribute)

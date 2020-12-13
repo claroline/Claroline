@@ -61,7 +61,6 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
                 $content .= '[%event_start% -> %event_end%]<br/>';
                 $content .= '%event_description%<br/><br/>';
                 $content .= '%event_location_address%<br/>';
-                $content .= '%event_location_extra%';
                 $template->setContent($content);
                 $om->persist($template);
             }

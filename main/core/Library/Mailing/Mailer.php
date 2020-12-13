@@ -18,25 +18,22 @@ class Mailer
 {
     private $ch;
     private $clients = [];
-    private $logDir;
+    private $logger;
 
     public function __construct(
         PlatformConfigurationHandler $ch,
-        $logDir
+        string $logDir
     ) {
         $this->ch = $ch;
-        $this->logDir = $logDir;
-        $this->clients = [];
+        $this->logger = FileLogger::get($logDir.'/email.log');
     }
 
     public function send(Message $message)
     {
         $client = $this->getClient();
-        $rightsLog = $this->logDir.'/email.log';
-        $logger = FileLogger::get($rightsLog);
 
         if (empty($message->getAttribute('to')) && empty($message->getAttribute('bcc'))) {
-            $logger->error('To field is either empty or invalid');
+            $this->logger->error('To field is either empty or invalid');
 
             return false;
         }
@@ -44,13 +41,13 @@ class Mailer
 
         try {
             $client->send($message);
-            $logger->info('Email sent to '.$to);
+            $this->logger->info('Email sent to '.$to);
 
             return true;
         } catch (\Exception $e) {
-            $logger->error('Fail to send email to '.$to);
-            $logger->error($e->getMessage());
-            $logger->error(json_encode($message));
+            $this->logger->error('Fail to send email to '.$to);
+            $this->logger->error($e->getMessage());
+            $this->logger->error(json_encode($message));
 
             return false;
         }

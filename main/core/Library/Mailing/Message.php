@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Library\Mailing;
 
 class Message
 {
+    private $attributes = [];
+
     public function __construct()
     {
         $this->attributes['to'] = [];

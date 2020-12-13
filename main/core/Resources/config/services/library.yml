@@ -96,7 +96,7 @@ services:
             - '@mailer'
             - '@logger'
 
-    Claroline\CoreBundle\Library\Mailing\Client\Postal:
+    Claroline\CoreBundle\Library\Mailing\Client\PostalMailer:
         tags: ['claroline.mailing']
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

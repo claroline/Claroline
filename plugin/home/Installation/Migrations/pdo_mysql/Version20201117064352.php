@@ -65,7 +65,7 @@ class Version20201117064352 extends AbstractMigration
         $this->addSql('
             DELETE c FROM claro_home_tab_widgets_containers AS c LEFT JOIN claro_home_tab_widgets AS w ON c.tab_id = w.id WHERE w.id IS NULL
         ');
-        
+
         $this->addSql('
             ALTER TABLE claro_home_tab_widgets 
             ADD CONSTRAINT FK_E813FD848D0C9323 FOREIGN KEY (tab_id) 

@@ -57,6 +57,11 @@ const EventsRegistered = (props) =>
                 path={props.path}
                 name={selectors.LIST_NAME}
                 url={['apiv2_cursus_my_events_active', {workspace: props.contextId}]}
+                primaryAction={(row) => ({
+                  type: LINK_BUTTON,
+                  target: props.path+'/'+row.id,
+                  label: trans('open', {}, 'actions')
+                })}
               />
             )
 
@@ -71,6 +76,11 @@ const EventsRegistered = (props) =>
                 path={props.path}
                 name={selectors.LIST_NAME}
                 url={['apiv2_cursus_my_events_ended', {workspace: props.contextId}]}
+                primaryAction={(row) => ({
+                  type: LINK_BUTTON,
+                  target: props.path+'/'+row.id,
+                  label: trans('open', {}, 'actions')
+                })}
               />
             )
 
@@ -85,6 +95,11 @@ const EventsRegistered = (props) =>
                 path={props.path}
                 name={selectors.LIST_NAME}
                 url={['apiv2_cursus_my_events_pending', {workspace: props.contextId}]}
+                primaryAction={(row) => ({
+                  type: LINK_BUTTON,
+                  target: props.path+'/'+row.id,
+                  label: trans('open', {}, 'actions')
+                })}
               />
             )
 

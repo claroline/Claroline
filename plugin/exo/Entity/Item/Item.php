@@ -139,7 +139,7 @@ class Item
      *
      * @ORM\Column(name="mandatory", type="boolean")
      *
-     * @var string
+     * @var bool
      * @deprecated. Moved on StepQuestion.
      */
     private $mandatory = false;

@@ -21,6 +21,11 @@ const EventsPublic = (props) =>
       path={props.path}
       name={selectors.LIST_NAME}
       url={['apiv2_cursus_event_public', {workspace: props.contextId}]}
+      primaryAction={(row) => ({
+        type: LINK_BUTTON,
+        target: props.path+'/'+row.id,
+        label: trans('open', {}, 'actions')
+      })}
     />
   </ToolPage>
 

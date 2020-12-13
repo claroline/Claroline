@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Security\Firewall;
+namespace Claroline\CoreBundle\Security\Firewall;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener as BaseExceptionListener;

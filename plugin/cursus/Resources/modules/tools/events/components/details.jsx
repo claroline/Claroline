@@ -1,7 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Event as EventTypes} from '#/plugin/cursus/prop-types'
@@ -13,10 +12,6 @@ const EventsDetails = (props) =>
     basePath={props.path}
     path={props.event ? [
       {
-        type: LINK_BUTTON,
-        label: trans('training_events', {}, 'cursus'),
-        target: props.path
-      }, {
         type: LINK_BUTTON,
         label: props.event.name,
         target: props.path + '/' + props.event.id

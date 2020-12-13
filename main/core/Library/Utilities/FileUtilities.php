@@ -15,7 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\File\PublicFileUse;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -31,10 +31,10 @@ class FileUtilities
     private $tokenStorage;
 
     public function __construct(
-        $filesDir,
-        SymfonyFileSystem $fileSystem,
+        string $filesDir,
+        Filesystem $fileSystem,
         ObjectManager $om,
-        $publicFilesDir,
+        string $publicFilesDir,
         TokenStorageInterface $tokenStorage
     ) {
         $this->filesDir = $filesDir;
@@ -44,32 +44,18 @@ class FileUtilities
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getFilesDir()
-    {
-        return $this->filesDir;
-    }
-
     /**
      * Creates a file into public files directory.
      * Then creates a <PublicFileUse> for created public file if $objectClass and $objectUuid are specified.
-     *
-     * @param File   $tmpFile
-     * @param string $name
-     * @param string $objectClass
-     * @param string $objectUuid
-     * @param string $objectName
-     * @param string $sourceType
-     *
-     * @return PublicFile
      */
     public function createFile(
         File $tmpFile,
-        $name = null,
-        $objectClass = null,
-        $objectUuid = null,
-        $objectName = null,
-        $sourceType = null
-    ) {
+        string $name = null,
+        string $objectClass = null,
+        string $objectUuid = null,
+        string $objectName = null,
+        string $sourceType = null
+    ): PublicFile {
         $fileName = $name ? $name : $tmpFile->getFilename();
         $directoryName = $this->getActiveDirectoryName();
         $size = filesize($tmpFile);
@@ -89,7 +75,7 @@ class FileUtilities
         $publicFile->setUrl($url);
         $publicFile->setSourceType($sourceType);
 
-        if ($this->tokenStorage->getToken() && $user = 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
+        if ($this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
             $user = $this->tokenStorage->getToken()->getUser();
             $publicFile->setCreator($user);
         }
@@ -108,24 +94,15 @@ class FileUtilities
     /**
      * Creates a file from given data into public files directory.
      * Then creates a <PublicFileUse> for created public file if $objectClass and $objectUuid are specified.
-     *
-     * @param string $data
-     * @param string $fileName
-     * @param string $objectClass
-     * @param string $objectUuid
-     * @param string $objectName
-     * @param string $sourceType
-     *
-     * @return PublicFile
      */
     public function createFileFromData(
-        $data,
-        $fileName,
-        $objectClass = null,
-        $objectUuid = null,
-        $objectName = null,
-        $sourceType = null
-    ) {
+        string $data,
+        string $fileName,
+        string $objectClass = null,
+        string $objectUuid = null,
+        string $objectName = null,
+        string $sourceType = null
+    ): PublicFile {
         $directoryName = $this->getActiveDirectoryName();
         $dataParts = explode(',', $data);
         $dataBin = base64_decode($dataParts[1]);
@@ -191,17 +168,6 @@ class FileUtilities
         return $publicFileUse;
     }
 
-    public function deletePublicFile(PublicFile $publicFile)
-    {
-        $uploadedFile = $this->filesDir.DIRECTORY_SEPARATOR.$publicFile->getUrl();
-        $this->om->remove($publicFile);
-        $this->om->flush();
-
-        if ($this->fileSystem->exists($uploadedFile)) {
-            $this->fileSystem->remove($uploadedFile);
-        }
-    }
-
     public function getActiveDirectoryName()
     {
         $finder = new Finder();
@@ -256,19 +222,9 @@ class FileUtilities
         return $next;
     }
 
-    /**
-     * @param array $filters
-     *
-     * @return PublicFile
-     */
-    public function getOneBy($filters)
+    public function getOneBy(array $filters): ?PublicFile
     {
         return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findOneBy($filters);
-    }
-
-    public function getPublicFileByType($type)
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findBySourceType($type);
     }
 
     public function getContents(PublicFile $file)
@@ -325,6 +281,7 @@ class FileUtilities
         $validUnits = ['KB', 'MB', 'GB', 'TB'];
         $value = str_replace(' ', '', $fileSize);
 
+        $match = [];
         $pattern = '/\d+/';
         preg_match($pattern, $value, $match);
 

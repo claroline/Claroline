@@ -23,6 +23,8 @@ class PluginManager
 {
     /** @var string */
     private $kernelRootDir;
+    /** @var string */
+    private $bundleFile;
 
     /** @var ObjectManager */
     private $om;
@@ -39,26 +41,20 @@ class PluginManager
     /** @var array */
     private $loadedBundles;
 
-    /**
-     * PluginManager constructor.
-     *
-     * @param string $kernelRootDir
-     * @param        $bundleFile
-     */
     public function __construct(
-        $kernelRootDir,
-        $bundleFile,
+        string $kernelRootDir,
+        string $bundleFile,
         ObjectManager $om,
         KernelInterface $kernel
     ) {
         $this->kernelRootDir = $kernelRootDir;
         $this->om = $om;
         $this->pluginRepo = $om->getRepository('ClarolineCoreBundle:Plugin');
-        $this->iniFile = $bundleFile;
+        $this->bundleFile = $bundleFile;
         $this->kernel = $kernel;
 
-        $this->loadedBundles = IniParser::parseFile($this->iniFile);
-        BundleManager::initialize($kernel, $this->iniFile);
+        $this->loadedBundles = IniParser::parseFile($this->bundleFile);
+        BundleManager::initialize($kernel, $this->bundleFile);
         $this->bundleManager = BundleManager::getInstance();
     }
 
@@ -68,7 +64,7 @@ class PluginManager
         IniParser::updateKey(
             $vendor.'\\'.$bundle.'Bundle\\'.$vendor.$bundle.'Bundle',
             true,
-            $this->iniFile
+            $this->bundleFile
         );
     }
 
@@ -129,11 +125,11 @@ class PluginManager
         IniParser::updateKey(
             $plugin->getBundleFQCN(),
             true,
-            $this->iniFile
+            $this->bundleFile
         );
 
         //cache the results
-        $this->loadedBundles = parse_ini_file($this->iniFile);
+        $this->loadedBundles = parse_ini_file($this->bundleFile);
 
         return $plugin;
     }
@@ -143,11 +139,11 @@ class PluginManager
         IniParser::updateKey(
             $plugin->getBundleFQCN(),
             false,
-            $this->iniFile
+            $this->bundleFile
         );
 
         //cache the results
-        $this->loadedBundles = IniParser::parseFile($this->iniFile);
+        $this->loadedBundles = IniParser::parseFile($this->bundleFile);
 
         return $plugin;
     }
@@ -179,10 +175,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     *
-     * @return bool
      */
-    public function isLoaded($plugin)
+    public function isLoaded($plugin): bool
     {
         $pluginClass = get_class($this->getBundle($plugin));
 
@@ -197,15 +191,15 @@ class PluginManager
 
     public function getIniFile()
     {
-        return $this->iniFile;
+        return $this->bundleFile;
     }
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
      *
-     * @return bool
+     * @deprecated It's no longer possible to hide a plugin
      */
-    public function isHidden($plugin)
+    public function isHidden($plugin): bool
     {
         return $this->getBundle($plugin)->isHidden();
     }

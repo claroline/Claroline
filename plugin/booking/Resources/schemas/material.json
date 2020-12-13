@@ -19,8 +19,7 @@
     "description": {
       "type": ["string", "null"],
       "description": "The material description"
-    },
-    "meta": {}
+    }
   },
   "required": ["code", "name"],
   "claroline": {

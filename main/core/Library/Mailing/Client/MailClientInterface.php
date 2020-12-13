@@ -7,6 +7,6 @@ use Claroline\CoreBundle\Library\Mailing\Message;
 interface MailClientInterface
 {
     public function getTransports();
+
     public function send(Message $message);
-    public function test(array $data);
 }

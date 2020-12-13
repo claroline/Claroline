@@ -91,5 +91,4 @@ plugin:
               - event_end
               - event_location_name
               - event_location_address
-              - event_location_extra
               - event_trainers

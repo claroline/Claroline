@@ -15,12 +15,12 @@ namespace Claroline\ThemeBundle\Manager;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\ThemeBundle\Entity\Icon\IconItem;
 use Claroline\ThemeBundle\Entity\Icon\IconSet;
 use Claroline\ThemeBundle\Library\Icon\ResourceIconSetIconItemList;
 use Claroline\ThemeBundle\Repository\Icon\IconItemRepository;
 use Psr\Log\LoggerAwareInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

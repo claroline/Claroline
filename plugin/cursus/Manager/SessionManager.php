@@ -213,7 +213,9 @@ class SessionManager
         // TODO : what to do with this if he goes in pending state ?
 
         if ($session->getRegistrationMail()) {
-            $this->sendSessionInvitation($session, $users, AbstractRegistration::LEARNER === $type);
+            $this->sendSessionInvitation($session, array_map(function (SessionUser $sessionUser) {
+                return $sessionUser->getUser();
+            }, $results), AbstractRegistration::LEARNER === $type);
         }
 
         // registers users to linked trainings
@@ -230,7 +232,7 @@ class SessionManager
         $events = $session->getEvents();
         foreach ($events as $event) {
             if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
-                $this->sessionEventManager->addUsersToSessionEvent($event, $users);
+                $this->sessionEventManager->addUsers($event, $users);
             }
         }
 
