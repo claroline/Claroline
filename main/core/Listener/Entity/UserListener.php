@@ -18,8 +18,6 @@ class UserListener
 
     /**
      * UserListener constructor.
-     *
-     * @param EncoderFactory $encoderFactory
      */
     public function __construct(EncoderFactory $encoderFactory)
     {
@@ -28,8 +26,6 @@ class UserListener
 
     /**
      * Encodes the password when a User is persisted.
-     *
-     * @param User $user
      */
     public function prePersist(User $user)
     {
@@ -40,21 +36,17 @@ class UserListener
 
     /**
      * Encodes the password when a User is updated and value has changed.
-     *
-     * @param User               $user
-     * @param PreUpdateEventArgs $event
      */
     public function preUpdate(User $user, PreUpdateEventArgs $event)
     {
-        if ($event->hasChangedField('password')) {
+        // UserRepository::upgradePassword() calls setPassword() directly, not setPlainPassword().
+        if ($event->hasChangedField('password') && $user->getPlainPassword()) {
             $event->setNewValue('password', $this->encodePassword($user));
         }
     }
 
     /**
      * Encodes the user password and returns it.
-     *
-     * @param User $user
      *
      * @return string - the encoded password
      */
