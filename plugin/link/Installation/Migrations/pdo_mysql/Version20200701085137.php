@@ -3,8 +3,8 @@
 namespace Claroline\LinkBundle\Installation\Migrations\pdo_mysql;
 
 use Claroline\MigrationBundle\Migrations\ConditionalMigrationTrait;
-use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated migration based on mapping information: modify it with caution.

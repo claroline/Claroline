@@ -2,8 +2,8 @@
 
 namespace Claroline\ForumBundle\Installation\Migrations\pdo_mysql;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
