@@ -12,13 +12,27 @@ const REGISTRATION_TYPES = {
   [REGISTRATION_PUBLIC]: trans('event_registration_public', {}, 'cursus')
 }
 
+const PRESENCE_STATUS_UNKNOWN = 'unknown'
+const PRESENCE_STATUS_PRESENT = 'present'
+const PRESENCE_STATUS_ABSENT_JUSTIFIED = 'absent_justified'
+const PRESENCE_STATUS_ABSENT_UNJUSTIFIED = 'absent_unjustified'
+
+const PRESENCE_STATUSES = {
+  [PRESENCE_STATUS_UNKNOWN]: trans('presence_unknown', {}, 'cursus'),
+  [PRESENCE_STATUS_PRESENT]: trans('presence_present', {}, 'cursus'),
+  [PRESENCE_STATUS_ABSENT_JUSTIFIED]: trans('presence_absent_justified', {}, 'cursus'),
+  [PRESENCE_STATUS_ABSENT_UNJUSTIFIED]: trans('presence_absent_unjustified', {}, 'cursus')
+}
+
+const PRESENCE_STATUS_COLORS = {
+  [PRESENCE_STATUS_UNKNOWN]: 'default',
+  [PRESENCE_STATUS_PRESENT]: 'success',
+  [PRESENCE_STATUS_ABSENT_JUSTIFIED]: 'warning',
+  [PRESENCE_STATUS_ABSENT_UNJUSTIFIED]: 'danger'
+}
+
 const LEARNER_TYPE = 'learner'
 const TEACHER_TYPE = 'tutor'
-
-const VALIDATION = 1
-const VALIDATION_USER = 2
-const VALIDATION_VALIDATOR = 4
-const VALIDATION_ORGANIZATION = 8
 
 export const constants = {
   DEFAULT_ORDER,
@@ -26,10 +40,8 @@ export const constants = {
   REGISTRATION_MANUAL,
   REGISTRATION_PUBLIC,
   REGISTRATION_TYPES,
+  PRESENCE_STATUSES,
+  PRESENCE_STATUS_COLORS,
   LEARNER_TYPE,
-  TEACHER_TYPE,
-  VALIDATION,
-  VALIDATION_USER,
-  VALIDATION_VALIDATOR,
-  VALIDATION_ORGANIZATION
+  TEACHER_TYPE
 }

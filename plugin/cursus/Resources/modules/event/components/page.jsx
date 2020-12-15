@@ -46,6 +46,22 @@ const EventPage = (props) => {
           displayed: hasPermission('open', props.event),
           group: trans('transfer'),
           target: ['apiv2_cursus_event_download_pdf', {id: props.event.id}]
+        }, {
+          name: 'export-presences-empty',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-border-none',
+          label: trans('export-presences-empty', {}, 'cursus'),
+          displayed: hasPermission('edit', props.event),
+          group: trans('presences', {}, 'cursus'),
+          target: ['apiv2_cursus_event_presence_download', {id: props.event.id, filled: 0}]
+        }, {
+          name: 'export-presences-filled',
+          type: URL_BUTTON,
+          icon: 'fa fa-fw fa-border-all',
+          label: trans('export-presences-filled', {}, 'cursus'),
+          displayed: hasPermission('edit', props.event),
+          group: trans('presences', {}, 'cursus'),
+          target: ['apiv2_cursus_event_presence_download', {id: props.event.id, filled: 1}]
         }
       ]}
 

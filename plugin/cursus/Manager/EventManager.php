@@ -12,7 +12,6 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
@@ -215,17 +214,9 @@ class EventManager
     /**
      * Sends invitation to all session event users.
      */
-    public function inviteAllSessionEventLearners(Event $event, Template $template = null)
+    public function inviteAllSessionEventLearners(Event $event)
     {
-        // only get fully registered users
-        $eventUsers = $this->eventUserRepo->findBy([
-            'sessionEvent' => $event,
-            'confirmed' => true,
-            'validated' => true,
-        ]);
-        $users = array_map(function (EventUser $eventUser) {
-            return $eventUser->getUser();
-        }, $eventUsers);
+        $users = $this->getRegisteredUsers($event);
 
         $this->sendSessionEventInvitation($event, $users);
     }
@@ -271,10 +262,12 @@ class EventManager
             'course_description' => $course->getDescription(),
             'session_name' => $session->getName(),
             'session_description' => $session->getDescription(),
+            'session_code' => $session->getCode(),
             'session_start' => $session->getStartDate()->format('d/m/Y'),
             'session_end' => $session->getEndDate()->format('d/m/Y'),
             'event_name' => $event->getName(),
             'event_description' => $event->getDescription(),
+            'event_code' => $event->getCode(),
             'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
             'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
             'event_location_name' => $locationName,
@@ -295,5 +288,42 @@ class EventManager
 
             $this->mailManager->send($title, $content, [$user]);
         }
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getRegisteredUsers(Event $event): array
+    {
+        /** @var EventUser[] $sessionLearners */
+        $sessionLearners = $this->eventUserRepo->findBy([
+            'event' => $event,
+            'type' => AbstractRegistration::LEARNER,
+            'validated' => true,
+        ]);
+
+        /** @var EventGroup[] $sessionGroups */
+        $sessionGroups = $this->eventGroupRepo->findBy([
+            'event' => $event,
+            'type' => AbstractRegistration::LEARNER,
+        ]);
+
+        $users = [];
+
+        foreach ($sessionLearners as $sessionLearner) {
+            $user = $sessionLearner->getUser();
+            $users[$user->getUuid()] = $user;
+        }
+
+        foreach ($sessionGroups as $sessionGroup) {
+            $group = $sessionGroup->getGroup();
+            $groupUsers = $group->getUsers();
+
+            foreach ($groupUsers as $user) {
+                $users[$user->getUuid()] = $user;
+            }
+        }
+
+        return array_values($users);
     }
 }

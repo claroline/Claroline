@@ -18,14 +18,15 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 import {isFullyRegistered, isFull} from '#/plugin/cursus/utils'
 import {constants} from '#/plugin/cursus/constants'
 import {Event as EventTypes} from '#/plugin/cursus/prop-types'
+import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
 const CurrentRegistration = (props) => {
-  let registrationTitle = trans('session_registration_pending', {}, 'cursus')
+  let registrationTitle = trans('event_registration_pending', {}, 'cursus')
   if (constants.TEACHER_TYPE === props.registration.type) {
-    registrationTitle = trans('session_registration_tutor', {}, 'cursus')
+    registrationTitle = trans('event_registration_tutor', {}, 'cursus')
   } else if (isFullyRegistered(props.registration)) {
-    registrationTitle = trans('session_registration', {}, 'cursus')
+    registrationTitle = trans('event_registration', {}, 'cursus')
   }
 
   return (
@@ -33,22 +34,22 @@ const CurrentRegistration = (props) => {
       type={isFullyRegistered(props.registration) ? 'success' : 'warning'}
       title={trans(registrationTitle, {}, 'cursus')}
     >
-      {props.sessionFull &&
-        <div>{trans('session_registration_full_help', {}, 'cursus')}</div>
+      {props.eventFull &&
+        <div>{trans('event_registration_full_help', {}, 'cursus')}</div>
       }
 
-      {!props.sessionFull && undefined !== props.registration.confirmed && !props.registration.confirmed &&
-        <div>{trans('session_registration_pending_help', {}, 'cursus')}</div>
+      {!props.eventFull && undefined !== props.registration.confirmed && !props.registration.confirmed &&
+        <div>{trans('event_registration_pending_help', {}, 'cursus')}</div>
       }
-      {!props.sessionFull && undefined !== props.registration.validated && !props.registration.validated &&
-        <div>{trans('session_registration_manager_help', {}, 'cursus')}</div>
+      {!props.eventFull && undefined !== props.registration.validated && !props.registration.validated &&
+        <div>{trans('event_registration_manager_help', {}, 'cursus')}</div>
       }
     </AlertBlock>
   )
 }
 
 CurrentRegistration.propTypes = {
-  sessionFull: T.bool,
+  eventFull: T.bool,
   registration: T.shape({
     type: T.string.isRequired,
     confirmed: T.bool,
@@ -124,11 +125,11 @@ const EventAbout = (props) =>
           <Alert type="warning">{trans('registration_auto', {}, 'cursus')}</Alert>
         }
 
-        {isEmpty(props.registration) && constants.REGISTRATION_PUBLIC === get(props.event, 'registration.registrationType') &&
+        {!isFull(props.event) && isEmpty(props.registration) && constants.REGISTRATION_PUBLIC === get(props.event, 'registration.registrationType') &&
           <Button
             className="btn btn-block btn-emphasis"
             type={MODAL_BUTTON}
-            label={trans(isFull(props.event) ? 'register_waiting_list' : 'self-register', {}, 'actions')}
+            label={trans('self-register', {}, 'actions')}
             modal={[MODAL_COURSE_REGISTRATION, {
               event: props.event,
               register: props.register
@@ -189,14 +190,14 @@ const EventAbout = (props) =>
 
       {props.registration &&
         <CurrentRegistration
-          sessionFull={isFull(props.event)}
+          eventFull={isFull(props.event)}
           registration={props.registration}
         />
       }
 
       {!props.registration && isFull(props.event) &&
-        <AlertBlock type="warning" title={trans('La séance est complète.', {}, 'cursus')}>
-          {trans('Les inscriptions sont désactivées.', {}, 'cursus')}
+        <AlertBlock type="warning" title={trans('event_full', {}, 'cursus')}>
+          {trans('event_full_help', {}, 'cursus')}
         </AlertBlock>
       }
 
@@ -227,6 +228,21 @@ const EventAbout = (props) =>
           }}
         />
       )}
+
+      <hr/>
+
+      <ContentTitle
+        level={3}
+        displayLevel={2}
+        title={trans('session', {}, 'cursus')}
+      />
+
+      <SessionCard
+        style={{marginBottom: 20}}
+        orientation="row"
+        size="xs"
+        data={props.event.meta.session}
+      />
     </div>
   </div>
 

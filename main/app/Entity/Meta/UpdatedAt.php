@@ -11,26 +11,22 @@ trait UpdatedAt
      *
      * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
      *
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     private $updatedAt;
 
     /**
      * Returns the entity's last update date.
-     *
-     * @return \DateTime
      */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
     /**
      * Sets the entity's last update date.
-     *
-     * @param \DateTime $updatedAt
      */
-    public function setUpdatedAt(\DateTime $updatedAt = null)
+    public function setUpdatedAt(\DateTimeInterface $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
     }

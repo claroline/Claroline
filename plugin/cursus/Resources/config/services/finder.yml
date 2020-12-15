@@ -33,3 +33,5 @@ services:
     Claroline\CursusBundle\Finder\EventGroupFinder: ~
 
     Claroline\CursusBundle\Finder\EventUserFinder: ~
+
+    Claroline\CursusBundle\Finder\EventPresenceFinder: ~

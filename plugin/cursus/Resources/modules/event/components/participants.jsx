@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 import {schemeCategory20c} from 'd3-scale'
 
@@ -8,6 +9,7 @@ import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Routes} from '#/main/app/router/components/routes'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {MODAL_USERS} from '#/main/core/modals/users'
 import {MODAL_GROUPS} from '#/main/core/modals/groups'
@@ -17,6 +19,7 @@ import {constants} from '#/plugin/cursus/constants'
 import {isFull} from '#/plugin/cursus/utils'
 
 import {selectors} from '#/plugin/cursus/event/store'
+import {MODAL_EVENT_PRESENCE} from '#/plugin/cursus/event/modals/presence'
 import {SessionGroups} from '#/plugin/cursus/session/components/groups'
 import {SessionUsers} from '#/plugin/cursus/session/components/users'
 
@@ -101,6 +104,55 @@ EventGroups.propTypes = {
   inviteGroups: T.func.isRequired
 }
 
+const EventPresences = (props) =>
+  <ListData
+    name={selectors.STORE_NAME+'.presences'}
+    fetch={{
+      url: ['apiv2_cursus_event_presence_list', {id: props.event.id}],
+      autoload: true
+    }}
+    definition={[
+      {
+        name: 'user',
+        type: 'user',
+        label: trans('user'),
+        displayed: true
+      }, {
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        options: {
+          choices: constants.PRESENCE_STATUSES
+        },
+        render: (row) => (
+          <span className={classes('label', `label-${constants.PRESENCE_STATUS_COLORS[row.status]}`)}>
+            {constants.PRESENCE_STATUSES[row.status]}
+          </span>
+        ),
+        displayed: true
+      }
+    ]}
+    actions={(rows) => [
+      {
+        name: 'edit',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-pencil',
+        label: trans('edit', {}, 'actions'),
+        displayed: hasPermission('edit', props.event),
+        modal: [MODAL_EVENT_PRESENCE, {
+          changeStatus: (status) => props.setPresenceStatus(props.event.id, rows, status)
+        }]
+      }
+    ]}
+  />
+
+EventPresences.propTypes = {
+  event: T.shape(
+    EventTypes.propTypes
+  ),
+  setPresenceStatus: T.func.isRequired
+}
+
 const EventParticipants = (props) =>
   <Fragment>
     <div className="row" style={{marginTop: '-20px'}}>
@@ -153,6 +205,10 @@ const EventParticipants = (props) =>
               icon: 'fa fa-fw fa-users',
               title: trans('groups'),
               path: '/groups'
+            }, {
+              icon: 'fa fa-fw fa-user-check',
+              title: trans('presences', {}, 'cursus'),
+              path: '/presences'
             }
           ]}
         />
@@ -165,57 +221,53 @@ const EventParticipants = (props) =>
             {
               path: '/',
               exact: true,
-              render() {
-                const Tutors = (
+              render: () => (
+                <EventUsers
+                  type={constants.TEACHER_TYPE}
+                  name={selectors.STORE_NAME+'.tutors'}
+                  event={props.event}
+                  addUsers={props.addUsers}
+                  inviteUsers={props.inviteUsers}
+                />
+              )
+            }, {
+              path: '/users',
+              render: () => (
+                <Fragment>
+                  {isFull(props.event) &&
+                    <AlertBlock type="warning" title={trans('event_full', {}, 'cursus')}>
+                      {trans('event_full_help', {}, 'cursus')}
+                    </AlertBlock>
+                  }
+
                   <EventUsers
-                    type={constants.TEACHER_TYPE}
-                    name={selectors.STORE_NAME+'.tutors'}
+                    type={constants.LEARNER_TYPE}
+                    name={selectors.STORE_NAME+'.users'}
                     event={props.event}
                     addUsers={props.addUsers}
                     inviteUsers={props.inviteUsers}
                   />
-                )
-
-                return Tutors
-              }
-            }, {
-              path: '/users',
-              render() {
-                const Users = (
-                  <Fragment>
-                    {isFull(props.event) &&
-                      <AlertBlock type="warning" title={trans('La séance est complète.', {}, 'cursus')}>
-                        {trans('Les inscriptions ne sont plus possible pour cette séance..', {}, 'cursus')}
-                      </AlertBlock>
-                    }
-
-                    <EventUsers
-                      type={constants.LEARNER_TYPE}
-                      name={selectors.STORE_NAME+'.users'}
-                      event={props.event}
-                      addUsers={props.addUsers}
-                      inviteUsers={props.inviteUsers}
-                    />
-                  </Fragment>
-                )
-
-                return Users
-              }
+                </Fragment>
+              )
             }, {
               path: '/groups',
-              render() {
-                const Groups = (
-                  <EventGroups
-                    type={constants.LEARNER_TYPE}
-                    name={selectors.STORE_NAME+'.groups'}
-                    event={props.event}
-                    addGroups={props.addGroups}
-                    inviteGroups={props.inviteGroups}
-                  />
-                )
-
-                return Groups
-              }
+              render: () => (
+                <EventGroups
+                  type={constants.LEARNER_TYPE}
+                  name={selectors.STORE_NAME+'.groups'}
+                  event={props.event}
+                  addGroups={props.addGroups}
+                  inviteGroups={props.inviteGroups}
+                />
+              )
+            }, {
+              path: '/presences',
+              render: () => (
+                <EventPresences
+                  event={props.event}
+                  setPresenceStatus={props.setPresenceStatus}
+                />
+              )
             }
           ]}
         />
@@ -231,7 +283,8 @@ EventParticipants.propTypes = {
   addUsers: T.func.isRequired,
   inviteUsers: T.func.isRequired,
   addGroups: T.func.isRequired,
-  inviteGroups: T.func.isRequired
+  inviteGroups: T.func.isRequired,
+  setPresenceStatus: T.func.isRequired
 }
 
 export {

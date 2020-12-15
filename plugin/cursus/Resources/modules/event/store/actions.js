@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 import {constants as actionConstants} from '#/main/app/action/constants'
-
+import {actions as listActions} from '#/main/app/content/list/store/actions'
 import {selectors} from '#/plugin/cursus/event/store/selectors'
 
 export const LOAD_EVENT = 'LOAD_EVENT'
@@ -66,7 +66,7 @@ actions.addGroups = (eventId, groups, type) => ({
       method: 'PATCH'
     },
     success: (data, dispatch) => {
-      // TODO : do something better (I need it to recompute session available space)
+      // TODO : do something better (I need it to recompute event available space)
       dispatch(actions.open(eventId, true))
     }
   }
@@ -79,5 +79,15 @@ actions.inviteGroups = (eventId, groups) => ({
     request: {
       method: 'PUT'
     }
+  }
+})
+
+actions.setPresenceStatus = (eventId, presences, status) => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_cursus_event_presence_update', {id: eventId, status: status}], {ids: presences.map(presence => presence.id)}),
+    request: {
+      method: 'PUT'
+    },
+    success: (response, dispatch) => dispatch(listActions.invalidateData(selectors.STORE_NAME+'.presences'))
   }
 })

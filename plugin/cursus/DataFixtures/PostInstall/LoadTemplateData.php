@@ -68,6 +68,26 @@ class LoadTemplateData extends AbstractFixture implements ContainerAwareInterfac
             $om->persist($eventInvitationType);
         }
 
+        $eventPresenceType = $this->templateTypeRepo->findOneBy(['name' => 'training_event_presences']);
+        $templates = $this->templateRepo->findBy(['name' => 'training_event_presences']);
+        if ($eventPresenceType && empty($templates)) {
+            foreach ($this->availableLocales as $locale) {
+                $template = new Template();
+                $template->setType($eventPresenceType);
+                $template->setName('training_event_presences');
+                $template->setLang($locale);
+                $template->setTitle($this->translator->trans('training_event_presences', [], 'template', $locale));
+                $content = '%event_name%<br/>';
+                $content .= '[%event_start% -> %event_end%]<br/>';
+                $content .= '%event_description%<br/><br/>';
+                $content .= '%event_presences_table%<br/>';
+                $template->setContent($content);
+                $om->persist($template);
+            }
+            $eventPresenceType->setDefaultTemplate('training_event_presences');
+            $om->persist($eventPresenceType);
+        }
+
         $om->flush();
     }
 

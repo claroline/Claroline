@@ -26,5 +26,12 @@ export const reducer = combineReducers({
     invalidated: makeReducer(false, {
       [LOAD_EVENT]: () => true
     })
+  }),
+  presences: makeListReducer(selectors.STORE_NAME+'.presences', {
+    sortBy: {property: 'user', direction: 1}
+  }, {
+    invalidated: makeReducer(false, {
+      [LOAD_EVENT]: () => true
+    })
   })
 })

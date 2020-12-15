@@ -37,6 +37,11 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\User\LocationSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
 
+    Claroline\CursusBundle\Serializer\EventPresenceSerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\User\UserSerializer'
+
     # Registrations
     Claroline\CursusBundle\Serializer\Registration\CourseUserSerializer:
         arguments:

@@ -4,7 +4,7 @@ namespace Claroline\CursusBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CursusBundle\Entity\Registration\EventUser;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,12 +22,20 @@ class EventPresence
     const ABSENT_UNJUSTIFIED = 'absent_unjustified';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Registration\EventUser")
-     * @ORM\JoinColumn(name="event_user_id", nullable=false, onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Event")
+     * @ORM\JoinColumn(name="event_id", nullable=false, onDelete="CASCADE")
      *
-     * @var EventUser
+     * @var Event
      */
-    private $eventUser;
+    private $event;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var User
+     */
+    private $user;
 
     /**
      * @ORM\Column(name="presence_status", nullable=false)
@@ -41,14 +49,24 @@ class EventPresence
         $this->refreshUuid();
     }
 
-    public function getEventUser(): EventUser
+    public function getEvent(): Event
     {
-        return $this->eventUser;
+        return $this->event;
     }
 
-    public function setEventUser(EventUser $eventUser)
+    public function setEvent(Event $event): void
     {
-        $this->eventUser = $eventUser;
+        $this->event = $event;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     public function getStatus(): string
@@ -56,7 +74,7 @@ class EventPresence
         return $this->status;
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }

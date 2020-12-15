@@ -18,6 +18,9 @@ const EventParticipants = connect(
     },
     addGroups(sessionId, groups, type = constants.LEARNER_TYPE) {
       dispatch(actions.addGroups(sessionId, groups, type))
+    },
+    setPresenceStatus(eventId, presences, status) {
+      dispatch(actions.setPresenceStatus(eventId, presences, status))
     }
   })
 )(EventParticipantsComponent)

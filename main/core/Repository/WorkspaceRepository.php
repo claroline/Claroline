@@ -23,6 +23,8 @@ class WorkspaceRepository extends EntityRepository
             ->where('(UPPER(w.name) LIKE :search OR UPPER(w.code) LIKE :search)')
             ->andWhere('w.displayable = true')
             ->andWhere('w.archived = false')
+            ->andWhere('w.personal = false')
+            ->andWhere('w.model = false')
             ->setFirstResult(0)
             ->setMaxResults($nbResults)
             ->setParameter('search', '%'.strtoupper($search).'%')

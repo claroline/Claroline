@@ -38,3 +38,10 @@ services:
             - '@router'
             - '@claroline.manager.template_manager'
             - '@security.token_storage'
+
+    Claroline\CursusBundle\Manager\EventPresenceManager:
+        arguments:
+            - '@translator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CursusBundle\Manager\EventManager'

@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 abstract class AbstractLogResourceEvent extends LogGenericEvent
 {
+    const ACTION = '';
+
     /**
      * Constructor.
      *

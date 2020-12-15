@@ -32,6 +32,14 @@ services:
             - '@translator'
             - '@Claroline\CursusBundle\Manager\EventManager'
 
+    Claroline\CursusBundle\Controller\EventPresenceController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CursusBundle\Manager\EventPresenceManager'
+
     # User trainings
     Claroline\CursusBundle\Controller\User\SessionController:
         arguments:

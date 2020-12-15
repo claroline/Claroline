@@ -83,12 +83,23 @@ plugin:
               - course_description
               - session_name
               - session_description
+              - session_code
               - session_start
               - session_end
               - event_name
+              - event_code
               - event_description
               - event_start
               - event_end
               - event_location_name
               - event_location_address
               - event_trainers
+
+        - name: training_event_presences
+          placeholders:
+              - event_name
+              - event_code
+              - event_description
+              - event_start
+              - event_end
+              - event_presences_table

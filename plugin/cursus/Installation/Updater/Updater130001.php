@@ -8,7 +8,7 @@ use Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData;
 use Claroline\InstallationBundle\Updater\Updater;
 use Psr\Log\LoggerInterface;
 
-class Updater130000 extends Updater
+class Updater130001 extends Updater
 {
     private $om;
     private $dataFixtures;

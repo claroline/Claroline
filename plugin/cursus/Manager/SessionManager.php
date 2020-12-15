@@ -435,6 +435,7 @@ class SessionManager
         $sessionLearners = $this->sessionUserRepo->findBy([
             'session' => $session,
             'type' => AbstractRegistration::LEARNER,
+            'confirmed' => true,
             'validated' => true,
         ]);
         /** @var SessionGroup[] $sessionGroups */
