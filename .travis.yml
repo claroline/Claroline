@@ -85,20 +85,17 @@ before_script:
   - bash $TRAVIS_BUILD_DIR/main/dev/Resources/travis/fetch-deps.bash
   - npm run webpack
   - php bin/console claroline:install --env=test -vvv
-  # move to distribution directory
-  - export ROOT=`pwd`
-  - cd vendor/claroline/distribution
   # set a flag indicating whether there are files to be analysed (vs simple deletions, renaming, etc.)
   - export DIFF=`cat git_diff_files.txt`
   - if [ "$DIFF" = '' ]; then echo 'No files to be analysed\n'; fi
 
 script:
   # run static analysis tools on modified files if needed
-  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/phpmd `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
-  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config=main/dev/Resources/travis/php-cs.php; fi
-  - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
+  - if [ "$DIFF" != '' ]; then vendor/bin/phpmd `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
+  - if [ "$DIFF" != '' ]; then vendor/bin/php-cs-fixer fix --dry-run --diff --config=main/dev/Resources/travis/php-cs.php; fi
+  - if [ "$DIFF" != '' ]; then node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch php tests
-  - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/simple-phpunit --dont-report-useless-tests
+  - SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
   # launch js tests
   # FIXME : enable JS test suite when fixed
   # - $ROOT/node_modules/.bin/karma start --single-run

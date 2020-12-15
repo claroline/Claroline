@@ -1,6 +1,34 @@
-vendor/*
-node_modules/*
+*~
+!.gitkeep
+config/.update
+config/parameters.yml
+coverage
+files/*
+node_modules
+npm-debug.log
+theme-assets.json
+webpack-*.json
+public/css/*
+public/data
+public/dist
+public/js/*
+public/packages
+public/themes/*
+!public/themes/.gitkeep
+.env
+docker-compose.override.yml
+installed
+composer.lock
+symfony.lock
 package-lock.json
 .php_cs.cache
 .phpunit.result.cache
-composer.lock
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

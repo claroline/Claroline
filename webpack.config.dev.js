@@ -84,7 +84,7 @@ module.exports = {
         },
         app: {
           name: 'app',
-          test: /[\\/]vendor[\\/]claroline[\\/]distribution[\\/]main[\\/]app/,
+          test: /[\\/]src[\\/]main[\\/]app/,
           minChunks: 4,
           priority: -20,
           chunks: 'all',

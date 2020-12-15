@@ -1,0 +1,44 @@
+version: '2'
+services:
+  web:
+    ports:
+      - 80:80
+    volumes:
+      - composer_cache:/root/.composer
+      - npm_cache:/root/.npm
+      - bower_cache:/root/.cache/bower
+    depends_on:
+      - db
+    environment:
+      APP_URL: ${APP_URL}
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET: ${SECRET}
+      ADMIN_FIRSTNAME: ${ADMIN_FIRSTNAME}
+      ADMIN_LASTNAME: ${ADMIN_LASTNAME}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+
+      # These will be the default platform options, they are only used once during the Claroline Connect install
+      PLATFORM_NAME: ${PLATFORM_NAME}
+      PLATFORM_SUPPORT_EMAIL: ${PLATFORM_SUPPORT_EMAIL}
+
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    image: mysql
+    volumes:
+      - ./.docker/mysql:/etc/mysql/conf.d
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data: # This is where the mysql data lives
+  composer_cache: # This is where the composer cache data lives
+  npm_cache: # This is where the npm cache data lives
+  bower_cache: # This is where the bower cache data lives

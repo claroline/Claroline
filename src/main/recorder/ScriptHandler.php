@@ -37,7 +37,7 @@ class ScriptHandler
     {
         if (!isset(static::$recorder)) {
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
-            $distBundlefile = realpath($vendorDir.'/claroline/distribution/main/installation/Resources/config').DIRECTORY_SEPARATOR.'bundles.ini-dist';
+            $distBundlefile = realpath($vendorDir.'/../src/main/installation/Resources/config').DIRECTORY_SEPARATOR.'bundles.ini-dist';
             $bundleFile = realpath($vendorDir.'/../files/config').DIRECTORY_SEPARATOR.'bundles.ini';
             $handler = new BundleHandler(new Filesystem(), $distBundlefile, $bundleFile, new ConsoleIoLogger($event->getIO()));
 

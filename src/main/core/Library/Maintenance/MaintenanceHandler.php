@@ -38,6 +38,6 @@ class MaintenanceHandler
 
     private static function getFlagPath()
     {
-        return __DIR__.'/../../../../../../../files/config/.update';
+        return __DIR__.'/../../../../../files/config/.update';
     }
 }
