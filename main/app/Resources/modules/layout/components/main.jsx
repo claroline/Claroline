@@ -61,8 +61,7 @@ const LayoutMain = props =>
             // and it cannot be set to exact: true because it contains sub routes for maintenance, login and registration.
             {
               path: '/',
-              component: HomeMenu,
-              disabled: true
+              component: HomeMenu
             }
           ]}
         />
