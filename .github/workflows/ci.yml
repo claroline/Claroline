@@ -1,0 +1,55 @@
+name: "Tests"
+
+on:
+    pull_request:
+    push:
+
+jobs:
+    php-74:
+        name: PHPUnit (PHP 7.4)
+        runs-on: ubuntu-latest
+
+        services:
+            mysql:
+                image: mysql:8.0
+                options: >-
+                    --health-cmd "mysqladmin ping --silent"
+                    -e MYSQL_ALLOW_EMPTY_PASSWORD=yes
+                    -e MYSQL_DATABASE=claroline_test
+                ports:
+                    - "3306:3306"
+
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP 7.4"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "7.4"
+                  extensions: pdo_mysql
+
+            -   name: Determine composer cache directory
+                id: composer-cache
+                run: echo "::set-output name=directory::$(composer config cache-dir)"
+
+            -   name: Cache composer dependencies
+                uses: actions/cache@v1
+                with:
+                    path: ${{ steps.composer-cache.outputs.directory }}
+                    key: composer-${{ hashFiles('**/composer.lock') }}
+                    restore-keys: composer-
+
+            - name: "Install PHP dependencies with composer"
+              run: composer update --no-interaction
+
+            - name: "Set project parameters"
+              run: "php bin/configure --default"
+
+            - name: "Install Claroline platform"
+              run: php bin/console claroline:install --env=test -vvv
+
+            - name: "Run PHPUnit Tests"
+              run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests

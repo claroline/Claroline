@@ -17,7 +17,7 @@
  */
 
 $params = [
-    ['database_host', 'DB_HOST', 'localhost'],
+    ['database_host', 'DB_HOST', '127.0.0.1'],
     ['database_name', 'DB_NAME', 'claroline'],
     ['database_user', 'DB_USER', 'root'],
     ['database_password', 'DB_PASSWORD', null],
