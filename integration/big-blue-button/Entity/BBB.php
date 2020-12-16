@@ -50,7 +50,7 @@ class BBB extends AbstractResource
      *
      * @var bool
      */
-    private $moderatorRequired = false;
+    private $moderatorRequired = true;
 
     /**
      * @ORM\Column(name="record", type="boolean")
