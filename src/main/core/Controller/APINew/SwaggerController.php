@@ -88,7 +88,7 @@ class SwaggerController
             }
 
             if (is_array($def)) {
-                $absolutePath = $this->rootDir.'/vendor/claroline/distribution/main/core/Resources/schemas/datalist/list.json';
+                $absolutePath = $this->rootDir.'/src/main/core/Resources/schemas/datalist/list.json';
                 $listSchema = $this->schemaProvider->loadSchema($absolutePath);
                 $listSchema = json_decode(json_encode($listSchema), true);
                 $listSchema['properties']['data'] = [

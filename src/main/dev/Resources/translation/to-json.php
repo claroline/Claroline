@@ -11,7 +11,7 @@ $dumper = new Symfony\Component\Translation\Dumper\JsonFileDumper();
 
 $finder = new Symfony\Component\Finder\Finder();
 $finder
-    ->in("{$rootDir}/vendor/claroline/distribution")
+    ->in("{$rootDir}/src")
     ->path('/Resources\/translations\/.*\.yml/');
 
 foreach ($finder as $file) {

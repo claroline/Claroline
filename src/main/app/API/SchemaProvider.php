@@ -134,7 +134,7 @@ class SchemaProvider
             $first = array_shift($path);
             $sec = array_shift($path);
 
-            $absolutePath = $this->projectDir.'/vendor/claroline/distribution/'
+            $absolutePath = $this->projectDir.'/src/'
             .$first.'/'.$sec.'/Resources/schemas/'.implode('/', $path);
 
             $schema = $this->loadSchema($absolutePath);
@@ -218,7 +218,7 @@ class SchemaProvider
             $url = $serializer->getSamples();
             $path = explode('/', $url);
 
-            return $this->projectDir.'/vendor/claroline/distribution/'
+            return $this->projectDir.'/src/'
               .$path[1].'/'.$path[2].'/Resources/samples/'.$path[3];
         }
 
@@ -235,7 +235,7 @@ class SchemaProvider
     private function resolveRef($uri)
     {
         $uri = str_replace($this->baseUri, '', $uri);
-        $schemaDir = realpath("{$this->projectDir}/vendor/claroline/distribution");
+        $schemaDir = realpath("{$this->projectDir}/src");
 
         return $schemaDir.'/'.$uri;
     }

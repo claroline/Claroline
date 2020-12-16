@@ -383,7 +383,7 @@ class TransferProvider implements LoggerAwareInterface
     public function getSamplePath($format, $entity, $action, $filename = null)
     {
         // FIXME : like this I can only define samples in core bundle
-        $path = "$this->projectDir/vendor/claroline/distribution/main/core/Resources/samples/$entity/$format/valid/$action/";
+        $path = "$this->projectDir/src/main/core/Resources/samples/$entity/$format/valid/$action/";
         if (!empty($filename)) {
             $path .= $filename;
         }

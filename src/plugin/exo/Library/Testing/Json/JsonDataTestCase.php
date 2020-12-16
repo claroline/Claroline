@@ -24,9 +24,9 @@ abstract class JsonDataTestCase extends TransactionalTestCase
     {
         parent::setUp();
 
-        $vendorDir = realpath("{$this->client->getKernel()->getProjectDir()}/vendor");
-        $this->formatDir = "{$vendorDir}/claroline/json-quiz/format";
-        $this->dataDir = "{$vendorDir}/claroline/distribution/plugin/exo/Tests/Data/json";
+        $projectDir = $this->client->getKernel()->getProjectDir();
+        $this->formatDir = "{$projectDir}/vendor/claroline/json-quiz/format";
+        $this->dataDir = "{$projectDir}/src/plugin/exo/Tests/Data/json";
     }
 
     /**

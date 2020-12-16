@@ -86,8 +86,8 @@ fetch composer $COMPOSER_SUM "COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-
 
 # we don't want the sources present in the cache
 echo "Overriding distribution package with local build/repo..."
-rm -rf vendor/claroline/distribution
-cp -r $DIST vendor/claroline/distribution
+rm -rf src
+cp -r $DIST src
 
 # this is normally done in the post-update-cmd script
 echo "Building files/config/bundles.ini..."

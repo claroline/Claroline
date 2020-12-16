@@ -4,7 +4,7 @@ imports:
 parameters:
     entity_id: 'claroline'
     credentials:
-      - certificate: "%kernel.project_dir%/vendor/claroline/distribution/plugin/saml/Resources/config/saml.crt"
-        key: "%kernel.project_dir%/vendor/claroline/distribution/plugin/saml/Resources/config/saml.pem"
+      - certificate: "%kernel.project_dir%/src/plugin/saml/Resources/config/saml.crt"
+        key: "%kernel.project_dir%/src/plugin/saml/Resources/config/saml.pem"
         password: ~
     idp: []

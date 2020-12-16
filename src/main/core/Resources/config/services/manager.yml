@@ -25,6 +25,7 @@ services:
     Claroline\CoreBundle\Manager\VersionManager:
         arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
+          - '%kernel.project_dir%'
         calls:
           - setLogger: [ '@logger' ]
 

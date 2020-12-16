@@ -9,55 +9,55 @@
     convertWarningsToExceptions = "false"
     processIsolation            = "false"
     stopOnFailure               = "false"
-    bootstrap                   = "../../autoload.php" >
+    bootstrap                   = "./vendor/autoload.php" >
 
     <php>
-        <server name="KERNEL_CLASS" value="App\Kernel" />
+        <server name="KERNEL_CLASS" value="Claroline\AppBundle\Kernel" />
     </php>
 
     <testsuites>
-        <testsuite name="Claroline distribution test suite">
-            <directory>main/core/Tests/API/</directory>
-            <directory>main/core/Tests/NewAPI/</directory>
-            <directory>main/core/Tests/Security/</directory>
-            <directory>main/migration/Tests/</directory>
-            <directory>plugin/announcement/Tests/</directory>
-            <directory>plugin/collecticiel/Tests/</directory>
-            <directory>plugin/message/Tests/</directory>
-            <directory>plugin/notification/Tests/</directory>
-            <directory>plugin/competency/Tests/</directory>
-            <directory>plugin/dropzone/Tests/</directory>
-            <directory>plugin/favourite/Tests/</directory>
-            <directory>plugin/forum/Tests/</directory>
-            <directory>plugin/website/Tests/</directory>
-            <directory>plugin/result/Tests/</directory>
-            <directory>plugin/rss-reader/Tests/</directory>
-            <directory>plugin/url/Tests/</directory>
-            <directory>plugin/exo/Tests/</directory>
-            <directory>plugin/chat/Tests/</directory>
-            <directory>main/core/Tests/Unit/Converter/</directory>
-            <directory>main/core/Tests/Unit/Entity/</directory>
-            <directory>main/core/Tests/Unit/Event/</directory>
-            <directory>main/core/Tests/Unit/Form/</directory>
-            <directory>main/core/Tests/Unit/Library/Configuration/</directory>
-            <directory>main/core/Tests/Unit/Library/HttpFoundation/</directory>
-            <directory>main/core/Tests/Unit/Library/Installation/</directory>
-            <directory>main/core/Tests/Unit/Library/Utilities/</directory>
-            <directory>main/core/Tests/Unit/Persistence/</directory>
-            <directory>plugin/badge/Tests/Unit/Rule/Constraints</directory>
-            <directory>main/core/Tests/Database/</directory>
-            <directory>main/authentication/Tests/</directory>
+        <testsuite name="Claroline test suite">
+            <directory>src/main/core/Tests/API/</directory>
+            <directory>src/main/core/Tests/NewAPI/</directory>
+            <directory>src/main/core/Tests/Security/</directory>
+            <directory>src/main/migration/Tests/</directory>
+            <directory>src/plugin/announcement/Tests/</directory>
+            <directory>src/plugin/collecticiel/Tests/</directory>
+            <directory>src/plugin/message/Tests/</directory>
+            <directory>src/plugin/notification/Tests/</directory>
+            <directory>src/plugin/competency/Tests/</directory>
+            <directory>src/plugin/dropzone/Tests/</directory>
+            <directory>src/plugin/favourite/Tests/</directory>
+            <directory>src/plugin/forum/Tests/</directory>
+            <directory>src/plugin/website/Tests/</directory>
+            <directory>src/plugin/result/Tests/</directory>
+            <directory>src/plugin/rss-reader/Tests/</directory>
+            <directory>src/plugin/url/Tests/</directory>
+            <directory>src/plugin/exo/Tests/</directory>
+            <directory>src/plugin/chat/Tests/</directory>
+            <directory>src/main/core/Tests/Unit/Converter/</directory>
+            <directory>src/main/core/Tests/Unit/Entity/</directory>
+            <directory>src/main/core/Tests/Unit/Event/</directory>
+            <directory>src/main/core/Tests/Unit/Form/</directory>
+            <directory>src/main/core/Tests/Unit/Library/Configuration/</directory>
+            <directory>src/main/core/Tests/Unit/Library/HttpFoundation/</directory>
+            <directory>src/main/core/Tests/Unit/Library/Installation/</directory>
+            <directory>src/main/core/Tests/Unit/Library/Utilities/</directory>
+            <directory>src/main/core/Tests/Unit/Persistence/</directory>
+            <directory>src/plugin/badge/Tests/Unit/Rule/Constraints</directory>
+            <directory>src/main/core/Tests/Database/</directory>
+            <directory>src/main/authentication/Tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./main</directory>
-            <directory>./plugin</directory>
+            <directory>./src/main</directory>
+            <directory>./src/plugin</directory>
             <exclude>
-                <directory>./*/*/Migrations</directory>
-                <directory>./*/*/Resources</directory>
-                <directory>./*/*/Tests</directory>
+                <directory>./src/*/*/Migrations</directory>
+                <directory>./src/*/*/Resources</directory>
+                <directory>./src/*/*/Tests</directory>
             </exclude>
         </whitelist>
     </filter>

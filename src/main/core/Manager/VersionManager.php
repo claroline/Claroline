@@ -27,11 +27,15 @@ class VersionManager implements LoggerAwareInterface
     private $om;
     /** @var VersionRepository */
     private $repo;
+    /** @var string */
+    private $projectDir;
 
     public function __construct(
-        ObjectManager $om
+        ObjectManager $om,
+        string $projectDir
     ) {
         $this->om = $om;
+        $this->projectDir = $projectDir;
 
         $this->repo = $this->om->getRepository('ClarolineCoreBundle:Update\Version');
     }
@@ -88,7 +92,7 @@ class VersionManager implements LoggerAwareInterface
 
     public function getVersionFile()
     {
-        $data = file_get_contents(__DIR__.'/../../../VERSION.txt');
+        $data = file_get_contents($this->projectDir.'/VERSION.txt');
 
         return explode("\n", $data);
     }
