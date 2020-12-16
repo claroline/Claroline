@@ -16,7 +16,14 @@ function collect(rootDir) {
     throw new Error(`${rootDir} is not a directory`)
   }
 
-  return normalizeNames(getDefinitions(rootDir))
+  return [
+    {
+      name: 'claroline-distribution',
+      path: `${rootDir}/src`,
+      meta: true,
+      assets: getMetaEntries(`${rootDir}/src`)
+    }
+  ].concat(normalizeNames(getDefinitions(rootDir)))
 }
 
 function getDefinitions(rootDir) {

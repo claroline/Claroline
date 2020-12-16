@@ -5,7 +5,6 @@
 const entries = require('./webpack/entries')
 const config = require('./webpack/config')
 const paths = require('./webpack/paths')
-const shared = require('./webpack/shared')
 
 const assetsFile = require('./webpack/plugins/assets-file')
 const hashedModuleIds = require('./webpack/plugins/hashed-module-ids')
@@ -90,6 +89,5 @@ module.exports = {
   resolve: {
     modules: ['./node_modules', './public/packages'],
     extensions: ['.js', '.jsx']
-  },
-  externals: shared.externals()
+  }
 }

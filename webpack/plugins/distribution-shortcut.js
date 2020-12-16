@@ -20,6 +20,6 @@ module.exports = () => {
   return new webpack.NormalModuleReplacementPlugin(/^#\//, request => {
     const parts = request.request.substr(2).split('/')
     const resolved = [...parts.slice(0, 2), 'Resources/modules', ...parts.slice(2)]
-    request.request = [paths.root(), 'vendor/claroline/distribution', ...resolved].join('/')
+    request.request = [paths.root(), 'src', ...resolved].join('/')
   })
 }
