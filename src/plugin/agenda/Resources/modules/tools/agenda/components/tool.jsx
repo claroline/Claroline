@@ -1,13 +1,12 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
-import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {now} from '#/main/app/intl/date'
-import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Event as EventTypes} from '#/plugin/agenda/event/prop-types'
@@ -77,22 +76,6 @@ const AgendaTool = (props) => {
           label: trans('configure', {}, 'actions'),
           modal: [MODAL_AGENDA_PARAMETERS],
           group: trans('management'),
-          displayed: false // TODO : implement
-        }, {
-          name: 'import',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-upload',
-          label: trans('import', {}, 'actions'),
-          callback: () => props.import(null, props.contextData),
-          group: trans('transfer'),
-          displayed: false // TODO : implement
-        }, {
-          name: 'export',
-          type: URL_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export', {}, 'actions'),
-          target: ['apiv2_download_agenda', {workspace: get(props.contextData, 'id')}],
-          group: trans('transfer'),
           displayed: false // TODO : implement
         }
       ]}
@@ -214,7 +197,6 @@ AgendaTool.propTypes = {
   delete: T.func.isRequired,
   markDone: T.func.isRequired,
   markTodo: T.func.isRequired,
-  import: T.func.isRequired,
 
   loadEvent: T.func.isRequired,
   currentEvent: T.shape(

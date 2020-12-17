@@ -18,14 +18,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
-use ICal\ICal;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AgendaManager
 {
@@ -39,7 +37,7 @@ class AgendaManager
 
     public function __construct(
         ObjectManager $om,
-        $projectDir,
+        string $projectDir,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         RoleManager $rm,
@@ -105,98 +103,6 @@ class AgendaManager
 
         $dispatcher = $this->container->get('event_dispatcher');
         $dispatcher->dispatch($message, 'claroline_message_sending_to_users');
-    }
-
-    /**
-     * @param $workspaceId
-     *
-     * @return list of Events
-     */
-    public function export($workspaceId = null)
-    {
-        $repo = $this->om->getRepository('ClarolineAgendaBundle:Event');
-        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
-
-        if ($workspace) {
-            $listEvents = $repo->findByWorkspaceId($workspaceId, false);
-        } else {
-            $usr = $this->tokenStorage->getToken()->getUser();
-            $listDesktop = $repo->findDesktop($usr, false);
-            $listEventsU = $repo->findByUser($usr, false);
-            $listEvents = array_merge($listEventsU, $listDesktop);
-        }
-
-        $calendar = $this->writeCalendar($listEvents);
-        $fileName = $this->writeToICS($calendar, $workspace);
-
-        return $fileName;
-    }
-
-    /**
-     * @param string    $text      it's the calendar text formatted in ics structure
-     * @param Workspace $workspace
-     *
-     * @return string $fileName path to the file in public/uploads folder
-     */
-    public function writeToICS($text, $workspace)
-    {
-        $name = is_null($workspace) ? 'desktop' : $workspace->getName();
-        $fileName = $this->projectDir.'/public/uploads/'.$name.'.ics';
-        file_put_contents($fileName, $text);
-
-        return $fileName;
-    }
-
-    /**
-     * Imports ical files.
-     *
-     * @param UploadedFile $fileData
-     * @param Workspace    $workspace
-     *
-     * @return Event[]
-     */
-    public function import($fileData, $workspace = null)
-    {
-        $ical = new ICal($fileData);
-        $events = $ical->events();
-        $entities = [];
-
-        foreach ($events as $event) {
-            $e = new Event();
-            $e->setTitle($event->summary);
-            $e->setStart($ical->iCalDateToUnixTimestamp($event->dtstart));
-            $e->setEnd($ical->iCalDateToUnixTimestamp($event->dtend));
-            $e->setDescription($event->description);
-            if ($workspace) {
-                $e->setWorkspace($workspace);
-            }
-            $e->setUser($this->tokenStorage->getToken()->getUser());
-            $e->setPriority('#01A9DB');
-            $this->om->persist($e);
-
-            $entities[] = $e;
-        }
-
-        $this->om->flush();
-
-        return $entities;
-    }
-
-    /**
-     * @return string view in ics format
-     */
-    private function writeCalendar(array $events)
-    {
-        $date = new \Datetime();
-        $tz = $date->getTimezone();
-
-        return $this->container->get('twig')->render(
-            '@ClarolineAgenda/ics_calendar.ics.twig',
-            [
-                'tzName' => $tz->getName(),
-                'events' => $events,
-            ]
-        );
     }
 
     public function checkOpenAccess(Workspace $workspace)

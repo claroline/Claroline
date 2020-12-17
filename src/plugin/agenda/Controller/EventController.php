@@ -142,56 +142,6 @@ class EventController extends AbstractCrudController
         }, $tasks));
     }
 
-    /**
-     * @Route("/download", name="apiv2_download_agenda", methods={"GET"})
-     *
-     * @return StreamedResponse
-     */
-    public function exportAction(Request $request)
-    {
-        $id = $request->query->get('workspace');
-        $file = $this->manager->export($id);
-
-        $response = new StreamedResponse();
-
-        $response->setCallBack(
-          function () use ($file) {
-              readfile($file);
-          }
-        );
-
-        $workspace = $this->om->getRepository(Workspace::class)->find($id);
-        $name = $workspace ? $workspace->getName() : 'desktop';
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$name.'.ics');
-        $response->headers->set('Content-Type', ' text/calendar');
-        $response->headers->set('Connection', 'close');
-
-        return $response;
-    }
-
-    /**
-     * @Route("/import", name="apiv2_event_import", methods={"POST"})
-     *
-     * @return JsonResponse
-     */
-    public function importAction(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-        $file = $data['file'];
-        $workspace = $data['workspace'];
-        $workspace = $workspace['id'] ? $this->om->getObject($workspace, Workspace::class) : null;
-        $fileEntity = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
-        $file = $this->serializer->deserialize($file, $fileEntity);
-        $fileData = $this->fileUtils->getContents($file);
-        $events = $this->manager->import($fileData, $workspace);
-
-        return new JsonResponse(array_map(function (Event $event) {
-            return $this->serializer->serialize($event);
-        }, $events));
-    }
-
     private function checkPermission(Event $event)
     {
         if (false === $event->isEditable()) {

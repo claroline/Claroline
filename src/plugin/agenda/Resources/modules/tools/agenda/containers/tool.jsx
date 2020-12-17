@@ -63,9 +63,6 @@ const AgendaTool = withRouter(
       },
       markTodo(event) {
         dispatch(actions.markTodo(event))
-      },
-      import(data, workspace = null) {
-        dispatch(actions.import(data, workspace))
       }
     })
   )(AgendaToolComponent)
