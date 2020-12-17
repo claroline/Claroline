@@ -4,7 +4,7 @@ services:
         calls:
             - ['setContainer', ['@service_container']]
 
-    Claroline\CursusBundle\Installation\Updater\Updater130000:
+    Claroline\CursusBundle\Installation\Updater\Updater130001:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CursusBundle\DataFixtures\PostInstall\LoadTemplateData'
