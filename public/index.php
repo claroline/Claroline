@@ -1,6 +1,6 @@
 <?php
 
-use Claroline\AppBundle\Kernel;
+use Claroline\KernelBundle\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
