@@ -2,7 +2,7 @@ README
 ======
 
 [![Join the chat at https://gitter.im/claroline/Claroline](https://badges.gitter.im/claroline/Claroline.svg)](https://gitter.im/claroline/Claroline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://github.com/Claroline/Claroline/workflows/ci/badge.svg)](https://github.com/Claroline/Claroline/actions)
+[![Build Status](https://github.com/claroline/Claroline/workflows/ci/badge.svg)](https://github.com/claroline/Claroline/actions)
 
 This repository provides the source code of the Claroline platform.
 
@@ -40,6 +40,7 @@ To update your 13.x just follow this steps :
 
 #### 1. Update source
 
+    git pull origin 13.x
     composer update --no-dev --optimize-autoloader
     
     npm install
@@ -105,11 +106,13 @@ For a development installation, you'll need at least:
 
 - PHP >= 7.2 with the following extensions:
     - curl
+    - dom
     - fileinfo
     - [gd][gd]
     - intl
     - mbstring
-    - mcrypt
+    - openssl
+    - pdo_mysql
     - xml
     - json
     - zip
@@ -224,4 +227,3 @@ For user documentation, see [here](https://support.claroline.com/#/desktop/works
 [webpack]:      https://webpack.github.io
 [symfo-server]: https://symfony.com/doc/4.4/setup/symfony_server.html
 [symfo-config]: https://symfony.com/doc/4.4/setup/web_server_configuration.html
-[dist-doc]:     https://github.com/claroline/Distribution/blob/master/doc/index.md
